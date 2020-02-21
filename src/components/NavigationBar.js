@@ -61,7 +61,7 @@ class NavigationBar extends React.Component {
                         <SimpleLineIcon
                             name={'home'}
                             size={30*factorRatio}
-                            color={(this.props.currentPage == 'HOME') ? '#fb1b2f':'grey'}
+                            color={(this.props.currentPage == 'HOME') ? '#fb1b2f' : 'grey'}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity key={'search'}
@@ -71,7 +71,7 @@ class NavigationBar extends React.Component {
                         <EvilIcons
                             name={'search'}
                             size={40*factorRatio}
-                            color={(this.props.currentPage == 'SEARCH') ? '#fb1b2f':'grey'}
+                            color={(this.props.currentPage == 'SEARCH') ? '#fb1b2f' : 'grey'}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity key={'download'}

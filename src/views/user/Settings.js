@@ -77,7 +77,7 @@ export default class Settings extends React.Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{flex: 0.66}}></View>
+                            <View style={{flex: 0.66}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -87,7 +87,7 @@ export default class Settings extends React.Component {
                             >
                                 Settings
                             </Text>
-                            <View style={{flex: 0.33}}></View>
+                            <View style={{flex: 0.33}}/>
                         </View>
                         <View key={'scrollview'}
                             style={{
@@ -125,7 +125,7 @@ export default class Settings extends React.Component {
                                     >
                                         Profile Settings
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
@@ -160,7 +160,7 @@ export default class Settings extends React.Component {
                                     >
                                         Notification Settings
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
@@ -195,7 +195,7 @@ export default class Settings extends React.Component {
                                     >
                                         Payment History
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
@@ -227,7 +227,7 @@ export default class Settings extends React.Component {
                                     >
                                         Manage Subscriptions
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
@@ -262,7 +262,7 @@ export default class Settings extends React.Component {
                                     >
                                         Support
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
@@ -297,7 +297,7 @@ export default class Settings extends React.Component {
                                     >
                                         Terms of Use
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
@@ -332,7 +332,7 @@ export default class Settings extends React.Component {
                                     >
                                         Privacy Policy
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
@@ -367,7 +367,7 @@ export default class Settings extends React.Component {
                                     >
                                         Log Out
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}

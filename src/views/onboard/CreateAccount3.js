@@ -19,7 +19,6 @@ import ImagePicker from 'react-native-image-picker';
 import DisplayName from '../../modals/DisplayName.js';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import Courses from 'Pianote2/src/assets/img/svgs/courses.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -202,7 +201,7 @@ export default class CreateAccount3 extends React.Component {
                                 >
                                     Create Account
                                 </Text>
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                             </View>
                             
                             <Animated.View key={'items'}
@@ -221,7 +220,7 @@ export default class CreateAccount3 extends React.Component {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <View style={{flex: 0.45,}}></View>
+                                    <View style={{flex: 0.45}}/>
                                     <View key={'displayname'}
                                         style={{
                                             height: 35*factorVertical,
@@ -239,7 +238,7 @@ export default class CreateAccount3 extends React.Component {
                                         >
                                             Add a display name
                                         </Text>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
                                     <View key={'email'}
                                         style={{
@@ -271,7 +270,7 @@ export default class CreateAccount3 extends React.Component {
                                             }}
                                         />
                                     </View>
-                                    <View style={{height: 10*factorVertical}}></View>
+                                    <View style={{height: 10*factorVertical}}/>
                                     <View key={'appearsOnProfile'}
                                         style={{
                                             width: fullWidth,
@@ -288,7 +287,7 @@ export default class CreateAccount3 extends React.Component {
                                             This appears on your Pianote profile and comments.
                                         </Text>
                                     </View>
-                                    <View style={{height: 40*factorVertical}}></View>
+                                    <View style={{height: 40*factorVertical}}/>
                                     <View key={'next'}
                                         style={{
                                             height: fullHeight*0.06,
@@ -323,14 +322,14 @@ export default class CreateAccount3 extends React.Component {
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={{height: 30*factorVertical}}></View>
+                                    <View style={{height: 30*factorVertical}}/>
                                     <View key={'dots'}
                                         style={{
                                             height: fullHeight*0.035,
                                             flexDirection: 'row',
                                         }}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View style={{justifyContent: 'center'}}>
                                             <View style={{flexDirection: 'row'}}>
                                                 <View 
@@ -345,7 +344,7 @@ export default class CreateAccount3 extends React.Component {
                                                     }}
                                                 >
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -360,7 +359,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -374,7 +373,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -391,9 +390,9 @@ export default class CreateAccount3 extends React.Component {
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 30*factorVertical}}></View>
+                                    <View style={{height: 30*factorVertical}}/>
                                     <View key={'skip'}
                                         style={{
                                             width: fullWidth,
@@ -485,9 +484,8 @@ export default class CreateAccount3 extends React.Component {
                                 >
                                     Create Account
                                 </Text>
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                             </View>
-                            
                             <Animated.View key={'items'}
                                 style={{
                                     position: 'relative',
@@ -504,7 +502,7 @@ export default class CreateAccount3 extends React.Component {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <View style={{flex: 0.3,}}></View>
+                                    <View style={{flex: 0.3,}}/>
                                     <View key={'addPicture'}
                                         style={{
                                             height: 35*factorVertical,
@@ -522,7 +520,7 @@ export default class CreateAccount3 extends React.Component {
                                             Add a profile picture
                                         </Text>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}></View>
+                                    <View style={{height: 10*factorVertical}}/>
                                     <View key={'profilePicture'}
                                         style={{
                                             height: fullHeight*0.22,
@@ -531,7 +529,7 @@ export default class CreateAccount3 extends React.Component {
                                             justifyContent: 'center',
                                         }}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <TouchableOpacity
                                             onPress={() => this.chooseImage()}
                                             style={[
@@ -583,9 +581,9 @@ export default class CreateAccount3 extends React.Component {
                                                 color={'white'}
                                             />
                                         </TouchableOpacity>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}></View>
+                                    <View style={{height: 10*factorVertical}}/>
                                     <View key={'appearsOnProfile'}
                                         style={{
                                             width: fullWidth,
@@ -602,7 +600,7 @@ export default class CreateAccount3 extends React.Component {
                                             This appears on your Pianote profile and comments.
                                         </Text>
                                     </View>
-                                    <View style={{height: 40*factorVertical}}></View>
+                                    <View style={{height: 40*factorVertical}}/>
                                     <View key={'next'}
                                         style={{
                                             height: fullHeight*0.06,
@@ -637,14 +635,14 @@ export default class CreateAccount3 extends React.Component {
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={{flex: 0.5}}></View>
+                                    <View style={{flex: 0.5}}/>
                                     <View key={'dots'}
                                         style={{
                                             height: fullHeight*0.035,
                                             flexDirection: 'row',
                                         }}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View style={{justifyContent: 'center'}}>
                                             <View style={{flexDirection: 'row'}}>
                                                 <View 
@@ -659,7 +657,7 @@ export default class CreateAccount3 extends React.Component {
                                                     }}
                                                 >
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -674,7 +672,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -688,7 +686,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -705,9 +703,9 @@ export default class CreateAccount3 extends React.Component {
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 30*factorVertical}}></View>
+                                    <View style={{height: 30*factorVertical}}/>
                                     <View key={'skip'}
                                         style={{
                                             width: fullWidth,
@@ -733,7 +731,6 @@ export default class CreateAccount3 extends React.Component {
                                     </View>
                                 </View>
                             </Animated.View>
-                        
                             <Modal key={'checkEmailModal'}
                                 isVisible={this.state.showDisplayName}
                                 style={[
@@ -756,9 +753,7 @@ export default class CreateAccount3 extends React.Component {
                                     }}
                                 />
                             </Modal>
-                        </View>                    
-                  
-                    
+                        </View>
                     </View>
                     <View key={'overview'}>
                         <View key={'pianote1'}
@@ -768,7 +763,7 @@ export default class CreateAccount3 extends React.Component {
                                 zIndex: 2,
                             }}
                         >
-                            <View style={{height: '10%'}}></View>
+                            <View style={{height: '10%'}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -785,7 +780,7 @@ export default class CreateAccount3 extends React.Component {
                                     borderBottomColor: '#dbdbdb',
                                     borderBottomWidth: 0.75*factorRatio,
                                 }}
-                            ></View>
+                            />
                             <View
                                 style={{
                                     height: fullWidth*0.3,
@@ -797,14 +792,14 @@ export default class CreateAccount3 extends React.Component {
                                 }}
                             >
                                 <View style={{flex: 0.35}}>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <View
                                         style={[
                                             styles.centerContent, {
                                             flexDirection: 'row',
                                         }]}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View
                                             style={[
                                                 styles.centerContent, {
@@ -820,16 +815,16 @@ export default class CreateAccount3 extends React.Component {
                                                 fill={'white'}
                                             />
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>    
                                 <View
                                     style={{
                                         flex: 0.65
                                     }}
                                 >
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -839,7 +834,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Learning Path
                                     </Text>
-                                    <View style={{height: 5*factorVertical}}></View>
+                                    <View style={{height: 5*factorVertical}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -848,7 +843,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Guided lessons covering{"\n"}every topic along the way.
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>
                             </View>
                             <View
@@ -862,14 +857,14 @@ export default class CreateAccount3 extends React.Component {
                                 }}
                             >
                                 <View style={{flex: 0.35}}>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <View
                                         style={[
                                             styles.centerContent, {
                                             flexDirection: 'row',
                                         }]}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View
                                             style={[
                                                 styles.centerContent, {
@@ -885,16 +880,16 @@ export default class CreateAccount3 extends React.Component {
                                                 fill={'white'}
                                             />
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>    
                                 <View
                                     style={{
                                         flex: 0.65
                                     }}
                                 >
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -904,7 +899,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Courses
                                     </Text>
-                                    <View style={{height: 5*factorVertical}}></View>
+                                    <View style={{height: 5*factorVertical}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -913,7 +908,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Series of short lessons{"\n"}based on a single topic.
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>
                             </View>
                             <View
@@ -927,14 +922,14 @@ export default class CreateAccount3 extends React.Component {
                                 }}
                             >
                                 <View style={{flex: 0.35}}>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <View
                                         style={[
                                             styles.centerContent, {
                                             flexDirection: 'row',
                                         }]}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View
                                             style={[
                                                 styles.centerContent, {
@@ -950,16 +945,16 @@ export default class CreateAccount3 extends React.Component {
                                                 fill={'white'}
                                             />
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>    
                                 <View
                                     style={{
                                         flex: 0.65
                                     }}
                                 >
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -969,7 +964,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Songs
                                     </Text>
-                                    <View style={{height: 5*factorVertical}}></View>
+                                    <View style={{height: 5*factorVertical}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -978,7 +973,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Famous songs with note-{"\n"}for-note transcriptions.
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>
                             </View>
                             <View
@@ -992,14 +987,14 @@ export default class CreateAccount3 extends React.Component {
                                 }}
                             >
                                 <View style={{flex: 0.35}}>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <View
                                         style={[
                                             styles.centerContent, {
                                             flexDirection: 'row',
                                         }]}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View
                                             style={[
                                                 styles.centerContent, {
@@ -1015,16 +1010,16 @@ export default class CreateAccount3 extends React.Component {
                                                 fill={'white'}
                                             />
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>    
                                 <View
                                     style={{
                                         flex: 0.65
                                     }}
                                 >
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -1034,7 +1029,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Support
                                     </Text>
-                                    <View style={{height: 5*factorVertical}}></View>
+                                    <View style={{height: 5*factorVertical}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'Roboto',
@@ -1043,17 +1038,17 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         Get personal support{"\n"}from real piano teachers.
                                     </Text>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>
                             </View>
-                            <View style={{height: '5%'}}></View>
+                            <View style={{height: '5%'}}/>
                             <View key={'dots'}
                                         style={{
                                             height: fullHeight*0.035,
                                             flexDirection: 'row',
                                         }}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View style={{justifyContent: 'center'}}>
                                             <View style={{flexDirection: 'row'}}>
                                                 <View 
@@ -1068,7 +1063,7 @@ export default class CreateAccount3 extends React.Component {
                                                     }}
                                                 >
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -1083,7 +1078,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -1097,7 +1092,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -1114,9 +1109,9 @@ export default class CreateAccount3 extends React.Component {
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                            <View style={{height: 30*factorVertical}}></View>
+                            <View style={{height: 30*factorVertical}}/>
                             <View key={'skip'}
                                 style={{
                                     width: fullWidth,
@@ -1150,7 +1145,7 @@ export default class CreateAccount3 extends React.Component {
                                 zIndex: 2,
                             }}
                         >
-                            <View style={{height: '9%'}}></View>
+                            <View style={{height: '9%'}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -1167,7 +1162,7 @@ export default class CreateAccount3 extends React.Component {
                                     borderBottomColor: '#dbdbdb',
                                     borderBottomWidth: 0.75*factorRatio,
                                 }}
-                            ></View>
+                            />
                             <View
                                 style={[
                                     styles.centerContent, {
@@ -1176,7 +1171,7 @@ export default class CreateAccount3 extends React.Component {
                                     alignSelf: 'stretch',
                                 }]}
                             >
-                                <View style={{height: 40*factorVertical}}></View>
+                                <View style={{height: 40*factorVertical}}/>
                                 <View style={[styles.centerContent, {flexDirection: 'row'}]}>
                                     <View style={{flex: 1}}/>
                                     <FastImage
@@ -1191,7 +1186,7 @@ export default class CreateAccount3 extends React.Component {
                                     />
                                     <View style={{flex: 1}}/>
                                 </View>
-                                <View style={{height: 10*factorVertical}}></View>
+                                <View style={{height: 10*factorVertical}}/>
                                 <View style={{flexDirection: 'row'}}>
                                     <FastImage
                                         style={{
@@ -1204,7 +1199,7 @@ export default class CreateAccount3 extends React.Component {
                                         resizeMode={FastImage.resizeMode.cover}
                                     />
                                 </View>      
-                                <View style={{height: 15*factorVertical}}></View>
+                                <View style={{height: 15*factorVertical}}/>
                                 <Text
                                     style={{
                                         fontFamily: 'Roboto',
@@ -1215,7 +1210,7 @@ export default class CreateAccount3 extends React.Component {
                                 >
                                     Welcome To{"\n"}The Keyboard
                                 </Text>
-                                <View style={{height: 10*factorVertical}}></View>
+                                <View style={{height: 10*factorVertical}}/>
                                 <Text
                                     style={{
                                         fontFamily: 'Roboto',
@@ -1227,14 +1222,14 @@ export default class CreateAccount3 extends React.Component {
                                     Level 1 / Lesson 1 / Lisa Witt
                                 </Text>
                             </View>
-                            <View style={{height: '3%'}}></View>
+                            <View style={{height: '3%'}}/>
                             <View key={'dots'}
                                         style={{
                                             height: fullHeight*0.035,
                                             flexDirection: 'row',
                                         }}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <View style={{justifyContent: 'center'}}>
                                             <View style={{flexDirection: 'row'}}>
                                                 <View 
@@ -1249,7 +1244,7 @@ export default class CreateAccount3 extends React.Component {
                                                     }}
                                                 >
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -1264,7 +1259,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -1278,7 +1273,7 @@ export default class CreateAccount3 extends React.Component {
                                                 >
 
                                                 </View>
-                                                <View style={{width: 7.5*factorHorizontal}}></View>
+                                                <View style={{width: 7.5*factorHorizontal}}/>
                                                 <View 
                                                     style={{
                                                         height: 10*factorRatio,
@@ -1295,9 +1290,9 @@ export default class CreateAccount3 extends React.Component {
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
-                            <View style={{height: 20*factorVertical}}></View>
+                            <View style={{height: 20*factorVertical}}/>
                             <View key={'skip'}
                                 style={{
                                     width: fullWidth,
@@ -1307,7 +1302,7 @@ export default class CreateAccount3 extends React.Component {
                                     borderRadius: 30*factorRatio,
                                 }}
                             >
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                                 <TouchableOpacity
                                     onPress={() => {
                                         this.props.navigation.navigate('HOME')
@@ -1331,7 +1326,7 @@ export default class CreateAccount3 extends React.Component {
                                         GET STARTED
                                     </Text>
                                 </TouchableOpacity>
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                             </View>
                         </View>
                     </View>
@@ -1340,80 +1335,3 @@ export default class CreateAccount3 extends React.Component {
         )
     }
 }
-
-/**
- *   <View key={'welcomeToPianote'} style={styles.centerContent}>
-                        <View
-                            style={[
-                                styles.centerContent, {
-                                flex: 0.53, 
-                                backgroundColor: '#f7f7f7',
-                                alignSelf: 'stretch',
-                            }]}
-                        >
-                            <View style={{flex: 1}}>
-
-                            </View>
-                            <View 
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    left: '10%',
-                                    height: '40%',
-                                    width: '80%',
-                                    zIndex: 2,
-                                    borderRadius: 15*factorRatio,
-                                    backgroundColor: '#fb1b2f',
-                                }]}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 20*factorRatio,
-                                        color: 'white',
-                                    }}
-                                >
-                                    Welcome To
-                                </Text>
-                                <Pianote
-                                    height={65*factorRatio}
-                                    width={175*factorRatio}
-                                    fill={'white'}
-                                />
-                            </View>
-                        </View>
-                        <View
-                            style={{
-                                flex: 0.47,
-                                backgroundColor: 'white',
-                                alignSelf: 'stretch',
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 20*factorRatio,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                Thank you for becoming a{"\n"}Pianote Member!
-                            </Text>
-                            <View style={{height: 20*factorVertical}}></View>
-                            <Text
-                                style={{
-                                    fontSize: 20*factorRatio,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                Let's get your account set up.
-                            </Text>
-                            <View style={{height: 100*factorVertical}}></View>
-                            <View style={[styles.centerContent]}>
-                                <Pianote
-                                    height={50*factorRatio}
-                                    width={125*factorRatio}
-                                    fill={'green'}
-                                />
-                            </View>
-                        </View>
-                    </View>
-                  
- */
