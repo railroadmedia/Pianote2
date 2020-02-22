@@ -15,10 +15,10 @@ import FastImage from 'react-native-fast-image';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Topic from 'Pianote2/src/assets/img/svgs/topics.svg';
 import Levels from 'Pianote2/src/assets/img/svgs/levels.svg';
+import FontIcon from 'react-native-vector-icons/FontAwesome';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import Instructors from 'Pianote2/src/assets/img/svgs/Instructor.svg';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
@@ -339,10 +339,10 @@ export default class CourseCatalog extends React.Component {
                                                             flexDirection: 'row',
                                                         }]}
                                                     >
-                                                        <Instructors
-                                                            height={20*factorRatio}
-                                                            width={20*factorRatio}
-                                                            fill={'white'}
+                                                        <FontIcon
+                                                            name={'user'}
+                                                            size={17.5*factorRatio}
+                                                            color={'white'}
                                                         />
                                                         <View style={{width: 5*factorHorizontal}}></View>
                                                         <Text

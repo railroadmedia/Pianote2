@@ -97,45 +97,12 @@ export default class Home extends React.Component {
                                 }}
                             >
                             </View>
-                            <View key={'ImageAndButtons'}
-                                style={{height: fullHeight*0.595}}
+                            <View key={'image'}
+                                style={[
+                                    styles.centerContent, {
+                                    height: fullHeight*0.595,
+                                }]}
                             >
-                                <View key={'pianoteIcon'}
-                                    style={[
-                                        styles.centerContent, {
-                                        position: 'absolute',
-                                        bottom: fullHeight*0.195,
-                                        width: fullWidth,
-                                        zIndex: 3,
-                                    }]}
-                                >
-                                    <Pianote
-                                        height={fullHeight*0.0325}
-                                        width={fullWidth*0.35}
-                                        fill={'#fb1b2f'}
-                                    />
-                                </View>
-                                <View key={'foundationsWord'}
-                                    style={[
-                                        styles.centerContent, {
-                                        position: 'absolute',
-                                        bottom: fullHeight*0.115,
-                                        width: fullWidth,
-                                        zIndex: 3,
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 60*factorRatio,
-                                            fontWeight: '700',
-                                            color: 'white',
-                                            fontFamily: 'RobotoCondensed-Regular',
-                                            transform: [{ scaleX: 0.7}],
-                                        }}
-                                    >
-                                        FOUNDATIONS
-                                    </Text>
-                                </View>
                                 <GradientFeature
                                     color={'red'}
                                     opacity={1}
@@ -150,25 +117,7 @@ export default class Home extends React.Component {
                                     }}
                                     source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
                                     resizeMode={FastImage.resizeMode.cover}
-                                />
-                                <StartIcon
-                                    pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.49}
-                                    pxFromLeft={fullWidth*0.065}
-                                    buttonWidth={fullWidth*0.42}
-                                    buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                    pressed={() => {
-                                        this.props.navigation.navigate('VIDEOPLAYER')
-                                    }}
-                                />
-                                <MoreInfoIcon
-                                    pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.49}
-                                    pxFromRight={fullWidth*0.065}
-                                    buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                    buttonWidth={fullWidth*0.42}
-                                    pressed={() => {
-                                        this.props.navigation.navigate('PATHOVERVIEW')
-                                    }}
-                                />   
+                                />  
                                 <NavMenuHeaders
                                     buttonLeft={() => {
                                         this.props.navigation.navigate('LESSONS')
@@ -179,11 +128,53 @@ export default class Home extends React.Component {
                                     buttonRight={() => {
                                         this.props.navigation.navigate('MYLIST')
                                     }}
-                                    pxFromTop={37.5*factorRatio}
+                                    pxFromTop={30*factorRatio}
                                     leftHeader={'LESSONS'}
                                     rightHeader={'ALL TYPES'}
                                     isHome={true}
                                 />
+                                <View key={'pianoteSVG'}
+                                    style={{
+                                        position: 'absolute',
+                                        bottom: fullHeight*0.175,
+                                        zIndex: 2,
+                                    }}
+                                >
+                                    <Pianote
+                                        height={fullHeight*0.0325}
+                                        width={fullWidth*0.35}
+                                        fill={'#fb1b2f'}
+                                    />
+                                </View>
+                                <Text key={'foundations'}
+                                    style={{
+                                        fontSize: 60*factorRatio,
+                                        fontWeight:'700',
+                                        color: 'white',
+                                        fontFamily: 'RobotoCondensed-Regular',
+                                        transform: [{ scaleX: 0.7}],
+                                        position: 'absolute',
+                                        bottom: fullHeight*0.09,
+                                        zIndex: 2,
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    FOUNDATIONS
+                                </Text>
+                                <StartIcon
+                                    pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.51}
+                                    buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
+                                    pxFromLeft={fullWidth*0.065}
+                                    buttonWidth={fullWidth*0.42}
+                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
+                                />
+                                <MoreInfoIcon
+                                    pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.51}
+                                    buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
+                                    pxFromRight={fullWidth*0.065}
+                                    buttonWidth={fullWidth*0.42}
+                                    pressed={() => this.props.navigation.navigate('LESSONS')}
+                                />   
                             </View>
                             <View key={'contentLists'}>
                                 <View style={{height: 5*factorRatio}}/>

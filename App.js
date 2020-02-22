@@ -50,7 +50,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: Profile,
+    initialRoute: CourseCatalog,
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},

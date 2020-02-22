@@ -109,25 +109,25 @@ export default class PathOverview extends React.Component {
                             >
                             </View>
                             <View key={'pianoteIcon'}
-                                    style={[
-                                        styles.centerContent, {
-                                        position: 'absolute',
-                                        bottom: fullHeight*0.255,
-                                        width: fullWidth,
-                                        zIndex: 3,
-                                    }]}
-                                >
-                                    <Pianote
-                                        height={fullHeight*0.0325}
-                                        width={fullWidth*0.35}
-                                        fill={'#fb1b2f'}
-                                    />
-                                </View>
-                            <View key={'PathOverviewWord'}
                                 style={[
                                     styles.centerContent, {
                                     position: 'absolute',
-                                    bottom: fullHeight*0.18,
+                                    bottom: fullHeight*0.2,
+                                    width: fullWidth,
+                                    zIndex: 3,
+                                }]}
+                            >
+                                <Pianote
+                                    height={fullHeight*0.0325}
+                                    width={fullWidth*0.35}
+                                    fill={'#fb1b2f'}
+                                />
+                            </View>
+                            <View key={'foundationsWord'}
+                                style={[
+                                    styles.centerContent, {
+                                    position: 'absolute',
+                                    bottom: fullHeight*0.1,
                                     width: fullWidth,
                                     zIndex: 3,
                                 }]}
@@ -155,29 +155,6 @@ export default class PathOverview extends React.Component {
                                 source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
-                            <View key={'message'}
-                                style={{
-                                    position: 'absolute',
-                                    width: fullWidth,
-                                    height: '100%',
-                                    zIndex: 10,
-                                    paddingLeft: fullWidth*0.075,
-                                    paddingRight: fullWidth*0.075,
-                                }}
-                            >
-                                <View style={{flex: 1}}></View>
-                                <Text
-                                    style={{
-                                        fontFamily: 'Roboto',
-                                        fontSize: 16*factorRatio,
-                                        textAlign: 'center',
-                                        color: 'white',    
-                                    }}
-                                >
-                                    This is a short message explaining what the the Drumeo Method is, how to use it, and why students houdl begin to go through it.
-                                </Text>
-                                <View style={{height: fullHeight*0.115}}></View>
-                            </View>
                             <View key={'buttons'}
                                 style={{
                                     position: 'absolute',
@@ -194,7 +171,7 @@ export default class PathOverview extends React.Component {
                                         alignSelf: 'stretch',  
                                     }}
                                 >
-                                    <View style={{flex: 1,}}></View>
+                                    <View style={{flex: 1,}}/>
                                     <Text
                                         numberOfLines={2}
                                         style={{
@@ -218,8 +195,9 @@ export default class PathOverview extends React.Component {
                                 </View>
                                 <View key={'buttonRow'}
                                     style={{
-                                        height: (isTablet) ? 80*factorVertical : 70*factorVertical,
+                                        height: (isTablet) ? 80*factorVertical : 60*factorVertical,
                                         flexDirection: 'row',
+                                        backgroundColor: 'green',
                                         zIndex: 11,
                                     }}
                                 >
@@ -255,7 +233,7 @@ export default class PathOverview extends React.Component {
                                     <View key={'start'}
                                         style={{width: fullWidth*0.5}}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <StartIcon
                                             pxFromTop={0}
                                             pxFromLeft={0}
@@ -278,7 +256,7 @@ export default class PathOverview extends React.Component {
                                             pressed={() => console.log('Start')}
                                         />
                                         )}
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
                                     <View key={'infoButton'}
                                         style={[

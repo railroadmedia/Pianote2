@@ -30,7 +30,7 @@ class NavMenuHeaders extends React.Component {
                 }]}
             >
                 {!this.props.isHome && (
-                <View key={'headers'}
+                <View
                     style={{
                         flexDirection: 'row',
                         width: fullWidth,
@@ -59,7 +59,7 @@ class NavMenuHeaders extends React.Component {
                             />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity key={'left'}
+                    <TouchableOpacity
                         onPress={() => this.props.pressLeftHeader()}
                         style={{flexDirection: 'row'}}
                     >
@@ -120,27 +120,43 @@ class NavMenuHeaders extends React.Component {
                 )}
                 
                 {this.props.isHome && (
-                <View key={'headersHome'}
+                <View
                     style={{
                         flexDirection: 'row',
-                        alignContent: 'space-around',
-                        justifyContent: 'space-around',
                         width: fullWidth,
                         zIndex: 3,
-                        paddingLeft: fullWidth*0.035,
-                        paddingRight: fullWidth*0.035,
                     }}
                 >
-                    <Pianote
-                        height={30*factorHorizontal}
-                        width={fullWidth*0.25}
-                        fill={'#fb1b2f'}
-                    />
-                    <TouchableOpacity key={'LESSONS'}
-                        onPress={() => this.props.buttonLeft()}
+                    <View
                         style={{
-                            flexDirection: 'row',
+                            position: 'relative',
+                            left: 0,
+                            bottom: 0,
+                            height: 40*factorHorizontal,
+                            width: 0.33*fullWidth,
                         }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('HOME')}
+                            style={[
+                                styles.centerContent, {
+                                height: '100%',
+                                width: '100%',
+                            }]}
+                        >
+                            <View style={{flex: 1}}/>
+                            <Pianote
+                                height={30*factorHorizontal}
+                                width={fullWidth*0.25}
+                                fill={'#fb1b2f'}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('LESSONS')
+                        }}
+                        style={{flexDirection: 'row'}}
                     >
                         <View>
                             <View style={{flex: 1}}/>
@@ -157,38 +173,51 @@ class NavMenuHeaders extends React.Component {
                             <View style={{flex: 0.2}}/>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity key={'PACKS'}
-                        onPress={() => this.props.buttonMiddle()}
+                    <View style={{flex: 1}}/>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('PACKS')
+                        }}
+                        style={{flexDirection: 'row'}}
                     >
-                        <View style={{flex: 1}}/>
-                        <Text
-                            style={{
-                                fontSize: 16*factorRatio,
-                                fontFamily: 'Roboto-Bold',
-                                fontWeight: '900',
-                                color: 'white',
-                            }}
-                        >
-                            PACKS{' '}
-                        </Text>
-                        <View style={{flex: 0.2}}/>
+                        <View>
+                            <View style={{flex: 1}}/>
+                            <Text
+                                style={{
+                                    fontSize: 16*factorRatio,
+                                    fontFamily: 'Roboto-Bold',
+                                    fontWeight: '900',
+                                    color: 'white',
+                                }}
+                            >
+                                PACKS{' '}
+                            </Text>
+                            <View style={{flex: 0.2}}/>
+                        </View>
                     </TouchableOpacity>
-                    <TouchableOpacity key={'MYLIST'}
-                        onPress={() => this.props.buttonRight()}
+                    <View style={{flex: 1}}/>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('MYLIST')
+                        }}
+                        style={{flexDirection: 'row'}}
                     >
-                        <View style={{flex: 1}}/>
-                        <Text
-                            style={{
-                                fontSize: 16*factorRatio,
-                                fontFamily: 'Roboto-Bold',
-                                fontWeight: '900',
-                                color: 'white',
-                            }}
-                        >
-                            MY LIST{' '}
-                        </Text>
-                        <View style={{flex: 0.2}}/>
+                        <View>
+                            <View style={{flex: 1}}/>
+                            <Text
+                                style={{
+                                    fontSize: 16*factorRatio,
+                                    fontFamily: 'Roboto-Bold',
+                                    fontWeight: '900',
+                                    color: 'white',
+                                }}
+                            >
+                                MY LIST{' '}
+                            </Text>
+                            <View style={{flex: 0.2}}/>
+                        </View>
                     </TouchableOpacity>
+                    <View style={{flex: 1}}/>
                 </View>
                 )}
             </View>

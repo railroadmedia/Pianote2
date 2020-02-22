@@ -6,13 +6,16 @@ import {
     View, 
     Text, 
 } from 'react-native';
+import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
+import XpRank from 'Pianote2/src/modals/XpRank.js';
 import ImagePicker from 'react-native-image-picker';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class Profile extends React.Component {
@@ -22,6 +25,8 @@ export default class Profile extends React.Component {
         this.state = {
             profileImage: '',
             notifications: [1,2,3,4,5],
+            showXpRank: false,
+            showReplyNotification: false,
         }
     }
 
@@ -132,7 +137,11 @@ export default class Profile extends React.Component {
                         <View style={{flex: 1}}/>
                         <View style={{flexDirection: 'row'}}>
                             <View style={{flex: 1}}/>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({showReplyNotification: true})
+                                }}
+                            >
                                 <EntypoIcon        
                                     size={20*factorRatio}
                                     name={'dots-three-horizontal'}
@@ -263,6 +272,13 @@ export default class Profile extends React.Component {
                                         bottom: '7.25%',
                                         height: '5%',
                                         width: '100%',
+                                        shadowOffset: { 
+                                            width: 5*factorRatio, 
+                                            height: 5*factorRatio 
+                                        },
+                                        shadowColor: 'black',
+                                        shadowOpacity: 0.1,
+                                        elevation: 3,
                                     }}
                                 >
                                     <View style={{flex: 1}}/>
@@ -277,55 +293,67 @@ export default class Profile extends React.Component {
                                     >
                                         <View style={{flex: 1}}/>
                                         <View style={[styles.centerContent, {flex: 10}]}>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'Roboto',
-                                                    fontSize: 12.5*factorRatio,
-                                                    fontWeight: '600',
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    this.setState({showXpRank: true})
                                                 }}
                                             >
-                                                XP
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'RobotoCondensed-Regular',
-                                                    fontSize: 22.5*factorRatio,
-                                                    fontWeight: '800',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                11,768
-                                            </Text>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'Roboto',
+                                                        fontSize: 12.5*factorRatio,
+                                                        fontWeight: '600',
+                                                        textAlign: 'center',
+                                                        color: '#fb1b2f',
+                                                    }}
+                                                >
+                                                    XP
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'RobotoCondensed-Regular',
+                                                        fontSize: 22.5*factorRatio,
+                                                        fontWeight: '800',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    11,768
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                         <View style={{flex: 1}}/>
                                         <View style={[styles.centerContent, {flex: 10}]}>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'Roboto',
-                                                    fontSize: 12.5*factorRatio,
-                                                    fontWeight: '600',
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    this.setState({showXpRank: true})
                                                 }}
                                             >
-                                                RANK
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'RobotoCondensed-Regular',
-                                                    fontSize: 22.5*factorRatio,
-                                                    fontWeight: '800',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                MAESTRO
-                                            </Text>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'Roboto',
+                                                        fontSize: 12.5*factorRatio,
+                                                        fontWeight: '600',
+                                                        textAlign: 'center',
+                                                        color: '#fb1b2f',
+                                                    }}
+                                                >
+                                                    RANK
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'RobotoCondensed-Regular',
+                                                        fontSize: 22.5*factorRatio,
+                                                        fontWeight: '800',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    MAESTRO
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                         <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}}/>
                                 </View>
                                 <View key={'imageProfile'}
                                     style={{
@@ -415,28 +443,68 @@ export default class Profile extends React.Component {
                                 </View>
                                 <View style={{flex: 1}}/>
                             </View>   
-                            <View style={{height: fullHeight*0.1}}>
-                                <View style={{height: '50%'}}/>
-                                <View>
-                                    <View style={{flex: 1}}/>
-                                    <Text
-                                        style={{
-                                            paddingLeft: fullWidth*0.05,
-                                            fontSize: 18*factorRatio,
-                                            fontFamily: 'RobotoCondensed-Regular',
-                                            fontWeight: '800',
-                                            color: '#9b9b9b',
-                                        }}
-                                    >
-                                        NOTIFICATIONS
-                                    </Text>
-                                    <View style={{flex: 1}}/>
-                                </View>
+                            <View key={'notifications'}
+                                style={{height: fullHeight*0.115}}
+                            >
+                                <View style={{height: '60%'}}/>
+                                <View style={{flex: 0.5}}/>
+                                <Text
+                                    style={{
+                                        paddingLeft: fullWidth*0.05,
+                                        fontSize: 18*factorRatio,
+                                        fontFamily: 'RobotoCondensed-Regular',
+                                        fontWeight: '800',
+                                        color: '#9b9b9b',
+                                    }}
+                                >
+                                    NOTIFICATIONS
+                                </Text>
+                                <View style={{flex: 1}}/>
                             </View>
-                            <View style={{height: 10*factorVertical}}/>
                             {this.renderNotifications()}
                         </ScrollView>
                     </View>
+                    <Modal key={'XpRank'}
+                        isVisible={this.state.showXpRank}
+                        style={[
+                            styles.centerContent, {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        }]}
+                        animation={'slideInUp'}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={false}
+                        hasBackdrop={false}
+                    >
+                        <XpRank
+                            hideXpRank={() => {
+                                this.setState({showXpRank: false})
+                            }}
+                        />
+                    </Modal>
+                    <Modal key={'replyNotification'}
+                        isVisible={this.state.showReplyNotification}
+                        style={[
+                            styles.centerContent, {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        }]}
+                        animation={'slideInUp'}
+                        backdropOpacity={0.6}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={false}
+                        hasBackdrop={true}
+                    >
+                        <ReplyNotification
+                            hideReplyNotification={() => {
+                                this.setState({showReplyNotification: false})
+                            }}
+                        />
+                    </Modal>                    
                     <NavigationBar
                         currentPage={'PROFILE'}
                     />

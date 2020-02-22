@@ -108,33 +108,10 @@ export default class Packs extends React.Component {
                                 height={'60%'}
                                 borderRadius={0}
                             />
-                            <View key={'message'}
-                                style={{
-                                    position: 'absolute',
-                                    width: fullWidth,
-                                    height: '100%',
-                                    zIndex: 10,
-                                    paddingLeft: fullWidth*0.125,
-                                    paddingRight: fullWidth*0.125,
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'Roboto',
-                                        fontSize: 16*factorRatio,
-                                        textAlign: 'center',
-                                        color: 'white',    
-                                    }}
-                                >
-                                    This is a short message explaining what the pack is, how to use it, and why students should begin to go through it.
-                                </Text>
-                                <View style={{height: fullHeight*0.115}}/>
-                            </View>
                             <View key={'image1'}
                                 style={{
                                     position: 'absolute',
-                                    bottom: fullHeight*0.095,
+                                    bottom: fullHeight*0.01,
                                     zIndex: 2,
                                     flexDirection: 'row',
                                 }}

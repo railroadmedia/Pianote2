@@ -110,7 +110,7 @@ export default class Lessons extends React.Component {
                         <View key={'image'}
                             style={[
                                 styles.centerContent, {
-                                height: fullHeight*0.675,
+                                height: fullHeight*0.595,
                             }]}
                         >
                             <GradientFeature
@@ -151,7 +151,7 @@ export default class Lessons extends React.Component {
                             <View key={'pianoteSVG'}
                                 style={{
                                     position: 'absolute',
-                                    bottom: fullHeight*0.26,
+                                    bottom: fullHeight*0.175,
                                     zIndex: 2,
                                 }}
                             >
@@ -169,37 +169,22 @@ export default class Lessons extends React.Component {
                                     fontFamily: 'RobotoCondensed-Regular',
                                     transform: [{ scaleX: 0.7}],
                                     position: 'absolute',
-                                    bottom: fullHeight*0.18,
+                                    bottom: fullHeight*0.09,
                                     zIndex: 2,
                                     textAlign: 'center',
                                 }}
                             >
                                 FOUNDATIONS
                             </Text>
-                            <Text key={'message'}
-                                style={{
-                                    position: 'absolute',
-                                    fontSize: 15*factorRatio,
-                                    paddingLeft: fullWidth*0.075,
-                                    paddingRight: fullWidth*0.075,
-                                    bottom: fullHeight*0.12,
-                                    zIndex: 2,
-                                    fontFamily: 'Roboto',
-                                    color: 'white',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                This is a short message explaining what the Pianote Foundations are, how to use them, & why students should begin to go through.
-                            </Text>
                             <StartIcon
-                                pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.575}
+                                pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.51}
                                 buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
                                 pxFromLeft={fullWidth*0.065}
                                 buttonWidth={fullWidth*0.42}
                                 pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
                             />
                             <MoreInfoIcon
-                                pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.575}
+                                pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.51}
                                 buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
                                 pxFromRight={fullWidth*0.065}
                                 buttonWidth={fullWidth*0.42}

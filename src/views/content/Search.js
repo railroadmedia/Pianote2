@@ -7,6 +7,7 @@ import {
     Text,
     Keyboard,
     TextInput, 
+    Animated,
     TouchableWithoutFeedback, 
     TouchableOpacity,
     ScrollView,
@@ -16,21 +17,34 @@ import Icon from 'react-native-vector-icons/Entypo';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { searchContent, getContent } from '@musora/services';
+import Student from 'Pianote2/src/assets/img/svgs/student.svg';
+import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import AsyncStorage from '@react-native-community/async-storage';
+import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-expanded-arrow.svg';
 
 export default class Search extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
+            filterSize: new Animated.Value(fullHeight*0.225),
             recentSearchResults: [], 
             searchResults: [],
             searchEntered: false,
             outVideos: false,
             numSearchResults: null,
             searchTerm: '',
+            filterClicked: false,
+            LearningPath: false,
+            Courses: false,
+            Songs: false,
+            StudentFocus: false,
+            showFilters: false,
+
         }
     }  
 
@@ -46,16 +60,16 @@ export default class Search extends React.Component {
 
 
     mapRecentResults() {
-        if(
-            this.state.recentSearchResults.length > 0 &&
-            typeof(this.state.recentSearchResults) !== null
-        ) {
+        if(this.state.recentSearchResults.length > 0 &&
+            typeof(this.state.recentSearchResults) !== null) {
             return this.state.recentSearchResults.map((row, id) => (
                 <View key={id}
                     style={{
                         height: fullHeight*0.065,
-                        borderBottomWidth: 1,
+                        borderBottomWidth: 1*factorRatio,
                         borderBottomColor: '#ececec',
+                        borderTopWidth: 1*factorRatio,
+                        borderTopColor: '#ececec',
                     }}
                 >
                     <TouchableOpacity
@@ -86,7 +100,7 @@ export default class Search extends React.Component {
                 <View key={'noResults'}
                     style={{
                         height: fullHeight*0.07,
-                        borderTopWidth: 1,
+                        borderTopWidth: 1*factorRatio,
                         borderTopColor: '#ececec',
                     }}
                 >
@@ -180,15 +194,21 @@ export default class Search extends React.Component {
                 >
                     <View>
                         <View style={{height: fullHeight*0.90625}}>
-                            <View style={{flex: 0.075}}></View>
-                            <View style={{flex: 0.065, flexDirection: 'row'}}>
-                                <View style={{flex: 0.05}}></View>
+                            <View style={{height: fullHeight*0.055}}/>
+                            <View key={'searchBox'}
+                                style={{
+                                    height: fullHeight*0.05, 
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <View style={{flex: 0.05}}/>
                                 <View 
                                     style={{
                                         flex: (this.state.searchTerm.length > 0) ? 0.75 : 0.9,
                                         backgroundColor: '#f3f6f6',
-                                        borderRadius: 7.5*factorHorizontal,
+                                        borderRadius: 60*factorHorizontal,
                                         flexDirection: 'row',
+                                        paddingLeft: fullWidth*0.02,
                                     }}
                                 >
                                     <View style={[styles.centerContent, {width: 40*factorHorizontal}]}>
@@ -229,10 +249,11 @@ export default class Search extends React.Component {
                                                 searchTerm: '',
                                                 searchResults: [],
                                                 searchEntered: false,
+                                                showFilters: false,
                                             })
                                         }}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <Text
                                             style={{
                                                 flex: 1,
@@ -246,16 +267,16 @@ export default class Search extends React.Component {
                                         >
                                             CANCEL
                                         </Text>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </TouchableOpacity>
                                     )}
                                 </View>
                             </View>
-                            <View style={{flex: 0.04}}></View>
+                            <View style={{height: fullHeight*0.04}}/>
                             <View key={'recentSearches'}
                                 style={[
                                     styles.centerContent, {
-                                    flex: 0.07, 
+                                    height: fullHeight*0.04,
                                     flexDirection: 'row',
                                 }]}
                             >
@@ -283,8 +304,7 @@ export default class Search extends React.Component {
                                         paddingRight: fullWidth*0.05,
                                     }}
                                 >
-                                    <View style={{flex: 1}}></View>
-
+                                    <View style={{flex: 1}}/>
                                     <TouchableOpacity
                                         onPress={() => this.clearRecent()}
                                         style={[styles.centerContent, {
@@ -335,25 +355,378 @@ export default class Search extends React.Component {
                                         paddingRight: fullWidth*0.05,
                                     }]}
                                 >
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.setState({
+                                                showFilters: !this.state.showFilters
+                                            })
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             flexDirection: 'row',
+                                            height: 37.5*factorRatio,
+                                            width: 37.5*factorRatio,
+                                            borderRadius: 200,
+                                            backgroundColor: (
+                                                this.state.showFilters
+                                            ) ?  'red' : 'white',
                                             transform: [{ rotate: '90deg'}],
                                         }]}
                                     >
                                         <IonIcon 
-                                            size={25*factorRatio}
+                                            size={22.5*factorRatio}
                                             name={'md-options'}
-                                            color={'#c2c2c2'}
+                                            color={(
+                                                this.state.showFilters
+                                            ) ? 'white' : '#c2c2c2'}
                                         />
                                     </TouchableOpacity>
                                 </View>
                                 )}
                             </View>
-                            <View style={{flex: 0.02}}></View>
+                            <View style={{height: fullHeight*0.015}}/>
+                            {this.state.showFilters && (
+                            <Animated.View key={'filterOptions'} 
+                                style={{
+                                    height: this.state.filterSize, 
+                                    width: fullWidth,
+                                    paddingTop: 2.5*factorRatio,
+                                }}
+                            >
+                                <View key={'content'}
+                                    style={{
+                                        flex: 1,
+                                    }}
+                                >
+                                    <View key={'upper'}
+                                        style={{
+                                            flex: 0.5,
+                                            flexDirection: 'row',
+                                            alignSelf: 'stretch',
+                                        }}
+                                    >
+                                        <View key={'level'}
+                                            style={{flex: 1}}
+                                        >
+                                            <View 
+                                                style={{
+                                                    flex: 1,
+                                                    flexDirection: 'row',
+                                                }}
+                                            >
+                                                <View style={{flex: 1}}/>
+                                                <View
+                                                    style={{
+                                                        height: '100%',
+                                                        width: '93%',
+                                                        alignSelf: 'stretch',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}}/>
+                                                    <View
+                                                        style={{
+                                                            height: '80%',
+                                                            width: '100%',
+                                                            borderRadius: 40*factorRatio,
+                                                            alignSelf: 'stretch',
+                                                            backgroundColor: (
+                                                                (this.state.LearningPath) ? '#fb1b2f' : 'black'
+                                                            ),
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    LearningPath: !this.state.LearningPath
+                                                                })
+                                                            }}
+                                                            style={[
+                                                                styles.centerContent, {
+                                                                height: '100%',
+                                                                width: '100%',
+                                                                flexDirection: 'row',
+                                                            }]}
+                                                        >
+                                                            <LearningPaths
+                                                                height={15*factorRatio}
+                                                                width={15*factorRatio}
+                                                                fill={'white'}
+                                                            />
+                                                            <View style={{width: 5*factorHorizontal}}/>
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 14*factorRatio,
+                                                                    fontWeight: '800',
+                                                                    color: 'white',
+                                                                    fontFamily: 'RobotoCondensed-Regular',
+                                                                }}
+                                                            >
+                                                                LEARNING PATHS
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    <View style={{flex: 1}}/>
+                                                </View>
+                                                <View style={{flex: 1}}/>
+                                            </View>
+                                        </View>
+                                        <View key={'instructor'}
+                                            style={{flex: 1}}
+                                        >
+                                            <View 
+                                                style={{
+                                                    flex: 1,
+                                                    flexDirection: 'row',
+                                                }}
+                                            >
+                                                <View style={{flex: 1}}/>
+                                                <View
+                                                    style={{
+                                                        height: '100%',
+                                                        width: '93%',
+                                                        alignSelf: 'stretch',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}}/>
+                                                    <View
+                                                        style={{
+                                                            height: '80%',
+                                                            width: '100%',
+                                                            borderRadius: 35*factorRatio,
+                                                            alignSelf: 'stretch',
+                                                            backgroundColor: (
+                                                                (this.state.Courses) ? '#fb1b2f' : 'black'
+                                                            ),
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    Courses: !this.state.Courses
+                                                                })
+                                                            }}
+                                                            style={[
+                                                                styles.centerContent, {
+                                                                height: '100%',
+                                                                width: '100%',
+                                                                flexDirection: 'row',
+                                                            }]}
+                                                        >
+                                                            <Graduation
+                                                                height={20*factorRatio}
+                                                                width={20*factorRatio}
+                                                                fill={'white'}
+                                                            />
+                                                            <View style={{width: 5*factorHorizontal}}/>
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 14*factorRatio,
+                                                                    fontWeight: '800',
+                                                                    color: 'white',
+                                                                    fontFamily: 'RobotoCondensed-Regular',
+                                                                }}
+                                                            >
+                                                                COURSES
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    <View style={{flex: 1}}/>
+                                                </View>
+                                                <View style={{flex: 1}}/>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View key={'lower'}
+                                        style={{
+                                            flex: 0.5,
+                                            flexDirection: 'row',
+                                            alignSelf: 'stretch',
+                                        }}
+                                    >
+                                        <View key={'topic'}
+                                            style={{flex: 1}}
+                                        >
+                                            <View 
+                                                style={{
+                                                    flex: 1,
+                                                    flexDirection: 'row',
+                                                }}
+                                            >
+                                                <View style={{flex: 1}}/>
+                                                <View
+                                                    style={{
+                                                        height: '100%',
+                                                        width: '93%',
+                                                        alignSelf: 'stretch',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}}/>
+                                                    <View
+                                                        style={{
+                                                            height: '80%',
+                                                            width: '100%',
+                                                            borderRadius: 35*factorRatio,
+                                                            alignSelf: 'stretch',
+                                                            backgroundColor: (
+                                                                (this.state.StudentFocus) ? '#fb1b2f' : 'black'
+                                                            ),
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    StudentFocus: !this.state.StudentFocus
+                                                                })
+                                                            }}
+                                                            style={[
+                                                                styles.centerContent, {
+                                                                height: '100%',
+                                                                width: '100%',
+                                                                flexDirection: 'row',
+                                                            }]}
+                                                        >
+                                                            <Student
+                                                                height={15*factorRatio}
+                                                                width={15*factorRatio}
+                                                                fill={'white'}
+                                                            />
+                                                            <View style={{width: 5*factorHorizontal}}/>
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 14*factorRatio,
+                                                                    fontWeight: '800',
+                                                                    color: 'white',
+                                                                    fontFamily: 'RobotoCondensed-Regular',
+                                                                }}
+                                                            >
+                                                                STUDENT FOCUS
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    <View style={{flex: 1}}/>
+                                                </View>
+                                                <View style={{flex: 1}}/>
+                                            </View>
+                                        </View>
+                                        <View key={'progress'}
+                                            style={{flex: 1}}
+                                        >
+                                            <View 
+                                                style={{
+                                                    flex: 1,
+                                                    flexDirection: 'row',
+                                                }}
+                                            >
+                                                <View style={{flex: 1}}/>
+                                                <View
+                                                    style={{
+                                                        height: '100%',
+                                                        width: '93%',
+                                                        alignSelf: 'stretch',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}}/>
+                                                    <View
+                                                        style={{
+                                                            height: '80%',
+                                                            width: '100%',
+                                                            borderRadius: 35*factorRatio,
+                                                            alignSelf: 'stretch',
+                                                            backgroundColor: (
+                                                                (this.state.Songs) ? '#fb1b2f' : 'black'
+                                                            ),
+                                                        }}
+                                                    >
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    Songs: !this.state.Songs
+                                                                })
+                                                            }}
+                                                            style={[
+                                                                styles.centerContent, {
+                                                                height: '100%',
+                                                                width: '100%',
+                                                                flexDirection: 'row',
+                                                            }]}
+                                                        >
+                                                            <Songs
+                                                                height={17.5*factorRatio}
+                                                                width={17.5*factorRatio}
+                                                                fill={'white'}
+                                                            />
+                                                            <View style={{width: 5*factorHorizontal}}/>
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 14*factorRatio,
+                                                                    fontWeight: '800',
+                                                                    color: 'white',
+                                                                    fontFamily: 'RobotoCondensed-Regular',
+                                                                }}
+                                                            >
+                                                                SONGS
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    <View style={{flex: 1}}/>
+                                                </View>
+                                                <View style={{flex: 1}}/>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View key={'clear'}
+                                    style={{
+                                        height: fullHeight*0.075,
+                                        backgroundColor: 'white',
+                                    }}
+                                >
+                                    <View style={{flex: 1}}/>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                Songs: false,
+                                                StudentFocus: false,
+                                                Courses: false,
+                                                LearningPath: false,
+                                            })
+                                        }}
+                                        style={[
+                                            styles.centerContent, {
+                                            flexDirection: 'row',
+                                        }]}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.centerContent, {
+                                                fontSize: 14*factorRatio,
+                                                color: 'grey',
+                                                marginRight: 0.5,
+                                                textAlign: 'center',
+                                                fontWeight: '700',
+                                                fontFamily: 'Roboto',
+                                            }]}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.centerContent, {
+                                                    fontSize: 14*factorRatio,
+                                                    color: 'grey',
+                                                    textAlign: 'right',
+                                                    fontWeight: '700',
+                                                    fontFamily: 'Roboto',
+                                                }]}
+                                            >
+                                                x </Text>
+                                            CLEAR FILTERS 
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <View style={{flex: 1}}/>
+                                </View>
+                            </Animated.View>
+                            )}
+                            
                             <ScrollView style={{flex: 0.73}}>
                                 {!this.state.searchEntered && (
                                 <View>

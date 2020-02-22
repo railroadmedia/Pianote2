@@ -8,15 +8,17 @@ import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Comments from '../../components/Comments';
+import SoundSlice from '../../modals/SoundSlice.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import AssignmentComplete from '../../modals/LessonComplete.js';
+import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from 'Pianote2/src/modals/QualitySettings.js';
 import VideoPlayerOptions from 'Pianote2/src/modals/VideoPlayerOptions.js';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import SoundSlice from '../../modals/SoundSlice';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 
 export default class VideoPlayer extends React.Component {
     static navigationOptions = {header: null};
@@ -29,20 +31,18 @@ export default class VideoPlayer extends React.Component {
             showSoundSlice: false,
             showVideoPlayerOptions: false,
             showQualitySettings: false,
+            showAssignmentComplete: false, 
+            showLessonComplete: false, 
             title: 'The Four Pillars \n Of Improvisation',
-
             page: 1, // page of content
             outVideos: false, // if no more videos
             items: [], // hello
-
             progress: 0.73, // 0 - 1 for percent thru course
-            
             assignmentList: [
                 ['Learn The Fill', 1],
                 ['Learn The Beat', 0],
                 ['Put It Together', 0],
             ], // assingments
-
             comments: [
                 ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
                 ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 0, 28,],
@@ -53,7 +53,6 @@ export default class VideoPlayer extends React.Component {
                 ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
                 ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
             ], // video's comments
-
             items: [], // video lessons to pass to vertical video list
             page: 0,
             outComments: false, // if out of comments
@@ -489,7 +488,10 @@ export default class VideoPlayer extends React.Component {
                                         paddingRight: fullWidth*0.0375,
                                     }}
                                 >
-                                    <View 
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({showLessonComplete: true})
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             height: 50*factorRatio,
@@ -507,7 +509,7 @@ export default class VideoPlayer extends React.Component {
                                         >
                                             COMPLETE LESSONS
                                         </Text>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                             <View key={'assingmentsHeader'}
@@ -693,6 +695,47 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>
+                <Modal key={'completeLesson'}
+                    isVisible={this.state.showAssignmentComplete}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    backdropOpacity={0.6}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={false}
+                    hasBackdrop={true}
+                >
+                    <AssignmentComplete
+                        showAssignmentComplete={() => {
+                            this.setState({showAssignmentComplete: false})
+                        }}
+                    />
+                </Modal>         
+                <Modal key={'completeLesson'}
+                    isVisible={this.state.showLessonComplete}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={false}
+                    hasBackdrop={false}
+                >
+                    <LessonComplete
+                        hideLessonComplete={() => {
+                            this.setState({showLessonComplete: false})
+                        }}
+                    />
+                </Modal>                                 
             </View>
         )
     }

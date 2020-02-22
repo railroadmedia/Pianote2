@@ -36,7 +36,7 @@ class ReplyNotification extends React.Component {
                 }}
             >
                 <View key={'buffTop'}
-                    style={{height: '33%'}}
+                    style={{flex: 1}}
                 >
                     <TouchableOpacity
                         onPress={() => this.props.hideReplyNotification()}
@@ -55,28 +55,14 @@ class ReplyNotification extends React.Component {
                         flexDirection: 'row',
                     }}
                 >
-                    <View key={'buffLeft'}
-                        style={{width: '5%'}}
-                    >
-                        <TouchableOpacity
-                            onPress={() => this.props.hideReplyNotification()}
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                            }}
-                        >
-
-                        </TouchableOpacity>
-                    </View>
-                    <View  key={'content'}
+                    <View key={'content'}
                         style={{
                             height: '100%',
-                            width: '90%',
+                            width: '100%',
                             backgroundColor: 'white',
-                            borderRadius: 15*factorRatio,
                         }}
                     >
-                        <View style={{height: '10%'}}/>
+                        <View style={{height: '2%'}}/>
                         <View key={'profile'}
                             style={{
                                 flexDirection: 'row',
@@ -199,12 +185,11 @@ class ReplyNotification extends React.Component {
                                 <View style={{flex: 1}}/>
                                 <View 
                                     style={{
-                                        flexDirection: 'row', 
+                                        flexDirection: 'row',
                                         alignItems: 'center',
                                         paddingLeft: fullWidth*0.035,
                                     }}
                                 >
-                                    
                                     <IonIcon
                                         name={'ios-notifications-outline'}
                                         size={26*factorRatio}
@@ -222,34 +207,9 @@ class ReplyNotification extends React.Component {
                                 <View style={{flex: 1}}/>
                             </TouchableOpacity>
                         </View>
-                    </View>
-                    <View key={'buffRight'}
-                        style={{width: '5%'}}
-                    >
-                        <TouchableOpacity
-                            onPress={() => this.props.hideReplyNotification()}
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                            }}
-                        >
-
-                        </TouchableOpacity>
+                        <View style={{height: '10%'}}/>
                     </View>
                 </View>            
-                <View key={'buffBottom'}
-                    style={{height: '27.5%'}}
-                >
-                    <TouchableOpacity
-                        onPress={() => this.props.hideReplyNotification()}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    >
-
-                    </TouchableOpacity>
-                </View>
             </View>
         )
     }

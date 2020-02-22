@@ -28,12 +28,12 @@ class LessonComplete extends React.Component {
                         styles.centerContent, {
                         height: fullHeight,
                         width: fullWidth,
-                        backgroundColor: 'white',
+                        backgroundColor: 'transparent',
                     }]}
-                    blurType={'dark'}
-                    blurAmount={100}
+                    blurType={'xlight'}
+                    blurAmount={10}
                 >
-                    <View style={{flex: 0.9, alignSelf: 'stretch',}}>
+                    <View style={{flex: 0.9, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideLessonComplete()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
@@ -284,7 +284,7 @@ class LessonComplete extends React.Component {
                         </View>
                         <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}/>
                     </View>
-                    <View style={{flex: 1.1, alignSelf: 'stretch',}}>
+                    <View style={{flex: 1.1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideLessonComplete()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
