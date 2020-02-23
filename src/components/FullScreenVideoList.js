@@ -5,14 +5,15 @@ import React from 'react';
 import { 
     View, 
     Text, 
-    FlatList, 
     ActivityIndicator, 
     StyleSheet,
     TouchableOpacity, 
     TouchableHighlight 
 } from 'react-native';
+import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
+import TheFourPillars from '../modals/TheFourPillars';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 class FullScreenVideoList extends React.Component {
@@ -20,6 +21,7 @@ class FullScreenVideoList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            showCourse: false,
         }
     }
 
@@ -33,12 +35,12 @@ class FullScreenVideoList extends React.Component {
                         height: this.props.itemHeight
                     }]}
                 >
-                    <View style={{flex: 1}}></View>
+                    <View style={{flex: 1}}/>
                     <ActivityIndicator 
                         size={'small'}
                         color={'grey'}
                     />
-                    <View style={{flex: 1}}></View>
+                    <View style={{flex: 1}}/>
                 </View>
             )
         } else {
@@ -59,6 +61,8 @@ class FullScreenVideoList extends React.Component {
                                 }]}
                             >
                                 <TouchableOpacity
+                                    delayLongPress={250}
+                                    onLongPress={() => this.setState({showCourse: true})}
                                     onPress={()=>this.props.navigation.navigate('ASSIGNMENTS')}
                                     style={{
                                         flex: 1, 
@@ -77,7 +81,7 @@ class FullScreenVideoList extends React.Component {
                                 </TouchableOpacity>
                             </View>
                         </TouchableHighlight>
-                        <View style={{height: 10*factorVertical}}></View>
+                        <View style={{height: 10*factorVertical}}/>
                         <View 
                             style={{
                                 width: this.props.itemWidth,
@@ -97,7 +101,7 @@ class FullScreenVideoList extends React.Component {
                                 >
                                     {item.title}
                                 </Text>
-                                <View style={{height: 3*factorRatio}}></View>
+                                <View style={{height: 3*factorRatio}}/>
                                 {this.props.showArtist && (
                                 <Text
                                     numberOfLines={2}
@@ -119,7 +123,7 @@ class FullScreenVideoList extends React.Component {
                                     flexDirection: 'row',
                                 }}
                             >
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                                 {this.props.showArtist && (
                                 <TouchableOpacity
                                     onPress={() => {}}
@@ -197,10 +201,34 @@ class FullScreenVideoList extends React.Component {
                             </TouchableOpacity>
                             <View style={{flex: 0.1}}/>
                         </View>
-                        <View style={{height: '0.75%'}}/>
+                        <View style={{height: 10*factorVertical}}/>
                     </View>
                     {this.mapResults()}
                 </View>
+                <Modal key={'modal'}
+                    isVisible={this.state.showCourse}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={false}
+                    backdropColor={'white'}
+                    backdropOpacity={0.79}
+                >
+                    <TheFourPillars
+                        hideTheFourPillars={() => {
+                            this.setState({
+                                showCourse: false
+                            })
+                        }}
+                    />
+                </Modal>       
             </View>
         )
     }

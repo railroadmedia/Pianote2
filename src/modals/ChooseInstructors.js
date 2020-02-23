@@ -17,7 +17,25 @@ class ChooseInstructors extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            chosenInstructor: 2,
+            lisa: this.props.lisa,
+            cassi: this.props.cassi,
+            jordan: this.props.jordan,
+            nate: this.props.nate,
+            brett: this.props.brett,
+            josh: this.props.josh,
+        }
+    }
+
+    isChosen = () => {
+        if(this.state.lisa !== false ||
+            this.state.cassi !== false ||
+            this.state.jordan !== false ||
+            this.state.nate !== false ||
+            this.state.brett !== false ||
+            this.state.josh !== false) {
+            this.props.setInstructor(true)
+        } else {
+            this.props.setInstructor(false)
         }
     }
 
@@ -30,10 +48,17 @@ class ChooseInstructors extends React.Component {
                         styles.centerContent, {
                         height: fullHeight,
                         width: fullWidth,
-                        backgroundColor: 'white',
+                        backgroundColor: 'transparent',
+                        shadowOffset: { 
+                            width: 5*factorRatio, 
+                            height: 10*factorRatio,
+                        },
+                        shadowColor: 'black',
+                        shadowOpacity: 0.1,
+                        elevation: 3,
                     }]}
-                    blurType={'dark'}
-                    blurAmount={100}
+                    blurType={'xlight'}
+                    blurAmount={10}
                 >
                     
                     <View style={{flex: 1, alignSelf: 'stretch',}}>
@@ -125,12 +150,10 @@ class ChooseInstructors extends React.Component {
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({chosenInstructor: 1})}
+                                            onPress={() => this.setState({lisa: !this.state.lisa})}
                                             style={{
-                                                borderWidth: ((this.state.chosenInstructor == 1) ? 
-                                                    4*factorRatio : 2.5*factorRatio),
-                                                borderColor: ((this.state.chosenInstructor == 1) ? 
-                                                    '#fb1b2f' : 'black'),
+                                                borderWidth: this.state.lisa ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.lisa ? '#fb1b2f' : 'black',
                                                 height: 80*factorRatio,
                                                 width: 80*factorRatio,
                                                 borderRadius: 300,
@@ -162,12 +185,10 @@ class ChooseInstructors extends React.Component {
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({chosenInstructor: 2})}
+                                            onPress={() => this.setState({cassi: !this.state.cassi})}
                                             style={{
-                                                borderWidth: ((this.state.chosenInstructor == 2) ? 
-                                                    4*factorRatio : 2.5*factorRatio),
-                                                borderColor: ((this.state.chosenInstructor == 2) ? 
-                                                    '#fb1b2f' : 'black'),
+                                                borderWidth: this.state.cassi ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.cassi ? '#fb1b2f' : 'black',
                                                 height: 80*factorRatio,
                                                 width: 80*factorRatio,
                                                 borderRadius: 300,
@@ -198,12 +219,10 @@ class ChooseInstructors extends React.Component {
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({chosenInstructor: 3})}
+                                            onPress={() => this.setState({jordan: !this.state.jordan})}
                                             style={{
-                                                borderWidth: ((this.state.chosenInstructor == 3) ? 
-                                                    4*factorRatio : 2.5*factorRatio),
-                                                borderColor: ((this.state.chosenInstructor == 3) ? 
-                                                    '#fb1b2f' : 'black'),
+                                                borderWidth: this.state.jordan ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.jordan ? '#fb1b2f' : 'black',
                                                 height: 80*factorRatio,
                                                 width: 80*factorRatio,
                                                 borderRadius: 300,
@@ -244,12 +263,10 @@ class ChooseInstructors extends React.Component {
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({chosenInstructor: 4})}
+                                            onPress={() => this.setState({nate: !this.state.nate})}
                                             style={{
-                                                borderWidth: ((this.state.chosenInstructor == 4) ? 
-                                                    4*factorRatio : 2.5*factorRatio),
-                                                borderColor: ((this.state.chosenInstructor == 4) ? 
-                                                    '#fb1b2f' : 'black'),
+                                                borderWidth: this.state.nate ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.nate ? '#fb1b2f' : 'black',
                                                 height: 80*factorRatio,
                                                 width: 80*factorRatio,
                                                 borderRadius: 300,
@@ -280,12 +297,10 @@ class ChooseInstructors extends React.Component {
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({chosenInstructor: 5})}
+                                            onPress={() => this.setState({brett: !this.state.brett})}
                                             style={{
-                                                borderWidth: ((this.state.chosenInstructor == 5) ? 
-                                                    4*factorRatio : 2.5*factorRatio),
-                                                borderColor: ((this.state.chosenInstructor == 5) ? 
-                                                    '#fb1b2f' : 'black'),
+                                                borderWidth: this.state.brett ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.brett ? '#fb1b2f' : 'black',
                                                 height: 80*factorRatio,
                                                 width: 80*factorRatio,
                                                 borderRadius: 300,
@@ -316,12 +331,10 @@ class ChooseInstructors extends React.Component {
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({chosenInstructor: 6})}
+                                            onPress={() => this.setState({josh: !this.state.josh})}
                                             style={{
-                                                borderWidth: ((this.state.chosenInstructor == 6) ? 
-                                                    4*factorRatio : 2.5*factorRatio),
-                                                borderColor: ((this.state.chosenInstructor == 6) ? 
-                                                    '#fb1b2f' : 'black'),
+                                                borderWidth: this.state.josh ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.josh ? '#fb1b2f' : 'black',
                                                 height: 80*factorRatio,
                                                 width: 80*factorRatio,
                                                 borderRadius: 300,
@@ -367,6 +380,17 @@ class ChooseInstructors extends React.Component {
                                         }]}
                                     >
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.isChosen(),
+                                                this.props.hideChooseInstructors(
+                                                    this.state.lisa,
+                                                    this.state.cassi,
+                                                    this.state.jordan,
+                                                    this.state.nate,
+                                                    this.state.brett,
+                                                    this.state.josh,
+                                                )
+                                            }}
                                             style={[
                                                 styles.centerContent, {
                                                 flex:1,
@@ -402,7 +426,16 @@ class ChooseInstructors extends React.Component {
                                 }]}
                             >
                                 <TouchableOpacity
-                                
+                                    onPress={() => {
+                                        this.setState({
+                                            lisa: false,
+                                            cassi: false,
+                                            jordan: false,
+                                            nate: false,
+                                            brett: false,
+                                            josh: false,
+                                        })
+                                    }}
                                 >
                                     <View
                                         style={[

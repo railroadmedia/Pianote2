@@ -1,19 +1,5 @@
 /**
  * VerticalVideoList
- *   Props
- *      outVideos - {boolean} - if no more pages to receive && render footer
- *      items - {array} - object with videos in it
- *      imageHeight - {float} - height of video image
- *      imageWidth - {float} - width of video image
- *      containerWidth - {float} - width of flatlist object
- *      containerHeight - {float} - height of flatlist object
- *      fetchVideos - {function} - call it at bottom of list to get more
- *      showsNextVideo - {boolean} - whether to show highlighted next video
- *      showProgress ? 
- *      showLines - {boolean} - whether show red bars on top
- *      imageRadius - {float} - radius of image
- *      containerBorderWidth - {float} - width of container
- *      renderType - {'Mapped' | 'Flatlist'} - whether to render flatlist or list.map()
 */
 import React from 'react';
 import { 
@@ -23,17 +9,20 @@ import {
     TouchableOpacity,
     FlatList, 
 } from 'react-native';
+import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import Progress from 'Pianote2/src/assets/img/svgs/progress.svg'
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import { withNavigation } from 'react-navigation';
+import TheFourPillars from '../modals/TheFourPillars';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
 class VerticalVideoList extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
+            showCourse: false,
         }
     }
 
@@ -204,7 +193,11 @@ class VerticalVideoList extends React.Component {
                         }}
                     >
                         <TouchableOpacity 
-                            onPress={() => {}}
+                            onPress={() => {
+                                this.setState({
+                                    showCourse: true,
+                                })
+                            }}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    
                         >
@@ -527,7 +520,30 @@ class VerticalVideoList extends React.Component {
                         this.renderFlatlist() : this.renderMappedList()
                     }
                 </View>
-            
+                <Modal key={'modal'}
+                        isVisible={this.state.showCourse}
+                        style={[
+                            styles.centerContent, {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        }]}
+                        animation={'slideInUp'}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={true}
+                        hasBackdrop={false}
+                        backdropColor={'white'}
+                        backdropOpacity={0.79}
+                    >
+                        <TheFourPillars
+                            hideTheFourPillars={() => {
+                                this.setState({
+                                    showCourse: false
+                                })
+                            }}
+                        />
+                    </Modal>
             </View>
         )
     }

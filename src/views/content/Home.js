@@ -181,38 +181,38 @@ export default class Home extends React.Component {
                                 <View key={'inProgress'}
                                     style={{
                                         height: fullHeight*0.3,
-                                        paddingLeft: 20*factorHorizontal,
+                                        paddingLeft: 15*factorHorizontal,
                                         backgroundColor: 'white',
                                     }}
                                 >
                                     <HorizontalVideoList
                                         items={this.state.inProgress}
                                         Title={'IN PROGRESS'}
+                                        Description={''}
                                         seeAllRoute={'PACKUSER'}
                                         itemWidth={fullWidth*0.6}
                                         itemHeight={fullHeight*0.155}
                                         showArtist={true}
                                     />
                                 </View>
-                                <View style={{height: 15*factorRatio}}/>
                                 <View key={'newLessons'}
-                                style={{
-                                    width: fullWidth,
-                                    paddingLeft: fullWidth*0.035,
-                                    paddingRight: fullWidth*0.035,
-                                    backgroundColor: 'white',
-                                }}
-                            >
-                                <FullScreenVideoList
-                                    items={this.state.newLessons}
-                                    showArtist={true}
-                                    Title={'NEW LESSONS'}
-                                    isHorizontal={false}
-                                    seeAllRoute={'PACKUSER'}
-                                    itemWidth={fullWidth*0.93}
-                                    itemHeight={fullHeight*0.245}
-                                />
-                            </View>
+                                    style={{
+                                        width: fullWidth,
+                                        paddingLeft: 15*factorHorizontal,
+                                        paddingRight: 15*factorHorizontal,
+                                        backgroundColor: 'white',
+                                    }}
+                                >
+                                    <FullScreenVideoList
+                                        items={this.state.newLessons}
+                                        showArtist={true}
+                                        Title={'NEW LESSONS'}
+                                        isHorizontal={false}
+                                        seeAllRoute={'PACKUSER'}
+                                        itemWidth={fullWidth*0.93}
+                                        itemHeight={fullHeight*0.245}
+                                    />
+                                </View>
                             </View>
                         </ScrollView>
                     </View>

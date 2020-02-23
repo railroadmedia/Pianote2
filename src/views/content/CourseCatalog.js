@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     ScrollView,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -16,7 +17,9 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Topic from 'Pianote2/src/assets/img/svgs/topics.svg';
 import Levels from 'Pianote2/src/assets/img/svgs/levels.svg';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
+import ChooseYourLevel from '../../modals/ChooseYourLevel.js';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import ChooseInstructors from '../../modals/ChooseInstructors.js';
 import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
@@ -30,8 +33,30 @@ export default class CourseCatalog extends React.Component {
             filterClicked: false, // clicked red button center bottom of image
             filterSize: new Animated.Value(fullHeight*0.225), // shows hidden filters
             outVideos: false, // if no more videos to load
+            showChooseInstructors: false,
+            showChooseYourLevel: false,
             items: [], // videos loaded
             page: 0, // current page
+            levelChosen: false,
+            instructorChosen: false,
+            topicChosen: false,
+            progressChosen: false,
+            circle1: false, 
+            circle2: false,
+            circle3: false,
+            circle4: false,
+            circle5: false,
+            circle6: false,
+            circle7: false,
+            circle8: false,
+            circle9: false,
+            circle10: false,
+            lisa: false, 
+            cassi: false,
+            jordan: false,
+            nate: false,
+            brett: false,
+            josh: false,
         }
     }
 
@@ -154,7 +179,7 @@ export default class CourseCatalog extends React.Component {
                                 flexDirection: 'row',
                             }}
                         >
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                             <View key={'filter'}
                                 style={[
                                     styles.centerContent, {
@@ -183,7 +208,7 @@ export default class CourseCatalog extends React.Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                         </View>
                         <View key={'image'}
                             style={{
@@ -225,7 +250,8 @@ export default class CourseCatalog extends React.Component {
                                 resizeMode={FastImage.resizeMode.stretch}
                             />
                         </View>
-                        <Animated.View key={'filterOptions'} 
+                        {this.state.filterClicked && (
+                        <View key={'filterOptions'} 
                             style={{
                                 height: this.state.filterSize, 
                                 width: fullWidth,
@@ -253,7 +279,7 @@ export default class CourseCatalog extends React.Component {
                                                 flexDirection: 'row',
                                             }}
                                         >
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                             <View
                                                 style={{
                                                     height: '100%',
@@ -261,18 +287,25 @@ export default class CourseCatalog extends React.Component {
                                                     alignSelf: 'stretch',
                                                 }}
                                             >
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                                 <View
                                                     style={{
                                                         height: '80%',
                                                         width: '100%',
                                                         borderRadius: 40*factorRatio,
                                                         alignSelf: 'stretch',
-                                                        backgroundColor: 'black',
+                                                        backgroundColor: (
+                                                            this.state.levelChosen ? 
+                                                                '#fb1b2f' : 'black'
+                                                        ),
                                                     }}
                                                 >
                                                     <TouchableOpacity
-                                                        onPress={() => {}}
+                                                        onPress={() => {
+                                                            this.setState({
+                                                                showChooseYourLevel: true
+                                                            })
+                                                        }}
                                                         style={[
                                                             styles.centerContent, {
                                                             height: '100%',
@@ -285,7 +318,7 @@ export default class CourseCatalog extends React.Component {
                                                             width={12.5*factorRatio}
                                                             fill={'white'}
                                                         />
-                                                        <View style={{width: 5*factorHorizontal}}></View>
+                                                        <View style={{width: 5*factorHorizontal}}/>
                                                         <Text
                                                             style={{
                                                                 fontFamily: 'Roboto',
@@ -298,9 +331,9 @@ export default class CourseCatalog extends React.Component {
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                             </View>
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                         </View>
                                     </View>
                                     <View key={'instructor'}
@@ -312,7 +345,7 @@ export default class CourseCatalog extends React.Component {
                                                 flexDirection: 'row',
                                             }}
                                         >
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                             <View
                                                 style={{
                                                     height: '100%',
@@ -320,18 +353,23 @@ export default class CourseCatalog extends React.Component {
                                                     alignSelf: 'stretch',
                                                 }}
                                             >
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                                 <View
                                                     style={{
                                                         height: '80%',
                                                         width: '100%',
                                                         borderRadius: 35*factorRatio,
-                                                        alignSelf: 'stretch',
-                                                        backgroundColor: 'black',
+                                                        alignSelf: 'stretch',       
+                                                        backgroundColor: this.state.instructorChosen ? 
+                                                                '#fb1b2f' : 'black',
                                                     }}
                                                 >
                                                     <TouchableOpacity
-                                                        onPress={() => {}}
+                                                        onPress={() => {
+                                                            this.setState({
+                                                                showChooseInstructors: true
+                                                            })
+                                                        }}
                                                         style={[
                                                             styles.centerContent, {
                                                             height: '100%',
@@ -344,7 +382,7 @@ export default class CourseCatalog extends React.Component {
                                                             size={17.5*factorRatio}
                                                             color={'white'}
                                                         />
-                                                        <View style={{width: 5*factorHorizontal}}></View>
+                                                        <View style={{width: 5*factorHorizontal}}/>
                                                         <Text
                                                             style={{
                                                                 fontFamily: 'Roboto',
@@ -357,9 +395,9 @@ export default class CourseCatalog extends React.Component {
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                             </View>
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                         </View>
                                     </View>
                                 </View>
@@ -379,7 +417,7 @@ export default class CourseCatalog extends React.Component {
                                                 flexDirection: 'row',
                                             }}
                                         >
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                             <View
                                                 style={{
                                                     height: '100%',
@@ -387,18 +425,23 @@ export default class CourseCatalog extends React.Component {
                                                     alignSelf: 'stretch',
                                                 }}
                                             >
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                                 <View
                                                     style={{
                                                         height: '80%',
                                                         width: '100%',
                                                         borderRadius: 35*factorRatio,
                                                         alignSelf: 'stretch',
-                                                        backgroundColor: 'black',
+                                                        backgroundColor: this.state.topicChosen ? 
+                                                                '#fb1b2f' : 'black',
                                                     }}
                                                 >
                                                     <TouchableOpacity
-                                                        onPress={() => {}}
+                                                        onPress={() => {
+                                                            this.setState({
+                                                                topicChosen: !this.state.topicChosen
+                                                            })
+                                                        }}
                                                         style={[
                                                             styles.centerContent, {
                                                             height: '100%',
@@ -411,7 +454,7 @@ export default class CourseCatalog extends React.Component {
                                                             width={18*factorRatio}
                                                             fill={'white'}
                                                         />
-                                                        <View style={{width: 5*factorHorizontal}}></View>
+                                                        <View style={{width: 5*factorHorizontal}}/>
                                                         <Text
                                                             style={{
                                                                 fontFamily: 'Roboto',
@@ -424,9 +467,9 @@ export default class CourseCatalog extends React.Component {
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                             </View>
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                         </View>
                                     </View>
                                     <View key={'progress'}
@@ -438,7 +481,7 @@ export default class CourseCatalog extends React.Component {
                                                 flexDirection: 'row',
                                             }}
                                         >
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                             <View
                                                 style={{
                                                     height: '100%',
@@ -446,18 +489,23 @@ export default class CourseCatalog extends React.Component {
                                                     alignSelf: 'stretch',
                                                 }}
                                             >
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                                 <View
                                                     style={{
                                                         height: '80%',
                                                         width: '100%',
                                                         borderRadius: 35*factorRatio,
                                                         alignSelf: 'stretch',
-                                                        backgroundColor: 'black',
+                                                        backgroundColor: this.state.progressChosen ? 
+                                                                '#fb1b2f' : 'black',
                                                     }}
                                                 >
                                                     <TouchableOpacity
-                                                        onPress={() => {}}
+                                                        onPress={() => {
+                                                            this.setState({
+                                                                progressChosen: !this.state.progressChosen
+                                                            })
+                                                        }}
                                                         style={[
                                                             styles.centerContent, {
                                                             height: '100%',
@@ -470,7 +518,7 @@ export default class CourseCatalog extends React.Component {
                                                             width={17*factorRatio}
                                                             fill={'white'}
                                                         />
-                                                        <View style={{width: 5*factorHorizontal}}></View>
+                                                        <View style={{width: 5*factorHorizontal}}/>
                                                         <Text
                                                             style={{
                                                                 fontFamily: 'Roboto',
@@ -483,9 +531,9 @@ export default class CourseCatalog extends React.Component {
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                             </View>
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                         </View>
                                     </View>
                                 </View>
@@ -496,9 +544,33 @@ export default class CourseCatalog extends React.Component {
                                     backgroundColor: 'white',
                                 }}
                             >
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                                 <TouchableOpacity
-                                    onPress={() => {}}
+                                    onPress={() => {
+                                        this.setState({
+                                            filterClicked: !this.state.filterClicked,
+                                            levelChosen: false,
+                                            instructorChosen: false,
+                                            topicChosen: false,
+                                            progressChosen: false,
+                                            circle1: false, 
+                                            circle2: false,
+                                            circle3: false,
+                                            circle4: false,
+                                            circle5: false,
+                                            circle6: false,
+                                            circle7: false,
+                                            circle8: false,
+                                            circle9: false,
+                                            circle10: false,
+                                            lisa: false, 
+                                            cassi: false,
+                                            jordan: false,
+                                            nate: false,
+                                            brett: false,
+                                            josh: false,
+                                        })
+                                    }}
                                     style={[
                                         styles.centerContent, {
                                         flexDirection: 'row',
@@ -529,9 +601,10 @@ export default class CourseCatalog extends React.Component {
                                         CLEAR FILTERS 
                                     </Text>
                                 </TouchableOpacity>
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                             </View>
-                        </Animated.View>
+                        </View>
+                        )}
                         <VerticalVideoList
                             outVideos={this.state.outVideos}
                             getVideos={() => this.getContent()}
@@ -546,7 +619,84 @@ export default class CourseCatalog extends React.Component {
                         />
                     </ScrollView>
                 </View>
-                
+                <Modal key={'chooseLevel'}
+                    isVisible={this.state.showChooseYourLevel}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={false}
+                    hasBackdrop={false}
+                >
+                    <ChooseYourLevel
+                        setLevel={(bool) => this.setState({levelChosen: bool})}
+                        circle1={this.state.circle1}
+                        circle2={this.state.circle2}
+                        circle3={this.state.circle3}
+                        circle4={this.state.circle4}
+                        circle5={this.state.circle5}
+                        circle6={this.state.circle6}
+                        circle7={this.state.circle7}
+                        circle8={this.state.circle8}
+                        circle9={this.state.circle9}
+                        circle10={this.state.circle10}
+                        hideChooseYourLevel={(c1,c2,c3,c4,c5,c6,c7,c8,c9,c10) => {
+                            this.setState({
+                                circle1: c1,
+                                circle2: c2,
+                                circle3: c3,
+                                circle4: c4,
+                                circle5: c5,
+                                circle6: c6,
+                                circle7: c7,
+                                circle8: c8,
+                                circle9: c9,
+                                circle10: c10,
+                                showChooseYourLevel: false
+                            })
+                        }}
+                    />
+                </Modal>
+                <Modal key={'chooseInstructor'}
+                    isVisible={this.state.showChooseInstructors}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={false}
+                    hasBackdrop={false}
+                >
+                    <ChooseInstructors
+                        setInstructor={(bool) => this.setState({instructorChosen: bool})}
+                        lisa={this.state.lisa}
+                        cassi={this.state.cassi}
+                        jordan={this.state.jordan}
+                        nate={this.state.nate}
+                        brett={this.state.brett}
+                        josh={this.state.josh}
+                        hideChooseInstructors={(l, c, j, n, b, josh) => {
+                            this.setState({
+                                lisa: l,
+                                cassi: c,
+                                jordan: j,
+                                nate: n,
+                                brett: b,
+                                josh: josh,
+                                showChooseInstructors: false
+                            })
+                        }}
+                    />
+                </Modal>                
                 <NavigationBar
                     currentPage={'COURSECATALOG'}
                 />

@@ -9,7 +9,7 @@ import {
     ActivityIndicator, 
     StyleSheet,
     TouchableOpacity, 
-    TouchableHighlight 
+    TouchableHighlight,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -37,17 +37,17 @@ class HorizontalVideoList extends React.Component {
                         height: '100%',
                     }]}
                 >
-                    <View style={{flex: 1}}></View>
+                    <View style={{flex: 1}}/>
                     <ActivityIndicator 
                         size={'small'}
                         color={'grey'}
                     />
-                    <View style={{flex: 1}}></View>
+                    <View style={{flex: 1}}/>
                 </View>
             )
         } else {
             return (
-                <View style={{height: 10*factorHorizontal}}></View>
+                <View style={{height: 10*factorHorizontal}}/>
             )
         }
     }
@@ -59,8 +59,8 @@ class HorizontalVideoList extends React.Component {
                 <View style={[styles.centerContent, {flex: 1}]}>
                     <View key={'container'}
                         style={[
-                            localStyles.itemContainer, {
-                            height: '17.5%',
+                            styles.centerContent, {
+                            height: fullHeight*0.05,
                             width: fullWidth-20*factorHorizontal,
                         }]}
                     >
@@ -97,7 +97,7 @@ class HorizontalVideoList extends React.Component {
                                     style={{
                                         textAlign: 'right',
                                         fontSize: 14.5*factorRatio,
-                                        marginRight: 7.5*factorRatio,
+                                        marginRight: 3.5*factorHorizontal,
                                         fontWeight: '300',
                                         marginTop: 10*factorRatio,
                                         color: 'red',
@@ -112,18 +112,19 @@ class HorizontalVideoList extends React.Component {
                         <View key={'description'}
                             style={{flex: 0.5}}
                         >
-                            <Text style={[
-                                localStyles.description, {
-                                fontSize: 16*factorRatio,
-                                fontFamily: 'RobotoCondensed-Regular',
-                            }]}>
+                            <Text 
+                                style={{
+                                    fontSize: 16*factorRatio,
+                                    fontFamily: 'RobotoCondensed-Regular',
+                                }}
+                            >
                                 {this.props.Description}
                             </Text>
                         </View>
                         )}
                     </View>
                     {(this.props.Description === '' ? false : true) && (
-                    <View style={{height: '0.75%'}}/>
+                    <View style={{height: 0*factorVertical}}/>
                     )}
                     <FlatList
                         data={this.props.items}
@@ -138,14 +139,16 @@ class HorizontalVideoList extends React.Component {
                                 underlayColor={'transparent'}
                                 onPress={() => this.props.navigation.goBack()}
                             >
-                                <View style={[
-                                    localStyles.imageContainer, {
-                                    width: this.props.itemWidth,
-                                    height: this.props.itemHeight,
-                                    marginRight: 10*factorHorizontal,
-                                    borderRadius: 7.5*factorRatio,
-                                    backgroundColor: '#ececec',
-                                }]}>
+                                <View 
+                                    style={[
+                                        styles.centerContent, {
+                                        width: this.props.itemWidth,
+                                        height: this.props.itemHeight,
+                                        marginRight: 10*factorHorizontal,
+                                        borderRadius: 7.5*factorRatio,
+                                        backgroundColor: '#ececec',
+                                    }]}
+                                >
                                     <TouchableOpacity
                                         onLongPress={() => {
                                             this.setState({
@@ -169,7 +172,6 @@ class HorizontalVideoList extends React.Component {
                                     </TouchableOpacity>
                                 </View>
                             </TouchableHighlight>
-                            <View style={{height: 10*factorVertical}}/>
                             <View 
                                 style={{
                                     width: this.props.itemWidth,
@@ -181,7 +183,7 @@ class HorizontalVideoList extends React.Component {
                                     <Text 
                                         numberOfLines={2} 
                                         style={{
-                                            fontSize: 18*factorRatio,
+                                            fontSize: 16*factorRatio,
                                             marginTop: 7.5*factorRatio,
                                             textAlign: 'left', 
                                             fontWeight: '700',
@@ -252,24 +254,5 @@ class HorizontalVideoList extends React.Component {
         )
     }
 }
-
-const localStyles = StyleSheet.create({
-    description: {
-        textAlign:'left', 
-        fontWeight:'500', 
-        color:'#979797', 
-        fontFamily:'avenir next',
-    },
-    styleTitle: {
-        textAlign:'left', 
-        fontWeight:'bold', 
-        fontFamily:'avenir next',
-    },
-    itemContainer: {
-        alignSelf:'stretch', 
-        justifyContent:'center', 
-        alignContent:'center', 
-    },
-});
 
 export default withNavigation(HorizontalVideoList);

@@ -16,16 +16,34 @@ class ChooseYourLevel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            circle1: false, 
-            circle2: false,
-            circle3: false,
-            circle4: false,
-            circle5: false,
-            circle6: false,
-            circle7: false,
-            circle8: false,
-            circle9: false,
-            circle10: false,
+            circle1: this.props.circle1,
+            circle2: this.props.circle2,
+            circle3: this.props.circle3,
+            circle4: this.props.circle4,
+            circle5: this.props.circle5,
+            circle6: this.props.circle6,
+            circle7: this.props.circle7,
+            circle8: this.props.circle8,
+            circle9: this.props.circle9,
+            circle10: this.props.circle10,
+        }
+    }
+
+
+    isChosen = () => {
+        if(this.state.circle1 !== false || 
+            this.state.circle2 !== false ||
+            this.state.circle3 !== false ||
+            this.state.circle4 !== false ||
+            this.state.circle5 !== false ||
+            this.state.circle6 !== false ||
+            this.state.circle7 !== false ||
+            this.state.circle8 !== false ||
+            this.state.circle9 !== false ||
+            this.state.circle10 !== false) {
+            this.props.setLevel(true)
+        } else {
+            this.props.setLevel(false)
         }
     }
 
@@ -38,13 +56,13 @@ class ChooseYourLevel extends React.Component {
                         styles.centerContent, {
                         height: fullHeight,
                         width: fullWidth,
-                        backgroundColor: 'white',
+                        backgroundColor: 'transparent',
                     }]}
-                    blurType={'dark'}
-                    blurAmount={100}
+                    blurType={'xlight'}
+                    blurAmount={10}
                 >
                     
-                    <View style={{flex: 1, alignSelf: 'stretch',}}>
+                    <View style={{flex: 1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseYourLevel()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
@@ -61,7 +79,7 @@ class ChooseYourLevel extends React.Component {
                     >
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseYourLevel()}
-                            style={{width: fullWidth*0.05,}}    
+                            style={{width: fullWidth*0.05}}
                         >
                         </TouchableWithoutFeedback>
                         <View 
@@ -69,9 +87,16 @@ class ChooseYourLevel extends React.Component {
                                 width: fullWidth*0.9,
                                 borderRadius: 10*factorRatio,
                                 backgroundColor: 'white',
+                                shadowOffset: { 
+                                    width: 5*factorRatio, 
+                                    height: 10*factorRatio,
+                                },
+                                shadowColor: 'black',
+                                shadowOpacity: 0.1,
+                                elevation: 3,
                             }}
                         >
-                            <View style={{flex: 0.06}}></View>
+                            <View style={{flex: 0.06}}/>
                             <View key={'chooseIntructor'}
                                 style={[
                                     styles.centerContent, {
@@ -111,7 +136,7 @@ class ChooseYourLevel extends React.Component {
                                 style={{
                                     flex: 0.01
                                 }}
-                            ></View>
+                            />
                             <View key={'instructors'}
                                 style={[
                                     styles.centerContent, {
@@ -120,7 +145,7 @@ class ChooseYourLevel extends React.Component {
                             >
                                 <View key={'buff1'}
                                     style={{flex: 1}}
-                                ></View>
+                                />
                                 <View key={'topRow'}
                                     style={{
                                         flexDirection: 'row',
@@ -168,7 +193,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level2'}
                                         style={[
                                             styles.centerContent, {
@@ -206,7 +231,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level3'}
                                         style={[
                                             styles.centerContent, {
@@ -244,7 +269,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level4'}
                                         style={[
                                             styles.centerContent, {
@@ -282,7 +307,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level5'}
                                         style={[
                                             styles.centerContent, {
@@ -319,7 +344,7 @@ class ChooseYourLevel extends React.Component {
                                 </View>
                                 <View key={'buff2'}
                                     style={{flex: 1*factorRatio}}
-                                ></View>
+                                />
                                 <View key={'bottomRow'}
                                     style={{
                                         flexDirection: 'row',
@@ -367,7 +392,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level7'}
                                         style={[
                                             styles.centerContent, {
@@ -405,7 +430,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level8'}
                                         style={[
                                             styles.centerContent, {
@@ -443,7 +468,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level9'}
                                         style={[
                                             styles.centerContent, {
@@ -481,7 +506,7 @@ class ChooseYourLevel extends React.Component {
                                         style={{
                                             width: 5*factorHorizontal
                                         }}
-                                    ></View>
+                                    />
                                     <View key={'level10'}
                                         style={[
                                             styles.centerContent, {
@@ -518,7 +543,7 @@ class ChooseYourLevel extends React.Component {
                                 </View>
                                 <View key={'buff3'}
                                     style={{flex: 1}}
-                                ></View>
+                                />
                             </View>  
                             <View key={'ok'}
                                     style={[
@@ -528,7 +553,7 @@ class ChooseYourLevel extends React.Component {
                                         paddingRight: fullWidth*0.1*factorRatio,
                                     }]}
                                 >
-                                    <View style={{flex: 0.15}}></View>
+                                    <View style={{flex: 0.15}}/>
                                     <View 
                                         style={[
                                             styles.centerContent, {
@@ -539,6 +564,21 @@ class ChooseYourLevel extends React.Component {
                                         }]}
                                     >
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.isChosen(),
+                                                this.props.hideChooseYourLevel(
+                                                    this.state.circle1,
+                                                    this.state.circle2,
+                                                    this.state.circle3,
+                                                    this.state.circle4,
+                                                    this.state.circle5,
+                                                    this.state.circle6,
+                                                    this.state.circle7,
+                                                    this.state.circle8,
+                                                    this.state.circle9,
+                                                    this.state.circle10,
+                                                )
+                                            }}
                                             style={[
                                                 styles.centerContent, {
                                                 flex:1,
@@ -556,7 +596,7 @@ class ChooseYourLevel extends React.Component {
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={{flex: 0.15}}></View>
+                                    <View style={{flex: 0.15}}/>
                                 </View>
                             <View key={'cancel'}
                             style={[
@@ -627,9 +667,9 @@ class ChooseYourLevel extends React.Component {
                             </View>
                         </View>
                         </View>
-                        <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}></View>
+                        <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}/>
                     </View>
-                    <View style={{flex: 1, alignSelf: 'stretch',}}>
+                    <View style={{flex: 1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseYourLevel()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}

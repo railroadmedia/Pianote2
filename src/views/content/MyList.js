@@ -193,10 +193,10 @@ export default class MyList extends React.Component {
                                 resizeMode={FastImage.resizeMode.stretch}
                             />
                         </View>
-                        <View style={{height: '1.5%'}}/>
+                        <View style={{height: fullHeight*0.015}}/>
                         <View key={'addedList'}
                             style={{
-                                height: fullHeight*0.25,
+                                height: fullHeight*0.225,
                                 paddingLeft: fullWidth*0.035,
                             }}
                         >
@@ -213,7 +213,7 @@ export default class MyList extends React.Component {
                         </View>
                         <View key={'progressList'}
                             style={{
-                                height: fullHeight*0.25,
+                                height: fullHeight*0.225,
                                 paddingLeft: fullWidth*0.035,
                             }}
                         >
@@ -230,7 +230,7 @@ export default class MyList extends React.Component {
                         </View>
                         <View key={'completedList'}
                             style={{
-                                height: fullHeight*0.25,
+                                height: fullHeight*0.225,
                                 paddingLeft: fullWidth*0.035,
                             }}
                         >

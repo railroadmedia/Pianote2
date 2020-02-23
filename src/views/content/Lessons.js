@@ -211,7 +211,7 @@ export default class Lessons extends React.Component {
                         </View>
                         <View key={'songs'}
                             style={{
-                                height: fullHeight*0.225,
+                                height: fullHeight*0.27,
                                 paddingLeft: fullWidth*0.035,
                             }}
                         >
@@ -222,8 +222,8 @@ export default class Lessons extends React.Component {
                                 showArtist={false}
                                 items={this.state.songs}
                                 forceSquareThumbs={false}
-                                itemWidth={fullWidth*0.42}
-                                itemHeight={fullHeight*0.115}
+                                itemWidth={fullHeight*0.15}
+                                itemHeight={fullHeight*0.15}
                             />
                         </View>
                         <View key={'packs'}
