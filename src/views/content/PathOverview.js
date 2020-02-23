@@ -197,7 +197,6 @@ export default class PathOverview extends React.Component {
                                     style={{
                                         height: (isTablet) ? 80*factorVertical : 60*factorVertical,
                                         flexDirection: 'row',
-                                        backgroundColor: 'green',
                                         zIndex: 11,
                                     }}
                                 >

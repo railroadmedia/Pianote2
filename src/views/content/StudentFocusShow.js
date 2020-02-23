@@ -7,16 +7,16 @@ import {
     Text, 
     TouchableOpacity,
 } from 'react-native';
+import { getContent } from '@musora/services';
+import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { ScrollView } from 'react-native-gesture-handler';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import SubscribeIcon from 'Pianote2/src/components/SubscribeIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import { getContent } from '@musora/services';
-import { ContentModel } from '@musora/models';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const packDict = {
     'Bootcamps': require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
@@ -237,7 +237,7 @@ export default class StudentFocusShow extends React.Component {
                                                         fontFamily: 'Roboto',
                                                         color: 'white',
                                                         marginTop: 3*factorRatio,
-                                                        fontSize: 12*factorRatio,
+                                                        fontSize: 14*factorRatio,
                                                     }}
                                                 >
                                                     My List
@@ -306,7 +306,7 @@ export default class StudentFocusShow extends React.Component {
                                                         fontFamily: 'Roboto',
                                                         color: 'white',
                                                         marginTop: 3*factorRatio,
-                                                        fontSize: 12*factorRatio,
+                                                        fontSize: 14*factorRatio,
                                                     }}
                                                 >
                                                     Info

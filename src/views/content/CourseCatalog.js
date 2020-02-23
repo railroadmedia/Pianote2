@@ -22,6 +22,7 @@ import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import ChooseInstructors from '../../modals/ChooseInstructors.js';
 import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
@@ -57,6 +58,8 @@ export default class CourseCatalog extends React.Component {
             nate: false,
             brett: false,
             josh: false,
+            parentPage: 'LESSONS',
+            menu: 'COURSES',
         }
     }
 
@@ -165,6 +168,20 @@ export default class CourseCatalog extends React.Component {
                             <NavMenuHeaders
                                 pxFromTop={30*factorRatio}
                                 leftHeader={'LESSONS'}
+                                pressLeftHeader={() => {
+                                    this.setState({
+                                        parentPage: 'LESSONS',
+                                        menu: 'HOME',
+                                        showModalMenu: true,
+                                    })
+                                }}
+                                pressRightHeader={() => {
+                                    this.setState({
+                                        parentPage: 'COURSES',
+                                        menu: 'LESSONS',
+                                        showModalMenu: true,
+                                    })
+                                }}
                                 rightHeader={'COURSES'}
                                 isHome={false}
                             />
@@ -697,6 +714,25 @@ export default class CourseCatalog extends React.Component {
                         }}
                     />
                 </Modal>                
+                <Modal key={'navMenu'}
+                        isVisible={this.state.showModalMenu}
+                        style={{
+                            margin: 0, 
+                            height: fullHeight,
+                            width: fullWidth,
+                        }}
+                        animation={'slideInUp'}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={true}
+                        hasBackdrop={false}
+                    >
+                        <NavigationMenu
+                            onClose={(e) => this.setState({showModalMenu: e})}
+                            menu={this.state.menu}
+                            parentPage={this.state.parentPage}
+                        />
+                    </Modal>
                 <NavigationBar
                     currentPage={'COURSECATALOG'}
                 />

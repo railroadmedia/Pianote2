@@ -86,12 +86,7 @@ class HorizontalVideoList extends React.Component {
                             <View style={{flex: 1}}/>
                             <TouchableOpacity key={'seeAll'}
                                 style={{flex: 1}}
-                                onPress={() => {
-                                    this.props.navigation.navigate(
-                                        this.props.seeAllRoute,
-                                        {firstPage: this.props.items}
-                                    )
-                                }}
+                                onPress={() => this.props.seeAllRoute()}
                             >
                                 <Text 
                                     style={{

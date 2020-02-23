@@ -9,12 +9,14 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import StudentFocus from 'Pianote2/src/assets/img/svgs/student.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
+import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
 export default class StudentFocusCatalog extends React.Component {
@@ -32,6 +34,8 @@ export default class StudentFocusCatalog extends React.Component {
             progressChosen: false, // filter option
             outVideos: false, // if no more videos to load
             page: 0, // current page
+            parentPage: 'LESSONS',
+            menu: 'STUDENT FOCUS',
         }
     }
 
@@ -172,12 +176,26 @@ export default class StudentFocusCatalog extends React.Component {
                                     </Text>
                                 </View>
                                 <View style={{zIndex: 5}}>
-                                    <NavMenuHeaders
-                                        pxFromTop={30*factorRatio}
-                                        leftHeader={'LESSONS'}
-                                        rightHeader={'STUDENT FOCUS'}
-                                        isHome={false}
-                                    />
+                                <NavMenuHeaders
+                                    pxFromTop={30*factorRatio}
+                                    leftHeader={'LESSONS'}
+                                    pressLeftHeader={() => {
+                                        this.setState({
+                                            parentPage: 'LESSONS',
+                                            menu: 'HOME',
+                                            showModalMenu: true,
+                                        })
+                                    }}
+                                    pressRightHeader={() => {
+                                        this.setState({
+                                            parentPage: 'STUDENT FOCUS',
+                                            menu: 'LESSONS',
+                                            showModalMenu: true,
+                                        })
+                                    }}
+                                    rightHeader={'STUDENT FOCUS'}
+                                    isHome={false}
+                                />
                                 </View>
                                 <FastImage
                                     style={{flex: 1}}
@@ -194,7 +212,7 @@ export default class StudentFocusCatalog extends React.Component {
                                 paddingRight: 10*factorHorizontal,
                             }}
                         >
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                             <View 
                                 style={{
                                     flexDirection: 'row',
@@ -225,7 +243,8 @@ export default class StudentFocusCatalog extends React.Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.props.navigation.navigate('STUDENTFOCUSSHOW', 
+                                        this.props.navigation.navigate(
+                                            'STUDENTFOCUSSHOW', 
                                             {'pack' : 'Q&A'}
                                         )
                                     }}
@@ -246,7 +265,8 @@ export default class StudentFocusCatalog extends React.Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.props.navigation.navigate('STUDENTFOCUSSHOW', 
+                                        this.props.navigation.navigate(
+                                            'STUDENTFOCUSSHOW', 
                                             {'pack' : 'Quick Tips'}
                                         )
                                     }}
@@ -267,7 +287,8 @@ export default class StudentFocusCatalog extends React.Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                      onPress={() => {
-                                        this.props.navigation.navigate('STUDENTFOCUSSHOW', 
+                                        this.props.navigation.navigate(
+                                            'STUDENTFOCUSSHOW', 
                                             {'pack' : 'Student Review'}
                                         )
                                     }}
@@ -287,18 +308,19 @@ export default class StudentFocusCatalog extends React.Component {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                         </View>
-                        <View
-                            style={{
-                                paddingLeft: fullWidth*0.035,
-                            }}
-                        >
-                            <View style={{height: fullHeight*0.25}}>
+                        <View style={{paddingLeft: fullWidth*0.035}}>
+                            <View style={{height: fullHeight*0.225}}>
                                 <HorizontalVideoList
                                     Title={'BOOTCAMPS'}
                                     Description={''}
-                                    seeAllRoute={'PACKUSER'}
+                                    seeAllRoute={() => {
+                                        this.props.navigation.navigate(
+                                            'STUDENTFOCUSSHOW', 
+                                            {'pack' : 'Bootcamps'}
+                                        )
+                                    }}
                                     showArtist={false}
                                     items={this.state.items}
                                     forceSquareThumbs={false}
@@ -306,11 +328,16 @@ export default class StudentFocusCatalog extends React.Component {
                                     itemHeight={fullHeight*0.115}
                                 />
                             </View>
-                            <View style={{height: fullHeight*0.25}}>
+                            <View style={{height: fullHeight*0.225}}>
                                 <HorizontalVideoList
                                     Title={'QUESTION & ANSWER'}
                                     Description={''}
-                                    seeAllRoute={'PACKUSER'}
+                                    seeAllRoute={() => {
+                                        this.props.navigation.navigate(
+                                            'STUDENTFOCUSSHOW', 
+                                            {'pack' : 'Q&A'}
+                                        )
+                                    }}
                                     showArtist={false}
                                     items={this.state.items}
                                     forceSquareThumbs={false}
@@ -318,11 +345,16 @@ export default class StudentFocusCatalog extends React.Component {
                                     itemHeight={fullHeight*0.115}
                                 />
                             </View>
-                            <View style={{height: fullHeight*0.25}}>
+                            <View style={{height: fullHeight*0.225}}>
                                 <HorizontalVideoList
                                     Title={'QUICK TIPS'}
                                     Description={''}
-                                    seeAllRoute={'PACKUSER'}
+                                    seeAllRoute={() => {
+                                        this.props.navigation.navigate(
+                                            'STUDENTFOCUSSHOW', 
+                                            {'pack' : 'Quick Tips'}
+                                        )
+                                    }}
                                     showArtist={false}
                                     items={this.state.items}
                                     forceSquareThumbs={false}
@@ -330,11 +362,16 @@ export default class StudentFocusCatalog extends React.Component {
                                     itemHeight={fullHeight*0.115}
                                 />
                             </View>
-                            <View style={{height: fullHeight*0.25}}>
+                            <View style={{height: fullHeight*0.225}}>
                                 <HorizontalVideoList
                                     Title={'STUDENT REVIEWS'}
                                     Description={''}
-                                    seeAllRoute={'PACKUSER'}
+                                    seeAllRoute={() => {
+                                        this.props.navigation.navigate(
+                                            'STUDENTFOCUSSHOW', 
+                                            {'pack' : 'Student Review'}
+                                        )
+                                    }}
                                     showArtist={false}
                                     items={this.state.items}
                                     forceSquareThumbs={false}
@@ -344,6 +381,25 @@ export default class StudentFocusCatalog extends React.Component {
                             </View>
                         </View>
                     </ScrollView>
+                    <Modal key={'navMenu'}
+                        isVisible={this.state.showModalMenu}
+                        style={{
+                            margin: 0, 
+                            height: fullHeight,
+                            width: fullWidth,
+                        }}
+                        animation={'slideInUp'}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={true}
+                        hasBackdrop={false}
+                    >
+                        <NavigationMenu
+                            onClose={(e) => this.setState({showModalMenu: e})}
+                            menu={this.state.menu}
+                            parentPage={this.state.parentPage}
+                        />
+                    </Modal>
                     <NavigationBar
                         currentPage={'LESSONS'}
                     />

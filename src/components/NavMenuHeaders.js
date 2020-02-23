@@ -95,7 +95,7 @@ class NavMenuHeaders extends React.Component {
                             <View style={{flex: 1}}/>
                             <Text
                                 style={{
-                                    fontSize: 16*factorRatio,
+                                    fontSize: 14*factorRatio,
                                     fontFamily: 'Roboto-Bold',
                                     fontWeight: '900',
                                     color: 'white',
