@@ -33,17 +33,16 @@ export default class SinglePack extends React.Component {
             outVideos: false,
             items: [],
             page: 0,
-            pack: 'FASTER FINGERS', // 500 SONGS | FASTERFINGERS | SIGHT READING
+            pack: '', // 500 SONGS | FASTERFINGERS | SIGHT READING
         }
     }
 
 
     componentDidMount = async () => {
-        await this.getContent()
         await this.setState({
             pack: this.props.navigation.state.params.data,
         })
-        console.log('hello')
+        await this.getContent()
     }
 
 

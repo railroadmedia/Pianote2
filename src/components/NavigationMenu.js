@@ -198,7 +198,7 @@ class NavigationMenu extends React.Component {
                     <TouchableOpacity
                         onPress={() => {
                             this.props.onClose(false),
-                            this.props.navigation.navigate('COURSE')
+                            this.props.navigation.navigate('COURSECATALOG')
                         }}
                         style={{flex: 1}}
                     >
@@ -314,7 +314,7 @@ class NavigationMenu extends React.Component {
                     <TouchableOpacity
                         onPress={() => {
                             this.props.onClose(false),
-                            this.props.navigation.navigate('SINGLEPACK', {data: '500 SONGS'})
+                            this.props.navigation.push('SINGLEPACK', {data: '500 SONGS'})
                         }}
                         style={{flex: 1}}
                     >
@@ -340,7 +340,7 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.navigation.navigate('SINGLEPACK', {data: 'SIGHT READING'}),
+                            this.props.navigation.push('SINGLEPACK', {data: 'SIGHT READING'}),
                             this.props.onClose(false)
                         }}
                         style={{flex: 1}}
@@ -368,7 +368,7 @@ class NavigationMenu extends React.Component {
                     <TouchableOpacity
                         onPress={() => {
                             this.props.onClose(false),
-                            this.props.navigation.navigate('SINGLEPACK', {data: 'FASTER FINGERS'})
+                            this.props.navigation.push('SINGLEPACK', {data: 'FASTER FINGERS'})
                         }}
                         style={{flex: 1}}
                     >

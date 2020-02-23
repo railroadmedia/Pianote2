@@ -44,27 +44,6 @@ export default class Packs extends React.Component {
     }
 
 
-    pressFilters = async () => {
-        await this.setState({
-            filterClicked: !this.state.filterClicked
-        })
-
-        await Animated.timing(
-            this.state.filterSize, {
-                toValue: (this.state.filterClicked) ? 0.25 : 0,
-                duration : 250,
-            }
-        ).start();
-        
-        await Animated.timing(
-            this.state.listSize, {
-            toValue: (this.state.filterClicked) ? 0.35 : 0.6,
-            duration : 250,
-            }
-        ).start();
-    }
-
-
     render() {
         return (
             <View styles={styles.container}>
@@ -147,8 +126,8 @@ export default class Packs extends React.Component {
                                 pxFromRight={fullWidth*0.065}
                                 buttonWidth={fullWidth*0.42}
                                 pressed={() => {
-                                    this.props.navigation.navigate('STUDENTFOCUSSHOW', 
-                                            {'pack' : 'Bootcamps'}
+                                    this.props.navigation.navigate('SINGLEPACK', 
+                                            {'data' : 'FASTER FINGERS'}
                                         )
                                 }}
                             />
@@ -165,8 +144,8 @@ export default class Packs extends React.Component {
                         >
                             <View key={'image2'}
                                 style={{
-                                    height: 170*factorVertical,
-                                    width: 170*factorVertical,
+                                    height: 175*factorVertical,
+                                    width: 175*factorVertical,
                                     borderRadius: 12.5*factorRatio,
                                 }}
                             >
@@ -176,20 +155,22 @@ export default class Packs extends React.Component {
                                     height={'60%'}
                                     borderRadius={12.5*factorRatio}
                                 />
-                                <View
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.navigate(
+                                            'SINGLEPACK', {'data' : 'SIGHT READING'}
+                                        )
+                                    }}
                                     style={{
                                         position: 'absolute',
                                         zIndex: 2,
-                                        height: 170*factorVertical,
-                                        width: 170*factorVertical,
+                                        height: 175*factorVertical,
+                                        width: 175*factorVertical,
+                                        zIndex: 4,
                                     }}
                                 >
                                     <View style={{flex: 1}}/>
-                                    <View 
-                                        style={{
-                                            flexDirection: 'row',
-                                        }}
-                                    >
+                                    <View style={{flexDirection: 'row'}}>
                                         <View style={{flex: 1}}/>
                                         <SightReading
                                             height={90*factorVertical}
@@ -197,11 +178,12 @@ export default class Packs extends React.Component {
                                         />
                                         <View style={{flex: 1}}/>
                                     </View>
-                                </View>
-                                <TouchableOpacity
+                                </TouchableOpacity>
+                                <View
                                     style={{
                                         height: '100%',
                                         width: '100%',
+                                        zIndex: 2,
                                     }}
                                 >
                                     <FastImage
@@ -209,12 +191,12 @@ export default class Packs extends React.Component {
                                         source={this.state.secondImage}
                                         resizeMode={FastImage.resizeMode.cover}
                                     />
-                                </TouchableOpacity>
+                                </View>
                             </View>
                             <View key={'image3'}
                                 style={{
-                                    height: 170*factorVertical,
-                                    width: 170*factorVertical,
+                                    height: 175*factorVertical,
+                                    width: 175*factorVertical,
                                     borderRadius: 12.5*factorRatio,
                                 }}
                             >
@@ -224,12 +206,17 @@ export default class Packs extends React.Component {
                                     height={'60%'}
                                     borderRadius={12.5*factorRatio}
                                 />
-                                <View
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.navigate(
+                                            'SINGLEPACK', {'data' : '500 SONGS'}
+                                        )
+                                    }}
                                     style={{
                                         position: 'absolute',
                                         zIndex: 2,
-                                        height: 170*factorVertical,
-                                        width: 170*factorVertical,
+                                        height: 175*factorVertical,
+                                        width: 175*factorVertical,
                                         
                                     }}
                                 >
@@ -246,8 +233,8 @@ export default class Packs extends React.Component {
                                         />
                                         <View style={{flex: 1}}/>
                                     </View>
-                                </View>
-                                <TouchableOpacity
+                                </TouchableOpacity>
+                                <View
                                     style={{
                                         height: '100%',
                                         width: '100%',
@@ -258,7 +245,7 @@ export default class Packs extends React.Component {
                                         source={this.state.thirdImage}
                                         resizeMode={FastImage.resizeMode.cover}
                                     />
-                                </TouchableOpacity>
+                                </View>
                             </View>
                             
                         </View>
