@@ -127,7 +127,12 @@ class VerticalVideoList extends React.Component {
                                 )}
                             </View>
                             <FastImage
-                                style={{flex: 1, borderRadius: 10*factorRatio}}
+                                style={{
+                                    flex: 1, 
+                                    borderRadius: 10*factorRatio,
+                                    backgroundColor: '#ececec',
+                                    alignSelf: 'center',
+                                }}
                                 source={{uri: row.item.thumbnail}}
                                 resizeMode={FastImage.resizeMode.cover}
                             />

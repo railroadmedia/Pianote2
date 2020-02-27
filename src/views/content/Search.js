@@ -13,7 +13,7 @@ import {
     ScrollView,
 } from 'react-native';
 import { ContentModel } from '@musora/models';
-import Icon from 'react-native-vector-icons/Entypo';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { searchContent, getContent } from '@musora/services';
@@ -25,6 +25,7 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-expanded-arrow.svg';
+
 
 export default class Search extends React.Component {
     static navigationOptions = {header: null};
@@ -312,7 +313,7 @@ export default class Search extends React.Component {
                                         }]}
                                     >
                                         <View style={{marginTop: 3.5*factorRatio}}>
-                                            <Icon 
+                                            <EntypoIcon 
                                                 name={'cross'}
                                                 size={18*factorRatio}
                                                 color={'grey'}

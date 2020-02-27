@@ -177,13 +177,8 @@ class FullScreenVideoList extends React.Component {
                             
                             <View style={{flex: 1}}/>
                             <TouchableOpacity 
+                                onPress={() => this.props.seeAll()}
                                 style={{flex: 1}}
-                                onPress={() => {
-                                    this.props.navigation.navigate(
-                                        this.props.seeAllRoute,
-                                        {firstPage: this.props.items}
-                                    )
-                                }}
                             >
                                 <Text 
                                     style={{

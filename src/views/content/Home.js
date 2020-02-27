@@ -207,7 +207,11 @@ export default class Home extends React.Component {
                                         showArtist={true}
                                         Title={'NEW LESSONS'}
                                         isHorizontal={false}
-                                        seeAllRoute={'PACKUSER'}
+                                        seeAll={() => {
+                                            this.props.navigation.navigate(
+                                                'SEEALL', {data: 'New Lessons'}
+                                            )
+                                        }}
                                         itemWidth={fullWidth*0.93}
                                         itemHeight={fullHeight*0.245}
                                     />
