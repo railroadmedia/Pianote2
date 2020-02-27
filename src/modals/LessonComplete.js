@@ -59,7 +59,7 @@ class LessonComplete extends React.Component {
                                 backgroundColor: 'white',
                             }}
                         >
-                            <View style={{height: '4%'}}></View>
+                            <View style={{height: '4%'}}/>
                             <View key={'trophy'}
                                 style={styles.centerContent}
                             >
@@ -79,7 +79,7 @@ class LessonComplete extends React.Component {
                             >
                                 Lesson{"\n"}Complete
                             </Text>
-                            <View style={{height: '2%'}}></View>
+                            <View style={{height: '2%'}}/>
                             <View key={'image1'}
                                 style={[
                                     styles.centerContent, {
@@ -100,7 +100,7 @@ class LessonComplete extends React.Component {
                                         flexDirection: 'row',
                                     }}
                                 >
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                     <View
                                         style={[
                                             styles.centerContent, {
@@ -128,9 +128,9 @@ class LessonComplete extends React.Component {
                                         }]}
                                     >
                                     </View>
-                                    <View style={{flex: 1}}></View>
+                                    <View style={{flex: 1}}/>
                                 </View>
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                                 <FastImage
                                     style={{
                                         width: '76%',

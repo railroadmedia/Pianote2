@@ -59,7 +59,7 @@ class QuickTips extends React.Component {
                                 backgroundColor: 'white',
                             }}
                         >
-                            <View style={{flex: 0.035}}></View>
+                            <View style={{flex: 0.035}}/>
                             <View key={'image'}
                                 style={[
                                     styles.centerContent, {
@@ -143,7 +143,7 @@ class QuickTips extends React.Component {
                                 style={{
                                     flex: 0.01
                                 }}
-                            ></View>
+                            />
                             <View key={'buttons'}
                                     style={[
                                         styles.centerContent, {
@@ -151,7 +151,7 @@ class QuickTips extends React.Component {
                                         flexDirection: 'row',
                                     }]}
                                 >
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}></View>
+                                    <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                     <View 
                                         style={[
                                             styles.centerContent, {
@@ -174,7 +174,7 @@ class QuickTips extends React.Component {
                                             100
                                         </Text>
                                     </View>
-                                    <View style={{width: 15*factorRatio}}></View>
+                                    <View style={{width: 15*factorRatio}}/>
                                     <View 
                                         style={[
                                             styles.centerContent, {
@@ -197,10 +197,10 @@ class QuickTips extends React.Component {
                                             My List
                                         </Text>
                                     </View>
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}></View>
+                                    <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                 </View>
                         </View>
-                        <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}></View>
+                        <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}/>
                     </View>
                     <View style={{flex: 1.1, alignSelf: 'stretch',}}>
                         <TouchableWithoutFeedback

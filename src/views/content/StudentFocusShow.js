@@ -194,7 +194,7 @@ export default class StudentFocusShow extends React.Component {
                                             alignSelf: 'stretch',  
                                         }}
                                     >
-                                        <View style={{flex: 1,}}></View>
+                                        <View style={{flex: 1,}}/>
                                         <Text
                                             numberOfLines={2}
                                             style={{
@@ -207,7 +207,7 @@ export default class StudentFocusShow extends React.Component {
                                         >
                                             {this.state.title}
                                         </Text>
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
                                     <View key={'buttonRow'}
                                         style={{
@@ -247,7 +247,7 @@ export default class StudentFocusShow extends React.Component {
                                         <View key={'start'}
                                             style={{width: fullWidth*0.5}}
                                         >
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                             {!this.state.showStarted && (
                                             <TouchableOpacity
                                                 onPress={() => {
@@ -282,7 +282,7 @@ export default class StudentFocusShow extends React.Component {
                                                 pressed={() => console.log('Start')}
                                             />
                                             )}
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                         </View>
                                         <View key={'infoButton'}
                                             style={[

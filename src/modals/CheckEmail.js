@@ -75,7 +75,7 @@ class CheckEmail extends React.Component {
                                 styles.centerContent, {
                                 flex: 0.1,
                             }]}
-                        ></View>
+                        />
                         <View key={'emailTaken'}
                             style={[
                                 styles.centerContent, {

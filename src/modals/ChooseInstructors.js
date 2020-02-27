@@ -6,6 +6,7 @@ import {
     View, 
     Text, 
     TouchableOpacity, 
+    ScrollView,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
@@ -61,7 +62,7 @@ class ChooseInstructors extends React.Component {
                     blurAmount={10}
                 >
                     
-                    <View style={{flex: 1, alignSelf: 'stretch',}}>
+                    <View style={{flex: 1}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseInstructors()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
@@ -78,37 +79,31 @@ class ChooseInstructors extends React.Component {
                     >
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseInstructors()}
-                            style={{width: fullWidth*0.05,}}    
+                            style={{width: fullWidth*0.05}}    
                         >
                         </TouchableWithoutFeedback>
                         <View 
                             style={{
                                 width: fullWidth*0.9,
                                 borderRadius: 10*factorRatio,
-                                backgroundColor: 'white',
+                                backgroundColor: 'red',
                             }}
                         >
-                            <View style={{flex: 0.06}}></View>
-                            <View key={'chooseIntructor'}
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 0.075,
-                                }]}
+                            <View style={{height: '5%'}}/>
+                            <Text key={'chooseIntructor'}
+                                style={{
+                                    fontFamily: 'Roboto',
+                                    fontWeight: '700',
+                                    fontSize: 19*factorRatio,
+                                    textAlign: 'center',
+                                }}
                             >
-                                <Text
-                                    style={{
-                                        fontFamily: 'Roboto',
-                                        fontWeight: '700',
-                                        fontSize: 19*factorRatio
-                                    }}
-                                >
-                                    Choose Your Instructor(s)
-                                </Text>
-                            </View>
+                                Choose Your Instructor(s)
+                            </Text>
+                            <View style={{height: '2%'}}/>
                             <View key={'text'}
                                 style={[
                                     styles.centerContent, {
-                                    flex: 0.175,
                                     paddingLeft: fullWidth*0.1,
                                     paddingRight: fullWidth*0.1,
                                 }]}
@@ -124,24 +119,19 @@ class ChooseInstructors extends React.Component {
                                     praesent ac ipsum a lorem rutrum ullamcorpoer. Praescent rutrum nisl et mi pretium digissim non id felis.
                                 </Text>
                             </View>
-                            <View key={'buffer'}
-                                style={{
-                                    flex: 0.01
+                            <View style={{height: '5%'}}/>
+                            <ScrollView key={'instructors'}
+                                contentContainerStyle={{
+                                    backgroundColor: 'purple',
                                 }}
-                            ></View>
-                            <View key={'instructors'}
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 0.45,
-                                }]}
                             >
                                 <View key={'topRow'}
                                     style={{
-                                        flex: 1, 
                                         flexDirection: 'row',
                                         justifyContent: 'space-around',
                                         alignContent: 'space-around',
                                         alignSelf: 'stretch',
+                                        backgroundColor: 'red',
                                     }}
                                 >
                                     <View key={'circle1'}
@@ -163,7 +153,7 @@ class ChooseInstructors extends React.Component {
                                         >
                                             <FastImage
                                                 style={{flex:1, borderRadius: 100}}
-                                                source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                                source={{uri:'Pianote2/src/assets/img/imgs/lisa-witt.jpg'}}
                                                 resizeMode={FastImage.resizeMode.stretch}
                                             />
                                         </TouchableOpacity>
@@ -250,7 +240,7 @@ class ChooseInstructors extends React.Component {
                                 </View>
                                 <View key={'bottomRow'}
                                     style={{
-                                        flex: 1, 
+                                        backgroundColor: 'green',
                                         flexDirection: 'row',
                                         justifyContent: 'space-around',
                                         alignContent: 'space-around',
@@ -360,120 +350,124 @@ class ChooseInstructors extends React.Component {
                                         </Text>
                                     </View>
                                 </View>
-                            </View>  
+                            </ScrollView>  
                             <View key={'ok'}
-                                    style={[
-                                        styles.centerContent, {
-                                        flex: 0.12,
-                                        paddingLeft: fullWidth*0.1*factorRatio,
-                                        paddingRight: fullWidth*0.1*factorRatio,
-                                    }]}
-                                >
-                                    <View style={{flex: 0.15}}></View>
-                                    <View 
-                                        style={[
-                                            styles.centerContent, {
-                                            flex: 0.7,
-                                            backgroundColor: '#fb1b2f',
-                                            alignSelf: 'stretch',
-                                            borderRadius: 40,
-                                        }]}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.isChosen(),
-                                                this.props.hideChooseInstructors(
-                                                    this.state.lisa,
-                                                    this.state.cassi,
-                                                    this.state.jordan,
-                                                    this.state.nate,
-                                                    this.state.brett,
-                                                    this.state.josh,
-                                                )
-                                            }}
-                                            style={[
-                                                styles.centerContent, {
-                                                flex:1,
-                                            }]}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'Roboto',
-                                                    color: 'white',
-                                                    fontSize: 14*factorRatio,
-                                                    fontWeight: '700',
-                                                }}
-                                            >
-                                                OK
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={{flex: 0.15}}></View>
-                                </View>
-                            <View key={'cancel'}
-                            style={[
-                                styles.centerContent, {
-                                flex: 0.075,
-                                paddingLeft: fullWidth*0.1,
-                                paddingRight: fullWidth*0.1,
-                            }]}
-                        >
-                            <View 
                                 style={[
                                     styles.centerContent, {
-                                    flex: 0.8,
-                                    alignSelf: 'stretch',
+                                    paddingLeft: fullWidth*0.1*factorRatio,
+                                    paddingRight: fullWidth*0.1*factorRatio,
+                                    height: fullHeight*0.1,
                                 }]}
                             >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.setState({
-                                            lisa: false,
-                                            cassi: false,
-                                            jordan: false,
-                                            nate: false,
-                                            brett: false,
-                                            josh: false,
-                                        })
-                                    }}
+                                <View style={{flex: 0.15}}/>
+                                <View 
+                                    style={[
+                                        styles.centerContent, {
+                                        flex: 0.7,
+                                        backgroundColor: '#fb1b2f',
+                                        alignSelf: 'stretch',
+                                        borderRadius: 40,
+                                    }]}
                                 >
-                                    <View
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.isChosen(),
+                                            this.props.hideChooseInstructors(
+                                                this.state.lisa,
+                                                this.state.cassi,
+                                                this.state.jordan,
+                                                this.state.nate,
+                                                this.state.brett,
+                                                this.state.josh,
+                                            )
+                                        }}
                                         style={[
                                             styles.centerContent, {
-                                            flexDirection: 'row',
+                                            flex:1,
                                         }]}
                                     >
-                                        <Text
-                                            style={[
-                                                styles.centerContent, {
-                                                    fontFamily: 'Roboto',
-                                                height: 22.5*factorRatio,
-                                                marginTop: 3.75*factorRatio,
-                                                fontSize: 14*factorRatio,
-                                                color: 'grey',
-                                                marginRight: 0.5,
-                                                fontWeight: '700',
-                                            }]}
-                                        >
-                                            x </Text>
                                         <Text
                                             style={{
                                                 fontFamily: 'Roboto',
+                                                color: 'white',
                                                 fontSize: 14*factorRatio,
-                                                color: 'grey',
                                                 fontWeight: '700',
                                             }}
                                         >
-                                            CLEAR
+                                            OK
                                         </Text>
-                                    </View>
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 0.15}}/>
+                            </View>
+                            <View key={'cancel'}
+                                style={[
+                                    styles.centerContent, {
+                                    paddingLeft: fullWidth*0.1,
+                                    paddingRight: fullWidth*0.1,
+                                    height: fullHeight*0.1,
+                                }]}
+                            >
+                                <View 
+                                    style={[
+                                        styles.centerContent, {
+                                        flex: 0.8,
+                                        alignSelf: 'stretch',
+                                    }]}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                lisa: false,
+                                                cassi: false,
+                                                jordan: false,
+                                                nate: false,
+                                                brett: false,
+                                                josh: false,
+                                            })
+                                        }}
+                                    >
+                                        <View
+                                            style={[
+                                                styles.centerContent, {
+                                                flexDirection: 'row',
+                                            }]}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.centerContent, {
+                                                        fontFamily: 'Roboto',
+                                                    height: 22.5*factorRatio,
+                                                    marginTop: 3.75*factorRatio,
+                                                    fontSize: 14*factorRatio,
+                                                    color: 'grey',
+                                                    marginRight: 0.5,
+                                                    fontWeight: '700',
+                                                }]}
+                                            >
+                                                x </Text>
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: 14*factorRatio,
+                                                    color: 'grey',
+                                                    fontWeight: '700',
+                                                }}
+                                            >
+                                                CLEAR
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                        </View>
-                        <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}></View>
+                        <TouchableWithoutFeedback
+                            onPress={() => this.props.hideChooseInstructors()}
+                            style={{width: fullWidth*0.05}}    
+                        >
+                        </TouchableWithoutFeedback>
                     </View>
-                    <View style={{flex: 1, alignSelf: 'stretch',}}>
+                    <View style={{flex: 1}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseInstructors()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}

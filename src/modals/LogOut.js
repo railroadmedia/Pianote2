@@ -51,7 +51,7 @@ class LogOut extends React.Component {
                             backgroundColor: 'white',
                         }}
                     >
-                        <View style={{flex: 0.03}}></View>
+                        <View style={{flex: 0.03}}/>
                         <View key={'LogOut'}
                             style={[
                                 styles.centerContent, {
@@ -94,7 +94,7 @@ class LogOut extends React.Component {
                                     paddingRight: fullWidth*0.1*factorRatio,
                                 }]}
                             >
-                                <View style={{flex: 0.15}}></View>
+                                <View style={{flex: 0.15}}/>
                                 <View 
                                     style={[
                                         styles.centerContent, {
@@ -122,7 +122,7 @@ class LogOut extends React.Component {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
-                                <View style={{flex: 0.15}}></View>
+                                <View style={{flex: 0.15}}/>
                             </View>
                     <View key={'cancel'}
                         style={[

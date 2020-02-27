@@ -1,5 +1,5 @@
 /**
- * PathOverview
+ * LearningPaths
  */
 import React from 'react';
 import { 
@@ -8,18 +8,20 @@ import {
     TouchableOpacity, 
     ScrollView, 
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
+import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
-export default class PathOverview extends React.Component {
+export default class LearningPaths extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -126,33 +128,26 @@ export default class PathOverview extends React.Component {
                                 source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
                                 resizeMode={FastImage.resizeMode.cover}
                             />  
-                            <View key={'goBackIcon'}
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 10*factorHorizontal,
-                                    top: 40*factorVertical,
-                                    height: 50*factorRatio,
-                                    width: 50*factorRatio,
-                                    zIndex: 10,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.goBack()
-                                    }}
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <EntypoIcon
-                                        name={'chevron-thin-left'}
-                                        size={27.5*factorRatio}
-                                        color={'white'}
-                                    />
-                                </TouchableOpacity>
-                            </View>                           
+                            <NavMenuHeaders
+                                pxFromTop={30*factorRatio}
+                                leftHeader={'LESSONS'}
+                                pressLeftHeader={() => {
+                                    this.setState({
+                                        parentPage: 'LESSONS',
+                                        menu: 'HOME',
+                                        showModalMenu: true,
+                                    })
+                                }}
+                                pressRightHeader={() => {
+                                    this.setState({
+                                        parentPage: 'LEARNING PATHES',
+                                        menu: 'LESSONS',
+                                        showModalMenu: true,
+                                    })
+                                }}
+                                rightHeader={'LEARNING PATHS'}
+                                isHome={false}
+                            />
                             <View key={'pianoteSVG'}
                                 style={{
                                     position: 'absolute',
@@ -181,81 +176,20 @@ export default class PathOverview extends React.Component {
                             >
                                 FOUNDATIONS
                             </Text>
-                            <View key={'thumbs'}
-                                    style={[
-                                        styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: (isTablet) ? fullHeight*0.445 : fullHeight*0.51,
-                                    width: fullWidth*0.25,
-                                    height: (isTablet) ? fullHeight*0.065 : fullHeight*0.053,
-                                    zIndex: 3,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    style={{
-                                        alignItems: 'center',
-                                        flex: 1,
-                                    }}
-                                >
-                                    <AntIcon
-                                        name={'like2'}
-                                        size={24.5*factorRatio}
-                                        color={'white'}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'Roboto',
-                                            color: 'white',
-                                            marginTop: 3*factorRatio,
-                                            fontSize: 12*factorRatio,
-                                        }}
-                                    >
-                                        34
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
                             <StartIcon
                                 pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.51}
                                 buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                pxFromLeft={fullWidth*0.5/2}
-                                buttonWidth={fullWidth*0.5}
+                                pxFromLeft={fullWidth*0.065}
+                                buttonWidth={fullWidth*0.42}
                                 pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
                             />
-                            <View key={'info'}
-                                style={[ 
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: (isTablet) ? fullHeight*0.445 : fullHeight*0.51,
-                                    width: fullWidth*0.25,
-                                    height: (isTablet) ? fullHeight*0.065 : fullHeight*0.053,
-                                    zIndex: 3,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    style={{
-                                        flex: 1,
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <AntIcon
-                                        name={'infocirlceo'}
-                                        size={22*factorRatio}
-                                        color={'white'}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'Roboto',
-                                            color: 'white',
-                                            marginTop: 3*factorRatio,
-                                            fontSize: 14*factorRatio,
-                                        }}
-                                    >
-                                        Info
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                            <MoreInfoIcon
+                                pxFromTop={(isTablet) ? fullHeight*0.445 : fullHeight*0.51}
+                                buttonHeight={(isTablet) ? fullHeight*0.065 : fullHeight*0.053}
+                                pxFromRight={fullWidth*0.065}
+                                buttonWidth={fullWidth*0.42}
+                                pressed={() => this.props.navigation.navigate('PATHOVERVIEW')}
+                            />   
                         </View>
                         <View style={{height: 10*factorVertical}}/>
                         <View key={'verticalVideoList'}
@@ -285,8 +219,27 @@ export default class PathOverview extends React.Component {
                         </View>
                     </ScrollView>
                 </View>
+                <Modal key={'navMenu'}
+                    isVisible={this.state.showModalMenu}
+                    style={{
+                        margin: 0, 
+                        height: fullHeight,
+                        width: fullWidth,
+                    }}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={false}
+                >
+                    <NavigationMenu
+                        onClose={(e) => this.setState({showModalMenu: e})}
+                        menu={this.state.menu}
+                        parentPage={this.state.parentPage}
+                    />
+                </Modal>
                 <NavigationBar
-                    currentPage={'LessonsPathOverview'}
+                    currentPage={'LessonsLearningPaths'}
                 />
             </View>
         )

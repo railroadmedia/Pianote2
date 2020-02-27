@@ -12,6 +12,7 @@ import { Animated } from 'react-native';
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';
 import StudentFocusShow from './src/views/content/StudentFocusShow.js';
 import CourseCatalog from './src/views/content/CourseCatalog.js';
+import LearningPaths from './src/views/content/LearningPaths';
 import VideoPlayer from './src/views/content/VideoPlayer.js';
 import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack.js';
@@ -67,8 +68,9 @@ const AppNavigator = createStackNavigator({
     STUDENTFOCUSCATALOG: {screen: StudentFocusCatalog},
     STUDENTFOCUSSHOW: {screen: StudentFocusShow},
     COURSECATALOG: {screen: CourseCatalog},
-    VIDEOPLAYER: {screen: VideoPlayer},
+    LEARNINGPATHS: {screen: LearningPaths},
     PATHOVERVIEW: {screen: PathOverview},
+    VIDEOPLAYER: {screen: VideoPlayer},
     SINGLEPACK: {screen: SinglePack},
     DOWNLOADS: {screen: Downloads},
     LESSONS: {screen: Lessons},

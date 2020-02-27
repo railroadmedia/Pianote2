@@ -14,7 +14,6 @@ import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
@@ -216,10 +215,6 @@ export default class Home extends React.Component {
                             </View>
                         </ScrollView>
                     </View>
-                    <NavigationBar
-                        profileImage={this.state.profileImage}
-                        currentPage={'HOME'}
-                    />
                 </View>
             </View>
         )

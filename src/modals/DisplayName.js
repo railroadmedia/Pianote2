@@ -75,7 +75,7 @@ class DisplayName extends React.Component {
                                 styles.centerContent, {
                                 flex: 0.125,
                             }]}
-                        ></View>
+                        />
                         <View key={'emailTaken'}
                             style={[
                                 styles.centerContent, {

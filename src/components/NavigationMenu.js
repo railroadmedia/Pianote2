@@ -171,7 +171,7 @@ class NavigationMenu extends React.Component {
                     <TouchableOpacity
                         onPress={() => {
                             this.props.onClose(false),
-                            this.props.navigation.navigate('PATHOVERVIEW')
+                            this.props.navigation.navigate('LEARNINGPATHS')
                         }}
                         style={{flex: 1}}
                     >

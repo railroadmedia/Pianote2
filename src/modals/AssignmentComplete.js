@@ -104,10 +104,10 @@ class AssignmentComplete extends React.Component {
                                 Assignment{"\n"}Complete
                             </Text>
                         </View>
-                        <View style={{flex: 0.075}}></View>
-                        <View style={{height: 7.5*factorRatio}}></View>
+                        <View style={{flex: 0.075}}/>
+                        <View style={{height: 7.5*factorRatio}}/>
                         <View key={'lessonTitle'}>
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -118,7 +118,7 @@ class AssignmentComplete extends React.Component {
                             >
                                 Congratulations! You completed
                             </Text>
-                            <View style={{height: 5*factorRatio}}></View>
+                            <View style={{height: 5*factorRatio}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -129,7 +129,7 @@ class AssignmentComplete extends React.Component {
                             >
                                 The assignment title
                             </Text>
-                            <View style={{height: 15*factorRatio}}></View>
+                            <View style={{height: 15*factorRatio}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -141,9 +141,9 @@ class AssignmentComplete extends React.Component {
                             >
                                 YOU EARNED 275 XP!
                             </Text>
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                         </View>
-                        <View style={{flex: 0.05}}></View>
+                        <View style={{flex: 0.05}}/>
                     </View>
                     <View key={'buffRight'}
                         style={{width: '5%'}}

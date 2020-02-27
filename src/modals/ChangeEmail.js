@@ -87,7 +87,7 @@ class ChangeEmail extends React.Component {
                         </Text>
                         <View style={{flex: 0.075}}/>
                         <View key={'enterPassword'}>
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -98,7 +98,7 @@ class ChangeEmail extends React.Component {
                             >
                                 Enter your account password to confirm the change of email address.
                             </Text>
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                         </View>
                         <View style={{flex: 0.075}}/>
                         <View key={'buttons'}

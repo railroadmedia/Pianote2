@@ -62,7 +62,7 @@ class RestartCourse extends React.Component {
                                 backgroundColor: 'white',
                             }}
                         >
-                            <View style={{flex: 0.03}}></View>
+                            <View style={{flex: 0.03}}/>
                             <View key={'restartCourse'}
                                 style={[
                                     styles.centerContent, {
@@ -107,7 +107,7 @@ class RestartCourse extends React.Component {
                                         paddingRight: fullWidth*0.1*factorRatio,
                                     }]}
                                 >
-                                    <View style={{flex: 0.15}}></View>
+                                    <View style={{flex: 0.15}}/>
                                     <View 
                                         style={[
                                             styles.centerContent, {
@@ -135,7 +135,7 @@ class RestartCourse extends React.Component {
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={{flex: 0.15}}></View>
+                                    <View style={{flex: 0.15}}/>
                                 </View>
                         <View key={'cancel'}
                             style={[
@@ -185,7 +185,7 @@ class RestartCourse extends React.Component {
                             </View>
                         </View>
                         </View>
-                        <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}></View>
+                        <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}/>
                     </View>
                     <View style={{flex: 1, alignSelf: 'stretch',}}>
                         <TouchableWithoutFeedback
