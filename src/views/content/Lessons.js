@@ -201,7 +201,11 @@ export default class Lessons extends React.Component {
                             <HorizontalVideoList
                                 Title={'COURSES'}
                                 Description={''}
-                                seeAllRoute={'PACKUSER'}
+                                seeAll={() => {
+                                    this.props.navigation.navigate(
+                                        'SEEALL', {data: 'Courses'}
+                                    )
+                                }}
                                 showArtist={false}
                                 items={this.state.courses}
                                 forceSquareThumbs={false}
@@ -218,7 +222,11 @@ export default class Lessons extends React.Component {
                             <HorizontalVideoList
                                 Title={'SONGS'}
                                 Description={''}
-                                seeAllRoute={'PACKUSER'}
+                                seeAll={() => {
+                                    this.props.navigation.navigate(
+                                        'SEEALL', {data: 'Songs'}
+                                    )
+                                }}
                                 showArtist={false}
                                 items={this.state.songs}
                                 forceSquareThumbs={false}

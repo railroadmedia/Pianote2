@@ -203,7 +203,11 @@ export default class MyList extends React.Component {
                             <HorizontalVideoList
                                 Title={'ADDED TO LIST'}
                                 Description={''}
-                                seeAllRoute={'PACKUSER'}
+                                seeAll={() => {
+                                    this.props.navigation.navigate(
+                                        'SEEALL', {data: 'Added to List'}
+                                    )
+                                }}
                                 showArtist={false}
                                 items={this.state.items}
                                 forceSquareThumbs={false}
@@ -220,7 +224,11 @@ export default class MyList extends React.Component {
                             <HorizontalVideoList
                                 Title={'IN PROGRESS'}
                                 Description={''}
-                                seeAllRoute={'PACKUSER'}
+                                seeAll={() => {
+                                    this.props.navigation.navigate(
+                                        'SEEALL', {data: 'In Progress'}
+                                    )
+                                }}
                                 showArtist={false}
                                 items={this.state.items}
                                 forceSquareThumbs={false}
@@ -237,7 +245,11 @@ export default class MyList extends React.Component {
                             <HorizontalVideoList
                                 Title={'COMPLETED'}
                                 Description={''}
-                                seeAllRoute={'PACKUSER'}
+                                seeAll={() => {
+                                    this.props.navigation.navigate(
+                                        'SEEALL', {data: 'In Completed'}
+                                    )
+                                }}
                                 showArtist={false}
                                 items={this.state.items}
                                 forceSquareThumbs={false}
@@ -245,18 +257,6 @@ export default class MyList extends React.Component {
                                 itemHeight={fullHeight*0.115}
                             />
                         </View>
-                        <VerticalVideoList
-                            outVideos={this.state.outVideos}
-                            getVideos={() => this.getContent()}
-                            renderType={'Mapped'}
-                            items={this.state.items}
-                            imageRadius={10*factorRatio}
-                            containerBorderWidth={1}
-                            containerWidth={fullWidth}
-                            containerHeight={(isTablet) ? fullHeight*0.125 : fullHeight*0.09}
-                            imageHeight={(isTablet) ? fullHeight*0.15 : fullHeight*0.07}
-                            imageWidth={fullWidth*0.26}
-                        />
                     </ScrollView>
                 </View>                
                 <NavigationBar

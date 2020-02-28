@@ -188,7 +188,11 @@ export default class Home extends React.Component {
                                         items={this.state.inProgress}
                                         Title={'IN PROGRESS'}
                                         Description={''}
-                                        seeAllRoute={'PACKUSER'}
+                                        seeAll={() => {
+                                            this.props.navigation.navigate(
+                                                'SEEALL', {data: 'In Progress'}
+                                            )
+                                        }}
                                         itemWidth={fullWidth*0.6}
                                         itemHeight={fullHeight*0.155}
                                         showArtist={true}

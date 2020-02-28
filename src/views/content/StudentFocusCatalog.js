@@ -315,7 +315,7 @@ export default class StudentFocusCatalog extends React.Component {
                                 <HorizontalVideoList
                                     Title={'BOOTCAMPS'}
                                     Description={''}
-                                    seeAllRoute={() => {
+                                    seeAll={() => {
                                         this.props.navigation.navigate(
                                             'STUDENTFOCUSSHOW', 
                                             {'pack' : 'Bootcamps'}
@@ -332,7 +332,7 @@ export default class StudentFocusCatalog extends React.Component {
                                 <HorizontalVideoList
                                     Title={'QUESTION & ANSWER'}
                                     Description={''}
-                                    seeAllRoute={() => {
+                                    seeAll={() => {
                                         this.props.navigation.navigate(
                                             'STUDENTFOCUSSHOW', 
                                             {'pack' : 'Q&A'}
@@ -349,7 +349,7 @@ export default class StudentFocusCatalog extends React.Component {
                                 <HorizontalVideoList
                                     Title={'QUICK TIPS'}
                                     Description={''}
-                                    seeAllRoute={() => {
+                                    seeAll={() => {
                                         this.props.navigation.navigate(
                                             'STUDENTFOCUSSHOW', 
                                             {'pack' : 'Quick Tips'}
@@ -366,7 +366,7 @@ export default class StudentFocusCatalog extends React.Component {
                                 <HorizontalVideoList
                                     Title={'STUDENT REVIEWS'}
                                     Description={''}
-                                    seeAllRoute={() => {
+                                    seeAll={() => {
                                         this.props.navigation.navigate(
                                             'STUDENTFOCUSSHOW', 
                                             {'pack' : 'Student Review'}
