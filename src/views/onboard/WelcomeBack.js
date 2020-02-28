@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Carousel from 'react-native-carousel-view';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import SwipeLeft from 'Pianote2/src/assets/img/svgs/swipe-left.svg'
 
 export default class WelcomeBack extends React.Component {
     static navigationOptions = {header: null};
@@ -94,7 +94,7 @@ export default class WelcomeBack extends React.Component {
                                 </View>
                             </View>
                         </View>
-                        <View style={{flex: 0.47}}></View>
+                        <View style={{flex: 0.47}}/>
                         <View
                             style={{
                                 position: 'absolute',
@@ -115,7 +115,7 @@ export default class WelcomeBack extends React.Component {
                             >
                                 Welcome back to Pianote!
                             </Text>
-                            <View style={{height: 25*factorVertical}}></View>
+                            <View style={{height: 25*factorVertical}}/>
                             <Text
                                 style={{
                                     fontFamily: 'Roboto',
@@ -146,12 +146,12 @@ export default class WelcomeBack extends React.Component {
                             >
                                 <View style={{flex: 1}}/>
                                 <View style={{justifyContent: 'center'}}>
-                                    <Pianote
+                                    <SwipeLeft
                                         height={65*factorRatio}
-                                        width={50*factorRatio}
-                                        fill={'#fb1b2f'}
+                                        width={100*factorRatio}
                                     />
                                     <View style={{flexDirection: 'row', height: fullHeight*0.035}}>
+                                        <View style={{flex: 1}}/>
                                         <View
                                             style={{
                                                 height: 10*factorRatio,
@@ -192,6 +192,7 @@ export default class WelcomeBack extends React.Component {
                                             }}
                                         >
                                         </View>
+                                        <View style={{flex: 1}}/>
                                     </View>
                                 </View>
                                 <View style={{flex: 1}}/>
@@ -266,7 +267,7 @@ export default class WelcomeBack extends React.Component {
                                 </View>
                             </View>
                         </View>
-                        <View style={{flex: 0.47}}></View>
+                        <View style={{flex: 0.47}}/>
                         <View
                             style={{
                                 position: 'absolute',
@@ -478,9 +479,9 @@ export default class WelcomeBack extends React.Component {
                                     flexDirection: 'row',
                                 }}
                             >
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                                 <View style={{justifyContent: 'center'}}>
-                                    <View style={{flexDirection: 'row', height: fullHeight*0.035,}}>
+                                    <View style={{flexDirection: 'row', height: fullHeight*0.05}}>
                                         <View 
                                             style={{
                                                 height: 10*factorRatio,

@@ -52,7 +52,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: Home,
+    initialRoute: WelcomeBack,
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},
