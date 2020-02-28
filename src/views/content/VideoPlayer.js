@@ -30,6 +30,7 @@ export default class VideoPlayer extends React.Component {
             showStarted: false,
             showSoundSlice: false,
             showVideoPlayerOptions: false,
+            showAssignmentComplete: false,
             showQualitySettings: false,
             showAssignmentComplete: false, 
             showLessonComplete: false, 

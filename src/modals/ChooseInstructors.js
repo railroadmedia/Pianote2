@@ -23,7 +23,9 @@ class ChooseInstructors extends React.Component {
             jordan: this.props.jordan,
             nate: this.props.nate,
             brett: this.props.brett,
-            josh: this.props.josh,
+            jonny: this.props.jonny,
+            kenny: this.props.kenny,
+            jay: this.props.jay,
         }
     }
 
@@ -33,7 +35,7 @@ class ChooseInstructors extends React.Component {
             this.state.jordan !== false ||
             this.state.nate !== false ||
             this.state.brett !== false ||
-            this.state.josh !== false) {
+            this.state.jonny !== false) {
             this.props.setInstructor(true)
         } else {
             this.props.setInstructor(false)
@@ -62,7 +64,7 @@ class ChooseInstructors extends React.Component {
                     blurAmount={10}
                 >
                     
-                    <View style={{flex: 1}}>
+                    <View style={{flex: 1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseInstructors()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
@@ -71,7 +73,7 @@ class ChooseInstructors extends React.Component {
                     </View>
                     <View
                         style={{
-                            height: fullHeight*0.7 + (
+                            height: fullHeight*0.65 + (
                                 (global.isTablet) ? fullHeight*0.1 : 0),
                             flexDirection: 'row',
                             borderRadius: 10*factorRatio,
@@ -86,7 +88,7 @@ class ChooseInstructors extends React.Component {
                             style={{
                                 width: fullWidth*0.9,
                                 borderRadius: 10*factorRatio,
-                                backgroundColor: 'red',
+                                backgroundColor: 'white',
                             }}
                         >
                             <View style={{height: '5%'}}/>
@@ -121,9 +123,7 @@ class ChooseInstructors extends React.Component {
                             </View>
                             <View style={{height: '5%'}}/>
                             <ScrollView key={'instructors'}
-                                contentContainerStyle={{
-                                    backgroundColor: 'purple',
-                                }}
+                                showsVerticalScrollIndicator={false}
                             >
                                 <View key={'topRow'}
                                     style={{
@@ -131,7 +131,6 @@ class ChooseInstructors extends React.Component {
                                         justifyContent: 'space-around',
                                         alignContent: 'space-around',
                                         alignSelf: 'stretch',
-                                        backgroundColor: 'red',
                                     }}
                                 >
                                     <View key={'circle1'}
@@ -153,7 +152,7 @@ class ChooseInstructors extends React.Component {
                                         >
                                             <FastImage
                                                 style={{flex:1, borderRadius: 100}}
-                                                source={{uri:'Pianote2/src/assets/img/imgs/lisa-witt.jpg'}}
+                                                source={require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')}
                                                 resizeMode={FastImage.resizeMode.stretch}
                                             />
                                         </TouchableOpacity>
@@ -187,7 +186,7 @@ class ChooseInstructors extends React.Component {
                                         >  
                                             <FastImage
                                                 style={{flex:1, borderRadius: 100}}
-                                                source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                                source={require('Pianote2/src/assets/img/imgs/cassi-falk.jpg')}
                                                 resizeMode={FastImage.resizeMode.stretch}
                                             />
                                         </TouchableOpacity>
@@ -221,7 +220,7 @@ class ChooseInstructors extends React.Component {
                                         >
                                             <FastImage
                                                 style={{flex:1, borderRadius: 100}}
-                                                source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                                source={require('Pianote2/src/assets/img/imgs/jordan-leibel.jpg')}
                                                 resizeMode={FastImage.resizeMode.stretch}
                                             />
                                         </TouchableOpacity>
@@ -238,9 +237,9 @@ class ChooseInstructors extends React.Component {
                                         </Text>
                                     </View>
                                 </View>
-                                <View key={'bottomRow'}
+                                <View style={{height: fullHeight*0.03}}/>
+                                <View key={'middleRow'}
                                     style={{
-                                        backgroundColor: 'green',
                                         flexDirection: 'row',
                                         justifyContent: 'space-around',
                                         alignContent: 'space-around',
@@ -265,7 +264,7 @@ class ChooseInstructors extends React.Component {
                                         >
                                             <FastImage
                                                 style={{flex:1, borderRadius: 100}}
-                                                source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                                source={require('Pianote2/src/assets/img/imgs/nate-bosch.jpg')}
                                                 resizeMode={FastImage.resizeMode.stretch}
                                             />
                                         </TouchableOpacity>
@@ -299,7 +298,7 @@ class ChooseInstructors extends React.Component {
                                         >
                                             <FastImage
                                                 style={{flex:1, borderRadius: 100}}
-                                                source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                                source={require('Pianote2/src/assets/img/imgs/brett-ziegler.jpg')}
                                                 resizeMode={FastImage.resizeMode.stretch}
                                             />
                                         </TouchableOpacity>
@@ -321,10 +320,10 @@ class ChooseInstructors extends React.Component {
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({josh: !this.state.josh})}
+                                            onPress={() => this.setState({jonny: !this.state.jonny})}
                                             style={{
-                                                borderWidth: this.state.josh ? 4*factorRatio : 2.5*factorRatio,
-                                                borderColor: this.state.josh ? '#fb1b2f' : 'black',
+                                                borderWidth: this.state.jonny ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.jonny ? '#fb1b2f' : 'black',
                                                 height: 80*factorRatio,
                                                 width: 80*factorRatio,
                                                 borderRadius: 300,
@@ -333,7 +332,7 @@ class ChooseInstructors extends React.Component {
                                         >
                                             <FastImage
                                                 style={{flex:1, borderRadius: 100}}
-                                                source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                                source={require('Pianote2/src/assets/img/imgs/jonny-tobin.jpg')}
                                                 resizeMode={FastImage.resizeMode.stretch}
                                             />
                                         </TouchableOpacity>
@@ -346,10 +345,91 @@ class ChooseInstructors extends React.Component {
                                                 textAlign: 'center'
                                             }}
                                         >
-                                            JOSH DION
+                                            JONNY TOBIN
                                         </Text>
                                     </View>
                                 </View>
+                                <View style={{height: fullHeight*0.03}}/>
+                                <View key={'bottomRow'}
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-around',
+                                        alignContent: 'space-around',
+                                        alignSelf: 'stretch'
+                                    }}
+                                >
+                                    <View style={{flex: 1}}/>
+                                    <View key={'circle7'}
+                                        style={{
+                                            width: 80*factorRatio,
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() => this.setState({kenny: !this.state.kenny})}
+                                            style={{
+                                                borderWidth: this.state.kenny ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.kenny ? '#fb1b2f' : 'black',
+                                                height: 80*factorRatio,
+                                                width: 80*factorRatio,
+                                                borderRadius: 300,
+                                                backgroundColor: 'white',
+                                            }}
+                                        >
+                                            <FastImage
+                                                style={{flex:1, borderRadius: 100}}
+                                                source={require('Pianote2/src/assets/img/imgs/kenny-werner.jpg')}
+                                                resizeMode={FastImage.resizeMode.stretch}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text
+                                            style={{
+                                                fontFamily: 'Roboto',
+                                                marginTop: 5*factorRatio,
+                                                fontSize: 11*factorRatio,
+                                                fontWeight: '600',
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            KENNY WERNER
+                                        </Text>
+                                    </View>
+                                    <View style={{flex: 0.5}}/>
+                                    <View key={'circle8'}
+                                        style={{
+                                            width: 80*factorRatio,
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() => this.setState({jay: !this.state.jay})}
+                                            style={{
+                                                borderWidth: this.state.jay ? 4*factorRatio : 2.5*factorRatio,
+                                                borderColor: this.state.jay ? '#fb1b2f' : 'black',
+                                                height: 80*factorRatio,
+                                                width: 80*factorRatio,
+                                                borderRadius: 300,
+                                                backgroundColor: 'white',
+                                            }}
+                                        >
+                                            <FastImage
+                                                style={{flex:1, borderRadius: 100}}
+                                                source={require('Pianote2/src/assets/img/imgs/jay-oliver.jpg')}
+                                                resizeMode={FastImage.resizeMode.stretch}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text
+                                            style={{
+                                                fontFamily: 'Roboto',
+                                                marginTop: 5*factorRatio,
+                                                fontSize: 10*factorRatio,
+                                                fontWeight: '600',
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            JAY OLIVER
+                                        </Text>
+                                    </View>
+                                    <View style={{flex: 1}}/>
+                                </View>   
                             </ScrollView>  
                             <View key={'ok'}
                                 style={[
@@ -359,7 +439,7 @@ class ChooseInstructors extends React.Component {
                                     height: fullHeight*0.1,
                                 }]}
                             >
-                                <View style={{flex: 0.15}}/>
+                                <View style={{flex: 0.2}}/>
                                 <View 
                                     style={[
                                         styles.centerContent, {
@@ -378,7 +458,9 @@ class ChooseInstructors extends React.Component {
                                                 this.state.jordan,
                                                 this.state.nate,
                                                 this.state.brett,
-                                                this.state.josh,
+                                                this.state.jonny, 
+                                                this.state.kenny, 
+                                                this.state.jay
                                             )
                                         }}
                                         style={[
@@ -398,14 +480,14 @@ class ChooseInstructors extends React.Component {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
-                                <View style={{flex: 0.15}}/>
+                                <View style={{flex: 0.2}}/>
                             </View>
                             <View key={'cancel'}
                                 style={[
                                     styles.centerContent, {
                                     paddingLeft: fullWidth*0.1,
                                     paddingRight: fullWidth*0.1,
-                                    height: fullHeight*0.1,
+                                    height: fullHeight*0.05,
                                 }]}
                             >
                                 <View 
@@ -423,7 +505,10 @@ class ChooseInstructors extends React.Component {
                                                 jordan: false,
                                                 nate: false,
                                                 brett: false,
-                                                josh: false,
+                                                jonny: false,
+                                                kenny: false,
+                                                jay: false,
+
                                             })
                                         }}
                                     >
@@ -460,6 +545,7 @@ class ChooseInstructors extends React.Component {
                                     </TouchableOpacity>
                                 </View>
                             </View>
+                            <View style={{height: '5%'}}/>
                         </View>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseInstructors()}
@@ -467,7 +553,7 @@ class ChooseInstructors extends React.Component {
                         >
                         </TouchableWithoutFeedback>
                     </View>
-                    <View style={{flex: 1}}>
+                    <View style={{flex: 1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideChooseInstructors()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}

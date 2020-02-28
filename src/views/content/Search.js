@@ -24,8 +24,7 @@ import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-expanded-arrow.svg';
-
+import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-selected.svg';
 
 export default class Search extends React.Component {
     static navigationOptions = {header: null};
@@ -366,22 +365,37 @@ export default class Search extends React.Component {
                                         style={[
                                             styles.centerContent, {
                                             flexDirection: 'row',
-                                            height: 37.5*factorRatio,
-                                            width: 37.5*factorRatio,
+                                            height: 40*factorRatio,
+                                            width: 40*factorRatio,
                                             borderRadius: 200,
-                                            backgroundColor: (
-                                                this.state.showFilters
-                                            ) ?  'red' : 'white',
-                                            transform: [{ rotate: '90deg'}],
                                         }]}
                                     >
-                                        <IonIcon 
-                                            size={22.5*factorRatio}
-                                            name={'md-options'}
-                                            color={(
-                                                this.state.showFilters
-                                            ) ? 'white' : '#c2c2c2'}
+                                        <FilterIcon
+                                            fill={(
+                                                this.state.showFilters) ? 'red' : 'white'
+                                            }
+                                            height={40*factorRatio}
+                                            width={40*factorRatio}
                                         />
+                                        <View
+                                            style={[
+                                                styles.centerContent, {
+                                                position: 'absolute',
+                                                zIndex: 5,
+                                                height: 40*factorRatio,
+                                                width: 40*factorRatio,
+                                                borderRadius: 200,
+                                                transform: [{ rotate: '90deg'}],
+                                            }]}
+                                        >
+                                            <IonIcon 
+                                                size={20*factorRatio}
+                                                name={'md-options'}
+                                                color={(
+                                                    this.state.showFilters
+                                                ) ? 'white' : '#c2c2c2'}
+                                            />
+                                        </View>
                                     </TouchableOpacity>
                                 </View>
                                 )}

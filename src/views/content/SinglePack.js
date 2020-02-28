@@ -148,33 +148,10 @@ export default class SinglePack extends React.Component {
                                 height={'60%'}
                                 borderRadius={0}
                             />
-                            <View key={'message'}
-                                style={{
-                                    position: 'absolute',
-                                    width: fullWidth,
-                                    height: '100%',
-                                    zIndex: 10,
-                                    paddingLeft: fullWidth*0.125,
-                                    paddingRight: fullWidth*0.125,
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                <Text
-                                    style={{
-                                        fontSize: 16*factorRatio,
-                                        textAlign: 'center',
-                                        color: 'white',
-                                        fontFamily: 'Roboto',
-                                    }}
-                                >
-                                    This is a short message explaining what the pack is, how to use it, and why students should begin to go through it.
-                                </Text>
-                                <View style={{height: fullHeight*0.115}}/>
-                            </View>
                             <View key={'image1'}
                                 style={{
                                     position: 'absolute',
-                                    bottom: fullHeight*0.09,
+                                    bottom: fullHeight*0.025,
                                     zIndex: 2,
                                     flexDirection: 'row',
                                 }}
@@ -182,19 +159,19 @@ export default class SinglePack extends React.Component {
                                 <View style={{flex: 1}}/>
                                 {(this.state.pack == 'SIGHT READING') && (
                                 <SightReading
-                                    height={250*factorVertical}
+                                    height={200*factorVertical}
                                     width={250*factorVertical}
                                 />
                                 )}
                                 {(this.state.pack == '500 SONGS') && (
                                 <Songs500
-                                    height={250*factorVertical}
+                                    height={200*factorVertical}
                                     width={250*factorVertical}
                                 />
                                 )}
                                 {(this.state.pack == 'FASTER FINGERS') && (
                                 <FasterFingers
-                                    height={250*factorVertical}
+                                    height={225*factorVertical}
                                     width={250*factorVertical}
                                 />
                                 )}
@@ -342,10 +319,7 @@ export default class SinglePack extends React.Component {
                                 </View>
                             </View>
                         </View>
-                        <View key={'buffer0'}
-                            style={{height: 5*factorVertical}}
-                        >
-                        </View>
+                        <View style={{height: 5*factorVertical}}/>
                         <View key={'verticalVideoList'}
                             style={[
                                 styles.centerContent, {

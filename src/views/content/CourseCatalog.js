@@ -13,7 +13,7 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import Topic from 'Pianote2/src/assets/img/svgs/topics.svg';
 import Levels from 'Pianote2/src/assets/img/svgs/levels.svg';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
@@ -24,6 +24,7 @@ import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
+import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-selected.svg';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
 export default class CourseCatalog extends React.Component {
@@ -57,7 +58,9 @@ export default class CourseCatalog extends React.Component {
             jordan: false,
             nate: false,
             brett: false,
-            josh: false,
+            jonny: false,
+            jay: false, 
+            kenny: false,
             parentPage: 'LESSONS',
             menu: 'COURSES',
         }
@@ -148,7 +151,7 @@ export default class CourseCatalog extends React.Component {
                         contentInsetAdjustmentBehavior={'never'}
                         style={{flex: 1}}
                     >
-                         <View key={'backgroundColoring'}
+                        <View key={'backgroundColoring'}
                             style={{
                                 backgroundColor: 'black',
                                 position: 'absolute',
@@ -161,9 +164,7 @@ export default class CourseCatalog extends React.Component {
                         >
                         </View>
                         <View key={'header'}
-                            style={{
-                                zIndex: 2
-                            }}
+                            style={{zIndex: 2}}
                         >
                             <NavMenuHeaders
                                 pxFromTop={30*factorRatio}
@@ -190,41 +191,58 @@ export default class CourseCatalog extends React.Component {
                             style={{
                                 position: 'absolute',
                                 top: fullHeight*0.275,
-                                left: 0,
                                 width: fullWidth,
                                 zIndex: 2,
                                 flexDirection: 'row',
                             }}
                         >
                             <View style={{flex: 1}}/>
-                            <View key={'filter'}
-                                style={[
-                                    styles.centerContent, {
-                                    height: 45*factorRatio,
-                                    width: 45*factorRatio,
-                                    backgroundColor: (this.state.filterClicked) ? 
-                                        '#fb1b2f' : 'transparent',
-                                    borderRadius: 50,
-                                    borderWidth: 2.5*factorRatio,
-                                    borderColor: '#fb1b2f', 
-                                    transform: [{ rotate: '90deg' }],
-                                }]}
-                            >
+                            <View style={styles.centerContent}>
+                                <View style={{flex: 1}}/>
                                 <TouchableOpacity
+                                    onPress={() => this.pressFilters()}
                                     style={[
                                         styles.centerContent, {
-                                        height: 45*factorRatio,
-                                        width: 45*factorRatio,
+                                        flexDirection: 'row',
+                                        height: 42.5*factorRatio,
+                                        width: 42.5*factorRatio,
+                                        borderWidth: 2*factorRatio,
+                                        borderColor: 'red',
+                                        borderRadius: 200,
                                     }]}
-                                    onPress={() => this.pressFilters()}
                                 >
-                                    <Ionicon 
-                                        size={25*factorRatio}
-                                        name={'md-options'}
-                                        color={(this.state.filterClicked) ? 'white':'#fb1b2f'}
+                                    <FilterIcon
+                                        fill={(
+                                            this.state.levelChosen == true ||
+                                            this.state.instructorChosen == true ||
+                                            this.state.topicChosen == true ||
+                                            this.state.progressChosen == true
+                                            ) ? 'red' : 'transparent'
+                                        }
+                                        height={42.5*factorRatio}
+                                        width={42.5*factorRatio}
                                     />
+                                    <View
+                                        style={[
+                                            styles.centerContent, {
+                                            position: 'absolute',
+                                            zIndex: 5,
+                                            height: 42.5*factorRatio,
+                                            width: 42.5*factorRatio,
+                                            borderRadius: 200,
+                                            transform: [{ rotate: '90deg'}],
+                                        }]}
+                                    >
+                                        <IonIcon 
+                                            size={22.5*factorRatio}
+                                            name={'md-options'}
+                                            color={(
+                                                this.state.showFilters
+                                            ) ? 'white' : 'red'}
+                                        />
+                                    </View>
                                 </TouchableOpacity>
-                            </View>
+                            </View>                            
                             <View style={{flex: 1}}/>
                         </View>
                         <View key={'image'}
@@ -585,7 +603,9 @@ export default class CourseCatalog extends React.Component {
                                             jordan: false,
                                             nate: false,
                                             brett: false,
-                                            josh: false,
+                                            jonny: false,
+                                            jay: false,
+                                            kenny: false,
                                         })
                                     }}
                                     style={[
@@ -700,15 +720,20 @@ export default class CourseCatalog extends React.Component {
                         jordan={this.state.jordan}
                         nate={this.state.nate}
                         brett={this.state.brett}
-                        josh={this.state.josh}
-                        hideChooseInstructors={(l, c, j, n, b, josh) => {
+                        jonny={this.state.jonny}
+                        jay={this.state.jay}
+                        kenny={this.state.kenny}
+                        hideChooseInstructors={(
+                            lisa, cassi, jordan, nate, brett, jonny, kenny, jay) => {
                             this.setState({
-                                lisa: l,
-                                cassi: c,
-                                jordan: j,
-                                nate: n,
-                                brett: b,
-                                josh: josh,
+                                lisa,
+                                cassi,
+                                jordan,
+                                nate,
+                                brett,
+                                jonny,
+                                kenny,
+                                jay,
                                 showChooseInstructors: false
                             })
                         }}
