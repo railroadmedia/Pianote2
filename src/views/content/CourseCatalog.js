@@ -137,6 +137,143 @@ export default class CourseCatalog extends React.Component {
     }
 
 
+    whatFilter() {
+        // if filter selected && filters closed
+        // else if filter not selected && filter closed
+        // else if filter open
+        if( this.state.filterClicked == false && (
+            this.state.levelChosen == true ||
+            this.state.instructorChosen == true ||
+            this.state.topicChosen == true ||
+            this.state.progressChosen == true
+        )) {
+            return <View style={styles.centerContent}>
+                <View style={{flex: 1}}/>
+                    <TouchableOpacity
+                        onPress={() => this.pressFilters()}
+                        style={[
+                            styles.centerContent, {
+                            borderWidth: 2*factorRatio,
+                            height: 42.5*factorRatio,
+                            width: 42.5*factorRatio,
+                            flexDirection: 'row',
+                            borderColor: 'red',
+                            backgroundColor: 'red',
+                            borderRadius: 200,
+                        }]}
+                    >
+                        <View
+                            style={[
+                                styles.centerContent, {
+                                position: 'absolute',
+                                zIndex: 5,
+                                height: 42.5*factorRatio,
+                                width: 42.5*factorRatio,
+                                borderRadius: 200,
+                                transform: [{rotate: '90deg'}],
+                            }]}
+                        >
+                            <IonIcon 
+                                size={22.5*factorRatio}
+                                name={'md-options'}
+                                color={'white'}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+        
+        } else if(
+            this.state.filterClicked == false && 
+            this.state.levelChosen == false &&
+            this.state.instructorChosen == false &&
+            this.state.topicChosen == false &&
+            this.state.progressChosen == false
+        ) {
+            return <View style={styles.centerContent}>
+                    <View style={{flex: 1}}/>
+                    <TouchableOpacity
+                        onPress={() => this.pressFilters()}
+                        style={[
+                            styles.centerContent, {
+                            borderWidth: 2*factorRatio,
+                            height: 42.5*factorRatio,
+                            width: 42.5*factorRatio,
+                            flexDirection: 'row',
+                            borderColor: 'red',
+                            borderRadius: 200,
+                        }]}
+                    >
+                        <FilterIcon
+                            fill={(
+                                this.state.levelChosen == true ||
+                                this.state.instructorChosen == true ||
+                                this.state.topicChosen == true ||
+                                this.state.progressChosen == true
+                                ) ? 'red' : 'transparent'
+                            }
+                            height={42.5*factorRatio}
+                            width={42.5*factorRatio}
+                        />
+                        <View
+                            style={[
+                                styles.centerContent, {
+                                position: 'absolute',
+                                zIndex: 5,
+                                height: 42.5*factorRatio,
+                                width: 42.5*factorRatio,
+                                borderRadius: 200,
+                                transform: [{rotate: '90deg'}],
+                            }]}
+                        >
+                            <IonIcon 
+                                size={22.5*factorRatio}
+                                name={'md-options'}
+                                color={(
+                                    this.state.showFilters
+                                ) ? 'white' : 'red'}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+        } else {
+            return <View style={styles.centerContent}>
+                <View style={{flex: 1}}/>
+                <TouchableOpacity
+                    onPress={() => this.pressFilters()}
+                    style={[
+                        styles.centerContent, {
+                        height: 42.5*factorRatio,
+                        width: 42.5*factorRatio,
+                        flexDirection: 'row',
+                    }]}
+                >
+                    <FilterIcon
+                        fill={'red'}
+                        height={'102.5%'}
+                        width={'102.%'}
+                    />
+                    <View
+                        style={[
+                            styles.centerContent, {
+                            position: 'absolute',
+                            zIndex: 5,
+                            height: 42.5*factorRatio,
+                            width: 42.5*factorRatio,
+                            transform: [{rotate: '90deg'}],
+                        }]}
+                    >
+                        <IonIcon 
+                            size={22.5*factorRatio}
+                            name={'md-options'}
+                            color={'white'}
+                        />
+                    </View>
+                </TouchableOpacity>
+            </View>                 
+        }
+    }
+
+
     render() {
         return (
             <View styles={styles.container}>
@@ -191,58 +328,13 @@ export default class CourseCatalog extends React.Component {
                             style={{
                                 position: 'absolute',
                                 top: fullHeight*0.275,
+                                flexDirection: 'row',
                                 width: fullWidth,
                                 zIndex: 2,
-                                flexDirection: 'row',
                             }}
                         >
                             <View style={{flex: 1}}/>
-                            <View style={styles.centerContent}>
-                                <View style={{flex: 1}}/>
-                                <TouchableOpacity
-                                    onPress={() => this.pressFilters()}
-                                    style={[
-                                        styles.centerContent, {
-                                        flexDirection: 'row',
-                                        height: 42.5*factorRatio,
-                                        width: 42.5*factorRatio,
-                                        borderWidth: 2*factorRatio,
-                                        borderColor: 'red',
-                                        borderRadius: 200,
-                                    }]}
-                                >
-                                    <FilterIcon
-                                        fill={(
-                                            this.state.levelChosen == true ||
-                                            this.state.instructorChosen == true ||
-                                            this.state.topicChosen == true ||
-                                            this.state.progressChosen == true
-                                            ) ? 'red' : 'transparent'
-                                        }
-                                        height={42.5*factorRatio}
-                                        width={42.5*factorRatio}
-                                    />
-                                    <View
-                                        style={[
-                                            styles.centerContent, {
-                                            position: 'absolute',
-                                            zIndex: 5,
-                                            height: 42.5*factorRatio,
-                                            width: 42.5*factorRatio,
-                                            borderRadius: 200,
-                                            transform: [{ rotate: '90deg'}],
-                                        }]}
-                                    >
-                                        <IonIcon 
-                                            size={22.5*factorRatio}
-                                            name={'md-options'}
-                                            color={(
-                                                this.state.showFilters
-                                            ) ? 'white' : 'red'}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                            </View>                            
+                            {this.whatFilter()}
                             <View style={{flex: 1}}/>
                         </View>
                         <View key={'image'}
