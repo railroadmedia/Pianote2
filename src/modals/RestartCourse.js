@@ -11,13 +11,11 @@ import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-
 class RestartCourse extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            chosenInstructor: 2,
         }
     }
 
@@ -34,7 +32,7 @@ class RestartCourse extends React.Component {
                     blurType={'dark'}
                     blurAmount={100}
                 >
-                    <View style={{flex: 1, alignSelf: 'stretch',}}>
+                    <View style={{flex: 1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideRestartCourse()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
@@ -43,7 +41,7 @@ class RestartCourse extends React.Component {
                     </View>
                     <View
                         style={{
-                            height: fullHeight*0.4 + (
+                            height: fullHeight*0.35 + (
                                 (global.isTablet) ? fullHeight*0.1 : 0),
                             flexDirection: 'row',
                             borderRadius: 10*factorRatio,
@@ -110,7 +108,7 @@ class RestartCourse extends React.Component {
                                     <View 
                                         style={[
                                             styles.centerContent, {
-                                            flex: 0.65,
+                                            flex: 0.675,
                                             backgroundColor: '#fb1b2f',
                                             alignSelf: 'stretch',
                                             borderRadius: 40*factorRatio,
@@ -189,7 +187,7 @@ class RestartCourse extends React.Component {
                         </View>
                         <View style={{width: fullWidth*0.05, backgroundColor:'transparent'}}/>
                     </View>
-                    <View style={{flex: 1, alignSelf: 'stretch',}}>
+                    <View style={{flex: 1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
                             onPress={() => this.props.hideRestartCourse()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}

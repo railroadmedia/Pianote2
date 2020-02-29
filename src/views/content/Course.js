@@ -266,7 +266,7 @@ export default class Course extends React.Component {
                                                     buttonHeight={(isTablet) ? 
                                                         fullHeight*0.065 : fullHeight*0.053
                                                     }
-                                                    pressed={() => console.log('Start')}
+                                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
                                                 />
                                             </TouchableOpacity>
                                             )}

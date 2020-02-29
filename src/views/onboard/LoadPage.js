@@ -4,6 +4,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -18,6 +19,8 @@ export default class LoadPage extends React.Component {
 
 
     componentDidMount = async () => {
+        await SplashScreen.hide();
+
         // check if loggedIn
         let isLoggedIn = await AsyncStorage.getItem('loggedInStatus')
         if(isLoggedIn !== 'true') {

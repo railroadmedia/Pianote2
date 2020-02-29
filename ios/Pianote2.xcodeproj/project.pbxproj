@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* Pianote2Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* Pianote2Tests.m */; };
 		06ECD7F3A46A4880AABA39CC /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3DE01978C1C4F35A5203BF3 /* Roboto-Regular.ttf */; };

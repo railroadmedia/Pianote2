@@ -41,6 +41,8 @@ target 'Pianote2' do
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'Pianote2Tests' do
     inherit! :search_paths
     # Pods for testing
