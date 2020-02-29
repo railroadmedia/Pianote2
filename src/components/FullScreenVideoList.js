@@ -232,10 +232,10 @@ class FullScreenVideoList extends React.Component {
 
 const localStyles = StyleSheet.create({
     description: {
-        textAlign:'left', 
-        fontWeight:'500', 
-        color:'#979797', 
-        fontFamily:'avenir next',
+        textAlign: 'left', 
+        fontWeight: '500', 
+        color: '#979797', 
+        fontFamily: 'avenir next',
     },
 });
 

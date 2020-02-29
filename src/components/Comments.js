@@ -6,16 +6,14 @@ import {
     View,
     Text,
     ActivityIndicator,
-    FlatList,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { withNavigation } from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import { withNavigation } from 'react-navigation';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
-
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Comments extends React.Component {
     static navigationOptions = {header: null};
@@ -44,7 +42,7 @@ class Comments extends React.Component {
             )
         } else {
             return (
-                <View style={{height:20*factorVertical}}></View>
+                <View style={{height:20*factorVertical}}/>
             )
         }
     }
@@ -225,8 +223,6 @@ class Comments extends React.Component {
                 <View 
                     style={{
                         backgroundColor: 'white',
-                        borderBottomColor: '#ececec',
-                        borderBottomWidth: 1*factorRatio,
                         paddingTop: fullHeight*0.025,
                         paddingBottom: fullHeight*0.02,
                         paddingLeft: fullWidth*0.05,
@@ -621,7 +617,10 @@ class Comments extends React.Component {
                         </View>
                         )}        
 
-                        <View key={'addComment'}
+                        <TouchableOpacity key={'addComment'}
+                            onPress={() => {
+                                this.props.showMakeComment()
+                            }}
                             style={{
                                 width: fullWidth,
                                 height: fullHeight*0.1,
@@ -630,6 +629,7 @@ class Comments extends React.Component {
                             }}
                         >
                             <TouchableOpacity
+                                onPress={() => {}}
                                 style={{
                                     height: '100%',
                                     width: '100%',
@@ -658,7 +658,6 @@ class Comments extends React.Component {
                             <View>
                                 <View style={{flex: 1}}/>
                                 <Text
-                                    onPress={() => {}}
                                     style={{
                                         fontFamily: 'Roboto',
                                         fontSize: 14*factorRatio,
@@ -669,7 +668,7 @@ class Comments extends React.Component {
                                 </Text>
                                 <View style={{flex: 1}}/>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                         <View style={{flex: 1}}/>
                     </View>
                     {this.mapComments()}

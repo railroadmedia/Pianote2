@@ -2,8 +2,11 @@
  * VideoPlayer
  */
 import React from 'react';
+import { 
+    View, 
+    Text, 
+} from 'react-native';
 import Modal from 'react-native-modal';
-import { View, Text } from 'react-native';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -12,11 +15,12 @@ import SoundSlice from '../../modals/SoundSlice.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AssignmentComplete from '../../modals/LessonComplete.js';
+import MakeComment from '../../components/MakeComment.js';
 import LessonComplete from '../../modals/LessonComplete.js';
-import QualitySettings from 'Pianote2/src/modals/QualitySettings.js';
-import VideoPlayerOptions from 'Pianote2/src/modals/VideoPlayerOptions.js';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import QualitySettings from '../../modals/QualitySettings.js';
+import AssignmentComplete from '../../modals/LessonComplete.js';
+import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
+import VerticalVideoList from '../../components/VerticalVideoList.js';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 
@@ -28,6 +32,7 @@ export default class VideoPlayer extends React.Component {
             showModalMenu: false, 
             showReplies: false,
             showStarted: false,
+            showMakeComment: false,
             showSoundSlice: false,
             showVideoPlayerOptions: false,
             showAssignmentComplete: false,
@@ -109,19 +114,19 @@ export default class VideoPlayer extends React.Component {
     renderAssignments() {
         return this.state.assignmentList.map((row, index) => {
             return (
-                <View 
+                <TouchableOpacity
                     style={{
                         height: 55*factorVertical,
                         paddingLeft: fullWidth*0.035,
                         borderBottomColor: '#ececec',
-                        borderBottomWidth: 1.5,
+                        borderBottomWidth: 1,
                         justifyContent: 'center',
                         alignContent: 'center',
                         flexDirection: 'row',
                     }}
                 >
                     <View>
-                        <View style={{flex: 1}}></View>
+                        <View style={{flex: 1}}/>
                         <Text
                             style={{
                                 fontSize: 18*factorRatio,
@@ -131,9 +136,9 @@ export default class VideoPlayer extends React.Component {
                         >
                             {index}. {row[0]}
                         </Text>
-                        <View style={{flex: 1}}></View>
+                        <View style={{flex: 1}}/>
                     </View>
-                    <View style={{flex: 1}}></View>
+                    <View style={{flex: 1}}/>
                     <View 
                         style={[
                             styles.centerContent, {
@@ -163,17 +168,17 @@ export default class VideoPlayer extends React.Component {
                         )}
                         {(row[1] == 0) && (
                         <View style={[styles.centerContent, {flexDirection: 'row'}]}>
-                            <View style={{flex: 0.25}}></View>
+                            <View style={{flex: 0.25}}/>
                             <EntypoIcon
                                 name={'chevron-thin-right'}
                                 size={20*factorRatio}
                                 color={'#c2c2c2'}
                             />
-                            <View style={{flex: 1}}></View>
+                            <View style={{flex: 1}}/>
                         </View>
                         )}
                     </View>
-                </View>
+                </TouchableOpacity>
             )
         })
     }
@@ -253,7 +258,7 @@ export default class VideoPlayer extends React.Component {
                                     paddingRight: fullWidth*0.015,
                                 }}
                             >
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                                 <View key={'icon'}
                                     style={{
                                         flex: 1,
@@ -315,7 +320,7 @@ export default class VideoPlayer extends React.Component {
                                         />
                                     </TouchableOpacity>
                                 </View>
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                             </View>
                             <View key={'iconWords'}
                                 style={{
@@ -459,7 +464,7 @@ export default class VideoPlayer extends React.Component {
                                                     height: fullHeight*0.05,
                                                 }}
                                             >
-                                                <View style={{flex: 0.5}}></View>
+                                                <View style={{flex: 0.5}}/>
                                                 <View style={[styles.centerContent]}>
                                                     <IonIcon
                                                         name={'ios-trophy'}
@@ -477,7 +482,7 @@ export default class VideoPlayer extends React.Component {
                                                 >
                                                     250 XP
                                                 </Text>
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                             </View>
                                         </View>
                                     </View>
@@ -570,6 +575,11 @@ export default class VideoPlayer extends React.Component {
                                 style={{height: fullHeight*0.85}}
                             >
                                 <Comments
+                                    showMakeComment={() => {
+                                        this.setState({
+                                            showMakeComment: true
+                                        })
+                                    }}
                                     containerHeight={fullHeight*0.85}
                                     comments={this.state.comments}
                                     outComments={this.state.outComments}
@@ -674,6 +684,27 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>
+                <Modal key={'makeComment'}
+                    isVisible={this.state.showMakeComment}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={false}
+                    hasBackdrop={false}
+                >
+                    <MakeComment
+                        hideMakeComment={() => {
+                            this.setState({showMakeComment: false})
+                        }}
+                    />
+                </Modal>                                 
+            
                 <Modal key={'SoundSlice'}
                     isVisible={this.state.showSoundSlice}
                     style={[
@@ -717,7 +748,7 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>         
-                <Modal key={'completeLesson'}
+                <Modal key={'complete'}
                     isVisible={this.state.showLessonComplete}
                     style={[
                         styles.centerContent, {
