@@ -152,7 +152,7 @@ class HorizontalVideoList extends React.Component {
                                         }}
                                         delayLongPress={350}
                                         onPress={() => {
-                                            this.props.navigation.navigate('ASSIGNMENTS')
+                                            this.props.navigation.navigate('VIDEOPLAYER')
                                         }}
                                         style={{
                                             flex: 1, 

@@ -63,7 +63,9 @@ class FullScreenVideoList extends React.Component {
                                 <TouchableOpacity
                                     delayLongPress={250}
                                     onLongPress={() => this.setState({showCourse: true})}
-                                    onPress={()=>this.props.navigation.navigate('ASSIGNMENTS')}
+                                    onPress={()=> {
+                                        this.props.navigation.navigate('VIDEOPLAYER')    
+                                    }}
                                     style={{
                                         flex: 1, 
                                         alignSelf: 'stretch'
@@ -174,7 +176,6 @@ class FullScreenVideoList extends React.Component {
                             >
                                 {this.props.Title}
                             </Text>
-                            
                             <View style={{flex: 1}}/>
                             <TouchableOpacity 
                                 onPress={() => this.props.seeAll()}

@@ -72,7 +72,9 @@ class VerticalVideoList extends React.Component {
                     }}
                 >
                     <TouchableOpacity 
-                        onPress={() => {}}
+                        onPress={() => {
+                            this.props.navigation.navigate('VIDEOPLAYER')
+                        }}
                         style={{justifyContent: 'center'}}
                         underlayColor={'transparent'}    
                     >
