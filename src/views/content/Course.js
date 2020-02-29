@@ -7,6 +7,7 @@ import {
     Text, 
     TouchableOpacity,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import { getContent } from '@musora/services';
 import FastImage from 'react-native-fast-image';
@@ -15,6 +16,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { ScrollView } from 'react-native-gesture-handler';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
+import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -52,10 +54,6 @@ export default class Course extends React.Component {
                 statuses: ['published'],
                 included_types:['song'],
             });
-
-            if(error) {
-                console.error(error);
-            }
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
@@ -248,7 +246,7 @@ export default class Course extends React.Component {
                                         <View key={'start'}
                                             style={{width: fullWidth*0.5}}
                                         >
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                             {!this.state.started && (
                                             <TouchableOpacity
                                                 onPress={() => {
@@ -283,7 +281,7 @@ export default class Course extends React.Component {
                                                 pressed={() => console.log('Start')}
                                             />
                                             )}
-                                            <View style={{flex: 1}}></View>
+                                            <View style={{flex: 1}}/>
                                         </View>
                                         <View key={'infoButton'}
                                             style={[
@@ -327,7 +325,7 @@ export default class Course extends React.Component {
                         <View key={'info'}
                             style={{
                                 width: fullWidth,
-                                backgroundColor: '#410b11',
+                                backgroundColor: '#3f070f',
                                 paddingLeft: fullWidth*0.05,
                                 paddingRight: fullWidth*0.05,
                             }}
@@ -344,11 +342,7 @@ export default class Course extends React.Component {
                                 Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. Cassi walks you step by step through some of her facourite Hanon exercises in this Course and includes a variation for each exercise that will target specific technical skills.
                             </Text>
                             <View key={'containStats'}>
-                                <View key={'buffer2'}
-                                    style={{height: 10*factorVertical}}
-                                >
-
-                                </View>
+                                <View style={{height: 10*factorVertical}}/>
                                 <View key={'stats'}
                                     style={[
                                         styles.centerContent, {
@@ -356,7 +350,7 @@ export default class Course extends React.Component {
                                         flexDirection: 'row',
                                     }]}
                                 >
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}></View>
+                                    <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                     <View 
                                         style={[
                                             styles.centerContent, {
@@ -388,7 +382,7 @@ export default class Course extends React.Component {
                                             LESSONS
                                         </Text>
                                     </View>
-                                    <View style={{width: 15*factorRatio}}></View>
+                                    <View style={{width: 15*factorRatio}}/>
                                     <View 
                                         style={[
                                             styles.centerContent, {
@@ -420,13 +414,9 @@ export default class Course extends React.Component {
                                             XP
                                         </Text>
                                     </View>
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}></View>
+                                    <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                 </View>
-                                <View key={'buffer1'}
-                                    style={{height: 15*factorVertical}}
-                                >
-
-                                </View>
+                                <View style={{height: 15*factorVertical}}/>
                                 <View key={'buttons'}
                                     style={[
                                         styles.centerContent, {
@@ -434,14 +424,19 @@ export default class Course extends React.Component {
                                         flexDirection: 'row',
                                     }]}
                                 >
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}></View>
-                                    <View 
+                                    <View style={{flex: 1, alignSelf: 'stretch'}}/>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                restart
+                                            })
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             width: 70*factorRatio,
                                         }]}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <AntIcon
                                             name={'like2'}
                                             size={27.5*factorRatio}
@@ -459,15 +454,15 @@ export default class Course extends React.Component {
                                         >
                                             34
                                         </Text>
-                                    </View>
-                                    <View style={{width: 15*factorRatio}}></View>
-                                    <View 
+                                    </TouchableOpacity>
+                                    <View style={{width: 15*factorRatio}}/>
+                                    <TouchableOpacity
                                         style={[
                                             styles.centerContent, {
                                             width: 70*factorRatio,
                                         }]}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <MaterialIcon
                                             name={'arrow-collapse-down'}
                                             size={27.5*factorRatio}
@@ -485,15 +480,20 @@ export default class Course extends React.Component {
                                         >
                                             My List
                                         </Text>
-                                    </View>
-                                    <View style={{width: 15*factorRatio}}></View>
-                                    <View 
+                                    </TouchableOpacity>
+                                    <View style={{width: 15*factorRatio}}/>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                showRestartCourse: true
+                                            })
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             width: 70*factorRatio,
                                         }]}
                                     >
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                         <MaterialIcon
                                             name={'replay'}
                                             size={27.5*factorRatio}
@@ -511,14 +511,10 @@ export default class Course extends React.Component {
                                         >
                                             Restart
                                         </Text>
-                                    </View>
-                                    <View style={{flex: 1, alignSelf: 'stretch'}}></View>
+                                    </TouchableOpacity>
+                                    <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                 </View>
-                                <View key={'buffer2'}
-                                    style={{height: 30*factorVertical}}
-                                >
-
-                                </View>
+                                <View style={{height: 30*factorVertical}}/>
                             </View>
                         </View>
                         )}
@@ -630,7 +626,7 @@ export default class Course extends React.Component {
                                                     height: fullHeight*0.05*factorVertical,
                                                 }}
                                             >
-                                                <View style={{flex: 0.5}}></View>
+                                                <View style={{flex: 0.5}}/>
                                                 <View style={[styles.centerContent]}>
                                                     <IonIcon
                                                         name={'ios-trophy'}
@@ -648,7 +644,7 @@ export default class Course extends React.Component {
                                                 >
                                                     250 XP
                                                 </Text>
-                                                <View style={{flex: 1}}></View>
+                                                <View style={{flex: 1}}/>
                                             </View>
                                         </View>
                                     </View>
@@ -673,6 +669,28 @@ export default class Course extends React.Component {
                             renderType={'Mapped'}
                         />
                     </ScrollView>
+                    <Modal key={'restartCourse'}
+                        isVisible={this.state.showRestartCourse}
+                        style={[
+                            styles.centerContent, {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        }]}
+                        animation={'slideInUp'}
+                        animationInTiming={350}
+                        animationOutTiming={350}
+                        coverScreen={false}
+                        hasBackdrop={false}
+                    >
+                        <RestartCourse
+                            hideRestartCourse={() => {
+                                this.setState({
+                                    showRestartCourse: false
+                                })
+                            }}
+                        />
+                    </Modal>
                     <NavigationBar
                         currentPage={'NONE'}
                     />

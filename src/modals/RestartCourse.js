@@ -30,7 +30,6 @@ class RestartCourse extends React.Component {
                         styles.centerContent, {
                         height: fullHeight,
                         width: fullWidth,
-                        backgroundColor: 'white',
                     }]}
                     blurType={'dark'}
                     blurAmount={100}
@@ -111,13 +110,16 @@ class RestartCourse extends React.Component {
                                     <View 
                                         style={[
                                             styles.centerContent, {
-                                            flex: 0.7,
+                                            flex: 0.65,
                                             backgroundColor: '#fb1b2f',
                                             alignSelf: 'stretch',
-                                            borderRadius: 40,
+                                            borderRadius: 40*factorRatio,
                                         }]}
                                     >
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.props.hideRestartCourse()
+                                            }}
                                             style={[
                                                 styles.centerContent, {
                                                 flex:1,
