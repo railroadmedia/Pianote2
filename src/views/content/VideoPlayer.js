@@ -9,6 +9,7 @@ import {
 import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
+import Replies from '../../components/Replies';
 import FastImage from 'react-native-fast-image';
 import Comments from '../../components/Comments';
 import SoundSlice from '../../modals/SoundSlice.js';
@@ -571,16 +572,18 @@ export default class VideoPlayer extends React.Component {
                                 />
                             </View>
                             <View style={{height: 10*factorVertical}}/>
-                            <View key={'comments'}
-                                style={{height: fullHeight*0.85}}
-                            >
+                            <View key={'comments'}>
                                 <Comments
                                     showMakeComment={() => {
                                         this.setState({
                                             showMakeComment: true
                                         })
                                     }}
-                                    containerHeight={fullHeight*0.85}
+                                    showReplies={() => {
+                                        this.setState({
+                                            showReplies: true
+                                        })
+                                    }}
                                     comments={this.state.comments}
                                     outComments={this.state.outComments}
                                     fetchComments={() => this.fetchComments()}
@@ -613,32 +616,6 @@ export default class VideoPlayer extends React.Component {
                             />
                         </TouchableOpacity>
                     </View>
-                    {this.state.showReplies && (
-                    <View
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: (isTablet) ? fullHeight*0.4 : fullHeight*0.275,
-                            zIndex: 10,
-                            height: (isTablet) ? fullHeight*0.4 : fullHeight*0.275,
-                            width: fullWidth,
-                            backgroundColor: 'blue',
-                        }}
-                    >
-                        <Comments
-                            hideReplies={() => this.setState({
-                                    showReplies: false,
-                                })
-                            }
-                            isReply={true}
-                            containerHeight={fullHeight}
-                            comments={this.state.comments}
-                            outComments={this.state.outComments}
-                            fetchComments={() => this.fetchComments()}
-                            type={'map'}
-                        />
-                    </View>
-                    )}
                 </View>
                 <Modal key={'VideoPlayerOptions'}
                     isVisible={this.state.showVideoPlayerOptions}
@@ -703,7 +680,30 @@ export default class VideoPlayer extends React.Component {
                             this.setState({showMakeComment: false})
                         }}
                     />
-                </Modal>                                 
+                </Modal>    
+                <Modal key={'replies'}
+                    isVisible={this.state.showReplies}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={false}
+                    hasBackdrop={false}
+                >
+                    <Replies
+                        hideReplies={() => {
+                            this.setState({showReplies: false})
+                        }}
+                        showMakeComment={() => {
+                            this.setState({showMakeComment: true})
+                        }}
+                    />
+                </Modal>                              
             
                 <Modal key={'SoundSlice'}
                     isVisible={this.state.showSoundSlice}
