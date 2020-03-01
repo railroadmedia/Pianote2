@@ -12,11 +12,12 @@ import { ContentModel } from '@musora/models';
 import Replies from '../../components/Replies';
 import FastImage from 'react-native-fast-image';
 import Comments from '../../components/Comments';
-import SoundSlice from '../../modals/SoundSlice.js';
+import SoundSlice from '../../components/SoundSlice.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MakeComment from '../../components/MakeComment.js';
+import Assignment from '../../components/Assignment.js';
 import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
 import AssignmentComplete from '../../modals/LessonComplete.js';
@@ -33,8 +34,9 @@ export default class VideoPlayer extends React.Component {
             showModalMenu: false, 
             showReplies: false,
             showStarted: false,
-            showMakeComment: false,
+            showAssignment: false,
             showSoundSlice: false,
+            showMakeComment: false,
             showVideoPlayerOptions: false,
             showAssignmentComplete: false,
             showQualitySettings: false,
@@ -47,8 +49,8 @@ export default class VideoPlayer extends React.Component {
             progress: 0.73, // 0 - 1 for percent thru course
             assignmentList: [
                 ['Learn The Fill', 1],
-                ['Learn The Beat', 0],
-                ['Put It Together', 0],
+                ['Learn The Beat', 2],
+                ['Put It Together', 3],
             ], // assingments
             comments: [
                 ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
@@ -62,6 +64,7 @@ export default class VideoPlayer extends React.Component {
             ], // video's comments
             items: [], // video lessons to pass to vertical video list
             page: 0,
+            clickedAssignment: {'name':'','num':''},
             outComments: false, // if out of comments
             outVideos: false, // if out of videos
         }
@@ -83,10 +86,6 @@ export default class VideoPlayer extends React.Component {
                 statuses: ['published'],
                 included_types:['song'],
             });
-
-            if(error) {
-                console.error(error);
-            }
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
@@ -116,6 +115,12 @@ export default class VideoPlayer extends React.Component {
         return this.state.assignmentList.map((row, index) => {
             return (
                 <TouchableOpacity
+                    onPress={() => {
+                        this.setState({
+                            clickedAssignment: {'name':row[0], 'num':index+1},
+                            showAssignment: true,
+                        })
+                    }}
                     style={{
                         height: 55*factorVertical,
                         paddingLeft: fullWidth*0.035,
@@ -603,7 +608,9 @@ export default class VideoPlayer extends React.Component {
                         }]}
                     >
                         <TouchableOpacity
-                            onPress={() => this.props.navigation.goBack()}
+                            onPress={() => {
+                                this.props.navigation.goBack()
+                            }}
                             style={{
                                 height: '100%',
                                 width: '100%',
@@ -703,29 +710,6 @@ export default class VideoPlayer extends React.Component {
                             this.setState({showMakeComment: true})
                         }}
                     />
-                </Modal>                              
-            
-                <Modal key={'SoundSlice'}
-                    isVisible={this.state.showSoundSlice}
-                    style={[
-                        styles.centerContent, {
-                        margin: 0,
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={true}
-                    hasBackdrop={true}
-                >
-                    <SoundSlice
-                        hideSoundSlice={() => {
-                            this.setState({
-                                showSoundSlice: false
-                            })
-                        }}
-                    />
                 </Modal>
                 <Modal key={'completeLesson'}
                     isVisible={this.state.showAssignmentComplete}
@@ -768,6 +752,52 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>                                 
+                <Modal key={'assignment'}
+                    isVisible={this.state.showAssignment}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={350}
+                    animationOutTiming={350}
+                    coverScreen={false}
+                    hasBackdrop={false}
+                >
+                    <Assignment
+                        assignment={this.state.clickedAssignment.name}
+                        assignmentNumber={this.state.clickedAssignment.num}
+                        hideAssignment={() => {
+                            this.setState({
+                                showAssignment: false
+                            })
+                        }}
+                    />
+                </Modal>
+                <Modal key={'soundSlice'}
+                    isVisible={this.state.showSoundSlice}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={350}
+                    animationOutTiming={350}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <SoundSlice
+                        hideSoundSlice={() => {
+                            this.setState({
+                                showSoundSlice: false
+                            })
+                        }}
+                    />
+                </Modal>                
             </View>
         )
     }
