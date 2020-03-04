@@ -17,6 +17,7 @@ import LearningPaths from './src/views/content/LearningPaths';
 import VideoPlayer from './src/views/content/VideoPlayer.js';
 import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack.js';
+import SongCatalog from './src/views/content/SongCatalog';
 import Downloads from './src/views/content/Downloads.js';
 import Lessons from './src/views/content/Lessons.js';
 import SeeAll from './src/views/content/SeeAll.js';
@@ -53,7 +54,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: CourseCatalog,
+    initialRoute: SongCatalog,
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},
@@ -67,12 +68,13 @@ const AppNavigator = createStackNavigator({
     TERMS: {screen: Terms},
 
     // content
-    STUDENTFOCUSCATALOG: {screen: StudentFocusCatalog},
+    STUDENTFOCUSCATALOG: {screen: StudentFocusCatalog}, 
     STUDENTFOCUSSHOW: {screen: StudentFocusShow},
     VIDEOPLAYERSONG: {screen: VideoPlayerSong},
     COURSECATALOG: {screen: CourseCatalog},
     LEARNINGPATHS: {screen: LearningPaths},
     PATHOVERVIEW: {screen: PathOverview},
+    SONGCATALOG: {screen: SongCatalog},
     VIDEOPLAYER: {screen: VideoPlayer},
     SINGLEPACK: {screen: SinglePack},
     DOWNLOADS: {screen: Downloads},
