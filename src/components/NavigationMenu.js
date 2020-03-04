@@ -429,7 +429,10 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false)
+                            this.props.onClose(false),
+                            this.props.navigation.navigate(
+                                    'SEEALL', {data: 'Added to List'}
+                                )
                         }}
                         style={{flex: 1}}
                     >
@@ -455,7 +458,10 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false)
+                            this.props.onClose(false),
+                            this.props.navigation.navigate(
+                                'SEEALL', {data: 'In Progress'}
+                            )
                         }}
                         style={{flex: 1}}
                     >
@@ -481,7 +487,10 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false)
+                            this.props.onClose(false),
+                            this.props.navigation.navigate(
+                                'SEEALL', {data: 'Complete'}
+                            )
                         }}
                         style={{flex: 1}}
                     >

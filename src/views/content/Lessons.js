@@ -202,9 +202,7 @@ export default class Lessons extends React.Component {
                                 Title={'COURSES'}
                                 Description={''}
                                 seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'Courses'}
-                                    )
+                                    this.props.navigation.navigate('COURSECATALOG')
                                 }}
                                 showArtist={false}
                                 items={this.state.courses}
@@ -223,9 +221,7 @@ export default class Lessons extends React.Component {
                                 Title={'SONGS'}
                                 Description={''}
                                 seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'Songs'}
-                                    )
+                                    this.props.navigation.navigate('SONGCATALOG')
                                 }}
                                 showArtist={false}
                                 items={this.state.songs}
