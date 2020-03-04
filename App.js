@@ -54,7 +54,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: MyList,
+    initialRoute: LoadPage,
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},

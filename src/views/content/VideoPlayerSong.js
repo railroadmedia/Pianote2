@@ -307,8 +307,7 @@ export default class VideoPlayerSong extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.setState({showAssignmentComplete: true}),
-                                        this.props.navigation.goBack()
+                                        this.setState({showAssignmentComplete: true})
                                     }}
                                     style={[
                                         styles.centerContent, {
