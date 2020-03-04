@@ -17,10 +17,8 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MakeComment from '../../components/MakeComment.js';
-import Assignment from '../../components/Assignment.js';
 import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
-import AssignmentComplete from '../../modals/LessonComplete.js';
 import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
@@ -31,12 +29,12 @@ export default class VideoPlayer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModalMenu: false, 
             showReplies: false,
             showStarted: false,
             showAssignment: false,
             showSoundSlice: false,
             showMakeComment: false,
+            showInfo: false,
             showVideoPlayerOptions: false,
             showAssignmentComplete: false,
             showQualitySettings: false,
@@ -48,8 +46,8 @@ export default class VideoPlayer extends React.Component {
             items: [], // hello
             progress: 0.73, // 0 - 1 for percent thru course
             assignmentList: [
-                ['Learn The Fill', 1],
-                ['Learn The Beat', 2],
+                ['Learn The Exercise', 1],
+                ['Learn The Song', 2],
                 ['Put It Together', 3],
             ], // assingments
             comments: [
@@ -116,8 +114,9 @@ export default class VideoPlayer extends React.Component {
             return (
                 <TouchableOpacity
                     onPress={() => {
-                        this.setState({
-                            clickedAssignment: {'name':row[0], 'num':index+1},
+                        this.props.navigation.navigate('VIDEOPLAYERSONG', {
+                            assignmentName: row[0], 
+                            assignmentNum: index+1,
                             showAssignment: true,
                         })
                     }}
@@ -140,7 +139,7 @@ export default class VideoPlayer extends React.Component {
                                 fontFamily: 'Roboto',
                             }}
                         >
-                            {index}. {row[0]}
+                            {index+1}. {row[0]}
                         </Text>
                         <View style={{flex: 1}}/>
                     </View>
@@ -313,7 +312,11 @@ export default class VideoPlayer extends React.Component {
                                         />
                                     </TouchableOpacity>
                                     <TouchableOpacity key={'info'}
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.setState({
+                                                showInfo: !this.state.showInfo,
+                                            })
+                                        }}
                                         style={{
                                             height: '100%',
                                             width: '100%',
@@ -378,6 +381,28 @@ export default class VideoPlayer extends React.Component {
                                         Info
                                     </Text>
                                 </View>
+                            </View>
+                            <View key={'infoExpanded'}>
+                                {this.state.showInfo && (
+                                <View>
+                                    <View style={{height: fullHeight*0.03}}/>
+                                    <Text
+                                        style={{
+                                            paddingLeft: '5%',
+                                            paddingRight: '5%',
+                                            fontFamily: 'Roboto',
+                                            fontSize: 14*factorRatio,
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        A description of the video I assume goes right here.
+                                        A description of the video I assume goes right here.
+                                        A description of the video I assume goes right here.
+                                        A description of the video I assume goes right here.
+                                        A description of the video I assume goes right here.
+                                    </Text>
+                                </View>
+                                )}
                             </View>
                             <View key={'lessonProgress'}
                                 style={{
@@ -711,28 +736,7 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>
-                <Modal key={'completeLesson'}
-                    isVisible={this.state.showAssignmentComplete}
-                    style={[
-                        styles.centerContent, {
-                        margin: 0,
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    animation={'slideInUp'}
-                    backdropOpacity={0.6}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={true}
-                >
-                    <AssignmentComplete
-                        showAssignmentComplete={() => {
-                            this.setState({showAssignmentComplete: false})
-                        }}
-                    />
-                </Modal>         
-                <Modal key={'complete'}
+                <Modal key={'lessonComplete'}
                     isVisible={this.state.showLessonComplete}
                     style={[
                         styles.centerContent, {
@@ -752,30 +756,6 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>                                 
-                <Modal key={'assignment'}
-                    isVisible={this.state.showAssignment}
-                    style={[
-                        styles.centerContent, {
-                        margin: 0,
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <Assignment
-                        assignment={this.state.clickedAssignment.name}
-                        assignmentNumber={this.state.clickedAssignment.num}
-                        hideAssignment={() => {
-                            this.setState({
-                                showAssignment: false
-                            })
-                        }}
-                    />
-                </Modal>
                 <Modal key={'soundSlice'}
                     isVisible={this.state.showSoundSlice}
                     style={[

@@ -11,6 +11,7 @@ import { Animated } from 'react-native';
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';
 import StudentFocusShow from './src/views/content/StudentFocusShow.js';
+import VideoPlayerSong from './src/views/content/VideoPlayerSong.js';
 import CourseCatalog from './src/views/content/CourseCatalog.js';
 import LearningPaths from './src/views/content/LearningPaths';
 import VideoPlayer from './src/views/content/VideoPlayer.js';
@@ -52,7 +53,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: VideoPlayer,
+    initialRoute: CourseCatalog,
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},
@@ -68,6 +69,7 @@ const AppNavigator = createStackNavigator({
     // content
     STUDENTFOCUSCATALOG: {screen: StudentFocusCatalog},
     STUDENTFOCUSSHOW: {screen: StudentFocusShow},
+    VIDEOPLAYERSONG: {screen: VideoPlayerSong},
     COURSECATALOG: {screen: CourseCatalog},
     LEARNINGPATHS: {screen: LearningPaths},
     PATHOVERVIEW: {screen: PathOverview},
