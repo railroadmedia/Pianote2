@@ -11,7 +11,7 @@ import {
     Animated,
     TouchableHighlight,
 } from 'react-native';
-import {userLogin} from '@musora/services';
+import { userForgotPassword } from '@musora/services';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
@@ -89,25 +89,12 @@ export default class forgotPassword extends React.Component {
         const { response, error } = await userForgotPassword({
             email: this.state.email,
         });
-    
-        if(error) {
-            console.error(error);
-        }
 
-        console.log(response)
-    }
-
-
-    login = async () => {
-        const { response, error } = await userLogin({
-            email:this.state.email,
-            password:this.state.password,
-        });
-    
         if(error) {
             console.error(error);
         } else {
-            console.log(response.data.token)
+            console.log(response)
+            this.props.navigation.navigate('LOGINCREDENTIALS')
         }
     }
 
@@ -137,7 +124,7 @@ export default class forgotPassword extends React.Component {
                     >
                     <Text
                         onPress={() => {
-                            this.props.navigation.goBack()
+                            this.props.navigation.navigate('LOGINCREDENTIALS')
                         }}
                         style={{
                             fontFamily: 'Roboto',
@@ -149,7 +136,7 @@ export default class forgotPassword extends React.Component {
                     >
                         Already a member? Log in.
                     </Text>
-                    <View style={{height: 7.5*factorVertical}}></View>
+                    <View style={{height: 7.5*factorVertical}}/>
                     <Text
                         onPress={() => {
                             this.props.navigation.navigate('CREATEACCOUNT')
@@ -187,7 +174,9 @@ export default class forgotPassword extends React.Component {
                     }]}
                 >
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.goBack()}
+                        onPress={() => {
+                            this.props.navigation.navigate('LOGINCREDENTIALS')
+                        }}
                         style={{
                             height: '100%',
                             width: '100%',
@@ -217,7 +206,7 @@ export default class forgotPassword extends React.Component {
                             alignItems: 'center',
                         }}
                     >
-                        <View style={{flex: 0.425,}}></View>
+                        <View style={{flex: 0.425,}}/>
                         <Pianote
                             height={90*factorRatio}
                             width={190*factorRatio}
@@ -233,7 +222,7 @@ export default class forgotPassword extends React.Component {
                         >
                             The Ultimate Online  {"\n"} Piano Lessons Experience.
                         </Text>
-                        <View style={{height: 30*factorVertical}}></View>
+                        <View style={{height: 30*factorVertical}}/>
                         <View key={'email'}
                             style={{
                                 height: fullHeight*0.06,
@@ -245,6 +234,7 @@ export default class forgotPassword extends React.Component {
                             }}
                         >
                             <TextInput 
+                                ref={(ref) => { this.textInput = ref }}
                                 autoCorrect={false}
                                 keyboardAppearance={'dark'}
                                 placeholderTextColor={'grey'}
@@ -256,7 +246,7 @@ export default class forgotPassword extends React.Component {
                                 }}
                             />
                         </View>
-                        <View style={{height: 30*factorVertical}}></View>
+                        <View style={{height: 30*factorVertical}}/>
                         <View key={'login'}
                             style={{
                                 height: fullHeight*0.06,
@@ -270,7 +260,9 @@ export default class forgotPassword extends React.Component {
                         >
                             <TouchableHighlight
                                 underlayColor={'transparent'}
-                                onPress={() => {}}
+                                onPress={() => {
+                                    this.forgotPassword()
+                                }}
                                 style={[
                                     styles.centerContent, {
                                     height: '100%',
