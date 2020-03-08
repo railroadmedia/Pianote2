@@ -4,14 +4,16 @@
  * which shows a vertical list of videos
  */
 import React from 'react';
-import { SafeAreaView, Text, View,
-    StyleSheet } from 'react-native';
-import VerticalVideoList from '../../components/VerticalVideoList';
+import { 
+    SafeAreaView, 
+    View,
+    StyleSheet 
+} from 'react-native';
+import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import NavigationMenu from '../../components/NavigationMenu';
-import Modal from "react-native-modal";
-
+import VerticalVideoList from '../../components/VerticalVideoList';
 
 export default class PackUser extends React.Component {
     static navigationOptions = {header: null};

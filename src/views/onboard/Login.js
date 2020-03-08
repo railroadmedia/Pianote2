@@ -4,8 +4,7 @@
 import React from 'react';
 import { 
     View, 
-    Text, 
-    StyleSheet 
+    Text,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Carousel from 'react-native-carousel-view';
@@ -1512,23 +1511,6 @@ export default class Login extends React.Component {
     }
 }
 
-const localStyles = StyleSheet.create({
-    whiteBordersCircles: {
-        borderColor: 'white',
-        borderWidth: 1.25,
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 0,
-    },
-    loginSignupButton: {
-        height: 25, 
-        width: '100%',
-        backgroundColor: 'transparent', 
-        borderWidth: 1.25,
-        borderColor: 'white', 
-        borderRadius: 10, 
-    },
-});
 
 
 

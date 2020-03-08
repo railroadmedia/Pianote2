@@ -40,7 +40,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Need phots</string>
+	<string>Allow Pianote access to your photos to upload a profile picture.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need phots</string>
 	<key>UIAppFonts</key>

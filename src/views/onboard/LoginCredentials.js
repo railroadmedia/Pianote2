@@ -2,19 +2,22 @@
  * LoginCredentials
  */
 import React from 'react';
-import { 
-    View, 
-    Text, 
-    TextInput, 
+import {
+    View,
+    Text,
+    TextInput,
     TouchableOpacity,
     Keyboard,
     Animated,
     Alert,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { userLogin } from '@musora/services';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
@@ -29,6 +32,7 @@ export default class LoginCredentials extends React.Component {
             pianoteYdelta: new Animated.Value(0),
             forgotYdelta: new Animated.Value(fullHeight*0.075),
             secureTextEntry: true,
+            showPasswordEmailMatch: false,
         }
     }
 
@@ -47,7 +51,7 @@ export default class LoginCredentials extends React.Component {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
     }
-  
+
 
     _keyboardDidShow = async () => {
         Animated.parallel([
@@ -65,7 +69,7 @@ export default class LoginCredentials extends React.Component {
             )
         ]).start()
     }
-  
+
 
     _keyboardDidHide = async () => {
         Animated.parallel([
@@ -87,14 +91,21 @@ export default class LoginCredentials extends React.Component {
 
     login = async () => {
         const { response, error } = await userLogin({
-            email:this.state.email,
-            password:this.state.password,
+            email: this.state.email,
+            password: this.state.password,
         });
-    
+
         if(error) {
-            console.error(error);
+            console.log(error)
+            this.setState({showPasswordEmailMatch: true})
         } else {
-            console.log(response.data.token)
+            await AsyncStorage.multiSet([
+                ['token', JSON.stringify(response.data.token)],
+                ['tokenTime', JSON.stringify(response.data.token)],
+                ['email', this.state.email],
+                ['password', this.state.password],
+            ])
+            this.props.navigation.navigate('HOME')
         }
     }
 
@@ -136,9 +147,11 @@ export default class LoginCredentials extends React.Component {
                     >
                         Forgot your password? 
                     </Text>
-                    <View style={{height: 7.5*factorVertical}}></View>
+                    <View style={{height: 7.5*factorVertical}}/>
                     <Text
-                        onPress={() => {}}
+                        onPress={() => {
+                            this.props.navigation.navigate('SUPPORT')
+                        }}
                         style={{
                             fontSize: 16*factorRatio,
                             fontFamily: 'Roboto',
@@ -202,7 +215,7 @@ export default class LoginCredentials extends React.Component {
                             alignItems: 'center',
                         }}
                     >
-                        <View style={{flex: 0.425,}}></View>
+                        <View style={{flex: 0.425,}}/>
                         <Pianote
                             height={90*factorRatio}
                             width={190*factorRatio}
@@ -218,7 +231,7 @@ export default class LoginCredentials extends React.Component {
                         >
                             The Ultimate Online  {"\n"} Piano Lessons Experience.
                         </Text>
-                        <View style={{height: 35*factorVertical}}></View>
+                        <View style={{height: 35*factorVertical}}/>
                         <View key={'email'}
                             style={{
                                 height: fullHeight*0.06,
@@ -241,7 +254,7 @@ export default class LoginCredentials extends React.Component {
                                 }}
                             />
                         </View>
-                        <View style={{height: 10*factorVertical}}></View>
+                        <View style={{height: 10*factorVertical}}/>
                         <View key={'password'}
                             style={{
                                 height: fullHeight*0.06,
@@ -291,7 +304,7 @@ export default class LoginCredentials extends React.Component {
                                 )}
                             </TouchableOpacity>
                         </View>
-                        <View style={{height: 35*factorVertical}}></View>
+                        <View style={{height: 35*factorVertical}}/>
                         <View key={'login'}
                             style={{
                                 height: fullHeight*0.06,
@@ -315,7 +328,7 @@ export default class LoginCredentials extends React.Component {
                                                 this.props.navigation.navigate('MEMBERSHIPEXPIRED')
                                             }},
                                             {text: 'Continue', onPress: () => {
-                                                this.props.navigation.navigate('HOME')
+                                                this.login()
                                             }}
                                         ],
                                         { cancelable: false }
@@ -346,6 +359,25 @@ export default class LoginCredentials extends React.Component {
                         </View>
                     </View>
                 </Animated.View>
+                <Modal key={'passwords'}
+                    isVisible={this.state.showPasswordEmailMatch}
+                    style={{
+                        margin: 0, 
+                        height: fullHeight,
+                        width: fullWidth,
+                    }}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={false}
+                >
+                    <PasswordEmailMatch
+                        hidePasswordEmailMatch={() => {
+                            this.setState({showPasswordEmailMatch: false})
+                        }}
+                    />
+                </Modal>
             </View>
         )
     }
