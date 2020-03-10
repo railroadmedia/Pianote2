@@ -29,7 +29,7 @@ export default class Lessons extends React.Component {
             courses: [], // videos
             songs: [], // videos
             showModalMenu: false, // show navigation menu
-            outVideos: false, // if no more videos to load
+            outVideos: false,
             page: 0,
             parentPage: 'LESSONS',
             menu: 'HOME',
@@ -38,25 +38,21 @@ export default class Lessons extends React.Component {
 
 
     componentDidMount() {
-        this.getVideos()
+        this.getCourses()
+        this.getSongs()
     }
 
 
-    async getVideos() {
+    async getCourses() {
         if(this.state.outVideos == false) {
-            
             const { response, error } = await getContent({
-                brand:'pianote',
+                brand: 'pianote',
                 limit: '15',
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types:['song'],
+                included_types:['course'],
             });
-
-            if(response.data.data.length == 0) {
-                this.setState({outVideos: true})
-            }
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
@@ -73,6 +69,43 @@ export default class Lessons extends React.Component {
 
             this.setState({
                 courses: [...this.state.courses, ...items],
+                page: this.state.page + 1,
+            })
+
+        }
+    }
+
+
+    async getSongs() {
+        if(this.state.outVideos == false) {
+            const { response, error } = await getContent({
+                brand: 'pianote',
+                limit: '15',
+                page: this.state.page,
+                sort: '-created_on',
+                statuses: ['published'],
+                included_types:['song'],
+            });
+
+            const newContent = await response.data.data.map((data) => {
+                return new ContentModel(data)
+            })
+
+            await console.log(response)
+            
+            let x = await newContent[0].getData('thumbnail_url')
+            await console.log(x)
+            
+            items = []
+            for(i in newContent) {
+                items.push({
+                    title: await newContent[i].getField('title'),
+                    artist: await newContent[i].getField('artist'),
+                    thumbnail: await newContent[i].getData('thumbnail_url'),
+                })
+            }
+
+            await this.setState({
                 songs: [...this.state.songs, ...items],
                 page: this.state.page + 1,
             })

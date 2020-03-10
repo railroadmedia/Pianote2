@@ -85,7 +85,7 @@ export default class Course extends React.Component {
     render() {
         return (
             <View styles={styles.container}>
-                <View key={'container2'}
+                <View key={'container'}
                     style={{
                         height: fullHeight, 
                         alignSelf: 'stretch',
