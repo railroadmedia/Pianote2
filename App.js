@@ -50,7 +50,7 @@ import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
     initialRoute: LoadPage,
-
+//GUH
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},
     PROFILESETTINGS: {screen: ProfileSettings},
