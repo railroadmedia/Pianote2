@@ -21,16 +21,15 @@ export default class Downloads extends React.Component {
         this.state = {
             editDone: true, // true EDIT | false DONE
             items: [
-                ['This is the lesson title', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
-                ['This is the lesson title', 'Song', '258MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Course', '281MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Play-Along', '201MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Course', '355MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Play-Along', '191MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Course', '121MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Show', '156MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Show', '156MB', 'Februrary 21, 2019', false, 0],
-                ['This is the lesson title', 'Show', '156MB', 'Februrary 21, 2019', false, 0],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
+                ['Lesson title here', 'Show', '156MB', 'Februrary 21, 2019', true, 0.5],
             ]
         }
     }
@@ -39,22 +38,24 @@ export default class Downloads extends React.Component {
     renderItems() {
         return this.state.items.map((data, index) => {
             return (
-                <View
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('VIDEOPLAYER')
+                    }}
                     style={[
                         styles.centerContent, {
                         height: fullHeight*0.12,
                         width: fullWidth,
                         flexDirection: 'row',
-                        borderBottomWidth: 1.25*factorRatio,
-                        borderBottomColor: '#ececec',
+                        backgroundColor: colors.mainBackground,
                     }]}
                 >
                     <View style={{flex: 0.035}}/>
                     <View>
                         <FastImage
                             style={{
-                                height: (onTablet) ? fullHeight*0.1 : fullHeight*0.09,
-                                width: (onTablet) ? fullWidth*0.325 : fullWidth*0.35,
+                                height: (onTablet) ? fullHeight*0.1 : fullHeight*0.085,
+                                width: (onTablet) ? fullWidth*0.325 : fullWidth*0.325,
                             }}
                             source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
                             resizeMode={FastImage.resizeMode.stretch}
@@ -70,7 +71,8 @@ export default class Downloads extends React.Component {
                         <Text
                             style={{
                                 fontSize: 15*factorRatio,
-                                fontWeight: '700',
+                                fontWeight: 'bold',
+                                color: 'white',
                                 marginBottom: 5*factorVertical,
                                 fontFamily: 'OpenSans-Regular',
                             }}
@@ -80,93 +82,15 @@ export default class Downloads extends React.Component {
                         <Text
                             style={{
                                 fontSize: 12*factorRatio,
-                                fontWeight: '300',
+                                color: colors.secondBackground,
                                 marginBottom: 5*factorVertical,
                                 fontFamily: 'OpenSans-Regular',
                             }}
                         >
                             {this.state.items[index][1]} | {this.state.items[index][2]}
                         </Text>
-                        <Text
-                            style={{
-                                fontSize: 12*factorRatio,
-                                fontWeight: '300',
-                                color: '#c5c5c5',
-                                fontFamily: 'OpenSans-Regular',
-                            }}
-                        >
-                            {this.state.items[index][3]}
-                        </Text>
                     </View>
                     <View style={{flex: 0.3}}>
-                        {this.state.editDone && (
-                        <View>
-                            {!this.state.items[index][4] && (
-                            <TouchableOpacity
-                                onPress={() => {}}
-                                style={[
-                                    styles.centerContent, {
-                                    height: '100%',
-                                    width: '100%',
-                                }]}
-                            >
-                                <Icon
-                                    name={'right'}
-                                    size={25*factorRatio}
-                                    color={'#c2c2c2'}
-                                />
-                            </TouchableOpacity>
-                            )}
-                            {this.state.items[index][4] && (
-                            <TouchableOpacity
-                                onPress={() => {}}
-                                style={[
-                                    styles.centerContent, {
-                                    height: '100%',
-                                    width: '100%',
-                                }]}
-                            >
-                                <View 
-                                    style={{
-                                        height: 25*factorRatio,
-                                        width: 25*factorRatio,
-                                        borderRadius: 30,
-                                        borderWidth: 1.5*factorRatio,
-                                        borderColor: '#fb1b2f',
-                                    }}
-                                >
-                                    <View style={[styles.centerContent, {flex: 1}]}>
-                                        <IconEntypo
-                                            name={'controller-stop'}
-                                            size={15*factorRatio}
-                                            color={'#fb1b2f'}
-                                        />
-                                    </View>
-                                </View>
-                                <View 
-                                    style={{
-                                        width: 20*factorHorizontal,
-                                        height: 3.5*factorRatio,
-                                        marginTop: 5*factorRatio,
-                                        backgroundColor: '#c2c2c2',
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            width: 20*factorHorizontal*this.state.items[index][5],
-                                            height: 3.5*factorRatio,
-                                            backgroundColor: '#fb1b2f',
-                                        }}
-                                    >
-                                    </View>
-                                    <View style={{flex: 1}}></View>
-                                </View>
-                            </TouchableOpacity>
-                            )}
-                        </View>
-                        )}
-                        {!this.state.editDone && (
                         <TouchableOpacity
                             onPress={() => {}}
                             style={[
@@ -181,9 +105,8 @@ export default class Downloads extends React.Component {
                                 color={'#fb1b2f'}
                             />
                         </TouchableOpacity>
-                        )}
                     </View>
-                </View>
+                </TouchableOpacity>
             )
         })
     }
@@ -200,62 +123,40 @@ export default class Downloads extends React.Component {
                 <View key={'contentContainer'}
                     style={{flex: 1}}
                 >
-                    <View key={'buffer'}
-                        style={{
-                            height: (isNotch) ? 7.5*factorVertical : 0,
-                        }}
-                    >
-
-                    </View>
-                    <View key={'myProfile'}
+                    <View 
                         style={[
                             styles.centerContent, {
-                            flex: 0.125,
-                            borderBottomColor: '#ececec',
-                            borderBottomWidth: 1.5,
+                            height: (Platform.OS == 'android') ?  fullHeight*0.035 : 
+                                (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                            backgroundColor: colors.thirdBackground,
                         }]}
                     >
-                        <View style={{flex: 0.66}}/>
-                        <View style={{flexDirection: 'row'}}>
-                            <View style={{flex: 1}}/>
-                            <View style={{flex: 1}}>
-                                <Text
-                                    style={{
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
-                                        fontSize: 22*factorRatio,
-                                        textAlign: 'center',
-                                        fontFamily: 'OpenSans-Regular',
-                                    }}
-                                >
-                                    Downloads
-                                </Text>
-                            </View>
-                            <View style={{flex: 0.9}}>
-                                <View style={{flex: 1}}/>
-                                <Text
-                                    onPress={() => {
-                                        this.setState({
-                                            editDone: !this.state.editDone
-                                        })
-                                    }}
-                                    style={{
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
-                                        fontSize: 12*factorRatio,
-                                        textAlign: 'right',
-                                        color: '#fb1b2f',
-                                        fontFamily: 'OpenSans-Regular',
-                                    }}
-                                >
-                                    {(this.state.editDone) ? 'EDIT':'DONE'}
-                                </Text>
-                            </View>
-                            <View style={{flex: 0.1}}/>
+                        <View style={{flex: 1}}/>
+                        <View 
+                            style={[
+                                styles.centerContent, {
+                                backgroundColor: colors.thirdBackground,
+                            }]}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 22*factorRatio,
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Regular',
+                                }}
+                            >
+                                Downloads
+                            </Text>
                         </View>
-                        <View style={{flex: 0.33}}/>
+                        <View style={{height: 20*factorVertical}}/>
                     </View>
                     <ScrollView key={'downloads'}
                         showsVerticalScrollIndicator={false}
-                        style={{flex: 0.9}}
+                        style={{
+                            flex: 0.9, 
+                            backgroundColor: colors.mainBackground
+                        }}
                     >
                         {this.renderItems()}
                     </ScrollView>

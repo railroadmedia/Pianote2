@@ -57,7 +57,7 @@ class NavigationBar extends React.Component {
                     }}
                 >
                     <TouchableOpacity key={'home'}
-                        onPress={() => this.props.navigation.navigate('HOME')}
+                        onPress={() => this.props.navigation.navigate('LESSONS')}
                     >
                         <SimpleLineIcon
                             name={'home'}

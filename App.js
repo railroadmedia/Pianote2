@@ -22,7 +22,6 @@ import Course from './src/views/content/Course.js';
 import MyList from './src/views/content/MyList.js';
 import Search from './src/views/content/Search.js';
 import Packs from './src/views/content/Packs.js';
-import Home from './src/views/content/Home.js';
 
 // onboard
 import MembershipExpired from './src/views/onboard/MembershipExpired.js';
@@ -49,7 +48,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: Search,
+    initialRoute: LoadPage,
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},
@@ -78,7 +77,6 @@ const AppNavigator = createStackNavigator({
     MYLIST: {screen: MyList},
     SEARCH: {screen: Search},
     PACKS: {screen: Packs},
-    HOME: {screen: Home},
 
     // onboard
     MEMBERSHIPEXPIRED: {screen: MembershipExpired},

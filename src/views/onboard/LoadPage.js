@@ -3,11 +3,9 @@
  */
 import React from 'react';
 import { View } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 
 export default class LoadPage extends React.Component {
     static navigationOptions = {header: null};
@@ -26,7 +24,7 @@ export default class LoadPage extends React.Component {
         if(isLoggedIn !== 'true') {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000)
         } else {
-            setTimeout(() => this.props.navigation.navigate('HOME'), 1000)
+            setTimeout(() => this.props.navigation.navigate('LESSONS'), 1000)
         }
     }
 
@@ -41,7 +39,7 @@ export default class LoadPage extends React.Component {
                 }]}
             >
 
-                <View key={'LoadPage'}
+                <View key={'loadPage'}
                     style={[
                         styles.centerContent, {
                         position: 'absolute',

@@ -213,9 +213,10 @@ export default class Search extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 20*factorRatio,
+                                            fontSize: 22*factorRatio,
                                             fontWeight: 'bold',
                                             color: 'white',
+                                            fontFamily: 'OpenSans-Regular',
                                         }}
                                     >
                                         Search
