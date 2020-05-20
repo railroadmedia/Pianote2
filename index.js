@@ -31,6 +31,10 @@ global.isNotch = DeviceInfo.hasNotch();
 global.navPxFromTop = (isNotch) ? 30*factorRatio : (onTablet) ? -5*factorVertical : (Platform.OS == 'android') ? 0*factorRatio : 10*factorRatio
 global.colors = {
     mainBackground: '#00101d',
+    secondBackground: '#445f73',
+    thirdBackground: '#081826',
+    pianoteRed: '#fb1b2f',
+
 }
 
 configure({

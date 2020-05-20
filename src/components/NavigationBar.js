@@ -41,7 +41,7 @@ class NavigationBar extends React.Component {
                 style={{
                     backgroundColor: colors.mainBackground,
                     height: fullHeight*0.09375,
-                    borderTopColor: '#ececec',
+                    borderTopColor: colors.mainBackground,
                     borderTopWidth: 2*factorRatio,
                 }}
             >
@@ -62,7 +62,7 @@ class NavigationBar extends React.Component {
                         <SimpleLineIcon
                             name={'home'}
                             size={30*factorRatio}
-                            color={(this.props.currentPage == 'HOME') ? '#fb1b2f' : 'grey'}
+                            color={(this.props.currentPage == 'HOME') ? 'white' : '#445f73'}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity key={'search'}
@@ -71,7 +71,7 @@ class NavigationBar extends React.Component {
                         <EvilIcons
                             name={'search'}
                             size={40*factorRatio}
-                            color={(this.props.currentPage == 'SEARCH') ? '#fb1b2f' : 'grey'}
+                            color={(this.props.currentPage == 'SEARCH') ? 'white' : '#445f73'}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity key={'download'}
@@ -80,7 +80,7 @@ class NavigationBar extends React.Component {
                         <MaterialIcon
                             name={'arrow-collapse-down'}
                             size={30*factorRatio}
-                            color={(this.props.currentPage == 'DOWNLOAD') ? '#fb1b2f':'grey'}
+                            color={(this.props.currentPage == 'DOWNLOAD') ? 'white' : '#445f73'}
                         />
                     </TouchableOpacity>                            
                     <TouchableOpacity key={'profile'}
@@ -92,11 +92,11 @@ class NavigationBar extends React.Component {
                                 height: 37.5*factorRatio,
                                 borderRadius: 100,
                                 borderWidth: 2.25*factorRatio,
-                                borderColor: (this.props.currentPage == 'PROFILE') ? '#fb1b2f':'transparent',
+                                borderColor: (this.props.currentPage == 'PROFILE') ? 'white' : 'transparent',
                             }} 
                         >
                             <FastImage
-                                style={{flex: 1, borderRadius: 100, backgroundColor: '#ececec'}}
+                                style={{flex: 1, borderRadius: 100, backgroundColor: '#445f73'}}
                                 source={{uri: this.state.profileImage}}
                                 resizeMode={FastImage.resizeMode.stretch}
                             />

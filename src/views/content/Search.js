@@ -67,10 +67,10 @@ export default class Search extends React.Component {
                 <View key={id}
                     style={{
                         height: fullHeight*0.065,
-                        borderBottomWidth: 1*factorRatio,
-                        borderBottomColor: '#ececec',
-                        borderTopWidth: 1*factorRatio,
-                        borderTopColor: '#ececec',
+                        borderBottomWidth: 1.25*factorRatio,
+                        borderBottomColor: colors.thirdBackground,
+                        borderTopWidth: 1.25*factorRatio,
+                        borderTopColor: colors.thirdBackground,
                     }}
                 >
                     <TouchableOpacity
@@ -84,9 +84,9 @@ export default class Search extends React.Component {
                     >
                         <Text 
                             style={{
-                                color: '#fb1b2f',
+                                color: 'white',
                                 fontSize: 18*factorRatio,
-                                fontWeight: '500',
+                                fontWeight: '700',
                                 fontFamily: 'OpenSans-Regular',
                             }}
                         >
@@ -102,7 +102,7 @@ export default class Search extends React.Component {
                     style={{
                         height: fullHeight*0.07,
                         borderTopWidth: 1*factorRatio,
-                        borderTopColor: '#ececec',
+                        borderTopColor: colors.secondBackground,
                     }}
                 >
                     <View
@@ -115,9 +115,10 @@ export default class Search extends React.Component {
                     >
                         <Text 
                             style={{
-                                fontSize: 20*factorRatio,
+                                fontSize: 18*factorRatio,
                                 fontWeight: '500',
                                 fontFamily: 'OpenSans-Regular',
+                                color: 'white',
                             }}
                         >
                             No Recent Searches
@@ -193,12 +194,39 @@ export default class Search extends React.Component {
                     onPress={() => Keyboard.dismiss()}
                     style={{height: fullHeight - navHeight, alignSelf: 'stretch'}}
                 >
-                    <View>
+                    <View style={{backgroundColor: colors.mainBackground}}>
                         <View style={{height: fullHeight*0.90625 - navHeight}}>
-                            <View style={{height: (Platform.OS == 'android') ?  fullHeight*0.035 : fullHeight*0.055}}/>
+                            <View 
+                                style={[
+                                    styles.centerContent, {
+                                    height: (Platform.OS == 'android') ?  fullHeight*0.035 : 
+                                        (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                                    backgroundColor: colors.thirdBackground,
+                                }]}
+                            >
+                                <View style={{flex: 1}}/>
+                                <View 
+                                    style={[
+                                        styles.centerContent, {
+                                        backgroundColor: colors.thirdBackground,
+                                    }]}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 20*factorRatio,
+                                            fontWeight: 'bold',
+                                            color: 'white',
+                                        }}
+                                    >
+                                        Search
+                                    </Text>
+                                </View>
+                                <View style={{height: 20*factorVertical}}/>
+                            </View>
+                            <View style={{height: fullHeight*0.05}}/>
                             <View key={'searchBox'}
                                 style={{
-                                    height: (Platform.OS == 'android') ? fullHeight*0.07 : fullHeight*0.05, 
+                                    height: (Platform.OS == 'android') ? fullHeight*0.075 : fullHeight*0.06, 
                                     flexDirection: 'row',
                                 }}
                             >
@@ -221,7 +249,7 @@ export default class Search extends React.Component {
                                     </View>
                                     <TextInput
                                         ref={(searchTerm) => { this.searchTerm = searchTerm }}
-                                        placeholder={'Search'}
+                                        placeholder={'Type your search...'}
                                         placeholderTextColor={'grey'}
                                         onChangeText={(searchTerm) => this.setState({searchTerm})}
                                         onSubmitEditing={() => this.search(this.state.searchTerm)}
@@ -231,7 +259,7 @@ export default class Search extends React.Component {
                                             color: 'grey',
                                             justifyContent: 'center',
                                             fontFamily: 'OpenSans-Regular',
-                                            fontSize: 20*factorRatio,
+                                            fontSize: 16*factorRatio,
                                         }}
                                     />
                                 </View>
@@ -259,7 +287,7 @@ export default class Search extends React.Component {
                                             style={{
                                                 flex: 2,
                                                 textAlign: 'center',
-                                                fontSize: 14*factorRatio,
+                                                fontSize: 12*factorRatio,
                                                 fontWeight: 'bold',
                                                 color: '#fb1b2f',
                                                 fontFamily: 'OpenSans-Regular',
@@ -280,6 +308,7 @@ export default class Search extends React.Component {
                                     styles.centerContent, {
                                     height: fullHeight*0.04,
                                     flexDirection: 'row',
+
                                 }]}
                             >
                                 {!this.state.searchEntered && (
@@ -289,10 +318,11 @@ export default class Search extends React.Component {
                                         paddingLeft: fullWidth*0.05,
                                         fontWeight: 'bold',
                                         fontFamily: 'OpenSans-Regular',
-                                        fontSize: 20*factorRatio,
+                                        fontSize: 18*factorRatio,
+                                        color: colors.secondBackground,
                                     }}
                                 >
-                                    RECENT SEARCHES
+                                    RECENT
                                 </Text>
                                 )}
                                 {!this.state.searchEntered && (
@@ -313,24 +343,16 @@ export default class Search extends React.Component {
                                             flexDirection: 'row'
                                         }]}
                                     >
-                                        <View style={{marginTop: 3.5*factorRatio}}>
-                                            <EntypoIcon 
-                                                name={'cross'}
-                                                size={18*factorRatio}
-                                                color={'grey'}
-                                            />
-                                        </View>
                                         <Text
                                             style={{
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                color: 'grey',
+                                                fontSize: 14*factorRatio,
+                                                color: colors.pianoteRed,
                                                 textAlign: 'right',
                                                 fontFamily: 'OpenSans-Regular',
                                                 marginTop: 3*factorVertical,
                                             }}
                                         >
-                                            CLEAR RECENT
+                                            Clear
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -342,7 +364,8 @@ export default class Search extends React.Component {
                                         paddingLeft: fullWidth*0.05,
                                         fontWeight: 'bold',
                                         fontFamily: 'OpenSans-Regular',
-                                        fontSize: 20*factorRatio,
+                                        fontSize: 18*factorRatio,
+                                        color: 'white',
                                     }}
                                 >
                                     {this.state.numSearchResults} SEARCH RESULT{(this.state.numSearchResults == 1) ? '':'S'}
