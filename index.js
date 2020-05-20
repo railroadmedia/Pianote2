@@ -29,6 +29,9 @@ global.factorRatio = (Dimensions.get('window').height/812 + Dimensions.get('wind
 global.onTablet = DeviceInfo.isTablet();
 global.isNotch = DeviceInfo.hasNotch();
 global.navPxFromTop = (isNotch) ? 30*factorRatio : (onTablet) ? -5*factorVertical : (Platform.OS == 'android') ? 0*factorRatio : 10*factorRatio
+global.colors = {
+    mainBackground: '#00101d',
+}
 
 configure({
     'baseURL': 'https://staging.musora.com',

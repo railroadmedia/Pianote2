@@ -40,12 +40,7 @@ export default class LoadPage extends React.Component {
                     alignSelf: 'stretch',
                 }]}
             >
-                <GradientFeature
-                    color={'dark'}
-                    opacity={0.5}
-                    height={'100%'}
-                    borderRadius={0}
-                />
+
                 <View key={'LoadPage'}
                     style={[
                         styles.centerContent, {
@@ -56,6 +51,7 @@ export default class LoadPage extends React.Component {
                         width: fullWidth,
                         zIndex: 4,
                         elevation: (Platform.OS == 'android') ? 4 : 0,
+                        backgroundColor: colors.mainBackground,
                     }]}
                 >
                     <Pianote
@@ -66,15 +62,7 @@ export default class LoadPage extends React.Component {
                     <View style={{height: 60*factorVertical}}/>
                 </View>
                 
-                <FastImage
-                    style={{
-                        height: fullHeight,
-                        width: fullWidth, 
-                        alignSelf: 'stretch',
-                    }}
-                    source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-                    resizeMode={FastImage.resizeMode.cover}
-                />
+          
             </View>
         )
     }

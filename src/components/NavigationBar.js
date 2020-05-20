@@ -12,6 +12,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 class NavigationBar extends React.Component {
     static navigationOptions = {header: null};
@@ -38,7 +39,7 @@ class NavigationBar extends React.Component {
         return (
             <View key={'taskBarContainer'}
                 style={{
-                    backgroundColor: 'white',
+                    backgroundColor: colors.mainBackground,
                     height: fullHeight*0.09375,
                     borderTopColor: '#ececec',
                     borderTopWidth: 2*factorRatio,
