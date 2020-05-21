@@ -13,6 +13,7 @@ import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import TheFourPillars from '../modals/TheFourPillars';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
@@ -318,6 +319,7 @@ class VerticalVideoList extends React.Component {
                                     textAlign: 'left',
                                     fontWeight: 'bold',
                                     fontFamily: 'OpenSans-Regular',
+                                    color: 'white',
                                 }}
                             >
                                 {row.title}
@@ -327,13 +329,12 @@ class VerticalVideoList extends React.Component {
                                 numberOfLines={2}
                                 style={{
                                     fontSize: 12*factorRatio,
-                                    color: '#9b9b9b',
+                                    color: colors.secondBackground,
                                     textAlign: 'left',
-                                    fontWeight: '500',
                                     fontFamily: 'OpenSans-Regular',
                                 }}
                             >
-                                2 mins
+                                Quick Tip / Jared Falk
                                 {/* {this.props.items[index].artist} */}
                             </Text>
                         </View>
@@ -346,7 +347,7 @@ class VerticalVideoList extends React.Component {
                                 <AntIcon
                                     name={'plus'} 
                                     size={30*factorRatio} 
-                                    color={'#c2c2c2'}
+                                    color={colors.pianoteRed}
                                 />
                             </TouchableOpacity>
                             )}
@@ -521,6 +522,113 @@ class VerticalVideoList extends React.Component {
     render = () => {
         return (
             <View style={styles.container}>
+                <View>
+                    <View style={{height: 5*factorVertical}}/>
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={{paddingLeft: 10*factorHorizontal}}>
+                            <Text
+                                style={{
+                                    fontSize: 18*factorRatio,
+                                    marginBottom: 5*factorVertical,
+                                    textAlign: 'left', 
+                                    fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
+                                    fontFamily: 'OpenSans-Regular',
+                                    color: colors.secondBackground,
+                                }}
+                            >
+                                {this.props.title}
+                            </Text>
+                        </View>
+                        <View style={{flex: 1}}/>
+                        <View 
+                            style={{
+                                paddingRight: 10*factorHorizontal,
+                                flexDirection: 'row',
+                            }}
+                        >
+                            <View>
+                                <View style={{flex: 1}}/>
+                                <Text
+                                    style={{
+                                        color: colors.pianoteRed,
+                                        fontSize: 12*factorRatio,
+                                        fontFamily: 'OpenSans-Regular',
+                                    }}
+                                >
+                                    RELEVANCE
+                                </Text>
+                                <View style={{flex: 1}}/>
+                            </View>
+                            <View style={{width: 10*factorHorizontal}}/>
+                            <TouchableOpacity
+                                style={[
+                                    styles.centerContent, {
+                                    borderWidth: 1*factorRatio,
+                                    borderColor: colors.pianoteRed,
+                                    paddingBottom: 5*factorRatio,
+                                    paddingTop: 5*factorRatio,
+                                    paddingRight: 7.5*factorRatio,
+                                    paddingLeft: 7.5*factorRatio,
+                                    borderRadius: 20*factorRatio,
+                                }]}
+                            >
+                                <View style={{flex: 1}}/>
+                                <View
+                                    style={{
+                                        transform: [{ rotate: '90deg'}]
+                                    }}
+                                >
+                                    <IonIcon 
+                                        size={14*factorRatio}
+                                        name={'md-options'}
+                                        color={colors.pianoteRed}
+                                    />
+                                </View>
+                                <View style={{flex: 1}}/>
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    
+                                }}
+                            >
+                                
+                            </View>
+
+                        </View>
+                    </View>
+                    <View>
+                        <View 
+                            style={{
+                                paddingLeft: 10*factorHorizontal,
+                                paddingRight: 10*factorHorizontal
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 12*factorRatio,
+                                    marginBottom: 5*factorVertical,
+                                    textAlign: 'left', 
+                                    fontFamily: 'OpenSans-Regular',
+                                    color: colors.secondBackground,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 12*factorRatio,
+                                        marginBottom: 5*factorVertical,
+                                        textAlign: 'left', 
+                                        fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
+                                        fontFamily: 'OpenSans-Regular',
+                                        color: colors.secondBackground,
+                                    }}
+                                >
+                                    Filters applied
+                                </Text> / BEGINNER 3 / BEATS, FILLS, FEET, TECHNIQUE / AARON EDGAR, JARED FALK / ALL PROGRESS
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={{height: 5*factorVertical}}/>
+                </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {
                         (this.props.renderType == 'FlatList') ? 

@@ -19,6 +19,7 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
 export default class Lessons extends React.Component {
@@ -35,7 +36,7 @@ export default class Lessons extends React.Component {
     }
 
 
-    componentDidMount() {
+    async componentDidMount() {
         this.getCourses()
         this.getSongs()
     }
@@ -245,6 +246,7 @@ export default class Lessons extends React.Component {
                                             borderRadius: 100,
                                             backgroundColor: colors.secondBackground,
                                             alignSelf: 'stretch',
+                                            borderWidth: 2,
                                         }}
                                     >
                                         <TouchableOpacity
@@ -266,24 +268,65 @@ export default class Lessons extends React.Component {
                             <View
                                 style={{
                                     flex: 3,
-                                    backgroundColor: 'red',
+                                    flexDirection: 'row',
                                     alignSelf: 'stretch',
                                 }}
                             >
-                                <View 
-                                    style={{
-                                        flex: 1,
-                                    }}
-                                >
-
+                                <View style={{flex: 1}}/>
+                                <View>
+                                    <View style={{flex: 1}}/>
+                                    <View>
+                                        <Text
+                                            style={{
+                                                color: colors.pianoteRed,
+                                                fontSize: 12*factorRatio,
+                                                fontWeight: 'bold',
+                                                textAlign: 'center',
+                                            }}
+                                        >
+                                            XP
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 24*factorRatio,
+                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
+                                                textAlign: 'center',
+                                            }}
+                                        >
+                                            32.2K
+                                        </Text>
+                                    </View>
+                                    <View style={{flex: 1}}/>
                                 </View>
-                                <View 
-                                    style={{
-                                        flex: 1,
-                                    }}
-                                >
-
+                                <View style={{flex: 1}}/>
+                                <View>
+                                    <View style={{flex: 1}}/>
+                                    <View>
+                                        <Text
+                                            style={{
+                                                color: colors.pianoteRed,
+                                                fontSize: 12*factorRatio,
+                                                fontWeight: 'bold',
+                                                textAlign: 'center',
+                                            }}
+                                        >
+                                            RANK
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                                fontSize: 24*factorRatio,
+                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
+                                                textAlign: 'center',
+                                            }}
+                                        >
+                                            MAESTRO
+                                        </Text>
+                                    </View>
+                                    <View style={{flex: 1}}/>
                                 </View>
+                                <View style={{flex: 1}}/>
                             </View>
                         </View>
                         <View key={'courses'}
@@ -331,153 +374,32 @@ export default class Lessons extends React.Component {
                             />
                         </View>
                         
-                        <View style={{height: 5*factorRatio}}/>
-                        <View key={'packs'}
+                        <View 
                             style={{
-                                backgroundColor: colors.mainBackground,
-                                width: fullWidth,
-                                paddingLeft: fullWidth*0.035,
-                                paddingRight: fullWidth*0.035,
+                                height: 5*factorRatio
                             }}
                         >
-                            <View key={'textTitle'}
-                                style={{height: fullHeight*0.065}}
-                            >
-                                <View style={{flex: 1}}/>
-                                <Text key={'studentFocusTitle'}
-                                    style={{
-                                        textAlign: 'left',
-                                        fontWeight: 'bold', 
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 18*factorRatio,
-                                    }}
-                                >
-                                    STUDENT FOCUS
-                                </Text>
-                                <View style={{flex: 1}}/>
-                            </View>
-                            <View key={'pack'}
-                                style={{
-                                    height: fullWidth*0.45*2+fullWidth*0.033,
-                                }}
-                            >
-                                <View key={'Q&A'}
-                                    style={{
-                                        borderRadius: 12.5*factorRatio,
-                                        position: 'absolute',
-                                        top: 0,
-                                        right: 0,
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45,
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.navigate('STUDENTFOCUSSHOW', 
-                                                {'pack' : 'Q&A'}
-                                            )
-                                        }}
-                                        style={{
-                                            height: fullWidth*0.45,
-                                            width: fullWidth*0.45,
-                                            zIndex: 10,
-                                            elevation: 10,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1}}
-                                            source={require('Pianote2/src/assets/img/imgs/questionAnswer.jpg')}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />  
-                                    </TouchableOpacity>
-                                </View>
-                                <View key={'bootcamps'}
-                                    style={{
-                                        borderRadius: 12.5*factorRatio,
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.navigate('STUDENTFOCUSSHOW', 
-                                                {'pack' : 'Bootcamps'}
-                                            )
-                                        }}
-                                        style={{
-                                            height: fullWidth*0.45,
-                                            width: fullWidth*0.45,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1, borderRadius: 10*factorRatio}}
-                                            source={require('Pianote2/src/assets/img/imgs/bootcamps.jpg')}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />   
-                                    </TouchableOpacity>
-                                </View>
-                                <View key={'studentReviews'}
-                                    style={{
-                                        borderRadius: 12.5*factorRatio,
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        right: 0,
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.navigate('STUDENTFOCUSSHOW', 
-                                                {'pack' : 'Student Review'}
-                                            )
-                                        }}
-                                        style={{
-                                            height: fullWidth*0.45,
-                                            width: fullWidth*0.45,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1, borderRadius: 10*factorRatio}}
-                                            source={require('Pianote2/src/assets/img/imgs/studentReview.jpg')}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />   
-                                    </TouchableOpacity>
-                                </View>
-                                <View key={'quicktips'}
-                                    style={{
-                                        borderRadius: 12.5*factorRatio,
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        left: 0,
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.navigate('STUDENTFOCUSSHOW', 
-                                                {'pack' : 'Quick Tips'}
-                                            )
-                                        }}
-                                        style={{
-                                            height: fullWidth*0.45,
-                                            width: fullWidth*0.45,
-                                        }}
-                                    >
-                                        <FastImage
-                                            style={{flex: 1, borderRadius: 10*factorRatio}}
-                                            source={require('Pianote2/src/assets/img/imgs/quickTips.jpg')}
-                                            resizeMode={FastImage.resizeMode.cover}
-                                        />   
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <View style={{height: fullHeight*0.033}}/>
+
+
                         </View>
+                        <VerticalVideoList
+                                title={'ALL LESSONS'}
+                                outVideos={this.state.outVideos}
+                                //getVideos={() => this.getContent()}
+                                renderType={'Mapped'}
+                                items={this.state.courses}
+                                imageRadius={5*factorRatio}
+                                containerBorderWidth={0}
+                                containerWidth={fullWidth}
+                                containerHeight={(onTablet) ? fullHeight*0.15 : (
+                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
+                                }
+                                imageHeight={(onTablet) ? fullHeight*0.12 : (
+                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                                }
+                                imageWidth={fullWidth*0.26}
+                            />
+                  
                     </ScrollView>
                     <NavigationBar
                         currentPage={'NONE'}

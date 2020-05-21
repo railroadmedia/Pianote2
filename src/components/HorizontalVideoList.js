@@ -63,7 +63,7 @@ class HorizontalVideoList extends React.Component {
                         }]}
                     >
                         <View style={{height: 10*factorVertical}}/>
-                        <View key={'inProgressText'}
+                        <View key={'title'}
                             style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',

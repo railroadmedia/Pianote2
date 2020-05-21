@@ -77,27 +77,6 @@ export default class MyList extends React.Component {
     }
 
 
-    pressFilters = async () => {
-        await this.setState({
-            filterClicked: !this.state.filterClicked
-        })
-
-        await Animated.timing(
-            this.state.filterSize, {
-                toValue: (this.state.filterClicked) ? 0.25 : 0,
-                duration : 250,
-            }
-        ).start();
-        
-        await Animated.timing(
-            this.state.listSize, {
-            toValue: (this.state.filterClicked) ? 0.35 : 0.6,
-            duration : 250,
-            }
-        ).start();
-    }
-
-
     render() {
         return (
             <View styles={styles.container}>
