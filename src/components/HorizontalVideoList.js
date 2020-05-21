@@ -62,6 +62,7 @@ class HorizontalVideoList extends React.Component {
                             width: fullWidth-20*factorHorizontal,
                         }]}
                     >
+                        <View style={{height: 10*factorVertical}}/>
                         <View key={'inProgressText'}
                             style={{
                                 flexDirection: 'row',
@@ -71,11 +72,12 @@ class HorizontalVideoList extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontSize: 19*factorRatio,
+                                    fontSize: 18*factorRatio,
                                     marginBottom: 5*factorVertical,
                                     textAlign: 'left', 
-                                    fontWeight: '700', 
+                                    fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
                                     fontFamily: 'OpenSans-Regular',
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 {this.props.Title}
@@ -108,6 +110,7 @@ class HorizontalVideoList extends React.Component {
                                 style={{
                                     fontSize: 16*factorRatio,
                                     fontFamily: 'OpenSans-Regular',
+                                    color: 'white',
                                 }}
                             >
                                 {this.props.Description}
@@ -178,8 +181,9 @@ class HorizontalVideoList extends React.Component {
                                             fontSize: 15.5*factorRatio,
                                             marginTop: 7.5*factorRatio,
                                             textAlign: 'left', 
-                                            fontWeight: '700',
+                                            fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
                                             fontFamily: 'OpenSans-Regular',
+                                            color: 'white',
                                         }}
                                     >
                                         {item.title}
@@ -191,8 +195,8 @@ class HorizontalVideoList extends React.Component {
                                         style={{
                                             textAlign: 'left',
                                             fontFamily: 'OpenSans-Regular',
-                                            color: 'grey',
-                                            fontSize: 13*factorRatio,
+                                            color: colors.secondBackground,
+                                            fontSize: 12*factorRatio,
                                         }}
                                     >
                                         Song / Ed Sheeran
@@ -209,7 +213,7 @@ class HorizontalVideoList extends React.Component {
                                         <Icon
                                             name={'plus'}
                                             size={30*factorRatio}
-                                            color={'#b8b8b8'}
+                                            color={colors.pianoteRed}
                                         />
                                     </TouchableOpacity>
                                     )}

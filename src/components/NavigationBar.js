@@ -12,7 +12,6 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 class NavigationBar extends React.Component {
     static navigationOptions = {header: null};
@@ -62,7 +61,7 @@ class NavigationBar extends React.Component {
                         <SimpleLineIcon
                             name={'home'}
                             size={30*factorRatio}
-                            color={(this.props.currentPage == 'HOME') ? 'white' : '#445f73'}
+                            color={(this.props.currentPage == 'HOME') ? 'white' : colors.secondBackground}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity key={'search'}
@@ -71,7 +70,7 @@ class NavigationBar extends React.Component {
                         <EvilIcons
                             name={'search'}
                             size={40*factorRatio}
-                            color={(this.props.currentPage == 'SEARCH') ? 'white' : '#445f73'}
+                            color={(this.props.currentPage == 'SEARCH') ? 'white' : colors.secondBackground}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity key={'download'}
@@ -80,7 +79,7 @@ class NavigationBar extends React.Component {
                         <MaterialIcon
                             name={'arrow-collapse-down'}
                             size={30*factorRatio}
-                            color={(this.props.currentPage == 'DOWNLOAD') ? 'white' : '#445f73'}
+                            color={(this.props.currentPage == 'DOWNLOAD') ? 'white' : colors.secondBackground}
                         />
                     </TouchableOpacity>                            
                     <TouchableOpacity key={'profile'}
@@ -96,7 +95,7 @@ class NavigationBar extends React.Component {
                             }} 
                         >
                             <FastImage
-                                style={{flex: 1, borderRadius: 100, backgroundColor: '#445f73'}}
+                                style={{flex: 1, borderRadius: 100, backgroundColor: colors.secondBackground}}
                                 source={{uri: this.state.profileImage}}
                                 resizeMode={FastImage.resizeMode.stretch}
                             />

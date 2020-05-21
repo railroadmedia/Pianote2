@@ -560,7 +560,7 @@ class NavigationMenu extends React.Component {
                 >
                     <View style={{flex: 0.225, alignSelf: 'stretch'}}/>
                     <View key={'menuItems'} 
-                        style={{alignSelf: 'stretch',}}
+                        style={{alignSelf: 'stretch'}}
                     >
                         {this.menuNavigation()}
                     </View>
@@ -580,7 +580,6 @@ class NavigationMenu extends React.Component {
                         >
                             <TouchableOpacity 
                                 onPress={() => {
-                                    console.log('close modal')
                                     this.props.onClose(false)
                                 }}
                                 style={[

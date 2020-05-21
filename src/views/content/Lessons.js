@@ -31,8 +31,6 @@ export default class Lessons extends React.Component {
             showModalMenu: false, // show navigation menu
             outVideos: false,
             page: 0,
-            parentPage: 'LESSONS',
-            menu: 'HOME',
         }
     }
 
@@ -122,6 +120,9 @@ export default class Lessons extends React.Component {
                         alignSelf: 'stretch'
                     }}
                 >
+                    <NavMenuHeaders
+                        currentPage={'LESSONS'}
+                    />
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
@@ -129,7 +130,7 @@ export default class Lessons extends React.Component {
                     >
                         <View key={'backgroundColoring'}
                             style={{
-                                backgroundColor: 'black',
+                                backgroundColor: colors.mainBackground,
                                 position: 'absolute',
                                 height: fullHeight,
                                 top: -fullHeight,
@@ -140,107 +141,108 @@ export default class Lessons extends React.Component {
                             }}
                         >
                         </View>
+                        <View key={'header'}
+                            style={{
+                                height: fullHeight*0.1,
+                                backgroundColor: colors.mainBackground,
+                            }}
+                        />
                         <View key={'image'}
                             style={[
                                 styles.centerContent, {
-                                height: fullHeight*0.595,
+                                height: fullHeight*0.32,
                             }]}
                         >
                             <GradientFeature
-                                color={'brown'}
+                                color={'blue'}
                                 opacity={1}
-                                height={'50%'}
+                                height={'100%'}
                                 borderRadius={0}
                             />
                             <FastImage
                                 style={{
                                     flex: 1, 
                                     alignSelf: 'stretch', 
-                                    backgroundColor: 'black',
+                                    backgroundColor: colors.mainBackground,
                                 }}
-                                source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
+                                source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
                                 resizeMode={FastImage.resizeMode.cover}
-                            />
-                            <NavMenuHeaders
-                                pxFromTop={navPxFromTop}
-                                leftHeader={'LESSONS'}
-                                pressLeftHeader={() => {
-                                    this.setState({
-                                        parentPage: 'LESSONS',
-                                        menu: 'HOME',
-                                        showModalMenu: true,
-                                    })
-                                }}
-                                pressRightHeader={() => {
-                                    this.setState({
-                                        parentPage: 'ALL TYPES',
-                                        menu: 'LESSONS',
-                                        showModalMenu: true,
-                                    })
-                                }}
-                                rightHeader={'ALL TYPES'}
-                                isHome={false}
                             />
                             <View key={'pianoteSVG'}
                                 style={{
                                     position: 'absolute',
-                                    bottom: isNotch ? fullHeight*0.175 : 
-                                            (onTablet) ? fullHeight*0.195 : fullHeight*0.185,
+                                    height: '100%',
+                                    width: fullWidth,
                                     zIndex: 2,
                                     elevation: 2,
                                 }}
                             >
-                                <Pianote
-                                    height={fullHeight*0.0325}
-                                    width={fullWidth*0.35}
-                                    fill={'#fb1b2f'}
-                                />
-                            </View>
-                            <Text key={'foundations'}
+                                <View style={{flex: 0.4}}/>
+                                <View style={{flexDirection: 'row'}}>
+                                    <View style={{flex: 1}}/>
+                                    <Pianote
+                                        height={fullHeight*0.03}
+                                        width={fullWidth*0.35}
+                                        fill={'white'}
+                                    />
+                                    <View style={{flex: 1}}/>
+                                </View>
+                                <Text key={'foundations'}
                                 style={{
                                     fontSize: 60*factorRatio,
-                                    fontWeight:'700',
+                                    fontWeight: '700',
                                     color: 'white',
                                     fontFamily: 'RobotoCondensed-Regular',
                                     transform: [{ scaleX: 0.7}],
-                                    position: 'absolute',
-                                    bottom: fullHeight*0.09,
-                                    zIndex: 2,
-                                    elevation: 2,
                                     textAlign: 'center',
                                 }}
                             >
                                 FOUNDATIONS
                             </Text>
-                            <StartIcon
-                                pxFromTop={(onTablet) ? fullHeight*0.505 : fullHeight*0.51}
-                                buttonHeight={(onTablet) ? fullHeight*0.06 : fullHeight*0.053}
-                                pxFromLeft={fullWidth*0.065}
-                                buttonWidth={fullWidth*0.42}
-                                pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
-                            />
-                            <MoreInfoIcon
-                                pxFromTop={(onTablet) ? fullHeight*0.505 : fullHeight*0.51}
-                                buttonHeight={(onTablet) ? fullHeight*0.06 : fullHeight*0.053}
-                                pxFromRight={fullWidth*0.065}
-                                buttonWidth={fullWidth*0.42}
-                                pressed={() => this.props.navigation.navigate('PATHOVERVIEW')}
-                            />   
+                                <View style={{flex: 0.6}}/>
+                                <StartIcon
+                                    pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
+                                    buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
+                                    pxFromLeft={fullWidth*0.065}
+                                    buttonWidth={fullWidth*0.42}
+                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
+                                />
+                                <MoreInfoIcon
+                                    pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
+                                    buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
+                                    pxFromRight={fullWidth*0.065}
+                                    buttonWidth={fullWidth*0.42}
+                                    pressed={() => this.props.navigation.navigate('PATHOVERVIEW')}
+                                />  
+                            </View> 
                         </View>
-                        <View style={{height: 7.5*factorVertical}}/>
+                        <View key={'profile'}
+                            style={{
+                                borderTopColor: colors.secondBackground,
+                                borderTopWidth: 0.25,
+                                borderBottomColor: colors.secondBackground,
+                                borderBottomWidth: 0.25,
+                                height: fullHeight*0.1,
+                                backgroundColor: colors.mainBackground,
+
+                            }}
+                        >
+
+                        </View>
                         <View key={'courses'}
                             style={{
                                 minHeight: fullHeight*0.225,
                                 paddingLeft: fullWidth*0.035,
+                                backgroundColor: colors.mainBackground,
                             }}
                         >
                             <HorizontalVideoList
-                                Title={'COURSES'}
+                                Title={'CONTINUE'}
                                 Description={''}
                                 seeAll={() => {
                                     this.props.navigation.navigate('COURSECATALOG')
                                 }}
-                                showArtist={false}
+                                showArtist={true}
                                 items={this.state.courses}
                                 forceSquareThumbs={false}
                                 itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
@@ -253,6 +255,7 @@ export default class Lessons extends React.Component {
                             style={{
                                 height: fullHeight*0.27,
                                 paddingLeft: fullWidth*0.035,
+                                backgroundColor: colors.mainBackground,
                             }}
                         >
                             <HorizontalVideoList
@@ -271,7 +274,7 @@ export default class Lessons extends React.Component {
                         <View style={{height: 5*factorRatio}}/>
                         <View key={'packs'}
                             style={{
-                                
+                                backgroundColor: colors.mainBackground,
                                 width: fullWidth,
                                 paddingLeft: fullWidth*0.035,
                                 paddingRight: fullWidth*0.035,

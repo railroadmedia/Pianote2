@@ -7,11 +7,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import { withNavigation } from 'react-navigation';
 
 const colorDict = {
+    blue: ['rgba(0, 16, 29, 0)', 'rgba(0, 16, 29, 1)'],
+    grey: ['transparent', 'rgba(23, 26, 26, 1)', 'rgba(23, 26, 26, 1)'],
     red: ['transparent', 'rgba(80, 15, 25, 0.4)', 'rgba(80, 15, 25, 0.98)'],
     black: ['transparent', 'rgba(20, 20, 20, 0.95)', 'rgba(15, 15, 15, 0.98)'],
-    grey: ['transparent', 'rgba(23, 26, 26, 1)', 'rgba(23, 26, 26, 1)'],
-    brown: ['rgba(65, 11, 17, 0)', 'rgba(65, 11, 17, 0.7)', 'rgba(65, 11, 17, 1)'],
     dark: ['rgba(23, 26, 26, 1)', 'rgba(23, 26, 26, 1)', 'rgba(23, 26, 26, 1)'],
+    brown: ['rgba(65, 11, 17, 0)', 'rgba(65, 11, 17, 0.7)', 'rgba(65, 11, 17, 1)'],
 }
 
 class GradientFeature extends React.Component {
