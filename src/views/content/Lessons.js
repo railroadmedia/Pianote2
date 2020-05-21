@@ -126,7 +126,7 @@ export default class Lessons extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1, backgroundColor: 'white'}}
+                        style={{flex: 1, backgroundColor: colors.mainBackground}}
                     >
                         <View key={'backgroundColoring'}
                             style={{
@@ -224,10 +224,67 @@ export default class Lessons extends React.Component {
                                 borderBottomWidth: 0.25,
                                 height: fullHeight*0.1,
                                 backgroundColor: colors.mainBackground,
-
+                                flexDirection: 'row',
                             }}
                         >
+                            <View
+                                style={[
+                                    styles.centerContent, {
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    alignSelf: 'stretch',
+                                }]}
+                            >
+                                <View style={{flex: 1}}/>
+                                <View>
+                                    <View style={{flex: 1}}/>
+                                    <View 
+                                        style={{
+                                            height: fullHeight*0.075,
+                                            width: fullHeight*0.075,
+                                            borderRadius: 100,
+                                            backgroundColor: colors.secondBackground,
+                                            alignSelf: 'stretch',
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() => {}}
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                alignSelf: 'center'
+                                            }}
+                                        >
 
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={{flex: 1}}/>
+                                </View>
+                                <View style={{flex: 1}}/>
+
+                            </View>
+                            <View
+                                style={{
+                                    flex: 3,
+                                    backgroundColor: 'red',
+                                    alignSelf: 'stretch',
+                                }}
+                            >
+                                <View 
+                                    style={{
+                                        flex: 1,
+                                    }}
+                                >
+
+                                </View>
+                                <View 
+                                    style={{
+                                        flex: 1,
+                                    }}
+                                >
+
+                                </View>
+                            </View>
                         </View>
                         <View key={'courses'}
                             style={{
@@ -251,26 +308,29 @@ export default class Lessons extends React.Component {
                                 itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
-                        <View key={'songs'}
+                        <View key={'newLessons'}
                             style={{
-                                height: fullHeight*0.27,
+                                minHeight: fullHeight*0.225,
                                 paddingLeft: fullWidth*0.035,
                                 backgroundColor: colors.mainBackground,
                             }}
                         >
                             <HorizontalVideoList
-                                Title={'SONGS'}
+                                Title={'NEW LESSONS'}
                                 Description={''}
                                 seeAll={() => {
-                                    this.props.navigation.navigate('SONGCATALOG')
+                                    this.props.navigation.navigate('COURSECATALOG')
                                 }}
-                                showArtist={false}
-                                items={this.state.songs}
+                                showArtist={true}
+                                items={this.state.courses}
                                 forceSquareThumbs={false}
-                                itemWidth={fullHeight*0.15}
-                                itemHeight={fullHeight*0.15}
+                                itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
+                                    fullWidth*0.425 : fullWidth*0.55)
+                                }
+                                itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
+                        
                         <View style={{height: 5*factorRatio}}/>
                         <View key={'packs'}
                             style={{
@@ -446,3 +506,28 @@ export default class Lessons extends React.Component {
         )
     }
 }
+
+/**
+ * 
+<View key={'songs'}
+    style={{
+        height: fullHeight*0.27,
+        paddingLeft: fullWidth*0.035,
+        backgroundColor: colors.mainBackground,
+    }}
+>
+    <HorizontalVideoList
+        Title={'SONGS'}
+        Description={''}
+        seeAll={() => {
+            this.props.navigation.navigate('SONGCATALOG')
+        }}
+        showArtist={false}
+        items={this.state.songs}
+        forceSquareThumbs={false}
+        itemWidth={fullHeight*0.15}
+        itemHeight={fullHeight*0.15}
+    />
+</View>
+                       
+ */

@@ -33,7 +33,13 @@ class NavMenuHeaders extends React.Component {
                     elevation: 3,
                 }]}
             >
-                <View style={{flex: 1}}>
+                <View 
+                    style={{
+                        flex: 1,
+                        backgroundColor: colors.mainBackground,
+                        alignSelf: 'stretch',
+                    }}
+                >
                     <View
                         style={{
                             flexDirection: 'row',
