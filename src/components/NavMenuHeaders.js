@@ -36,7 +36,7 @@ class NavMenuHeaders extends React.Component {
                 <View 
                     style={{
                         flex: 1,
-                        backgroundColor: colors.mainBackground,
+                        backgroundColor: colors.thirdBackground,
                         alignSelf: 'stretch',
                     }}
                 >
@@ -44,7 +44,7 @@ class NavMenuHeaders extends React.Component {
                         style={{
                             flexDirection: 'row',
                             width: fullWidth,
-                            backgroundColor: colors.mainBackground,
+                            backgroundColor: colors.thirdBackground,
                         }}
                     >
                         <View key={'pianoteSign'}

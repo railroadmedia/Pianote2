@@ -4,12 +4,11 @@
 import React from 'react';
 import { 
     View,
+    Text,
     TouchableOpacity,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import Songs500 from 'Pianote2/src/assets/img/svgs/500SongsLogo.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -23,23 +22,8 @@ export default class Packs extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            parentPage: 'PACKS',
-            menu: 'HOME',
             showModalMenu: false,
-            mainImage: null,
-            secondImage: null,
-            thirdImage: null,
-            currentPack: 'FASTER FINGERS'
         }
-    }
-
-
-    componentDidMount() {
-        this.setState({
-            mainImage: require('Pianote2/src/assets/img/imgs/fasterFingers.png'),
-            secondImage: require('Pianote2/src/assets/img/imgs/sightReading.png'),
-            thirdImage: require('Pianote2/src/assets/img/imgs/500Songs.png'),
-        })
     }
 
 
@@ -50,218 +34,200 @@ export default class Packs extends React.Component {
                     style={{
                         height: fullHeight - navHeight,
                         alignSelf: 'stretch',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
                     <View key={'contentContainer'}
                         style={{flex: 1}}
                     >
                         <NavMenuHeaders
-                            pxFromTop={navPxFromTop}
-                            leftHeader={'PACKS'}
-                            pressLeftHeader={() => {
-                                this.setState({
-                                    parentPage: 'PACKS',
-                                    menu: 'HOME',
-                                    showModalMenu: true,
-                                })
-                            }}
-                            pressRightHeader={() => {
-                                this.setState({
-                                    parentPage: 'ALL PACKS',
-                                    menu: 'PACKS',
-                                    showModalMenu: true,
-                                })
-                            }}
-                            rightHeader={'ALL PACKS'}
-                            isHome={false}
+                            currentPage={'PACKS'}
                         />
-                        <View key={'focusedPack'}
-                            style={{flex: 1}}
+                        <View key={'header'}
+                            style={{
+                                height: fullHeight*0.1,
+                                backgroundColor: colors.thirdBackground,
+                            }}
+                        />
+                        <View style={{height: 20*factorVertical}}/>
+                        <Text
+                            style={{
+                                paddingLeft: 12*factorHorizontal,
+                                fontSize: 30*factorRatio,
+                                color: 'white',
+                                fontFamily: 'OpenSans-Regular',
+                                fontWeight: (Platform.OS == 'ios') ? '900' : 'bold',
+                            }}
                         >
-                            <GradientFeature
-                                color={'black'}
-                                opacity={1}
-                                height={'60%'}
-                                borderRadius={0}
-                            />
-                            <View key={'image1'}
-                                style={{
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                <FasterFingers
-                                    height={250*factorRatio}
-                                    width={250*factorRatio}
-                                />
-                                <View style={{flex: 1}}/>
-                            </View>    
-                            <FastImage
-                                style={{
-                                    flex: 1, 
-                                    alignSelf: 'stretch', 
-                                    backgroundColor: 'black'
-                                }}
-                                source={this.state.mainImage}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                            <View key={'startMoreInfo'}
-                                style={{
-                                    height: (onTablet) ? fullHeight*0.1 : fullHeight*0.09,
-                                    width: fullWidth,
-                                    zIndex: 3,
-                                    elevation: 3,
-                                    backgroundColor: 'transparent',
-                                    position: 'absolute',
-                                    bottom: 0,
-                                }}
-                            >
-                                <StartIcon
-                                    pxFromTop={0}
-                                    pxFromLeft={fullWidth*0.065}
-                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                    buttonWidth={fullWidth*0.42}
-                                    pressed={() => {
-                                        this.props.navigation.navigate('VIDEOPLAYER')
-                                    }}
-                                />
-                                <MoreInfoIcon
-                                    pxFromTop={0}
-                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                    pxFromRight={fullWidth*0.065}
-                                    buttonWidth={fullWidth*0.42}
-                                    pressed={() => {
-                                        this.props.navigation.navigate('SINGLEPACK', 
-                                                {'data' : 'FASTER FINGERS'}
-                                            )
-                                    }}
-                                />
-                            </View>
-                        </View>
-                        <View key={'otherPacks'}
-                            style={[
-                                styles.centerContent, {
-                                height: fullWidth*0.45 + fullWidth*0.05,
-                                paddingLeft: fullWidth*0.015,
-                                paddingRight: fullWidth*0.015,
-                                justifyContent: 'space-around',
-                                alignContent: 'space-around', 
+                            Packs
+                        </Text>
+                        <View style={{height: 20*factorVertical}}/>
+                            
+                        <View
+                            style={{
                                 flexDirection: 'row',
-                                zIndex: 10,
-                                elevation: 10,
-                            }]}
+                                alignContent: 'space-around',
+                                justifyContent: 'space-around',
+                                paddingLeft: 5*factorHorizontal,
+                                paddingRight: 5*factorHorizontal,
+                            }}
                         >
-                            <View key={'altPack1'}
+                            <TouchableOpacity
                                 style={{
-                                    height: fullWidth*0.45,
-                                    width: fullWidth*0.45,
-                                    borderRadius: 12.5*factorRatio,
+                                    width: fullWidth*0.285,
+                                    height: fullWidth*0.285*(95/65),
+                                    backgroundColor: colors.secondBackground,
+                                    borderRadius: 7.5*factorRatio,
                                 }}
                             >
                                 <GradientFeature
                                     color={'black'}
-                                    opacity={0.85}
-                                    height={'60%'}
-                                    borderRadius={12.5*factorRatio}
+                                    opacity={0.45}
+                                    height={'100%'}
+                                    borderRadius={0}
                                 />
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'SINGLEPACK', {'data' : 'SIGHT READING'}
-                                        )
-                                    }}
-                                    style={{
-                                        position: 'absolute',
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45,
-                                        zIndex: 4,
-                                        elevation: 4,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View style={{flexDirection: 'row'}}>
-                                        <View style={{flex: 1}}/>
-                                        <SightReading
-                                            height={90*factorRatio}
-                                            width={125*factorRatio}
-                                        />
-                                        <View style={{flex: 1}}/>
-                                    </View>
-                                </TouchableOpacity>
                                 <View
                                     style={{
-                                        height: '100%',
-                                        width: '100%',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{flex: 1, borderRadius: 12.5*factorRatio, backgroundColor: 'black'}}
-                                        source={this.state.secondImage}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
-                            </View>
-                            <View key={'altPack2'}
-                                style={{
-                                    height: fullWidth*0.45,
-                                    width: fullWidth*0.45,
-                                    borderRadius: 12.5*factorRatio,
-                                }}
-                            >
-                                <GradientFeature
-                                    color={'black'}
-                                    opacity={0.8}
-                                    height={'60%'}
-                                    borderRadius={12.5*factorRatio}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'SINGLEPACK', {'data' : '500 SONGS'}
-                                        )
-                                    }}
-                                    style={{
                                         position: 'absolute',
                                         zIndex: 2,
                                         elevation: 2,
-                                        height: fullWidth*0.45,
-                                        width: fullWidth*0.45,  
+                                        height: '100%',
+                                        width: '100%',
+                                        borderRadius: 7.5*factorRatio,
                                     }}
                                 >
                                     <View style={{flex: 1}}/>
-                                    <View 
-                                        style={{
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <View style={{flex: 1}}/>
+                                    <View style={styles.centerContent}>
+                                        <View>
+                                            <View
+                                                style={[
+                                                    styles.centerContent, {
+                                                    backgroundColor: colors.pianoteRed,
+                                                    paddingLeft: 3.5*factorRatio,
+                                                    paddingRight: 3.5*factorRatio,
+                                                    paddingTop: 2.5*factorRatio,
+                                                    paddingBottom: 2.5*factorRatio,
+                                                    borderRadius: 20*factorRatio,
+                                                    alignSelf: 'stretch',
+                                                }]}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        fontSize: 8*factorRatio,
+                                                        fontWeight: 'bold',
+                                                        color: 'white',
+                                                    }}
+                                                >
+                                                    NEW PACK!
+                                                </Text>
+                                            </View>
+                                        </View>
                                         <Songs500
-                                            height={100*factorRatio}
-                                            width={100*factorRatio}
+                                            height={32.5*factorVertical}
+                                            width={fullWidth*0.2}
                                         />
-                                        <View style={{flex: 1}}/>
                                     </View>
-                                </TouchableOpacity>
+                                    <View style={{height: 10*factorVertical}}/>
+                                </View>                                
+                                <FastImage
+                                    style={{
+                                        flex: 1, 
+                                        borderRadius: 7.5*factorRatio,
+                                        alignSelf: 'stretch', 
+                                    }}
+                                    source={require('Pianote2/src/assets/img/imgs/500Songs.png')}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{
+                                    width: fullWidth*0.285,
+                                    height: fullWidth*0.285*(95/65),
+                                    backgroundColor: colors.secondBackground,
+                                    borderRadius: 7.5*factorRatio,
+                                }}
+                            >
+                                <GradientFeature
+                                    color={'black'}
+                                    opacity={0.45}
+                                    height={'100%'}
+                                    borderRadius={0}
+                                />
                                 <View
                                     style={{
+                                        position: 'absolute',
+                                        zIndex: 2,
+                                        elevation: 2,
                                         height: '100%',
                                         width: '100%',
+                                        borderRadius: 7.5*factorRatio,
                                     }}
                                 >
-                                    <FastImage
-                                        style={{flex: 1, borderRadius: 12.5*factorRatio, backgroundColor: 'black'}}
-                                        source={this.state.thirdImage}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
+                                    <View style={{flex: 1}}/>
+                                    <View style={styles.centerContent}>
+                                        <FasterFingers
+                                            height={32.5*factorVertical}
+                                            width={fullWidth*0.2}
+                                        />
+                                    </View>
+                                    <View style={{height: 10*factorVertical}}/>
                                 </View>
-                            </View>
+                                <FastImage
+                                    style={{
+                                        flex: 1, 
+                                        borderRadius: 7.5*factorRatio,
+                                        alignSelf: 'stretch', 
+                                    }}
+                                    source={require('Pianote2/src/assets/img/imgs/fasterFingers.png')}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{
+                                    width: fullWidth*0.285,
+                                    height: fullWidth*0.285*(95/65),
+                                    backgroundColor: colors.secondBackground,
+                                    borderRadius: 7.5*factorRatio,
+                                }}
+                            >
+                                <GradientFeature
+                                    color={'black'}
+                                    opacity={0.45}
+                                    height={'100%'}
+                                    borderRadius={0}
+                                />
+                                <View
+                                    style={{
+                                        position: 'absolute',
+                                        zIndex: 2,
+                                        elevation: 2,
+                                        height: '100%',
+                                        width: '100%',
+                                        borderRadius: 7.5*factorRatio,
+                                    }}
+                                >
+                                    <View style={{flex: 1}}/>
+                                    <View style={styles.centerContent}>
+                                        <SightReading
+                                            height={30*factorVertical}
+                                            width={fullWidth*0.25}
+                                        />
+                                    </View>
+                                    <View style={{height: 10*factorVertical}}/>
+                                </View>
+                                <FastImage
+                                    style={{
+                                        flex: 1, 
+                                        borderRadius: 7.5*factorRatio,
+                                        alignSelf: 'stretch', 
+                                    }}
+                                    source={require('Pianote2/src/assets/img/imgs/sightReading.png')}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+                            </TouchableOpacity>
                         </View>
+                    
                     </View>
                     <NavigationBar
                         currentPage={'PACKS'}

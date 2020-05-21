@@ -131,7 +131,7 @@ export default class Lessons extends React.Component {
                     >
                         <View key={'backgroundColoring'}
                             style={{
-                                backgroundColor: colors.mainBackground,
+                                backgroundColor: colors.thirdBackground,
                                 position: 'absolute',
                                 height: fullHeight,
                                 top: -fullHeight,
@@ -145,7 +145,7 @@ export default class Lessons extends React.Component {
                         <View key={'header'}
                             style={{
                                 height: fullHeight*0.1,
-                                backgroundColor: colors.mainBackground,
+                                backgroundColor: colors.thirdBackground,
                             }}
                         />
                         <View key={'image'}
