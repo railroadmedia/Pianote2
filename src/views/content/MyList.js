@@ -11,7 +11,6 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import List from 'Pianote2/src/assets/img/svgs/myList.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';

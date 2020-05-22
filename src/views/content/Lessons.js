@@ -340,7 +340,7 @@ export default class Lessons extends React.Component {
                                 Title={'CONTINUE'}
                                 Description={''}
                                 seeAll={() => {
-                                    this.props.navigation.navigate('COURSECATALOG')
+                                    this.props.navigation.navigate('SEEALL', {title: 'CONTINUE'})
                                 }}
                                 showArtist={true}
                                 items={this.state.courses}

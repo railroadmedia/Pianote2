@@ -112,106 +112,58 @@ export default class SeeAll extends React.Component {
                     <View key={'contentContainer'}
                         style={{flex: 1}}
                     >
-                        <View key={'buffer'}
-                            style={{
-                                height: isNotch ? 7.5*factorVertical : 0,
-                            }}
-                        />
-                        <View style={{height:  (Platform.OS == 'android') ? fullHeight*0.02 : fullHeight*0.04}}/>
-                        <View key={'recentSearches'}
+                        <View 
                             style={[
                                 styles.centerContent, {
-                                height: + (Platform.OS == 'android') ? fullHeight*0.065 : fullHeight*0.055,
-                                flexDirection: 'row',
-                                borderBottomWidth: 1*factorRatio,
-                                borderBottomColor: '#ececec',
-                                paddingBottom: fullHeight*0.015,
+                                height: (Platform.OS == 'android') ?  fullHeight*0.035 : 
+                                    (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                                backgroundColor: colors.thirdBackground,
                             }]}
                         >
-                            <View key={'goBackIcon'}
+                            <View style={{flex: 1}}/>
+                            <View 
                                 style={[
                                     styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 15*factorHorizontal,
-                                    width: 50*factorRatio,
-                                    zIndex: 10,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => this.props.navigation.goBack()}
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <EntypoIcon
-                                        name={'chevron-thin-left'}
-                                        size={25*factorRatio}
-                                        color={'grey'}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <Text
-                                style={{
-                                    fontWeight: '700',
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 22*factorRatio,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {this.state.title}
-                            </Text>
-                            <View
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    right: fullWidth*0.05,
                                     flexDirection: 'row',
+                                    backgroundColor: colors.thirdBackground,
                                 }]}
                             >
-                                <View style={{flex: 1}}/>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.setState({
-                                            showFilters: !this.state.showFilters
-                                        })
-                                    }}
-                                    style={[
-                                        styles.centerContent, {
-                                        flexDirection: 'row',
-                                        height: 40*factorRatio,
-                                        width: 40*factorRatio,
-                                        borderRadius: 200,
-                                    }]}
-                                >
-                                    <FilterIcon
-                                        fill={(
-                                            this.state.showFilters) ? 'red' : 'white'
-                                        }
-                                        height={40*factorRatio}
-                                        width={40*factorRatio}
-                                    />
-                                    <View
-                                        style={[
-                                            styles.centerContent, {
-                                            position: 'absolute',
-                                            zIndex: 5,
-                                            height: 40*factorRatio,
-                                            width: 40*factorRatio,
-                                            borderRadius: 200,
-                                            transform: [{ rotate: '90deg'}],
-                                        }]}
-                                    >
-                                        <IonIcon 
-                                            size={20*factorRatio}
-                                            name={'md-options'}
-                                            color={(
-                                                this.state.showFilters
-                                            ) ? 'white' : '#c2c2c2'}
-                                        />
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    
+                                    <View style={{flex: 0.1}}>
+
                                     </View>
-                                </TouchableOpacity>
+                                    <View>
+                                        <View style={{flex: 1}}/>
+                                        <TouchableOpacity
+                                            onPress={() => this.props.navigation.goBack()}
+                                            style={{
+                                                paddingLeft: 10*factorRatio,
+                                                paddingRight: 10*factorRatio,
+                                            }}
+                                        >
+                                            <EntypoIcon
+                                                name={'chevron-thin-left'}
+                                                size={25*factorRatio}
+                                                color={'white'}
+                                            />
+                                        </TouchableOpacity>
+                                        <View style={{flex: 1}}/>
+                                    </View>
+                                </View>
+                                <Text
+                                    style={{
+                                        fontSize: 22*factorRatio,
+                                        fontWeight: 'bold',
+                                        color: 'white',
+                                        fontFamily: 'OpenSans-Regular',
+                                    }}
+                                >
+                                    {this.props.navigation.getParam('title')}
+                                </Text>
+                                <View style={{flex: 1}}></View>
                             </View>
+                            <View style={{height: 20*factorVertical}}/>
                         </View>
                         
                         {this.state.showFilters && (
@@ -557,7 +509,7 @@ export default class SeeAll extends React.Component {
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             contentInsetAdjustmentBehavior={'never'}
-                            style={{flex: 0.9, backgroundColor: 'white'}}
+                            style={{flex: 0.9, backgroundColor: colors.mainBackground}}
                         >
                             <VerticalVideoList
                                 outVideos={this.state.outVideos}
