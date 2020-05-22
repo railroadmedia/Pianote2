@@ -573,11 +573,7 @@ class VerticalVideoList extends React.Component {
                                 }]}
                             >
                                 <View style={{flex: 1}}/>
-                                <View
-                                    style={{
-                                        transform: [{ rotate: '90deg'}]
-                                    }}
-                                >
+                                <View style={{transform: [{ rotate: '90deg'}]}}>
                                     <IonIcon 
                                         size={14*factorRatio}
                                         name={'md-options'}
@@ -586,14 +582,6 @@ class VerticalVideoList extends React.Component {
                                 </View>
                                 <View style={{flex: 1}}/>
                             </TouchableOpacity>
-                            <View
-                                style={{
-                                    
-                                }}
-                            >
-                                
-                            </View>
-
                         </View>
                     </View>
                     <View>

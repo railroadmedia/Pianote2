@@ -373,33 +373,24 @@ export default class Lessons extends React.Component {
                                 itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
-                        
-                        <View 
-                            style={{
-                                height: 5*factorRatio
-                            }}
-                        >
-
-
-                        </View>
+                        <View style={{height: 5*factorRatio}}/>
                         <VerticalVideoList
-                                title={'ALL LESSONS'}
-                                outVideos={this.state.outVideos}
-                                //getVideos={() => this.getContent()}
-                                renderType={'Mapped'}
-                                items={this.state.courses}
-                                imageRadius={5*factorRatio}
-                                containerBorderWidth={0}
-                                containerWidth={fullWidth}
-                                containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
-                                }
-                                imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
-                                }
-                                imageWidth={fullWidth*0.26}
-                            />
-                  
+                            title={'ALL LESSONS'}
+                            outVideos={this.state.outVideos}
+                            //getVideos={() => this.getContent()}
+                            renderType={'Mapped'}
+                            items={this.state.courses}
+                            imageRadius={5*factorRatio}
+                            containerBorderWidth={0}
+                            containerWidth={fullWidth}
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (
+                                Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
+                            }
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (
+                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                            }
+                            imageWidth={fullWidth*0.26}
+                        />
                     </ScrollView>
                     <NavigationBar
                         currentPage={'NONE'}

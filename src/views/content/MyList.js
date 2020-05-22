@@ -5,18 +5,18 @@ import React from 'react';
 import {
     View,
     Text,
-    Animated,
     ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
-import FastImage from 'react-native-fast-image';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 import List from 'Pianote2/src/assets/img/svgs/myList.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class MyList extends React.Component {
     static navigationOptions = {header: null};
@@ -27,8 +27,6 @@ export default class MyList extends React.Component {
             outVideos: false, // if no more videos to load
             items: [], // videos loaded
             page: 0, // current page
-            parentPageNav: 'MY LIST',
-            menu: 'HOME',
         }
     }
 
@@ -86,14 +84,23 @@ export default class MyList extends React.Component {
                         alignSelf: 'stretch'
                     }}
                 >
+                    <NavMenuHeaders
+                        currentPage={'MYLIST'}
+                    />
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1, backgroundColor: 'white'}}
+                        style={{flex: 1, backgroundColor: colors.mainBackground,}}
                     >
+                        <View key={'header'}
+                            style={{
+                                height: fullHeight*0.1,
+                                backgroundColor: colors.thirdBackground,
+                            }}
+                        />
                         <View key={'backgroundColoring'}
                             style={{
-                                backgroundColor: 'black',
+                                backgroundColor: colors.thirdBackground,
                                 position: 'absolute',
                                 height: fullHeight,
                                 top: -fullHeight,
@@ -104,135 +111,117 @@ export default class MyList extends React.Component {
                             }}
                         >
                         </View>
-                        <View key={'image'}
+                        <View style={{height: 20*factorVertical}}/>
+                        <Text
                             style={{
-                                height: (onTablet) ? fullHeight*0.425 : fullHeight*0.375,
-                                width: fullWidth,
+                                paddingLeft: 12*factorHorizontal,
+                                fontSize: 30*factorRatio,
+                                color: 'white',
+                                fontFamily: 'OpenSans-Regular',
+                                fontWeight: (Platform.OS == 'ios') ? '900' : 'bold',
                             }}
                         >
-                            <NavMenuHeaders
-                                pxFromTop={navPxFromTop}
-                                leftHeader={'MY LIST'}
-                                rightHeader={'ALL LESSONS'}
-                                pressLeftHeader={() => {
-                                    this.setState({
-                                        showModalMenu: true,
-                                        parentPage: 'MY LIST',
-                                        menu: 'HOME',
-                                    })
-                                }}
-                                pressRightHeader={() => {
-                                    this.setState({
-                                        showModalMenu: true,
-                                        parentPage: 'ALL LESSONS',
-                                        menu: 'MY LIST',
-                                    })
-                                }}
-                                isHome={false}
-                            />
-                            <View key={'courses'}
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    top: 35*factorVertical,
-                                    left: 0,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                    height: '100%',
-                                    width: '100%',
-                                    
-                                }]}
-                            >
-                                <List
-                                    height={37.5*factorRatio}
-                                    width={37.5*factorRatio}
-                                    fill={'#fb1b2f'}
-                                />
+                            My List
+                        </Text>
+                        <View style={{height: 30*factorVertical}}/>
+                        <TouchableOpacity
+                            style={{
+                                height: fullHeight*0.075,
+                                width: fullWidth,
+                                borderTopWidth: 0.25*factorRatio,
+                                borderTopColor: colors.secondBackground,
+                                borderBottomWidth: 0.25*factorRatio,
+                                borderBottomColor: colors.secondBackground,
+                                flexDirection: 'row',
+                            }}
+                        >
+                            <View>
+                                <View style={{flex: 1}}/>
                                 <Text
                                     style={{
-                                        fontSize: 45*factorRatio,
-                                        fontWeight: '700',
-                                        color: 'white',
-                                        fontFamily: 'RobotoCondensed-Regular',
+                                        paddingLeft: 12*factorHorizontal,
+                                        fontSize: 18*factorRatio,
+                                        marginBottom: 5*factorVertical,
+                                        textAlign: 'left', 
+                                        fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
+                                        fontFamily: 'OpenSans-Regular',
+                                        color: colors.secondBackground,
                                     }}
                                 >
-                                    MY LIST
+                                    In Progress
                                 </Text>
+                                <View style={{flex: 1}}/>
                             </View>
-                            <FastImage
+                            <View style={{flex: 1}}/>
+                            <View
                                 style={{
-                                    flex: 1,
-                                    alignSelf: 'stretch',
-                                    backgroundColor: 'black',
+                                    paddingRight: 12*factorHorizontal,
                                 }}
-                                source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-                                resizeMode={FastImage.resizeMode.stretch}
-                            />
-                        </View>
-                        <View style={{height: fullHeight*0.015}}/>
-                        <View key={'addedList'}
+                            >
+                                <View style={{flex: 1}}/>
+                                <EntypoIcon
+                                    name={'chevron-thin-right'}
+                                    size={22.5*factorRatio}
+                                    color={colors.secondBackground}
+                                />
+                                <View style={{flex: 1}}/>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
                             style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
+                                height: fullHeight*0.075,
+                                width: fullWidth,
+                                borderBottomWidth: 0.25*factorRatio,
+                                borderBottomColor: colors.secondBackground,
+                                flexDirection: 'row',
                             }}
                         >
-                            <HorizontalVideoList
-                                Title={'ADDED TO LIST'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'Added to List'}
-                                    )
-                                }}
-                                showArtist={false}
-                                items={this.state.items}
-                                forceSquareThumbs={false}
-                                itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                            />
-                        </View>
-                        <View key={'progressList'}
-                            style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'IN PROGRESS'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'In Progress'}
-                                    )
-                                }}
-                                showArtist={false}
-                                items={this.state.items}
-                                forceSquareThumbs={false}
-                                itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                            />
-                        </View>
-                        <View key={'completedList'}
-                            style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'COMPLETED'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate(
-                                        'SEEALL', {data: 'In Completed'}
-                                    )
-                                }}
-                                showArtist={false}
-                                items={this.state.items}
-                                forceSquareThumbs={false}
-                                itemWidth={onTablet ? fullWidth*0.425 : fullWidth*0.42}
-                                itemHeight={onTablet ? fullHeight*0.155 : fullHeight*0.12}
-                            />
-                        </View>
+                            <View>
+                                <View style={{flex: 1}}/>
+                                <Text
+                                    style={{
+                                        paddingLeft: 12*factorHorizontal,
+                                        fontSize: 18*factorRatio,
+                                        marginBottom: 5*factorVertical,
+                                        textAlign: 'left', 
+                                        fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
+                                        fontFamily: 'OpenSans-Regular',
+                                        color: colors.secondBackground,
+                                    }}
+                                >
+                                    Completed
+                                </Text>
+                                <View style={{flex: 1}}/>
+                            </View>
+                            <View style={{flex: 1}}/>
+                            <View style={{paddingRight: 12*factorHorizontal}}>
+                                <View style={{flex: 1}}/>
+                                <EntypoIcon
+                                    name={'chevron-thin-right'}
+                                    size={22.5*factorRatio}
+                                    color={colors.secondBackground}
+                                />
+                                <View style={{flex: 1}}/>
+                            </View>
+                        </TouchableOpacity>
+                        <View style={{height: 15*factorVertical}}/>
+                        <VerticalVideoList
+                            title={'ADDED TO MY LIST'}
+                            outVideos={this.state.outVideos}
+                            //getVideos={() => this.getContent()}
+                            renderType={'Mapped'}
+                            items={this.state.items}
+                            imageRadius={5*factorRatio}
+                            containerBorderWidth={0}
+                            containerWidth={fullWidth}
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (
+                                Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
+                            }
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (
+                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                            }
+                            imageWidth={fullWidth*0.26}
+                        />                    
                     </ScrollView>
                 </View>                
                 <NavigationBar
