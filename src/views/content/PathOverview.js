@@ -91,38 +91,19 @@ export default class PathOverview extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1, backgroundColor: 'white'}}
+                        style={{flex: 1, backgroundColor: colors.mainBackground}}
                     >
-                        <View key={'backgroundColoring'}
-                            style={{
-                                backgroundColor: 'black',
-                                position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 10,
-                                elevation: 10,
-                            }}
-                        >
-                        </View>
                         <View key={'image'}
                             style={[
                                 styles.centerContent, {
-                                height: fullHeight*0.595,
+                                height: fullHeight*0.31 + (isNotch ? fullHeight*0.035 : 0),
                             }]}
                         >
-                            <GradientFeature
-                                color={'brown'}
-                                opacity={1}
-                                height={'50%'}
-                                borderRadius={0}
-                            />
                             <FastImage
                                 style={{
                                     flex: 1, 
                                     alignSelf: 'stretch', 
-                                    backgroundColor: 'black',
+                                    backgroundColor: colors.mainBackground,
                                 }}
                                 source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
                                 resizeMode={FastImage.resizeMode.cover}
@@ -155,47 +136,16 @@ export default class PathOverview extends React.Component {
                                     />
                                 </TouchableOpacity>
                             </View>                           
-                            <View key={'pianoteSVG'}
-                                style={{
-                                    position: 'absolute',
-                                    bottom: isNotch ? fullHeight*0.175 : 
-                                            (onTablet) ? fullHeight*0.2 : fullHeight*0.185,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                }}
-                            >
-                                <Pianote
-                                    height={fullHeight*0.0325}
-                                    width={fullWidth*0.35}
-                                    fill={'#fb1b2f'}
-                                />
-                            </View>
-                            <Text key={'foundations'}
-                                style={{
-                                    fontSize: 60*factorRatio,
-                                    fontWeight:'700',
-                                    color: 'white',
-                                    fontFamily: 'RobotoCondensed-Regular',
-                                    transform: [{ scaleX: 0.7}],
-                                    position: 'absolute',
-                                    bottom: onTablet ? fullHeight*0.1 : fullHeight*0.09,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                FOUNDATIONS
-                            </Text>
                             <View key={'thumbs'}
                                     style={[
                                         styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: (onTablet) ? fullHeight*0.5 : fullHeight*0.51,
-                                    width: fullWidth*0.25,
-                                    height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
-                                    zIndex: 3,
-                                    elevation: 3,
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: (onTablet) ? fullHeight*0.5 : fullHeight*0.51,
+                                        width: fullWidth*0.25,
+                                        height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
+                                        zIndex: 3,
+                                        elevation: 3,
                                 }]}
                             >
                                 <TouchableOpacity
@@ -273,11 +223,11 @@ export default class PathOverview extends React.Component {
                         <View key={'info'}
                             style={{
                                 width: fullWidth,
-                                backgroundColor: '#3f070f',
                                 paddingLeft: fullWidth*0.05,
                                 paddingRight: fullWidth*0.05,
                             }}
                         >
+                            <View style={{height: 20*factorVertical}}/>
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -287,7 +237,7 @@ export default class PathOverview extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. Cassi walks you step by step through some of her facourite Hanon exercises in this Course and includes a variation for each exercise that will target specific technical skills.
+                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. 
                             </Text>
                             <View key={'containStats'}>
                                 <View style={{height: 10*factorVertical}}/>
@@ -472,7 +422,7 @@ export default class PathOverview extends React.Component {
                                 fetchVideos={() => this.getContent()}
                                 renderType={'Mapped'}
                                 showNextVideo={false}
-                                showLines={true}
+                                showFilters={false}
                                 showMultipleVideos={true}
                                 items={this.state.items}
                                 containerWidth={fullWidth}

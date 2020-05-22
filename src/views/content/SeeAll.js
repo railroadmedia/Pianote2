@@ -129,10 +129,7 @@ export default class SeeAll extends React.Component {
                                 }]}
                             >
                                 <View style={{flex: 1, flexDirection: 'row'}}>
-                                    
-                                    <View style={{flex: 0.1}}>
-
-                                    </View>
+                                    <View style={{flex: 0.1}}/>
                                     <View>
                                         <View style={{flex: 1}}/>
                                         <TouchableOpacity
@@ -161,7 +158,7 @@ export default class SeeAll extends React.Component {
                                 >
                                     {this.props.navigation.getParam('title')}
                                 </Text>
-                                <View style={{flex: 1}}></View>
+                                <View style={{flex: 1}}/>
                             </View>
                             <View style={{height: 20*factorVertical}}/>
                         </View>

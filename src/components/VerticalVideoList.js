@@ -524,6 +524,7 @@ class VerticalVideoList extends React.Component {
             <View style={styles.container}>
                 <View>
                     <View style={{height: 5*factorVertical}}/>
+                    {this.props.showFilter && (
                     <View style={{flexDirection: 'row'}}>
                         <View style={{paddingLeft: 10*factorHorizontal}}>
                             <Text
@@ -540,6 +541,7 @@ class VerticalVideoList extends React.Component {
                             </Text>
                         </View>
                         <View style={{flex: 1}}/>
+                        
                         <View 
                             style={{
                                 paddingRight: 10*factorHorizontal,
@@ -583,7 +585,10 @@ class VerticalVideoList extends React.Component {
                                 <View style={{flex: 1}}/>
                             </TouchableOpacity>
                         </View>
+
                     </View>
+                    )}
+                    {this.props.showFilter && (
                     <View>
                         <View 
                             style={{
@@ -615,6 +620,7 @@ class VerticalVideoList extends React.Component {
                             </Text>
                         </View>
                     </View>
+                    )}
                     <View style={{height: 5*factorVertical}}/>
                 </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
