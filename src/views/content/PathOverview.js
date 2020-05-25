@@ -136,12 +136,49 @@ export default class PathOverview extends React.Component {
                                     />
                                 </TouchableOpacity>
                             </View>                           
-                            <View key={'thumbs'}
+                        </View>
+                        <View key={'title'}
+                            style={{minHeight: fullHeight*0.2}}
+                        >
+                            <View style={{height: 20*factorVertical}}/>
+                            <View style={{flex: 1}}>   
+                                <Text
+                                    numberOfLines={2}
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        fontWeight: 'bold',
+                                        color: 'white',
+                                        textAlign: 'center',
+                                        fontSize: 24*factorRatio,
+
+                                    }}
+                                >
+                                    {'The Four Pillars \nof Improvisation'}
+                                </Text>
+                                <View style={{height: 10*factorVertical}}/>
+                                <Text
+                                    numberOfLines={2}
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        color: colors.secondBackground,
+                                        textAlign: 'center',
+                                        fontSize: 14*factorRatio,
+
+                                    }}
+                                >
+                                    TAYLOR GORDON | LEVEL 5 | 275XP
+                                </Text>
+                            </View>
+                            <View style={{height: 20*factorVertical}}/>
+                            <View key={'thumb/Start/Info'}
+                                style={{height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053}}
+                            >
+                                <View key={'thumbs'}
                                     style={[
                                         styles.centerContent, {
                                         position: 'absolute',
                                         left: 0,
-                                        top: (onTablet) ? fullHeight*0.5 : fullHeight*0.51,
+                                        top: 0,
                                         width: fullWidth*0.25,
                                         height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
                                         zIndex: 3,
@@ -157,7 +194,7 @@ export default class PathOverview extends React.Component {
                                     <AntIcon
                                         name={'like2'}
                                         size={24.5*factorRatio}
-                                        color={'white'}
+                                        color={colors.pianoteRed}
                                     />
                                     <Text
                                         style={{
@@ -171,54 +208,56 @@ export default class PathOverview extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <StartIcon
-                                pxFromTop={(onTablet) ? fullHeight*0.5 : fullHeight*0.51}
-                                buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                pxFromLeft={fullWidth*0.5/2}
-                                buttonWidth={fullWidth*0.5}
-                                pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
-                            />
-                            <View key={'info'}
-                                style={[ 
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: (onTablet) ? fullHeight*0.5 : fullHeight*0.51,
-                                    width: fullWidth*0.25,
-                                    height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
-                                    zIndex: 3,
-                                    elevation: 3,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.setState({
-                                            showInfo: !this.state.showInfo
-                                        })
-                                    }}
-                                    style={{
-                                        flex: 1,
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <AntIcon
-                                        name={'infocirlceo'}
-                                        size={22*factorRatio}
-                                        color={'white'}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            color: 'white',
-                                            marginTop: 3*factorRatio,
-                                            fontSize: 13*factorRatio,
-                                        }}
+                                <StartIcon
+                                    pxFromTop={0}
+                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
+                                    pxFromLeft={fullWidth*0.5/2}
+                                    buttonWidth={fullWidth*0.5}
+                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
+                                />
+                                <View key={'info'}
+                                        style={[ 
+                                            styles.centerContent, {
+                                            position: 'absolute',
+                                            right: 0,
+                                            top: 0,
+                                            width: fullWidth*0.25,
+                                            height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
+                                            zIndex: 3,
+                                            elevation: 3,
+                                        }]}
                                     >
-                                        Info
-                                    </Text>
-                                </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    showInfo: !this.state.showInfo
+                                                })
+                                            }}
+                                            style={{
+                                                flex: 1,
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <AntIcon
+                                                name={'infocirlceo'}
+                                                size={22*factorRatio}
+                                                color={colors.pianoteRed}
+                                            />
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'OpenSans-Regular',
+                                                    color: 'white',
+                                                    marginTop: 3*factorRatio,
+                                                    fontSize: 13*factorRatio,
+                                                }}
+                                            >
+                                                Info
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
                             </View>
                         </View>
+                        
                         {this.state.showInfo && (
                         <View key={'info'}
                             style={{
@@ -296,6 +335,37 @@ export default class PathOverview extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
+                                            48
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontSize: 13*factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10*factorVertical,
+                                            }}
+                                        >
+                                            MINS
+                                        </Text>
+                                    </View>
+                                    <View style={{width: 15*factorRatio}}/>
+                                    <View 
+                                        style={[
+                                            styles.centerContent, {
+                                            width: 70*factorRatio,
+                                        }]}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontWeight: '700',
+                                                fontSize: 17*factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10*factorVertical,
+                                            }}
+                                        >
                                             2400
                                         </Text>
                                         <Text
@@ -310,6 +380,7 @@ export default class PathOverview extends React.Component {
                                             XP
                                         </Text>
                                     </View>
+                                    
                                     <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                 </View>
                                 <View style={{height: 15*factorVertical}}/>
@@ -332,7 +403,7 @@ export default class PathOverview extends React.Component {
                                         <AntIcon
                                             name={'like2'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -357,7 +428,7 @@ export default class PathOverview extends React.Component {
                                         <MaterialIcon
                                             name={'arrow-collapse-down'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -387,7 +458,7 @@ export default class PathOverview extends React.Component {
                                         <MaterialIcon
                                             name={'replay'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -426,10 +497,10 @@ export default class PathOverview extends React.Component {
                                 showMultipleVideos={true}
                                 items={this.state.items}
                                 containerWidth={fullWidth}
-                                containerHeight={(onTablet) ? fullHeight*0.155 : fullHeight*0.125}
+                                containerHeight={(onTablet) ? fullHeight*0.155 : fullHeight*0.115}
                                 containerBorderWidth={0}
-                                imageHeight={(onTablet) ? fullHeight*0.125 : fullHeight*0.10}
-                                imageWidth={fullWidth*0.35}
+                                imageHeight={(onTablet) ? fullHeight*0.125 : fullHeight*0.0875}
+                                imageWidth={fullWidth*0.325}
                                 imageRadius={7*factorRatio}
                             />
                         </View>
