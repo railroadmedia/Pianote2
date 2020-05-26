@@ -83,9 +83,20 @@ export default class MyList extends React.Component {
                         alignSelf: 'stretch'
                     }}
                 >
-                    <NavMenuHeaders
-                        currentPage={'MYLIST'}
-                    />
+                    <View
+                        style={{
+                            height: fullHeight*0.1,
+                            width: fullWidth,
+                            position: 'absolute',
+                            zIndex: 2, 
+                            elevation: 2,
+                            alignSelf: 'stretch', 
+                        }}
+                    >
+                        <NavMenuHeaders
+                            currentPage={'MYLIST'}
+                        />
+                    </View>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}

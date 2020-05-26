@@ -37,16 +37,27 @@ export default class Packs extends React.Component {
                         backgroundColor: colors.mainBackground,
                     }}
                 >
-                    <View key={'contentContainer'}
-                        style={{flex: 1}}
+                    <View
+                        style={{
+                            height: fullHeight*0.1,
+                            width: fullWidth,
+                            position: 'absolute',
+                            zIndex: 2, 
+                            elevation: 2,
+                            alignSelf: 'stretch', 
+                        }}
                     >
                         <NavMenuHeaders
                             currentPage={'PACKS'}
                         />
+                    </View>
+                    <View key={'contentContainer'}
+                        style={{flex: 1}}
+                    >
                         <View key={'header'}
                             style={{
                                 height: fullHeight*0.1,
-                                backgroundColor: colors.thirdBackground,
+                                backgroundColor: colors.mainBackground,
                             }}
                         />
                         <View style={{height: 20*factorVertical}}/>

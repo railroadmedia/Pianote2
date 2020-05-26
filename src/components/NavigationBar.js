@@ -36,7 +36,7 @@ class NavigationBar extends React.Component {
 
     render = () => {
         return (
-            <View key={'taskBarContainer'}
+            <View 
                 style={{
                     backgroundColor: colors.mainBackground,
                     height: fullHeight*0.09375,
@@ -55,13 +55,13 @@ class NavigationBar extends React.Component {
                         alignContent: 'space-around',
                     }}
                 >
-                    <TouchableOpacity key={'home'}
+                    <TouchableOpacity key={'lessons'}
                         onPress={() => this.props.navigation.navigate('LESSONS')}
                     >
                         <SimpleLineIcon
                             name={'home'}
                             size={30*factorRatio}
-                            color={(this.props.currentPage == 'HOME') ? 'white' : colors.secondBackground}
+                            color={(this.props.currentPage == 'LESSONS') ? 'white' : colors.secondBackground}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity key={'search'}
@@ -97,7 +97,7 @@ class NavigationBar extends React.Component {
                             <FastImage
                                 style={{flex: 1, borderRadius: 100, backgroundColor: colors.secondBackground}}
                                 source={{uri: this.state.profileImage}}
-                                resizeMode={FastImage.resizeMode.stretch}
+                                resizeMode={FastImage.resizeMode.cover}
                             />
                         </View>
                         <View style={{height: 2*factorVertical}}/>

@@ -68,6 +68,7 @@ class HorizontalVideoList extends React.Component {
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignContent: 'center',
+                                paddingBottom: 5*factorVertical
                             }}
                         >
                             <Text

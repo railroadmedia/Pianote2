@@ -14,6 +14,7 @@ import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import AsyncStorage from '@react-native-community/async-storage';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -31,12 +32,18 @@ export default class Lessons extends React.Component {
             songs: [], // videos
             showModalMenu: false, // show navigation menu
             outVideos: false,
+            profileImage: '',
             page: 0,
         }
     }
 
 
     async componentDidMount() {
+        let profileImage = await AsyncStorage.getItem('profileURI')
+        console.log(profileImage)
+        if(profileImage !== null) {
+            await this.setState({profileImage})
+        }
         this.getCourses()
         this.getSongs()
     }
@@ -117,17 +124,33 @@ export default class Lessons extends React.Component {
             <View styles={styles.container}>
                 <View
                     style={{
-                        height: fullHeight - navHeight, 
-                        alignSelf: 'stretch'
+                        height: fullHeight*0.1,
+                        width: fullWidth,
+                        position: 'absolute',
+                        zIndex: 2, 
+                        elevation: 2,
+                        alignSelf: 'stretch', 
                     }}
                 >
                     <NavMenuHeaders
                         currentPage={'LESSONS'}
-                    />
+                    /> 
+                </View>
+                <View
+                    style={{
+                        height: fullHeight - navHeight, 
+                        alignSelf: 'stretch',
+                        zIndex: 1,
+                        elevation: 1, 
+                    }}
+                >                    
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1, backgroundColor: colors.mainBackground}}
+                        style={{
+                            flex: 1, 
+                            backgroundColor: colors.mainBackground,
+                        }}
                     >
                         <View key={'backgroundColoring'}
                             style={{
@@ -189,17 +212,17 @@ export default class Lessons extends React.Component {
                                     <View style={{flex: 1}}/>
                                 </View>
                                 <Text key={'foundations'}
-                                style={{
-                                    fontSize: 60*factorRatio,
-                                    fontWeight: '700',
-                                    color: 'white',
-                                    fontFamily: 'RobotoCondensed-Regular',
-                                    transform: [{ scaleX: 0.7}],
-                                    textAlign: 'center',
-                                }}
-                            >
-                                FOUNDATIONS
-                            </Text>
+                                    style={{
+                                        fontSize: 60*factorRatio,
+                                        fontWeight: '700',
+                                        color: 'white',
+                                        fontFamily: 'RobotoCondensed-Regular',
+                                        transform: [{ scaleX: 0.7}],
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    FOUNDATIONS
+                                </Text>
                                 <View style={{flex: 0.6}}/>
                                 <StartIcon
                                     pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
@@ -224,6 +247,8 @@ export default class Lessons extends React.Component {
                                 borderBottomColor: colors.secondBackground,
                                 borderBottomWidth: 0.25,
                                 height: fullHeight*0.1,
+                                paddingTop: 10*factorVertical,
+                                paddingBottom: 10*factorVertical,
                                 backgroundColor: colors.mainBackground,
                                 flexDirection: 'row',
                             }}
@@ -257,7 +282,11 @@ export default class Lessons extends React.Component {
                                                 alignSelf: 'center'
                                             }}
                                         >
-
+                                            <FastImage
+                                                style={{flex: 1, borderRadius: 100, backgroundColor: colors.secondBackground}}
+                                                source={{uri: this.state.profileImage}}
+                                                resizeMode={FastImage.resizeMode.cover}
+                                            />
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{flex: 1}}/>
@@ -393,7 +422,7 @@ export default class Lessons extends React.Component {
                         />
                     </ScrollView>
                     <NavigationBar
-                        currentPage={'NONE'}
+                        currentPage={'LESSONS'}
                     />
                 </View>
                 <Modal key={'navMenu'}

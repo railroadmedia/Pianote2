@@ -115,7 +115,7 @@ export default class SeeAll extends React.Component {
                         <View 
                             style={[
                                 styles.centerContent, {
-                                height: (Platform.OS == 'android') ?  fullHeight*0.035 : 
+                                height: (Platform.OS == 'android') ?  fullHeight*0.1 : 
                                     (isNotch ? fullHeight*0.12 : fullHeight*0.055),
                                 backgroundColor: colors.thirdBackground,
                             }]}
@@ -509,6 +509,7 @@ export default class SeeAll extends React.Component {
                             style={{flex: 0.9, backgroundColor: colors.mainBackground}}
                         >
                             <VerticalVideoList
+                                title={'ALL LESSONS'}
                                 outVideos={this.state.outVideos}
                                 getVideos={() => this.getContent()}
                                 renderType={'Mapped'}

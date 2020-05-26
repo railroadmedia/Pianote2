@@ -25,12 +25,9 @@ class NavMenuHeaders extends React.Component {
                     styles.centerContent, {
                     top: 0,
                     height: fullHeight*0.1 + (isNotch ? 10*factorVertical : 0), 
-                    position: 'absolute',
                     flexDirection: 'row',
                     left: 0,
                     backgroundColor: colors.mainBackground,
-                    zIndex: 3,
-                    elevation: 3,
                 }]}
             >
                 <View 
