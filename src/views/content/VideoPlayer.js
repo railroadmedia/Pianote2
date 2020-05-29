@@ -319,7 +319,7 @@ export default class VideoPlayer extends React.Component {
                                             My List
                                         </Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity key={'download'}
+                                    <TouchableOpacity key={'resource'}
                                         onPress={() => {}}
                                         style={{
                                             flex: 1,
