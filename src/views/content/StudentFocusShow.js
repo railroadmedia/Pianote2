@@ -16,7 +16,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
-import SubscribeIcon from 'Pianote2/src/components/SubscribeIcon.js';
+import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
@@ -91,7 +91,7 @@ export default class StudentFocusShow extends React.Component {
     render() {
         return (
             <View styles={styles.container}>
-                <View key={'container2'}
+                <View
                     style={{
                         height: fullHeight - navHeight, 
                         alignSelf: 'stretch',
@@ -100,11 +100,11 @@ export default class StudentFocusShow extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1}}
+                        style={{flex: 1, backgroundColor: colors.mainBackground}}
                     >
                         <View key={'backgroundColoring'}
                             style={{
-                                backgroundColor: 'black',
+                                backgroundColor: colors.mainBackground,
                                 position: 'absolute',
                                 height: fullHeight,
                                 top: -fullHeight,
@@ -112,44 +112,20 @@ export default class StudentFocusShow extends React.Component {
                                 right: 0,
                                 zIndex: 10,
                             }}
-                        >
-                        </View>
+                        />
                         <View key={'imageContainer'}
                             style={{
-                                height: fullHeight*0.58,
                                 width: fullWidth,
                             }}
                         >
-                            <View key={'bootcampImage'}
-                                style={[
-                                    styles.centerContent, {
-                                    bottom: onTablet ? fullHeight*0.2 : fullHeight*0.175,
-                                    position: 'absolute',
-                                    width: fullWidth,
-                                    zIndex: 2,
-                                }]}
-                            >
-                                <FastImage
-                                    style={{
-                                        height: onTablet ?  fullWidth*0.45 :  fullWidth*0.525,
-                                        width: onTablet ?  fullWidth*0.45 :  fullWidth*0.525,
-                                        zIndex: 2,
-                                        borderRadius: 10*factorRatio,
-                                        borderColor: 'white',
-                                        borderWidth: 2,
-                                    }}
-                                    source={packDict[this.state.pack]}
-                                    resizeMode={FastImage.resizeMode.stretch}
-                                />
-                            </View>
                             <View key={'goBackIcon'}
                                 style={[
                                     styles.centerContent, {
                                     position: 'absolute',
                                     left: 10*factorHorizontal,
-                                    top: (isNotch) ? 40*factorVertical : 30*factorVertical,
-                                    height: 50,
-                                    width: 50,
+                                    top: (isNotch) ? 50*factorVertical : 40*factorVertical,
+                                    height: 50*factorRatio,
+                                    width: 50*factorRatio,
                                     zIndex: 5,
                                 }]}
                             >
@@ -169,158 +145,96 @@ export default class StudentFocusShow extends React.Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            <View key={'contentContainer'}
-                                style={{
-                                    flex: 1,
-                                    backgroundColor: 'black',
-                                }}
+                            <View key={'bootcampImage'}
+                                style={[
+                                    styles.centerContent, {
+                                    paddingTop: fullHeight*0.1,
+                                    width: fullWidth,
+                                    zIndex: 2,
+                                }]}
                             >
                                 <FastImage
-                                    style={{flex: 1}}
-                                    source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                                <View key={'buttons'}
                                     style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        left: 0,
-                                        width: fullWidth,
-                                        height: (onTablet) ? 170*factorVertical : 150*factorVertical,
+                                        height: onTablet ?  fullWidth*0.45 :  (Platform.OS == 'ios') ? fullWidth*0.625 : fullWidth*0.525,
+                                        width: onTablet ?  fullWidth*0.45 :  (Platform.OS == 'ios') ? fullWidth*0.625 : fullWidth*0.525,
                                         zIndex: 2,
+                                        borderRadius: 10*factorRatio,
+                                        borderColor: colors.thirdBackground,
+                                        borderWidth: 5,
                                     }}
+                                    source={packDict[this.state.pack]}
+                                    resizeMode={FastImage.resizeMode.stretch}
+                                />
+                            </View>
+                            <View style={{height: 20*factorVertical}}/>
+                            <View key={'buttons'}
+                                style={{
+                                    height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <View style={{flex: 1}}/>
+                                <View key={'start'}
+                                    style={{width: fullWidth*0.5}}
                                 >
-                                    <View key={'title'}
+                                    <View style={{flex: 1}}/>
+                                    {!this.state.showStarted && (
+                                    <StartIcon
+                                        pxFromTop={0}
+                                        pxFromLeft={0}
+                                        buttonWidth={fullWidth*0.5}
+                                        buttonHeight={(onTablet) ? 
+                                            fullHeight*0.065 : fullHeight*0.053
+                                        }
+                                        pressed={() => this.setState({showStarted: !this.state.showStarted})}
+                                    />
+                                    )}
+                                    {this.state.showStarted && (
+                                    <ContinueIcon
+                                        pxFromTop={0}
+                                        pxFromLeft={0}
+                                        buttonWidth={fullWidth*0.5}
+                                        buttonHeight={
+                                            (onTablet) ? fullHeight*0.065 : fullHeight*0.053
+                                        }
+                                        pressed={() => console.log('Start')}
+                                    />
+                                    )}
+                                    <View style={{flex: 1}}/>
+                                </View>
+                                <View key={'infoButton'}
+                                    style={[
+                                        styles.centerContent, {
+                                        flex: 1,
+                                    }]}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                showInfo: !this.state.showInfo,
+                                            })
+                                        }}
                                         style={{
-                                            height: (onTablet) ? 90*factorVertical : 80*factorVertical,
-                                            alignSelf: 'stretch',  
+                                            flex: 1,
+                                            alignItems: 'center',
                                         }}
                                     >
-                                        <View style={{flex: 1,}}/>
+                                        <AntIcon
+                                            name={'infocirlceo'}
+                                            size={22*factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
                                         <Text
-                                            numberOfLines={2}
                                             style={{
-                                                fontSize: 28*factorRatio,
-                                                textAlign: 'center',
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontWeight: '700',
                                                 color: 'white',
+                                                marginTop: 3*factorRatio,
+                                                fontSize: 13*factorRatio,
                                             }}
                                         >
-                                            {this.state.title}
+                                            Info
                                         </Text>
-                                        <View style={{flex: 1}}/>
-                                    </View>
-                                    <View key={'buttonRow'}
-                                        style={{
-                                            height: (onTablet) ? 80*factorVertical : 70*factorVertical,
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <View key={'plusButton'}
-                                            style={[
-                                                styles.centerContent, {
-                                                flex: 1,
-                                            }]}
-                                        >
-                                            <TouchableOpacity
-                                                style={{
-                                                    alignItems: 'center',
-                                                    flex: 1,
-                                                }}
-                                            >
-                                                <AntIcon
-                                                    name={'plus'}
-                                                    size={24.5*factorRatio}
-                                                    color={'white'}
-                                                />
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        color: 'white',
-                                                        marginTop: 3*factorRatio,
-                                                        fontSize: 13*factorRatio,
-                                                    }}
-                                                >
-                                                    My List
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View key={'start'}
-                                            style={{width: fullWidth*0.5}}
-                                        >
-                                            <View style={{flex: 1}}/>
-                                            {!this.state.showStarted && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        showStarted: !this.state.showStarted
-                                                    })
-                                                }}
-                                                style={{
-                                                    height: '100%',
-                                                    width: '100%',
-                                                }}
-                                            >
-                                                <SubscribeIcon
-                                                    pxFromTop={0}
-                                                    pxFromLeft={0}
-                                                    buttonWidth={fullWidth*0.5}
-                                                    buttonHeight={(onTablet) ? 
-                                                        fullHeight*0.065 : fullHeight*0.053
-                                                    }
-                                                    pressed={() => console.log('Start')}
-                                                />
-                                            </TouchableOpacity>
-                                            )}
-                                            {this.state.showStarted && (
-                                            <ContinueIcon
-                                                pxFromTop={0}
-                                                pxFromLeft={0}
-                                                buttonWidth={fullWidth*0.5}
-                                                buttonHeight={
-                                                    (onTablet) ? fullHeight*0.065 : fullHeight*0.053
-                                                }
-                                                pressed={() => console.log('Start')}
-                                            />
-                                            )}
-                                            <View style={{flex: 1}}/>
-                                        </View>
-                                        <View key={'infoButton'}
-                                            style={[
-                                                styles.centerContent, {
-                                                flex: 1,
-                                            }]}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        showInfo: !this.state.showInfo,
-                                                    })
-                                                }}
-                                                style={{
-                                                    flex: 1,
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <AntIcon
-                                                    name={'infocirlceo'}
-                                                    size={22*factorRatio}
-                                                    color={'white'}
-                                                />
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        color: 'white',
-                                                        marginTop: 3*factorRatio,
-                                                        fontSize: 13*factorRatio,
-                                                    }}
-                                                >
-                                                    Info
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </View>
@@ -328,7 +242,7 @@ export default class StudentFocusShow extends React.Component {
                         <View key={'info'}
                             style={{
                                 width: fullWidth,
-                                backgroundColor: 'rgba(80, 15, 25, 0.98)',
+                                backgroundColor: colors.mainBackground,
                                 paddingLeft: fullWidth*0.05,
                                 paddingRight: fullWidth*0.05,
                             }}
@@ -343,7 +257,7 @@ export default class StudentFocusShow extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. Cassi walks you step by step through some of her facourite Hanon exercises in this Course and includes a variation for each exercise that will target specific technical skills.
+                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations.
                             </Text>
                             <View key={'containStats'}>
                                 <View style={{height: 10*factorVertical}}/>
@@ -402,6 +316,37 @@ export default class StudentFocusShow extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
+                                            48
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontSize: 13*factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10*factorVertical,
+                                            }}
+                                        >
+                                            MINS
+                                        </Text>
+                                    </View>
+                                    <View style={{width: 15*factorRatio}}/>
+                                    <View 
+                                        style={[
+                                            styles.centerContent, {
+                                            width: 70*factorRatio,
+                                        }]}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontWeight: '700',
+                                                fontSize: 17*factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10*factorVertical,
+                                            }}
+                                        >
                                             2400
                                         </Text>
                                         <Text
@@ -438,7 +383,7 @@ export default class StudentFocusShow extends React.Component {
                                         <AntIcon
                                             name={'like2'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -463,7 +408,7 @@ export default class StudentFocusShow extends React.Component {
                                         <MaterialIcon
                                             name={'arrow-collapse-down'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -493,7 +438,7 @@ export default class StudentFocusShow extends React.Component {
                                         <MaterialIcon
                                             name={'replay'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -513,10 +458,13 @@ export default class StudentFocusShow extends React.Component {
                             </View>
                         </View>
                         )}
+                        <View style={{height: 20*factorVertical}}/>
                         <VerticalVideoList
+                            title={'EPISODES'}
                             outVideos={this.state.outVideos}
                             fetchVideos={() => this.getContent()}
                             items={this.state.items}
+                            showFilter={true}
                             containerWidth={fullWidth}
                             imageRadius={5*factorRatio}
                             containerHeight={(onTablet) ? fullHeight*0.15 : (

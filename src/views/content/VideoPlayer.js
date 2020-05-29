@@ -214,7 +214,7 @@ export default class VideoPlayer extends React.Component {
                     <View key={'video'}
                         style={{
                             height: (onTablet) ? fullHeight*0.4 : fullHeight*0.3025,
-                            backgroundColor: 'black'
+                            backgroundColor: colors.mainBackground
                         }}
                     >
                         <FastImage
@@ -229,21 +229,18 @@ export default class VideoPlayer extends React.Component {
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             contentInsetAdjustmentBehavior={'never'}
-                            style={{flex: 1, backgroundColor: 'white'}}
+                            style={{flex: 1, backgroundColor: colors.mainBackground}}
                         >
                             <View style={{height: 2.5*factorVertical}}/>
-                            <View key={'lessonTitle'}
-                                style={{
-                                    backgroundColor: 'white',
-                                    paddingLeft: fullWidth*0.035
-                                }}
-                            >
+                            <View key={'lessonTitle'}>
                                 <View style={{height: fullHeight*0.015}}/>
                                 <Text
                                     style={{
                                         fontSize: 20*factorRatio,
-                                        fontWeight: '700',
+                                        fontWeight: 'bold',
                                         fontFamily: 'OpenSans-Regular',
+                                        textAlign: 'center',
+                                        color: 'white',
                                     }}
                                 >
                                     This is The Lesson Title
@@ -255,6 +252,8 @@ export default class VideoPlayer extends React.Component {
                                         fontWeight: '400',
                                         color: 'grey',
                                         fontFamily: 'OpenSans-Regular',
+                                        textAlign: 'center',
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     CASSI FALK | LESSON 7 | 275 XP
@@ -318,6 +317,28 @@ export default class VideoPlayer extends React.Component {
                                             }}
                                         >
                                             My List
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity key={'download'}
+                                        onPress={() => {}}
+                                        style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <MaterialIcon
+                                            name={'arrow-collapse-down'}
+                                            size={27.5*factorRatio}
+                                            color={'black'}
+                                        />
+                                        <View style={{height: 5*factorVertical}}/>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                fontSize: 12*factorRatio,
+                                            }}
+                                        >
+                                            Download
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity key={'download'}

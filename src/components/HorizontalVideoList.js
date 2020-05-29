@@ -77,7 +77,7 @@ class HorizontalVideoList extends React.Component {
                                     marginBottom: 5*factorVertical,
                                     textAlign: 'left', 
                                     fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'RobotoCondensed-Bold',
                                     color: colors.secondBackground,
                                 }}
                             >

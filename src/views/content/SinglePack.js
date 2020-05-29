@@ -12,12 +12,12 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import Songs500 from 'Pianote2/src/assets/img/svgs/500SongsLogo.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,8 +30,6 @@ export default class SinglePack extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            menu: 'PACKS',
-            parentPage: 'PACKS',
             outVideos: false,
             showInfo: false,
             items: [],
@@ -108,59 +106,56 @@ export default class SinglePack extends React.Component {
                         elevation: 3,
                     }}
                 >
-                    <NavMenuHeaders
-                        pxFromTop={navPxFromTop}
-                        leftHeader={'PACKS'}
-                        rightHeader={this.state.pack}
-                        pressLeftHeader={() => {
-                            this.setState({
-                                parentPage: 'PACKS',
-                                menu: 'HOME',
-                                showModalMenu: true,
-                            })
-                        }}
-                        pressRightHeader={() => {
-                            this.setState({
-                                parentPage: this.props.navigation.state.params.data,
-                                menu: 'PACKS',
-                                showModalMenu: true,
-                            })
-                        }}
-                        isHome={false}
-                    />
                     <ScrollView
+                        style={{backgroundColor: colors.mainBackground}}
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
                     >
-                        <View key={'backgroundColoring'}
-                            style={{
-                                backgroundColor: 'black',
-                                position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 3, 
-                                elevation: 3,
-                            }}
-                        />
+                            <View key={'goBackIcon'}
+                                style={[
+                                    styles.centerContent, {
+                                    position: 'absolute',
+                                    left: 10*factorHorizontal,
+                                    top: (isNotch) ? 60*factorVertical : 50*factorVertical,
+                                    height: 50*factorRatio,
+                                    width: 50*factorRatio,
+                                    zIndex: 5,
+                                }]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.goBack()
+                                    }}
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                    }}
+                                >
+                                    <EntypoIcon
+                                        name={'chevron-thin-left'}
+                                        size={25*factorRatio}
+                                        color={'white'}
+                                    />
+                                </TouchableOpacity>
+                            </View>  
+                        <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
                         <View key={'imageContainer'}
                             style={{
-                                height: (fullHeight*0.90625 - navHeight) - (fullWidth*0.45 + fullWidth*0.05),
+                                height: fullHeight*0.5,
                                 zIndex: 3, 
                                 elevation: 3,
                             }}
-                        >
+                        >                           
                             <GradientFeature
-                                color={'black'}
+                                color={'blue'}
                                 opacity={1}
-                                height={'60%'}
+                                height={'100%'}
                                 borderRadius={0}
                             />
-                            <View key={'image1'}
+                            <View key={'SVGs'}
                                 style={{
                                     position: 'absolute',
-                                    bottom: fullHeight*0.025,
+                                    bottom: (onTablet) ? fullHeight*0.065/2 : fullHeight*0.053/2,
                                     zIndex: 2,
                                     elevation: 2,
                                     flexDirection: 'row',
@@ -170,65 +165,41 @@ export default class SinglePack extends React.Component {
                                 {(this.state.pack == 'SIGHT READING') && (
                                 <SightReading
                                     height={200*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={250*factorVertical}
+                                    width={275*factorVertical}
                                 />
                                 )}
                                 {(this.state.pack == '500 SONGS') && (
                                 <Songs500
                                     height={200*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={250*factorVertical}
+                                    width={275*factorVertical}
                                 />
                                 )}
                                 {(this.state.pack == 'FASTER FINGERS') && (
                                 <FasterFingers
                                     height={250*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={290*factorVertical}
+                                    width={300*factorVertical}
                                 />
                                 )}
                                 <View style={{flex: 1}}/>
                             </View>    
                             <FastImage
-                                style={{flex: 1, backgroundColor: 'black'}}
+                                style={{flex: 1}}
                                 source={this.whatImage()}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
                             <View key={'buttons'}
                                 style={{
                                     position: 'absolute',
-                                    bottom: 5*factorVertical,
+                                    bottom: 10*factorRatio,
                                     left: 0,
                                     width: fullWidth,
-                                    height: (onTablet) ? 170*factorVertical : 150*factorVertical,
                                     zIndex: 10,
                                     elevation: 10,
                                 }}
                             >
-                                <View key={'title'}
-                                    style={{
-                                        height: (onTablet) ? 90*factorVertical : 80*factorVertical,
-                                        alignSelf: 'stretch',  
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <Text
-                                        numberOfLines={2}
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 25*factorRatio,
-                                            textAlign: 'center',
-                                            fontWeight: '700',
-                                            color: 'white',
-                                        }}
-                                    >
-                                        {this.state.title}
-                                    </Text>
-                                </View>
                                 <View key={'buttonRow'}
-                                    style={{
-                                        height: (onTablet) ? 80*factorVertical : 70*factorVertical,
-                                        flexDirection: 'row',
-                                    }}
-                                >
+                                    style={{flexDirection: 'row'}}
+                                >                                   
                                     <View key={'plusButton'}
                                         style={[
                                             styles.centerContent, {
@@ -242,9 +213,9 @@ export default class SinglePack extends React.Component {
                                             }}
                                         >
                                             <AntIcon
-                                                name={'like2'}
-                                                size={24.5*factorRatio}
-                                                color={'white'}
+                                                name={'plus'} 
+                                                size={30*factorRatio} 
+                                                color={colors.pianoteRed}
                                             />
                                             <Text
                                                 style={{
@@ -254,7 +225,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 12*factorRatio,
                                                 }}
                                             >
-                                                34
+                                                My List
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
@@ -277,9 +248,7 @@ export default class SinglePack extends React.Component {
                                                 pxFromTop={0}
                                                 pxFromLeft={0}
                                                 buttonWidth={fullWidth*0.5}
-                                                buttonHeight={(onTablet) ? 
-                                                    fullHeight*0.065 : fullHeight*0.053
-                                                }
+                                                buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
                                                 pressed={() => {
                                                     this.props.navigation.navigate('VIDEOPLAYER')
                                                 }}
@@ -293,10 +262,10 @@ export default class SinglePack extends React.Component {
                                             buttonHeight={
                                                 (onTablet) ? fullHeight*0.065 : fullHeight*0.053
                                             }
-                                            pressed={() => console.log('Start')}
+                                            pressed={() => {}}
                                         />
                                         )}
-                                        <View style={{flex: 1}}></View>
+                                        <View style={{flex: 1}}/>
                                     </View>
                                     <View key={'infoButton'}
                                         style={[
@@ -316,7 +285,7 @@ export default class SinglePack extends React.Component {
                                             <AntIcon
                                                 name={'infocirlceo'}
                                                 size={22*factorRatio}
-                                                color={'white'}
+                                                color={colors.pianoteRed}
                                             />
                                             <Text
                                                 style={{
@@ -337,7 +306,7 @@ export default class SinglePack extends React.Component {
                         <View key={'info'}
                             style={{
                                 width: fullWidth,
-                                backgroundColor: '#111212',
+                                backgroundColor: colors.mainBackground,
                                 paddingLeft: fullWidth*0.05,
                                 paddingRight: fullWidth*0.05,
                             }}
@@ -351,7 +320,7 @@ export default class SinglePack extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. Cassi walks you step by step through some of her facourite Hanon exercises in this Course and includes a variation for each exercise that will target specific technical skills.
+                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice.
                             </Text>
                             <View key={'containStats'}>
                                 <View style={{height: 10*factorVertical}}/>
@@ -410,6 +379,37 @@ export default class SinglePack extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
+                                            48
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontSize: 13*factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10*factorVertical,
+                                            }}
+                                        >
+                                            MINS
+                                        </Text>
+                                    </View>
+                                    <View style={{width: 15*factorRatio}}/>
+                                    <View 
+                                        style={[
+                                            styles.centerContent, {
+                                            width: 70*factorRatio,
+                                        }]}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontWeight: '700',
+                                                fontSize: 17*factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10*factorVertical,
+                                            }}
+                                        >
                                             2400
                                         </Text>
                                         <Text
@@ -446,7 +446,7 @@ export default class SinglePack extends React.Component {
                                         <AntIcon
                                             name={'like2'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -471,7 +471,7 @@ export default class SinglePack extends React.Component {
                                         <MaterialIcon
                                             name={'arrow-collapse-down'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -501,7 +501,7 @@ export default class SinglePack extends React.Component {
                                         <MaterialIcon
                                             name={'replay'}
                                             size={27.5*factorRatio}
-                                            color={'white'}
+                                            color={colors.pianoteRed}
                                         />
                                         <Text
                                             style={{
@@ -538,17 +538,15 @@ export default class SinglePack extends React.Component {
                                 renderType={'Mapped'}
                                 containerWidth={fullWidth}
                                 containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.09
+                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
                                 }
                                 imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.0625
+                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
                                 }
                                 imageWidth={fullWidth*0.26}
-                                showLines={false}
-                                imageRadius={10*factorRatio}
-                                containerBorderWidth={1}
                             />
                         </View>
+                        <View style={{height: 15*factorVertical}}/>
                     </ScrollView>
                 </View>
                 <NavigationBar

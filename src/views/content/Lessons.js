@@ -408,6 +408,7 @@ export default class Lessons extends React.Component {
                             outVideos={this.state.outVideos}
                             //getVideos={() => this.getContent()}
                             renderType={'Mapped'}
+                            showFilter={true}
                             items={this.state.courses}
                             imageRadius={5*factorRatio}
                             containerBorderWidth={0}

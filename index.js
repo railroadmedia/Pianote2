@@ -33,6 +33,7 @@ global.colors = {
     mainBackground: '#00101d',
     secondBackground: '#445f73',
     thirdBackground: '#081826',
+    notificationColor: '#002038',
     pianoteRed: '#fb1b2f',
 
 }

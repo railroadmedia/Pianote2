@@ -55,7 +55,7 @@ class SubscribeIcon extends React.Component {
                         style={{
                             color: 'white',
                             fontSize: 14*factorRatio,
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'RobotoCondensed-Bold',
                             fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
                         }}
                     >

@@ -53,7 +53,7 @@ class ContinueIcon extends React.Component {
                     <Text
                         style={{
                             color: 'white',
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'RobotoCondensed-Bold',
                             fontSize: 14*factorRatio,
                             fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
                         }}

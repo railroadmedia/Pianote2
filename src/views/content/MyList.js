@@ -6,6 +6,7 @@ import {
     View,
     Text,
     ScrollView,
+    TouchableOpacity,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
@@ -15,7 +16,6 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class MyList extends React.Component {
     static navigationOptions = {header: null};
@@ -150,11 +150,11 @@ export default class MyList extends React.Component {
                                 <Text
                                     style={{
                                         paddingLeft: 12*factorHorizontal,
-                                        fontSize: 18*factorRatio,
+                                        fontSize: 20*factorRatio,
                                         marginBottom: 5*factorVertical,
                                         textAlign: 'left', 
                                         fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         color: colors.secondBackground,
                                     }}
                                 >
@@ -191,11 +191,11 @@ export default class MyList extends React.Component {
                                 <Text
                                     style={{
                                         paddingLeft: 12*factorHorizontal,
-                                        fontSize: 18*factorRatio,
+                                        fontSize: 20*factorRatio,
                                         marginBottom: 5*factorVertical,
                                         textAlign: 'left', 
                                         fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         color: colors.secondBackground,
                                     }}
                                 >
@@ -220,6 +220,7 @@ export default class MyList extends React.Component {
                             outVideos={this.state.outVideos}
                             //getVideos={() => this.getContent()}
                             renderType={'Mapped'}
+                            showFilter={true}
                             items={this.state.items}
                             imageRadius={5*factorRatio}
                             containerBorderWidth={0}
@@ -228,7 +229,7 @@ export default class MyList extends React.Component {
                                 Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
                             }
                             imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.07
                             }
                             imageWidth={fullWidth*0.26}
                         />                    

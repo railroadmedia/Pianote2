@@ -34,7 +34,9 @@ export default class Profile extends React.Component {
 
     componentDidMount = async () => {
         profileImage = await AsyncStorage.getItem('profileURI')
-        await this.setState({profileImage})
+        if(profileImage !== null) {
+            await this.setState({profileImage})
+        } 
     }
 
 
@@ -44,7 +46,7 @@ export default class Profile extends React.Component {
                 <View
                     style={{
                         height: 90*factorRatio,
-                        backgroundColor: 'white',
+                        backgroundColor: (index % 2) ? colors.mainBackground : colors.notificationColor,
                         flexDirection: 'row',
                     }}
                 >
@@ -104,13 +106,14 @@ export default class Profile extends React.Component {
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 15*factorRatio,
                                     fontWeight: (Platform.OS == 'ios') ? '700' : 'bold',
+                                    color: 'white',
                                 }}
                             ><Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 15*factorRatio,
                                     fontWeight: (Platform.OS == 'ios') ? '700' : 'bold',
-                                    color: '#fb1b2f',
+                                    color: 'white',
                                 }}
                             >{'NEW - '}</Text>Jordan Leibel<Text
                                     style={{
@@ -126,7 +129,7 @@ export default class Profile extends React.Component {
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 13*factorRatio,
                                     fontWeight: '400',
-                                    color: 'grey',
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 Yesterday at 12:19 PM
@@ -150,6 +153,7 @@ export default class Profile extends React.Component {
                                 <EntypoIcon        
                                     size={20*factorRatio}
                                     name={'dots-three-horizontal'}
+                                    color={colors.secondBackground}
                                 />
                             </TouchableOpacity>
                             <View style={{flex: 1}}/>
@@ -159,40 +163,6 @@ export default class Profile extends React.Component {
                 </View>
             )
         })
-    }
-
-
-    async chooseImage() {
-        await ImagePicker.showImagePicker({
-                tintColor: '#147efb',
-                storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            }
-        }, (response) => {
-            if(response.didCancel) {
-            } else if(response.error) {
-            } else {
-                AsyncStorage.setItem('profileImage', response.data)
-                AsyncStorage.setItem('profileURI', response.uri)
-                this.setState({
-                    imageURI: response.uri,
-                    showImage: true,
-                    profileImage: response.uri,
-                })
-            }
-        })
-        await this.forceUpdate()
-    }
-
-
-    clearImage = async () => {
-        await AsyncStorage.setItem('profileImage', '')
-        await this.setState({
-            imageURI: '', 
-            showImage: false,
-        })
-        await this.forceUpdate()
     }
 
 
@@ -208,205 +178,73 @@ export default class Profile extends React.Component {
                     <View key={'contentContainer'}
                         style={{flex: 1}}
                     >
+                        <View 
+                            style={[
+                                styles.centerContent, {
+                                height: (Platform.OS == 'android') ?  fullHeight*0.1 : 
+                                    (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                                backgroundColor: colors.thirdBackground,
+                            }]}
+                        >
+                            <View style={{flex: 1}}/>
+                            <View 
+                                style={[
+                                    styles.centerContent, {
+                                    backgroundColor: colors.thirdBackground,
+                                }]}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 22*factorRatio,
+                                        fontWeight: 'bold',
+                                        color: 'white',
+                                        fontFamily: 'OpenSans-Regular',
+                                    }}
+                                >
+                                    My Profile
+                                </Text>
+                                <View
+                                    style={{
+                                        position: 'absolute',
+                                        right: 20*factorHorizontal,
+                                    }}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.props.navigation.navigate('SETTINGS')
+                                        }}
+                                    >
+                                        <Settings
+                                            height={20*factorRatio}
+                                            width={20*factorRatio}
+                                            fill={colors.pianoteRed}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={{height: 20*factorVertical}}/>
+                        </View>
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             contentInsetAdjustmentBehavior={'never'}
-                            style={{flex: 1, backgroundColor: 'white'}}
+                            style={{flex: 1, backgroundColor: colors.mainBackground}}
                         >
-                            <View key={'backgroundColoring'}
-                                style={{
-                                    backgroundColor: '#fb1b2f',
-                                    position: 'absolute',
-                                    height: fullHeight,
-                                    top: -fullHeight,
-                                    left: 0,
-                                    right: 0,
-                                    zIndex: 10,
-                                    elevation: 10,
-                                }}
-                            />
-                            <View key={'myProfile'}
-                                style={[
-                                    styles.centerContent, {
-                                    height: (isNotch) ? fullHeight*0.12 : fullHeight*0.1,
-                                    backgroundColor: '#fb1b2f',
-                                    elevation: 0,
-                                }]}
-                            >
-                                <View style={{flex: 0.5}}/>
-                                <View style={{flexDirection: 'row'}}>
-                                    <View style={{flex: 1}}/>
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
-                                            fontSize: 18*factorRatio,
-                                            color: 'white',
-                                        }}
-                                    >
-                                        My Profile
-                                    </Text>
-                                    <View style={{flex: 1, flexDirection: 'row'}}>
-                                        <View style={{flex: 0.8}}/>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate('SETTINGS')
-                                            }}
-                                        >
-                                            <Settings
-                                                height={20*factorRatio}
-                                                width={20*factorRatio}
-                                                fill={'white'}
-                                            />
-                                        </TouchableOpacity>
-                                        <View style={{flex: 0.2}}/>
-                                    </View>
-                                </View>
-                                <View style={{flex: 0.25}}/>
-                            </View>
+                            <View style={{height: 20*factorVertical}}/>
                             <View key={'profilePicture'}
                                 style={[
                                     styles.centerContent, {
-                                        backgroundColor: '#fb1b2f',
-                                    height: (isNotch) ? fullHeight*0.35 : fullHeight*0.375,
+                                        backgroundColor: colors.mainBackground,
                                 }]}
                             >
-                                <View key={'rank'}
-                                    style={{
-                                        position: 'absolute',
-                                        flexDirection: 'row',
-                                        bottom: '7.25%',
-                                        height: '5%',
-                                        width: '100%',
-                                        shadowOffset: { 
-                                            width: 5*factorRatio, 
-                                            height: 5*factorRatio 
-                                        },
-                                        shadowColor: 'black',
-                                        shadowOpacity: 0.1,
-                                        zIndex: 5,
-                                        elevation: 5,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            height: fullHeight*0.0875,
-                                            width: '90%',
-                                            borderRadius: 75*factorRatio,
-                                            backgroundColor: 'white',
-                                            elevation: 5,
-                                        }}
-                                    >
-                                        <View style={{flex: 1}}/>
-                                        <TouchableOpacity
-                                            style={[styles.centerContent, {flex: 10}]}
-                                            onPress={() => {
-                                                this.setState({showXpRank: true})
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 12.5*factorRatio,
-                                                    fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
-                                                }}
-                                            >
-                                                XP
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 22.5*factorRatio,
-                                                    fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                11,768
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View style={{flex: 1}}/>
-                                        <TouchableOpacity
-                                            style={[styles.centerContent, {flex: 10}]}
-                                            onPress={() => {
-                                                this.setState({showXpRank: true})
-                                            }}
-                                        >
-                                            <View
-                                                style={{
-                                                    heiight: '100%',
-                                                    width: '100%'
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        fontSize: 12.5*factorRatio,
-                                                        fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
-                                                        textAlign: 'center',
-                                                        color: '#fb1b2f',
-                                                    }}
-                                                >
-                                                    RANK
-                                                </Text>
-                                                <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 22.5*factorRatio,
-                                                    fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                MAESTRO
-                                            </Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <View style={{flex: 1}}/>
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>
                                 <View key={'imageProfile'}
                                     style={{
                                         borderRadius: 250,
                                         borderWidth: 2*factorRatio,
-                                        borderColor: 'white',
+                                        borderColor: colors.pianoteRed,
                                         height: (onTablet) ? 112*factorRatio : 140*factorRatio,
                                         width: (onTablet) ? 112*factorRatio : 140*factorRatio,
                                     }}
                                 >
-                                    <View key={'camera'}
-                                        style={{
-                                            position: 'absolute',
-                                            top: -11*factorVertical,
-                                            right: -11*factorVertical,
-                                            height: 32*factorVertical,
-                                            width: 32*factorVertical,
-                                            borderRadius: 100,
-                                            borderWidth: 2,
-                                            borderColor: 'white',
-                                            zIndex: 13,
-                                        }}
-                                    >         
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.chooseImage()
-                                            }}
-                                            style={[
-                                                styles.centerContent, {
-                                                height: '100%',
-                                                width: '100%',
-                                            }]}
-                                        >
-                                            <EntypoIcon
-                                                size={(onTablet) ? 14*factorRatio : 16*factorRatio}
-                                                color={'white'}
-                                                name={'camera'}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
                                     <View style={{flex: 1}}/>
                                     <View style={{flexDirection: 'row'}}>
                                         <View style={{flex: 1}}/>
@@ -434,7 +272,7 @@ export default class Profile extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 30*factorRatio,
-                                            fontWeight: (Platform.OS == 'ios') ? '700' : 'bold',
+                                            fontWeight: (Platform.OS == 'ios') ? '900' : 'bold',
                                             textAlign: 'center',
                                             color: 'white',
                                         }}
@@ -446,23 +284,108 @@ export default class Profile extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 14*factorRatio,
-                                            fontWeight: '400',
                                             textAlign: 'center',
-                                            color: 'white',
+                                            color: colors.secondBackground,
                                         }}
                                     >
-                                        @drummer_jared
+                                        MEMBER SINCE 2017
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}}/>
                             </View>   
+                            <View style={{height: 20*factorVertical}}/>
+                            <View key={'rank'}
+                                style={{
+                                    borderTopColor: colors.secondBackground,
+                                    borderTopWidth: 0.25,
+                                    borderBottomColor: colors.secondBackground,
+                                    borderBottomWidth: 0.25,
+                                    height: fullHeight*0.1,
+                                    paddingTop: 10*factorVertical,
+                                    paddingBottom: 10*factorVertical,
+                                    backgroundColor: colors.mainBackground,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 3,
+                                        flexDirection: 'row',
+                                        alignSelf: 'stretch',
+                                    }}
+                                >
+                                    <View style={{flex: 1}}/>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({showXpRank: true})
+                                        }}
+                                    >
+                                        <View style={{flex: 1}}/>
+                                        <View>
+                                            <Text
+                                                style={{
+                                                    color: colors.pianoteRed,
+                                                    fontSize: 12*factorRatio,
+                                                    fontWeight: 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                XP
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontSize: 24*factorRatio,
+                                                    fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                32.2K
+                                            </Text>
+                                        </View>
+                                        <View style={{flex: 1}}/>
+                                    </TouchableOpacity>
+                                    <View style={{flex: 1}}/>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({showXpRank: true})
+                                        }}
+                                    >
+                                        <View style={{flex: 1}}/>
+                                        <View>
+                                            <Text
+                                                style={{
+                                                    color: colors.pianoteRed,
+                                                    fontSize: 12*factorRatio,
+                                                    fontWeight: 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                RANK
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: 'white',
+                                                    fontSize: 24*factorRatio,
+                                                    fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                MAESTRO
+                                            </Text>
+                                        </View>
+                                        <View style={{flex: 1}}/>
+                                    </TouchableOpacity>
+                                    <View style={{flex: 1}}/>
+                                </View>
+                            </View>
                             <View key={'notifications'}
                                 style={{
-                                    height: fullHeight*0.115,
+                                    paddingTop: 25*factorVertical,
+                                    paddingBottom: 15*factorVertical,
                                     elevation: 1,
                                 }}
                             >
-                                <View style={{height: '60%'}}/>
                                 <View style={{flex: 0.5}}/>
                                 <Text
                                     style={{
@@ -470,7 +393,7 @@ export default class Profile extends React.Component {
                                         fontSize: 18*factorRatio,
                                         fontFamily: 'OpenSans-Regular',
                                         fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
-                                        color: '#9b9b9b',
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     NOTIFICATIONS

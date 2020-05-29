@@ -61,7 +61,7 @@ class NavMenuHeaders extends React.Component {
                                     width: '100%',
                                 }]}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 2.5}}/>
                                 <Pianote
                                     height={30*factorHorizontal}
                                     width={fullWidth*0.25}
@@ -75,7 +75,7 @@ class NavMenuHeaders extends React.Component {
                                 this.props.navigation.navigate('LESSONS')
                             }}
                         >
-                            <View style={{flex: 1.25}}/>
+                            <View style={{flex: 2}}/>
                             <View 
                                 style={{
                                     flexDirection: 'row',
@@ -105,7 +105,7 @@ class NavMenuHeaders extends React.Component {
                                 this.props.navigation.navigate('PACKS')
                             }}
                         >
-                            <View style={{flex: 1.25}}/>
+                            <View style={{flex: 2}}/>
                             <View 
                                 style={{
                                     flexDirection: 'row',
@@ -130,7 +130,7 @@ class NavMenuHeaders extends React.Component {
                                 this.props.navigation.navigate('MYLIST')
                             }}
                         >
-                            <View style={{flex: 1.25}}/>
+                            <View style={{flex: 2}}/>
                             <View 
                                 style={{
                                     flexDirection: 'row',

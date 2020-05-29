@@ -73,7 +73,6 @@ export default class Packs extends React.Component {
                             Packs
                         </Text>
                         <View style={{height: 20*factorVertical}}/>
-                            
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -84,6 +83,9 @@ export default class Packs extends React.Component {
                             }}
                         >
                             <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate('SINGLEPACK', {data: '500 SONGS'} )
+                                }}
                                 style={{
                                     width: fullWidth*0.285,
                                     height: fullWidth*0.285*(95/65),
@@ -152,6 +154,9 @@ export default class Packs extends React.Component {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate('SINGLEPACK', {data: 'FASTER FINGERS'} )
+                                }}
                                 style={{
                                     width: fullWidth*0.285,
                                     height: fullWidth*0.285*(95/65),
@@ -195,6 +200,9 @@ export default class Packs extends React.Component {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate('SINGLEPACK', {data: 'SIGHT READING'} )
+                                }}
                                 style={{
                                     width: fullWidth*0.285,
                                     height: fullWidth*0.285*(95/65),
@@ -238,7 +246,6 @@ export default class Packs extends React.Component {
                                 />
                             </TouchableOpacity>
                         </View>
-                    
                     </View>
                     <NavigationBar
                         currentPage={'PACKS'}

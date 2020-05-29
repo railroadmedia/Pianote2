@@ -96,15 +96,27 @@ export default class Course extends React.Component {
                         alignSelf: 'stretch',
                     }}
                 >
-                         <View key={'contentContainer'}
+                <View key={'contentContainer'}
                     style={{
-                        height: fullHeight*0.90625 - navHeight,
+                        height: fullHeight,
                         alignSelf: 'stretch'
                     }}
                 >
-                    <NavMenuHeaders
-                        currentPage={'LESSONS'}
-                    />
+                    <View
+                        style={{
+                            height: fullHeight*0.1,
+                            width: fullWidth,
+                            position: 'absolute',
+                            zIndex: 2, 
+                            elevation: 2,
+                            alignSelf: 'stretch', 
+                        }}
+                    >
+                        <NavMenuHeaders
+                            currentPage={'LESSONS'}
+                        />
+                    </View>
+                    
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
@@ -194,6 +206,7 @@ export default class Course extends React.Component {
                             //getVideos={() => this.getContent()}
                             renderType={'Mapped'}
                             items={this.state.items}
+                            showFilter={true}
                             imageRadius={5*factorRatio}
                             containerBorderWidth={0}
                             containerWidth={fullWidth}
@@ -207,9 +220,6 @@ export default class Course extends React.Component {
                         />                    
                     </ScrollView>
                 </View>                
-                <NavigationBar
-                    currentPage={'course'}
-                />
                 <Modal key={'restartCourse'}
                         isVisible={this.state.showRestartCourse}
                         style={[

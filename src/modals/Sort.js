@@ -1,5 +1,5 @@
 /**
- * QualitySettings
+ * Sort
  */
 import React from 'react';
 import { 
@@ -12,7 +12,7 @@ import X from 'Pianote2/src/assets/img/svgs/X.svg';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-class QualitySettings extends React.Component {
+class Sort extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -25,9 +25,9 @@ class QualitySettings extends React.Component {
     render = () => {
         return (
             <View style={styles.container}>          
-                <View style={{flex: 1, alignSelf: 'stretch',}}>
+                <View style={{flex: 1, alignSelf: 'stretch'}}>
                     <TouchableWithoutFeedback
-                        onPress={() => this.props.hideQualitySettings()}
+                        onPress={() => this.props.hideSort()}
                         style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
                     >
                     </TouchableWithoutFeedback>
@@ -218,7 +218,7 @@ class QualitySettings extends React.Component {
                         
                         <TouchableOpacity key={'cancel'}
                             onPress={() => {
-                                this.props.hideQualitySettings()
+                                this.props.hideSort()
                             }}
                             style={{
                                 flex: 0.4,
@@ -257,4 +257,4 @@ class QualitySettings extends React.Component {
     }
 }
 
-export default withNavigation(QualitySettings);
+export default withNavigation(Sort);
