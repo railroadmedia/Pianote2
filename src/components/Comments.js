@@ -48,186 +48,19 @@ class Comments extends React.Component {
     }
 
 
-    renderComment(row) {
-        return (
-            <View 
-                style={{
-                    backgroundColor: 'white',
-                    paddingTop: fullHeight*0.025,
-                    paddingBottom: fullHeight*0.02,
-                    paddingLeft: fullWidth*0.05,
-                    paddingRight: fullWidth*0.03,
-                    minHeight: 40*factorVertical,
-                    flexDirection: 'row',
-                }}
-            >
-                <View>
-                    <View style={{alignItems: 'center'}}>
-                        <FastImage
-                            style={{
-                                height: 40*factorHorizontal,
-                                width: 40*factorHorizontal,
-                                borderRadius: 100,
-                            }}
-                            source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
-                            resizeMode={FastImage.resizeMode.stretch}
-                        />
-                        <Text
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 10*factorRatio,
-                                marginTop: 2*factorRatio,
-                                fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                                color: 'grey',
-                            }}
-                        >
-                            {row.item[4]}
-                        </Text>
-                    </View>
-                    <View style={{flex: 1}}/>
-                </View>
-                <View 
-                    style={{
-                        flex: 1,
-                        paddingLeft: 12.5*factorHorizontal,
-                    }}
-                >
-                    <View style={{height: 3*factorVertical}}/>
-                    <Text 
-                        style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 13*factorRatio,
-                        }}
-                    >
-                        {row.item[0]}
-                    </Text>
-                    <View style={{height: 7.5*factorVertical}}/>
-                    <Text
-                        style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 11*factorRatio,
-                            color: 'grey',
-                        }}
-                    >
-                        {row.item[1]} | {row.item[2]} | {row.item[3]}
-                    </Text>
-                    <View style={{height: 50*factorVertical}}>
-                        <View style={{flex: 1}}/>
-                        <View style={{flexDirection: 'row'}}>
-                            <View style={{flexDirection: 'row'}}>
-                                <TouchableOpacity 
-                                    onPress={() => {}}
-                                    style={{
-                                    }}
-                                >
-                                    <AntIcon
-                                        name={'like2'}
-                                        size={20*factorRatio}
-                                        color={'black'}
-                                    />
-                                </TouchableOpacity>
-                                <View style={{width: 10*factorHorizontal}}/>
-                                {(row.item[6] > 0) && (
-                                <View>
-                                    <View style={{flex: 1}}/>
-                                    <View 
-                                        style={[
-                                            styles.centerContent, {
-                                            borderRadius: 40,
-                                            paddingLeft: 8*factorHorizontal,
-                                            paddingRight: 8*factorHorizontal,
-                                            paddingTop: 4*factorVertical,
-                                            paddingBottom: 4*factorVertical,
-                                            backgroundColor: '#ececec',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 9.5*factorRatio,
-                                                color: 'dimgrey',
-                                            }}
-                                        >
-                                            {row.item[6]} LIKES
-                                        </Text>
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>                                
-                                )}
-                            </View>
-                            <View style={{width: 20*factorHorizontal}}/>
-                            <View style={{flexDirection: 'row'}}>
-                                <TouchableOpacity 
-                                    onPress={() => {}}
-                                    style={{
-                                    }}
-                                >
-                                    <MaterialIcon
-                                        name={'comment-text-outline'}
-                                        size={20*factorRatio}
-                                        color={'black'}
-                                    />
-                                </TouchableOpacity>
-                                <View style={{width: 10*factorHorizontal}}/>
-                                {(row.item[5] > 0) && (
-                                <View>
-                                    <View style={{flex: 1}}/>
-                                    <View 
-                                        style={[
-                                            styles.centerContent, {
-                                            borderRadius: 40,
-                                            paddingLeft: 8*factorHorizontal,
-                                            paddingRight: 8*factorHorizontal,
-                                            paddingTop: 4*factorVertical,
-                                            paddingBottom: 4*factorVertical,
-                                            backgroundColor: '#ececec',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 10*factorRatio,
-                                                color: 'dimgrey',
-                                            }}
-                                        >
-                                            {row.item[5]} REPLIES
-                                        </Text>
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                )}
-                            </View>
-                        </View>
-                        <View style={{flex: 1}}/>
-                    </View>
-                    <TouchableOpacity>
-                        <Text
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 11.5*factorRatio,
-                                color: '#fb1b2f',
-                            }}
-                        >
-                            VIEW {row.item[5]} REPLIES
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        )
-    }
-
-
     mapComments() {
         return this.props.comments.map((row, index) => {
             return (
                 <View 
                     style={{
-                        backgroundColor: 'white',
+                        backgroundColor: colors.mainBackground,
                         paddingTop: fullHeight*0.025,
                         paddingBottom: fullHeight*0.02,
                         paddingLeft: fullWidth*0.05,
                         paddingRight: fullWidth*0.03,
                         minHeight: 40*factorVertical,
+                        borderTopColor: colors.secondBackground,
+                        borderTopWidth: 1,
                         flexDirection: 'row',
                     }}
                 >
@@ -247,7 +80,7 @@ class Comments extends React.Component {
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 10*factorRatio,
                                     marginTop: 2*factorRatio,
-                                    fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
+                                    fontWeight: 'bold',
                                     color: 'grey',
                                 }}
                             >
@@ -267,6 +100,7 @@ class Comments extends React.Component {
                             style={{
                                 fontFamily: 'OpenSans-Regular',
                                 fontSize: 13*factorRatio,
+                                color: 'white',
                             }}
                         >
                             {row[0]}
@@ -275,15 +109,16 @@ class Comments extends React.Component {
                         <Text
                             style={{
                                 fontFamily: 'OpenSans-Regular',
-                                fontSize: 11*factorRatio,
-                                color: 'grey',
+                                fontSize: 12*factorRatio,
+                                color: colors.secondBackground,
                             }}
                         >
                             {row[1]} | {row[2]} | {row[3]}
                         </Text>
                         <View
                             style={{
-                                height: 50*factorVertical,
+                                paddingTop: 15*factorVertical,
+                                paddingBottom: 15*factorVertical,
                             }}
                         >
                             <View style={{flex: 1}}/>
@@ -297,7 +132,7 @@ class Comments extends React.Component {
                                         <AntIcon
                                             name={'like2'}
                                             size={20*factorRatio}
-                                            color={'black'}
+                                            color={colors.pianoteRed}
                                         />
                                     </TouchableOpacity>
                                     <View style={{width: 10*factorHorizontal}}/>
@@ -312,14 +147,14 @@ class Comments extends React.Component {
                                                 paddingRight: 8*factorHorizontal,
                                                 paddingTop: 4*factorVertical,
                                                 paddingBottom: 4*factorVertical,
-                                                backgroundColor: '#ececec',
+                                                backgroundColor: colors.notificationColor,
                                             }]}
                                         >
                                             <Text
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 9.5*factorRatio,
-                                                    color: 'dimgrey',
+                                                    fontSize: 10*factorRatio,
+                                                    color: colors.pianoteRed,
                                                 }}
                                             >
                                                 {row[6]} LIKES
@@ -339,7 +174,7 @@ class Comments extends React.Component {
                                         <MaterialIcon
                                             name={'comment-text-outline'}
                                             size={20*factorRatio}
-                                            color={'black'}
+                                            color={colors.pianoteRed}
                                         />
                                     </TouchableOpacity>
                                     <View style={{width: 10*factorHorizontal}}/>
@@ -354,14 +189,14 @@ class Comments extends React.Component {
                                                 paddingRight: 8*factorHorizontal,
                                                 paddingTop: 4*factorVertical,
                                                 paddingBottom: 4*factorVertical,
-                                                backgroundColor: '#ececec',
+                                                backgroundColor: colors.notificationColor,
                                             }]}
                                         >
                                             <Text
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 9.5*factorRatio,
-                                                    color: 'dimgrey',
+                                                    fontSize: 10*factorRatio,
+                                                    color: colors.pianoteRed,
                                                 }}
                                             >
                                                 {row[5]} REPLIES
@@ -382,8 +217,8 @@ class Comments extends React.Component {
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontSize: 11.5*factorRatio,
-                                    color: '#fb1b2f',
+                                    fontSize: 12*factorRatio,
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 VIEW {row[5]} REPLIES
@@ -407,10 +242,10 @@ class Comments extends React.Component {
                 }]}
             >
                 <View style={{flex: 1}}>
-                    <View key={'commentCount'}
+                    <View
                         style={{
                             width: fullWidth,
-                            backgroundColor: 'white',
+                            backgroundColor: colors.mainBackground,
                             zIndex: 5,
                         }}
                     >
@@ -427,9 +262,9 @@ class Comments extends React.Component {
                                 <View style={{flex: 1}}/>
                                 <Text
                                     style={{
-                                        fontSize: 17*factorRatio,
-                                        fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontSize: 18*factorRatio,
+                                        fontFamily: 'RobotoCondensed-Bold',
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     {(this.props.isReply) ? 'Replies' : '8 COMMENTS'}
@@ -463,11 +298,10 @@ class Comments extends React.Component {
                             <View style={{flex: 0.1}}/>
                         </View>
                         <View style={{flex: 1.25}}/>
-                        
                         {this.props.isReply && (
                         <View key={'originalReply'}
                             style={{
-                                backgroundColor: 'white',
+                                backgroundColor: colors.mainBackground,
                                 paddingTop: fullHeight*0.025,
                                 paddingBottom: fullHeight*0.02,
                                 paddingLeft: fullWidth*0.05,
@@ -616,12 +450,9 @@ class Comments extends React.Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        )}        
-
+                        )}
                         <TouchableOpacity key={'addComment'}
-                            onPress={() => {
-                                this.props.showMakeComment()
-                            }}
+                            onPress={() => this.props.showMakeComment()}
                             style={{
                                 width: fullWidth,
                                 height: fullHeight*0.1,
@@ -632,11 +463,9 @@ class Comments extends React.Component {
                             <TouchableOpacity
                                 onPress={() => {}}
                                 style={{
-                                    height: '100%',
-                                    width: '100%',
                                 }}
                             >
-                                <View
+                                <View key={'yourImage'}
                                     style={{
                                         height: '100%',
                                         width: 40*factorHorizontal,
@@ -655,20 +484,6 @@ class Comments extends React.Component {
                                     <View style={{flex: 1}}/>
                                 </View>
                             </TouchableOpacity>
-                            <View style={{width: 12.5*factorHorizontal}}/>
-                            <View>
-                                <View style={{flex: 1}}/>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 14*factorRatio,
-                                        color: 'grey',
-                                    }}
-                                >
-                                    Add a reply...
-                                </Text>
-                                <View style={{flex: 1}}/>
-                            </View>
                         </TouchableOpacity>
                         <View style={{flex: 1}}/>
                     </View>

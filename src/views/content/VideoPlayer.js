@@ -45,11 +45,10 @@ export default class VideoPlayer extends React.Component {
             page: 1, // page of content
             outVideos: false, // if no more videos
             items: [], // hello
-            progress: 0.73, // 0 - 1 for percent thru course
             assignmentList: [
-                ['Learn The Exercise', 1],
-                ['Learn The Song', 2],
-                ['Put It Together', 3],
+                ['Learn The Exercise', 1, 1],
+                ['Learn The Song', 2, 0],
+                ['Put It Together', 3, 0],
             ], // assingments
             comments: [
                 ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
@@ -126,7 +125,7 @@ export default class VideoPlayer extends React.Component {
                     style={{
                         height: 55*factorVertical,
                         paddingLeft: fullWidth*0.035,
-                        borderBottomColor: '#ececec',
+                        borderBottomColor: colors.secondBackground,
                         borderBottomWidth: 1,
                         justifyContent: 'center',
                         alignContent: 'center',
@@ -138,8 +137,8 @@ export default class VideoPlayer extends React.Component {
                         <Text
                             style={{
                                 fontSize: 18*factorRatio,
-                                color: '#7F8C8D',
-                                fontFamily: 'OpenSans-Regular',
+                                color: colors.secondBackground,
+                                fontFamily: 'RobotoCondensed-Bold',
                             }}
                         >
                             {index+1}. {row[0]}
@@ -155,7 +154,7 @@ export default class VideoPlayer extends React.Component {
                             flexDirection: 'row',
                         }]}
                     >
-                        {(row[1] == 1) && (
+                        {(row[2] == 1) && (
                         <View style={styles.centerContent}>
                             <View
                                 style={[
@@ -168,19 +167,19 @@ export default class VideoPlayer extends React.Component {
                             >
                                 <EntypoIcon
                                     name={'check'}
-                                    size={15*factorRatio}
-                                    color={'white'}
+                                    size={17.5*factorRatio}
+                                    color={colors.mainBackground}
                                 />
                             </View>
                         </View>
                         )}
-                        {(row[1] == 0) && (
+                        {(row[2] == 0) && (
                         <View style={[styles.centerContent, {flexDirection: 'row'}]}>
                             <View style={{flex: 0.25}}/>
                             <EntypoIcon
                                 name={'chevron-thin-right'}
                                 size={20*factorRatio}
-                                color={'#c2c2c2'}
+                                color={colors.secondBackground}
                             />
                             <View style={{flex: 1}}/>
                         </View>
@@ -285,13 +284,14 @@ export default class VideoPlayer extends React.Component {
                                         <AntIcon
                                             name={'like2'}
                                             size={27.5*factorRatio}
-                                            color={'black'}
+                                            color={colors.pianoteRed}
                                         />
                                         <View style={{height: 5*factorVertical}}/>
                                         <Text
                                             style={{
                                                 textAlign: 'center',
                                                 fontSize: 12*factorRatio,
+                                                color: 'white',
                                             }}
                                         >
                                             34
@@ -307,13 +307,14 @@ export default class VideoPlayer extends React.Component {
                                         <AntIcon
                                             name={'plus'}
                                             size={27.5*factorRatio}
-                                            color={'black'}
+                                            color={colors.pianoteRed}
                                         />
                                         <View style={{height: 5*factorVertical}}/>
                                         <Text
                                             style={{
                                                 textAlign: 'center',
                                                 fontSize: 12*factorRatio,
+                                                color: 'white',
                                             }}
                                         >
                                             My List
@@ -329,13 +330,14 @@ export default class VideoPlayer extends React.Component {
                                         <MaterialIcon
                                             name={'arrow-collapse-down'}
                                             size={27.5*factorRatio}
-                                            color={'black'}
+                                            color={colors.pianoteRed}
                                         />
                                         <View style={{height: 5*factorVertical}}/>
                                         <Text
                                             style={{
                                                 textAlign: 'center',
                                                 fontSize: 12*factorRatio,
+                                                color: 'white',
                                             }}
                                         >
                                             Download
@@ -351,16 +353,17 @@ export default class VideoPlayer extends React.Component {
                                         <MaterialIcon
                                             name={'arrow-collapse-down'}
                                             size={27.5*factorRatio}
-                                            color={'black'}
+                                            color={colors.pianoteRed}
                                         />
                                         <View style={{height: 5*factorVertical}}/>
                                         <Text
                                             style={{
                                                 textAlign: 'center',
                                                 fontSize: 12*factorRatio,
+                                                color: 'white',
                                             }}
                                         >
-                                            Download
+                                            Resources
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity key={'info'}
@@ -377,13 +380,14 @@ export default class VideoPlayer extends React.Component {
                                         <AntIcon
                                             name={'infocirlceo'}
                                             size={27.5*factorRatio}
-                                            color={'black'}
+                                            color={colors.pianoteRed}
                                         />
                                         <View style={{height: 5*factorVertical}}/>
                                         <Text
                                             style={{
                                                 textAlign: 'center',
                                                 fontSize: 12*factorRatio,
+                                                color: 'white',
                                             }}
                                         >
                                             Info
@@ -403,6 +407,7 @@ export default class VideoPlayer extends React.Component {
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 14*factorRatio,
                                             textAlign: 'center',
+                                            color: 'white',
                                         }}
                                     >
                                         A description of the video I assume goes right here.
@@ -414,209 +419,49 @@ export default class VideoPlayer extends React.Component {
                                 </View>
                                 )}
                             </View>
-                            <View key={'lessonProgress'}
-                                style={{
-                                    height: fullHeight*0.25
-                                }}
-                            >
-                                <View style={{flex: 0.3}}/>
-                                <View key={'subTitle'}
-                                    style={{paddingLeft: fullWidth*0.035}}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 17*factorRatio,
-                                            fontWeight: '700',
-                                            fontFamily: 'OpenSans-Regular',
-                                        }}
-                                    >
-                                        YOUR LESSON PROGRESS
-                                    </Text>
-                                </View>
-                                <View style={{flex: 0.2}}/>
-                                <View key={'progressBar'}
-                                    style={styles.centerContent}
-                                >
-                                    <View
-                                        style={{
-                                            height: (Platform.OS == 'ios') ? 
-                                                fullHeight*0.05*factorVertical : fullHeight*0.07*factorVertical,
-                                            width: '92.5%',
-                                            flexDirection: 'row',
-                                            borderRadius: 100*factorRatio,
-                                            backgroundColor: '#ececec',
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                height: (Platform.OS == 'ios') ? 
-                                                    fullHeight*0.05*factorVertical : fullHeight*0.07*factorVertical,
-                                                width: '83%',
-                                                borderRadius: 100*factorRatio,
-                                                backgroundColor: 'white',
-                                            }}
-                                        >
-                                            <View
-                                                style={{
-                                                    height: (Platform.OS == 'ios') ? 
-                                                        fullHeight*0.045*factorVertical : fullHeight*0.07*factorVertical,
-                                                    width: '97%',
-                                                    borderRadius: 100*factorRatio,
-                                                    backgroundColor: '#ececec',
-                                                    justifyContent: 'center',
-                                                    alignContent: 'center',
-                                                    paddingLeft: 5*factorHorizontal,
-                                                    paddingRight: 5*factorHorizontal,
-                                                }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        height: '75%',
-                                                        width: fullWidth*0.1 + fullWidth*0.635*this.state.progress,
-                                                        borderRadius: 100*factorRatio,
-                                                        backgroundColor: '#7F8C8D',
-                                                        justifyContent: 'center',
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 14*factorRatio,
-                                                            paddingRight: 10*factorHorizontal,
-                                                            fontWeight: '700',
-                                                            fontFamily: 'OpenSans-Regular',
-                                                            textAlign: 'right',
-                                                            color: 'white'
-                                                        }}
-                                                    >
-                                                        {this.state.progress*100}%
-                                                    </Text>
-                                                </View>
-                                            </View>    
-                                        </View>
-                                        <View
-                                            style={[
-                                                styles.centerContent, {
-                                                height: (Platform.OS == 'ios') ? 
-                                                    fullHeight*0.05*factorVertical : fullHeight*0.07*factorVertical,
-                                                width: '15%',
-                                                alignSelf: 'stretch'
-                                            }]}
-                                        >
-                                            <View 
-                                                style={{
-                                                    width: fullWidth*0.1,
-                                                    height: (Platform.OS == 'ios') ? 
-                                                        fullHeight*0.05*factorVertical : fullHeight*0.07*factorVertical,
-                                                }}
-                                            >
-                                                <View style={{flex: 0.5}}/>
-                                                <View style={styles.centerContent}>
-                                                    <IonIcon
-                                                        name={'ios-trophy'}
-                                                        size={16*factorRatio}
-                                                        color={'#7F8C8D'}
-                                                    />
-                                                </View>
-                                                <Text
-                                                    style={{
-                                                        color: '#7F8C8D',
-                                                        fontWeight: '700',
-                                                        textAlign: 'center',
-                                                        fontSize: 10*factorRatio,
-                                                    }}
-                                                >
-                                                    250 XP
-                                                </Text>
-                                                <View style={{flex: 0.5}}/>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View style={{flex: 0.155}}/>
-                                <View key={'completeLessons'}
-                                    style={{
-                                        paddingLeft: fullWidth*0.0375,
-                                        paddingRight: fullWidth*0.0375,
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({showLessonComplete: true})
-                                        }}
-                                        style={[
-                                            styles.centerContent, {
-                                            height: 50*factorRatio,
-                                            width: '100%',
-                                            borderRadius: 200,
-                                            backgroundColor: '#fb1b2f',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 18*factorRatio,
-                                                fontWeight: '700',
-                                                color: 'white',
-                                            }}
-                                        >
-                                            COMPLETE LESSON
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                            <View style={{height: 20*factorVertical}}/>
                             <View key={'assingmentsHeader'}
                                 style={{paddingLeft: fullWidth*0.035}}
                             >
                                 <Text
                                     style={{
-                                        fontSize: 17*factorRatio,
-                                        fontWeight: '700',
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontSize: 18*factorRatio,
+                                        fontFamily: 'RobotoCondensed-Bold',
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     ASSIGNMENTS
                                 </Text>
                             </View>
-                            <View style={{height: fullHeight*0.01}}/>
+                            <View style={{height: 20*factorVertical}}/>
                             <View key={'assignments'}
                                 style={{
                                     width: fullWidth,
-                                    borderTopColor: '#ececec',
-                                    borderTopWidth: 1.5,
+                                    borderTopColor: colors.secondBackground,
+                                    borderTopWidth: 1,
                                 }}
                             >
                                 {this.renderAssignments()}
                             </View>
-                            <View style={{height: fullHeight*0.045}}/>
-                            <View key={'courseHeader'}
-                                style={{paddingLeft: fullWidth*0.035}}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 17*factorRatio,
-                                        fontWeight: '700',
-                                        fontFamily: 'OpenSans-Regular',
-                                    }}
-                                >
-                                    COURSE LESSONS
-                                </Text>
-                            </View>
-                            <View style={{height: fullHeight*0.02}}/>
+                            <View style={{height: 5*factorVertical}}/>
                             <View key={'videoList'}>
-                                <VerticalVideoList
-                                    outVideos={true}
-                                    showPlus={false}
-                                    fetchVideos={() => this.getContent()}
-                                    renderType={'Mapped'}
-                                    items={this.state.items}
-                                    containerWidth={fullWidth}
-                                    imageRadius={7.5*factorRatio}
-                                    containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                        Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.09}
-                                    imageHeight={(onTablet) ? fullHeight*0.125 : (
-                                        Platform.OS == 'android') ? fullHeight*0.0925 : fullHeight*0.07
-                                    }        
-                                    imageWidth={fullWidth*0.26}
-                                />
+                            <VerticalVideoList
+                                title={'COURSE LESSONS'}
+                                outVideos={this.state.outVideos}
+                                renderType={'Mapped'}
+                                showFilter={true}
+                                items={this.state.items}
+                                imageRadius={5*factorRatio}
+                                containerBorderWidth={0}
+                                containerWidth={fullWidth}
+                                containerHeight={(onTablet) ? fullHeight*0.15 : (
+                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
+                                }
+                                imageHeight={(onTablet) ? fullHeight*0.12 : (
+                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                                }
+                                imageWidth={fullWidth*0.26}
+                            />
                             </View>
                             <View style={{height: 10*factorVertical}}/>
                             <View key={'comments'}>
