@@ -7,16 +7,21 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { withNavigation } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 
 class NavMenuHeaders extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
+        this.state = {
+            showModalMenu: false,
+        }
     }
+
 
     render = () => {
         return (
@@ -72,6 +77,9 @@ class NavMenuHeaders extends React.Component {
                         </View>
                         <TouchableOpacity key={'lessons'}
                             onPress={() => {
+                                (this.props.currentPage == 'LESSONS') ? 
+                                this.setState({showModalMenu: true})
+                                :
                                 this.props.navigation.navigate('LESSONS')
                             }}
                         >
@@ -152,22 +160,28 @@ class NavMenuHeaders extends React.Component {
                         <View style={{flex: 1}}/>
                     </View>
                 </View>
+                <Modal key={'navMenu'}
+                    isVisible={this.state.showModalMenu}
+                    style={{
+                        margin: 0, 
+                        height: fullHeight,
+                        width: fullWidth,
+                    }}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={false}
+                >
+                    <NavigationMenu
+                        onClose={(e) => this.setState({showModalMenu: e})}
+                        menu={this.state.menu}
+                        parentPage={this.state.parentPage}
+                    />
+                </Modal>
             </View>
         )
     }
 }
-
-/**
-<BlurView
-    style={{
-        height: '100%',
-        width: '100%',
-        opacity: 0.1,
-    }}
-    blurType={'dark'}
-    blurAmount={20}
-    blurRadius={1}
-/>
- */
 
 export default withNavigation(NavMenuHeaders);

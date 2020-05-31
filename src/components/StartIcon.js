@@ -57,7 +57,6 @@ class StartIcon extends React.Component {
                             color: 'white',
                             fontSize: 14*factorRatio,
                             fontFamily: 'RobotoCondensed-Bold',
-                            fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
                         }}
                     >
                         START

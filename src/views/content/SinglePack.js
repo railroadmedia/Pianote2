@@ -111,33 +111,33 @@ export default class SinglePack extends React.Component {
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
                     >
-                            <View key={'goBackIcon'}
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 10*factorHorizontal,
-                                    top: (isNotch) ? 60*factorVertical : 50*factorVertical,
-                                    height: 50*factorRatio,
-                                    width: 50*factorRatio,
-                                    zIndex: 5,
-                                }]}
+                        <View key={'goBackIcon'}
+                            style={[
+                                styles.centerContent, {
+                                position: 'absolute',
+                                left: 10*factorHorizontal,
+                                top: (isNotch) ? 60*factorVertical : 50*factorVertical,
+                                height: 50*factorRatio,
+                                width: 50*factorRatio,
+                                zIndex: 5,
+                            }]}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.goBack()
+                                }}
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                }}
                             >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.goBack()
-                                    }}
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <EntypoIcon
-                                        name={'chevron-thin-left'}
-                                        size={25*factorRatio}
-                                        color={'white'}
-                                    />
-                                </TouchableOpacity>
-                            </View>  
+                                <EntypoIcon
+                                    name={'chevron-thin-left'}
+                                    size={25*factorRatio}
+                                    color={'white'}
+                                />
+                            </TouchableOpacity>
+                        </View>  
                         <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
                         <View key={'imageContainer'}
                             style={{
@@ -149,7 +149,7 @@ export default class SinglePack extends React.Component {
                             <GradientFeature
                                 color={'blue'}
                                 opacity={1}
-                                height={'100%'}
+                                height={'70%'}
                                 borderRadius={0}
                             />
                             <View key={'SVGs'}

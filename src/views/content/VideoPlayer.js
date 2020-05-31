@@ -15,7 +15,6 @@ import Replies from '../../components/Replies';
 import FastImage from 'react-native-fast-image';
 import Comments from '../../components/Comments';
 import SoundSlice from '../../components/SoundSlice.js';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MakeComment from '../../components/MakeComment.js';
@@ -41,13 +40,14 @@ export default class VideoPlayer extends React.Component {
             showQualitySettings: false,
             showAssignmentComplete: false, 
             showLessonComplete: false, 
+            isCourse: true,
             title: 'The Four Pillars \n Of Improvisation',
             page: 1, // page of content
             outVideos: false, // if no more videos
             items: [], // hello
             assignmentList: [
-                ['Learn The Exercise', 1, 1],
-                ['Learn The Song', 2, 0],
+                ['Learn The Fill', 1, 1],
+                ['Learn The Beat', 2, 0],
                 ['Put It Together', 3, 0],
             ], // assingments
             comments: [
@@ -208,11 +208,13 @@ export default class VideoPlayer extends React.Component {
                     style={{
                         height: fullHeight, 
                         alignSelf: 'stretch',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
+                    <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
                     <View key={'video'}
                         style={{
-                            height: (onTablet) ? fullHeight*0.4 : fullHeight*0.3025,
+                            height: (onTablet) ? fullHeight*0.375 : fullHeight*0.275,
                             backgroundColor: colors.mainBackground
                         }}
                     >
@@ -419,7 +421,8 @@ export default class VideoPlayer extends React.Component {
                                 </View>
                                 )}
                             </View>
-                            <View style={{height: 20*factorVertical}}/>
+                            <View style={{height: (this.state.isCourse) ? 20*factorVertical : 10*factorVertical}}/>
+                            {this.state.isCourse && (
                             <View key={'assingmentsHeader'}
                                 style={{paddingLeft: fullWidth*0.035}}
                             >
@@ -432,8 +435,10 @@ export default class VideoPlayer extends React.Component {
                                 >
                                     ASSIGNMENTS
                                 </Text>
+                                <View style={{height: 20*factorVertical}}/>
                             </View>
-                            <View style={{height: 20*factorVertical}}/>
+                            )}
+                            {this.state.isCourse && (
                             <View key={'assignments'}
                                 style={{
                                     width: fullWidth,
@@ -441,26 +446,32 @@ export default class VideoPlayer extends React.Component {
                                     borderTopWidth: 1,
                                 }}
                             >
-                                {this.renderAssignments()}
+                                {this.renderAssignments()}   
                             </View>
-                            <View style={{height: 5*factorVertical}}/>
+                            )}
+                            <View style={{height: 20*factorVertical}}/>
                             <View key={'videoList'}>
                             <VerticalVideoList
-                                title={'COURSE LESSONS'}
+                                title={(this.state.isCourse) ? 'COURSE LESSONS' : 'MORE SONGS'}
                                 outVideos={this.state.outVideos}
                                 renderType={'Mapped'}
                                 showFilter={true}
+                                showTitleOnly={true}
                                 items={this.state.items}
                                 imageRadius={5*factorRatio}
                                 containerBorderWidth={0}
                                 containerWidth={fullWidth}
-                                containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
+                                containerHeight={(this.state.isCourse) ? 
+                                    ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925)
+                                    : 
+                                    fullWidth*0.22
                                 }
-                                imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                                imageHeight={(this.state.isCourse) ? 
+                                    ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065))
+                                    : 
+                                    fullWidth*0.175
                                 }
-                                imageWidth={fullWidth*0.26}
+                                imageWidth={(this.state.isCourse) ? fullWidth*0.26 : fullWidth*0.175}
                             />
                             </View>
                             <View style={{height: 10*factorVertical}}/>
@@ -483,17 +494,139 @@ export default class VideoPlayer extends React.Component {
                             </View>
                         </ScrollView>
                     </View>
+                    <View key={'completeLesson'}
+                        style={[
+                            styles.centerContent, {
+                            position: 'absolute',
+                            left: 0*factorHorizontal,
+                            width: fullWidth,
+                            backgroundColor: colors.mainBackground,
+                            zIndex: 5,
+                            bottom: 0,
+                            paddingBottom: (isNotch) ? fullHeight*0.035 : fullHeight*0.015,
+                        }]}
+                    >
+                        <View style={{flexDirection: 'row'}}>
+                            <View 
+                                style={{
+                                    width: fullWidth*0.7,
+                                    height: 2*factorRatio,
+                                    backgroundColor: colors.pianoteRed,
+                                }}
+                            />
+                            <View style={{flex: 1}}/>
+                        </View>
+                        <View 
+                            style={{
+                                width: fullWidth,
+                                height: 15*factorVertical
+                            }}
+                        />
+                        <View style={{flexDirection: 'row'}}>
+                            <View key={'last'}
+                                style={[
+                                    styles.centerContent, {
+                                    flex: 0.2, 
+                                    alignSelf: 'stretch',
+                                                                
+                                }]}
+                            >
+                                <View
+                                    style={{
+                                        height: fullWidth*0.1,
+                                        width: fullWidth*0.1,
+                                        borderRadius: 100,
+                                        borderWidth: 2*factorRatio,
+                                        borderColor: colors.secondBackground,
+                                    }}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {}}
+                                        style={[
+                                            styles.centerContent, {
+                                            height: '100%',
+                                            width: '100%',
+                                        }]}
+                                    >
+                                        <EntypoIcon
+                                            name={'chevron-thin-left'}
+                                            size={22.5*factorRatio}
+                                            color={colors.secondBackground}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View key={'complete'}
+                                style={[
+                                    styles.centerContent, {
+                                    flex: 0.6, 
+                                    alignSelf: 'stretch',
+                                }]}
+                            >
+                                <TouchableOpacity
+                                    style={[
+                                        styles.centerContent, {
+                                        height: fullWidth*0.1,
+                                        width: fullWidth*0.6,
+                                        borderRadius: 100,
+                                        backgroundColor: colors.pianoteRed,
+                                    }]}
+                                >
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontFamily: 'RobotoCondensed-Bold',
+                                            fontSize: 14*factorRatio,
+                                        }}
+                                    >
+                                        COMPLETE {this.state.isCourse ? 'COURSE':'SONG'} 
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View key={'next'}
+                            style={[
+                                styles.centerContent, {
+                                flex: 0.2, 
+                                alignSelf: 'stretch',
+                                                              
+                            }]}
+                        >
+                            <View
+                                style={{
+                                    height: fullWidth*0.1,
+                                    width: fullWidth*0.1,
+                                    borderRadius: 100,
+                                    borderWidth: 2*factorRatio,
+                                    borderColor: colors.pianoteRed,
+                                }}
+                            >
+                                <TouchableOpacity
+                                        onPress={() => {}}
+                                        style={[
+                                            styles.centerContent, {
+                                            height: '100%',
+                                            width: '100%',
+                                        }]}
+                                    >
+                                        <EntypoIcon
+                                            name={'chevron-thin-right'}
+                                            size={22.5*factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
+                                    </TouchableOpacity>
+                            </View>
+                        </View>
+                        </View>
+                    </View>                  
                     <View key={'goBackIcon'}
                         style={[
                             styles.centerContent, {
                             position: 'absolute',
                             left: 10*factorHorizontal,
-                            top: (isNotch) ? 40*factorVertical : 30*factorVertical,
+                            top: (isNotch) ? 55*factorVertical : 45*factorVertical,
                             height: 50*factorRatio,
                             width: 50*factorRatio,
-                            zIndex: 10,
-                            elevation: 10,
-                            backgroundColor: 'transparent',
+                            zIndex: 5,
                         }]}
                     >
                         <TouchableOpacity
@@ -511,7 +644,7 @@ export default class VideoPlayer extends React.Component {
                                 color={'white'}
                             />
                         </TouchableOpacity>
-                    </View>
+                    </View>                  
                 </View>
                 <Modal key={'VideoPlayerOptions'}
                     isVisible={this.state.showVideoPlayerOptions}

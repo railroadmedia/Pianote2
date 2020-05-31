@@ -60,7 +60,7 @@ class Comments extends React.Component {
                         paddingRight: fullWidth*0.03,
                         minHeight: 40*factorVertical,
                         borderTopColor: colors.secondBackground,
-                        borderTopWidth: 1,
+                        borderTopWidth: 0.25,
                         flexDirection: 'row',
                     }}
                 >
@@ -289,9 +289,9 @@ class Comments extends React.Component {
                             <TouchableOpacity onPress={() => {}}>
                                 <IonIcon
                                     style={{transform: [{ rotate: '90deg' }]}}
-                                    size={25*factorRatio}
+                                    size={20*factorRatio}
                                     name={'md-options'}
-                                    color={'#c2c2c2'}
+                                    color={colors.pianoteRed}
                                 />
                             </TouchableOpacity>
                             )}
@@ -463,6 +463,7 @@ class Comments extends React.Component {
                             <TouchableOpacity
                                 onPress={() => {}}
                                 style={{
+                                    flexDirection: 'row',
                                 }}
                             >
                                 <View key={'yourImage'}
@@ -482,6 +483,25 @@ class Comments extends React.Component {
                                         resizeMode={FastImage.resizeMode.stretch}
                                     />
                                     <View style={{flex: 1}}/>
+                                </View>
+                                <View key={'addComment'}
+                                    style={{
+                                        height: '100%',
+                                        width: fullWidth*0.95 - 40*factorHorizontal,
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'left',
+                                            fontFamily: 'OpenSans-Regular',
+                                            fontSize: 13*factorRatio,
+                                            color: 'white',
+                                            paddingLeft: 10*factorHorizontal,
+                                        }}
+                                    >
+                                        Add a comment...
+                                    </Text>
                                 </View>
                             </TouchableOpacity>
                         </TouchableOpacity>

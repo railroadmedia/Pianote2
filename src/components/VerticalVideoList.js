@@ -532,7 +532,6 @@ class VerticalVideoList extends React.Component {
                                     fontSize: 18*factorRatio,
                                     marginBottom: 5*factorVertical,
                                     textAlign: 'left', 
-                                    fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
                                     fontFamily: 'RobotoCondensed-Bold',
                                     color: colors.secondBackground,
                                 }}
@@ -541,7 +540,7 @@ class VerticalVideoList extends React.Component {
                             </Text>
                         </View>
                         <View style={{flex: 1}}/>
-                        
+                        {!this.props.showTitleOnly && (
                         <View 
                             style={{
                                 paddingRight: 10*factorHorizontal,
@@ -585,10 +584,10 @@ class VerticalVideoList extends React.Component {
                                 <View style={{flex: 1}}/>
                             </TouchableOpacity>
                         </View>
-
+                        )}
                     </View>
                     )}
-                    {this.props.showFilter && (
+                    {!this.props.showTitleOnly && this.props.showFilter && (
                     <View>
                         <View 
                             style={{
