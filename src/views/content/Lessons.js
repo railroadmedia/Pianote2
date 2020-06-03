@@ -40,7 +40,6 @@ export default class Lessons extends React.Component {
 
     async componentDidMount() {
         let profileImage = await AsyncStorage.getItem('profileURI')
-        console.log(profileImage)
         if(profileImage !== null) {
             await this.setState({profileImage})
         }
@@ -449,28 +448,3 @@ export default class Lessons extends React.Component {
         )
     }
 }
-
-/**
- * 
-<View key={'songs'}
-    style={{
-        height: fullHeight*0.27,
-        paddingLeft: fullWidth*0.035,
-        backgroundColor: colors.mainBackground,
-    }}
->
-    <HorizontalVideoList
-        Title={'SONGS'}
-        Description={''}
-        seeAll={() => {
-            this.props.navigation.navigate('SONGCATALOG')
-        }}
-        showArtist={false}
-        items={this.state.songs}
-        forceSquareThumbs={false}
-        itemWidth={fullHeight*0.15}
-        itemHeight={fullHeight*0.15}
-    />
-</View>
-                       
- */

@@ -16,9 +16,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import Topic from 'Pianote2/src/assets/img/svgs/topics.svg';
 import Levels from 'Pianote2/src/assets/img/svgs/levels.svg';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
-import ChooseYourLevel from '../../modals/ChooseYourLevel.js';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
-import ChooseInstructors from '../../modals/ChooseInstructors.js';
 import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -718,90 +716,7 @@ export default class CourseCatalog extends React.Component {
                             imageWidth={fullWidth*0.26}
                         />
                     </ScrollView>
-                </View>
-                <Modal key={'chooseLevel'}
-                    isVisible={this.state.showChooseYourLevel}
-                    style={[
-                        styles.centerContent, {
-                        margin: 0,
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <ChooseYourLevel
-                        setLevel={(bool) => this.setState({levelChosen: bool})}
-                        circle1={this.state.circle1}
-                        circle2={this.state.circle2}
-                        circle3={this.state.circle3}
-                        circle4={this.state.circle4}
-                        circle5={this.state.circle5}
-                        circle6={this.state.circle6}
-                        circle7={this.state.circle7}
-                        circle8={this.state.circle8}
-                        circle9={this.state.circle9}
-                        circle10={this.state.circle10}
-                        hideChooseYourLevel={(c1,c2,c3,c4,c5,c6,c7,c8,c9,c10) => {
-                            this.setState({
-                                circle1: c1,
-                                circle2: c2,
-                                circle3: c3,
-                                circle4: c4,
-                                circle5: c5,
-                                circle6: c6,
-                                circle7: c7,
-                                circle8: c8,
-                                circle9: c9,
-                                circle10: c10,
-                                showChooseYourLevel: false
-                            })
-                        }}
-                    />
-                </Modal>
-                <Modal key={'chooseInstructor'}
-                    isVisible={this.state.showChooseInstructors}
-                    style={[
-                        styles.centerContent, {
-                        margin: 0,
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <ChooseInstructors
-                        setInstructor={(bool) => this.setState({instructorChosen: bool})}
-                        lisa={this.state.lisa}
-                        cassi={this.state.cassi}
-                        jordan={this.state.jordan}
-                        nate={this.state.nate}
-                        brett={this.state.brett}
-                        jonny={this.state.jonny}
-                        jay={this.state.jay}
-                        kenny={this.state.kenny}
-                        hideChooseInstructors={(
-                            lisa, cassi, jordan, nate, brett, jonny, kenny, jay) => {
-                            this.setState({
-                                lisa,
-                                cassi,
-                                jordan,
-                                nate,
-                                brett,
-                                jonny,
-                                kenny,
-                                jay,
-                                showChooseInstructors: false
-                            })
-                        }}
-                    />
-                </Modal>                
+                </View>      
                 <Modal key={'navMenu'}
                         isVisible={this.state.showModalMenu}
                         style={{

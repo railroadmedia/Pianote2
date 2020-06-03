@@ -6,6 +6,7 @@ import {
     View, 
     Text,
     ScrollView, 
+    TouchableOpacity,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
@@ -15,8 +16,8 @@ import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
+import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
@@ -78,7 +79,132 @@ export default class LearningPaths extends React.Component {
     render() {
         return (
             <View styles={styles.container}>
-                <View key={'contentContainer'}
+                <View
+                    style={{
+                        height: fullHeight - navHeight, 
+                        alignSelf: 'stretch',
+                        zIndex: 1,
+                        elevation: 1, 
+                    }}
+                >                    
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        contentInsetAdjustmentBehavior={'never'}
+                        style={{
+                            flex: 1, 
+                            backgroundColor: colors.mainBackground,
+                        }}
+                    >
+                        <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
+                        <View key={'header'}
+                            style={{
+                                height: fullHeight*0.1,
+                                backgroundColor: colors.thirdBackground,
+                            }}
+                        />
+                        <View key={'image'}
+                            style={[
+                                styles.centerContent, {
+                                height: fullHeight*0.32,
+                            }]}
+                        >
+                            <GradientFeature
+                                color={'blue'}
+                                opacity={1}
+                                height={'100%'}
+                                borderRadius={0}
+                            />
+                            <FastImage
+                                style={{
+                                    flex: 1, 
+                                    alignSelf: 'stretch', 
+                                    backgroundColor: colors.mainBackground,
+                                }}
+                                source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
+                            <View key={'pianoteSVG'}
+                                style={{
+                                    position: 'absolute',
+                                    height: '100%',
+                                    width: fullWidth,
+                                    zIndex: 2,
+                                    elevation: 2,
+                                }}
+                            >
+                                <View style={{flex: 0.4}}/>
+                                <View style={{flexDirection: 'row'}}>
+                                    <View style={{flex: 1}}/>
+                                    <Pianote
+                                        height={fullHeight*0.03}
+                                        width={fullWidth*0.35}
+                                        fill={'white'}
+                                    />
+                                    <View style={{flex: 1}}/>
+                                </View>
+                                <Text key={'foundations'}
+                                    style={{
+                                        fontSize: 60*factorRatio,
+                                        fontWeight: '700',
+                                        color: 'white',
+                                        fontFamily: 'RobotoCondensed-Regular',
+                                        transform: [{ scaleX: 0.7}],
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    FOUNDATIONS
+                                </Text>
+                                <View style={{flex: 0.6}}/>
+                                <StartIcon
+                                    pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
+                                    buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
+                                    pxFromLeft={fullWidth*0.065}
+                                    buttonWidth={fullWidth*0.42}
+                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
+                                />
+                                <MoreInfoIcon
+                                    pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
+                                    buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
+                                    pxFromRight={fullWidth*0.065}
+                                    buttonWidth={fullWidth*0.42}
+                                    pressed={() => this.props.navigation.navigate('PATHOVERVIEW')}
+                                />  
+                            </View> 
+                        </View>
+                        <View style={{height: 5*factorRatio}}/>
+                        <VerticalVideoList
+                            title={'ALL LESSONS'}
+                            outVideos={this.state.outVideos}
+                            //getVideos={() => this.getContent()}
+                            renderType={'Mapped'}
+                            showFilter={true}
+                            items={this.state.items}
+                            imageRadius={5*factorRatio}
+                            containerBorderWidth={0}
+                            containerWidth={fullWidth}
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (
+                                Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
+                            }
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (
+                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                            }
+                            imageWidth={fullWidth*0.26}
+                        />
+                    </ScrollView>
+                    <NavigationBar
+                        currentPage={'LESSONS'}
+                    />
+                </View>
+                <NavigationBar
+                    currentPage={'LessonsLearningPaths'}
+                />
+            </View>
+        )
+    }
+}
+                            
+/**
+<View key={'contentContainer'}
                     style={{
                         height: fullHeight*0.90625 - navHeight,
                         width: fullWidth,
@@ -183,7 +309,7 @@ export default class LearningPaths extends React.Component {
                                 pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
                             />
                             <MoreInfoIcon
-                                pxFromTop={(onTablet) ? fullHeight*0.505 : fullHeight*0.51}
+                     d           pxFromTop={(onTablet) ? fullHeight*0.505 : fullHeight*0.51}
                                 buttonHeight={(onTablet) ? fullHeight*0.06 : fullHeight*0.053}
                                 pxFromRight={fullWidth*0.065}
                                 buttonWidth={fullWidth*0.42}
@@ -218,30 +344,5 @@ export default class LearningPaths extends React.Component {
                         </View>
                     </ScrollView>
                 </View>
-                <Modal key={'navMenu'}
-                    isVisible={this.state.showModalMenu}
-                    style={{
-                        margin: 0, 
-                        height: fullHeight,
-                        width: fullWidth,
-                    }}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={true}
-                    hasBackdrop={false}
-                >
-                    <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
-                        menu={this.state.menu}
-                        parentPage={this.state.parentPage}
-                    />
-                </Modal>
-                <NavigationBar
-                    currentPage={'LessonsLearningPaths'}
-                />
-            </View>
-        )
-    }
-}
-                            
+                
+ */

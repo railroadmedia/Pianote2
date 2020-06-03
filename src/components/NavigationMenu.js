@@ -38,15 +38,12 @@ class NavigationMenu extends React.Component {
                         <Text
                             style={{
                                 fontFamily: 'OpenSans-Regular',
-                                color: (this.props.parentPage == 'LEARNING PATHES') ? 
-                                    colors.secondBackground : 'white',
-                                fontSize: (this.props.parentPage == 'LEARNING PATHES' ? 25 : 21) + 
-                                        (onTablet ? 27.5 : 0),
-                                fontWeight: (Platform.OS == 'android') ? 'bold' : (this.props.parentPage == 'LEARNING PATHES') ? 
-                                    '900' : '700',
+                                color: (this.props.parentPage == 'LEARNING PATHES') ? 'white' : colors.secondBackground,
+                                fontSize: (this.props.parentPage == 'LEARNING PATHES' ? 30*factorRatio : 25*factorRatio) + (onTablet ? 27.5 : 0),
+                                fontWeight: 'bold',
                             }}
                         >
-                            LEARNING PATHES
+                            Learning Paths
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -58,22 +55,19 @@ class NavigationMenu extends React.Component {
                     <TouchableOpacity
                         onPress={() => {
                             this.props.onClose(false),
-                            this.props.navigation.navigate('COURSECATALOG')
+                            this.props.navigation.navigate('COURSE')
                         }}
                         style={{flex: 1}}
                     >
                         <Text
                             style={{
                                 fontFamily: 'OpenSans-Regular',
-                                color: (this.props.parentPage == 'COURSES') ? 
-                                    colors.secondBackground : 'white',
-                                fontSize: (this.props.parentPage == 'COURSES' ? 25 : 21) + 
-                                        (onTablet ? 27.5 : 0),
-                                fontWeight: (Platform.OS == 'android') ? 'bold' : (this.props.parentPage == 'COURSES') ? 
-                                    '900' : '700',
+                                color: (this.props.parentPage == 'COURSES') ? 'white' : colors.secondBackground,
+                                fontSize: (this.props.parentPage == 'COURSES' ? 30*factorRatio : 25*factorRatio) + (onTablet ? 27.5 : 0),
+                                fontWeight: 'bold',
                             }}
                         >
-                            COURSES
+                            Courses
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -92,15 +86,12 @@ class NavigationMenu extends React.Component {
                         <Text
                             style={{
                                 fontFamily: 'OpenSans-Regular',
-                                color: (this.props.parentPage == 'SONGS') ? 
-                                    colors.secondBackground : 'white',
-                                fontSize: (this.props.parentPage == 'SONGS' ? 25 : 21) + 
-                                        (onTablet ? 27.5 : 0),
-                                fontWeight: (Platform.OS == 'android') ? 'bold' : (this.props.parentPage == 'SONGS') ? 
-                                    '900' : '700',
+                                color: (this.props.parentPage == 'SONGS') ? 'white' : colors.secondBackground,
+                                fontSize: (this.props.parentPage == 'SONGS' ? 30*factorRatio : 25*factorRatio) + (onTablet ? 27.5 : 0),
+                                fontWeight: 'bold',
                             }}
                         >
-                            SONGS
+                            Songs
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -119,15 +110,12 @@ class NavigationMenu extends React.Component {
                         <Text
                             style={{
                                 fontFamily: 'OpenSans-Regular',
-                                color: (this.props.parentPage == 'STUDENT FOCUS') ? 
-                                    colors.secondBackground : 'white',
-                                fontSize: (this.props.parentPage == 'STUDENT FOCUS' ? 25 : 21) + 
-                                        (onTablet ? 27.5 : 0),
-                                fontWeight: (Platform.OS == 'android') ? 'bold' : (this.props.parentPage == 'STUDENT FOCUS') ? 
-                                    '900' : '700',
+                                color: (this.props.parentPage == 'STUDENT FOCUS') ? 'white' : colors.secondBackground,
+                                fontSize: (this.props.parentPage == 'STUDENT FOCUS' ? 30*factorRatio : 25*factorRatio) + (onTablet ? 27.5 : 0),
+                                fontWeight: 'bold',
                             }}
                         >
-                            STUDENT FOCUS
+                            Student Focus
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -153,7 +141,7 @@ class NavigationMenu extends React.Component {
                         height: fullHeight,
                         width: fullWidth,
                     }]}
-                    blurType={'extraDark'}
+                    blurType={'dark'}
                     blurAmount={15}
                 />
                 <View
@@ -164,7 +152,7 @@ class NavigationMenu extends React.Component {
                         width: fullWidth,
                     }}
                 >
-                    <View style={{flex: 0.225, alignSelf: 'stretch'}}/>
+                    <View style={{flex: 0.4, alignSelf: 'stretch'}}/>
                     <View key={'menuItems'} 
                         style={{alignSelf: 'stretch'}}
                     >

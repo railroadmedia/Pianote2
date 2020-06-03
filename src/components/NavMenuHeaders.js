@@ -22,7 +22,6 @@ class NavMenuHeaders extends React.Component {
         }
     }
 
-
     render = () => {
         return (
             <View 
