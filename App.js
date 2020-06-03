@@ -1,9 +1,9 @@
 /**
  *  Router
  */
+import { Animated } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { Animated } from 'react-native';
 
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';

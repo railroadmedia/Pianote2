@@ -22,9 +22,26 @@ export default class Filters extends React.Component {
             openProgress: false,
             openInstructors: false,
             all: false,
+            filter1: false,
+            filter2: false,
+            filter3: false,
+            filter4: false,
+            filter5: false,
+            filter6: false,
+            filter7: false,
+            filter8: false,
+            kenny: false,
+            lisa: false,
+            cassi: false,
+            jay: false,
+            jordan: false, 
+            jonny: false,
+            brett: false,
+            nate: false,
             progressAll: false,
             progressProgress: false,
             progressComplete: false,
+            allLevels: false,
 
         }
     }
@@ -124,7 +141,7 @@ export default class Filters extends React.Component {
                                 }]}
                             >
                                 <MultiSlider
-                                    min={0}
+                                    min={1}
                                     max={10}
                                     step={1}
                                     snapped={true}
@@ -142,8 +159,8 @@ export default class Filters extends React.Component {
                                         height: 5*factorHorizontal,
                                     }}
                                     markerStyle={{
-                                        height: 17.5*factorRatio,
-                                        width: 17.5*factorRatio,
+                                        height: (this.state.allLevels) ? 0 : 17.5*factorRatio,
+                                        width: (this.state.allLevels) ? 0 : 17.5*factorRatio,
                                         marginBottom: 0,
                                         borderRadius: 40,
                                         backgroundColor: colors.pianoteRed,
@@ -161,7 +178,7 @@ export default class Filters extends React.Component {
                                     color: 'white',
                                 }}
                             >
-                                LEVEL {this.state.level}
+                                {(this.state.allLevels) ? 'ALL LEVELS' : 'LEVEL ' + this.state.level}
                             </Text>
                             <View style={{height: 10*factorRatio}}/>
                             <Text
@@ -177,7 +194,7 @@ export default class Filters extends React.Component {
                                 Occasion endeavor of soon rank be most head time tore. Colonel or passage to ability. 
                             </Text>
                             <View style={{height: 10*factorRatio}}/>
-                            <View key={'topicsSelected'}
+                            <View key={'allLevels'}
                                 style={{
                                     minHeight: 70*factorVertical,
                                     borderBottomWidth: 0.5*factorRatio,
@@ -194,7 +211,13 @@ export default class Filters extends React.Component {
                                     }}
                                 >
                                     <View style={{flex: 1}}/>
-                                    <View
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                allLevels: !this.state.allLevels,
+                                                level: 10,
+                                            })
+                                        }}
                                         style={[ 
                                             styles.centerContent, {
                                             height: 30*factorVertical,
@@ -202,7 +225,8 @@ export default class Filters extends React.Component {
                                             marginRight: fullWidth*0.01,
                                             marginLeft: fullWidth*0.01,
                                             borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
+                                            borderColor: (this.state.allLevels) ? 'transparent' : colors.secondBackground,
+                                            backgroundColor: (this.state.allLevels) ? 'red' : 'transparent',
                                             borderRadius: 200,
                                         }]}
                                     >
@@ -212,214 +236,14 @@ export default class Filters extends React.Component {
                                                 fontWeight: 'bold',
                                                 fontSize: 12*factorRatio,
                                                 fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
+                                                color: (this.state.allLevels) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             ALL
                                         </Text>                                
-                                    </View>
-                                    {false && (
-                                    <View
-                                        style={[ 
-                                            styles.centerContent, {
-                                            height: 30*factorVertical,
-                                            width: fullWidth*0.3,
-                                            marginRight: fullWidth*0.01,
-                                            marginLeft: fullWidth*0.01,
-                                            borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
-                                        </Text>                                
-                                    </View>
-                                    )}
-                                    {false && (
-                                    <View
-                                        style={[ 
-                                            styles.centerContent, {
-                                            height: 30*factorVertical,
-                                            width: fullWidth*0.3,
-                                            marginRight: fullWidth*0.01,
-                                            marginLeft: fullWidth*0.01,
-                                            borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
-                                        </Text>                                
-                                    </View>
-                                    )}    
+                                    </TouchableOpacity>
                                     <View style={{flex: 1}}/>
                                 </View>
-                                <View style={{height: 10*factorRatio}}/>
-                                {false && (
-                                <View
-                                    style={{
-                                        height: 30*factorVertical,
-                                        justifyContent: 'space-around',
-                                        alignContent: 'space-around',
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View
-                                        style={[ 
-                                            styles.centerContent, {
-                                            height: 30*factorVertical,
-                                            width: fullWidth*0.3,
-                                            marginRight: fullWidth*0.01,
-                                            marginLeft: fullWidth*0.01,
-                                            borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
-                                        </Text>                                
-                                    </View>
-                                    <View
-                                        style={[ 
-                                            styles.centerContent, {
-                                            height: 30*factorVertical,
-                                            width: fullWidth*0.3,
-                                            marginRight: fullWidth*0.01,
-                                            marginLeft: fullWidth*0.01,
-                                            borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
-                                        </Text>                                
-                                    </View>
-                                    <View
-                                        style={[ 
-                                            styles.centerContent, {
-                                            height: 30*factorVertical,
-                                            width: fullWidth*0.3,
-                                            marginRight: fullWidth*0.01,
-                                            marginLeft: fullWidth*0.01,
-                                            borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
-                                        </Text>                                
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                )}
-                                <View style={{height: 10*factorRatio}}/>
-                                {false && (
-                                <View
-                                    style={{
-                                        height: 30*factorVertical,
-                                        justifyContent: 'space-around',
-                                        alignContent: 'space-around',
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View
-                                        style={[ 
-                                            styles.centerContent, {
-                                            height: 30*factorVertical,
-                                            width: fullWidth*0.3,
-                                            marginRight: fullWidth*0.01,
-                                            marginLeft: fullWidth*0.01,
-                                            borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
-                                        </Text>                                
-                                    </View>
-                                    <View
-                                        style={[ 
-                                            styles.centerContent, {
-                                            height: 30*factorVertical,
-                                            width: fullWidth*0.3,
-                                            marginRight: fullWidth*0.01,
-                                            marginLeft: fullWidth*0.01,
-                                            borderWidth: 0.5*factorRatio,
-                                            borderColor: colors.secondBackground,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12*factorRatio,
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
-                                        </Text>                                
-                                    </View>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                                )}
                                 <View style={{height: 40*factorRatio}}/>
                             </View>
                             <View style={{height: 30*factorVertical}}/>
@@ -452,6 +276,11 @@ export default class Filters extends React.Component {
                                     >
                                         <View style={{flex: 1}}/>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter1: !this.state.filter1
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -459,7 +288,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter1) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter1) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -469,13 +299,18 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter1) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 ALL
                                             </Text>                                
                                         </TouchableOpacity>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter2: !this.state.filter2
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -483,7 +318,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter2) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter2) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -493,13 +329,18 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter2) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 TOPICS
                                             </Text>                                
                                         </TouchableOpacity>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter3: !this.state.filter3
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -507,7 +348,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter3) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter3) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -517,7 +359,7 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter3) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 FROM
@@ -536,6 +378,11 @@ export default class Filters extends React.Component {
                                     >
                                         <View style={{flex: 1}}/>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter4: !this.state.filter4
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -543,7 +390,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter4) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter4) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -553,13 +401,18 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter4) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 THIS
                                             </Text>                                
                                         </TouchableOpacity>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter5: !this.state.filter5
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -567,7 +420,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter5) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter5) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -577,13 +431,18 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter5) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 CONTENT
                                             </Text>                                
                                         </TouchableOpacity>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter6: !this.state.filter6
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -591,7 +450,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter6) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter6) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -601,7 +461,7 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter6) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 TYPE
@@ -620,6 +480,11 @@ export default class Filters extends React.Component {
                                     >
                                         <View style={{flex: 1}}/>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter7: !this.state.filter7
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -627,7 +492,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter7) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter7) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -637,13 +503,18 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter7) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 GO
                                             </Text>                                
                                         </TouchableOpacity>
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter8: !this.state.filter8
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
@@ -651,7 +522,8 @@ export default class Filters extends React.Component {
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
                                                 borderWidth: 0.5*factorRatio,
-                                                borderColor: colors.secondBackground,
+                                                borderColor: (this.state.filter8) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter8) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
                                         >
@@ -661,7 +533,7 @@ export default class Filters extends React.Component {
                                                     fontWeight: 'bold',
                                                     fontSize: 12*factorRatio,
                                                     fontFamily: 'OpenSans-Regular',
-                                                    color: colors.secondBackground,
+                                                    color: (this.state.filter8) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
                                                 HERE
@@ -935,7 +807,7 @@ export default class Filters extends React.Component {
                                                 fontSize: 11*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.kenny) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             KENNY WERNER
@@ -969,7 +841,7 @@ export default class Filters extends React.Component {
                                                 fontSize: 10*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.lisa) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             LISA WITT
@@ -1004,16 +876,14 @@ export default class Filters extends React.Component {
                                                 fontSize: 10*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.cassi) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             CASSI FALK
                                         </Text>
                                     </View>
                                     <View key={'circle3'}
-                                        style={{
-                                            width: 70*factorRatio,
-                                        }}
+                                        style={{width: 70*factorRatio}}
                                     >
                                         <TouchableOpacity
                                             onPress={() => this.setState({jordan: !this.state.jordan})}
@@ -1039,7 +909,7 @@ export default class Filters extends React.Component {
                                                 fontSize: 10*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.jordan) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             JORDAN LEIBEL
@@ -1056,9 +926,7 @@ export default class Filters extends React.Component {
                                     }}
                                 >
                                     <View key={'circle4'}
-                                        style={{
-                                            width: 70*factorRatio,
-                                        }}
+                                        style={{width: 70*factorRatio}}
                                     >
                                         <TouchableOpacity
                                             onPress={() => this.setState({nate: !this.state.nate})}
@@ -1084,16 +952,14 @@ export default class Filters extends React.Component {
                                                 fontSize: 11*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.nate) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             NATE BOSCH
                                         </Text>
                                     </View>
                                     <View key={'circle5'}
-                                        style={{
-                                            width: 70*factorRatio,
-                                        }}
+                                        style={{width: 70*factorRatio}}
                                     >
                                         <TouchableOpacity
                                             onPress={() => this.setState({brett: !this.state.brett})}
@@ -1119,7 +985,7 @@ export default class Filters extends React.Component {
                                                 fontSize: 10*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.brett) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             BRETT ZIEGLER
@@ -1154,7 +1020,7 @@ export default class Filters extends React.Component {
                                                 fontSize: 11*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.jonny) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             JONNY TOBIN
@@ -1189,7 +1055,7 @@ export default class Filters extends React.Component {
                                                 fontSize: 10*factorRatio,
                                                 textAlign: 'center',
                                                 fontWeight: 'bold',
-                                                color: colors.secondBackground,
+                                                color: (this.state.jay) ? 'white' : colors.secondBackground,
                                             }}
                                         >
                                             JAY OLIVER
@@ -1243,6 +1109,34 @@ export default class Filters extends React.Component {
                             <View style={{flex: 1}}/>
                             <View style={styles.centerContent}>
                                 <TouchableOpacity
+                                    onPress={() => {
+                                        this.setState({
+                                            level: 3,
+                                            openProgress: false,
+                                            openInstructors: false,
+                                            all: false,
+                                            filter1: false,
+                                            filter2: false,
+                                            filter3: false,
+                                            filter4: false,
+                                            filter5: false,
+                                            filter6: false,
+                                            filter7: false,
+                                            filter8: false,
+                                            kenny: false,
+                                            lisa: false,
+                                            cassi: false,
+                                            jay: false,
+                                            jordan: false, 
+                                            jonny: false,
+                                            brett: false,
+                                            nate: false,
+                                            progressAll: false,
+                                            progressProgress: false,
+                                            progressComplete: false,
+                                            allLevels: false,
+                                        })
+                                    }}
                                     style={[
                                         styles.centerContent, {
                                         height: fullHeight*0.05,
