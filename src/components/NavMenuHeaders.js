@@ -76,10 +76,7 @@ class NavMenuHeaders extends React.Component {
                         </View>
                         <TouchableOpacity key={'lessons'}
                             onPress={() => {
-                                (this.props.currentPage == 'LESSONS') ? 
                                 this.setState({showModalMenu: true})
-                                :
-                                this.props.navigation.navigate('LESSONS')
                             }}
                         >
                             <View style={{flex: 2}}/>
@@ -175,7 +172,7 @@ class NavMenuHeaders extends React.Component {
                     <NavigationMenu
                         onClose={(e) => this.setState({showModalMenu: e})}
                         menu={this.state.menu}
-                        parentPage={this.state.parentPage}
+                        parentPage={this.props.parentPage}
                     />
                 </Modal>
             </View>

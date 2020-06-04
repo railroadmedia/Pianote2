@@ -114,6 +114,7 @@ export default class Course extends React.Component {
                     >
                         <NavMenuHeaders
                             currentPage={'LESSONS'}
+                            parentPage={'COURSES'}
                         />
                     </View>
                     

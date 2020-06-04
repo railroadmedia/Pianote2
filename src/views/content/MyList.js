@@ -135,6 +135,11 @@ export default class MyList extends React.Component {
                         </Text>
                         <View style={{height: 30*factorVertical}}/>
                         <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.navigate(
+                                    'SEEALL', {title: 'In Progress'}
+                                )
+                            }}
                             style={{
                                 height: fullHeight*0.075,
                                 width: fullWidth,
@@ -225,12 +230,8 @@ export default class MyList extends React.Component {
                             imageRadius={5*factorRatio}
                             containerBorderWidth={0}
                             containerWidth={fullWidth}
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
-                            }
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.07
-                            }
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925}
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.07}
                             imageWidth={fullWidth*0.26}
                         />                    
                     </ScrollView>

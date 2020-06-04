@@ -99,6 +99,7 @@ export default class SongCatalog extends React.Component {
                     >
                         <NavMenuHeaders
                             currentPage={'LESSONS'}
+                            parentPage={'SONGS'}
                         />
                     </View>
                     <ScrollView

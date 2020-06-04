@@ -17,7 +17,6 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
@@ -133,6 +132,7 @@ export default class Lessons extends React.Component {
                 >
                     <NavMenuHeaders
                         currentPage={'LESSONS'}
+                        parentPage={'LESSONS'}
                     /> 
                 </View>
                 <View
@@ -425,25 +425,6 @@ export default class Lessons extends React.Component {
                         currentPage={'LESSONS'}
                     />
                 </View>
-                <Modal key={'navMenu'}
-                    isVisible={this.state.showModalMenu}
-                    style={{
-                        margin: 0, 
-                        height: fullHeight,
-                        width: fullWidth,
-                    }}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={true}
-                    hasBackdrop={false}
-                >
-                    <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
-                        menu={this.state.menu}
-                        parentPage={this.state.parentPage}
-                    />
-                </Modal>
             </View>
         )
     }

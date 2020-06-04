@@ -55,7 +55,7 @@ class HorizontalVideoList extends React.Component {
     render = () => {
         return (
             <View style={styles.container}>
-                <View style={[styles.centerContent, {flex: 1}]}>
+                <View style={[styles.centerContent, {minHeight: this.props.itemHeight}]}>
                     <View key={'container'}
                         style={[
                             styles.centerContent, {

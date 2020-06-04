@@ -94,7 +94,8 @@ export default class StudentFocusCatalog extends React.Component {
                         }}
                     >
                         <NavMenuHeaders
-                            currentPage={'STUDENT FOCUS'}
+                            currentPage={'LESSONS'}
+                            parentPage={'STUDENT FOCUS'}
                         />
                     </View>
                     <ScrollView

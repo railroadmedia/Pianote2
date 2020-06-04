@@ -11,14 +11,12 @@ import {
 } from 'react-native';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Student from 'Pianote2/src/assets/img/svgs/student.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
-import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-selected.svg';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
 export default class SeeAll extends React.Component {
@@ -76,27 +74,6 @@ export default class SeeAll extends React.Component {
             })
 
         }
-    }
-
-
-    pressFilters = async () => {
-        await this.setState({
-            filterClicked: !this.state.filterClicked
-        })
-
-        await Animated.timing(
-            this.state.filterSize, {
-                toValue: (this.state.filterClicked) ? 0.25 : 0,
-                duration : 250,
-            }
-        ).start();
-        
-        await Animated.timing(
-            this.state.listSize, {
-            toValue: (this.state.filterClicked) ? 0.35 : 0.6,
-            duration : 250,
-            }
-        ).start();
     }
 
 
@@ -515,14 +492,9 @@ export default class SeeAll extends React.Component {
                                 renderType={'Mapped'}
                                 items={this.state.items}
                                 imageRadius={10*factorRatio}
-                                containerBorderWidth={1}
                                 containerWidth={fullWidth}
-                                containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.09
-                                }
-                                imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.0625
-                                }
+                                containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925}
+                                imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.07}
                                 imageWidth={fullWidth*0.26}
                             />
                         </ScrollView>
