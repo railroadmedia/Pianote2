@@ -19,9 +19,6 @@ class NavigationBar extends React.Component {
         super(props);
         this.state = {
             profileImage: '',
-            onHome: false,
-            onSearch: false,
-            onDownload: false,
             hasNotch: 0,
         }
     }

@@ -8,7 +8,6 @@ import {
     ScrollView,
     TouchableOpacity
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';

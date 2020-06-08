@@ -15,10 +15,8 @@ import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
@@ -93,6 +91,7 @@ export default class PathOverview extends React.Component {
                         contentInsetAdjustmentBehavior={'never'}
                         style={{flex: 1, backgroundColor: colors.mainBackground}}
                     >
+                        <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
                         <View key={'image'}
                             style={[
                                 styles.centerContent, {
@@ -113,7 +112,7 @@ export default class PathOverview extends React.Component {
                                     styles.centerContent, {
                                     position: 'absolute',
                                     left: 10*factorHorizontal,
-                                    top: (isNotch) ? 40*factorVertical : 30*factorVertical,
+                                    top: (isNotch) ? 20*factorVertical : 10*factorVertical,
                                     height: 50*factorRatio,
                                     width: 50*factorRatio,
                                     zIndex: 10,
@@ -150,7 +149,6 @@ export default class PathOverview extends React.Component {
                                         color: 'white',
                                         textAlign: 'center',
                                         fontSize: 24*factorRatio,
-
                                     }}
                                 >
                                     {'The Four Pillars \nof Improvisation'}
