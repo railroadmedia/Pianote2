@@ -16,7 +16,6 @@ import {
 import { ContentModel } from '@musora/models';
 import { searchContent } from '@musora/services';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Student from 'Pianote2/src/assets/img/svgs/student.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';

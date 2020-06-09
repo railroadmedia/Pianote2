@@ -220,7 +220,7 @@ export default class StudentFocusShow extends React.Component {
                                         }}
                                     >
                                         <AntIcon
-                                            name={'infocirlceo'}
+                                            name={(this.state.showInfo) ? 'infocirlce':'infocirlceo'}
                                             size={22*factorRatio}
                                             color={colors.pianoteRed}
                                         />

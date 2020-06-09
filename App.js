@@ -10,7 +10,7 @@ import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';
 import StudentFocusShow from './src/views/content/StudentFocusShow.js';
 import VideoPlayerSong from './src/views/content/VideoPlayerSong.js';
 import CourseCatalog from './src/views/content/CourseCatalog.js';
-import LearningPaths from './src/views/content/LearningPaths';
+import Foundations from './src/views/content/Foundations';
 import VideoPlayer from './src/views/content/VideoPlayer.js';
 import SongCatalog from './src/views/content/SongCatalog.js';
 import PathOverview from './src/views/content/PathOverview';
@@ -49,7 +49,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: PathOverview,
+    initialRoute: LoadPage, 
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},
@@ -66,7 +66,7 @@ const AppNavigator = createStackNavigator({
     STUDENTFOCUSSHOW: {screen: StudentFocusShow},
     VIDEOPLAYERSONG: {screen: VideoPlayerSong},
     COURSECATALOG: {screen: CourseCatalog},
-    LEARNINGPATHS: {screen: LearningPaths},
+    FOUNDATIONS: {screen: Foundations},
     PATHOVERVIEW: {screen: PathOverview},
     SONGCATALOG: {screen: SongCatalog},
     VIDEOPLAYER: {screen: VideoPlayer},

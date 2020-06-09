@@ -1,5 +1,5 @@
 /**
- * LearningPaths
+ * Foundations
  */
 import React from 'react';
 import { 
@@ -14,6 +14,7 @@ import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -21,10 +22,9 @@ import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
-export default class LearningPaths extends React.Component {
+export default class Foundations extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -237,7 +237,7 @@ export default class LearningPaths extends React.Component {
                                         }}
                                     >
                                         <AntIcon
-                                            name={'infocirlceo'}
+                                            name={(this.state.showInfo) ? 'infocirlce':'infocirlceo'}
                                             size={22*factorRatio}
                                             color={colors.pianoteRed}
                                         />
@@ -275,206 +275,27 @@ export default class LearningPaths extends React.Component {
                                 textAlign: 'center',
                             }}
                         >
-                            Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. 
+                            Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice.
                         </Text>
-                        <View key={'containStats'}>
-                            <View style={{height: 10*factorVertical}}/>
-                            <View key={'stats'}
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 0.22,
-                                    flexDirection: 'row',
-                                }]}
+                        <View style={{height: 10*factorVertical}}/>
+                        <TouchableOpacity>
+                            <Text
+                                style={{
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontSize: 15*factorRatio,
+                                    color: colors.pianoteRed,
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                }}
                             >
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                                <View 
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: 17*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        11
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        LESSONS
-                                    </Text>
-                                </View>
-                                <View style={{width: 15*factorRatio}}/>
-                                <View 
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: 17*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        48
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        MINS
-                                    </Text>
-                                </View>
-                                <View style={{width: 15*factorRatio}}/>
-                                <View 
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: 17*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        2400
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        XP
-                                    </Text>
-                                </View>
-                                
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                            </View>
-                            <View style={{height: 15*factorVertical}}/>
-                            <View key={'buttons'}
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 0.25,
-                                    flexDirection: 'row',
-                                }]}
-                            >
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                                <TouchableOpacity
-                                    onPress={() => {}}
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'like2'}
-                                        size={27.5*factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        34
-                                    </Text>
-                                </TouchableOpacity>
-                                <View style={{width: 15*factorRatio}}/>
-                                <TouchableOpacity
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <MaterialIcon
-                                        name={'arrow-collapse-down'}
-                                        size={27.5*factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        My List
-                                    </Text>
-                                </TouchableOpacity>
-                                <View style={{width: 15*factorRatio}}/>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.setState({
-                                            showRestartCourse: true
-                                        })
-                                    }}
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <MaterialIcon
-                                        name={'replay'}
-                                        size={27.5*factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        Restart
-                                    </Text>
-                                </TouchableOpacity>
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                            </View>
-                            <View style={{height: 30*factorVertical}}/>
-                        </View>
+                                <EntypoIcon
+                                    name={'controller-play'}
+                                    size={20*factorRatio}
+                                    color={colors.pianoteRed}
+                                />WATCH THE TRAILER
+                            </Text>
+                        </TouchableOpacity>
+                        <View style={{height: 10*factorVertical}}/>
                     </View>
                     )}
                     {this.state.isStarted && (

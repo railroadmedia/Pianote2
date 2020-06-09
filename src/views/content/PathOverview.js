@@ -106,14 +106,14 @@ export default class PathOverview extends React.Component {
                                 }}
                                 source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
                                 resizeMode={FastImage.resizeMode.cover}
-                            />  
+                            />
                             <View key={'goBackIcon'}
                                 style={[
                                     styles.centerContent, {
                                     position: 'absolute',
                                     left: 10*factorHorizontal,
                                     top: (isNotch) ? 20*factorVertical : 10*factorVertical,
-                                    height: 50*factorRatio,
+                                     height: 50*factorRatio,
                                     width: 50*factorRatio,
                                     zIndex: 10,
                                     elevation: 10,
@@ -237,7 +237,7 @@ export default class PathOverview extends React.Component {
                                             }}
                                         >
                                             <AntIcon
-                                                name={'infocirlceo'}
+                                                name={(this.state.showInfo) ? 'infocirlce':'infocirlceo'}
                                                 size={22*factorRatio}
                                                 color={colors.pianoteRed}
                                             />
