@@ -9,7 +9,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';
 import StudentFocusShow from './src/views/content/StudentFocusShow.js';
 import VideoPlayerSong from './src/views/content/VideoPlayerSong.js';
-import CourseCatalog from './src/views/content/CourseCatalog.js';
+import FoundationsLevel from './src/views/content/FoundationsLevel.js';
 import Foundations from './src/views/content/Foundations';
 import VideoPlayer from './src/views/content/VideoPlayer.js';
 import SongCatalog from './src/views/content/SongCatalog.js';
@@ -49,7 +49,7 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator({
-    initialRoute: LoadPage, 
+    initialRoute: FoundationsLevel, 
 
     // user
     NOTIFICATIONSETTINGS: {screen: NotificationSettings},
@@ -65,7 +65,7 @@ const AppNavigator = createStackNavigator({
     STUDENTFOCUSCATALOG: {screen: StudentFocusCatalog},
     STUDENTFOCUSSHOW: {screen: StudentFocusShow},
     VIDEOPLAYERSONG: {screen: VideoPlayerSong},
-    COURSECATALOG: {screen: CourseCatalog},
+    FOUNDATIONSLEVEL: {screen: FoundationsLevel},
     FOUNDATIONS: {screen: Foundations},
     PATHOVERVIEW: {screen: PathOverview},
     SONGCATALOG: {screen: SongCatalog},

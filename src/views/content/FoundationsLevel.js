@@ -1,5 +1,5 @@
 /**
- * Foundations
+ * FoundationsLevel
  */
 import React from 'react';
 import { 
@@ -7,24 +7,23 @@ import {
     Text,
     ScrollView, 
     TouchableOpacity,
-    Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
-export default class Foundations extends React.Component {
+export default class FoundationsLevel extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -91,21 +90,6 @@ export default class Foundations extends React.Component {
             <View styles={styles.container}>
             <View
                 style={{
-                    height: fullHeight*0.1,
-                    width: fullWidth,
-                    position: 'absolute',
-                    zIndex: 2, 
-                    elevation: 2,
-                    alignSelf: 'stretch', 
-                }}
-            >
-                <NavMenuHeaders
-                    currentPage={'LESSONS'}
-                    parentPage={'FOUNDATIONS'}
-                /> 
-            </View>
-            <View
-                style={{
                     height: fullHeight - navHeight, 
                     alignSelf: 'stretch',
                     zIndex: 1,
@@ -120,30 +104,41 @@ export default class Foundations extends React.Component {
                         backgroundColor: colors.mainBackground,
                     }}
                 >
-                    <View key={'backgroundColoring'}
-                        style={{
-                            backgroundColor: colors.thirdBackground,
-                            position: 'absolute',
-                            height: fullHeight,
-                            top: -fullHeight,
-                            left: 0,
-                            right: 0,
-                            zIndex: 10,
-                            elevation: 10,
-                        }}
-                    />
-                    <View key={'header'}
-                        style={{
-                            height: fullHeight*0.1,
-                            backgroundColor: colors.thirdBackground,
-                        }}
-                    />
+                    <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
                     <View key={'image'}
                         style={[
                             styles.centerContent, {
-                            height: fullHeight*0.32,
+                            height: fullHeight*0.33,
                         }]}
                     >
+                        <View key={'goBackIcon'}
+                            style={[
+                                styles.centerContent, {
+                                position: 'absolute',
+                                left: 10*factorHorizontal,
+                                top: (isNotch) ? 20*factorVertical : 10*factorVertical,
+                                    height: 50*factorRatio,
+                                width: 50*factorRatio,
+                                zIndex: 10,
+                                elevation: 10,
+                            }]}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.goBack()
+                                }}
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                }}
+                            >
+                                <EntypoIcon
+                                    name={'chevron-thin-left'}
+                                    size={27.5*factorRatio}
+                                    color={'white'}
+                                />
+                            </TouchableOpacity>
+                        </View>
                         <GradientFeature
                             color={'blue'}
                             opacity={1}
@@ -180,21 +175,33 @@ export default class Foundations extends React.Component {
                             </View>
                             <Text key={'foundations'}
                                 style={{
-                                    fontSize: 60*factorRatio,
+                                    fontSize: 30*factorRatio,
                                     fontWeight: '700',
                                     color: 'white',
                                     fontFamily: 'RobotoCondensed-Regular',
-                                    transform: [{ scaleX: 0.7}],
+                                    transform: [{scaleX: 0.7}],
                                     textAlign: 'center',
                                 }}
                             >
                                 FOUNDATIONS
                             </Text>
+                            <View style={{flex: 0.15}}/>
+                            <Text key={'level'}
+                                style={{
+                                    fontSize: 60*factorRatio,
+                                    fontWeight: '700',
+                                    color: 'white',
+                                    fontFamily: 'RobotoCondensed-Regular',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                LEVEL {this.state.level}
+                            </Text>
                             <View style={{flex: 0.3}}/>
                             <View key={'startIcon'}
-                                style={{height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053}}
+                                style={{height: (onTablet) ? fullHeight*0.065 : fullHeight*0.05}}
                             >
-                                <View key={'thumbs'}
+                                <View key={'mylist'}
                                     style={[
                                         styles.centerContent, {
                                         position: 'absolute',
@@ -205,10 +212,34 @@ export default class Foundations extends React.Component {
                                         zIndex: 3,
                                         elevation: 3,
                                     }]}
-                                />
-                                <StartIcon
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {}}
+                                        style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <AntIcon
+                                            name={'plus'} 
+                                            size={27.5*factorRatio} 
+                                            color={colors.pianoteRed}
+                                        />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                color: 'white',
+                                                fontSize: 12*factorRatio,
+                                            }}
+                                        >
+                                            My List
+                                        </Text>
+                                    </TouchableOpacity>
+                                                                 
+                                </View>
+                                <ContinueIcon
                                     pxFromTop={0}
-                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
+                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.05}
                                     pxFromLeft={fullWidth*0.5/2}
                                     buttonWidth={fullWidth*0.5}
                                     pressed={() => this.props.navigation.navigate('COURSECATALOG')}
@@ -277,6 +308,28 @@ export default class Foundations extends React.Component {
                         >
                             Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. 
                         </Text>
+                        <View style={{height: 15*factorVertical}}/>
+                        <TouchableOpacity
+                            onPress={() => {}}
+                            style={{}}
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontSize: 15*factorRatio,
+                                    color: colors.pianoteRed,
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                <EntypoIcon
+                                    name={'controller-play'}
+                                    color={colors.pianoteRed}
+                                    size={15*factorRatio}
+                                /> WATCH THE TRAILER
+                            </Text>
+                        </TouchableOpacity>
+                        <View style={{height: 10*factorVertical}}/>
                         <View key={'containStats'}>
                             <View style={{height: 10*factorVertical}}/>
                             <View key={'stats'}
@@ -477,59 +530,6 @@ export default class Foundations extends React.Component {
                         </View>
                     </View>
                     )}
-                    {this.state.isStarted && (
-                    <View
-                        style={{
-                            height: fullHeight*0.08,
-                            width: fullWidth, 
-                            flexDirection: 'row',
-                        }}
-                    >
-                        <View key={'profileImage'}
-                            style={{
-                                flex: 0.4, 
-                                flexDirection: 'row',
-                                paddingRight: fullWidth*0.035,
-                            }}
-                        >
-                            <View style={{flex: 1}}/>
-                            <View>
-                                <View style={{flex: 1}}/>
-                                <View
-                                    style={{
-                                        height: fullHeight*0.075,
-                                        width: fullHeight*0.075,
-                                        backgroundColor: 'red',
-                                        borderRadius: 200,
-                                        backgroundColor: colors.secondBackground,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{flex: 1, borderRadius: 100, backgroundColor: colors.secondBackground}}
-                                        source={{uri: this.state.profileImage}}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
-                                <View style={{flex: 1}}/>
-                            </View>
-                        </View>
-                        <View style={{flex: 0.6}}>
-                            <View style={{flex: 1}}/>
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'ios') ? '800':'bold',
-                                    color: 'white',
-                                    textAlign: 'left',
-                                    fontSize: 28*factorRatio,                                    
-                                }}
-                            >
-                                LEVEL {this.state.level}
-                            </Text>
-                            <View style={{flex: 1}}/>
-                        </View>                        
-                    </View>
-                    )}
                     <VerticalVideoList
                         title={'ALL LESSONS'}
                         outVideos={this.state.outVideos}
@@ -540,12 +540,11 @@ export default class Foundations extends React.Component {
                         imageRadius={5*factorRatio}
                         containerBorderWidth={0}
                         containerWidth={fullWidth}
-                        containerHeight={fullWidth*0.3}
-                        imageHeight={fullWidth*0.26}
-                        imageWidth={fullWidth*0.26}
-                        navigator={() => {
-                            this.props.navigation.navigate('FOUNDATIONSLEVEL')
-                        }}
+                        containerHeight={(onTablet) ? fullHeight*0.155 : fullHeight*0.115}
+                        imageHeight={(onTablet) ? fullHeight*0.125 : fullHeight*0.087}
+                        imageWidth={fullWidth*0.315}
+                        imageRadius={5*factorRatio}
+                        showLines={true}
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}

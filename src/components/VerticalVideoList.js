@@ -73,9 +73,7 @@ class VerticalVideoList extends React.Component {
                     }}
                 >
                     <TouchableOpacity 
-                        onPress={() => {
-                            this.props.navigation.navigate('VIDEOPLAYER')
-                        }}
+                        onPress={() => {this.props.navigator()}}
                         style={{justifyContent: 'center'}}
                         underlayColor={'transparent'}    
                     >
@@ -201,11 +199,7 @@ class VerticalVideoList extends React.Component {
                         }}
                     >
                         <TouchableOpacity 
-                            onPress={() => {
-                                this.setState({
-                                    showCourse: true,
-                                })
-                            }}
+                            onPress={() => {this.props.navigator()}}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    
                         >
@@ -292,7 +286,7 @@ class VerticalVideoList extends React.Component {
                                 >
                                     <View 
                                         style={{
-                                            backgroundColor: 'pink',
+                                            backgroundColor: '#7c1526',
                                             width: '90%',
                                             height: '100%',
                                             borderRadius: 20,
@@ -531,7 +525,7 @@ class VerticalVideoList extends React.Component {
                                 style={{
                                     fontSize: 18*factorRatio,
                                     marginBottom: 5*factorVertical,
-                                    textAlign: 'left', 
+                                    textAlign: 'left',
                                     fontFamily: 'RobotoCondensed-Bold',
                                     color: colors.secondBackground,
                                 }}
@@ -574,7 +568,7 @@ class VerticalVideoList extends React.Component {
                                 }]}
                             >
                                 <View style={{flex: 1}}/>
-                                <View style={{transform: [{ rotate: '90deg'}]}}>
+                                <View style={{transform: [{rotate: '90deg'}]}}>
                                     <IonIcon 
                                         size={14*factorRatio}
                                         name={'md-options'}
