@@ -374,7 +374,7 @@ class VerticalVideoList extends React.Component {
                                 }}
                                 numberOfLines={1}
                             >
-                                YOUR NEXT LESSONS
+                                YOUR NEXT LESSON
                             </Text>
                         </View>
                         <View 

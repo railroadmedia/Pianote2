@@ -12,12 +12,13 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import NextVideo from 'Pianote2/src/components/NextVideo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
+import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -569,6 +570,9 @@ export default class FoundationsLevel extends React.Component {
                         }}
                     />
                 </Modal>
+                <NextVideo
+                    item={this.state.items[0]}
+                />
                 <NavigationBar
                     currentPage={''}
                 />

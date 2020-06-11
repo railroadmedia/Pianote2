@@ -8,6 +8,7 @@ import {
     ScrollView,
     TouchableOpacity
 } from 'react-native';
+
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -234,7 +235,7 @@ export default class Lessons extends React.Component {
                                     buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
                                     pxFromRight={fullWidth*0.065}
                                     buttonWidth={fullWidth*0.42}
-                                    pressed={() => this.props.navigation.navigate('PATHOVERVIEW')}
+                                    pressed={() => this.props.navigation.navigate('FOUNDATIONS')}
                                 />  
                             </View> 
                         </View>
