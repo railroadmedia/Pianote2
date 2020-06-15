@@ -20,6 +20,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MakeComment from '../../components/MakeComment.js';
 import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
+import Resources from 'Pianote2/src/assets/img/svgs/resources.svg';
 import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
@@ -329,12 +330,12 @@ export default class VideoPlayer extends React.Component {
                                             alignItems: 'center',
                                         }}
                                     >
-                                        <MaterialIcon
-                                            name={'arrow-collapse-down'}
-                                            size={27.5*factorRatio}
-                                            color={colors.pianoteRed}
+                                        <Resources
+                                            height={27.5*factorRatio}
+                                            width={27.5*factorRatio}
+                                            fill={colors.pianoteRed}
                                         />
-                                        <View style={{height: 5*factorVertical}}/>
+                                        <View style={{height: 7.5*factorVertical}}/>
                                         <Text
                                             style={{
                                                 textAlign: 'center',
