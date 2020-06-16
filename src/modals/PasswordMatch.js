@@ -84,23 +84,21 @@ class PasswordMatch extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 22*factorRatio,
-                                    fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
+                                    fontWeight: 'bold',
                                     textAlign: 'center',
                                 }}
                             >
                                 Your passwords do {"\n"} not match.
                             </Text>
                         </View>
-                        <View style={{flex: 0.075}}/>
+                        <View style={{flex: 0.05}}/>
                         <View key={'toUseThis'}>
                             <View style={{flex: 1}}/>
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 16*factorRatio,
-                                    fontWeight: '300',
                                     textAlign: 'center',
                                 }}
                             >
@@ -145,9 +143,8 @@ class PasswordMatch extends React.Component {
                                             <View style={{flex: 1}}/>
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
                                                     fontSize: 17*factorRatio,
-                                                    fontWeight: '700',
+                                                    fontWeight: 'bold',
                                                     color: '#fb1b2f',
                                                     textAlign: 'center',
                                                 }}

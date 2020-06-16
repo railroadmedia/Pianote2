@@ -107,16 +107,11 @@ export default class forgotPassword extends React.Component {
     forgotPassword = async () => {
         this.textInput.clear()
 
-        const { response, error } = await userForgotPassword({
+        const { response, error } = userForgotPassword({
             email: this.state.email,
         });
 
-        if(error) {
-            console.error(error);
-        } else {
-            console.log(response)
-            this.props.navigation.navigate('LOGINCREDENTIALS')
-        }
+        this.props.navigation.navigate('LOGINCREDENTIALS')
     }
 
 
@@ -255,7 +250,7 @@ export default class forgotPassword extends React.Component {
                         <View style={{height: 30*factorVertical}}/>
                         <View key={'email'}
                             style={{
-                                height: (Platform.OS == 'ios') ? fullHeight*0.07 : fullHeight*0.06,
+                                height: fullHeight*0.06,
                                 width: fullWidth*0.9,
                                 borderRadius: 50*factorRatio,
                                 backgroundColor: 'white',
@@ -304,7 +299,7 @@ export default class forgotPassword extends React.Component {
                                     style={{
                                         fontSize: 18*factorRatio,
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: '700',
+                                        fontWeight: 'bold',
                                         color: (this.state.email.length > 0) ? 
                                             'white' : '#fb1b2f',
                                     }}                            

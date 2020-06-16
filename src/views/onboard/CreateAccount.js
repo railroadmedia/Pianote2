@@ -9,14 +9,12 @@ import {
     TouchableOpacity,
     Keyboard,
     Animated,
-    Alert,
     Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import CheckEmail from '../../modals/CheckEmail.js';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 
 var showListener = (Platform.OS == 'ios') ? 'keyboardWillShow' : 'keyboardDidShow'
@@ -106,24 +104,28 @@ export default class CreateAccount extends React.Component {
     }
 
 
-    verifyEmail = () => {
+    verifyEmail = async () => {
         if(this.state.email.length > 0) {
-            Alert.alert(
-                'Test when email is taken', 'or continue', 
-                [
-                    {text: 'Test failure', onPress: () => this.setState({showCheckEmail: true})},
-                    {text: 'Continue', onPress: () => this.emailValid()}
-                ],
-                { cancelable: false }
-            )
+            // check if email valid
+            await fetch('http://127.0.0.1:5000/checkEmailTaken', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: this.state.email,
+                }) 
+            })
+            .then((response) => response.json())
+            .then((response) => {
+                if(response == 'success') {
+                    this.props.navigation.navigate('CREATEACCOUNT2', {email: this.state.email})
+                } else {
+                    this.setState({showCheckEmail: true})
+                }
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })
         }
-    }
-
-
-    emailValid = async () => {
-        // verified email
-        await AsyncStorage.setItem('email', this.state.email)
-        await this.props.navigation.navigate('CREATEACCOUNT2')
     }
 
     
@@ -438,7 +440,7 @@ export default class CreateAccount extends React.Component {
                                     style={{
                                         fontSize: 18*factorRatio,
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: '700',
+                                        fontWeight: 'bold',
                                         color: (this.state.email.length > 0) ? 
                                             'white' : '#fb1b2f',
                                     }}                            

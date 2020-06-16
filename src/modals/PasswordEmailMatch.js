@@ -62,7 +62,7 @@ class PasswordEmailMatch extends React.Component {
 
                         </TouchableOpacity>
                     </View>
-                    <View  key={'content'}
+                    <View key={'content'}
                         style={{
                             height: '100%',
                             width: '90%',
@@ -87,7 +87,7 @@ class PasswordEmailMatch extends React.Component {
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 22*factorRatio,
-                                    fontWeight: '600',
+                                    fontWeight: 'bold',
                                     textAlign: 'center',
                                 }}
                             >
@@ -101,7 +101,6 @@ class PasswordEmailMatch extends React.Component {
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 16*factorRatio,
-                                    fontWeight: '300',
                                     textAlign: 'center',
                                 }}
                             >
@@ -148,7 +147,7 @@ class PasswordEmailMatch extends React.Component {
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
                                                     fontSize: 17*factorRatio,
-                                                    fontWeight: '700',
+                                                    fontWeight: 'bold',
                                                     color: '#fb1b2f',
                                                     textAlign: 'center',
                                                 }}

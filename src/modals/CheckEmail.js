@@ -44,7 +44,7 @@ class CheckEmail extends React.Component {
                 </View>
                 <View key={'content'}
                     style={{
-                        height: '36%',
+                        height: fullHeight*0.36,
                         width: '100%',
                         flexDirection: 'row',
                     }}
@@ -62,7 +62,7 @@ class CheckEmail extends React.Component {
 
                         </TouchableOpacity>
                     </View>
-                    <View  key={'content'}
+                    <View key={'content'}
                         style={{
                             height: '100%',
                             width: '90%',
@@ -71,36 +71,28 @@ class CheckEmail extends React.Component {
                         }}
                     >
                         <View key={'buffer'}
-                            style={[
-                                styles.centerContent, {
-                                flex: 0.1,
-                            }]}
+                            style={{height: fullHeight*0.035}}
                         />
                         <View key={'emailTaken'}
-                            style={[
-                                styles.centerContent, {
-                                flex: 0.2,
-                            }]}
+                            style={styles.centerContent}
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 22*factorRatio,
-                                    fontWeight: (Platform.OS == 'ios') ? '600' : 'bold',
+                                    fontWeight: 'bold',
                                     textAlign: 'center',
                                 }}
                             >
                                 This email is already {"\n"} connected to an account.
                             </Text>
                         </View>
-                        <View style={{flex: 0.075}}/>
+                        <View style={{height: fullHeight*0.035}}/>
                         <View key={'toUseThis'}>
                             <View style={{flex: 1}}/>
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 16*factorRatio,
-                                    fontWeight: '300',
                                     textAlign: 'center',
                                 }}
                             >
@@ -108,13 +100,12 @@ class CheckEmail extends React.Component {
                             </Text>
                             <View style={{flex: 1}}/>
                         </View>
-                        <View style={{flex: 0.05}}/>
+                        <View style={{height: fullHeight*0.035}}/>
                         <View key={'buttons'}
-                            style={{flex: 0.55}}
                         >
                             <View key={'LOGIN'}
                                 style={{
-                                    height: '42.5%',
+                                    height: fullHeight*0.07,
                                     flexDirection: 'row',
                                 }}
                             >
@@ -165,7 +156,7 @@ class CheckEmail extends React.Component {
                             <View style={{flex: 0.15}}/>
                             <View key={'SIGNUP'}
                                 style={{
-                                    height: '40%',
+                                    height: fullHeight*0.07,
                                     flexDirection: 'row',
                                 }}
                             >

@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import AsyncStorage from '@react-native-community/async-storage';
 
 export default class NewMembership extends React.Component {
     static navigationOptions = {header: null};
@@ -18,26 +17,36 @@ export default class NewMembership extends React.Component {
         super(props);
         this.state = {
             step: 3,
-            newUser: false,
+            newUser: this.props.navigation.state.params.data.type,
+            email: this.props.navigation.state.params.data.email,
+            password: this.props.navigation.state.params.data.password,
         }
     }
 
 
-    componentDidMount = async () => {
-        let newUser = await this.props.navigation.state.params.type
-        this.setState({newUser: 'SIGNUP'})
-    }
-
-
-    paid = async (price) => {
-        price = await JSON.stringify(price)
-        await AsyncStorage.setItem('loggedInStatus', 'true')
-        await AsyncStorage.setItem('plan', price)
-        
-        if(this.state.newUser) {
-            await this.props.navigation.navigate('CREATEACCOUNT3')
-        } else {
-            await this.props.navigation.navigate('GETRESTARTED')
+    paid = async (plan) => {
+        // if successful payment
+        if(true == true) {
+            if(this.state.newUser) {
+            
+                await this.props.navigation.navigate('CREATEACCOUNT3', {
+                    data: {
+                        email: this.state.email,
+                        password: this.state.password,
+                        plan,
+                    }
+                })
+            } else {
+                // restore purchases
+                await this.props.navigation.navigate('GETRESTARTED', {
+                    data: {
+                        loggedInStatus: 'true',
+                        email: this.state.email,
+                        password: this.state.password,
+                        plan,
+                    }
+                })
+            }
         }
     }
 
@@ -231,14 +240,7 @@ export default class NewMembership extends React.Component {
                                         >
                                             <View style={{flex: 1}}/>
                                             <TouchableOpacity
-                                                onPress={() => Alert.alert(
-                                                    'Make payment example', 'in production IAP modal comes up', 
-                                                    [
-                                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-                                                        {text: 'Pay', onPress: (price) => this.paid(29.99)}
-                                                    ],
-                                                    { cancelable: false }
-                                                )}
+                                                onPress={() => this.paid(29.99)}
                                                 style={{
                                                     height: '80%',
                                                     width: '90%',

@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
     Keyboard,
     Animated,
-    Alert,
     Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
@@ -119,18 +118,20 @@ export default class LoginCredentials extends React.Component {
             password: this.state.password,
         });
 
-        if(error) {
-            console.log(error)
+        if(typeof(response) == 'undefined') {
             this.setState({showPasswordEmailMatch: true})
-        } else {
+        } else if(response.data.success) {
             await AsyncStorage.multiSet([
                 ['token', JSON.stringify(response.data.token)],
                 ['tokenTime', JSON.stringify(response.data.token)],
                 ['email', this.state.email],
                 ['password', this.state.password],
             ])
-            this.props.navigation.navigate('HOME')
+
+            await this.props.navigation.navigate('HOME')
         }
+
+        //this.props.navigation.navigate('MEMBERSHIPEXPIRED')
     }
 
 
@@ -353,21 +354,7 @@ export default class LoginCredentials extends React.Component {
                             <TouchableOpacity
                                 underlayColor={'transparent'}
                                 onPress={() => {
-                                    (this.state.password.length > 0 && this.state.email.length > 0) ? 
-                                    Alert.alert(
-                                        'Simulate failed payment', 'or continue', 
-                                        [
-                                            {text: 'Test failed payment', onPress: () => {
-                                                this.props.navigation.navigate('MEMBERSHIPEXPIRED')
-                                            }},
-                                            {text: 'Continue', onPress: () => {
-                                                this.login()
-                                            }}
-                                        ],
-                                        { cancelable: false }
-                                    )
-                                    : 
-                                    null
+                                    (this.state.password.length > 0 && this.state.email.length > 0) ? this.login() : null
                                 }}
                                 style={[
                                     styles.centerContent, {
@@ -380,7 +367,7 @@ export default class LoginCredentials extends React.Component {
                                     style={{
                                         fontSize: 20*factorRatio,
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: '700',
+                                        fontWeight: 'bold',
                                         color: (this.state.email.length > 0 && 
                                             this.state.password.length > 0) ? 
                                             'white' : '#fb1b2f',

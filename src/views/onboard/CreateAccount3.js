@@ -10,7 +10,6 @@ import {
     TextInput,
     TouchableOpacity,
     ScrollView,
-    Alert,
     Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
@@ -39,8 +38,12 @@ export default class CreateAccount3 extends React.Component {
             showDisplayName: false,
             showImage: false,
             canScroll: false,
+            displayNameValid: false,
             displayName: '',
             imageURI: '',
+            plan: this.props.navigation.state.params.data.plan,
+            email: this.props.navigation.state.params.data.email,
+            password: this.props.navigation.state.params.data.password,
         }
     }
 
@@ -113,19 +116,74 @@ export default class CreateAccount3 extends React.Component {
     
     setName = async () => {
         if(this.state.displayName.length > 0) {
-            // if valid
-            Alert.alert('Test when username taken', 'or continue', [
-                    {text: 'Test failure', onPress: () => this.setState({showDisplayName: true})},
-                    {text: 'Continue', onPress: () => {
-                        AsyncStorage.setItem('username', this.state.displayName)
-                        this.myScroll.scrollTo({x: fullWidth, y: 0, animated: true})
-                        this.setState({page: 2})
-                        this.forceUpdate()
-                    }}
-                ],
-                { cancelable: false }
-            )
+            // check if valid
+            await fetch('http://127.0.0.1:5000/displayNameAvailable', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    displayName: this.state.displayName,
+                }) 
+            })
+            .then((response) => response.json())
+            .then((response) => {
+                if(response == 'success') {
+                    this.myScroll.scrollTo({x: fullWidth, y: 0, animated: true})
+                    this.setState({
+                        page: 2,
+                        displayNameValid: true,
+                    })
+                    this.forceUpdate()
+                } else {
+                    this.setState({showDisplayName: true})
+                }
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })
         }
+    }
+
+
+    async goHome() {
+        // if display name already validated or no name enter
+        if(this.state.displayNameValid || this.state.displayName == '') {
+            await this.createAccount()
+        } else {
+            // validate name
+            await this.setName()
+            // create account
+            await this.createAccount()
+        }
+    }
+
+    async createAccount() {
+        await fetch('http://127.0.0.1:5000/createAccount', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                plan: this.state.plan, 
+                email: this.state.email,
+                password: this.state.password,
+                username: this.state.displayName,
+                loggedInStatus: this.state.loggedInStatus,
+                profileImage: 'val2',
+            }) 
+        })
+        .then((response) => response.json())
+        .then((response) => {
+            AsyncStorage.multiSet([
+                ['plan', this.state.plan], 
+                ['email', this.state.email],
+                ['password', this.state.password],
+                ['username', this.state.displayName],
+                ['loggedInStatus', this.state.loggedInStatus],
+                ['profileImage', 'val2']
+            ])
+            this.state.navigation.navigate('HOME')
+        })
+        .catch((error) => {
+            console.log('API Error: ', error)
+        })
     }
 
 
@@ -421,7 +479,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.props.navigation.navigate('HOME')
+                                                this.goHome()
                                             }}
                                         >
                                             <Text
@@ -739,7 +797,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.props.navigation.navigate('HOME')
+                                                this.goHome()
                                             }}
                                         >
                                             <Text
@@ -1145,7 +1203,7 @@ export default class CreateAccount3 extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.props.navigation.navigate('HOME')
+                                        this.goHome()
                                     }}
                                 >
                                     <Text
@@ -1332,7 +1390,7 @@ export default class CreateAccount3 extends React.Component {
                                 <View style={{flex: 1}}/>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.props.navigation.navigate('HOME')
+                                        this.goHome()
                                     }}
                                     style={[
                                         styles.centerContent, {

@@ -14,7 +14,6 @@ import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import PasswordMatch from '../../modals/PasswordMatch';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
@@ -34,9 +33,9 @@ export default class CreateAccount extends React.Component {
             showConfirmPassword: false,
             showPassword: false,
             step: 2,
-            email: '',
             password: '',
             confirmPassword: '',
+            email: this.props.navigation.state.params.email,
         }
     }
 
@@ -110,25 +109,16 @@ export default class CreateAccount extends React.Component {
     }
 
 
-    login = async () => {
-        const { response, error } = await userLogin({
-            email:this.state.email,
-            password:this.state.password,
-        });
-    
-        if(error) {
-            console.error(error);
-        } else {
-            console.log(response.data.token)
-        }
-    }
-
-
     savePassword = async () => {
         if(this.state.password == this.state.confirmPassword) {
             if(this.state.password.length > 7) {
-                await AsyncStorage.setItem('password', this.state.password)
-                await this.props.navigation.navigate('NEWMEMBERSHIP', {'type':'SIGNUP'})
+                this.props.navigation.navigate('NEWMEMBERSHIP', {data: 
+                    {
+                        type: 'SIGNUP',
+                        email: this.state.email,
+                        password: this.state.password,
+                    }
+                })
             }
         } else {
             this.setState({showPasswordMatch: true})
@@ -566,7 +556,7 @@ export default class CreateAccount extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18*factorRatio,
-                                        fontWeight: '700',
+                                        fontWeight: 'bold',
                                         fontFamily: 'OpenSans-Regular',
                                         color: (
                                             this.state.password.length > 0 &&
