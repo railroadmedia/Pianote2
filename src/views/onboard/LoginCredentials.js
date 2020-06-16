@@ -117,7 +117,7 @@ export default class LoginCredentials extends React.Component {
             email: this.state.email,
             password: this.state.password,
         });
-
+        console.log(response)
         if(typeof(response) == 'undefined') {
             this.setState({showPasswordEmailMatch: true})
         } else if(response.data.success) {
