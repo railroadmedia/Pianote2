@@ -240,7 +240,7 @@ export default class NewMembership extends React.Component {
                                         >
                                             <View style={{flex: 1}}/>
                                             <TouchableOpacity
-                                                onPress={() => this.paid(29.99)}
+                                                onPress={() => this.paid('plan1')}
                                                 style={{
                                                     height: '80%',
                                                     width: '90%',
@@ -338,9 +338,7 @@ export default class NewMembership extends React.Component {
                                             }}
                                         />
                                         <View 
-                                            style={{
-                                                flex: 0.125,
-                                            }}
+                                            style={{flex: 0.125}}
                                         />
                                         <Text
                                                 style={{
@@ -368,16 +366,7 @@ export default class NewMembership extends React.Component {
                                         >
                                             <View style={{flex: 1}}/>
                                             <TouchableOpacity
-                                                onPress={() => Alert.alert(
-                                                    'Make payment example', 'in production IAP modal comes up', 
-                                                    [
-                                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-                                                        {text: 'Pay', onPress: () => {
-                                                            this.props.navigation.navigate('CREATEACCOUNT3', {'price': 199.99})
-                                                        }},
-                                                    ],
-                                                    { cancelable: false }
-                                                )}
+                                                onPress={() => this.paid('plan2')}
                                                 style={{
                                                     height: '80%',
                                                     width: '90%',

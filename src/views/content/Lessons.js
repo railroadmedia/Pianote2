@@ -270,11 +270,9 @@ export default class Lessons extends React.Component {
                                             borderRadius: 100,
                                             backgroundColor: colors.secondBackground,
                                             alignSelf: 'stretch',
-                                            borderWidth: 2,
                                         }}
                                     >
-                                        <TouchableOpacity
-                                            onPress={() => {}}
+                                        <View
                                             style={{
                                                 height: '100%',
                                                 width: '100%',
@@ -286,12 +284,11 @@ export default class Lessons extends React.Component {
                                                 source={{uri: this.state.profileImage}}
                                                 resizeMode={FastImage.resizeMode.cover}
                                             />
-                                        </TouchableOpacity>
+                                        </View>
                                     </View>
                                     <View style={{flex: 1}}/>
                                 </View>
                                 <View style={{flex: 1}}/>
-
                             </View>
                             <View
                                 style={{

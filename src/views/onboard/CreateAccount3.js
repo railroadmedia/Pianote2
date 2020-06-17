@@ -12,6 +12,7 @@ import {
     ScrollView,
     Platform,
 } from 'react-native';
+import axios from 'axios';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import X from 'Pianote2/src/assets/img/svgs/X.svg';
@@ -27,6 +28,7 @@ import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 
 var showListener = (Platform.OS == 'ios') ? 'keyboardWillShow' : 'keyboardDidShow'
 var hideListener = (Platform.OS == 'ios') ? 'keyboardWillHide' : 'keyboardDidHide'
+var data = new FormData()
 
 export default class CreateAccount3 extends React.Component {
     static navigationOptions = {header: null};
@@ -156,34 +158,37 @@ export default class CreateAccount3 extends React.Component {
         }
     }
 
-    async createAccount() {
-        await fetch('http://127.0.0.1:5000/createAccount', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                plan: this.state.plan, 
-                email: this.state.email,
-                password: this.state.password,
-                username: this.state.displayName,
-                loggedInStatus: this.state.loggedInStatus,
-                profileImage: 'val2',
-            }) 
-        })
-        .then((response) => response.json())
-        .then((response) => {
-            AsyncStorage.multiSet([
-                ['plan', this.state.plan], 
-                ['email', this.state.email],
-                ['password', this.state.password],
-                ['username', this.state.displayName],
-                ['loggedInStatus', this.state.loggedInStatus],
-                ['profileImage', 'val2']
-            ])
-            this.state.navigation.navigate('HOME')
-        })
-        .catch((error) => {
-            console.log('API Error: ', error)
-        })
+
+    createAccount = async () => {
+        data.append('plan', this.state.plan)
+        data.append('email', this.state.email)
+        data.append('password', this.state.password)
+        data.append('username', this.state.displayName)
+
+        console.log(data)
+
+        await axios({
+                method: 'POST',
+                url: 'http://127.0.0.1:5000/createAccount',
+                data,
+                config: {headers: {'Content-Type':'multipart/form-data'}}
+            })
+            .then((response) => {
+                console.log('API response: ', response)
+                this.props.navigation.navigate('LESSONS')
+                AsyncStorage.multiSet([
+                    ['plan', this.state.plan], 
+                    ['email', this.state.email],
+                    ['password', this.state.password],
+                    ['username', this.state.displayName],
+                    ['loggedInStatus', 'true'],
+                    ['profileImage', this.state.response.data],
+                    ['profileURI', this.state.response.uri],
+                ])
+            })
+            .catch((error) => {
+                console.log('API error', error)
+            })
     }
 
 
@@ -198,9 +203,13 @@ export default class CreateAccount3 extends React.Component {
             if(response.didCancel) {
             } else if(response.error) {
             } else {
-                AsyncStorage.setItem('profileImage', response.data)
-                AsyncStorage.setItem('profileURI', response.uri)
+                data.append('profileImage', {
+                    uri: response.uri,
+                    name: 'profileImage',
+                    type: 'image/jpeg'
+                })
                 this.setState({
+                    response,
                     imageURI: response.uri,
                     showImage: true,
                 })
@@ -211,10 +220,11 @@ export default class CreateAccount3 extends React.Component {
 
 
     clearImage = async () => {
-        await AsyncStorage.setItem('profileImage', '')
+        data = new FormData()
         await this.setState({
             imageURI: '', 
             showImage: false,
+            response: null,
         })
         await this.forceUpdate()
     }
