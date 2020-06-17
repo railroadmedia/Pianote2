@@ -133,9 +133,8 @@ export default class Support extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 14*factorRatio,
-                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
+                                                fontFamily: 'RobotoCondensed-Bold',
+                                                fontSize: 18*factorRatio,
                                                 color: 'white',
                                             }}
                                         >
@@ -164,9 +163,8 @@ export default class Support extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 14*factorRatio,
-                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
+                                                fontFamily: 'RobotoCondensed-Bold',
+                                                fontSize: 18*factorRatio,
                                                 color: 'white',
                                             }}
                                         >
@@ -195,9 +193,8 @@ export default class Support extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 14*factorRatio,
-                                                fontWeight: (Platform.OS == 'ios') ? '800' : 'bold',
+                                                fontFamily: 'RobotoCondensed-Bold',
+                                                fontSize: 18*factorRatio,
                                                 color: 'white',
                                             }}
                                         >

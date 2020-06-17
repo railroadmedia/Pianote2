@@ -121,14 +121,18 @@ export default class LoginCredentials extends React.Component {
         if(typeof(response) == 'undefined') {
             this.setState({showPasswordEmailMatch: true})
         } else if(response.data.success) {
-            await AsyncStorage.multiSet([
-                ['token', JSON.stringify(response.data.token)],
-                ['tokenTime', JSON.stringify(response.data.token)],
-                ['email', this.state.email],
-                ['password', this.state.password],
-            ])
-
-            await this.props.navigation.navigate('HOME')
+            // check membership status
+            if('membershipValid' == 'membershipVali') {
+                await AsyncStorage.multiSet([
+                    ['token', JSON.stringify(response.data.token)],
+                    ['tokenTime', JSON.stringify(response.data.token)],
+                    ['email', this.state.email],
+                    ['password', this.state.password],
+                ])
+                await this.props.navigation.navigate('HOME')
+            } else {
+                this.props.navigation.navigate('MEMBERSHIPEXPIRED')
+            }
         }
 
         //this.props.navigation.navigate('MEMBERSHIPEXPIRED')
@@ -366,8 +370,7 @@ export default class LoginCredentials extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 20*factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontWeight: 'bold',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         color: (this.state.email.length > 0 && 
                                             this.state.password.length > 0) ? 
                                             'white' : '#fb1b2f',

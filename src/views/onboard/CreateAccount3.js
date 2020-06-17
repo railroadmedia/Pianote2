@@ -399,9 +399,8 @@ export default class CreateAccount3 extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '700',
                                                     color: (this.state.displayName.length == 0) ? 
                                                         '#fb1b2f' : 'white'
                                                 }}                            
@@ -717,9 +716,8 @@ export default class CreateAccount3 extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '700',
                                                     color: (this.state.imageURI.length == 0) ? 
                                                         '#fb1b2f' : 'white'
                                                 }}                            
@@ -1412,9 +1410,8 @@ export default class CreateAccount3 extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'RobotoCondensed-Bold',
                                             fontSize: 18*factorRatio,
-                                            fontWeight: '700',
                                             color: 'white',
                                         }}
                                     >

@@ -439,8 +439,7 @@ export default class CreateAccount extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18*factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontWeight: 'bold',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         color: (this.state.email.length > 0) ? 
                                             'white' : '#fb1b2f',
                                     }}                            

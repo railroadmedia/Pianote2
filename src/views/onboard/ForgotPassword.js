@@ -106,10 +106,11 @@ export default class forgotPassword extends React.Component {
 
     forgotPassword = async () => {
         this.textInput.clear()
-
         const { response, error } = userForgotPassword({
             email: this.state.email,
         });
+
+        console.log(response, error)
 
         this.props.navigation.navigate('LOGINCREDENTIALS')
     }
@@ -298,8 +299,7 @@ export default class forgotPassword extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18*factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontWeight: 'bold',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         color: (this.state.email.length > 0) ? 
                                             'white' : '#fb1b2f',
                                     }}                            

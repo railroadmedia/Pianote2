@@ -556,8 +556,7 @@ export default class CreateAccount extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18*factorRatio,
-                                        fontWeight: 'bold',
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         color: (
                                             this.state.password.length > 0 &&
                                             this.state.confirmPassword.length > 0 &&

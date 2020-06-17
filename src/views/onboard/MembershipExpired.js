@@ -4,8 +4,7 @@
 import React from 'react';
 import { 
     View, 
-    Text, 
-    StyleSheet,
+    Text,
     TouchableOpacity,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -20,24 +19,7 @@ export default class MembershipExpired extends React.Component {
         }
     }
 
-
-    async changeColor(number) {
-        if(number == 0) {
-            await this.setState({page: 1})
-        } else if(number == 1) {
-            await this.setState({page: 2})
-        } else if(number == 2) {
-            await this.setState({page: 3})
-        } else if(number == 3) {
-            await this.setState({page: 4})
-        } else if(number == 4) {
-            await this.setState({page: 5})
-        }
-
-        await this.forceUpdate()
-    }
-
-
+    
     render() {
         return (
             <View style={[
@@ -89,8 +71,7 @@ export default class MembershipExpired extends React.Component {
                             backgroundColor: 'rgba(23, 26, 26, 1)',
                             alignSelf: 'stretch',
                         }}
-                    >
-                    </View>
+                    />
                     <View key={'content1'}
                         style={{
                             position: 'absolute',
@@ -169,11 +150,10 @@ export default class MembershipExpired extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18*factorRatio,
-                                                fontWeight: '600',
                                                 textAlign: 'center',
                                                 color: 'white',
+                                                fontFamily: 'RobotoCondensed-Bold',
                                             }}
                                         >
                                             RENEW MEMBERSHIP
@@ -188,24 +168,3 @@ export default class MembershipExpired extends React.Component {
         )
     }
 }
-
-const localStyles = StyleSheet.create({
-    whiteBordersCircles: {
-        borderColor: 'white',
-        borderWidth: 1.25,
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 0,
-    },
-    MembershipExpiredSignupButton: {
-        height: 25, 
-        width: '100%',
-        backgroundColor: 'transparent', 
-        borderWidth: 1.25,
-        borderColor: 'white', 
-        borderRadius: 10, 
-    },
-});
-
-
-

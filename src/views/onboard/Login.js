@@ -43,7 +43,14 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <View style={[styles.centerContent, {flex: 1, height: fullHeight}]}>
+            <View 
+                style={[
+                    styles.centerContent, {
+                    flex: 1, backgroundColor: 'black',
+                    alignSelf: 'stretch',
+                    height: fullHeight,
+                }]}
+            >
                 <ScrollView
                     horizontal={true}
                     ref={(ref) => { this.myScroll = ref }}
@@ -295,9 +302,8 @@ export default class Login extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '600',
                                                     textAlign: 'center',
                                                     color: '#fb1b2f',
                                                 }}
@@ -333,9 +339,8 @@ export default class Login extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '600',
                                                     textAlign: 'center',
                                                     color: 'white',
                                                 }}
@@ -607,9 +612,8 @@ export default class Login extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'RobotoCondensed-Bold',
                                                 fontSize: 18*factorRatio,
-                                                fontWeight: '600',
                                                 textAlign: 'center',
                                                 color: '#fb1b2f',
                                             }}
@@ -645,9 +649,8 @@ export default class Login extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'RobotoCondensed-Bold',
                                                 fontSize: 18*factorRatio,
-                                                fontWeight: '600',
                                                 textAlign: 'center',
                                                 color: 'white',
                                             }}
@@ -918,9 +921,8 @@ export default class Login extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'RobotoCondensed-Bold',
                                                 fontSize: 18*factorRatio,
-                                                fontWeight: '600',
                                                 textAlign: 'center',
                                                 color: '#fb1b2f',
                                             }}
@@ -956,9 +958,8 @@ export default class Login extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'RobotoCondensed-Bold',
                                                 fontSize: 18*factorRatio,
-                                                fontWeight: '600',
                                                 textAlign: 'center',
                                                 color: 'white',
                                             }}
@@ -1229,9 +1230,8 @@ export default class Login extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '600',
                                                     textAlign: 'center',
                                                     color: '#fb1b2f',
                                                 }}
@@ -1267,9 +1267,8 @@ export default class Login extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '600',
                                                     textAlign: 'center',
                                                     color: 'white',
                                                 }}
@@ -1513,9 +1512,8 @@ export default class Login extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '600',
                                                     textAlign: 'center',
                                                     color: '#fb1b2f',
                                                 }}
@@ -1551,9 +1549,8 @@ export default class Login extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 18*factorRatio,
-                                                    fontWeight: '600',
                                                     textAlign: 'center',
                                                     color: 'white',
                                                 }}
