@@ -6,10 +6,10 @@ import {
     View, 
     Text, 
     TouchableOpacity,
-    Alert,
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class NewMembership extends React.Component {
     static navigationOptions = {header: null};
@@ -25,10 +25,9 @@ export default class NewMembership extends React.Component {
 
 
     paid = async (plan) => {
-        // if successful payment
-        if(true == true) {
-            if(this.state.newUser) {
-            
+        // if successful payment and new plan
+        if('paymentSuccessful' == 'paymentSuccessful') {
+            if(this.state.newUser == 'SIGNUP') {
                 await this.props.navigation.navigate('CREATEACCOUNT3', {
                     data: {
                         email: this.state.email,
@@ -36,16 +35,10 @@ export default class NewMembership extends React.Component {
                         plan,
                     }
                 })
-            } else {
-                // restore purchases
-                await this.props.navigation.navigate('GETRESTARTED', {
-                    data: {
-                        loggedInStatus: 'true',
-                        email: this.state.email,
-                        password: this.state.password,
-                        plan,
-                    }
-                })
+            } else if(this.state.newUser == 'EXPIRED') {
+                // save plan details
+                await AsyncStorage.setItem('plan', plan)
+                await this.props.navigation.navigate('GETRESTARTED')
             }
         }
     }
@@ -396,7 +389,7 @@ export default class NewMembership extends React.Component {
                             </View>
                             <View style={{flex: 1}}/>
                         </View>
-                        {this.state.newUser && (
+                        {(this.state.newUser == 'SIGNUP') && (
                         <View key={'progress'}
                             style={{
                                 height: fullHeight*0.06,
@@ -624,14 +617,14 @@ export default class NewMembership extends React.Component {
                         </View>
                         <View key={'buff3'}
                             style={{
-                                height: (this.state.newUser) ? 
+                                height: (this.state.newUser == 'SIGNUP') ? 
                                     fullHeight*0.045 : fullHeight*0.12,
                             }}
                         />      
                         <View key={'alreadyMember'}>
                             <Text
                                 onPress={() => {
-                                    (this.state.newUser) ? 
+                                    (this.state.newUser == 'SIGNUP') ? 
                                         this.props.navigation.navigate('LOGINCREDENTIALS')
                                         : 
                                         Alert.alert('Simulated appstore')
@@ -644,12 +637,12 @@ export default class NewMembership extends React.Component {
                                     textDecorationLine: 'underline',
                                 }}
                             >
-                                {(this.state.newUser) ? 
+                                {(this.state.newUser == 'SIGNUP') ? 
                                     'Already A Member? Log In.' : 'Restore purchases'
                                 }
                             </Text>
                             <View style={{height: 2*factorVertical}}/>
-                            {this.state.newUser && (
+                            {(this.state.newUser == 'SIGNUP') && (
                             <Text
                                 onPress={() => {
                                     this.props.navigation.navigate('TERMS')

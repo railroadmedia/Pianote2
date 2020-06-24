@@ -12,19 +12,39 @@ export default class LoadPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            username: '',
         }
     }
 
 
     componentDidMount = async () => {
-        await SplashScreen.hide();
 
-        // check if loggedIn
-        let isLoggedIn = await AsyncStorage.getItem('loggedInStatus')
+        await SplashScreen.hide();
+        isLoggedIn = await AsyncStorage.getItem('loggedInStatus')
+        email = await AsyncStorage.getItem('email')
+        
         if(isLoggedIn !== 'true') {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000)
         } else {
-            setTimeout(() => this.props.navigation.navigate('LESSONS'), 1000)
+            // membership expired
+            await fetch('http://127.0.0.1:5000/checkMembershipStatus', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: email,
+                }) 
+            })
+            .then((response) => response.json())
+            .then((response) => {
+                if(response == 'success') {
+                    setTimeout(() => this.props.navigation.navigate('LESSONS'), 1000)
+                } else {
+                    setTimeout(() => this.props.navigation.navigate('MEMBERSHIPEXPIRED'), 1000)
+                }
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })            
         }
     }
 

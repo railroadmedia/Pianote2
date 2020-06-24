@@ -223,7 +223,7 @@ export default class WelcomeBack extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.props.navigation.navigate('HOME')
+                                        this.props.navigation.navigate('LESSONS')
                                     }}
                                 >
                                     <Text
@@ -409,7 +409,7 @@ export default class WelcomeBack extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.props.navigation.navigate('HOME')
+                                        this.props.navigation.navigate('LESSONS')
                                     }}
                                 >
                                     <Text
@@ -581,7 +581,7 @@ export default class WelcomeBack extends React.Component {
                                 <View style={{flex: 1}}/>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.props.navigation.navigate('HOME')
+                                        this.props.navigation.navigate('LESSONS')
                                     }}
                                     style={[
                                         styles.centerContent, {
@@ -593,9 +593,8 @@ export default class WelcomeBack extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'RobotoCondensed-Bold',
                                             fontSize: 18*factorRatio,
-                                            fontWeight: '700',
                                             color: 'white',
                                         }}
                                     >

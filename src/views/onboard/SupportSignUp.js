@@ -9,7 +9,6 @@ import {
     Platform,
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 
 export default class SupportSignUp extends React.Component {
     static navigationOptions = {header: null};

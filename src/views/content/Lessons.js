@@ -6,9 +6,8 @@ import {
     View, 
     Text,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
-
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -31,19 +30,43 @@ export default class Lessons extends React.Component {
             songs: [], // videos
             showModalMenu: false, // show navigation menu
             outVideos: false,
-            profileImage: '',
             page: 0,
+            profileImage: '',
+            xp: 0, // user's XP
+            rank: '', // user's level
         }
     }
 
 
-    async componentDidMount() {
-        let profileImage = await AsyncStorage.getItem('profileURI')
-        if(profileImage !== null) {
-            await this.setState({profileImage})
-        }
-        this.getCourses()
-        this.getSongs()
+    componentDidMount = async () => {
+        
+        email = await AsyncStorage.getItem('email')
+
+        await fetch('http://127.0.0.1:5000/accountDetails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+            })
+        })
+        .then((response) => response.json())
+        .then((response) => {
+            console.log('response: ', response)
+            this.setState({
+                xp: response.XP,
+                rank: response.rank,
+                profileImage: response.profileURI,
+            })
+            console.log('response: ', this.state.xp, this.state.rank)
+        })
+        .catch((error) => {
+            console.log('API Error: ', error)
+        })    
+        
+        await this.getCourses()
+        await this.getSongs()
     }
 
 
@@ -113,6 +136,21 @@ export default class Lessons extends React.Component {
                 page: this.state.page + 1,
             })
 
+        }
+    }
+
+
+    async changeXP(num) {
+        console.log('num: ', num)
+        num = Number(num)
+        if(num < 10000) {
+            num = num.toString()
+            console.log('num: ', num)
+            return num
+        } else {
+            num = (num/1000).toFixed(1).toString()
+            num = num + 'k'
+            return num
         }
     }
 
@@ -297,7 +335,7 @@ export default class Lessons extends React.Component {
                                     alignSelf: 'stretch',
                                 }}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 0.5}}/>
                                 <View>
                                     <View style={{flex: 1}}/>
                                     <View>
@@ -319,7 +357,7 @@ export default class Lessons extends React.Component {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            32.2K
+                                            {this.changeXP(this.state.xp)}
                                         </Text>
                                     </View>
                                     <View style={{flex: 1}}/>
@@ -346,7 +384,7 @@ export default class Lessons extends React.Component {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            MAESTRO
+                                            {this.state.rank}
                                         </Text>
                                     </View>
                                     <View style={{flex: 1}}/>

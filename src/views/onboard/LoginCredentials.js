@@ -117,18 +117,20 @@ export default class LoginCredentials extends React.Component {
             email: this.state.email,
             password: this.state.password,
         });
-        console.log(response)
+        console.log('RESPONSE: ', response, 'ERROR: ', error)
         if(typeof(response) == 'undefined') {
             this.setState({showPasswordEmailMatch: true})
         } else if(response.data.success) {
-            // check membership status
+            // store data
+            await AsyncStorage.multiSet([
+                ['token', JSON.stringify(response.data.token)],
+                ['tokenTime', JSON.stringify(response.data.token)],
+                ['email', this.state.email],
+                ['password', this.state.password],
+            ])
+
+            // check membership status then navigate
             if('membershipValid' == 'membershipVali') {
-                await AsyncStorage.multiSet([
-                    ['token', JSON.stringify(response.data.token)],
-                    ['tokenTime', JSON.stringify(response.data.token)],
-                    ['email', this.state.email],
-                    ['password', this.state.password],
-                ])
                 await this.props.navigation.navigate('HOME')
             } else {
                 this.props.navigation.navigate('MEMBERSHIPEXPIRED')

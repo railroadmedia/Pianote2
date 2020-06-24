@@ -140,7 +140,13 @@ export default class MembershipExpired extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.props.navigation.navigate('NEWMEMBERSHIP', {'type': false})
+                                            this.props.navigation.navigate('NEWMEMBERSHIP', {
+                                                data: {
+                                                    type: 'EXPIRED',
+                                                    email: '',
+                                                    password: '',
+                                                }
+                                            })
                                         }}
                                         style={{
                                             height: '100%',

@@ -122,9 +122,8 @@ export default class GetRestarted extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         fontSize: 18*factorRatio,
-                                        fontWeight: '700',
                                         color: 'white',
                                     }}
                                 >
