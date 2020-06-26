@@ -26,51 +26,51 @@ export default class Lessons extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            courses: [], // videos
-            songs: [], // videos
-            showModalMenu: false, // show navigation menu
-            outVideos: false,
+            progressLessons: [],
+            newLessons: [],
+            allLessons: [],
+            outVideos: false, 
             page: 0,
+            showModalMenu: false, // show navigation menu
+            lessonsStarted: true,
             profileImage: '',
-            xp: 0, // user's XP
+            xp: '', // user's XP
             rank: '', // user's level
         }
     }
 
 
     componentDidMount = async () => {
-        
         email = await AsyncStorage.getItem('email')
+        profileURI = await AsyncStorage.getItem('profileURI')
 
         await fetch('http://127.0.0.1:5000/accountDetails', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 email: email,
             })
         })
-        .then((response) => response.json())
-        .then((response) => {
-            console.log('response: ', response)
-            this.setState({
-                xp: response.XP,
-                rank: response.rank,
-                profileImage: response.profileURI,
+            .then((response) => response.json())
+            .then((response) => {
+                this.setState({
+                    xp: response.XP,
+                    rank: response.rank,
+                    profileImage: profileURI,
+                    lessonsStarted: (response.lessonsStarted == 1) ? true : false,
+                })
             })
-            console.log('response: ', this.state.xp, this.state.rank)
-        })
-        .catch((error) => {
-            console.log('API Error: ', error)
-        })    
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })    
         
-        await this.getCourses()
-        await this.getSongs()
+        await this.getProgressLessons()
+        await this.getNewLessons()
+        await this.getAllLessons()
     }
 
 
-    async getCourses() {
+    async getProgressLessons() {
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
                 brand: 'pianote',
@@ -78,26 +78,34 @@ export default class Lessons extends React.Component {
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
+                //required_user_states: ['started'],
                 included_types:['course'],
             });
+
+            console.log(response, 'response')
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
             })
 
+            console.log(newContent, 'hello')
             items = []
             for(i in newContent) {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].getField('xp'),
+                        likeCount: newContent[i].likeCount,
                     })
                 }
             }
 
             this.setState({
-                courses: [...this.state.courses, ...items],
+                progressLessons: [...this.state.progressLessons, ...items],
                 page: this.state.page + 1,
             })
 
@@ -105,7 +113,49 @@ export default class Lessons extends React.Component {
     }
 
 
-    async getSongs() {
+    async getNewLessons() {
+        if(this.state.outVideos == false) {
+            const { response, error } = await getContent({
+                brand: 'pianote',
+                limit: '15',
+                page: this.state.page,
+                sort: '-created_on',
+                statuses: ['published'],
+                //required_user_states: ['started'],
+                included_types:['course'],
+            });
+
+            console.log(response, 'response')
+
+            const newContent = response.data.data.map((data) => {
+                return new ContentModel(data)
+            })
+
+            console.log(newContent, 'hello')
+            items = []
+            for(i in newContent) {
+                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].getField('xp'),
+                        likeCount: newContent[i].likeCount,
+                    })
+                }
+            }
+
+            this.setState({
+                newLessons: [...this.state.newLessons, ...items],
+            })
+
+        }
+    }    
+
+
+    async getAllLessons() {
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
                 brand: 'pianote',
@@ -132,25 +182,24 @@ export default class Lessons extends React.Component {
             }
 
             await this.setState({
-                songs: [...this.state.songs, ...items],
-                page: this.state.page + 1,
+                allLessons: [...this.state.allLessons, ...items],
             })
 
         }
     }
 
 
-    async changeXP(num) {
-        console.log('num: ', num)
-        num = Number(num)
-        if(num < 10000) {
-            num = num.toString()
-            console.log('num: ', num)
-            return num
-        } else {
-            num = (num/1000).toFixed(1).toString()
-            num = num + 'k'
-            return num
+    changeXP = (num) => {
+        if(num !== '') {
+            num = Number(num)
+            if(num < 10000) {
+                num = num.toString()
+                return num
+            } else {
+                num = (num/1000).toFixed(1).toString()
+                num = num + 'k'
+                return num
+            }
         }
     }
 
@@ -308,6 +357,8 @@ export default class Lessons extends React.Component {
                                             borderRadius: 100,
                                             backgroundColor: colors.secondBackground,
                                             alignSelf: 'stretch',
+                                            borderWidth: 3*factorRatio,
+                                            borderColor: colors.secondBackground,
                                         }}
                                     >
                                         <View
@@ -318,7 +369,11 @@ export default class Lessons extends React.Component {
                                             }}
                                         >
                                             <FastImage
-                                                style={{flex: 1, borderRadius: 100, backgroundColor: colors.secondBackground}}
+                                                style={{
+                                                    flex: 1, 
+                                                    borderRadius: 100, 
+                                                    backgroundColor: colors.secondBackground,
+                                                }}
                                                 source={{uri: this.state.profileImage}}
                                                 resizeMode={FastImage.resizeMode.cover}
                                             />
@@ -392,7 +447,8 @@ export default class Lessons extends React.Component {
                                 <View style={{flex: 1}}/>
                             </View>
                         </View>
-                        <View key={'courses'}
+                        {(this.state.lessonsStarted && 
+                        <View key={'progressCourses'}
                             style={{
                                 minHeight: fullHeight*0.225,
                                 paddingLeft: fullWidth*0.035,
@@ -403,10 +459,11 @@ export default class Lessons extends React.Component {
                                 Title={'CONTINUE'}
                                 Description={''}
                                 seeAll={() => {
-                                    this.props.navigation.navigate('SEEALL', {title: 'CONTINUE'})
+                                    this.props.navigation.navigate('SEEALL', {title: 'Continue'})
                                 }}
                                 showArtist={true}
-                                items={this.state.courses}
+                                showType={true}
+                                items={this.state.progressLessons}
                                 forceSquareThumbs={false}
                                 itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
                                     fullWidth*0.425 : fullWidth*0.55)
@@ -414,6 +471,7 @@ export default class Lessons extends React.Component {
                                 itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
+                        )}
                         <View key={'newLessons'}
                             style={{
                                 minHeight: fullHeight*0.225,
@@ -428,7 +486,8 @@ export default class Lessons extends React.Component {
                                     this.props.navigation.navigate('COURSECATALOG')
                                 }}
                                 showArtist={true}
-                                items={this.state.courses}
+                                showType={true}
+                                items={this.state.newLessons}
                                 forceSquareThumbs={false}
                                 itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
                                     fullWidth*0.425 : fullWidth*0.55)
@@ -443,7 +502,8 @@ export default class Lessons extends React.Component {
                             //getVideos={() => this.getContent()}
                             renderType={'Mapped'}
                             showFilter={true}
-                            items={this.state.courses}
+                            showType={true}
+                            items={this.state.newLessons}
                             imageRadius={5*factorRatio}
                             containerBorderWidth={0}
                             containerWidth={fullWidth}

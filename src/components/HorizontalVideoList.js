@@ -36,12 +36,12 @@ class HorizontalVideoList extends React.Component {
                         height: '100%',
                     }]}
                 >
-                    <View style={{flex: 1}}/>
+                    <View style={{flex: 0.33}}/>
                     <ActivityIndicator 
                         size={'small'}
                         color={'grey'}
                     />
-                    <View style={{flex: 1}}/>
+                    <View style={{flex: 0.66}}/>
                 </View>
             )
         } else {
@@ -49,6 +49,10 @@ class HorizontalVideoList extends React.Component {
                 <View style={{height: 10*factorHorizontal}}/>
             )
         }
+    }
+
+    capitalize = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
 
@@ -124,6 +128,7 @@ class HorizontalVideoList extends React.Component {
                     )}
                     <FlatList
                         data={this.props.items}
+                        onLayout={console.log(this.props.items)}
                         extraData={this.state}
                         horizontal={true}
                         ListFooterComponent={this.showFooter}
@@ -148,7 +153,8 @@ class HorizontalVideoList extends React.Component {
                                     <TouchableOpacity
                                         onLongPress={() => {
                                             this.setState({
-                                                showCourse:  true
+                                                showCourse:  true,
+                                                item,
                                             })
                                         }}
                                         delayLongPress={350}
@@ -190,19 +196,37 @@ class HorizontalVideoList extends React.Component {
                                         {item.title}
                                     </Text>
                                     <View style={{height: 3*factorRatio}}/>
-                                    {this.props.showArtist && (
-                                    <Text
-                                        numberOfLines={2}
+                                    <View
                                         style={{
-                                            textAlign: 'left',
-                                            fontFamily: 'OpenSans-Regular',
-                                            color: colors.secondBackground,
-                                            fontSize: 12*factorRatio,
+                                            flexDirection: 'row',
                                         }}
                                     >
-                                        Song / Ed Sheeran
-                                    </Text>
-                                    )}
+                                        {this.props.showType && (
+                                        <Text
+                                            numberOfLines={2}
+                                            style={{
+                                                textAlign: 'left',
+                                                fontFamily: 'OpenSans-Regular',
+                                                color: colors.secondBackground,
+                                                fontSize: 12*factorRatio,
+                                            }}
+                                        >
+                                            {this.capitalize(item.type)} / 
+                                        </Text>
+                                        )}
+                                        {this.props.showArtist && (
+                                        <Text
+                                            numberOfLines={2}
+                                            style={{
+                                                textAlign: 'left',
+                                                fontFamily: 'OpenSans-Regular',
+                                                color: colors.secondBackground,
+                                                fontSize: 12*factorRatio,
+                                            }}
+                                        > {item.artist}
+                                        </Text>
+                                        )}
+                                    </View>
                                 </View>
                                 <View style={{flex: 0.2, flexDirection: 'row'}}>
                                     <View style={{flex: 1}}/>
@@ -239,6 +263,7 @@ class HorizontalVideoList extends React.Component {
                         backdropOpacity={0.79}
                     >
                         <TheFourPillars
+                            data={this.state.item}
                             hideTheFourPillars={() => {
                                 this.setState({
                                     showCourse: false

@@ -23,6 +23,9 @@ class TheFourPillars extends React.Component {
         }
     }
 
+    capitalize = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     render = () => {
         return (
@@ -86,7 +89,7 @@ class TheFourPillars extends React.Component {
                             >
                                 <View
                                     style={{
-                                        height: 160*factorRatio,
+                                        height: 180*factorRatio,
                                         width: fullWidth*0.8,
                                         backgroundColor: 'white',
                                         zIndex: 10,
@@ -94,7 +97,7 @@ class TheFourPillars extends React.Component {
                                 >
                                     <FastImage
                                         style={{flex:1, borderRadius: 10}}
-                                        source={require('Pianote2/src/assets/img/imgs/image-1.jpg')}
+                                        source={{uri: this.props.data.thumbnail}}
                                         resizeMode={FastImage.resizeMode.stretch}
                                     />
                                 </View>
@@ -111,7 +114,7 @@ class TheFourPillars extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    The Four Pillars {'\n'}Of Improvisation
+                                    {this.props.data.title}
                                 </Text>
                             </View>
                             <View key={'artist'}
@@ -126,14 +129,13 @@ class TheFourPillars extends React.Component {
                                         textAlign: 'center',
                                         fontSize: 12*factorRatio,
                                         color: 'grey',
-                                        fontWeight: '400',
                                     }}
                                 >
-                                    Course / Cassi Falk
+                                    {this.capitalize(this.props.data.type)} / {this.props.data.artist}
                                 </Text>
                             </View>
                             <View style={{height: 10*factorVertical}}/>
-                            <View key={'text'}
+                            <View key={'description'}
                                 style={[
                                     styles.centerContent, {
                                     paddingLeft: fullWidth*0.05,
@@ -143,12 +145,11 @@ class TheFourPillars extends React.Component {
                                 <Text
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: '300',
                                         fontSize: 14*factorRatio,
                                         textAlign: 'left',
                                     }}
                                 >
-                                    Hanon exercises have been around forever and there is a great reason for their sticking power. These exercises make the perfect warmup for daily practice. They will help you develop speed, dexterity, and finger independence as well as give you a platform to practice dynamics and articulations. Cassi walks you step by step through some of her favourite Hanon exercises in this course and includes a variation for each exercise that will target specific technical skills.
+                                    {this.props.data.description}
                                 </Text>
                             </View>
                             <View key={'stats'}
@@ -178,10 +179,9 @@ class TheFourPillars extends React.Component {
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
-                                            fontWeight: '400',
                                             fontSize: 12*factorRatio,
                                             textAlign: 'left',
-                                            marginTop: 10*factorVertical,
+                                            marginTop: 5*factorVertical,
                                         }}
                                     >
                                         LESSONS
@@ -197,13 +197,13 @@ class TheFourPillars extends React.Component {
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
-                                            fontWeight: '700',
+                                            fontWeight: 'bold',
                                             fontSize: 18*factorRatio,
                                             textAlign: 'left',
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        2400
+                                        {this.props.data.xp}
                                     </Text>
                                     <Text
                                         style={{
@@ -211,7 +211,7 @@ class TheFourPillars extends React.Component {
                                             fontWeight: '400',
                                             fontSize: 12*factorRatio,
                                             textAlign: 'left',
-                                            marginTop: 10*factorVertical,
+                                            marginTop: 5*factorVertical,
                                         }}
                                     >
                                         XP
@@ -242,13 +242,12 @@ class TheFourPillars extends React.Component {
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontWeight: '400',
                                                 fontSize: 12*factorRatio,
                                                 textAlign: 'left',
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            100
+                                            {this.props.data.likeCount}
                                         </Text>
                                     </View>
                                     <View style={{width: 15*factorRatio}}/>
@@ -267,7 +266,6 @@ class TheFourPillars extends React.Component {
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontWeight: '400',
                                                 fontSize: 12*factorRatio,
                                                 textAlign: 'left',
                                                 marginTop: 10*factorVertical,
@@ -292,7 +290,6 @@ class TheFourPillars extends React.Component {
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontWeight: '400',
                                                 fontSize: 12*factorRatio,
                                                 textAlign: 'left',
                                                 marginTop: 10*factorVertical,
