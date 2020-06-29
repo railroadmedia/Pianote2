@@ -52,6 +52,25 @@ class VerticalVideoList extends React.Component {
     }
 
 
+    addToMyList = async (contentID) => {
+        await fetch('http://127.0.0.1:5000/addToMyList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, addded to my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    } 
+
+
     renderFlatlist = () => {
         return (
             <FlatList
@@ -166,7 +185,9 @@ class VerticalVideoList extends React.Component {
                     </View>
                     <View style={{flex: 0.5}}>
                         <TouchableOpacity 
-                            onPress={() => {}}
+                            onPress={() => {
+                                this.addToMyList(row.id)
+                            }}
                             style={[styles.centerContent, {flex: 1}]}
                         >
                             <AntIcon
@@ -180,6 +201,11 @@ class VerticalVideoList extends React.Component {
                 )}
             />
         )
+    }
+
+
+    capitalize = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
 
@@ -319,23 +345,44 @@ class VerticalVideoList extends React.Component {
                                 {row.title}
                             </Text>
                             <View style={{height: 2*factorVertical}}/>
-                            <Text
-                                numberOfLines={2}
+                            <View
                                 style={{
-                                    fontSize: 12*factorRatio,
-                                    color: colors.secondBackground,
-                                    textAlign: 'left',
-                                    fontFamily: 'OpenSans-Regular',
+                                    flexDirection: 'row',
                                 }}
                             >
-                                Quick Tip / Jared Falk
-                                {/* {this.props.items[index].artist} */}
-                            </Text>
+                                {this.props.showType && (
+                                <Text
+                                    numberOfLines={2}
+                                    style={{
+                                        fontSize: 12*factorRatio,
+                                        color: colors.secondBackground,
+                                        textAlign: 'left',
+                                        fontFamily: 'OpenSans-Regular',
+                                    }}
+                                >
+                                    {this.capitalize(row.type)} / 
+                                </Text>
+                                )}
+                                {this.props.showArtist && (
+                                <Text
+                                    numberOfLines={2}
+                                    style={{
+                                        fontSize: 12*factorRatio,
+                                        color: colors.secondBackground,
+                                        textAlign: 'left',
+                                        fontFamily: 'OpenSans-Regular',
+                                    }}
+                                > {row.artist}
+                                </Text>
+                                )}
+                            </View>
                         </View>
                         <View style={{flex: 0.5}}>
                             {(this.props.showPlus == null) && (
                             <TouchableOpacity 
-                                onPress={() => {}}
+                                onPress={() => {
+                                    this.addToMyList(row.id)
+                                }}
                                 style={[styles.centerContent, {flex: 1}]}
                             >
                                 <AntIcon
@@ -492,7 +539,9 @@ class VerticalVideoList extends React.Component {
                             <View style={{flex: 1}}>
                                 {(this.props.showPlus == null) && (
                                 <TouchableOpacity
-                                    onPress={() => {}}
+                                    onPress={() => {
+                                        this.addToMyList(row.id)
+                                    }}
                                     style={[styles.centerContent, {flex: 1}]}
                                 >
                                     <AntIcon
@@ -556,6 +605,9 @@ class VerticalVideoList extends React.Component {
                             </View>
                             <View style={{width: 10*factorHorizontal}}/>
                             <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate('FILTERS', {type: this.props.type})
+                                }}
                                 style={[
                                     styles.centerContent, {
                                     borderWidth: 1*factorRatio,
@@ -568,7 +620,11 @@ class VerticalVideoList extends React.Component {
                                 }]}
                             >
                                 <View style={{flex: 1}}/>
-                                <View style={{transform: [{rotate: '90deg'}]}}>
+                                <View 
+                                    style={{
+                                        transform: [{rotate: '90deg'}]
+                                    }}
+                                >
                                     <IonIcon 
                                         size={14*factorRatio}
                                         name={'md-options'}
@@ -583,17 +639,17 @@ class VerticalVideoList extends React.Component {
                     )}
                     {!this.props.showTitleOnly && this.props.showFilter && (
                     <View>
-                        <View 
+                        <View
                             style={{
                                 paddingLeft: 10*factorHorizontal,
-                                paddingRight: 10*factorHorizontal
+                                paddingRight: 10*factorHorizontal,
                             }}
                         >
                             <Text
                                 style={{
                                     fontSize: 12*factorRatio,
                                     marginBottom: 5*factorVertical,
-                                    textAlign: 'left', 
+                                    textAlign: 'left',
                                     fontFamily: 'OpenSans-Regular',
                                     color: colors.secondBackground,
                                 }}

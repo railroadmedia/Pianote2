@@ -11,6 +11,18 @@ import {
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import { NavigationActions, StackActions} from 'react-navigation';
+
+const filterDict = {
+    'LESSONS': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
+    'COURSES': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
+    'SONGS': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
+}
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+})
 
 export default class Filters extends React.Component {
     static navigationOptions = {header: null};
@@ -18,7 +30,7 @@ export default class Filters extends React.Component {
         super(props);
         this.state = {
             type: 'Courses',
-            level: 3,
+            level: 0,
             openProgress: false,
             openInstructors: false,
             all: false,
@@ -30,6 +42,7 @@ export default class Filters extends React.Component {
             filter6: false,
             filter7: false,
             filter8: false,
+            filter9: false,
             kenny: false,
             lisa: false,
             cassi: false,
@@ -43,13 +56,6 @@ export default class Filters extends React.Component {
             progressComplete: false,
             allLevels: false,
 
-        }
-    }
-
-    componentDidMount() {
-        let type = this.props.navigation.getParam('type')
-        if(typeof(type) !== 'undefined') {
-            this.setState({type})
         }
     }
 
@@ -275,6 +281,7 @@ export default class Filters extends React.Component {
                                         }}
                                     >
                                         <View style={{flex: 1}}/>
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][0]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -302,9 +309,11 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter1) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                ALL
+                                                {filterDict[this.props.navigation.state.params.type][0]}
                                             </Text>                                
                                         </TouchableOpacity>
+                                        )}
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][1]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -332,9 +341,11 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter2) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                TOPICS
+                                                {filterDict[this.props.navigation.state.params.type][1]}
                                             </Text>                                
                                         </TouchableOpacity>
+                                        )}
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][2]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -362,9 +373,10 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter3) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                FROM
+                                                {filterDict[this.props.navigation.state.params.type][2]}
                                             </Text>                                
                                         </TouchableOpacity>
+                                        )}
                                         <View style={{flex: 1}}/>
                                     </View>
                                     <View style={{height: 10*factorRatio}}/>
@@ -377,6 +389,7 @@ export default class Filters extends React.Component {
                                         }}
                                     >
                                         <View style={{flex: 1}}/>
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][3]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -404,9 +417,11 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter4) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                THIS
+                                                {filterDict[this.props.navigation.state.params.type][3]}
                                             </Text>                                
                                         </TouchableOpacity>
+                                        )}
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][4]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -434,9 +449,11 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter5) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                CONTENT
+                                                {filterDict[this.props.navigation.state.params.type][4]}
                                             </Text>                                
                                         </TouchableOpacity>
+                                        )}
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][5]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -464,9 +481,10 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter6) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                TYPE
+                                                {filterDict[this.props.navigation.state.params.type][5]}
                                             </Text>                                
                                         </TouchableOpacity>
+                                        )}
                                         <View style={{flex: 1}}/>
                                     </View>
                                     <View style={{height: 10*factorRatio}}/>
@@ -479,6 +497,7 @@ export default class Filters extends React.Component {
                                         }}
                                     >
                                         <View style={{flex: 1}}/>
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][6]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -506,9 +525,11 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter7) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                GO
+                                                {filterDict[this.props.navigation.state.params.type][6]}
                                             </Text>                                
                                         </TouchableOpacity>
+                                        )}
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][7]) !== 'undefined') && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
@@ -536,19 +557,42 @@ export default class Filters extends React.Component {
                                                     color: (this.state.filter8) ? 'white' : colors.secondBackground,
                                                 }}
                                             >
-                                                HERE
+                                                {filterDict[this.props.navigation.state.params.type][7]}
                                             </Text>                                
                                         </TouchableOpacity>
-                                        <View
+                                        )}
+                                        {(typeof(filterDict[this.props.navigation.state.params.type][8]) !== 'undefined') && (
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    filter9: !this.state.filter9
+                                                })
+                                            }}
                                             style={[ 
                                                 styles.centerContent, {
                                                 height: 30*factorVertical,
                                                 width: fullWidth*0.3,
                                                 marginRight: fullWidth*0.01,
                                                 marginLeft: fullWidth*0.01,
+                                                borderWidth: 0.5*factorRatio,
+                                                borderColor: (this.state.filter9) ? 'transparent' : colors.secondBackground,
+                                                backgroundColor: (this.state.filter9) ? 'red' : 'transparent',
                                                 borderRadius: 200,
                                             }]}
-                                        />
+                                        >
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    fontWeight: 'bold',
+                                                    fontSize: 12*factorRatio,
+                                                    fontFamily: 'OpenSans-Regular',
+                                                    color: (this.state.filter9) ? 'white' : colors.secondBackground,
+                                                }}
+                                            >
+                                                {filterDict[this.props.navigation.state.params.type][8]}
+                                            </Text>                                
+                                        </TouchableOpacity>
+                                        )}
                                         <View style={{flex: 1}}/>
                                     </View>
                                 </View>
@@ -1087,6 +1131,9 @@ export default class Filters extends React.Component {
                             <View style={{flex: 1}}/>
                             <View style={styles.centerContent}>
                                 <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.dispatch(resetAction);
+                                }}
                                     style={[
                                         styles.centerContent, {
                                         height: fullHeight*0.05,
@@ -1123,6 +1170,7 @@ export default class Filters extends React.Component {
                                             filter6: false,
                                             filter7: false,
                                             filter8: false,
+                                            filter9: false,                                            
                                             kenny: false,
                                             lisa: false,
                                             cassi: false,

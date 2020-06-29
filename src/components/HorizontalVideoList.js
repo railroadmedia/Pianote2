@@ -27,6 +27,25 @@ class HorizontalVideoList extends React.Component {
     }
 
 
+    addToMyList = async (contentID) => {
+        await fetch('http://127.0.0.1:5000/addToMyList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, addded to my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    } 
+
+
     showFooter() {
         if(this.props.items.length == 0) {
             return (
@@ -232,8 +251,12 @@ class HorizontalVideoList extends React.Component {
                                     <View style={{flex: 1}}/>
                                     {this.props.showArtist && (
                                     <TouchableOpacity
-                                        style={{paddingTop: 5*factorVertical}}
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.addToMyList(item.id)
+                                        }}
+                                        style={{
+                                            paddingTop: 5*factorVertical
+                                        }}
                                     >
                                         <Icon
                                             name={'plus'}

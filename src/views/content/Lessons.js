@@ -6,7 +6,6 @@ import {
     View, 
     Text,
     ScrollView,
-    TouchableOpacity,
 } from 'react-native';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
@@ -36,6 +35,7 @@ export default class Lessons extends React.Component {
             profileImage: '',
             xp: '', // user's XP
             rank: '', // user's level
+            isLoading: true,
         }
     }
 
@@ -66,7 +66,8 @@ export default class Lessons extends React.Component {
         
         await this.getProgressLessons()
         await this.getNewLessons()
-        await this.getAllLessons()
+        //await this.getAllLessons()
+        await this.setState({isLoading: false})
     }
 
 
@@ -78,17 +79,16 @@ export default class Lessons extends React.Component {
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                //required_user_states: ['started'],
-                included_types:['course'],
+                required_user_states: ['started'],
+                included_types: ['course'],
             });
 
-            console.log(response, 'response')
+            console.log('lessons in progress: ', response)
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
             })
 
-            console.log(newContent, 'hello')
             items = []
             for(i in newContent) {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -99,6 +99,7 @@ export default class Lessons extends React.Component {
                         type: newContent[i].post.type,
                         description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                         xp: newContent[i].getField('xp'),
+                        id: newContent[i].id,
                         likeCount: newContent[i].likeCount,
                     })
                 }
@@ -106,7 +107,7 @@ export default class Lessons extends React.Component {
 
             this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
-                page: this.state.page + 1,
+                lessonsStarted: (items.length > 0) ? true : false,
             })
 
         }
@@ -131,7 +132,6 @@ export default class Lessons extends React.Component {
                 return new ContentModel(data)
             })
 
-            console.log(newContent, 'hello')
             items = []
             for(i in newContent) {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -142,11 +142,14 @@ export default class Lessons extends React.Component {
                         type: newContent[i].post.type,
                         description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                         xp: newContent[i].getField('xp'),
+                        id: newContent[i].id,
                         likeCount: newContent[i].likeCount,
                     })
                 }
             }
 
+            console.log(newContent, 'hello')
+            
             this.setState({
                 newLessons: [...this.state.newLessons, ...items],
             })
@@ -163,7 +166,7 @@ export default class Lessons extends React.Component {
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types:['song'],
+                included_types: ['song'],
             });
 
             const newContent = await response.data.data.map((data) => {
@@ -174,9 +177,14 @@ export default class Lessons extends React.Component {
             for(i in newContent) {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
-                        title: await newContent[i].getField('title'),
-                        artist: await newContent[i].getField('artist'),
-                        thumbnail: await newContent[i].getData('thumbnail_url'),
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].getField('xp'),
+                        id: newContent[i].id,
+                        likeCount: newContent[i].likeCount,
                     })
                 }
             }
@@ -315,7 +323,11 @@ export default class Lessons extends React.Component {
                                     buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
                                     pxFromLeft={fullWidth*0.065}
                                     buttonWidth={fullWidth*0.42}
-                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
+                                    pressed={() => {
+                                        this.props.navigation.navigate('VIDEOPLAYER', {
+
+                                        })
+                                    }}
                                 />
                                 <MoreInfoIcon
                                     pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
@@ -447,74 +459,81 @@ export default class Lessons extends React.Component {
                                 <View style={{flex: 1}}/>
                             </View>
                         </View>
-                        {(this.state.lessonsStarted && 
-                        <View key={'progressCourses'}
-                            style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
-                                backgroundColor: colors.mainBackground,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'CONTINUE'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate('SEEALL', {title: 'Continue'})
+                        
+                        {!this.state.isLoading && (
+                        <View>
+                            {(this.state.lessonsStarted && 
+                            <View key={'progressCourses'}
+                                style={{
+                                    minHeight: fullHeight*0.225,
+                                    paddingLeft: fullWidth*0.035,
+                                    backgroundColor: colors.mainBackground,
                                 }}
-                                showArtist={true}
+                            >
+                                <HorizontalVideoList
+                                    Title={'CONTINUE'}
+                                    Description={''}
+                                    seeAll={() => {
+                                        this.props.navigation.navigate('SEEALL', {title: 'Continue'})
+                                    }}
+                                    showArtist={true}
+                                    showType={true}
+                                    items={this.state.progressLessons}
+                                    forceSquareThumbs={false}
+                                    itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
+                                        fullWidth*0.425 : fullWidth*0.55)
+                                    }
+                                    itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
+                                />
+                            </View>
+                            )}
+                            <View key={'newLessons'}
+                                style={{
+                                    minHeight: fullHeight*0.225,
+                                    paddingLeft: fullWidth*0.035,
+                                    backgroundColor: colors.mainBackground,
+                                }}
+                            >
+                                <HorizontalVideoList
+                                    Title={'NEW LESSONS'}
+                                    Description={''}
+                                    seeAll={() => {
+                                        this.props.navigation.navigate('COURSECATALOG')
+                                    }}
+                                    showArtist={true}
+                                    showType={true}
+                                    items={this.state.newLessons}
+                                    forceSquareThumbs={false}
+                                    itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
+                                        fullWidth*0.425 : fullWidth*0.55)
+                                    }
+                                    itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
+                                />
+                            </View>
+                            <View style={{height: 5*factorRatio}}/>
+                            <VerticalVideoList
+                                title={'ALL LESSONS'}
+                                outVideos={this.state.outVideos}
+                                //getVideos={() => this.getContent()}
+                                renderType={'Mapped'}
+                                type={'LESSONS'}
+                                showFilter={true}
                                 showType={true}
-                                items={this.state.progressLessons}
-                                forceSquareThumbs={false}
-                                itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
-                                    fullWidth*0.425 : fullWidth*0.55)
+                                showArtist={true}
+                                items={this.state.newLessons}
+                                imageRadius={5*factorRatio}
+                                containerBorderWidth={0}
+                                containerWidth={fullWidth}
+                                containerHeight={(onTablet) ? fullHeight*0.15 : (
+                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
                                 }
-                                itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
+                                imageHeight={(onTablet) ? fullHeight*0.12 : (
+                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
+                                }
+                                imageWidth={fullWidth*0.26}
                             />
                         </View>
                         )}
-                        <View key={'newLessons'}
-                            style={{
-                                minHeight: fullHeight*0.225,
-                                paddingLeft: fullWidth*0.035,
-                                backgroundColor: colors.mainBackground,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'NEW LESSONS'}
-                                Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate('COURSECATALOG')
-                                }}
-                                showArtist={true}
-                                showType={true}
-                                items={this.state.newLessons}
-                                forceSquareThumbs={false}
-                                itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
-                                    fullWidth*0.425 : fullWidth*0.55)
-                                }
-                                itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
-                            />
-                        </View>
-                        <View style={{height: 5*factorRatio}}/>
-                        <VerticalVideoList
-                            title={'ALL LESSONS'}
-                            outVideos={this.state.outVideos}
-                            //getVideos={() => this.getContent()}
-                            renderType={'Mapped'}
-                            showFilter={true}
-                            showType={true}
-                            items={this.state.newLessons}
-                            imageRadius={5*factorRatio}
-                            containerBorderWidth={0}
-                            containerWidth={fullWidth}
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
-                            }
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
-                            }
-                            imageWidth={fullWidth*0.26}
-                        />
                     </ScrollView>
                     <NavigationBar
                         currentPage={'LESSONS'}
