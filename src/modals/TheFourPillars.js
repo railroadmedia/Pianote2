@@ -23,9 +23,74 @@ class TheFourPillars extends React.Component {
         }
     }
 
+
     capitalize = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
+
+    addToMyList = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        
+        await fetch('http://127.0.0.1:5000/addToMyList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, addded to my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    } 
+
+    
+    like = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        
+        await fetch('http://127.0.0.1:5000/like', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, addded to my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    } 
+
+
+    download = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        
+        await fetch('http://127.0.0.1:5000/addToMyList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, addded to my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    } 
+
 
     render = () => {
         return (

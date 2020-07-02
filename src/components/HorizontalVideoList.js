@@ -22,12 +22,14 @@ class HorizontalVideoList extends React.Component {
         super(props);
         this.showFooter = this.showFooter.bind(this)
         this.state = {
-            showCourse: false,
+            showModal: false,
         }
     }
 
 
     addToMyList = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        
         await fetch('http://127.0.0.1:5000/addToMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -166,13 +168,12 @@ class HorizontalVideoList extends React.Component {
                                         height: this.props.itemHeight,
                                         marginRight: 10*factorHorizontal,
                                         borderRadius: 7.5*factorRatio,
-                                        backgroundColor: '#ececec',
                                     }]}
                                 >
                                     <TouchableOpacity
                                         onLongPress={() => {
                                             this.setState({
-                                                showCourse:  true,
+                                                showModal:  true,
                                                 item,
                                             })
                                         }}
@@ -270,7 +271,7 @@ class HorizontalVideoList extends React.Component {
                         </View>
                     }/>
                     <Modal key={'modal'}
-                        isVisible={this.state.showCourse}
+                        isVisible={this.state.showModal}
                         style={[
                             styles.centerContent, {
                             margin: 0,
@@ -289,7 +290,7 @@ class HorizontalVideoList extends React.Component {
                             data={this.state.item}
                             hideTheFourPillars={() => {
                                 this.setState({
-                                    showCourse: false
+                                    showModal: false
                                 })
                             }}
                         />

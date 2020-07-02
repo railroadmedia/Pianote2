@@ -6,6 +6,7 @@ import {
     View, 
     Text,
     ScrollView,
+    Alert,
 } from 'react-native';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
@@ -35,7 +36,9 @@ export default class Lessons extends React.Component {
             profileImage: '',
             xp: '', // user's XP
             rank: '', // user's level
+            currentSort: 'Relevance',
             isLoading: true,
+            filters: null,
         }
     }
 
@@ -66,7 +69,7 @@ export default class Lessons extends React.Component {
         
         await this.getProgressLessons()
         await this.getNewLessons()
-        //await this.getAllLessons()
+        await this.getAllLessons()
         await this.setState({isLoading: false})
     }
 
@@ -126,7 +129,7 @@ export default class Lessons extends React.Component {
                 included_types:['course'],
             });
 
-            console.log(response, 'response')
+            console.log('new lessons: ', response)
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
@@ -147,8 +150,6 @@ export default class Lessons extends React.Component {
                     })
                 }
             }
-
-            console.log(newContent, 'hello')
             
             this.setState({
                 newLessons: [...this.state.newLessons, ...items],
@@ -159,6 +160,27 @@ export default class Lessons extends React.Component {
 
 
     async getAllLessons() {
+        // see if importing filters
+        try {
+            var filters = this.props.navigation.state.params.filters
+            if(
+                filters.instructors.length !== 0 || 
+                filters.level.length !== 0 || 
+                filters.progress.length !== 0 || 
+                filters.topics.length !== 0
+            ) {
+                // if has a filter then send filters to vertical list
+                this.setState({filters})
+            } else {
+                // if no filters selected then null
+                var filters = null
+            }
+        } catch (error) {
+            var filters = null
+        }
+
+        console.log('filters', filters)
+
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
                 brand: 'pianote',
@@ -311,7 +333,7 @@ export default class Lessons extends React.Component {
                                         fontWeight: '700',
                                         color: 'white',
                                         fontFamily: 'RobotoCondensed-Regular',
-                                        transform: [{ scaleX: 0.7}],
+                                        transform: [{scaleX: 0.7}],
                                         textAlign: 'center',
                                     }}
                                 >
@@ -512,25 +534,30 @@ export default class Lessons extends React.Component {
                             </View>
                             <View style={{height: 5*factorRatio}}/>
                             <VerticalVideoList
-                                title={'ALL LESSONS'}
-                                outVideos={this.state.outVideos}
-                                //getVideos={() => this.getContent()}
-                                renderType={'Mapped'}
-                                type={'LESSONS'}
-                                showFilter={true}
-                                showType={true}
-                                showArtist={true}
-                                items={this.state.newLessons}
-                                imageRadius={5*factorRatio}
-                                containerBorderWidth={0}
-                                containerWidth={fullWidth}
-                                containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                    Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
-                                }
-                                imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                    Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
-                                }
-                                imageWidth={fullWidth*0.26}
+                                items={this.state.allLessons}
+                                title={'ALL LESSONS'} // title for see all page
+                                renderType={'Mapped'} // map vs flatlist
+                                type={'LESSONS'} // the type of content on page
+                                showFilter={true} // 
+                                showType={true} // show course / song by artist name
+                                showArtist={true} // show artist name
+                                filters={this.state.filters} // show filter list
+                                imageRadius={5*factorRatio} // radius of image shown
+                                containerBorderWidth={0} // border of box
+                                containerWidth={fullWidth} // width of list
+                                currentSort={this.state.currentSort} // relevance sort
+                                changeSort={(sort) => { 
+                                    this.setState({
+                                        currentSort: sort,
+                                        allLessons: [],
+                                    }),
+                                    this.getAllLessons()
+                                }} // change sort and reload videos
+                                containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925} // height per row
+                                imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065} // image height
+                                imageWidth={fullWidth*0.26} // image width
+                                outVideos={this.state.outVideos} // if paging and out of videos
+                                //getVideos={() => this.getContent()} // for paging
                             />
                         </View>
                         )}

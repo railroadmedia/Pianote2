@@ -10,12 +10,14 @@ import {
     FlatList, 
 } from 'react-native';
 import Modal from 'react-native-modal';
+import Relevance from '../modals/Relevance';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import TheFourPillars from '../modals/TheFourPillars';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import AsyncStorage from '@react-native-community/async-storage';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
 class VerticalVideoList extends React.Component {
@@ -23,7 +25,8 @@ class VerticalVideoList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showCourse: false,
+            showModal: false,
+            showRelevance: false,
         }
     }
 
@@ -53,6 +56,8 @@ class VerticalVideoList extends React.Component {
 
 
     addToMyList = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+
         await fetch('http://127.0.0.1:5000/addToMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -92,7 +97,15 @@ class VerticalVideoList extends React.Component {
                     }}
                 >
                     <TouchableOpacity 
-                        onPress={() => {this.props.navigator()}}
+                        onLongPress={() => {
+                            this.setState({
+                                showModal: true,
+                                item: row,
+                            })
+                        }}
+                        onPress={() => {
+                            this.props.navigation.navigate('VIDEOPLAYER')
+                        }}
                         style={{justifyContent: 'center'}}
                         underlayColor={'transparent'}    
                     >
@@ -209,6 +222,63 @@ class VerticalVideoList extends React.Component {
     }
 
 
+    topics = () => {
+        if(this.props.filters.topics.length > 0) {
+            var topicString = '/ '
+
+            for(i in this.props.filters.topics) {
+                if(i == this.props.filters.topics.length - 1) {
+                    topicString = topicString + this.props.filters.topics[i]
+                } else { 
+                    topicString = topicString + this.props.filters.topics[i] + ', '
+                }
+            }
+
+            return topicString
+        } else {
+            return
+        }
+    }
+
+
+    instructors = () => {
+        if(this.props.filters.instructors.length > 0) {
+            var instructorString = '/ '
+
+            for(i in this.props.filters.instructors) {
+                if(i == this.props.filters.instructors.length - 1) {
+                    instructorString = instructorString + this.props.filters.instructors[i]
+                } else { 
+                    instructorString = instructorString + this.props.filters.instructors[i] + ', '
+                }
+            }
+
+            return instructorString
+        } else {
+            return
+        }
+    }
+
+
+    progress = () => {
+        if(this.props.filters.progress.length > 0) {
+            var progressString = '/ '
+
+            for(i in this.props.filters.progress) {
+                if(i == this.props.filters.progress.length - 1) {
+                    progressString = progressString + this.props.filters.progress[i]
+                } else { 
+                    progressString = progressString + this.props.filters.progress[i] + ', '
+                }
+            }
+
+            return progressString
+        } else {
+            return
+        }
+    }
+
+
     renderMappedList = () => {
         return this.props.items.map((row, index) => {
             return (
@@ -225,7 +295,15 @@ class VerticalVideoList extends React.Component {
                         }}
                     >
                         <TouchableOpacity 
-                            onPress={() => {this.props.navigator()}}
+                            onLongPress={() => {
+                                this.setState({
+                                    showModal: true,
+                                    item: row,
+                                })
+                            }}
+                            onPress={() => {
+                                this.props.navigation.navigate('VIDEOPLAYER')
+                            }}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    
                         >
@@ -445,7 +523,15 @@ class VerticalVideoList extends React.Component {
                             </Text>
                         </View>              
                         <TouchableOpacity 
-                            onPress={() => {}}
+                            onLongPress={() => {
+                                this.setState({
+                                    showModal: true,
+                                    item: row,
+                                })
+                            }}
+                            onPress={() => {
+                                this.props.navigation.navigate('VIDEOPLAYER')
+                            }}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    
                         >
@@ -590,7 +676,13 @@ class VerticalVideoList extends React.Component {
                                 flexDirection: 'row',
                             }}
                         >
-                            <View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({
+                                        showRelevance: !this.state.showRelevance,
+                                    })
+                                }}
+                            >
                                 <View style={{flex: 1}}/>
                                 <Text
                                     style={{
@@ -602,7 +694,7 @@ class VerticalVideoList extends React.Component {
                                     RELEVANCE
                                 </Text>
                                 <View style={{flex: 1}}/>
-                            </View>
+                            </TouchableOpacity>
                             <View style={{width: 10*factorHorizontal}}/>
                             <TouchableOpacity
                                 onPress={() => {
@@ -610,7 +702,7 @@ class VerticalVideoList extends React.Component {
                                 }}
                                 style={[
                                     styles.centerContent, {
-                                    borderWidth: 1*factorRatio,
+                                    borderWidth: 1.5*factorRatio,
                                     borderColor: colors.pianoteRed,
                                     paddingBottom: 5*factorRatio,
                                     paddingTop: 5*factorRatio,
@@ -639,10 +731,12 @@ class VerticalVideoList extends React.Component {
                     )}
                     {!this.props.showTitleOnly && this.props.showFilter && (
                     <View>
+                        {(this.props.filters !== null) && (
                         <View
                             style={{
                                 paddingLeft: 10*factorHorizontal,
                                 paddingRight: 10*factorHorizontal,
+                                paddingTop: 5*factorVertical,
                             }}
                         >
                             <Text
@@ -663,11 +757,11 @@ class VerticalVideoList extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                         color: colors.secondBackground,
                                     }}
-                                >
-                                    Filters applied
-                                </Text> / BEGINNER 3 / BEATS, FILLS, FEET, TECHNIQUE / AARON EDGAR, JARED FALK / ALL PROGRESS
+                                >FILTERS APPLIED </Text>
+                                / {this.props.filters.level[1]} {this.props.filters.level[0]} {this.topics()} {this.instructors()} {this.progress()}
                             </Text>
                         </View>
+                        )}
                     </View>
                     )}
                     <View style={{height: 5*factorVertical}}/>
@@ -679,7 +773,7 @@ class VerticalVideoList extends React.Component {
                     }
                 </View>
                 <Modal key={'modal'}
-                        isVisible={this.state.showCourse}
+                        isVisible={this.state.showModal}
                         style={[
                             styles.centerContent, {
                             margin: 0,
@@ -695,10 +789,37 @@ class VerticalVideoList extends React.Component {
                         backdropOpacity={0.79}
                     >
                         <TheFourPillars
+                            data={this.state.item}
                             hideTheFourPillars={() => {
                                 this.setState({
-                                    showCourse: false
+                                    showModal: false
                                 })
+                            }}
+                        />
+                    </Modal>
+                    <Modal key={'modalRelevance'}
+                        isVisible={this.state.showRelevance}
+                        style={[
+                            styles.centerContent, {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        }]}
+                        animation={'slideInUp'}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={true}
+                        hasBackdrop={false}
+                        backdropColor={'white'}
+                        backdropOpacity={0.79}
+                    >
+                        <Relevance
+                            hideRelevance={() => {
+                                this.setState({showRelevance: false})
+                            }}
+                            currentSort={this.props.currentSort}
+                            changeSort={(sort) => {
+                                this.props.changeSort(sort)
                             }}
                         />
                     </Modal>

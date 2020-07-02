@@ -11,7 +11,6 @@ import {
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { NavigationActions, StackActions} from 'react-navigation';
 
 const filterDict = {
     'LESSONS': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
@@ -19,10 +18,11 @@ const filterDict = {
     'SONGS': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
 }
 
-const resetAction = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
-})
+const titleDict = {
+    'LESSONS': 'Lessons',
+    'COURSES': 'Courses',
+    'SONGS': 'Songs',
+}
 
 export default class Filters extends React.Component {
     static navigationOptions = {header: null};
@@ -30,7 +30,7 @@ export default class Filters extends React.Component {
         super(props);
         this.state = {
             type: 'Courses',
-            level: 0,
+            level: null,
             openProgress: false,
             openInstructors: false,
             all: false,
@@ -54,9 +54,99 @@ export default class Filters extends React.Component {
             progressAll: false,
             progressProgress: false,
             progressComplete: false,
-            allLevels: false,
+            allLevels: true,
 
         }
+    }
+
+    returnFilters = () => {
+        // add topics to list of filters if selected
+        var topics = []
+        if(this.state.filter1) {
+            topics.push(filterDict[this.props.navigation.state.params.type][0])
+        }
+        if(this.state.filter2) {
+            topics.push(filterDict[this.props.navigation.state.params.type][1])
+        }
+        if(this.state.filter3) {
+            topics.push(filterDict[this.props.navigation.state.params.type][2])
+        }
+        if(this.state.filter4) {
+            topics.push(filterDict[this.props.navigation.state.params.type][3])
+        }
+        if(this.state.filter5) {
+            topics.push(filterDict[this.props.navigation.state.params.type][4])
+        }
+        if(this.state.filter6) {
+            topics.push(filterDict[this.props.navigation.state.params.type][5])
+        }
+        if(this.state.filter7) {
+            topics.push(filterDict[this.props.navigation.state.params.type][6])
+        }
+        if(this.state.filter8) {
+            topics.push(filterDict[this.props.navigation.state.params.type][7])
+        }
+        if(this.state.filter9) {
+            topics.push(filterDict[this.props.navigation.state.params.type][8])
+        }
+
+        var progress = []
+        if(this.state.progressAll) {
+            progress.push('ALL')
+        }
+        if(this.state.progressProgress) {
+            progress.push('STARTED')
+        }
+        if(this.state.progressComplete) {
+            progress.push('COMPLETE')
+        }
+        
+        var instructors = []
+        if(this.state.kenny) {
+            instructors.push('KENNY')
+        }
+        if(this.state.lisa) {
+            instructors.push('LISA')
+        }
+        if(this.state.cassi) {
+            instructors.push('CASSI')
+        }
+        if(this.state.jay) {
+            instructors.push('JAY')
+        }
+        if(this.state.jordan) {
+            instructors.push('JORDAN')
+        }
+        if(this.state.jonny) {
+            instructors.push('JONNY')
+        }
+        if(this.state.brett) {
+            instructors.push('BRETT')
+        }
+        if(this.state.nate) {
+            instructors.push('NATE')
+        }
+
+        var level = []
+        if(this.state.allLevels) {
+            
+        } else {
+            level.push(this.state.level)
+            if(this.state.level < 4) {
+                level.push('BEGINNER')
+            } else if(this.state.level < 7) {
+                level.push('INTERMEDIATE')
+            } else {
+                level.push('ADVANCED')
+            }
+        }
+
+        return ({
+            'level': level,
+            'topics': topics,
+            'progress': progress,
+            'instructors': instructors,
+        })
     }
 
 
@@ -115,7 +205,7 @@ export default class Filters extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
-                                    Filter {this.state.type}
+                                    Filter {titleDict[this.props.navigation.state.params.type]}
                                 </Text>
                                 <View style={{flex: 1}}/>
                             </View>
@@ -151,11 +241,13 @@ export default class Filters extends React.Component {
                                     max={10}
                                     step={1}
                                     snapped={true}
-                                    values={[this.state.level]}
+                                    values={[
+                                        (this.state.allLevels) ? 10 : this.state.level
+                                    ]}
                                     onValuesChangeFinish={(e) => {
                                         this.setState({level: e[0]})
                                     }}
-                                    sliderLength={fullWidth*0.93}
+                                    sliderLength={fullWidth*0.9}
                                     trackStyle={{
                                         height: 5*factorHorizontal,
                                         backgroundColor: colors.secondBackground,
@@ -165,8 +257,8 @@ export default class Filters extends React.Component {
                                         height: 5*factorHorizontal,
                                     }}
                                     markerStyle={{
-                                        height: (this.state.allLevels) ? 0 : 17.5*factorRatio,
-                                        width: (this.state.allLevels) ? 0 : 17.5*factorRatio,
+                                        height: 17.5*factorRatio,
+                                        width: 17.5*factorRatio,
                                         marginBottom: 0,
                                         borderRadius: 40,
                                         backgroundColor: colors.pianoteRed,
@@ -1132,7 +1224,9 @@ export default class Filters extends React.Component {
                             <View style={styles.centerContent}>
                                 <TouchableOpacity
                                 onPress={() => {
-                                    this.props.navigation.dispatch(resetAction);
+                                    this.props.navigation.push(this.props.navigation.state.params.type, {
+                                        filters: this.returnFilters()
+                                    });
                                 }}
                                     style={[
                                         styles.centerContent, {
@@ -1158,7 +1252,7 @@ export default class Filters extends React.Component {
                                 <TouchableOpacity
                                     onPress={() => {
                                         this.setState({
-                                            level: 3,
+                                            level: null,
                                             openProgress: false,
                                             openInstructors: false,
                                             all: false,
@@ -1182,7 +1276,7 @@ export default class Filters extends React.Component {
                                             progressAll: false,
                                             progressProgress: false,
                                             progressComplete: false,
-                                            allLevels: false,
+                                            allLevels: true,
                                         })
                                     }}
                                     style={[

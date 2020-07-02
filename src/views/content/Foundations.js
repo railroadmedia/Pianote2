@@ -18,6 +18,7 @@ import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
+import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -168,7 +169,7 @@ export default class Foundations extends React.Component {
                                 elevation: 2,
                             }}
                         >
-                            <View style={{flex: 0.7}}/>
+                            <View style={{flex: 0.4}}/>
                             <View style={{flexDirection: 'row'}}>
                                 <View style={{flex: 1}}/>
                                 <Pianote
@@ -184,79 +185,64 @@ export default class Foundations extends React.Component {
                                     fontWeight: '700',
                                     color: 'white',
                                     fontFamily: 'RobotoCondensed-Regular',
-                                    transform: [{ scaleX: 0.7}],
+                                    transform: [{scaleX: 0.7}],
                                     textAlign: 'center',
                                 }}
                             >
                                 FOUNDATIONS
                             </Text>
-                            <View style={{flex: 0.3}}/>
-                            <View key={'startIcon'}
-                                style={{height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053}}
+                            <View style={{flex: 0.6}}/>
+                            
+                            <StartIcon
+                                pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
+                                buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
+                                pxFromLeft={fullWidth*0.5/2}
+                                buttonWidth={fullWidth*0.5}
+                                pressed={() => this.props.navigation.navigate('COURSECATALOG')}
+                            />
+                            <View key={'info'}
+                                style={[ 
+                                    styles.centerContent, {
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: (onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725,
+                                    width: fullWidth*0.25,
+                                    height: (onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055,
+                                    zIndex: 3,
+                                    elevation: 3,
+                                }]}
                             >
-                                <View key={'thumbs'}
-                                    style={[
-                                        styles.centerContent, {
-                                        position: 'absolute',
-                                        left: 0,
-                                        top: 0,
-                                        width: fullWidth*0.25,
-                                        height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
-                                        zIndex: 3,
-                                        elevation: 3,
-                                    }]}
-                                />
-                                <StartIcon
-                                    pxFromTop={0}
-                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
-                                    pxFromLeft={fullWidth*0.5/2}
-                                    buttonWidth={fullWidth*0.5}
-                                    pressed={() => this.props.navigation.navigate('COURSECATALOG')}
-                                />
-                                <View key={'info'}
-                                    style={[ 
-                                        styles.centerContent, {
-                                        position: 'absolute',
-                                        right: 0,
-                                        top: 0,
-                                        width: fullWidth*0.25,
-                                        height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
-                                        zIndex: 3,
-                                        elevation: 3,
-                                    }]}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.setState({
+                                            showInfo: !this.state.showInfo
+                                        })
+                                    }}
+                                    style={{
+                                        flex: 1,
+                                        alignItems: 'center',
+                                    }}
                                 >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                showInfo: !this.state.showInfo
-                                            })
-                                        }}
+                                    <AntIcon
+                                        name={(this.state.showInfo) ? 'infocirlce':'infocirlceo'}
+                                        size={22*factorRatio}
+                                        color={colors.pianoteRed}
+                                    />
+                                    <Text
                                         style={{
-                                            flex: 1,
-                                            alignItems: 'center',
+                                            fontFamily: 'OpenSans-Regular',
+                                            color: 'white',
+                                            marginTop: 3*factorRatio,
+                                            fontSize: 13*factorRatio,
                                         }}
                                     >
-                                        <AntIcon
-                                            name={(this.state.showInfo) ? 'infocirlce':'infocirlceo'}
-                                            size={22*factorRatio}
-                                            color={colors.pianoteRed}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                color: 'white',
-                                                marginTop: 3*factorRatio,
-                                                fontSize: 13*factorRatio,
-                                            }}
-                                        >
-                                            Info
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                        Info
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
-                            <View style={{height: 20*factorVertical}}/>   
                         </View> 
                     </View>
+                                        
                     {this.state.showInfo && (
                     <View key={'info'}
                         style={{
