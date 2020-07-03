@@ -12,6 +12,7 @@ import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
@@ -49,7 +50,7 @@ class TheFourPillars extends React.Component {
             }) 
     } 
 
-    
+
     like = async (contentID) => {
         email = await AsyncStorage.getItem('email')
         
@@ -63,7 +64,7 @@ class TheFourPillars extends React.Component {
         })
             .then((response) => response.json())
             .then((response) => {
-                console.log('response, addded to my list: ', response)
+                console.log('response, liked: ', response)
             })
             .catch((error) => {
                 console.log('API Error: ', error)
@@ -72,23 +73,7 @@ class TheFourPillars extends React.Component {
 
 
     download = async (contentID) => {
-        email = await AsyncStorage.getItem('email')
         
-        await fetch('http://127.0.0.1:5000/addToMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            })
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, addded to my list: ', response)
-            })
-            .catch((error) => {
-                console.log('API Error: ', error)
-            }) 
     } 
 
 
@@ -174,7 +159,7 @@ class TheFourPillars extends React.Component {
                                 <Text
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: '700',
+                                        fontWeight: 'bold',
                                         fontSize: 22*factorRatio,
                                         textAlign: 'center',
                                     }}
@@ -233,7 +218,7 @@ class TheFourPillars extends React.Component {
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
-                                            fontWeight: '700',
+                                            fontWeight: 'bold',
                                             fontSize: 18*factorRatio,
                                             textAlign: 'left',
                                             marginTop: 10*factorVertical,
@@ -273,7 +258,6 @@ class TheFourPillars extends React.Component {
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
-                                            fontWeight: '400',
                                             fontSize: 12*factorRatio,
                                             textAlign: 'left',
                                             marginTop: 5*factorVertical,
@@ -298,7 +282,11 @@ class TheFourPillars extends React.Component {
                                             width: 70*factorRatio,
                                         }]}
                                     >
-                                        <TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.like(this.props.data.id)
+                                            }}
+                                        >
                                             <AntIcon
                                                 name={'like2'}
                                                 size={25*factorRatio}
@@ -322,7 +310,11 @@ class TheFourPillars extends React.Component {
                                             width: 70*factorRatio,
                                         }]}
                                     >
-                                        <TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.addToMyList(this.props.data.id)
+                                            }}
+                                        >
                                             <AntIcon
                                                 name={'plus'}
                                                 size={30*factorRatio}
@@ -346,7 +338,11 @@ class TheFourPillars extends React.Component {
                                             width: 70*factorRatio,
                                         }]}
                                     >
-                                        <TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.download(this.props.data.id)
+                                            }}
+                                        >
                                             <MaterialIcon
                                                 name={'arrow-collapse-down'}
                                                 size={30*factorRatio}

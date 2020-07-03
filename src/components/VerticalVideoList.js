@@ -104,7 +104,9 @@ class VerticalVideoList extends React.Component {
                             })
                         }}
                         onPress={() => {
-                            this.props.navigation.navigate('VIDEOPLAYER')
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                                data: row
+                            })
                         }}
                         style={{justifyContent: 'center'}}
                         underlayColor={'transparent'}    
@@ -302,7 +304,9 @@ class VerticalVideoList extends React.Component {
                                 })
                             }}
                             onPress={() => {
-                                this.props.navigation.navigate('VIDEOPLAYER')
+                                this.props.navigation.navigate('VIDEOPLAYER', {
+                                    data: item
+                                })
                             }}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    

@@ -112,7 +112,7 @@ export default class Foundations extends React.Component {
                     zIndex: 1,
                     elevation: 1, 
                 }}
-            >                    
+            >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}

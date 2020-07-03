@@ -6,7 +6,6 @@ import {
     View, 
     Text,
     ScrollView,
-    Alert,
 } from 'react-native';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
@@ -346,9 +345,7 @@ export default class Lessons extends React.Component {
                                     pxFromLeft={fullWidth*0.065}
                                     buttonWidth={fullWidth*0.42}
                                     pressed={() => {
-                                        this.props.navigation.navigate('VIDEOPLAYER', {
-
-                                        })
+                                        this.props.navigation.navigate('VIDEOPLAYER')
                                     }}
                                 />
                                 <MoreInfoIcon
@@ -520,7 +517,7 @@ export default class Lessons extends React.Component {
                                     Title={'NEW LESSONS'}
                                     Description={''}
                                     seeAll={() => {
-                                        this.props.navigation.navigate('COURSECATALOG')
+                                        this.props.navigation.navigate('SEEALL', {title: 'New Lessons'})
                                     }}
                                     showArtist={true}
                                     showType={true}

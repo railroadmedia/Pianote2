@@ -15,6 +15,7 @@ import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import TheFourPillars from '../modals/TheFourPillars';
 import Icon from 'react-native-vector-icons/AntDesign';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class HorizontalVideoList extends React.Component {
     static navigationOptions = {header: null};
@@ -179,7 +180,9 @@ class HorizontalVideoList extends React.Component {
                                         }}
                                         delayLongPress={350}
                                         onPress={() => {
-                                            this.props.navigation.navigate('VIDEOPLAYER')
+                                            this.props.navigation.navigate('VIDEOPLAYER', {
+                                                data: item
+                                            })
                                         }}
                                         style={{
                                             flex: 1, 
