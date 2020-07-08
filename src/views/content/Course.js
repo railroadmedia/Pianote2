@@ -5,24 +5,14 @@ import React from 'react';
 import { 
     View, 
     Text, 
-    TouchableOpacity,
     ScrollView,
     Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import { getContent } from '@musora/services';
-import FastImage from 'react-native-fast-image';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
@@ -31,23 +21,51 @@ export default class Course extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
+            progressCourses: [],
+            newCourses: [],
+            allCourses: [],
             showModalMenu: false, // show navigation menu
             showInfo: false,
             started: false, // if started lesson
             outVideos: false, // if no more videos
             page: 1, // page of content
             progress: 0.52,
+            currentSort: 'Relevance',
+            filters: null,
+            filtering: false,
         }
     }
 
 
-    componentDidMount() {
-        this.getContent()
+    componentDidMount = async () => {
+        this.getProgressCourses()
+        this.getNewCourses()
+        this.getAllCourses()
     }
 
 
-    async getContent() {
+    getAllCourses = async () => {
+        await this.setState({filtering: true})
+
+        // see if importing filters
+        try {
+            var filters = this.state.filters
+            if(
+                filters.instructors.length !== 0 || 
+                filters.level.length !== 0 || 
+                filters.progress.length !== 0 || 
+                filters.topics.length !== 0
+            ) {
+                // if has a filter then send filters to vertical list
+                this.setState({filters})
+            } else {
+                // if no filters selected then null
+                var filters = null
+            }
+        } catch (error) {
+            var filters = null
+        }
+
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
                 brand:'pianote',
@@ -68,8 +86,13 @@ export default class Course extends React.Component {
                     if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                         items.push({
                             title: newContent[i].getField('title'),
-                            artist: newContent[i].getField('artist'),
+                            artist: newContent[i].getField('instructor').fields[0].value,
                             thumbnail: newContent[i].getData('thumbnail_url'),
+                            type: newContent[i].post.type,
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                            xp: newContent[i].getField('xp'),
+                            id: newContent[i].id,
+                            likeCount: newContent[i].likeCount,
                             progress: (i < 7 && i > 1) ? 'check' : ((i == 7) ? 'progress':'none'),
                         })
                     }
@@ -77,13 +100,143 @@ export default class Course extends React.Component {
             }
 
             this.setState({
-                items: [...this.state.items, ...items],
+                allCourses: [...this.state.allCourses, ...items],
                 page: this.state.page + 1,
                 outVideos: (items.length == 0) ? true : false
             })
-
-            console.log(this.state.items, ' - results')
         }
+
+        await this.setState({filtering: false})
+    }
+    
+
+    getProgressCourses = async () => {
+        if(this.state.outVideos == false) {
+            const { response, error } = await getContent({
+                brand:'pianote',
+                limit: '15',
+                page: this.state.page,
+                sort: '-created_on',
+                statuses: ['published'],
+                included_types:['song'],
+            });
+
+            const newContent = response.data.data.map((data) => {
+                return new ContentModel(data)
+            })
+
+            items = []
+            for(i in newContent) {
+                if(i > 0) {
+                    if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                        items.push({
+                            title: newContent[i].getField('title'),
+                            artist: newContent[i].getField('instructor').fields[0].value,
+                            thumbnail: newContent[i].getData('thumbnail_url'),
+                            type: newContent[i].post.type,
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                            xp: newContent[i].getField('xp'),
+                            id: newContent[i].id,
+                            likeCount: newContent[i].likeCount,
+                            progress: (i < 7 && i > 1) ? 'check' : ((i == 7) ? 'progress':'none'),
+                        })
+                    }
+                }
+            }
+
+            this.setState({
+                progressCourses: [...this.state.progressCourses, ...items],
+                page: this.state.page + 1,
+                outVideos: (items.length == 0) ? true : false
+            })
+        }
+    }
+
+
+    getNewCourses = async () => {
+        await this.setState({filtering: true})
+
+        // see if importing filters
+        try {
+            var filters = this.state.filters
+            if(
+                filters.instructors.length !== 0 || 
+                filters.level.length !== 0 || 
+                filters.progress.length !== 0 || 
+                filters.topics.length !== 0
+            ) {
+                // if has a filter then send filters to vertical list
+                this.setState({filters})
+            } else {
+                // if no filters selected then null
+                var filters = null
+            }
+        } catch (error) {
+            var filters = null
+        }
+
+        if(this.state.outVideos == false) {
+            const { response, error } = await getContent({
+                brand:'pianote',
+                limit: '15',
+                page: this.state.page,
+                sort: '-created_on',
+                statuses: ['published'],
+                included_types:['song'],
+            });
+
+            const newContent = response.data.data.map((data) => {
+                return new ContentModel(data)
+            })
+
+            items = []
+            for(i in newContent) {
+                if(i > 0) {
+                    if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                        items.push({
+                            title: newContent[i].getField('title'),
+                            artist: newContent[i].getField('instructor').fields[0].value,
+                            thumbnail: newContent[i].getData('thumbnail_url'),
+                            type: newContent[i].post.type,
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                            xp: newContent[i].getField('xp'),
+                            id: newContent[i].id,
+                            likeCount: newContent[i].likeCount,
+                            progress: (i < 7 && i > 1) ? 'check' : ((i == 7) ? 'progress':'none'),
+                        })
+                    }
+                }
+            }
+
+            this.setState({
+                newCourses: [...this.state.newCourses, ...items],
+                page: this.state.page + 1,
+                outVideos: (items.length == 0) ? true : false
+            })
+        }
+
+        await this.setState({filtering: false})
+    }
+
+
+    filterResults = async () => {
+        this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'COURSES',
+            onGoBack: (filters) => {
+                this.setState({
+                    allCourses: [],
+                    filters: (
+                        filters.instructors.length == 0 && 
+                        filters.level.length == 0 && 
+                        filters.progress.length == 0 && 
+                        filters.topics.length == 0
+                    ) ? null : filters, 
+                }),
+                this.getAllCourses(),
+                this.forceUpdate()
+            }
+        })
     }
 
 
@@ -165,15 +318,11 @@ export default class Course extends React.Component {
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
                                 Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate('SEEALL', {title: 'CONTINUE'})
-                                }}
+                                seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
                                 showArtist={true}
-                                items={this.state.items}
+                                items={this.state.progressCourses}
                                 forceSquareThumbs={false}
-                                itemWidth={isNotch ? fullWidth*0.575 : (onTablet ? 
-                                    fullWidth*0.425 : fullWidth*0.55)
-                                }
+                                itemWidth={isNotch ? fullWidth*0.575 : (onTablet ? fullWidth*0.425 : fullWidth*0.55)}
                                 itemHeight={isNotch ? fullHeight*0.15 : fullHeight*0.175}
                             />
                         </View>
@@ -187,38 +336,46 @@ export default class Course extends React.Component {
                             <HorizontalVideoList
                                 Title={'NEW COURSES'}
                                 Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate('SEEALL', {title: 'CONTINUE'})
-                                }}
+                                seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'New Courses'})}
                                 showArtist={true}
-                                items={this.state.items}
+                                items={this.state.newCourses}
                                 forceSquareThumbs={false}
-                                itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
-                                    fullWidth*0.425 : fullWidth*0.55)
-                                }
+                                itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? fullWidth*0.425 : fullWidth*0.55)}
                                 itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
                         
                         <View style={{height: 15*factorVertical}}/>
+                        {!this.state.filtering && (
                         <VerticalVideoList
+                            items={this.state.allCourses}
                             title={'COURSES'}
-                            outVideos={this.state.outVideos}
-                            //getVideos={() => this.getContent()}
                             renderType={'Mapped'}
-                            items={this.state.items}
+                            type={'COURSES'} // the type of content on page
                             showFilter={true}
+                            showType={true} // show course / song by artist name
+                            showArtist={true} // show artist name
+                            showLength={false}
+                            filters={this.state.filters} // show filter list
                             imageRadius={5*factorRatio}
                             containerBorderWidth={0}
+                            currentSort={this.state.currentSort} // relevance sort
+                            changeSort={(currentSort) => { 
+                                this.setState({
+                                    currentSort,
+                                    allCourses: [],
+                                }),
+                                this.getAllCourses()
+                            }} // change sort and reload videos
+                            filterResults={() => this.filterResults()} // apply from filters page
                             containerWidth={fullWidth}
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925
-                            }
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (
-                                Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065
-                            }
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925}
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065}
                             imageWidth={fullWidth*0.26}
-                        />                    
+                            outVideos={this.state.outVideos}
+                            //getVideos={() => this.getContent()}
+                        />
+                        )}               
                     </ScrollView>
                 </View>                
                 <Modal key={'restartCourse'}

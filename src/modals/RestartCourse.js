@@ -80,9 +80,8 @@ class RestartCourse extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '700',
-                                        fontSize: 19*factorRatio,
+                                        fontWeight: 'bold',
+                                        fontSize: 20*factorRatio,
                                         marginTop: 10*factorRatio,
                                     }}
                                 >
@@ -100,7 +99,6 @@ class RestartCourse extends React.Component {
                                 <Text
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: '300',
                                         fontSize: 16*factorRatio,
                                         textAlign: 'justify',
                                     }}
@@ -137,10 +135,9 @@ class RestartCourse extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
                                                     color: 'white',
+                                                    fontFamily: 'RobotoCondensed-Bold',
                                                     fontSize: 14*factorRatio,
-                                                    fontWeight: '700',
                                                 }}
                                             >
                                                 RESTART LEVEL
@@ -180,10 +177,9 @@ class RestartCourse extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
                                                         fontSize: 14*factorRatio,
+                                                        fontFamily: 'RobotoCondensed-Bold',
                                                         color: 'grey',
-                                                        fontWeight: '700',
                                                     }}
                                                 >
                                                     CANCEL

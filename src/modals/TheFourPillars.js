@@ -140,7 +140,7 @@ class TheFourPillars extends React.Component {
                                 <View
                                     style={{
                                         height: 180*factorRatio,
-                                        width: fullWidth*0.8,
+                                        width: (this.props.data.type == 'song') ? 180*factorRatio : fullWidth*0.8,
                                         backgroundColor: 'white',
                                         zIndex: 10,
                                     }}

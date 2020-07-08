@@ -35,9 +35,10 @@ export default class Lessons extends React.Component {
             profileImage: '',
             xp: '', // user's XP
             rank: '', // user's level
-            currentSort: 'Relevance',
             isLoading: true,
+            filtering: false,
             filters: null,
+            currentSort: 'Relevance',
         }
     }
 
@@ -85,8 +86,6 @@ export default class Lessons extends React.Component {
                 included_types: ['course'],
             });
 
-            console.log('lessons in progress: ', response)
-
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
             })
@@ -111,7 +110,6 @@ export default class Lessons extends React.Component {
                 progressLessons: [...this.state.progressLessons, ...items],
                 lessonsStarted: (items.length > 0) ? true : false,
             })
-
         }
     }
 
@@ -127,8 +125,6 @@ export default class Lessons extends React.Component {
                 //required_user_states: ['started'],
                 included_types:['course'],
             });
-
-            console.log('new lessons: ', response)
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
@@ -155,13 +151,15 @@ export default class Lessons extends React.Component {
             })
 
         }
-    }    
+    }
 
 
-    async getAllLessons() {
+    getAllLessons = async () => {
+        await this.setState({filtering: true})
+
         // see if importing filters
         try {
-            var filters = this.props.navigation.state.params.filters
+            var filters = this.state.filters
             if(
                 filters.instructors.length !== 0 || 
                 filters.level.length !== 0 || 
@@ -177,8 +175,6 @@ export default class Lessons extends React.Component {
         } catch (error) {
             var filters = null
         }
-
-        console.log('filters', filters)
 
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
@@ -215,6 +211,8 @@ export default class Lessons extends React.Component {
             })
 
         }
+
+        await this.setState({filtering: false})
     }
 
 
@@ -230,6 +228,27 @@ export default class Lessons extends React.Component {
                 return num
             }
         }
+    }
+
+
+    filterResults = async () => {
+        this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'LESSONS',
+            onGoBack: (filters) => {
+                this.setState({
+                    allLessons: [],
+                    filters: (
+                        filters.instructors.length == 0 && 
+                        filters.level.length == 0 && 
+                        filters.progress.length == 0 && 
+                        filters.topics.length == 0
+                    ) ? null : filters, 
+                }),
+                this.getAllLessons(),
+                this.forceUpdate()
+            }
+        })
     }
 
 
@@ -516,20 +535,17 @@ export default class Lessons extends React.Component {
                                 <HorizontalVideoList
                                     Title={'NEW LESSONS'}
                                     Description={''}
-                                    seeAll={() => {
-                                        this.props.navigation.navigate('SEEALL', {title: 'New Lessons'})
-                                    }}
+                                    seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'New Lessons'})}
                                     showArtist={true}
                                     showType={true}
                                     items={this.state.newLessons}
                                     forceSquareThumbs={false}
-                                    itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
-                                        fullWidth*0.425 : fullWidth*0.55)
-                                    }
+                                    itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? fullWidth*0.425 : fullWidth*0.55)}
                                     itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                                 />
                             </View>
                             <View style={{height: 5*factorRatio}}/>
+                            {!this.state.filtering && (
                             <VerticalVideoList
                                 items={this.state.allLessons}
                                 title={'ALL LESSONS'} // title for see all page
@@ -538,6 +554,7 @@ export default class Lessons extends React.Component {
                                 showFilter={true} // 
                                 showType={true} // show course / song by artist name
                                 showArtist={true} // show artist name
+                                showLength={false}
                                 filters={this.state.filters} // show filter list
                                 imageRadius={5*factorRatio} // radius of image shown
                                 containerBorderWidth={0} // border of box
@@ -550,12 +567,14 @@ export default class Lessons extends React.Component {
                                     }),
                                     this.getAllLessons()
                                 }} // change sort and reload videos
+                                filterResults={() => this.filterResults()} // apply from filters page
                                 containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925} // height per row
                                 imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065} // image height
                                 imageWidth={fullWidth*0.26} // image width
                                 outVideos={this.state.outVideos} // if paging and out of videos
                                 //getVideos={() => this.getContent()} // for paging
                             />
+                            )}
                         </View>
                         )}
                     </ScrollView>

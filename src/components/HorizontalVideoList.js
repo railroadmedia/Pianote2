@@ -150,7 +150,6 @@ class HorizontalVideoList extends React.Component {
                     )}
                     <FlatList
                         data={this.props.items}
-                        onLayout={console.log(this.props.items)}
                         extraData={this.state}
                         horizontal={true}
                         ListFooterComponent={this.showFooter}

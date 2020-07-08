@@ -14,9 +14,10 @@ import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import StartIcon from 'Pianote2/src/components/StartIcon.js';
+import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
@@ -33,58 +34,170 @@ export default class StudentFocusShow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            items: [], // hello
             showModalMenu: false, // show navigation menu
             showStarted: false,
             showRestartCourse: false,
-            title: null,
-            page: 1, // page of content
             outVideos: false, // if no more videos
-            items: [], // hello
+            page: 1, // page of content
+            filters: null,
+            currentSort: 'Relevance',
+            pack: this.props.navigation.state.params.pack,
+            title: this.props.navigation.state.params.pack,
         }
     }
 
 
-    componentDidMount() {
-        this.setState({
-            pack: this.props.navigation.state.params.pack,
-            title: this.props.navigation.state.params.pack,
-        })
+    componentDidMount = async () => {
         this.getContent()
     }
 
 
+    restartCourse = async () => {
+        email = await AsyncStorage.getItem('email')
+        contentID = 0
+
+        await fetch('http://127.0.0.1:5000/restartCourse', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, addded to my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })
+    }
+
+
+    like = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        contentID = 0
+
+        await fetch('http://127.0.0.1:5000/like', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, liked: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    } 
+
+
+    addToMyList = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        contentID = 0
+
+        await fetch('http://127.0.0.1:5000/addToMyList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, addded to my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    } 
+
+
     async getContent() {
+        // see if importing filters
+        try {
+            var filters = this.props.navigation.state.params.filters
+            if(
+                filters.instructors.length !== 0 || 
+                filters.level.length !== 0 || 
+                filters.progress.length !== 0 || 
+                filters.topics.length !== 0
+            ) {
+                // if has a filter then send filters to vertical list
+                this.setState({filters})
+            } else {
+                // if no filters selected then null
+                var filters = null
+            }
+        } catch (error) {
+            var filters = null
+        }
+
+        console.log('filters', filters)
+
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
-                brand:'pianote',
+                brand: 'pianote',
                 limit: '15',
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types:['song'],
+                included_types: ['song'],
             });
 
-            const newContent = response.data.data.map((data) => {
+            const newContent = await response.data.data.map((data) => {
                 return new ContentModel(data)
             })
-
+            
             items = []
             for(i in newContent) {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].getField('xp'),
+                        id: newContent[i].id,
+                        likeCount: newContent[i].likeCount,
                     })
                 }
             }
 
-            this.setState({
+            await this.setState({
                 items: [...this.state.items, ...items],
                 page: this.state.page + 1,
                 outVideos: (items.length == 0) ? true : false
             })
         }
+    }
+
+
+    filterResults = async () => {
+        this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'STUDENTFOCUSSHOW',
+            onGoBack: (filters) => {
+                this.setState({
+                    items: [],
+                    filters: (
+                        filters.instructors.length == 0 && 
+                        filters.level.length == 0 && 
+                        filters.progress.length == 0 && 
+                        filters.topics.length == 0
+                    ) ? null : filters, 
+                }),
+                this.getContent(),
+                this.forceUpdate()
+            }
+        })
     }
 
 
@@ -121,30 +234,58 @@ export default class StudentFocusShow extends React.Component {
                             <View key={'goBackIcon'}
                                 style={[
                                     styles.centerContent, {
+                                    height: (Platform.OS == 'android') ?  fullHeight*0.1 : (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                                    width: fullWidth,
                                     position: 'absolute',
-                                    left: 10*factorHorizontal,
-                                    top: (isNotch) ? 50*factorVertical : 40*factorVertical,
-                                    height: 50*factorRatio,
-                                    width: 50*factorRatio,
+                                    top: 0,
                                     zIndex: 5,
                                 }]}
                             >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.goBack()
-                                    }}
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                    }}
+                                <View style={{flex: 1}}/>
+                                <View 
+                                    style={[
+                                        styles.centerContent, {
+                                        flexDirection: 'row',
+                                    }]}
                                 >
-                                    <EntypoIcon
-                                        name={'chevron-thin-left'}
-                                        size={25*factorRatio}
-                                        color={'white'}
-                                    />
-                                </TouchableOpacity>
-                            </View>
+                                    <View style={{flex: 1, flexDirection: 'row'}}>
+                                        <View style={{flex: 0.1}}/>
+                                        <View>
+                                            <View style={{flex: 1}}/>
+                                            <TouchableOpacity
+                                                onPress={() => this.props.navigation.goBack()}
+                                                style={{
+                                                    paddingLeft: 10*factorRatio,
+                                                    paddingRight: 10*factorRatio,
+                                                }}
+                                            >
+                                                <EntypoIcon
+                                                    name={'chevron-thin-left'}
+                                                    size={25*factorRatio}
+                                                    color={'white'}
+                                                />
+                                            </TouchableOpacity>
+                                            <View style={{flex: 1}}/>
+                                        </View>
+                                    </View>
+                                    <Text
+                                        style={{
+                                            fontSize: 22*factorRatio,
+                                            fontWeight: 'bold',
+                                            color: colors.mainBackground,
+                                            fontFamily: 'OpenSans-Regular',
+                                        }}
+                                    >
+                                        Filter Courses
+                                    </Text>
+                                    <View style={{flex: 1}}/>
+                                </View>
+                                <View style={{height: 20*factorVertical}}/>
+                            </View>                 
+
+
+
+
                             <View key={'bootcampImage'}
                                 style={[
                                     styles.centerContent, {
@@ -373,7 +514,9 @@ export default class StudentFocusShow extends React.Component {
                                 >
                                     <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.like(0)
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             width: 70*factorRatio,
@@ -399,6 +542,9 @@ export default class StudentFocusShow extends React.Component {
                                     </TouchableOpacity>
                                     <View style={{width: 15*factorRatio}}/>
                                     <TouchableOpacity
+                                        onPress={() => {
+                                            this.addToMyList(0)
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             width: 70*factorRatio,
@@ -460,20 +606,32 @@ export default class StudentFocusShow extends React.Component {
                         )}
                         <View style={{height: 20*factorVertical}}/>
                         <VerticalVideoList
-                            title={'EPISODES'}
-                            outVideos={this.state.outVideos}
-                            fetchVideos={() => this.getContent()}
                             items={this.state.items}
+                            title={'EPISODES'}
+                            renderType={'Mapped'} // map vs flatlist
+                            type={'STUDENTFOCUSSHOW'} // the type of content on page
                             showFilter={true}
+                            showType={true} // show course / song by artist name
+                            showArtist={true} // show artist name
+                            showLength={false}
+                            filters={this.state.filters} // show filter list
                             containerWidth={fullWidth}
                             imageRadius={5*factorRatio}
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (
-                                Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.09}
-                            imageHeight={(onTablet) ? fullHeight*0.125 : (
-                                Platform.OS == 'android') ? fullHeight*0.0925 : fullHeight*0.07
-                            }
-                            renderType={'Mapped'}
+                            containerBorderWidth={0} // border of box
+                            currentSort={this.state.currentSort} // relevance sort
+                            changeSort={(sort) => { 
+                                this.setState({
+                                    currentSort: sort,
+                                    items: [],
+                                }),
+                                this.getContent()
+                            }} // change sort and reload videos
+                            filterResults={() => this.filterResults()} 
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.09}
+                            imageHeight={(onTablet) ? fullHeight*0.125 : (Platform.OS == 'android') ? fullHeight*0.0925 : fullHeight*0.07}
                             imageWidth={fullWidth*0.26}
+                            outVideos={this.state.outVideos}
+                            //fetchVideos={() => this.getContent()}
                         />
                     </ScrollView>
                     <Modal key={'restartCourse'}
@@ -493,6 +651,7 @@ export default class StudentFocusShow extends React.Component {
                     >
                         <RestartCourse
                             hideRestartCourse={() => {
+                                this.restartCourse(),
                                 this.setState({
                                     showRestartCourse: false
                                 })

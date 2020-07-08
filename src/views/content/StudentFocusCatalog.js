@@ -4,7 +4,6 @@
 import React from 'react';
 import {
     View,
-    Animated,
     ScrollView,
     Text,
     TouchableOpacity,
@@ -13,6 +12,7 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -23,32 +23,50 @@ export default class StudentFocusCatalog extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [], // videos
+            progressStudentFocus: [], // videos
             outVideos: false, // if no more videos to load
             page: 0, // current page
+            lessonsStarted: false,
         }
     }
 
 
-    componentDidMount() {
-        this.getVideos()
+    componentDidMount = async () => {
+        email = await AsyncStorage.getItem('email')
+
+        await fetch('http://127.0.0.1:5000/accountDetails', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                this.setState({
+                    lessonsStarted: (response.lessonsStarted == 1) ? true : false,
+                })
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })           
+        await this.getProgressStudentFocus()
     }
 
 
-    async getVideos() {
+    async getProgressStudentFocus() {
         if(this.state.outVideos == false) {     
             const { response, error } = await getContent({
-                brand:'pianote',
+                brand: 'pianote',
                 limit: '15',
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types:['song'],
+                required_user_states: ['started'],
+                included_types: ['course'],
             });
             
-            if(response.data.data.length == 0) {
-                this.setState({outVideos: true})
-            }
+            console.log('student focus in progress: ', response)
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
@@ -59,17 +77,21 @@ export default class StudentFocusCatalog extends React.Component {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].getField('xp'),
+                        id: newContent[i].id,
+                        likeCount: newContent[i].likeCount,
                     })
                 }
             }
 
             this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-            })
-
+                progressStudentFocus: [...this.state.progressStudentFocus, ...items],
+                lessonsStarted: (items.length > 0) ? true : false,
+            })        
         }
     }
 
@@ -101,7 +123,7 @@ export default class StudentFocusCatalog extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        style={{flex: 1, backgroundColor: colors.mainBackground,}}
+                        style={{flex: 1, backgroundColor: colors.mainBackground}}
                     >
                         <View key={'header'}
                             style={{
@@ -135,9 +157,10 @@ export default class StudentFocusCatalog extends React.Component {
                             Student Focus
                         </Text>
                         <View style={{height: 15*factorVertical}}/>
+                        {this.state.lessonsStarted && (
                         <View key={'continueCourses'}
                             style={{
-                                minHeight: fullHeight*0.225,
+                                minHeight: fullHeight*0.305,
                                 paddingLeft: fullWidth*0.035,
                                 backgroundColor: colors.mainBackground,
                             }}
@@ -145,18 +168,16 @@ export default class StudentFocusCatalog extends React.Component {
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
                                 Description={''}
-                                seeAll={() => {
-                                    this.props.navigation.navigate('SEEALL', {title: 'CONTINUE'})
-                                }}
+                                seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
                                 showArtist={true}
-                                items={this.state.items}
+                                showType={true}
+                                items={this.state.progressStudentFocus}
                                 forceSquareThumbs={false}
-                                itemWidth={isNotch ? fullWidth*0.575 : (onTablet ? 
-                                    fullWidth*0.425 : fullWidth*0.55)
-                                }
-                                itemHeight={isNotch ? fullHeight*0.15 : fullHeight*0.175}
+                                itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? fullWidth*0.425 : fullWidth*0.55)}
+                                itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
+                        )}
                         <View key={'pack'}
                             style={{
                                 height: fullWidth*0.45*2+fullWidth*0.033,
@@ -280,7 +301,6 @@ export default class StudentFocusCatalog extends React.Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                           
                         <View style={{height: 15*factorVertical}}/>                  
                     </ScrollView>
                 </View>                
