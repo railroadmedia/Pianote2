@@ -256,6 +256,7 @@ export default class SongCatalog extends React.Component {
                             showType={false} // show course / song by artist name
                             showArtist={true} // show artist name
                             showLength={false}
+                            showSort={true}
                             filters={this.state.filters} // show filter list
                             imageRadius={5*factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box

@@ -44,7 +44,7 @@ export default class Downloads extends React.Component {
                     }}
                     style={[
                         styles.centerContent, {
-                        height: fullHeight*0.12,
+                        height: (onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095,
                         width: fullWidth,
                         flexDirection: 'row',
                         backgroundColor: colors.mainBackground,
@@ -54,8 +54,9 @@ export default class Downloads extends React.Component {
                     <View>
                         <FastImage
                             style={{
-                                height: (onTablet) ? fullHeight*0.1 : fullHeight*0.085,
-                                width: (onTablet) ? fullWidth*0.325 : fullWidth*0.325,
+                                height: (onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075,
+                                width: fullWidth*0.275,
+                                
                             }}
                             source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
                             resizeMode={FastImage.resizeMode.stretch}
@@ -92,7 +93,9 @@ export default class Downloads extends React.Component {
                     </View>
                     <View style={{flex: 0.3}}>
                         <TouchableOpacity
-                            onPress={() => {}}
+                            onPress={() => {
+                                this.removeItem()
+                            }}
                             style={[
                                 styles.centerContent, {
                                 height: '100%',
@@ -109,6 +112,12 @@ export default class Downloads extends React.Component {
                 </TouchableOpacity>
             )
         })
+    }
+
+
+    removeItem = async (contentID) => {
+        await this.state.items.splice(1, 1)
+        await this.setState({items: this.state.items})
     }
 
 

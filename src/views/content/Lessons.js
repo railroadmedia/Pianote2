@@ -105,7 +105,6 @@ export default class Lessons extends React.Component {
                     })
                 }
             }
-
             this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
                 lessonsStarted: (items.length > 0) ? true : false,
@@ -209,6 +208,8 @@ export default class Lessons extends React.Component {
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
             })
+
+            console.log(this.state.allLessons)
 
         }
 
@@ -554,6 +555,7 @@ export default class Lessons extends React.Component {
                                 showFilter={true} // 
                                 showType={true} // show course / song by artist name
                                 showArtist={true} // show artist name
+                                showSort={true}
                                 showLength={false}
                                 filters={this.state.filters} // show filter list
                                 imageRadius={5*factorRatio} // radius of image shown
@@ -585,4 +587,4 @@ export default class Lessons extends React.Component {
             </View>
         )
     }
-}
+} 

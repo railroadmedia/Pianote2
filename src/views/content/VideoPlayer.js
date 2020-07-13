@@ -343,7 +343,7 @@ export default class VideoPlayer extends React.Component {
                                                 color: 'white',
                                             }}
                                         >
-                                            Download
+                                            Resources
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity key={'download'}
@@ -366,7 +366,7 @@ export default class VideoPlayer extends React.Component {
                                                 color: 'white',
                                             }}
                                         >
-                                            Resources
+                                            Download
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity key={'info'}

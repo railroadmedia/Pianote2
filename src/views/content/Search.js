@@ -15,16 +15,10 @@ import {
 } from 'react-native';
 import { ContentModel } from '@musora/models';
 import { searchContent } from '@musora/services';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import Student from 'Pianote2/src/assets/img/svgs/student.svg';
-import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import AsyncStorage from '@react-native-community/async-storage';
-import Graduation from 'Pianote2/src/assets/img/svgs/courses.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import FilterIcon from 'Pianote2/src/assets/img/svgs/filters-selected.svg';
 
 export default class Search extends React.Component {
     static navigationOptions = {header: null};
@@ -57,6 +51,7 @@ export default class Search extends React.Component {
             await this.setState({recentSearchResults})
         }
     }
+
 
 
     mapRecentResults() {
@@ -148,33 +143,41 @@ export default class Search extends React.Component {
         })
 
         const { response, error } = await searchContent({
-            term: this.state.searchTerm,
+            brand: 'pianote',
+            limit: '15',
+            page: 1,
+            sort: '-created_on',
             statuses: ['published'],
             included_types: ['song'],
-            page: '1',
-            brand: 'pianote',
-            limit: '20',
-            sort: '-created_on',
         });
-
-        console.log('Search Error: ', error)
-        console.log('Search Response: ', response)
 
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)
         })
 
-        searchResults = []
+        items = []
         for(i in newContent) {
-            searchResults.push({
-                title: newContent[i].getField('title'),
-                artist: newContent[i].getField('artist'),
-                thumbnail: newContent[i].getData('thumbnail_url'),
-                duration: newContent[i].getData('length'),
-            })
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].getField('xp'),
+                    id: newContent[i].id,                    
+                    likeCount: newContent[i].likeCount,
+                })
+            }
         }
 
-        await this.setState({searchResults})
+        this.setState({
+            searchResults: [...this.state.searchResults, ...items],
+        })
+
+        
+
+        
     }
 
 
@@ -381,393 +384,10 @@ export default class Search extends React.Component {
                                     }]}
                                 >
                                     <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                showFilters: !this.state.showFilters
-                                            })
-                                        }}
-                                        style={[
-                                            styles.centerContent, {
-                                            flexDirection: 'row',
-                                            height: 40*factorRatio,
-                                            width: 40*factorRatio,
-                                            borderRadius: 200,
-                                        }]}
-                                    >
-                                        <FilterIcon
-                                            fill={(
-                                                this.state.showFilters) ? 'red' : 'white'
-                                            }
-                                            height={40*factorRatio}
-                                            width={40*factorRatio}
-                                        />
-                                        <View
-                                            style={[
-                                                styles.centerContent, {
-                                                position: 'absolute',
-                                                height: 40*factorRatio,
-                                                width: 40*factorRatio,
-                                                borderRadius: 200,
-                                                transform: [{ rotate: '90deg'}],
-                                                zIndex: 4,
-                                                elevation: 0,
-                                            }]}
-                                        >
-                                            <IonIcon 
-                                                size={20*factorRatio}
-                                                name={'md-options'}
-                                                color={(
-                                                    this.state.showFilters
-                                                ) ? 'white' : '#c2c2c2'}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
                                 </View>
                                 )}
                             </View>
                             <View style={{height: fullHeight*0.015}}/>
-                            {this.state.showFilters && (
-                            <Animated.View key={'filterOptions'} 
-                                style={{
-                                    height: this.state.filterSize, 
-                                    width: fullWidth,
-                                    paddingTop: 2.5*factorRatio,
-                                }}
-                            >
-                                <View key={'content'}
-                                    style={{
-                                        flex: 1,
-                                    }}
-                                >
-                                    <View key={'upper'}
-                                        style={{
-                                            flex: 0.5,
-                                            flexDirection: 'row',
-                                            alignSelf: 'stretch',
-                                        }}
-                                    >
-                                        <View key={'level'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 40*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.LearningPath) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    LearningPath: !this.state.LearningPath
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <LearningPaths
-                                                                height={15*factorRatio}
-                                                                width={15*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                LEARNING PATHS
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                        <View key={'instructor'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 35*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.Courses) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    Courses: !this.state.Courses
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <Graduation
-                                                                height={20*factorRatio}
-                                                                width={20*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                COURSES
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View key={'lower'}
-                                        style={{
-                                            flex: 0.5,
-                                            flexDirection: 'row',
-                                            alignSelf: 'stretch',
-                                        }}
-                                    >
-                                        <View key={'topic'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 35*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.StudentFocus) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    StudentFocus: !this.state.StudentFocus
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <Student
-                                                                height={15*factorRatio}
-                                                                width={15*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                STUDENT FOCUS
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                        <View key={'progress'}
-                                            style={{flex: 1}}
-                                        >
-                                            <View 
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}}/>
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '93%',
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}}/>
-                                                    <View
-                                                        style={{
-                                                            height: '80%',
-                                                            width: '100%',
-                                                            borderRadius: 35*factorRatio,
-                                                            alignSelf: 'stretch',
-                                                            backgroundColor: (
-                                                                (this.state.Songs) ? '#fb1b2f' : 'black'
-                                                            ),
-                                                        }}
-                                                    >
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.setState({
-                                                                    Songs: !this.state.Songs
-                                                                })
-                                                            }}
-                                                            style={[
-                                                                styles.centerContent, {
-                                                                height: '100%',
-                                                                width: '100%',
-                                                                flexDirection: 'row',
-                                                            }]}
-                                                        >
-                                                            <Songs
-                                                                height={17.5*factorRatio}
-                                                                width={17.5*factorRatio}
-                                                                fill={'white'}
-                                                            />
-                                                            <View style={{width: 5*factorHorizontal}}/>
-                                                            <Text
-                                                                style={{
-                                                                    fontSize: 14*factorRatio,
-                                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                                    color: 'white',
-                                                                    fontFamily: 'OpenSans-Regular',
-                                                                }}
-                                                            >
-                                                                SONGS
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View style={{flex: 1}}/>
-                                                </View>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View key={'clear'}
-                                    style={{
-                                        height: fullHeight*0.075,
-                                        backgroundColor: 'white',
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                Songs: false,
-                                                StudentFocus: false,
-                                                Courses: false,
-                                                LearningPath: false,
-                                            })
-                                        }}
-                                        style={[
-                                            styles.centerContent, {
-                                            flexDirection: 'row',
-                                        }]}
-                                    >
-                                        <Text
-                                            style={[
-                                                styles.centerContent, {
-                                                fontSize: 14*factorRatio,
-                                                color: 'grey',
-                                                marginRight: 0.5,
-                                                textAlign: 'center',
-                                                fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                fontFamily: 'OpenSans-Regular',
-                                            }]}
-                                        >
-                                            <Text
-                                                style={[
-                                                    styles.centerContent, {
-                                                    fontSize: 14*factorRatio,
-                                                    color: 'grey',
-                                                    textAlign: 'right',
-                                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '800',
-                                                    fontFamily: 'OpenSans-Regular',
-                                                }]}
-                                            >
-                                                x </Text>
-                                            CLEAR FILTERS 
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}}/>
-                                </View>
-                            </Animated.View>
-                            )}
-                            
                             <ScrollView style={{flex: 0.73}}>
                                 {!this.state.searchEntered && (
                                 <View>
@@ -775,18 +395,7 @@ export default class Search extends React.Component {
                                 </View>
                                 )}
                                 
-                                {this.state.searchEntered && (
-                                <VerticalVideoList
-                                    fetchVideos={() => this.getContent()}
-                                    items={this.state.searchResults}
-                                    renderType={'Mapped'}
-                                    outVideos={this.state.outVideos}
-                                    containerWidth={fullWidth}
-                                    containerHeight={(onTablet) ? fullHeight*0.15 : fullHeight*0.09}
-                                    imageHeight={(onTablet) ? fullHeight*0.125 : fullHeight*0.07}
-                                    imageWidth={fullWidth*0.26}
-                                />
-                                )}
+                               
                             </ScrollView>
                         </View>
                         <NavigationBar

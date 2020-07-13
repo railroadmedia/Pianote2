@@ -80,9 +80,6 @@ export default class SinglePack extends React.Component {
                 }
             }
 
-            console.log(newContent)
-            console.log(items)
-
             this.setState({
                 items: [...this.state.items, ...items],
             })

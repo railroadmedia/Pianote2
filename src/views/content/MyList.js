@@ -26,16 +26,20 @@ export default class MyList extends React.Component {
             outVideos: false, // if no more videos to load
             items: [], // videos loaded
             page: 0, // current page
+            filters: null,
+            filtering: true,
         }
     }
 
 
-    componentDidMount() {
-        this.getContent()
+    componentDidMount = async () => {
+        await this.setState({filtering: true})
+        await this.getContent()
+        await this.setState({filtering: false})
     }
 
 
-    async getContent() {
+    getContent = async () => {
         if(this.state.outVideos == false) { 
             const { response, error } = await getContent({
                 brand:'pianote',
@@ -59,8 +63,13 @@ export default class MyList extends React.Component {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].getField('xp'),
+                        id: newContent[i].id,
+                        likeCount: newContent[i].likeCount,
                     })
                 }
             }
@@ -71,6 +80,38 @@ export default class MyList extends React.Component {
             })
 
         }
+    }
+
+
+    filterResults = async () => {
+        this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'LESSONS',
+            onGoBack: (filters) => {
+                this.setState({
+                    items: [],
+                    filters: (
+                        filters.instructors.length == 0 && 
+                        filters.level.length == 0 && 
+                        filters.progress.length == 0 && 
+                        filters.topics.length == 0
+                    ) ? null : filters, 
+                }),
+                this.getContent(),
+                this.forceUpdate()
+            }
+        })
+    }
+
+
+    removeFromMyList = async (contentID) => {
+        for(i in this.state.items) {
+            // remove if ID matches
+            if(this.state.items[i].id == contentID) {
+                this.state.items.splice(i, 1);
+            }
+        }
+        await this.setState({items: this.state.items})
     }
 
 
@@ -136,9 +177,7 @@ export default class MyList extends React.Component {
                         <View style={{height: 30*factorVertical}}/>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.navigation.navigate(
-                                    'SEEALL', {title: 'In Progress'}
-                                )
+                                this.props.navigation.navigate('SEEALL', {title: 'In Progress'})
                             }}
                             style={{
                                 height: fullHeight*0.075,
@@ -183,6 +222,9 @@ export default class MyList extends React.Component {
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.navigate('SEEALL', {title: 'Completed'})
+                            }}
                             style={{
                                 height: fullHeight*0.075,
                                 width: fullWidth,
@@ -220,20 +262,31 @@ export default class MyList extends React.Component {
                             </View>
                         </TouchableOpacity>
                         <View style={{height: 15*factorVertical}}/>
+                        {!this.state.filtering && (
                         <VerticalVideoList
-                            title={'ADDED TO MY LIST'}
-                            outVideos={this.state.outVideos}
-                            //getVideos={() => this.getContent()}
-                            renderType={'Mapped'}
-                            showFilter={true}
                             items={this.state.items}
-                            imageRadius={5*factorRatio}
-                            containerBorderWidth={0}
-                            containerWidth={fullWidth}
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925}
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.07}
-                            imageWidth={fullWidth*0.26}
-                        />                    
+                            title={'ADDED TO MY LIST'}
+                            renderType={'Mapped'}
+                            type={'MYLIST'} // the type of content on page
+                            showFilter={true} // shows filters button
+                            showType={false} // show course / song by artist name
+                            showArtist={false} // show artist name
+                            showLength={true} // duration of song
+                            showSort={false}
+                            filters={this.state.filters} // show filter list
+                            filterResults={() => this.filterResults()} // apply from filters page
+                            outVideos={this.state.outVideos}
+                            removeItem={(contentID) => {
+                                this.removeFromMyList(contentID)
+                            }}
+                            imageRadius={5*factorRatio} // radius of image shown
+                            containerBorderWidth={0} // border of box
+                            containerWidth={fullWidth} // width of list
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
+                            imageWidth={fullWidth*0.26} // image width
+                        />
+                        )}
                     </ScrollView>
                 </View>                
                 <NavigationBar

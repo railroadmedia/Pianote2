@@ -16,6 +16,7 @@ import { withNavigation } from 'react-navigation';
 import TheFourPillars from '../modals/TheFourPillars';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
@@ -68,12 +69,34 @@ class VerticalVideoList extends React.Component {
         })
             .then((response) => response.json())
             .then((response) => {
-                console.log('response, addded to my list: ', response)
+                console.log('response, added to my list: ', response)
             })
             .catch((error) => {
                 console.log('API Error: ', error)
             }) 
     } 
+
+
+    removeFromMyList = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        await this.props.removeItem(contentID)
+        await fetch('http://127.0.0.1:5000/removeFromMyList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                this.props.items = []
+                console.log('response, removed from my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+    }
 
 
     capitalize = (string) => {
@@ -343,15 +366,27 @@ class VerticalVideoList extends React.Component {
                             {(this.props.showPlus == null) && (
                             <TouchableOpacity 
                                 onPress={() => {
+                                    (this.props.type == 'MYLIST') ?
+                                    this.removeFromMyList(row.id)
+                                    :
                                     this.addToMyList(row.id)
                                 }}
                                 style={[styles.centerContent, {flex: 1}]}
                             >
+                                {(this.props.type !== 'MYLIST') && (
                                 <AntIcon
                                     name={'plus'} 
                                     size={30*factorRatio} 
                                     color={colors.pianoteRed}
                                 />
+                                )}
+                                {(this.props.type == 'MYLIST') && (
+                                <AntIcon
+                                    name={'close'} 
+                                    size={30*factorRatio} 
+                                    color={colors.pianoteRed}
+                                />
+                                )}
                             </TouchableOpacity>
                             )}
                         </View>
@@ -703,7 +738,14 @@ class VerticalVideoList extends React.Component {
                                 flexDirection: 'row',
                             }}
                         >
+                            {this.props.showSort && (
                             <TouchableOpacity
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                }}
                                 onPress={() => {
                                     this.setState({
                                         showRelevance: !this.state.showRelevance,
@@ -720,8 +762,17 @@ class VerticalVideoList extends React.Component {
                                 >
                                     RELEVANCE
                                 </Text>
+                                <View style={{width: 5*factorHorizontal}}/>
+                                <View>
+                                    <FontIcon
+                                        size={14*factorRatio}
+                                        name={'sort-amount-down'}
+                                        color={colors.pianoteRed}
+                                    />
+                                </View>
                                 <View style={{flex: 1}}/>
                             </TouchableOpacity>
+                            )}
                             <View style={{width: 10*factorHorizontal}}/>
                             <TouchableOpacity
                                 onPress={() => {
@@ -748,6 +799,7 @@ class VerticalVideoList extends React.Component {
                                 </View>
                                 <View style={{flex: 1}}/>
                             </TouchableOpacity>
+                            <View style={{width: 5*factorHorizontal}}/>
                         </View>
                         )}
                     </View>

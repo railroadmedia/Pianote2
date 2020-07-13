@@ -16,6 +16,7 @@ const filterDict = {
     'LESSONS': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
     'COURSES': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
     'SONGS': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
+    'MYLIST': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
     'STUDENTFOCUSSHOW': ['ALL', 'TOPICS', 'FROM', 'THIS', 'CONTENT', 'TYPE', 'GO', 'HERE'],
 }
 
@@ -24,6 +25,7 @@ const titleDict = {
     'COURSES': 'Courses',
     'SONGS': 'Songs',
     'STUDENTFOCUSSHOW': 'Courses',
+    'MYLIST': 'My List',
 }
 
 export default class Filters extends React.Component {

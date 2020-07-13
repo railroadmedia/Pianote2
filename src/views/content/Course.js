@@ -356,6 +356,7 @@ export default class Course extends React.Component {
                             showType={true} // show course / song by artist name
                             showArtist={true} // show artist name
                             showLength={false}
+                            showSort={true}
                             filters={this.state.filters} // show filter list
                             imageRadius={5*factorRatio}
                             containerBorderWidth={0}
