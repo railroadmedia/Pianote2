@@ -115,33 +115,6 @@ export default class SinglePack extends React.Component {
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
                     >
-                        <View key={'goBackIcon'}
-                            style={[
-                                styles.centerContent, {
-                                position: 'absolute',
-                                left: 10*factorHorizontal,
-                                top: (isNotch) ? 60*factorVertical : 50*factorVertical,
-                                height: 50*factorRatio,
-                                width: 50*factorRatio,
-                                zIndex: 5,
-                            }]}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.goBack()
-                                }}
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-                                <EntypoIcon
-                                    name={'chevron-thin-left'}
-                                    size={25*factorRatio}
-                                    color={'white'}
-                                />
-                            </TouchableOpacity>
-                        </View>  
                         <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
                         <View key={'imageContainer'}
                             style={{
@@ -149,7 +122,59 @@ export default class SinglePack extends React.Component {
                                 zIndex: 3, 
                                 elevation: 3,
                             }}
-                        >                           
+                        >           
+                            <View key={'goBackIcon'}
+                                style={[
+                                    styles.centerContent, {
+                                    position: 'absolute',
+                                    left: 10*factorHorizontal,
+                                    top: (isNotch) ? 10*factorVertical : 10*factorVertical,
+                                    height: 35*factorRatio,
+                                    width: 35*factorRatio,
+                                    borderRadius: 100,
+                                    zIndex: 5,
+                                }]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.goBack()
+                                    }}
+                                    style={[
+                                        styles.centerContent, {
+                                        height: '100%',
+                                        width: '100%',
+                                        borderRadius: 100,
+                                        backgroundColor: 'black',
+                                        opacity: 0.5,
+                                    }]}
+                                >
+                                    <EntypoIcon
+                                        name={'chevron-thin-left'}
+                                        size={22.5*factorRatio}
+                                        color={'white'}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.goBack()
+                                    }}
+                                    style={[
+                                        styles.centerContent, {
+                                        height: '100%',
+                                        width: '100%',
+                                        borderRadius: 100,
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                    }]}
+                                >
+                                    <EntypoIcon
+                                        name={'chevron-thin-left'}
+                                        size={22.5*factorRatio}
+                                        color={'white'}
+                                    />
+                                </TouchableOpacity>
+                            </View>                
                             <GradientFeature
                                 color={'blue'}
                                 opacity={1}

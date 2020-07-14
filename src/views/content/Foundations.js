@@ -487,6 +487,8 @@ export default class Foundations extends React.Component {
                                         width: fullHeight*0.075,
                                         backgroundColor: 'red',
                                         borderRadius: 200,
+                                        borderWidth: 2*factorRatio,
+                                        borderColor: colors.secondBackground,
                                         backgroundColor: colors.secondBackground,
                                     }}
                                 >

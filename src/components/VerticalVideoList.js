@@ -195,7 +195,7 @@ class VerticalVideoList extends React.Component {
                             }}
                             onPress={() => {
                                 this.props.navigation.navigate('VIDEOPLAYER', {
-                                    data: item
+                                    data: row
                                 })
                             }}
                             style={{justifyContent: 'center'}}

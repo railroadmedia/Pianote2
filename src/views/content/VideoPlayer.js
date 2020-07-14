@@ -20,6 +20,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MakeComment from '../../components/MakeComment.js';
 import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
+import AsyncStorage from '@react-native-community/async-storage';
 import Resources from 'Pianote2/src/assets/img/svgs/resources.svg';
 import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
@@ -30,6 +31,7 @@ export default class VideoPlayer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            data: this.props.navigation.state.params.data,
             showReplies: false,
             showStarted: false,
             showAssignment: false,
@@ -45,33 +47,25 @@ export default class VideoPlayer extends React.Component {
             title: 'The Four Pillars \n Of Improvisation',
             page: 1, // page of content
             outVideos: false, // if no more videos
+            likes: 34,
+            isLiked: false,
             items: [], // hello
             assignmentList: [
                 ['Learn The Fill', 1, 1],
                 ['Learn The Beat', 2, 0],
                 ['Put It Together', 3, 0],
             ], // assingments
-            comments: [
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 0, 28,],
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
-                ['Lorem ipsum dolor sit smart cosaf adlsafdd. elit, Prascent quie eros magna. Etrian tincidunt', 'Username', 'User Rank', '48 mins ago', '10.0 k', 4, 8,],
-            ], // video's comments
             items: [], // video lessons to pass to vertical video list
             page: 0,
             clickedAssignment: {'name':'','num':''},
-            outComments: false, // if out of comments
             outVideos: false, // if out of videos
         }
     }
 
 
-    componentDidMount() {
+    componentDidMount = async () => {
         this.getContent()
+        this.fetchComments()
     }
 
 
@@ -192,16 +186,6 @@ export default class VideoPlayer extends React.Component {
     }
 
 
-    fetchComments() {
-        if(this.state.outComments == false) {
-            this.setState({
-                comments: [...this.state.comments, ...this.state.comments],
-                outComments: (this.state.comments.length > 100) ? true : false
-            })
-        }
-    }
-
-
     render() {
         return (
             <View styles={styles.container}>
@@ -221,8 +205,8 @@ export default class VideoPlayer extends React.Component {
                     >
                         <FastImage
                             style={{flex: 1}}
-                            source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
-                            resizeMode={FastImage.resizeMode.cover}
+                            source={{uri: this.state.data.thumbnail}}
+                            resizeMode={FastImage.resizeMode.stretch}
                         />
                     </View>
                     <View key={'belowVideo'}
@@ -245,7 +229,7 @@ export default class VideoPlayer extends React.Component {
                                         color: 'white',
                                     }}
                                 >
-                                    This is The Lesson Title
+                                    {this.state.data.title}
                                 </Text>
                                 <View style={{height: fullHeight*0.01}}/>
                                 <Text
@@ -258,7 +242,7 @@ export default class VideoPlayer extends React.Component {
                                         color: colors.secondBackground,
                                     }}
                                 >
-                                    CASSI FALK | LESSON 7 | 275 XP
+                                    {this.state.data.artist} | LESSON 7 | {this.state.data.xp} XP
                                 </Text>
                                 <View style={{height: fullHeight*0.015}}/>
                             </View>
@@ -278,14 +262,19 @@ export default class VideoPlayer extends React.Component {
                                     }}
                                 >
                                     <TouchableOpacity key={'like'}
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.setState({
+                                                isLiked: !this.state.isLiked,
+                                                likes: (this.state.isLiked) ? this.state.likes - 1 : this.state.likes + 1
+                                            })
+                                        }}
                                         style={{
                                             flex: 1,
                                             alignItems: 'center',
                                         }}
                                     >
                                         <AntIcon
-                                            name={'like2'}
+                                            name={(this.state.isLiked) ? 'like1' : 'like2'}
                                             size={27.5*factorRatio}
                                             color={colors.pianoteRed}
                                         />
@@ -297,7 +286,7 @@ export default class VideoPlayer extends React.Component {
                                                 color: 'white',
                                             }}
                                         >
-                                            34
+                                            {this.state.likes}
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity key={'list'}
@@ -413,11 +402,7 @@ export default class VideoPlayer extends React.Component {
                                             color: 'white',
                                         }}
                                     >
-                                        A description of the video I assume goes right here.
-                                        A description of the video I assume goes right here.
-                                        A description of the video I assume goes right here.
-                                        A description of the video I assume goes right here.
-                                        A description of the video I assume goes right here.
+                                        {this.state.data.description}
                                     </Text>
                                 </View>
                                 )}
@@ -462,37 +447,18 @@ export default class VideoPlayer extends React.Component {
                                 imageRadius={5*factorRatio}
                                 containerBorderWidth={0}
                                 containerWidth={fullWidth}
-                                containerHeight={(this.state.isCourse) ? 
-                                    ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925)
-                                    : 
-                                    fullWidth*0.22
-                                }
-                                imageHeight={(this.state.isCourse) ? 
-                                    ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065))
-                                    : 
-                                    fullWidth*0.175
-                                }
+                                containerHeight={(this.state.isCourse) ? ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925) : fullWidth*0.22}
+                                imageHeight={(this.state.isCourse) ? ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.09 : fullHeight*0.07)): fullWidth*0.175}
                                 imageWidth={(this.state.isCourse) ? fullWidth*0.26 : fullWidth*0.175}
                             />
                             </View>
                             <View style={{height: 10*factorVertical}}/>
                             <View key={'comments'}>
                                 <Comments
-                                    showMakeComment={() => {
-                                        this.setState({
-                                            showMakeComment: true
-                                        })
-                                    }}
-                                    showReplies={() => {
-                                        this.setState({
-                                            showReplies: true
-                                        })
-                                    }}
-                                    comments={this.state.comments}
-                                    outComments={this.state.outComments}
-                                    fetchComments={() => this.fetchComments()}
+                                    ID={this.state.data.id}
                                 />
                             </View>
+                            <View style={{height: 60*factorVertical}}/>
                         </ScrollView>
                     </View>
                     <View key={'completeLesson'}
@@ -618,15 +584,16 @@ export default class VideoPlayer extends React.Component {
                             </View>
                         </View>
                         </View>
-                    </View>                  
+                    </View>             
                     <View key={'goBackIcon'}
                         style={[
                             styles.centerContent, {
                             position: 'absolute',
                             left: 10*factorHorizontal,
                             top: (isNotch) ? 55*factorVertical : 45*factorVertical,
-                            height: 50*factorRatio,
-                            width: 50*factorRatio,
+                            height: 35*factorRatio,
+                            width: 35*factorRatio,
+                            borderRadius: 100,
                             zIndex: 5,
                         }]}
                     >
@@ -634,18 +601,42 @@ export default class VideoPlayer extends React.Component {
                             onPress={() => {
                                 this.props.navigation.goBack()
                             }}
-                            style={{
+                            style={[
+                                styles.centerContent, {
                                 height: '100%',
                                 width: '100%',
-                            }}
+                                borderRadius: 100,
+                                backgroundColor: 'black',
+                                opacity: 0.4,
+                            }]}
                         >
                             <EntypoIcon
                                 name={'chevron-thin-left'}
-                                size={25*factorRatio}
+                                size={22.5*factorRatio}
                                 color={'white'}
                             />
                         </TouchableOpacity>
-                    </View>                  
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.goBack()
+                            }}
+                            style={[
+                                styles.centerContent, {
+                                height: '100%',
+                                width: '100%',
+                                borderRadius: 100,
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                            }]}
+                        >
+                            <EntypoIcon
+                                name={'chevron-thin-left'}
+                                size={22.5*factorRatio}
+                                color={'white'}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <Modal key={'VideoPlayerOptions'}
                     isVisible={this.state.showVideoPlayerOptions}

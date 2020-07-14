@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Comments extends React.Component {
@@ -20,12 +21,55 @@ class Comments extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            profileImage: '',
+            comments: [],
+            isLoading: true,
+            outComments: false,
+            isReply: false,
         }
     }
 
 
+    componentDidMount = async () => {
+        let profileImage = await AsyncStorage.getItem('profileURI')
+        
+        if(profileImage !== null) {
+            await this.setState({profileImage})
+        }
+        
+        this.fetchComments()
+    }
+
+
+    fetchComments = async () => {
+        await this.setState({isLoading: true})
+        email = await AsyncStorage.getItem('email')
+
+        await fetch('http://127.0.0.1:5000/getComments', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                contentID: this.props.ID,
+                email,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('comments: ', response)
+                this.setState({
+                    comments: [...response, ...this.state.comments],
+                })
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })
+        
+            await this.setState({isLoading: false})
+    }
+
+
     showFooter() {
-        if(this.props.outComments == false) {
+        if(this.state.outComments == false) {
             return (
                 <View
                     style={[
@@ -48,8 +92,53 @@ class Comments extends React.Component {
     }
 
 
+    like = async (index) => {
+        if(this.state.comments[index][8] == 0) {
+            this.state.comments[index][8] = 1
+            this.state.comments[index][6] = this.state.comments[index][6] + 1
+            await fetch('http://127.0.0.1:5000/likeComment', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    commentID: this.state.comments[index][9],
+                    email,
+                })
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log('liked : ', response)
+                })
+                .catch((error) => {
+                    console.log('API Error: ', error)
+                })
+        } else {
+            this.state.comments[index][8] = 0
+            this.state.comments[index][6] = this.state.comments[index][6] - 1
+            await fetch('http://127.0.0.1:5000/unlikeComment', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    commentID: this.state.comments[index][9],
+                    email,
+                })
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log('unliked : ', response)
+                })
+                .catch((error) => {
+                    console.log('API Error: ', error)
+                })
+        }
+
+        await this.setState({
+            comments: this.state.comments,
+        })
+    }
+
+
     mapComments() {
-        return this.props.comments.map((row, index) => {
+        return this.state.comments.map((row, index) => {
             return (
                 <View 
                     style={{
@@ -72,7 +161,7 @@ class Comments extends React.Component {
                                     width: 40*factorHorizontal,
                                     borderRadius: 100,
                                 }}
-                                source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                source={{uri: row[7]}}
                                 resizeMode={FastImage.resizeMode.stretch}
                             />
                             <Text
@@ -84,7 +173,7 @@ class Comments extends React.Component {
                                     color: 'grey',
                                 }}
                             >
-                                {row[4]}
+                                {this.changeXP(row[4])}
                             </Text>
                         </View>
                         <View style={{flex: 1}}/>
@@ -125,12 +214,12 @@ class Comments extends React.Component {
                             <View style={{flexDirection: 'row'}}>
                                 <View style={{flexDirection: 'row'}}>
                                     <TouchableOpacity 
-                                        onPress={() => {}}
-                                        style={{
+                                        onPress={() => {
+                                            this.like(index)
                                         }}
                                     >
                                         <AntIcon
-                                            name={'like2'}
+                                            name={(row[8]) ? 'like1' : 'like2'}
                                             size={20*factorRatio}
                                             color={colors.pianoteRed}
                                         />
@@ -209,6 +298,7 @@ class Comments extends React.Component {
                             </View>
                             <View style={{flex: 1}}/>
                         </View>
+                        {(row[5] !== 0) && (
                         <TouchableOpacity
                             onPress={() => {
                                 this.props.showReplies()
@@ -224,10 +314,26 @@ class Comments extends React.Component {
                                 VIEW {row[5]} REPLIES
                             </Text>
                         </TouchableOpacity>
+                        )}
                     </View>
                 </View>
             )
         })
+    }
+
+
+    changeXP = (num) => {
+        if(num !== '') {
+            num = Number(num)
+            if(num < 10000) {
+                num = num.toString()
+                return num
+            } else {
+                num = (num/1000).toFixed(1).toString()
+                num = num + 'k'
+                return num
+            }
+        }
     }
 
 
@@ -241,6 +347,7 @@ class Comments extends React.Component {
                     zIndex: 10,
                 }]}
             >
+                {!this.state.isLoading && (
                 <View style={{flex: 1}}>
                     <View
                         style={{
@@ -267,12 +374,12 @@ class Comments extends React.Component {
                                         color: colors.secondBackground,
                                     }}
                                 >
-                                    {(this.props.isReply) ? 'Replies' : '8 COMMENTS'}
+                                    {(this.state.isReply) ? 'REPLIES' : this.state.comments.length.toString() + ' COMMENTS'}
                                 </Text>
                                 <View style={{flex: 1}}/>
                             </View>
                             <View style={{flex: 1}}/>
-                            {this.props.isReply && (
+                            {this.state.isReply && (
                             <TouchableOpacity
                                 onPress={() => {
                                     this.props.hideReplies()
@@ -285,12 +392,15 @@ class Comments extends React.Component {
                                 />
                             </TouchableOpacity>
                             )}
-                            {!this.props.isReply && (
-                            <TouchableOpacity onPress={() => {}}>
-                                <IonIcon
-                                    style={{transform: [{ rotate: '90deg' }]}}
-                                    size={20*factorRatio}
-                                    name={'md-options'}
+                            {!this.state.isReply && (
+                            <TouchableOpacity 
+                                onPress={() => {
+
+                                }}
+                            >
+                                <FontIcon
+                                    size={16*factorRatio}
+                                    name={'sort-amount-down'}
                                     color={colors.pianoteRed}
                                 />
                             </TouchableOpacity>
@@ -298,7 +408,7 @@ class Comments extends React.Component {
                             <View style={{flex: 0.1}}/>
                         </View>
                         <View style={{flex: 1.25}}/>
-                        {this.props.isReply && (
+                        {this.state.isReply && (
                         <View key={'originalReply'}
                             style={{
                                 backgroundColor: colors.mainBackground,
@@ -318,7 +428,7 @@ class Comments extends React.Component {
                                             width: 40*factorHorizontal,
                                             borderRadius: 100,
                                         }}
-                                        source={{uri:'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                        source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
                                         resizeMode={FastImage.resizeMode.stretch}
                                     />
                                     <Text
@@ -479,7 +589,7 @@ class Comments extends React.Component {
                                             width: 40*factorHorizontal,
                                             borderRadius: 100,
                                         }}
-                                        source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                        source={{uri: this.state.profileImage}}
                                         resizeMode={FastImage.resizeMode.stretch}
                                     />
                                     <View style={{flex: 1}}/>
@@ -509,6 +619,7 @@ class Comments extends React.Component {
                     </View>
                     {this.mapComments()}
                 </View>
+                )}
                 <View style={{height: fullHeight*0.035}}/>
             </View>
         )

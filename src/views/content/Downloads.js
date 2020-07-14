@@ -9,8 +9,6 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Icon from 'react-native-vector-icons/AntDesign';
-import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconFeather from 'react-native-vector-icons/Feather';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 

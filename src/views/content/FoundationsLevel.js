@@ -117,29 +117,54 @@ export default class FoundationsLevel extends React.Component {
                                 styles.centerContent, {
                                 position: 'absolute',
                                 left: 10*factorHorizontal,
-                                top: (isNotch) ? 20*factorVertical : 10*factorVertical,
-                                    height: 50*factorRatio,
-                                width: 50*factorRatio,
-                                zIndex: 10,
-                                elevation: 10,
+                                top: (isNotch) ? 10*factorVertical : 10*factorVertical,
+                                height: 35*factorRatio,
+                                width: 35*factorRatio,
+                                borderRadius: 100,
+                                zIndex: 5,
                             }]}
                         >
                             <TouchableOpacity
                                 onPress={() => {
                                     this.props.navigation.goBack()
                                 }}
-                                style={{
+                                style={[
+                                    styles.centerContent, {
                                     height: '100%',
                                     width: '100%',
-                                }}
+                                    borderRadius: 100,
+                                    backgroundColor: 'black',
+                                    opacity: 0.5,
+                                }]}
                             >
                                 <EntypoIcon
                                     name={'chevron-thin-left'}
-                                    size={27.5*factorRatio}
+                                    size={22.5*factorRatio}
+                                    color={'white'}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.goBack()
+                                }}
+                                style={[
+                                    styles.centerContent, {
+                                    height: '100%',
+                                    width: '100%',
+                                    borderRadius: 100,
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                }]}
+                            >
+                                <EntypoIcon
+                                    name={'chevron-thin-left'}
+                                    size={22.5*factorRatio}
                                     color={'white'}
                                 />
                             </TouchableOpacity>
                         </View>
+
                         <GradientFeature
                             color={'blue'}
                             opacity={1}
