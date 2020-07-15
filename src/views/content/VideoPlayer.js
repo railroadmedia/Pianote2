@@ -369,7 +369,7 @@ export default class VideoPlayer extends React.Component {
                                         }}
                                     >
                                         <AntIcon
-                                            name={'infocirlceo'}
+                                            name={(this.state.showInfo) ? 'infocirlce' : 'infocirlceo'}
                                             size={27.5*factorRatio}
                                             color={colors.pianoteRed}
                                         />
