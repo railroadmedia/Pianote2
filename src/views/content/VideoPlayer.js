@@ -17,7 +17,6 @@ import Comments from '../../components/Comments';
 import SoundSlice from '../../components/SoundSlice.js';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import MakeComment from '../../components/MakeComment.js';
 import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -682,26 +681,6 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>
-                <Modal key={'makeComment'}
-                    isVisible={this.state.showMakeComment}
-                    style={[
-                        styles.centerContent, {
-                        margin: 0,
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <MakeComment
-                        hideMakeComment={() => {
-                            this.setState({showMakeComment: false})
-                        }}
-                    />
-                </Modal>    
                 <Modal key={'replies'}
                     isVisible={this.state.showReplies}
                     style={[
