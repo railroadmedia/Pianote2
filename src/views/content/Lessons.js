@@ -182,7 +182,7 @@ export default class Lessons extends React.Component {
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types: ['song'],
+                included_types: ['course'],
             });
 
             const newContent = await response.data.data.map((data) => {

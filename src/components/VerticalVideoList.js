@@ -686,7 +686,6 @@ class VerticalVideoList extends React.Component {
                             }}
                         >
                             2 mins
-                            {/* {this.props.items[index].artist} */}
                         </Text>
                     </View>
                     <View style={{flex: 0.5}}>

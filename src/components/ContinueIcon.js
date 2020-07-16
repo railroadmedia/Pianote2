@@ -5,7 +5,7 @@ import React from 'react';
 import { 
     View, 
     Text,  
-    TouchableOpacity 
+    TouchableOpacity,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Entypo';

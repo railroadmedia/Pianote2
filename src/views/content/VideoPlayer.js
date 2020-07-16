@@ -5,34 +5,44 @@ import React from 'react';
 import { 
     View, 
     Text, 
-    TouchableOpacity, 
-    ScrollView,
+    TouchableOpacity,
+    Keyboard, 
+    Platform,
+    ActivityIndicator,
+    TextInput,
+    Animated,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
-import Replies from '../../components/Replies';
 import FastImage from 'react-native-fast-image';
-import Comments from '../../components/Comments';
+import Replies from '../../components/Replies.js';
 import SoundSlice from '../../components/SoundSlice.js';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
+import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-community/async-storage';
 import Resources from 'Pianote2/src/assets/img/svgs/resources.svg';
 import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+var showListener = (Platform.OS == 'ios') ? 'keyboardWillShow' : 'keyboardDidShow'
+var hideListener = (Platform.OS == 'ios') ? 'keyboardWillHide' : 'keyboardDidHide'
 
 export default class VideoPlayer extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            data: this.props.navigation.state.params.data,
-            showReplies: false,
-            showStarted: false,
+            data: this.props.navigation.state.params.data, // data about incoming video
+            profileImage: '',
+
+            showReplies: false, 
             showAssignment: false,
             showSoundSlice: false,
             showMakeComment: false,
@@ -42,65 +52,452 @@ export default class VideoPlayer extends React.Component {
             showQualitySettings: false,
             showAssignmentComplete: false, 
             showLessonComplete: false, 
-            isCourse: true,
-            title: 'The Four Pillars \n Of Improvisation',
-            page: 1, // page of content
-            outVideos: false, // if no more videos
+            isReply: false,
+            showMakeComment: false, 
+            selectedComment: null,
+            
+            makeCommentVertDelta: new Animated.Value(0.01),
+            
+            comments: [],
+            commentsLoading: true,
+            outComments: false,
+            page: 1,
+
+            videos: [], 
+            videoLoading: true,
+            
             likes: 34,
             isLiked: false,
-            items: [], // hello
+            comment: '',
+            commentID: null,
+
             assignmentList: [
                 ['Learn The Fill', 1, 1],
                 ['Learn The Beat', 2, 0],
                 ['Put It Together', 3, 0],
-            ], // assingments
-            items: [], // video lessons to pass to vertical video list
-            page: 0,
-            clickedAssignment: {'name':'','num':''},
-            outVideos: false, // if out of videos
+            ],
+
+            clickedAssignment: {'name': '', 'num': ''},
         }
     }
 
 
     componentDidMount = async () => {
-        this.getContent()
+        // get profile image
+        let profileImage = await AsyncStorage.getItem('profileURI')        
+        if(profileImage !== null) {
+            await this.setState({profileImage})
+        }
+
+        this.keyboardDidShowListener = Keyboard.addListener(
+            showListener, this._keyboardDidShow
+        )
+        this.keyboardDidHideListener = Keyboard.addListener(
+            hideListener, this._keyboardDidHide
+        )
+
+        this.getVideos()
         this.fetchComments()
     }
 
 
-    async getContent() {
-        if(this.state.outVideos == false) {
-            const { response, error } = await getContent({
-                brand:'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types:['song'],
-            });
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+    }
+  
 
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
+    _keyboardDidShow = async (e) => {
+        const { height, screenX, screenY, width } = e.endCoordinates
+        
 
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        progress: (i < 7) ? 'check': ((i == 7) ? 'progress':'none')
-                    })
+        if(Platform.OS == 'ios') {
+            Animated.timing(
+                this.state.makeCommentVertDelta, {
+                    toValue: height,
+                    duration: 275,
                 }
-            }
+            ).start()
+        } else {
+            Animated.timing(
+                this.state.makeCommentVertDelta, {
+                    toValue: height,
+                    duration: 0,
+                }
+            ).start()
+        }
+    }
+  
 
-            this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-                outVideos: (items.length == 0) ? true : false
+    _keyboardDidHide = async () => {
+        Animated.timing(
+            this.state.makeCommentVertDelta, {
+                toValue: -250,
+                duration: 275,
+            }
+        ).start()
+    }
+
+
+    getVideos = async () => {
+        await this.setState({videoLoading: true})
+        
+        const { response, error } = await getContent({
+            brand:'pianote',
+            limit: '15',
+            page: this.state.page,
+            sort: '-created_on',
+            statuses: ['published'],
+            included_types: ['song'],
+        });
+
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
+
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].getField('xp'),
+                    id: newContent[i].id,
+                    likeCount: newContent[i].likeCount,
+                })
+            }
+        }
+
+        this.setState({
+            videos: [...this.state.videos, ...items],
+        })
+        
+        await this.setState({videoLoading: false})
+    }
+
+
+    fetchComments = async () => {
+        await this.setState({commentsLoading: true})
+
+        email = await AsyncStorage.getItem('email')
+
+        await fetch('http://127.0.0.1:5000/getComments', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                contentID: this.state.data.id,
+                email,
             })
-            
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('comments: ', response)
+                this.setState({
+                    comments: [...response, ...this.state.comments],
+                })
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })
+
+        await this.setState({commentsLoading: false})
+    }
+
+
+    showFooter() {
+        if(this.state.outComments == false) {
+            return (
+                <View
+                    style={[
+                        styles.centerContent, {
+                        marginTop: 15*factorRatio,
+                        height: 35*factorVertical
+                    }]}
+                >
+                    <ActivityIndicator
+                        size={(isTablet) ? 'large' : 'small'}
+                        color={'grey'}
+                    />
+                </View>
+            )
+        } else {
+            return (
+                <View style={{height:20*factorVertical}}/>
+            )
+        }
+    }
+
+
+    likeComment = async (index) => {
+        if(this.state.comments[index][8] == 0) {
+            this.state.comments[index][8] = 1
+            this.state.comments[index][6] = this.state.comments[index][6] + 1
+            await fetch('http://127.0.0.1:5000/likeComment', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    commentID: this.state.comments[index][9],
+                    email,
+                })
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log('liked : ', response)
+                })
+                .catch((error) => {
+                    console.log('API Error: ', error)
+                })
+        } else {
+            this.state.comments[index][8] = 0
+            this.state.comments[index][6] = this.state.comments[index][6] - 1
+            await fetch('http://127.0.0.1:5000/unlikeComment', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    commentID: this.state.comments[index][9],
+                    email,
+                })
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log('unliked : ', response)
+                })
+                .catch((error) => {
+                    console.log('API Error: ', error)
+                })
+        }
+
+        await this.setState({
+            comments: this.state.comments,
+        })
+    }
+
+
+    makeComment = async () => {
+        // reply to main video
+        console.log('comment on video: ', this.state.data.id)
+        this.setState({comment: ''})
+        this.textInputRef.blur()
+    }
+
+
+    makeReply = async () => {
+        // reply to comment
+        console.log('reply to commentID: ', this.state.commentID)
+        this.setState({
+            comment: '',
+            commentID: null,
+        })
+        this.textInputRef.blur()
+    }    
+
+
+    mapComments() {
+        return this.state.comments.map((row, index) => {
+            return (
+                <View 
+                    style={{
+                        backgroundColor: colors.mainBackground,
+                        paddingTop: fullHeight*0.025,
+                        paddingBottom: fullHeight*0.02,
+                        paddingLeft: fullWidth*0.05,
+                        paddingRight: fullWidth*0.03,
+                        minHeight: 40*factorVertical,
+                        borderTopColor: colors.secondBackground,
+                        borderTopWidth: 0.25,
+                        flexDirection: 'row',
+                    }}
+                >
+                    <View>
+                        <View style={{alignItems: 'center'}}>
+                            <FastImage
+                                style={{
+                                    height: 40*factorHorizontal,
+                                    width: 40*factorHorizontal,
+                                    borderRadius: 100,
+                                }}
+                                source={{uri: row[7]}}
+                                resizeMode={FastImage.resizeMode.stretch}
+                            />
+                            <Text
+                                style={{
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontSize: 10*factorRatio,
+                                    marginTop: 2*factorRatio,
+                                    fontWeight: 'bold',
+                                    color: 'grey',
+                                }}
+                            >
+                                {this.changeXP(row[4])}
+                            </Text>
+                        </View>
+                        <View style={{flex: 1}}/>
+                    </View>
+                    <View 
+                        style={{
+                            flex: 1,
+                            paddingLeft: 12.5*factorHorizontal,
+                        }}
+                    >
+                        <View style={{height: 3*factorVertical}}/>
+                        <Text 
+                            style={{
+                                fontFamily: 'OpenSans-Regular',
+                                fontSize: 13*factorRatio,
+                                color: 'white',
+                            }}
+                        >
+                            {row[0]}
+                        </Text>
+                        <View style={{height: 7.5*factorVertical}}/>
+                        <Text
+                            style={{
+                                fontFamily: 'OpenSans-Regular',
+                                fontSize: 12*factorRatio,
+                                color: colors.secondBackground,
+                            }}
+                        >
+                            {row[1]} | {row[2]} | {row[3]}
+                        </Text>
+                        <View
+                            style={{
+                                paddingTop: 15*factorVertical,
+                                paddingBottom: 15*factorVertical,
+                            }}
+                        >
+                            <View style={{flex: 1}}/>
+                            <View style={{flexDirection: 'row'}}>
+                                <View style={{flexDirection: 'row'}}>
+                                    <TouchableOpacity 
+                                        onPress={() => {
+                                            this.likeComment(index)
+                                        }}
+                                    >
+                                        <AntIcon
+                                            name={(row[8]) ? 'like1' : 'like2'}
+                                            size={20*factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
+                                    </TouchableOpacity>
+                                    <View style={{width: 10*factorHorizontal}}/>
+                                    {(row[6] > 0) && (
+                                    <View>
+                                        <View style={{flex: 1}}/>
+                                        <View 
+                                            style={[
+                                                styles.centerContent, {
+                                                borderRadius: 40,
+                                                paddingLeft: 8*factorHorizontal,
+                                                paddingRight: 8*factorHorizontal,
+                                                paddingTop: 4*factorVertical,
+                                                paddingBottom: 4*factorVertical,
+                                                backgroundColor: colors.notificationColor,
+                                            }]}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontSize: 10*factorRatio,
+                                                    color: colors.pianoteRed,
+                                                }}
+                                            >
+                                                {row[6]} LIKES
+                                            </Text>
+                                        </View>
+                                        <View style={{flex: 1}}/>
+                                    </View>                                
+                                    )}
+                                </View>
+                                <View style={{width: 20*factorHorizontal}}/>
+                                <View style={{flexDirection: 'row'}}>
+                                    <TouchableOpacity 
+                                        onPress={() => {
+                                            this.setState({
+                                                showMakeComment: true,
+                                                commentID: row[9]
+                                            }),
+                                            setTimeout(() => this.textInputRef.focus(), 100)
+                                        }}
+                                    >
+                                        <MaterialIcon
+                                            name={'comment-text-outline'}
+                                            size={20*factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
+                                    </TouchableOpacity>
+                                    <View style={{width: 10*factorHorizontal}}/>
+                                    {(row[5] > 0) && (
+                                    <View>
+                                        <View style={{flex: 1}}/>
+                                        <View 
+                                            style={[
+                                                styles.centerContent, {
+                                                borderRadius: 40,
+                                                paddingLeft: 8*factorHorizontal,
+                                                paddingRight: 8*factorHorizontal,
+                                                paddingTop: 4*factorVertical,
+                                                paddingBottom: 4*factorVertical,
+                                                backgroundColor: colors.notificationColor,
+                                            }]}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontSize: 10*factorRatio,
+                                                    color: colors.pianoteRed,
+                                                }}
+                                            >
+                                                {row[5]} REPLIES
+                                            </Text>
+                                        </View>
+                                        <View style={{flex: 1}}/>
+                                    </View>
+                                    )}
+                                </View>
+                            </View>
+                            <View style={{flex: 1}}/>
+                        </View>
+                        {(row[5] !== 0) && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.setState({
+                                    showReplies: true,
+                                    selectedComment: row,
+                                })
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontSize: 12*factorRatio,
+                                    color: colors.secondBackground,
+                                }}
+                            >
+                                VIEW {row[5]} REPLIES
+                            </Text>
+                        </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
+            )
+        })
+    }
+
+
+    changeXP = (num) => {
+        if(num !== '') {
+            num = Number(num)
+            if(num < 10000) {
+                num = num.toString()
+                return num
+            } else {
+                num = (num/1000).toFixed(1).toString()
+                num = num + 'k'
+                return num
+            }
         }
     }
 
@@ -211,7 +608,10 @@ export default class VideoPlayer extends React.Component {
                     <View key={'belowVideo'}
                         style={{flex: 1}}
                     >
-                        <ScrollView
+                        <KeyboardAwareScrollView
+                            innerRef={ref => {
+                                this.scroll = ref
+                            }}
                             showsVerticalScrollIndicator={false}
                             contentInsetAdjustmentBehavior={'never'}
                             style={{flex: 1, backgroundColor: colors.mainBackground}}
@@ -406,8 +806,12 @@ export default class VideoPlayer extends React.Component {
                                 </View>
                                 )}
                             </View>
-                            <View style={{height: (this.state.isCourse) ? 20*factorVertical : 10*factorVertical}}/>
-                            {this.state.isCourse && (
+                            <View key={'buffer'}
+                                style={{height: (this.state.data.type == 'course') ? 
+                                    20*factorVertical : 10*factorVertical
+                                }}
+                            />
+                            {this.state.data.type == 'course' && (
                             <View key={'assingmentsHeader'}
                                 style={{paddingLeft: fullWidth*0.035}}
                             >
@@ -423,7 +827,7 @@ export default class VideoPlayer extends React.Component {
                                 <View style={{height: 20*factorVertical}}/>
                             </View>
                             )}
-                            {this.state.isCourse && (
+                            {this.state.data.type == 'course' && (
                             <View key={'assignments'}
                                 style={{
                                     width: fullWidth,
@@ -435,31 +839,416 @@ export default class VideoPlayer extends React.Component {
                             </View>
                             )}
                             <View style={{height: 20*factorVertical}}/>
-                            <View key={'videoList'}>
+                            <View key={'videoList'}
+                                style={{
+                                    minHeight: fullHeight*0.5
+                                }}
+                            >
+                            {!this.state.videoLoading && (
                             <VerticalVideoList
-                                title={(this.state.isCourse) ? 'COURSE LESSONS' : 'MORE SONGS'}
-                                outVideos={this.state.outVideos}
+                                title={this.state.data.type == 'course' ? 'COURSE LESSONS' : 'MORE SONGS'}
+                                items={this.state.videos}
                                 renderType={'Mapped'}
-                                showFilter={true}
+                                type={'LESSONS'}
+                                
                                 showTitleOnly={true}
-                                items={this.state.items}
+                                showFilter={true}
+                                showType={false}
+                                showArtist={false}
+                                showSort={false}
+                                showLength={true}
+
                                 imageRadius={5*factorRatio}
                                 containerBorderWidth={0}
                                 containerWidth={fullWidth}
-                                containerHeight={(this.state.isCourse) ? ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925) : fullWidth*0.22}
-                                imageHeight={(this.state.isCourse) ? ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.09 : fullHeight*0.07)): fullWidth*0.175}
-                                imageWidth={(this.state.isCourse) ? fullWidth*0.26 : fullWidth*0.175}
+                                containerHeight={(this.state.data.type == 'course') ? ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925) : fullWidth*0.22}
+                                imageHeight={(this.state.data.type == 'course') ? ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.09 : fullHeight*0.07)): fullWidth*0.175}
+                                imageWidth={(this.state.data.type == 'course') ? fullWidth*0.26 : fullWidth*0.175}
                             />
+                            )}
                             </View>
                             <View style={{height: 10*factorVertical}}/>
-                            <View key={'comments'}>
-                                <Comments
-                                    ID={this.state.data.id}
-                                />
+                            <View key={'commentList'}
+                                style={{
+                                    minHeight: fullHeight*0.4
+                                }}
+                            >
+                            {!this.state.commentsLoading && (
+                            <View key={'commentContainer'}
+                                style={[
+                                    styles.centerContent, {
+                                    minHeight: fullHeight*0.4,
+                                    width: fullWidth,
+                                    zIndex: 10,
+                                }]}
+                            >
+                                <View style={{flex: 1}}>
+                                    <View
+                                        style={{
+                                            width: fullWidth,
+                                            backgroundColor: colors.mainBackground,
+                                            zIndex: 5,
+                                        }}
+                                    >
+                                        <View style={{height: fullHeight*0.025}}/>
+                                        <View key={'commentHeader'}
+                                            style={{
+                                                width: fullWidth,
+                                                flexDirection: 'row',
+                                                paddingLeft: fullWidth*0.05,
+                                                paddingRight: fullWidth*0.01,
+                                            }}
+                                        >
+                                            <View>
+                                                <View style={{flex: 1}}/>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 18*factorRatio,
+                                                        fontFamily: 'RobotoCondensed-Bold',
+                                                        color: colors.secondBackground,
+                                                    }}
+                                                >
+                                                    {(this.state.isReply) ? 'REPLIES' : this.state.comments.length.toString() + ' COMMENTS'}
+                                                </Text>
+                                                <View style={{flex: 1}}/>
+                                            </View>
+                                            <View style={{flex: 1}}/>
+                                            {this.state.isReply && (
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                }}
+                                            >
+                                                <EntypoIcon
+                                                    size={27.5*factorRatio}
+                                                    name={'cross'}
+                                                    color={'#c2c2c2'}
+                                                />
+                                            </TouchableOpacity>
+                                            )}
+                                            {!this.state.isReply && (
+                                            <TouchableOpacity 
+                                                style={{
+                                                    marginLeft: factorHorizontal*10,
+                                                }}
+                                                onPress={() => {
+
+                                                }}
+                                            >
+                                                <FontIcon
+                                                    size={20*factorRatio}
+                                                    name={'sort-amount-down'}
+                                                    color={colors.pianoteRed}
+                                                />
+                                            </TouchableOpacity>
+                                            )}
+                                            <View style={{flex: 0.1}}/>
+                                        </View>
+                                        <View style={{flex: 1.25}}/>
+                                        {this.state.isReply && (
+                                        <View key={'originalReply'}
+                                            style={{
+                                                backgroundColor: colors.mainBackground,
+                                                paddingTop: fullHeight*0.025,
+                                                paddingBottom: fullHeight*0.02,
+                                                paddingLeft: fullWidth*0.05,
+                                                paddingRight: fullWidth*0.03,
+                                                minHeight: 40*factorVertical,
+                                                flexDirection: 'row',
+                                            }}
+                                        >
+                                            <View>
+                                                <View style={{alignItems: 'center'}}>
+                                                    <FastImage
+                                                        style={{
+                                                            height: 40*factorHorizontal,
+                                                            width: 40*factorHorizontal,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}
+                                                        resizeMode={FastImage.resizeMode.stretch}
+                                                    />
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: 'OpenSans-Regular',
+                                                            fontSize: 10*factorRatio,
+                                                            marginTop: 2*factorRatio,
+                                                            fontWeight: (Platform.OS == 'ios') ? '700' : 'bold',
+                                                            color: 'grey',
+                                                        }}
+                                                    >
+                                                        'Hello'
+                                                    </Text>
+                                                </View>
+                                                <View style={{flex: 1}}/>
+                                            </View>
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    paddingLeft: 12.5*factorHorizontal,
+                                                }}
+                                            >
+                                                <View style={{height: 3*factorVertical}}/>
+                                                <Text 
+                                                    style={{
+                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontSize: 13*factorRatio,
+                                                    }}
+                                                >
+                                                    Lorem ipsum dolor sit smart cosaf adiffdsf eli, prascent quie eros magnia. Etrian tincidunt
+                                                </Text>
+                                                <View style={{height: 7.5*factorVertical}}/>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontSize: 11*factorRatio,
+                                                        color: 'grey',
+                                                    }}
+                                                >
+                                                    user | rank | time
+                                                </Text>
+                                                <View style={{height: 50*factorVertical}}>
+                                                    <View style={{flex: 1}}/>
+                                                    <View style={{flexDirection: 'row'}}>
+                                                        <View style={{flexDirection: 'row'}}>
+                                                            <TouchableOpacity 
+                                                                onPress={() => {
+                                                                    this.likeComment()
+                                                                }}
+                                                            >
+                                                                <AntIcon
+                                                                    name={'like2'}
+                                                                    size={20*factorRatio}
+                                                                    color={'black'}
+                                                                />
+                                                            </TouchableOpacity>
+                                                            <View style={{width: 10*factorHorizontal}}/>
+                                                            <View>
+                                                                <View style={{flex: 1}}/>
+                                                                <View 
+                                                                    style={[
+                                                                        styles.centerContent, {
+                                                                        borderRadius: 40,
+                                                                        paddingLeft: 8*factorHorizontal,
+                                                                        paddingRight: 8*factorHorizontal,
+                                                                        paddingTop: 4*factorVertical,
+                                                                        paddingBottom: 4*factorVertical,
+                                                                        backgroundColor: '#ececec',
+                                                                    }]}
+                                                                >
+                                                                    <Text
+                                                                        style={{
+                                                                            fontFamily: 'OpenSans-Regular',
+                                                                            fontSize: 9.5*factorRatio,
+                                                                            color: 'dimgrey',
+                                                                        }}
+                                                                    >
+                                                                        4 LIKES
+                                                                    </Text>
+                                                                </View>
+                                                                <View style={{flex: 1}}/>
+                                                            </View>
+                                                        </View>
+                                                        <View style={{width: 20*factorHorizontal}}/>
+                                                        <View style={{flexDirection: 'row'}}>
+                                                            <TouchableOpacity onPress={() => {}}>
+                                                                <MaterialIcon
+                                                                    name={'comment-text-outline'}
+                                                                    size={20*factorRatio}
+                                                                    color={'black'}
+                                                                />
+                                                            </TouchableOpacity>
+                                                            <View style={{width: 10*factorHorizontal}}/>
+                                                            <View>
+                                                                <View style={{flex: 1}}/>
+                                                                <View 
+                                                                    style={[
+                                                                        styles.centerContent, {
+                                                                        borderRadius: 40,
+                                                                        paddingLeft: 8*factorHorizontal,
+                                                                        paddingRight: 8*factorHorizontal,
+                                                                        paddingTop: 4*factorVertical,
+                                                                        paddingBottom: 4*factorVertical,
+                                                                        backgroundColor: '#ececec',
+                                                                    }]}
+                                                                >
+                                                                    <Text
+                                                                        style={{
+                                                                            fontFamily: 'OpenSans-Regular',
+                                                                            fontSize: 9.5*factorRatio,
+                                                                            color: 'dimgrey',
+                                                                        }}
+                                                                    >
+                                                                        REPLIES
+                                                                    </Text>
+                                                                </View>
+                                                                <View style={{flex: 1}}/>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{flex: 1}}/>
+                                                </View>
+                                                <TouchableOpacity onPress={() => {}}>
+                                                    <Text
+                                                        style={{
+                                                            fontFamily: 'OpenSans-Regular',
+                                                            fontSize: 11.5*factorRatio,
+                                                            color: '#fb1b2f',
+                                                        }}
+                                                    >
+                                                        VIEW REPLIES
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                        )}
+                                        <View key={'addComment'}
+                                            style={{
+                                                width: fullWidth,
+                                                height: fullHeight*0.1,
+                                                flexDirection: 'row',
+                                                paddingLeft: fullWidth*0.05,
+                                            }}
+                                        >
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    this.setState({showMakeComment: true}),
+                                                    setTimeout(() => this.textInputRef.focus(), 100)
+                                                }}
+                                                style={{
+                                                    flexDirection: 'row',
+                                                }}
+                                            >
+                                                <View key={'profileImage'}
+                                                    style={{
+                                                        height: '100%',
+                                                        width: 40*factorHorizontal,
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}}/>
+                                                    <FastImage
+                                                        style={{
+                                                            height: 40*factorHorizontal,
+                                                            width: 40*factorHorizontal,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={{uri: this.state.profileImage}}
+                                                        resizeMode={FastImage.resizeMode.stretch}
+                                                    />
+                                                    <View style={{flex: 1}}/>
+                                                </View>
+                                                <View key={'addComment'}
+                                                    style={{
+                                                        height: '100%',
+                                                        width: fullWidth*0.95 - 40*factorHorizontal,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'left',
+                                                            fontFamily: 'OpenSans-Regular',
+                                                            fontSize: 13*factorRatio,
+                                                            color: 'white',
+                                                            paddingLeft: 10*factorHorizontal,
+                                                        }}
+                                                    >
+                                                        Add a comment...
+                                                    </Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={{flex: 1}}/>
+                                    </View>
+                                    {this.mapComments()}
+                                </View>
+                                <View style={{height: fullHeight*0.035}}/>
                             </View>
-                            <View style={{height: 60*factorVertical}}/>
-                        </ScrollView>
+                            )}
+                            </View>
+                            <View style={{height: (isNotch) ? 90*factorVertical : 60*factorVertical}}/>
+                        </KeyboardAwareScrollView>
                     </View>
+
+                    {this.state.showMakeComment && (
+                    <Animated.View key={'makeComment'}
+                        style={{
+                            position: 'absolute',
+                            bottom: this.state.makeCommentVertDelta,
+                            left: 0,
+                            minHeight: fullHeight*0.125,
+                            maxHeight: fullHeight*0.175,
+                            width: fullWidth,
+                            backgroundColor: colors.mainBackground,
+                            flexDirection: 'row',
+                        }}
+                    >
+                        <View 
+                            style={{
+                                flex: 1,
+                                borderTopWidth: 0.5*factorRatio,
+                                borderTopColor: colors.secondBackground,
+                            }}
+                        />
+                        <View
+                            stlye={{
+                                borderTopWidth: 0.5*factorRatio,
+                                borderTopColor: colors.secondBackground,
+                            }}
+                        >
+                            <View 
+                                style={{
+                                    height: 10*factorVertical,
+                                    borderTopWidth: 0.5*factorRatio,
+                                    borderTopColor: colors.secondBackground,
+                                }}
+                            />
+                            <TextInput
+                                multiline={true}
+                                ref={ref => { this.textInputRef = ref }}
+                                style={{
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontSize: 14*factorRatio,
+                                    width: fullWidth*0.6,
+                                    backgroundColor: colors.mainBackground,
+                                    color: colors.secondBackground,
+                                }}
+                                onSubmitEditing={() => {
+                                    (this.state.commentID !== null) ? this.makeReply() : this.makeComment(),
+                                    this.textInputRef.clear()
+                                }}
+                                returnKeyType={'go'}
+                                onChangeText={(comment) => this.setState({comment})}
+                                onBlur={() => this.textInputRef.clear()}
+                                placeholder={'Add a comment'}
+                                placeholderTextColor={colors.secondBackground}
+                            />
+                            <View style={{height: 10*factorVertical}}/>
+                        </View>
+                        <View
+                            style={[
+                                styles.centerContent, {
+                                flex: 1,
+                                borderTopWidth: 0.5*factorRatio,
+                                borderTopColor: colors.secondBackground,
+                            }]}
+                        >
+                            <View style={{flex: 1}}/>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    (this.state.commentID !== null) ? this.makeReply() : this.makeComment(),
+                                    this.textInputRef.clear()
+                                }}
+                            >
+                                <IonIcon
+                                    name={'md-send'}
+                                    size={25*factorRatio}
+                                    color={colors.pianoteRed}
+                                />
+                            </TouchableOpacity>
+                            <View style={{flex: 0.2}}/>
+                        </View>
+                    </Animated.View>
+                    )}
                     <View key={'completeLesson'}
                         style={[
                             styles.centerContent, {
@@ -545,7 +1334,7 @@ export default class VideoPlayer extends React.Component {
                                             fontSize: 14*factorRatio,
                                         }}
                                     >
-                                        COMPLETE {this.state.isCourse ? 'COURSE':'SONG'} 
+                                        COMPLETE {this.state.data == 'course' ? 'COURSE':'SONG'} 
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -690,8 +1479,8 @@ export default class VideoPlayer extends React.Component {
                         width: fullWidth,
                     }]}
                     animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
+                    animationInTiming={350}
+                    animationOutTiming={350}
                     coverScreen={false}
                     hasBackdrop={false}
                 >
@@ -699,9 +1488,7 @@ export default class VideoPlayer extends React.Component {
                         hideReplies={() => {
                             this.setState({showReplies: false})
                         }}
-                        showMakeComment={() => {
-                            this.setState({showMakeComment: true})
-                        }}
+                        parentComment={this.state.selectedComment}
                     />
                 </Modal>
                 <Modal key={'lessonComplete'}
