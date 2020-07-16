@@ -18,9 +18,6 @@ class ReplyNotification extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rankProgress: 62.5,
-            XP: '11,768',
-            rank: 'MASTERO',
             user: 'Jordan Leibel',
         }
     }
@@ -59,7 +56,7 @@ class ReplyNotification extends React.Component {
                         style={{
                             height: '100%',
                             width: '100%',
-                            backgroundColor: 'white',
+                            backgroundColor: colors.mainBackground,
                         }}
                     >
                         <View style={{height: '2%'}}/>
@@ -115,6 +112,7 @@ class ReplyNotification extends React.Component {
                                 fontFamily: 'OpenSans-Regular',
                                 fontSize: 14*factorRatio,
                                 textAlign: 'center',
+                                color: colors.secondBackground,
                             }}
                         >
                             <Text
@@ -134,8 +132,8 @@ class ReplyNotification extends React.Component {
                             style={{
                                 height: '18.5%',
                                 width: '100%',
-                                borderTopWidth: 1*factorRatio,
-                                borderTopColor: '#ececec',
+                                borderTopWidth: 0.5*factorRatio,
+                                borderTopColor: colors.secondBackground,
                             }}
                         >
                             <TouchableOpacity
@@ -155,11 +153,13 @@ class ReplyNotification extends React.Component {
                                     <EntypoIcon
                                         name={'cross'}
                                         size={26*factorRatio}
+                                        color={colors.pianoteRed}
                                     />
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 17*factorRatio,
+                                            color: colors.secondBackground,
                                         }}    
                                     >
                                         Remove this notification
@@ -172,8 +172,8 @@ class ReplyNotification extends React.Component {
                             style={{
                                 height: '18.5%',
                                 width: '100%',
-                                borderTopWidth: 1*factorRatio,
-                                borderTopColor: '#ececec',
+                                borderTopWidth: 0.5*factorRatio,
+                                borderTopColor: colors.secondBackground,
                             }}
                         >
                             <TouchableOpacity
@@ -193,12 +193,14 @@ class ReplyNotification extends React.Component {
                                     <IonIcon
                                         name={'ios-notifications-outline'}
                                         size={26*factorRatio}
+                                        color={colors.pianoteRed}
                                     />
                                     <View style={{width: 5*factorRatio}}/>
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 17*factorRatio,
+                                            color: colors.secondBackground,
                                         }}    
                                     >
                                         Turn off comment reply notifications
@@ -207,7 +209,7 @@ class ReplyNotification extends React.Component {
                                 <View style={{flex: 1}}/>
                             </TouchableOpacity>
                         </View>
-                        <View style={{height: '10%'}}/>
+                        <View style={{height: '12.5%'}}/>
                     </View>
                 </View>            
             </View>

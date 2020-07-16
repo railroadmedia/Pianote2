@@ -11,7 +11,6 @@ import {
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import XpRank from 'Pianote2/src/modals/XpRank.js';
-import ImagePicker from 'react-native-image-picker';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -34,9 +33,50 @@ export default class Profile extends React.Component {
 
     componentDidMount = async () => {
         profileImage = await AsyncStorage.getItem('profileURI')
+        username = await AsyncStorage.getItem('username')
+        profileImage = await AsyncStorage.getItem('profileURI')
+        email = await AsyncStorage.getItem('email')
+
+        await fetch('http://127.0.0.1:5000/accountDetails', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                this.setState({
+                    xp: response.XP,
+                    rank: response.rank,
+                    profileImage: profileURI,
+                    username: username,
+                    memberSince: 2017,
+                    lessonsStarted: (response.lessonsStarted == 1) ? true : false,
+                })
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            })    
+
         if(profileImage !== null) {
             await this.setState({profileImage})
         } 
+    }
+
+
+    changeXP = (num) => {
+        if(num !== '') {
+            num = Number(num)
+            if(num < 10000) {
+                num = num.toString()
+                return num
+            } else {
+                num = (num/1000).toFixed(1).toString()
+                num = num + 'k'
+                return num
+            }
+        }
     }
 
 
@@ -277,7 +317,7 @@ export default class Profile extends React.Component {
                                             color: 'white',
                                         }}
                                     >
-                                        Jared Falk
+                                        {this.state.username}
                                     </Text>
                                     <View style={{height: 10*factorVertical}}/>
                                     <Text
@@ -340,7 +380,7 @@ export default class Profile extends React.Component {
                                                     textAlign: 'center',
                                                 }}
                                             >
-                                                32.2K
+                                                {this.changeXP(this.state.xp)}
                                             </Text>
                                         </View>
                                         <View style={{flex: 1}}/>
@@ -371,7 +411,7 @@ export default class Profile extends React.Component {
                                                     textAlign: 'center',
                                                 }}
                                             >
-                                                MAESTRO
+                                                {this.state.rank}
                                             </Text>
                                         </View>
                                         <View style={{flex: 1}}/>
@@ -421,6 +461,8 @@ export default class Profile extends React.Component {
                             hideXpRank={() => {
                                 this.setState({showXpRank: false})
                             }}
+                            xp={this.state.xp}
+                            rank={this.state.rank}
                         />
                     </Modal>
                     <Modal key={'replyNotification'}

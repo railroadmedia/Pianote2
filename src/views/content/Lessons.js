@@ -74,7 +74,7 @@ export default class Lessons extends React.Component {
     }
 
 
-    async getProgressLessons() {
+    getProgressLessons = async () => {
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
                 brand: 'pianote',
@@ -113,7 +113,7 @@ export default class Lessons extends React.Component {
     }
 
 
-    async getNewLessons() {
+    getNewLessons = async () => {
         if(this.state.outVideos == false) {
             const { response, error } = await getContent({
                 brand: 'pianote',

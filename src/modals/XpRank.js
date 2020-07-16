@@ -17,12 +17,12 @@ class XpRank extends React.Component {
         super(props);
         this.state = {
             rankProgress: 62.5,
-            XP: '11,768',
-            rank: 'MASTERO',
+            XP: this.props.xp,
+            rank: this.props.rank,
         }
     }
 
-    
+
     render = () => {
         return (         
             <View key={'container'}
@@ -103,7 +103,7 @@ class XpRank extends React.Component {
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 20*factorRatio,
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
+                                        fontWeight: 'bold' ,
                                         textAlign: 'center',
                                     }}
                                 >
@@ -155,7 +155,7 @@ class XpRank extends React.Component {
                                                         fontSize: 34*factorRatio,
                                                     }}
                                                 >
-                                                    {this.state.XP}
+                                                    {Number(this.state.XP).toLocaleString()}
                                                 </Text>
                                                 <Text 
                                                     style={{
