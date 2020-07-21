@@ -21,6 +21,7 @@ class TheFourPillars extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            data: this.props.data
         }
     }
 
@@ -53,6 +54,11 @@ class TheFourPillars extends React.Component {
 
     like = async (contentID) => {
         email = await AsyncStorage.getItem('email')
+
+        this.state.data.isLiked = !this.state.data.isLiked
+        this.state.data.like_count = (this.state.data.isLiked) ? this.state.data.like_count + 1 : this.state.data.like_count - 1
+
+        await this.setState({data: this.state.data})
         
         await fetch('http://127.0.0.1:5000/like', {
             method: 'POST',
@@ -140,14 +146,14 @@ class TheFourPillars extends React.Component {
                                 <View
                                     style={{
                                         height: 180*factorRatio,
-                                        width: (this.props.data.type == 'song') ? 180*factorRatio : fullWidth*0.8,
+                                        width: (this.state.data.type == 'song') ? 180*factorRatio : fullWidth*0.8,
                                         backgroundColor: 'white',
                                         zIndex: 10,
                                     }}
                                 >
                                     <FastImage
                                         style={{flex:1, borderRadius: 10}}
-                                        source={{uri: this.props.data.thumbnail}}
+                                        source={{uri: this.state.data.thumbnail}}
                                         resizeMode={FastImage.resizeMode.stretch}
                                     />
                                 </View>
@@ -164,7 +170,7 @@ class TheFourPillars extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    {this.props.data.title}
+                                    {this.state.data.title}
                                 </Text>
                             </View>
                             <View key={'artist'}
@@ -181,7 +187,7 @@ class TheFourPillars extends React.Component {
                                         color: 'grey',
                                     }}
                                 >
-                                    {this.capitalize(this.props.data.type)} / {this.props.data.artist}
+                                    {this.capitalize(this.state.data.type)} / {this.state.data.artist}
                                 </Text>
                             </View>
                             <View style={{height: 10*factorVertical}}/>
@@ -199,7 +205,7 @@ class TheFourPillars extends React.Component {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    {this.props.data.description}
+                                    {this.state.data.description}
                                 </Text>
                             </View>
                             <View key={'stats'}
@@ -253,7 +259,7 @@ class TheFourPillars extends React.Component {
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        {this.props.data.xp}
+                                        {this.state.data.xp}
                                     </Text>
                                     <Text
                                         style={{
@@ -284,11 +290,11 @@ class TheFourPillars extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.like(this.props.data.id)
+                                                this.like(this.state.data.id)
                                             }}
                                         >
                                             <AntIcon
-                                                name={'like2'}
+                                                name={(this.state.data.isLiked) ? 'like1' : 'like2'}
                                                 size={25*factorRatio}
                                             />
                                         </TouchableOpacity>
@@ -297,10 +303,10 @@ class TheFourPillars extends React.Component {
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 12*factorRatio,
                                                 textAlign: 'left',
-                                                marginTop: 10*factorVertical,
+                                                marginTop: 15*factorVertical,
                                             }}
                                         >
-                                            {this.props.data.likeCount}
+                                            {this.state.data.like_count}
                                         </Text>
                                     </View>
                                     <View style={{width: 15*factorRatio}}/>
@@ -312,7 +318,7 @@ class TheFourPillars extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.addToMyList(this.props.data.id)
+                                                this.addToMyList(this.state.data.id)
                                             }}
                                         >
                                             <AntIcon
@@ -340,7 +346,7 @@ class TheFourPillars extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.download(this.props.data.id)
+                                                this.download(this.state.data.id)
                                             }}
                                         >
                                             <MaterialIcon

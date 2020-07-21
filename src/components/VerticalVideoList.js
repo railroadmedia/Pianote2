@@ -7,7 +7,6 @@ import {
     Text,
     ActivityIndicator,
     TouchableOpacity,
-    FlatList, 
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Relevance from '../modals/Relevance';
@@ -175,7 +174,7 @@ class VerticalVideoList extends React.Component {
         return this.props.items.map((row, index) => {
             return (
                 <View key={index}>
-                    {(index > 0 || this.props.showNextVideo == false) && (
+                    {(index >= 0 || this.props.showNextVideo == false) && (
                     <View
                         style={{
                             height: this.props.containerHeight,
@@ -332,7 +331,7 @@ class VerticalVideoList extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
-                                    2 min
+                                    {Math.floor(row.duration/60)} {(Math.floor(row.duration/60) == 1) ? 'min' : 'mins'} 
                                 </Text>
                                 )}
                                 {this.props.showType && (
@@ -533,8 +532,7 @@ class VerticalVideoList extends React.Component {
                                     fontWeight: '500',
                                 }}
                             >
-                                2 mins
-                                {/* {this.props.items[index].artist} */}
+                                {Math.floor(row.duration/60)} mins
                             </Text>
                             </View>
                             <View style={{flex: 1}}/>
@@ -564,148 +562,6 @@ class VerticalVideoList extends React.Component {
                 </View>
             )
         })
-    }
-
-
-    renderFlatlist = () => {
-        return (
-            <FlatList
-                data={this.props.items}
-                extraData={this.props}
-                style={{width: fullWidth}}
-                showsVerticalScrollIndicator={false}
-                ListFooterComponent={() => this.showFooter()}
-                onEndReached={() => this.props.fetchVideos()}
-                renderItem={(row) => (
-                <View key={row.index}
-                    style={{
-                        height: this.props.containerHeight,
-                        width: this.props.containerWidth,
-                        paddingLeft: 10*factorHorizontal,
-                        flexDirection:'row',
-                        borderTopColor: '#ececec',
-                        borderTopWidth: 1.5,
-                    }}
-                >
-                    <TouchableOpacity 
-                        onLongPress={() => {
-                            this.setState({
-                                showModal: true,
-                                item: row,
-                            })
-                        }}
-                        onPress={() => {
-                            this.props.navigation.navigate('VIDEOPLAYER', {
-                                data: row
-                            })
-                        }}
-                        style={{justifyContent: 'center'}}
-                        underlayColor={'transparent'}    
-                    >
-                        <View
-                            style={{
-                                width: this.props.imageWidth,
-                                height: this.props.imageHeight,
-                                borderRadius: this.props.imageRadius,
-                            }}
-                        >
-                            <View
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    width: this.props.imageWidth,
-                                    height: this.props.imageHeight,
-                                    borderRadius: this.props.imageRadius,
-                                    top: 0,
-                                    left: 0,
-                                    zIndex: 4,
-                                    opacity: 0.3,
-                                    backgroundColor: (row.item.progress == 'check') ? 
-                                        '#ff3333':'transparent',
-                                }]}
-                            >
-                            </View>
-                            <View
-                                style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    width: this.props.imageWidth,
-                                    height: this.props.imageHeight,
-                                    borderRadius: this.props.imageRadius,
-                                    top: 0,
-                                    left: 0,
-                                    zIndex: 4,
-                                }]}
-                            >
-                                {(row.item.progress == 'check') && (
-                                <ApprovedTeacher
-                                    height={50*factorRatio}
-                                    width={50*factorRatio}
-                                    fill={'white'}
-                                />
-                                )}
-                                {(row.item.progress == 'progress') && (
-                                <Progress
-                                    height={37.5*factorRatio}
-                                    width={37.5*factorRatio}
-                                    fill={'white'}
-                                />
-                                )}
-                            </View>
-                            <FastImage
-                                style={{
-                                    flex: 1, 
-                                    borderRadius: 10*factorRatio,
-                                    backgroundColor: '#ececec',
-                                    alignSelf: 'center',
-                                }}
-                                source={{uri: row.item.thumbnail}}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                        </View>
-                    </TouchableOpacity>
-                    <View style={{width: 10*factorHorizontal}}/>
-                    <View style={{flex: 1.5, justifyContent: 'center'}}>
-                        <Text
-                            style={{
-                                fontSize: 15*factorRatio,
-                                textAlign: 'left',
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            {row.item.title}
-                        </Text>
-                        <View style={{height: 2*factorVertical}}/>
-                        <Text
-                            numberOfLines={2}
-                            style={{
-                                fontSize: 12*factorRatio,
-                                color: '#9b9b9b',
-                                textAlign: 'left',
-                                fontWeight: '500',
-                            }}
-                        >
-                            2 mins
-                        </Text>
-                    </View>
-                    <View style={{flex: 0.5}}>
-                        <TouchableOpacity 
-                            onPress={() => {
-                                this.addToMyList(row.id)
-                            }}
-                            style={[styles.centerContent, {flex: 1}]}
-                        >
-                            <AntIcon
-                                name={'plus'} 
-                                size={30*factorRatio} 
-                                color={'#c2c2c2'}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                )}
-            />
-        )
     }
 
     
@@ -843,7 +699,7 @@ class VerticalVideoList extends React.Component {
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {
                         (this.props.renderType == 'FlatList') ? 
-                        this.renderFlatlist() : this.renderMappedList()
+                        null : this.renderMappedList()
                     }
                 </View>
                 <Modal key={'modal'}

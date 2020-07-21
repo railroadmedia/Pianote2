@@ -70,7 +70,7 @@ class CustomSwitch extends React.Component {
                     borderRadius: 100,
                     width: 52.5*factorRatio,
                     height: 28*factorRatio,
-                    backgroundColor: (this.state.clicked) ? '#fb1b2f' : '#C5CDCD',
+                    backgroundColor: (this.state.clicked) ? '#fb1b2f' : colors.secondBackground,
                     flexDirection: 'row',
                 }]}
             >
@@ -106,7 +106,7 @@ class CustomSwitch extends React.Component {
                             <EntypoIcon
                                 name={'cross'}
                                 size={22.5*factorRatio}
-                                color={'#C5CDCD'}
+                                color={colors.secondBackground}
                             />
                             )}
                         </View>

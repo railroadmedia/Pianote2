@@ -28,6 +28,7 @@ export default class Support extends React.Component {
                     style={{
                         height: fullHeight - navHeight,
                         alignSelf: 'stretch',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
                     <View key={'contentContainer'}
@@ -43,8 +44,6 @@ export default class Support extends React.Component {
                             style={[
                                 styles.centerContent, {
                                 flex: 0.1,
-                                borderBottomColor: '#ececec',
-                                borderBottomWidth: 1*factorRatio,
                             }]}
                         >
                             <View key={'goback'}
@@ -68,16 +67,17 @@ export default class Support extends React.Component {
                                     <EntypoIcon
                                         name={'chevron-thin-left'}
                                         size={22.5*factorRatio}
-                                        color={'black'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                             </View>
                             <View style={{flex: 0.66}}/>
                             <Text
                                 style={{
+                                    fontSize: 22*factorRatio,
+                                    fontWeight: 'bold',
                                     fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'ios') ? '600': 'bold',
-                                    fontSize: 20*factorRatio,
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 Support
@@ -97,6 +97,7 @@ export default class Support extends React.Component {
                                     style={{
                                         fontSize: 15.5*factorRatio,
                                         fontFamily: 'OpenSans-Regular',
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     Lorem ipsum dolor sit amet, consecteur aclipsing elit. In facilisis orci felis, ac mollis, tellius dignissim ut. 
@@ -106,6 +107,7 @@ export default class Support extends React.Component {
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 15.5*factorRatio,
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     Lorem ipsum dolor sit amet, consecteur aclipsing elit. In facilisis orci felis, ac mollis, tellius dignissim ut. 
@@ -211,9 +213,8 @@ export default class Support extends React.Component {
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 14*factorRatio,
-                                        fontWeight: '600',
                                         opacity: 0.8,
-                                        color: 'grey',
+                                        color: colors.secondBackground,
                                         textAlign: 'center',
                                     }}
                                 >
@@ -225,6 +226,7 @@ export default class Support extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 13.5*factorRatio,
                                         textAlign: 'center',
+                                        color: 'white',
                                     }}
                                 >
                                     support@musora.com
@@ -234,9 +236,8 @@ export default class Support extends React.Component {
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 14*factorRatio,
-                                        fontWeight: '600',
                                         opacity: 0.8,
-                                        color: 'grey',
+                                        color: colors.secondBackground,
                                         textAlign: 'center',
                                     }}
                                 >
@@ -248,6 +249,7 @@ export default class Support extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 13.5*factorRatio,
                                         textAlign: 'center',
+                                        color: 'white',
                                     }}
                                 >
                                     1-800-439-8921
@@ -258,6 +260,7 @@ export default class Support extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 13.5*factorRatio,
                                         textAlign: 'center',
+                                        color: 'white',
                                     }}
                                 >
                                     1-604-921-6721

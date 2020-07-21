@@ -9,7 +9,7 @@ import {
     ScrollView, 
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { getContent } from '@musora/services';
+import { getContentChildById } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -30,71 +30,103 @@ export default class SinglePack extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            outVideos: false,
             showInfo: false,
-            items: [],
-            page: 0,
-            pack: '', // 500 SONGS | FASTERFINGERS | SIGHT READING
+            showStarted: this.props.navigation.state.params.data.isStarted,
+            videos: [],
+            pack: this.props.navigation.state.params.data,
+            bundleID: null,
         }
     }
 
 
     componentDidMount = async () => {
-        await this.setState({
-            pack: this.props.navigation.state.params.data,
-        })
-        await this.getContent()
+        console.log(this.state.pack, 'PACK DATA')
+        await this.getBundle()
+        await this.getVideos()
     }
 
 
-    async getContent() {
-        if(this.state.outVideos == false) {
-            const { response, error } = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                //required_user_states: ['started'],
-                included_types: ['course'],
-            });
+    getBundle = async () => {
+        const { response, error } = await getContentChildById({
+            parentId: this.state.pack.id,
+        });
 
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
+
+        var bundleID = newContent[0].id
+
+        console.log('BUNDLE ID: ', bundleID)
+
+        await this.setState({bundleID})
+    }
+
+
+    getDuration = (newContent) => {
+        if(newContent.post.fields[0].key == 'video') {
+            return newContent.post.fields[0].value.fields[1].value
+        } else if(newContent.post.fields[1].key == 'video') {
+            return newContent.post.fields[1].value.fields[1].value
+        } else if(newContent.post.fields[2].key == 'video') {
+            return newContent.post.fields[2].value.fields[1].value
+        }
+    }
+
+
+    getVideos = async () => {
+        try {
+            const { response, error } = await getContentChildById({
+                parentId: this.state.bundleID,
+            });
+    
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
             })
-
+    
+            console.log('VIDEO DATA: ', response)
+    
             items = []
             for(i in newContent) {
+                console.log(newContent[i])
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
                         artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
                         description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
-                        duration: newContent[i].getField('length'),
+                        type: newContent[i].post.type,
+                        xp: newContent[i].post.xp,
                         id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
+                        duration: this.getDuration(newContent[i]),
+                        like_count: newContent[i].likeCount,
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
                     })
                 }
             }
-
+    
+            console.log(items, 'IMTEMS')
+    
             this.setState({
-                items: [...this.state.items, ...items],
+                videos: [...this.state.videos, ...items],
             })
+    
+            console.log('VIDEOS: ', this.state.videos)            
+        } catch (error) {
+            console.log(error)
         }
     }
 
 
-    whatImage() {
-        if(this.state.pack == '500 SONGS') { 
-            return require('Pianote2/src/assets/img/imgs/500Songs.png')
-        } else if(this.state.pack == 'FASTER FINGERS') {
-            return require('Pianote2/src/assets/img/imgs/fasterFingers.png')
-        } else if(this.state.pack == 'SIGHT READING') {
-            return require('Pianote2/src/assets/img/imgs/sightReading.png')
-        }
+    like = async () => {
+        this.state.pack.like_count = (this.state.pack.isLiked) ? this.state.pack.like_count - 1 : this.state.pack.like_count + 1
+        this.state.pack.isLiked = !this.state.pack.isLiked
+        await this.setState({pack: this.state.pack})
     }
 
 
@@ -127,7 +159,7 @@ export default class SinglePack extends React.Component {
                                 style={[
                                     styles.centerContent, {
                                     position: 'absolute',
-                                    left: 10*factorHorizontal,
+                                    left: 7.5*factorHorizontal,
                                     top: (isNotch) ? 10*factorVertical : 10*factorVertical,
                                     height: 35*factorRatio,
                                     width: 35*factorRatio,
@@ -145,7 +177,7 @@ export default class SinglePack extends React.Component {
                                         width: '100%',
                                         borderRadius: 100,
                                         backgroundColor: 'black',
-                                        opacity: 0.5,
+                                        opacity: 0.4,
                                     }]}
                                 >
                                     <EntypoIcon
@@ -213,7 +245,7 @@ export default class SinglePack extends React.Component {
                             </View>    
                             <FastImage
                                 style={{flex: 1}}
-                                source={this.whatImage()}
+                                source={{uri: this.state.pack.thumbnail}}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
                             <View key={'buttons'}
@@ -312,7 +344,7 @@ export default class SinglePack extends React.Component {
                                             }}
                                         >
                                             <AntIcon
-                                                name={'infocirlceo'}
+                                                name={(this.state.showInfo) ? 'infocirlce':'infocirlceo'}
                                                 size={22*factorRatio}
                                                 color={colors.pianoteRed}
                                             />
@@ -349,7 +381,7 @@ export default class SinglePack extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice.
+                                {this.state.pack.description}
                             </Text>
                             <View key={'containStats'}>
                                 <View style={{height: 10*factorVertical}}/>
@@ -377,7 +409,7 @@ export default class SinglePack extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            11
+                                            {this.state.videos.length}
                                         </Text>
                                         <Text
                                             style={{
@@ -439,7 +471,7 @@ export default class SinglePack extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            2400
+                                            {this.state.pack.xp}
                                         </Text>
                                         <Text
                                             style={{
@@ -465,7 +497,9 @@ export default class SinglePack extends React.Component {
                                 >
                                     <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.like()
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             width: 70*factorRatio,
@@ -473,7 +507,7 @@ export default class SinglePack extends React.Component {
                                     >
                                         <View style={{flex: 1}}/>
                                         <AntIcon
-                                            name={'like2'}
+                                            name={(this.state.pack.isLiked) ? 'like1':'like2'}
                                             size={27.5*factorRatio}
                                             color={colors.pianoteRed}
                                         />
@@ -486,7 +520,7 @@ export default class SinglePack extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            34
+                                            {this.state.pack.like_count}
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{width: 15*factorRatio}}/>
@@ -561,7 +595,7 @@ export default class SinglePack extends React.Component {
                             }]}
                         >
                             <VerticalVideoList
-                                items={this.state.items}
+                                items={this.state.videos}
                                 title={'Packs'} // title for see all page
                                 renderType={'Mapped'} // map vs flatlist
                                 type={'PACK'} // the type of content on page

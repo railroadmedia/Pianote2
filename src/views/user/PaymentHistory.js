@@ -45,7 +45,7 @@ export default class PaymentHistory extends React.Component {
                     style={{
                         height: fullHeight*0.085,
                         width: fullWidth,
-                        backgroundColor: 'white',
+                        backgroundColor: colors.mainBackground,
                         paddingLeft: fullWidth*0.05,
                         paddingRight: fullWidth*0.05,
                     }}
@@ -57,7 +57,7 @@ export default class PaymentHistory extends React.Component {
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 12*factorRatio,
-                                    color: 'grey',
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 {row[1]}
@@ -69,8 +69,9 @@ export default class PaymentHistory extends React.Component {
                         >
                             <Text 
                                 style={{
-                                    fontFamily: 'Roboto',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 14*factorRatio,
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 {row[0]}
@@ -78,11 +79,12 @@ export default class PaymentHistory extends React.Component {
                             <View style={{flex: 1}}/>
                             <Text 
                                 style={{
-                                    fontFamily: 'Roboto',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 14*factorRatio,
+                                    color:'white',
                                 }}
                             >
-                                USD${row[2]}
+                                ${row[2]} USD
                             </Text>
                         </View>
                     </View>
@@ -101,6 +103,7 @@ export default class PaymentHistory extends React.Component {
                     style={{
                         height: fullHeight - navHeight,
                         alignSelf: 'stretch',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
                     <View key={'contentContainer'}
@@ -116,8 +119,6 @@ export default class PaymentHistory extends React.Component {
                             style={[
                                 styles.centerContent, {
                                 flex: 0.1,
-                                borderBottomColor: '#ececec',
-                                borderBottomWidth: 1*factorRatio,
                             }]}
                         >
                             <View key={'goback'}
@@ -141,15 +142,17 @@ export default class PaymentHistory extends React.Component {
                                     <EntypoIcon
                                         name={'chevron-thin-left'}
                                         size={22.5*factorRatio}
-                                        color={'black'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                             </View>
                             <View style={{flex: 0.66}}/>
                             <Text
                                 style={{
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
-                                    fontSize: 20*factorRatio,
+                                    fontSize: 22*factorRatio,
+                                    fontWeight: 'bold',
+                                    fontFamily: 'OpenSans-Regular',
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 Payment History

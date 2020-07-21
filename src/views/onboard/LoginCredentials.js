@@ -12,12 +12,12 @@ import {
     Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { userLogin } from '@musora/services';
 import FastImage from 'react-native-fast-image';
+import { userLogin, configure } from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
+import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
@@ -130,8 +130,11 @@ export default class LoginCredentials extends React.Component {
             ])
 
             // check membership status then navigate
-            if('membershipValid' == 'membershipVali') {
-                await this.props.navigation.navigate('HOME')
+            if('membershipValid' == 'membershipValid') {
+                await configure({
+                    'authToken': response.data.token,
+                })
+                await this.props.navigation.navigate('LESSONS')
             } else {
                 this.props.navigation.navigate('MEMBERSHIPEXPIRED')
             }

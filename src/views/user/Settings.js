@@ -34,6 +34,7 @@ export default class Settings extends React.Component {
                     style={{
                         height: fullHeight - navHeight,
                         alignSelf: 'stretch',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
                     <View key={'contentContainer'}
@@ -74,16 +75,17 @@ export default class Settings extends React.Component {
                                     <EntypoIcon
                                         name={'chevron-thin-left'}
                                         size={22.5*factorRatio}
-                                        color={'black'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                             </View>
                             <View style={{flex: 0.66}}/>
                             <Text
                                 style={{
+                                    fontSize: 22*factorRatio,
+                                    fontWeight: 'bold',
                                     fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
-                                    fontSize: 21*factorRatio,
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 Settings
@@ -93,8 +95,6 @@ export default class Settings extends React.Component {
                         <View key={'scrollview'}
                             style={{
                                 flex: 0.95,
-                                borderTopWidth: 1.5*factorRatio,
-                                borderTopColor: '#ececec',
                             }}
                         >
                             <ScrollView>
@@ -105,8 +105,10 @@ export default class Settings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
+                                        borderTopWidth: 0.5*factorRatio,
+                                        borderTopColor: colors.secondBackground,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -115,13 +117,14 @@ export default class Settings extends React.Component {
                                         <FeatherIcon
                                             name={'user'}
                                             size={25*factorRatio}
+                                            color={colors.pianoteRed}
                                         />
                                     </View>
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Profile Settings
@@ -130,7 +133,7 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'notificationSettings'}
@@ -140,8 +143,8 @@ export default class Settings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -149,6 +152,7 @@ export default class Settings extends React.Component {
                                     <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
                                         <IonIcon
                                             name={'ios-notifications-outline'}
+                                            color={colors.pianoteRed}
                                             size={35*factorRatio}
                                         />
                                     </View>
@@ -156,7 +160,7 @@ export default class Settings extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Notification Settings
@@ -165,7 +169,7 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'paymentHistory'}
@@ -175,8 +179,8 @@ export default class Settings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -185,13 +189,14 @@ export default class Settings extends React.Component {
                                         <FontIcon
                                             name={'credit-card'}
                                             size={24*factorRatio}
+                                            color={colors.pianoteRed}
                                         />
                                     </View>
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Payment History
@@ -200,15 +205,15 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'manageSubscriptions'}
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -217,13 +222,14 @@ export default class Settings extends React.Component {
                                         <AntIcon
                                             name={'folder1'}
                                             size={25*factorRatio}
+                                            color={colors.pianoteRed}
                                         />
                                     </View>
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Manage Subscriptions
@@ -232,7 +238,7 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'support'}
@@ -242,8 +248,8 @@ export default class Settings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -252,13 +258,14 @@ export default class Settings extends React.Component {
                                         <FontIcon
                                             name={'support'}
                                             size={25*factorRatio}
+                                            color={colors.pianoteRed}
                                         />
                                     </View>
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Support
@@ -267,7 +274,7 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'termsOfUse'}
@@ -277,8 +284,8 @@ export default class Settings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -287,13 +294,14 @@ export default class Settings extends React.Component {
                                         <AntIcon
                                             name={'form'}
                                             size={25*factorRatio}
+                                            color={colors.pianoteRed}
                                         />
                                     </View>
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Terms of Use
@@ -302,7 +310,7 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'privacyPolicy'}
@@ -312,8 +320,8 @@ export default class Settings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -321,6 +329,7 @@ export default class Settings extends React.Component {
                                     <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
                                         <FontIcon
                                             name={'shield'}
+                                            color={colors.pianoteRed}
                                             size={27.5*factorRatio}
                                         />
                                     </View>
@@ -328,7 +337,7 @@ export default class Settings extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Privacy Policy
@@ -337,7 +346,7 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'logOut'}
@@ -347,8 +356,8 @@ export default class Settings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -356,6 +365,7 @@ export default class Settings extends React.Component {
                                     <View style={[styles.centerContent, {width: 60*factorHorizontal}]}>
                                         <AntIcon
                                             name={'poweroff'}
+                                            color={colors.pianoteRed}
                                             size={23.5*factorRatio}
                                         />
                                     </View>
@@ -363,7 +373,7 @@ export default class Settings extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
-                                            color: '#fb1b2f',
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Log Out
@@ -372,15 +382,15 @@ export default class Settings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <Text
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         textAlign: 'center',
-                                        color: '#b9b9b9',
-                                        marginTop: 10*factorRatio,
+                                        color: colors.secondBackground,
+                                        marginTop: 15*factorRatio,
                                         fontSize: 12*factorRatio,
                                     }}
                                 >

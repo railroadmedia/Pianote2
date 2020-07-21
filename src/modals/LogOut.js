@@ -76,7 +76,6 @@ class LogOut extends React.Component {
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontWeight: '300',
                                     fontSize: 16*factorRatio,
                                     textAlign: 'justify',
                                 }}
@@ -110,10 +109,9 @@ class LogOut extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
                                                 color: 'white',
+                                                fontFamily: 'RobotoCondensed-Bold',
                                                 fontSize: 14*factorRatio,
-                                                fontWeight: '700',
                                             }}
                                         >
                                             LOG OUT

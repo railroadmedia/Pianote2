@@ -65,6 +65,7 @@ export default class ProfileSettings extends React.Component {
                     style={{
                         height: fullHeight - navHeight,
                         alignSelf: 'stretch',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
                     <View key={'contentContainer'}
@@ -142,16 +143,17 @@ export default class ProfileSettings extends React.Component {
                                     <EntypoIcon
                                         name={'chevron-thin-left'}
                                         size={22.5*factorRatio}
-                                        color={'black'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                             </View>
                             <View style={{flex: 0.66}}/>
                             <Text
                                 style={{
+                                    fontSize: 22*factorRatio,
+                                    fontWeight: 'bold',
                                     fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '700',
-                                    fontSize: 20*factorRatio,
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 {this.state.currentlyView}
@@ -161,8 +163,6 @@ export default class ProfileSettings extends React.Component {
                         <View key={'scrollview'}
                             style={{
                                 flex: 0.95,
-                                borderTopWidth: 1.5*factorRatio,
-                                borderTopColor: '#ececec',
                             }}
                         >
                             {(this.state.currentlyView == 'Profile Settings') && (
@@ -174,8 +174,10 @@ export default class ProfileSettings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
+                                        borderTopWidth: 1*factorRatio,
+                                        borderTopColor: colors.secondBackground,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -185,6 +187,7 @@ export default class ProfileSettings extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Display Name
@@ -193,18 +196,19 @@ export default class ProfileSettings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'notificationProfileSettings'}
                                     onPress={() => {
                                         this.setState({currentlyView: 'Profile Photo'})
                                     }}
-                                    style={[styles.centerContent, {
+                                    style={[
+                                        styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -214,6 +218,7 @@ export default class ProfileSettings extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Profile Photo
@@ -222,7 +227,7 @@ export default class ProfileSettings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'paymentHistory'}
@@ -232,8 +237,8 @@ export default class ProfileSettings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -243,6 +248,7 @@ export default class ProfileSettings extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Password
@@ -251,7 +257,7 @@ export default class ProfileSettings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity key={'manageSubscriptions'}
@@ -263,8 +269,8 @@ export default class ProfileSettings extends React.Component {
                                     style={[styles.centerContent, {
                                         height: 50*factorRatio,
                                         width: fullWidth,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                         flexDirection: 'row',
                                         paddingRight: fullWidth*0.025,
                                     }]}
@@ -274,6 +280,7 @@ export default class ProfileSettings extends React.Component {
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 18*factorRatio,
+                                            color: colors.secondBackground,
                                         }}
                                     >
                                         Email Address
@@ -282,7 +289,7 @@ export default class ProfileSettings extends React.Component {
                                     <AntIcon
                                         name={'right'}
                                         size={22.5*factorRatio}
-                                        color={'#c2c2c2'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                             </ScrollView>
@@ -293,7 +300,7 @@ export default class ProfileSettings extends React.Component {
                                     ref={(txt) => { this.txt = txt }}
                                     placeholder={'Display Name'}
                                     value={this.state.displayName}
-                                    placeholderTextColor={'grey'}
+                                    placeholderTextColor={colors.secondBackground}
                                     onChangeText={(displayName) => this.setState({displayName})}
                                     onSubmitEditing={() => {}}
                                     returnKeyType={'go'}
@@ -304,8 +311,9 @@ export default class ProfileSettings extends React.Component {
                                         width: fullWidth,
                                         justifyContent: 'center',
                                         fontSize: 18*factorRatio,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
+                                        color: colors.secondBackground,
                                     }}
                                 />
                                 <View style={{height: 10*factorRatio}}/>
@@ -315,6 +323,7 @@ export default class ProfileSettings extends React.Component {
                                         fontSize: 16*factorRatio,
                                         paddingLeft: fullWidth*0.045,
                                         paddingRight: fullWidth*0.045,
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     This is the name that will appear on your comments and forum posts.
@@ -351,7 +360,7 @@ export default class ProfileSettings extends React.Component {
                                                 height: 35*factorRatio,
                                                 width: 35*factorRatio,
                                                 borderRadius: 200,
-                                                borderColor: 'black',
+                                                borderColor: colors.secondBackground,
                                                 borderWidth: 2,
                                                 zIndex: 5,
                                             }]}
@@ -359,6 +368,7 @@ export default class ProfileSettings extends React.Component {
                                             <EntypoIcon
                                                 name={'cross'}
                                                 size={25*factorRatio}
+                                                color={colors.secondBackground}
                                             />
                                         </TouchableOpacity>
                                         )}
@@ -399,6 +409,7 @@ export default class ProfileSettings extends React.Component {
                                         fontSize: 15*factorRatio,
                                         paddingLeft: fullWidth*0.045,
                                         paddingRight: fullWidth*0.045,
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     This is the image that will appear with your comments and forum posts.
@@ -420,14 +431,14 @@ export default class ProfileSettings extends React.Component {
                                             height: fullWidth*0.2,
                                             width: fullWidth*0.2,
                                             borderRadius: 200*factorRatio,
-                                            borderColor: 'red',
+                                            borderColor: colors.secondBackground,
                                             borderWidth: 2*factorRatio,
                                         }]}
                                     >
                                         <IonIcon
                                             size={50*factorRatio}
                                             name={'ios-camera'}
-                                            color={'red'}
+                                            color={colors.secondBackground}
                                         />
                                     </TouchableOpacity>
                                     <View style={{flex: 1}}/>
@@ -440,7 +451,7 @@ export default class ProfileSettings extends React.Component {
                                     ref={(txt) => { this.password = txt }}
                                     placeholder={'Current Password'}
                                     value={this.state.password}
-                                    placeholderTextColor={'grey'}
+                                    placeholderTextColor={colors.secondBackground}
                                     onChangeText={(password) => this.setState({password})}
                                     onSubmitEditing={() => {}}
                                     returnKeyType={'go'}
@@ -451,15 +462,16 @@ export default class ProfileSettings extends React.Component {
                                         width: fullWidth,
                                         justifyContent: 'center',
                                         fontSize: 18*factorRatio,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
+                                        color: colors.secondBackground,
                                     }}
                                 />
                                 <TextInput
                                     ref={(txt) => { this.newPassword = txt }}
                                     placeholder={'New Password'}
                                     value={this.state.newPassword}
-                                    placeholderTextColor={'grey'}
+                                    placeholderTextColor={colors.secondBackground}
                                     onChangeText={(newPassword) => this.setState({newPassword})}
                                     onSubmitEditing={() => {}}
                                     returnKeyType={'go'}
@@ -470,15 +482,16 @@ export default class ProfileSettings extends React.Component {
                                         width: fullWidth,
                                         justifyContent: 'center',
                                         fontSize: 18*factorRatio,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        color: colors.secondBackground,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                     }}
                                 />
                                 <TextInput
                                     ref={(txt) => { this.retypeNewPassword = txt }}
                                     placeholder={'Re-Type New Password'}
                                     value={this.state.retypeNewPassword}
-                                    placeholderTextColor={'grey'}
+                                    placeholderTextColor={colors.secondBackground}
                                     onChangeText={(retypeNewPassword) => {
                                         this.setState({retypeNewPassword})
                                     }}
@@ -489,10 +502,11 @@ export default class ProfileSettings extends React.Component {
                                         height: (Platform.OS == 'android') ? fullHeight*0.07 : fullHeight*0.06,
                                         paddingLeft: fullWidth*0.045,
                                         width: fullWidth,
+                                        color: colors.secondBackground,
                                         justifyContent: 'center',
                                         fontSize: 18*factorRatio,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                     }}
                                 />
                             </View>
@@ -503,7 +517,7 @@ export default class ProfileSettings extends React.Component {
                                     ref={(txt) => { this.txt = txt }}
                                     placeholder={'Email Address'}
                                     value={this.state.email}
-                                    placeholderTextColor={'grey'}
+                                    placeholderTextColor={colors.secondBackground}
                                     onChangeText={(email) => this.setState({email})}
                                     onSubmitEditing={() => {}}
                                     returnKeyType={'go'}
@@ -512,10 +526,11 @@ export default class ProfileSettings extends React.Component {
                                         height: (Platform.OS == 'android') ? fullHeight*0.07 : fullHeight*0.06,
                                         paddingLeft: fullWidth*0.045,
                                         width: fullWidth,
+                                        color: colors.secondBackground,
                                         justifyContent: 'center',
                                         fontSize: 18*factorRatio,
-                                        borderBottomColor: '#ececec',
-                                        borderBottomWidth: 1.5*factorRatio,
+                                        borderBottomColor: colors.secondBackground,
+                                        borderBottomWidth: 1*factorRatio,
                                     }}
                                 />
                                 <View style={{height: 30*factorRatio}}/>
@@ -525,6 +540,7 @@ export default class ProfileSettings extends React.Component {
                                         fontSize: 16*factorRatio,
                                         paddingLeft: fullWidth*0.045,
                                         paddingRight: fullWidth*0.045,
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     This email address is what you will use to login to your account. You will be asked to confirm with your account password following this change.

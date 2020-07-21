@@ -39,9 +39,9 @@ global.colors = {
 }
 
 configure({
-    'baseURL': 'https://staging.musora.com',
+    'baseURL': 'https://devcaleb.pianote.com',
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Accept': 'application/json'
+    'Accept': 'application/json',
 })
 
 /**

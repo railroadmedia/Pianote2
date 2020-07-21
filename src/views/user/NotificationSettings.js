@@ -35,6 +35,7 @@ export default class NotificationSettings extends React.Component {
                     style={{
                         height: fullHeight - navHeight,
                         alignSelf: 'stretch',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
                     <View key={'contentContainer'}
@@ -78,16 +79,17 @@ export default class NotificationSettings extends React.Component {
                                     <EntypoIcon
                                         name={'chevron-thin-left'}
                                         size={22.5*factorRatio}
-                                        color={'black'}
+                                        color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                             </View>
                             <View style={{flex: 0.66}}/>
                             <Text
                                 style={{
+                                    fontSize: 22*factorRatio,
+                                    fontWeight: 'bold',
                                     fontFamily: 'OpenSans-Regular',
-                                    fontWeight: (Platform.OS == 'android') ? 'bold' : '600',
-                                    fontSize: 20*factorRatio,
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 Notification Settings
@@ -108,7 +110,7 @@ export default class NotificationSettings extends React.Component {
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 16*factorRatio,
-                                        fontWeight: '600',
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     Notification Types
@@ -133,6 +135,7 @@ export default class NotificationSettings extends React.Component {
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 16*factorRatio,
+                                                color: colors.secondBackground,
                                             }}
                                         >
                                             Weekly community updates
@@ -167,6 +170,7 @@ export default class NotificationSettings extends React.Component {
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 16*factorRatio,
+                                                color: colors.secondBackground,
                                             }}
                                         >
                                             Comment replies
@@ -201,6 +205,7 @@ export default class NotificationSettings extends React.Component {
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 16*factorRatio,
+                                                color: colors.secondBackground,
                                             }}
                                         >
                                             Comment likes
@@ -235,6 +240,7 @@ export default class NotificationSettings extends React.Component {
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 16*factorRatio,
+                                                color: colors.secondBackground,
                                             }}
                                         >
                                             Forum post replies
@@ -269,6 +275,7 @@ export default class NotificationSettings extends React.Component {
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 16*factorRatio,
+                                                color: colors.secondBackground,
                                             }}
                                         >
                                             Forum post likes
@@ -288,7 +295,7 @@ export default class NotificationSettings extends React.Component {
                             <View key={'border'}
                                 style={{
                                     height: 25*factorVertical,
-                                    borderBottomColor: '#ececec',
+                                    borderBottomColor: colors.secondBackground,
                                     borderBottomWidth: 1*factorRatio,
                                 }}
                             />
@@ -306,7 +313,7 @@ export default class NotificationSettings extends React.Component {
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 16*factorRatio,
-                                        fontWeight: '600',
+                                        color: colors.secondBackground,
                                     }}
                                 >
                                     Email Notification Frequency
@@ -330,6 +337,7 @@ export default class NotificationSettings extends React.Component {
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 16*factorRatio,
+                                                color: colors.secondBackground,
                                             }}
                                         >
                                             Immediate
@@ -343,7 +351,7 @@ export default class NotificationSettings extends React.Component {
                                             height: fullHeight*0.0375,
                                             width: fullHeight*0.0375,
                                             backgroundColor: (this.state.frequency == 'Immediate') ?
-                                                '#fb1b2f' : '#C5CDCD',
+                                                '#fb1b2f' : colors.secondBackground,
                                             borderRadius: 100,
                                         }]}
                                     >
@@ -393,6 +401,7 @@ export default class NotificationSettings extends React.Component {
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
                                                     fontSize: 16*factorRatio,
+                                                    color: colors.secondBackground,
                                                 }}
                                             >
                                                 Once per day
@@ -406,7 +415,7 @@ export default class NotificationSettings extends React.Component {
                                                 height: fullHeight*0.0375,
                                                 width: fullHeight*0.0375,
                                                 backgroundColor: (this.state.frequency == 'OncePerDay') ?
-                                                    '#fb1b2f' : '#C5CDCD',
+                                                    '#fb1b2f' : colors.secondBackground,
                                                 borderRadius: 100,
                                             }]}
                                         >
@@ -438,7 +447,7 @@ export default class NotificationSettings extends React.Component {
                                     </View>
                                     <View style={{flex: 1}}/>
                                 </View>
-                            <View key={'never'}
+                                <View key={'never'}
                                         style={{
                                             height: fullHeight*0.065,
                                             paddingLeft: fullWidth*0.045,
@@ -456,6 +465,7 @@ export default class NotificationSettings extends React.Component {
                                                     style={{
                                                         fontFamily: 'OpenSans-Regular',
                                                         fontSize: 16*factorRatio,
+                                                        color: colors.secondBackground,
                                                     }}
                                                 >
                                                     Never
@@ -469,7 +479,7 @@ export default class NotificationSettings extends React.Component {
                                                     height: fullHeight*0.0375,
                                                     width: fullHeight*0.0375,
                                                     backgroundColor: (this.state.frequency == 'Never') ?
-                                                        '#fb1b2f' : '#C5CDCD',
+                                                        '#fb1b2f' : colors.secondBackground,
                                                     borderRadius: 100,
                                                 }]}
                                             >
