@@ -8,7 +8,6 @@ import {
     TouchableOpacity, 
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 class LogOut extends React.Component {
     static navigationOptions = {header: null};
@@ -23,12 +22,16 @@ class LogOut extends React.Component {
     render = () => {
         return (
             <View style={styles.container}>          
-                <View style={{flex: 1, alignSelf: 'stretch',}}>
-                    <TouchableWithoutFeedback
+                <View style={{flex: 1, alignSelf: 'stretch'}}>
+                    <TouchableOpacity
                         onPress={() => this.props.hideLogOut()}
-                        style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
+                        style={{
+                            height: '100%', 
+                            width: '100%', 
+                            alignSelf: 'stretch'
+                        }}
                     >
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 </View>
                 <View
                     style={{
@@ -38,7 +41,7 @@ class LogOut extends React.Component {
                         borderRadius: 10*factorRatio,
                     }}
                 >
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
                         onPress={() => this.props.hideLogOut()}
                         style={{width: fullWidth*0.05,}}    
                     />
@@ -59,7 +62,7 @@ class LogOut extends React.Component {
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontWeight: '700',
+                                    fontWeight: 'bold',
                                     fontSize: 19*factorRatio,
                                     marginTop: 10*factorRatio,
                                 }}
@@ -168,18 +171,18 @@ class LogOut extends React.Component {
                         </View>
                     </View>
                     </View>
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
                         onPress={() => this.props.hideLogOut()}
                         style={{width: fullWidth*0.05,}}    
                     />
                 </View>
                 <View style={{flex: 1, alignSelf: 'stretch',}}>
-                        <TouchableWithoutFeedback
-                            onPress={() => this.props.hideLogOut()}
-                            style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
-                        >
-                        </TouchableWithoutFeedback>
-                    </View>
+                    <TouchableOpacity
+                        onPress={() => this.props.hideLogOut()}
+                        style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
+                    >
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }

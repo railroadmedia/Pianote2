@@ -31,27 +31,22 @@ class VerticalVideoList extends React.Component {
     }
 
 
-    showFooter() {
-        if(this.props.outVideos == false) {
-            return (
-                <View
-                    style={[
-                        styles.centerContent, {
-                        marginTop: 15*factorRatio,
-                        height: 35*factorVertical
-                    }]}
-                >
-                    <ActivityIndicator
-                        size={(isTablet) ? 'large' : 'small'}
-                        color={'grey'}
-                    />
-                </View>
-            )
-        } else {
-            return (
-                <View style={{height:20*factorVertical}}/>
-            )
-        }
+    showSpinner = () => {
+        return (
+            <View
+                style={[
+                    styles.centerContent, {
+                    height: fullHeight*0.415,
+                    marginTop: 15*factorRatio,
+                }]}
+            >
+                <ActivityIndicator
+                    size={(onTablet) ? 'large' : 'small'}
+                    animating={true}
+                    color={colors.secondBackground}
+                />
+            </View>
+        )
     }
 
 
@@ -171,6 +166,12 @@ class VerticalVideoList extends React.Component {
 
 
     renderMappedList = () => {
+        if(this.props.items.length == 0) {
+            return (
+                this.showSpinner()
+            )
+        } 
+
         return this.props.items.map((row, index) => {
             return (
                 <View key={index}>
@@ -698,61 +699,58 @@ class VerticalVideoList extends React.Component {
                 </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {
-                        (this.props.renderType == 'FlatList') ? 
-                        null : this.renderMappedList()
+                        (this.props.renderType == 'Mapped') ? this.renderMappedList() : null
                     }
                 </View>
                 <Modal key={'modal'}
-                        isVisible={this.state.showModal}
-                        style={[
-                            styles.centerContent, {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        }]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={false}
-                        backdropColor={'white'}
-                        backdropOpacity={0.79}
-                    >
-                        <TheFourPillars
-                            data={this.state.item}
-                            hideTheFourPillars={() => {
-                                this.setState({
-                                    showModal: false
-                                })
-                            }}
-                        />
-                    </Modal>
-                    <Modal key={'modalRelevance'}
-                        isVisible={this.state.showRelevance}
-                        style={[
-                            styles.centerContent, {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        }]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={false}
-                        backdropColor={'white'}
-                        backdropOpacity={0.79}
-                    >
-                        <Relevance
-                            hideRelevance={() => {
-                                this.setState({showRelevance: false})
-                            }}
-                            currentSort={this.props.currentSort}
-                            changeSort={(sort) => {
-                                this.props.changeSort(sort)
-                            }}
-                        />
-                    </Modal>
+                    isVisible={this.state.showModal}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <TheFourPillars
+                        data={this.state.item}
+                        hideTheFourPillars={() => {
+                            this.setState({
+                                showModal: false
+                            })
+                        }}
+                    />
+                </Modal>
+                <Modal key={'modalRelevance'}
+                    isVisible={this.state.showRelevance}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={false}
+                    backdropColor={'white'}
+                    backdropOpacity={0.79}
+                >
+                    <Relevance
+                        hideRelevance={() => {
+                            this.setState({showRelevance: false})
+                        }}
+                        currentSort={this.props.currentSort}
+                        changeSort={(sort) => {
+                            this.props.changeSort(sort)
+                        }}
+                    />
+                </Modal>
             </View>
         )
     }

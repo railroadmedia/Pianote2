@@ -110,7 +110,6 @@ export default class Search extends React.Component {
                         <Text 
                             style={{
                                 fontSize: 18*factorRatio,
-                                fontWeight: '500',
                                 fontFamily: 'OpenSans-Regular',
                                 color: 'white',
                             }}

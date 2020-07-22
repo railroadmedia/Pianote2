@@ -8,7 +8,6 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
 import ProgressCircle from 'react-native-progress-circle';
 
 class XpRank extends React.Component {
@@ -31,16 +30,6 @@ class XpRank extends React.Component {
                     width: fullWidth, 
                 }}
             >
-                <BlurView
-                    style={[
-                        styles.centerContent, {
-                        height: fullHeight,
-                        width: fullWidth,
-                        backgroundColor: 'transparent',
-                    }]}
-                    blurType={'xlight'}
-                    blurAmount={(Platform.OS == 'android') ? 1 : 10}
-                />
                <View
                     style={{
                         position: 'absolute',

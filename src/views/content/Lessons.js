@@ -35,7 +35,9 @@ export default class Lessons extends React.Component {
             profileImage: '',
             xp: '', // user's XP
             rank: '', // user's level
-            isLoading: true,
+            isLoading: true, // new lessons
+            isLoadingAll: true, // all lessons
+            isLoadingProgress: true,
             filtering: false,
             filters: null,
             currentSort: 'Relevance',
@@ -67,10 +69,9 @@ export default class Lessons extends React.Component {
                 console.log('API Error: ', error)
             })    
         
-        await this.getProgressLessons()
-        await this.getNewLessons()
-        await this.getAllLessons()
-        await this.setState({isLoading: false})
+        this.getProgressLessons()
+        this.getNewLessons()
+        this.getAllLessons()
     }
 
 
@@ -98,61 +99,91 @@ export default class Lessons extends React.Component {
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                    xp: newContent[i].getField('xp'),
+                    xp: newContent[i].post.xp,
                     id: newContent[i].id,
-                    likeCount: newContent[i].like_count,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
                 })
             }
         }
-        this.setState({
+        
+        await this.setState({
             progressLessons: [...this.state.progressLessons, ...items],
             lessonsStarted: (items.length > 0) ? true : false,
+            isLoadingProgress: false,
         })
     }
 
 
-    getNewLessons = async () => {
-        if(this.state.outVideos == false) {
-            const { response, error } = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                //required_user_states: ['started'],
-                included_types:['course'],
-            });
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
-
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
-                        id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
-                    })
-                }
-            }
-            
-            this.setState({
-                newLessons: [...this.state.newLessons, ...items],
-            })
-
+    getDuration = (newContent) => {
+        if(newContent.post.fields[0].key == 'video') {
+            return newContent.post.fields[0].value.fields[1].value
+        } else if(newContent.post.fields[1].key == 'video') {
+            return newContent.post.fields[1].value.fields[1].value
+        } else if(newContent.post.fields[2].key == 'video') {
+            return newContent.post.fields[2].value.fields[1].value
         }
     }
 
 
+    getNewLessons = async () => {
+        const { response, error } = await getContent({
+            brand: 'pianote',
+            limit: '15',
+            page: this.state.page,
+            sort: '-created_on',
+            statuses: ['published'],
+            //required_user_states: ['started'],
+            included_types:['course'],
+        });
+
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
+
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                })
+            }
+        }
+        
+        this.setState({
+            newLessons: [...this.state.newLessons, ...items],
+            isLoadingAll: false,
+        })
+    }
+
+
     getAllLessons = async () => {
-        await this.setState({filtering: true})
+        await this.setState({
+            filtering: true,
+            isLoadingAll: true,
+        })
+
+        console.log('all prog: ', this.state.isLoadingAll)
 
         // see if importing filters
         try {
@@ -197,9 +228,16 @@ export default class Lessons extends React.Component {
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
+                        xp: newContent[i].post.xp,
                         id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
+                        like_count: newContent[i].likeCount,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
                     })
                 }
             }
@@ -209,7 +247,12 @@ export default class Lessons extends React.Component {
             })
         }
 
-        await this.setState({filtering: false})
+        await this.setState({
+            filtering: false,
+            isLoadingAll: false,
+        })
+
+        console.log('all prog: ', this.state.isLoadingAll)
     }
 
 
@@ -494,8 +537,6 @@ export default class Lessons extends React.Component {
                                 <View style={{flex: 1}}/>
                             </View>
                         </View>
-                        
-                        {!this.state.isLoading && (
                         <View>
                             {(this.state.lessonsStarted && 
                             <View key={'progressCourses'}
@@ -508,6 +549,7 @@ export default class Lessons extends React.Component {
                                 <HorizontalVideoList
                                     Title={'CONTINUE'}
                                     Description={''}
+                                    isLoading={this.state.isLoadingProgress}
                                     seeAll={() => {
                                         this.props.navigation.navigate('SEEALL', {title: 'Continue'})
                                     }}
@@ -545,6 +587,7 @@ export default class Lessons extends React.Component {
                             {!this.state.filtering && (
                             <VerticalVideoList
                                 items={this.state.allLessons}
+                                isLoading={this.state.isLoadingAll}
                                 title={'ALL LESSONS'} // title for see all page
                                 renderType={'Mapped'} // map vs flatlist
                                 type={'LESSONS'} // the type of content on page
@@ -574,7 +617,6 @@ export default class Lessons extends React.Component {
                             />
                             )}
                         </View>
-                        )}
                     </ScrollView>
                     <NavigationBar
                         currentPage={'LESSONS'}

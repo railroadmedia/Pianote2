@@ -86,23 +86,13 @@ class TheFourPillars extends React.Component {
     render = () => {
         return (
             <View style={styles.container}>
-                <BlurView
-                    style={[
-                        styles.centerContent, {
-                        height: fullHeight,
-                        width: fullWidth,
-                        backgroundColor: 'transparent'
-                    }]}
-                    blurType={'xlight'}
-                    blurAmount={(Platform.OS == 'android') ? 1 : 10}
-                />
                 <View
                     style={{
                         position: 'absolute',
                         zIndex: 5,
                         elevation: 5,
                         height: '100%',
-                        width: '100%',     
+                        width: '100%',
                     }}
                 >
                     <View style={{flex: 0.9, alignSelf: 'stretch'}}>
@@ -215,6 +205,7 @@ class TheFourPillars extends React.Component {
                                 }]}
                             >
                                 <View style={{flex: 1, alignSelf: 'stretch'}}/>
+                                {(this.state.data.bundle_count > 1) && (
                                 <View 
                                     style={[
                                         styles.centerContent, {
@@ -230,7 +221,7 @@ class TheFourPillars extends React.Component {
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        11
+                                        {this.state.data.bundle_count}
                                     </Text>
                                     <Text
                                         style={{
@@ -243,7 +234,10 @@ class TheFourPillars extends React.Component {
                                         LESSONS
                                     </Text>
                                 </View>
+                                )}
+                                {(this.state.data.bundle_count > 1) && (
                                 <View style={{width: 15*factorRatio}}/>
+                                )}
                                 <View 
                                     style={[
                                         styles.centerContent, {

@@ -454,8 +454,8 @@ export default class Profile extends React.Component {
                         animation={'slideInUp'}
                         animationInTiming={250}
                         animationOutTiming={250}
-                        coverScreen={false}
-                        hasBackdrop={false}
+                        coverScreen={true}
+                        hasBackdrop={true}
                     >
                         <XpRank
                             hideXpRank={() => {
@@ -474,10 +474,9 @@ export default class Profile extends React.Component {
                             width: fullWidth,
                         }]}
                         animation={'slideInUp'}
-                        backdropOpacity={0.6}
                         animationInTiming={250}
                         animationOutTiming={250}
-                        coverScreen={false}
+                        coverScreen={true}
                         hasBackdrop={true}
                     >
                         <ReplyNotification

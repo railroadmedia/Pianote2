@@ -15,6 +15,7 @@ import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import TheFourPillars from '../modals/TheFourPillars';
 import Icon from 'react-native-vector-icons/AntDesign';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 
 class HorizontalVideoList extends React.Component {
@@ -24,13 +25,25 @@ class HorizontalVideoList extends React.Component {
         this.showFooter = this.showFooter.bind(this)
         this.state = {
             showModal: false,
+            items: this.props.items,
         }
+    }
+
+
+    componentDidMount() {
+        console.log(this.state.items)
     }
 
 
     addToMyList = async (contentID) => {
         email = await AsyncStorage.getItem('email')
-        
+
+        for(i in this.state.items) {
+            if(this.state.items[i].id == contentID) {
+                this.state.items[i].isAddedToList =  true
+            }
+        }
+
         await fetch('http://127.0.0.1:5000/addToMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -46,11 +59,46 @@ class HorizontalVideoList extends React.Component {
             .catch((error) => {
                 console.log('API Error: ', error)
             }) 
+
+        this.setState({items: this.state.items})      
+        
+        console.log(this.state.items)
     } 
 
 
-    showFooter() {
-        if(this.props.items.length == 0) {
+    removeFromMyList = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        
+        for(i in this.state.items) {
+            if(this.state.items[i].id == contentID) {
+                this.state.items[i].isAddedToList =  false
+            }
+        }
+        
+        await fetch('http://127.0.0.1:5000/removeFromMyList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                ID: contentID,
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log('response, removed from my list: ', response)
+            })
+            .catch((error) => {
+                console.log('API Error: ', error)
+            }) 
+
+        this.setState({items: this.state.items})
+
+        console.log(this.state.items)
+    }
+
+
+    showFooter = () => {
+        if(!this.props.isLoading || this.state.items.length == 0) {
             return (
                 <View 
                     style={[
@@ -60,8 +108,9 @@ class HorizontalVideoList extends React.Component {
                 >
                     <View style={{flex: 0.33}}/>
                     <ActivityIndicator 
-                        size={'small'}
-                        color={'grey'}
+                        size={(onTablet) ? 'large' : 'small'}
+                        animating={true}
+                        color={colors.secondBackground}
                     />
                     <View style={{flex: 0.66}}/>
                 </View>
@@ -72,6 +121,7 @@ class HorizontalVideoList extends React.Component {
             )
         }
     }
+
 
     capitalize = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -149,10 +199,10 @@ class HorizontalVideoList extends React.Component {
                     <View style={{height: 0*factorVertical}}/>
                     )}
                     <FlatList
-                        data={this.props.items}
+                        data={this.state.items}
                         extraData={this.state}
                         horizontal={true}
-                        ListFooterComponent={this.showFooter}
+                        ListFooterComponent={(this.props.isLoading) ? this.showFooter : null}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({item, index}) =>
@@ -253,20 +303,32 @@ class HorizontalVideoList extends React.Component {
                                 <View style={{flex: 0.2, flexDirection: 'row'}}>
                                     <View style={{flex: 1}}/>
                                     {this.props.showArtist && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.addToMyList(item.id)
-                                        }}
-                                        style={{
-                                            paddingTop: 5*factorVertical
-                                        }}
-                                    >
-                                        <Icon
-                                            name={'plus'}
-                                            size={30*factorRatio}
-                                            color={colors.pianoteRed}
-                                        />
-                                    </TouchableOpacity>
+                                    <View>
+                                        {!item.isAddedToList && (
+                                        <TouchableOpacity
+                                            style={{paddingTop: 5*factorVertical}}    
+                                            onPress={() => this.addToMyList(item.id)}
+                                        >
+                                            <Icon
+                                                name={'plus'}
+                                                size={30*factorRatio}
+                                                color={colors.pianoteRed}
+                                            />
+                                        </TouchableOpacity>
+                                        )}
+                                        {item.isAddedToList && (
+                                        <TouchableOpacity
+                                            style={{paddingTop: 5*factorVertical}}    
+                                            onPress={() => this.removeFromMyList(item.id)}
+                                        >
+                                            <AntIcon
+                                                name={'close'} 
+                                                size={30*factorRatio} 
+                                                color={colors.pianoteRed}
+                                            />
+                                        </TouchableOpacity>       
+                                        )}                             
+                                    </View>
                                     )}
                                 </View>
                             </View>
@@ -284,9 +346,7 @@ class HorizontalVideoList extends React.Component {
                         animationInTiming={250}
                         animationOutTiming={250}
                         coverScreen={true}
-                        hasBackdrop={false}
-                        backdropColor={'white'}
-                        backdropOpacity={0.79}
+                        hasBackdrop={true}
                     >
                         <TheFourPillars
                             data={this.state.item}
