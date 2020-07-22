@@ -1,5 +1,5 @@
 /**
- * TheFourPillars
+ * ContentModal
  */
 import React from 'react';
 import { 
@@ -10,13 +10,12 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-class TheFourPillars extends React.Component {
+class ContentModal extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -33,27 +32,24 @@ class TheFourPillars extends React.Component {
 
     addToMyList = async (contentID) => {
         email = await AsyncStorage.getItem('email')
-        
-        await fetch('http://127.0.0.1:5000/addToMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            })
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, addded to my list: ', response)
-            })
-            .catch((error) => {
-                console.log('API Error: ', error)
-            }) 
+        this.state.data.isAddedToList =  true
+        this.props.addToMyList(contentID)
+        this.setState({data: this.state.data})
     } 
+
+
+    removeFromMyList = async (contentID) => {
+        email = await AsyncStorage.getItem('email')
+        this.state.data.isAddedToList =  false
+        this.props.removeFromMyList(contentID)
+        this.setState({data: this.state.data})
+    }
 
 
     like = async (contentID) => {
         email = await AsyncStorage.getItem('email')
+
+        this.props.like(contentID)
 
         this.state.data.isLiked = !this.state.data.isLiked
         this.state.data.like_count = (this.state.data.isLiked) ? this.state.data.like_count + 1 : this.state.data.like_count - 1
@@ -75,7 +71,7 @@ class TheFourPillars extends React.Component {
             .catch((error) => {
                 console.log('API Error: ', error)
             }) 
-    } 
+    }
 
 
     download = async (contentID) => {
@@ -97,7 +93,7 @@ class TheFourPillars extends React.Component {
                 >
                     <View style={{flex: 0.9, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
-                            onPress={() => this.props.hideTheFourPillars()}
+                            onPress={() => this.props.hideContentModal()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
                         >
                             <View style={{flex: 1, alignSelf: 'stretch'}}/>
@@ -110,7 +106,7 @@ class TheFourPillars extends React.Component {
                         }}
                     >
                         <TouchableWithoutFeedback
-                            onPress={() => this.props.hideTheFourPillars()}
+                            onPress={() => this.props.hideContentModal()}
                             style={{width: fullWidth*0.05}}    
                         >
                             <View style={{flex: 1, alignSelf: 'stretch'}}/>
@@ -310,16 +306,33 @@ class TheFourPillars extends React.Component {
                                             width: 70*factorRatio,
                                         }]}
                                     >
+                                        <View>
+                                        {!this.state.data.isAddedToList && (
                                         <TouchableOpacity
-                                            onPress={() => {
-                                                this.addToMyList(this.state.data.id)
-                                            }}
+                                            style={{paddingTop: 5*factorVertical}}    
+                                            onPress={() => this.addToMyList(this.state.data.id)}
                                         >
                                             <AntIcon
                                                 name={'plus'}
                                                 size={30*factorRatio}
+                                                color={'black'}
                                             />
                                         </TouchableOpacity>
+                                        )}
+                                        {this.state.data.isAddedToList && (
+                                        <TouchableOpacity
+                                            style={{paddingTop: 5*factorVertical}}    
+                                            onPress={() => this.removeFromMyList(this.state.data.id)}
+                                        >
+                                            <AntIcon
+                                                name={'close'} 
+                                                size={30*factorRatio} 
+                                                color={'black'}
+                                            />
+                                        </TouchableOpacity>       
+                                        )}                             
+                                    </View>
+                                                                        
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
@@ -330,7 +343,7 @@ class TheFourPillars extends React.Component {
                                         >
                                             My List
                                         </Text>
-                                    </View>
+                                    </View>                                    
                                     <View style={{width: 15*factorRatio}}/>
                                     <View 
                                         style={[
@@ -364,7 +377,7 @@ class TheFourPillars extends React.Component {
                                 <View style={{height: 20*factorVertical}}/>
                         </View>
                         <TouchableWithoutFeedback
-                            onPress={() => this.props.hideTheFourPillars()}
+                            onPress={() => this.props.hideContentModal()}
                             style={{width: fullWidth*0.05}}    
                         >
                             <View style={{flex: 1, alignSelf: 'stretch'}}/>
@@ -372,7 +385,7 @@ class TheFourPillars extends React.Component {
                     </View>
                     <View style={{flex: 1.1, alignSelf: 'stretch'}}>
                         <TouchableWithoutFeedback
-                            onPress={() => this.props.hideTheFourPillars()}
+                            onPress={() => this.props.hideContentModal()}
                             style={{height: '100%', width: '100%', alignSelf: 'stretch'}}
                         >
                             <View style={{flex: 1, alignSelf: 'stretch'}}/>
@@ -385,4 +398,4 @@ class TheFourPillars extends React.Component {
 }
 
 
-export default withNavigation(TheFourPillars);
+export default withNavigation(ContentModal);

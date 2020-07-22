@@ -12,11 +12,10 @@ import Modal from 'react-native-modal';
 import Relevance from '../modals/Relevance';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import TheFourPillars from '../modals/TheFourPillars';
+import ContentModal from '../modals/ContentModal';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
@@ -27,6 +26,7 @@ class VerticalVideoList extends React.Component {
         this.state = {
             showModal: false,
             showRelevance: false,
+            items: this.props.items,
         }
     }
 
@@ -53,6 +53,12 @@ class VerticalVideoList extends React.Component {
     addToMyList = async (contentID) => {
         email = await AsyncStorage.getItem('email')
 
+        for(i in this.state.items) {
+            if(this.state.items[i].id == contentID) {
+                this.state.items[i].isAddedToList =  true
+            }
+        }
+
         await fetch('http://127.0.0.1:5000/addToMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -67,13 +73,21 @@ class VerticalVideoList extends React.Component {
             })
             .catch((error) => {
                 console.log('API Error: ', error)
-            }) 
+            })
+            
+        this.setState({items: this.state.items})
     } 
 
 
     removeFromMyList = async (contentID) => {
         email = await AsyncStorage.getItem('email')
-        await this.props.removeItem(contentID)
+        
+        for(i in this.state.items) {
+            if(this.state.items[i].id == contentID) {
+                this.state.items[i].isAddedToList =  false
+            }
+        }
+        
         await fetch('http://127.0.0.1:5000/removeFromMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -84,12 +98,13 @@ class VerticalVideoList extends React.Component {
         })
             .then((response) => response.json())
             .then((response) => {
-                this.props.items = []
                 console.log('response, removed from my list: ', response)
             })
             .catch((error) => {
                 console.log('API Error: ', error)
             }) 
+
+        this.setState({items: this.state.items})            
     }
 
 
@@ -165,14 +180,25 @@ class VerticalVideoList extends React.Component {
     }
 
 
+    like  = (contentID) => {
+        for(i in this.state.items) {
+            if(this.state.items[i].id == contentID) {
+                this.state.items[i].isLiked = !this.state.items.isLiked
+                this.state.items[i].like_count = (this.state.items.isLiked) ? this.state.items.like_count + 1 : this.state.items.like_count - 1
+            }
+        }
+        this.setState({items: this.state.items})
+    }
+
+
     renderMappedList = () => {
-        if(this.props.items.length == 0) {
+        if(this.state.items.length == 0) {
             return (
                 this.showSpinner()
             )
         } 
 
-        return this.props.items.map((row, index) => {
+        return this.state.items.map((row, index) => {
             return (
                 <View key={index}>
                     {(index >= 0 || this.props.showNextVideo == false) && (
@@ -363,32 +389,32 @@ class VerticalVideoList extends React.Component {
                             </View>
                         </View>
                         <View style={{flex: 0.5}}>
-                            {(this.props.showPlus == null) && (
-                            <TouchableOpacity 
-                                onPress={() => {
-                                    (this.props.type == 'MYLIST') ?
-                                    this.removeFromMyList(row.id)
-                                    :
-                                    this.addToMyList(row.id)
-                                }}
-                                style={[styles.centerContent, {flex: 1}]}
-                            >
-                                {(this.props.type !== 'MYLIST') && (
-                                <AntIcon
-                                    name={'plus'} 
-                                    size={30*factorRatio} 
-                                    color={colors.pianoteRed}
-                                />
+                            <View style={[styles.centerContent, {flex: 1}]}>
+                                {!row.isAddedToList && (
+                                <TouchableOpacity
+                                    style={{paddingTop: 5*factorVertical}}    
+                                    onPress={() => this.addToMyList(row.id)}
+                                >
+                                    <AntIcon
+                                        name={'plus'}
+                                        size={30*factorRatio}
+                                        color={colors.pianoteRed}
+                                    />
+                                </TouchableOpacity>
                                 )}
-                                {(this.props.type == 'MYLIST') && (
-                                <AntIcon
-                                    name={'close'} 
-                                    size={30*factorRatio} 
-                                    color={colors.pianoteRed}
-                                />
-                                )}
-                            </TouchableOpacity>
-                            )}
+                                {row.isAddedToList && (
+                                <TouchableOpacity
+                                    style={{paddingTop: 5*factorVertical}}    
+                                    onPress={() => this.removeFromMyList(row.id)}
+                                >
+                                    <AntIcon
+                                        name={'close'} 
+                                        size={30*factorRatio} 
+                                        color={colors.pianoteRed}
+                                    />
+                                </TouchableOpacity>       
+                                )}                             
+                            </View>                            
                         </View>
                     </View>
                     )}
@@ -716,13 +742,12 @@ class VerticalVideoList extends React.Component {
                     coverScreen={true}
                     hasBackdrop={true}
                 >
-                    <TheFourPillars
+                    <ContentModal
                         data={this.state.item}
-                        hideTheFourPillars={() => {
-                            this.setState({
-                                showModal: false
-                            })
-                        }}
+                        hideContentModal={() => this.setState({showModal: false})}
+                        like={(contentID) => this.like(contentID)}
+                        addToMyList={(contentID) => this.addToMyList(contentID)}
+                        removeFromMyList={(contentID) => this.removeFromMyList(contentID)}
                     />
                 </Modal>
                 <Modal key={'modalRelevance'}

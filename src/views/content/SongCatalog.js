@@ -23,6 +23,7 @@ export default class SongCatalog extends React.Component {
         this.state = {
             allSongs: [], // videos loaded
             progressSongs: [],
+            isLoadingProgress: true,
             outVideos: false, // if no more videos to load
             showChooseInstructors: false,
             showChooseYourLevel: false,
@@ -128,44 +129,59 @@ export default class SongCatalog extends React.Component {
 
 
     getProgressSongs = async () => {
-        if(this.state.outVideos == false) {
-            const { response, error } = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                //required_user_states: ['started'],
-                included_types: ['song'],
-            });
+        const { response, error } = await getContent({
+            brand: 'pianote',
+            limit: '15',
+            page: this.state.page,
+            sort: '-created_on',
+            statuses: ['published'],
+            included_types: ['song'],
+        });
 
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
 
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
-                        id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
-                    })
-                }
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                })
             }
-
-            this.setState({
-                progressSongs: [...this.state.progressSongs, ...items],
-            })
         }
+
+        this.setState({
+            progressSongs: [...this.state.progressSongs, ...items],
+            isLoadingProgress: false,
+        })
     }
 
     
+    getDuration = (newContent) => {
+        if(newContent.post.fields[0].key == 'video') {
+            return newContent.post.fields[0].value.fields[1].value
+        } else if(newContent.post.fields[1].key == 'video') {
+            return newContent.post.fields[1].value.fields[1].value
+        } else if(newContent.post.fields[2].key == 'video') {
+            return newContent.post.fields[2].value.fields[1].value
+        }
+    }    
+  
 
     render() {
         return (
@@ -237,7 +253,7 @@ export default class SongCatalog extends React.Component {
                         >
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
-                                Description={''}
+                                isLoading={this.state.isLoadingProgress}
                                 seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
                                 showArtist={true}
                                 items={this.state.progressSongs}

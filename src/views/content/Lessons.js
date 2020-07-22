@@ -35,7 +35,7 @@ export default class Lessons extends React.Component {
             profileImage: '',
             xp: '', // user's XP
             rank: '', // user's level
-            isLoading: true, // new lessons
+            isLoadingNew: true, // new lessons
             isLoadingAll: true, // all lessons
             isLoadingProgress: true,
             filtering: false,
@@ -170,9 +170,9 @@ export default class Lessons extends React.Component {
             }
         }
         
-        this.setState({
+        await this.setState({
             newLessons: [...this.state.newLessons, ...items],
-            isLoadingAll: false,
+            isLoadingNew: false,
         })
     }
 
@@ -182,8 +182,6 @@ export default class Lessons extends React.Component {
             filtering: true,
             isLoadingAll: true,
         })
-
-        console.log('all prog: ', this.state.isLoadingAll)
 
         // see if importing filters
         try {
@@ -251,8 +249,6 @@ export default class Lessons extends React.Component {
             filtering: false,
             isLoadingAll: false,
         })
-
-        console.log('all prog: ', this.state.isLoadingAll)
     }
 
 
@@ -548,18 +544,12 @@ export default class Lessons extends React.Component {
                             >
                                 <HorizontalVideoList
                                     Title={'CONTINUE'}
-                                    Description={''}
-                                    isLoading={this.state.isLoadingProgress}
-                                    seeAll={() => {
-                                        this.props.navigation.navigate('SEEALL', {title: 'Continue'})
-                                    }}
+                                    seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
                                     showArtist={true}
                                     showType={true}
                                     items={this.state.progressLessons}
-                                    forceSquareThumbs={false}
-                                    itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? 
-                                        fullWidth*0.425 : fullWidth*0.55)
-                                    }
+                                    isLoading={this.state.isLoadingProgress}
+                                    itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? fullWidth*0.425 : fullWidth*0.55)}
                                     itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                                 />
                             </View>
@@ -573,17 +563,18 @@ export default class Lessons extends React.Component {
                             >
                                 <HorizontalVideoList
                                     Title={'NEW LESSONS'}
-                                    Description={''}
                                     seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'New Lessons'})}
                                     showArtist={true}
                                     showType={true}
+                                    isLoading={this.state.isLoadingNew}
                                     items={this.state.newLessons}
-                                    forceSquareThumbs={false}
                                     itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? fullWidth*0.425 : fullWidth*0.55)}
                                     itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                                 />
                             </View>
+                            
                             <View style={{height: 5*factorRatio}}/>
+                            
                             {!this.state.filtering && (
                             <VerticalVideoList
                                 items={this.state.allLessons}

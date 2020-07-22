@@ -12,7 +12,7 @@ import {
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import TheFourPillars from '../modals/TheFourPillars';
+import ContentModal from '../modals/ContentModal';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 class FullScreenVideoList extends React.Component {
@@ -216,8 +216,8 @@ class FullScreenVideoList extends React.Component {
                     backdropColor={'white'}
                     backdropOpacity={0.79}
                 >
-                    <TheFourPillars
-                        hideTheFourPillars={() => {
+                    <ContentModal
+                        hideContentModal={() => {
                             this.setState({
                                 showCourse: false
                             })

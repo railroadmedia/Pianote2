@@ -24,6 +24,7 @@ export default class StudentFocusCatalog extends React.Component {
         super(props);
         this.state = {
             progressStudentFocus: [], // videos
+            isLoadingProgress: true,
             outVideos: false, // if no more videos to load
             page: 0, // current page
             lessonsStarted: false,
@@ -55,45 +56,60 @@ export default class StudentFocusCatalog extends React.Component {
 
 
     async getProgressStudentFocus() {
-        if(this.state.outVideos == false) {     
-            const { response, error } = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                required_user_states: ['started'],
-                included_types: ['course'],
-            });
-            
-            console.log('student focus in progress: ', response)
+        const { response, error } = await getContent({
+            brand: 'pianote',
+            limit: '15',
+            page: 1,
+            sort: '-created_on',
+            statuses: ['published'],
+            required_user_states: ['started'],
+            included_types: ['course'],
+        });
 
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
 
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
-                        id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
-                    })
-                }
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                })
             }
-
-            this.setState({
-                progressStudentFocus: [...this.state.progressStudentFocus, ...items],
-                lessonsStarted: (items.length > 0) ? true : false,
-            })        
         }
+
+        this.setState({
+            progressStudentFocus: [...this.state.progressStudentFocus, ...items],
+            isLoadingProgress: false,
+            isStarted: (response.data.data.length > 0) ? true : false,
+        })        
     }
+
+    
+    getDuration = (newContent) => {
+        if(newContent.post.fields[0].key == 'video') {
+            return newContent.post.fields[0].value.fields[1].value
+        } else if(newContent.post.fields[1].key == 'video') {
+            return newContent.post.fields[1].value.fields[1].value
+        } else if(newContent.post.fields[2].key == 'video') {
+            return newContent.post.fields[2].value.fields[1].value
+        }
+    }    
 
 
     render() {
@@ -157,7 +173,7 @@ export default class StudentFocusCatalog extends React.Component {
                             Student Focus
                         </Text>
                         <View style={{height: 15*factorVertical}}/>
-                        {this.state.lessonsStarted && (
+                        {(this.state.isStarted) && (
                         <View key={'continueCourses'}
                             style={{
                                 minHeight: fullHeight*0.305,
@@ -167,17 +183,17 @@ export default class StudentFocusCatalog extends React.Component {
                         >
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
-                                Description={''}
                                 seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
                                 showArtist={true}
+                                isLoading={this.state.isLoadingProgress}
                                 showType={true}
                                 items={this.state.progressStudentFocus}
-                                forceSquareThumbs={false}
                                 itemWidth={isNotch ? fullWidth*0.6 : (onTablet ? fullWidth*0.425 : fullWidth*0.55)}
                                 itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
                         )}
+
                         <View key={'pack'}
                             style={{
                                 height: fullWidth*0.45*2+fullWidth*0.033,

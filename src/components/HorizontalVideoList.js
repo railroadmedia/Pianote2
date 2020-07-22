@@ -13,8 +13,7 @@ import {
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import TheFourPillars from '../modals/TheFourPillars';
-import Icon from 'react-native-vector-icons/AntDesign';
+import ContentModal from '../modals/ContentModal';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -22,16 +21,21 @@ class HorizontalVideoList extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        this.showFooter = this.showFooter.bind(this)
         this.state = {
             showModal: false,
             items: this.props.items,
+            isLoading: this.props.isLoading,
         }
     }
 
 
-    componentDidMount() {
-        console.log(this.state.items)
+    componentWillReceiveProps = async (props) => {
+        if(props.isLoading !== this.state.isLoading) {
+          await this.setState({
+              isLoading: props.isLoading,
+              items: props.items,
+            });
+        }
     }
 
 
@@ -98,7 +102,7 @@ class HorizontalVideoList extends React.Component {
 
 
     showFooter = () => {
-        if(!this.props.isLoading || this.state.items.length == 0) {
+        if(this.state.items.length == 0) {
             return (
                 <View 
                     style={[
@@ -115,10 +119,6 @@ class HorizontalVideoList extends React.Component {
                     <View style={{flex: 0.66}}/>
                 </View>
             )
-        } else {
-            return (
-                <View style={{height: 10*factorHorizontal}}/>
-            )
         }
     }
 
@@ -128,14 +128,30 @@ class HorizontalVideoList extends React.Component {
     }
 
 
+    like  = (contentID) => {
+        for(i in this.state.items) {
+            if(this.state.items[i].id == contentID) {
+                this.state.items[i].isLiked = !this.state.items.isLiked
+                this.state.items[i].like_count = (this.state.items.isLiked) ? this.state.items.like_count + 1 : this.state.items.like_count - 1
+            }
+        }
+        this.setState({items: this.state.items})
+    }
+
+
     render = () => {
         return (
             <View style={styles.container}>
-                <View style={[styles.centerContent, {minHeight: this.props.itemHeight}]}>
-                    <View key={'container'}
+                <View key={'container'}
+                    style={[
+                        styles.centerContent, {
+                        minHeight: this.props.itemHeight,
+                    }]}
+                >
+                    <View key={'title'}
                         style={[
                             styles.centerContent, {
-                            width: fullWidth-20*factorHorizontal,
+                            width: fullWidth - 20*factorHorizontal,
                         }]}
                     >
                         <View style={{height: 10*factorVertical}}/>
@@ -179,30 +195,25 @@ class HorizontalVideoList extends React.Component {
                             </TouchableOpacity>
                             <View style={{flex: 0.1}}/>
                         </View>
-                        {((this.props.Description === '') ? false : true) && (
-                        <View key={'description'}
-                            style={{flex: 0.5}}
-                        >
-                            <Text 
-                                style={{
-                                    fontSize: 16*factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    color: 'white',
-                                }}
-                            >
-                                {this.props.Description}
-                            </Text>
-                        </View>
-                        )}
                     </View>
-                    {(this.props.Description === '' ? false : true) && (
-                    <View style={{height: 0*factorVertical}}/>
+
+                    {this.state.isLoading && (
+                    <View 
+                        style={[
+                            styles.centerContent, {
+                            width: fullWidth,
+                            height: this.props.itemHeight + 80*factorVertical,
+                            alignSelf:  'stretch'
+                        }]}
+                    >
+                        {this.showFooter()}
+                    </View>
                     )}
-                    <FlatList
+                    {!this.state.isLoading && (
+                    <FlatList key={'videos'}
                         data={this.state.items}
                         extraData={this.state}
                         horizontal={true}
-                        ListFooterComponent={(this.props.isLoading) ? this.showFooter : null}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({item, index}) =>
@@ -309,7 +320,7 @@ class HorizontalVideoList extends React.Component {
                                             style={{paddingTop: 5*factorVertical}}    
                                             onPress={() => this.addToMyList(item.id)}
                                         >
-                                            <Icon
+                                            <AntIcon
                                                 name={'plus'}
                                                 size={30*factorRatio}
                                                 color={colors.pianoteRed}
@@ -334,6 +345,7 @@ class HorizontalVideoList extends React.Component {
                             </View>
                         </View>
                     }/>
+                    )}
                     <Modal key={'modal'}
                         isVisible={this.state.showModal}
                         style={[
@@ -348,13 +360,12 @@ class HorizontalVideoList extends React.Component {
                         coverScreen={true}
                         hasBackdrop={true}
                     >
-                        <TheFourPillars
+                        <ContentModal
                             data={this.state.item}
-                            hideTheFourPillars={() => {
-                                this.setState({
-                                    showModal: false
-                                })
-                            }}
+                            hideContentModal={() => this.setState({showModal: false})}
+                            like={(contentID) => this.like(contentID)}
+                            addToMyList={(contentID) => this.addToMyList(contentID)}
+                            removeFromMyList={(contentID) => this.removeFromMyList(contentID)}
                         />
                     </Modal>       
                 </View>
