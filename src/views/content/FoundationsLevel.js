@@ -91,6 +91,25 @@ export default class FoundationsLevel extends React.Component {
     }
 
 
+    getDuration = (newContent) => {
+        var data = 0
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
+        }
+    }
+
+
     render() {
         return (
             <View styles={styles.container}>
@@ -275,7 +294,7 @@ export default class FoundationsLevel extends React.Component {
                                     buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.05}
                                     pxFromLeft={fullWidth*0.5/2}
                                     buttonWidth={fullWidth*0.5}
-                                    pressed={() => this.props.navigation.navigate('COURSECATALOG')}
+                                    pressed={() => this.props.navigation.navigate('PATHOVERVIEW')}
                                 />
                                 <View key={'info'}
                                     style={[ 
@@ -568,20 +587,19 @@ export default class FoundationsLevel extends React.Component {
                             isLoading={this.state.isLoadingAll}
                             title={'ADDED TO MY LIST'}
                             type={'MYLIST'} // the type of content on page
-                            showFilter={true} // shows filters button
+                            showFilter={false} // shows filters button
                             showType={false} // show course / song by artist name
                             showArtist={false} // show artist name
                             showLength={true} // duration of song
                             showSort={false}
                             showLines={true}
-                            filters={this.state.filters} // show filter list
-                            filterResults={() => this.filterResults()} // apply from filters page
                             imageRadius={5*factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.1} // height per row
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.0825} // image height
                             imageWidth={fullWidth*0.26} // image width
+                            navigator={(row) => this.props.navigation.navigate('PATHOVERVIEW', {data: row})}
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}
@@ -593,10 +611,10 @@ export default class FoundationsLevel extends React.Component {
                         width: fullWidth,
                     }]}
                     animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={false}
-                    hasBackdrop={false}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
                 >
                     <RestartCourse
                         hideRestartCourse={() => {

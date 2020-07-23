@@ -574,6 +574,7 @@ export default class Foundations extends React.Component {
                         containerHeight={fullWidth*0.285}
                         imageHeight={fullWidth*0.25}
                         imageWidth={fullWidth*0.25} // image width
+                        navigator={(row) => this.props.navigation.navigate('FOUNDATIONSLEVEL', {data: row})}
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}

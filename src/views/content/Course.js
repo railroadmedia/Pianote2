@@ -389,10 +389,11 @@ export default class Course extends React.Component {
                             filterResults={() => this.filterResults()} // apply from filters page
                             containerWidth={fullWidth}
                             containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.0825} // image height
                             imageWidth={fullWidth*0.26} // image width
                             outVideos={this.state.outVideos}
                             //getVideos={() => this.getContent()}
+                            navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
                         />        
                         <View style={{height: fullHeight*0.025}}/>
                     </ScrollView>

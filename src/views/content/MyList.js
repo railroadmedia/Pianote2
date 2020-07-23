@@ -307,8 +307,9 @@ export default class MyList extends React.Component {
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list
                             containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.0825} // image height
                             imageWidth={fullWidth*0.26} // image width
+                            navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
                         />
                     </ScrollView>
                 </View>                

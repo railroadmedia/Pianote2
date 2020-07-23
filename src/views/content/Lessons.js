@@ -602,10 +602,11 @@ export default class Lessons extends React.Component {
                                 }} // change sort and reload videos
                                 filterResults={() => this.filterResults()} // apply from filters page
                                 containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925} // height per row
-                                imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.09 :fullHeight*0.07} // image height
+                                imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.09 :fullHeight*0.0825} // image height
                                 imageWidth={fullWidth*0.26} // image width
                                 outVideos={this.state.outVideos} // if paging and out of videos
                                 //getVideos={() => this.getContent()} // for paging
+                                navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
                             />
                             )}
                         </View>

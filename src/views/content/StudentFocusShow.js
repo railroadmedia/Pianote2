@@ -348,11 +348,12 @@ export default class StudentFocusShow extends React.Component {
                                 this.getContent()
                             }} // change sort and reload videos
                             filterResults={() => this.filterResults()} 
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.09}
-                            imageHeight={(onTablet) ? fullHeight*0.125 : (Platform.OS == 'android') ? fullHeight*0.0925 : fullHeight*0.07}
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925}
+                            imageHeight={(onTablet) ? fullHeight*0.125 : (Platform.OS == 'android') ? fullHeight*0.0925 : fullHeight*0.0825}
                             imageWidth={fullWidth*0.26}
                             outVideos={this.state.outVideos}
                             //fetchVideos={() => this.getContent()}
+                            navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
                         />
                     </ScrollView>
                     <Modal key={'restartCourse'}

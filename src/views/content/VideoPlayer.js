@@ -41,7 +41,7 @@ export default class VideoPlayer extends React.Component {
         this.state = {
             data: this.props.navigation.state.params.data, // data about incoming video
             profileImage: '',
-
+            isLoadingAll: true,
             showReplies: false, 
             showAssignment: false,
             showSoundSlice: false,
@@ -64,7 +64,6 @@ export default class VideoPlayer extends React.Component {
             page: 1,
 
             videos: [], 
-            videoLoading: true,
             
             likes: 34,
             isLiked: false,
@@ -140,8 +139,6 @@ export default class VideoPlayer extends React.Component {
 
 
     getVideos = async () => {
-        await this.setState({videoLoading: true})
-        
         const { response, error } = await getContent({
             brand:'pianote',
             limit: '15',
@@ -164,18 +161,43 @@ export default class VideoPlayer extends React.Component {
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                    xp: newContent[i].getField('xp'),
+                    xp: newContent[i].post.xp,
                     id: newContent[i].id,
-                    likeCount: newContent[i].likeCount,
+                    like_count: newContent[i].post.like_count,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
                 })
             }
         }
 
         this.setState({
             videos: [...this.state.videos, ...items],
+            isLoadingAll: false,
         })
-        
-        await this.setState({videoLoading: false})
+    }
+
+
+    getDuration = (newContent) => {
+        var data = 0
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
+        }
     }
 
 
@@ -844,12 +866,11 @@ export default class VideoPlayer extends React.Component {
                                     minHeight: fullHeight*0.5
                                 }}
                             >
-                            {!this.state.videoLoading && (
                             <VerticalVideoList
                                 title={this.state.data.type == 'course' ? 'COURSE LESSONS' : 'MORE SONGS'}
                                 items={this.state.videos}
                                 type={'LESSONS'}
-                                
+                                isLoading={this.state.isLoadingAll}
                                 showTitleOnly={true}
                                 showFilter={true}
                                 showType={false}
@@ -861,10 +882,10 @@ export default class VideoPlayer extends React.Component {
                                 containerBorderWidth={0}
                                 containerWidth={fullWidth}
                                 containerHeight={(this.state.data.type == 'course') ? ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925) : fullWidth*0.22}
-                                imageHeight={(this.state.data.type == 'course') ? ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.09 : fullHeight*0.07)): fullWidth*0.175}
+                                imageHeight={(this.state.data.type == 'course') ? ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.09 : fullHeight*0.08)): fullWidth*0.175}
                                 imageWidth={(this.state.data.type == 'course') ? fullWidth*0.26 : fullWidth*0.175}
+                                navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
                             />
-                            )}
                             </View>
                             <View style={{height: 10*factorVertical}}/>
                             <View key={'commentList'}

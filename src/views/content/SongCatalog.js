@@ -302,6 +302,7 @@ export default class SongCatalog extends React.Component {
                             imageWidth={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.075} // image height
                             outVideos={this.state.outVideos} // if paging and out of videos
                             //getVideos={() => this.getContent()} // for paging
+                            navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
                         />
                     </ScrollView>
                 </View>                
