@@ -30,7 +30,7 @@ export default class FoundationsLevel extends React.Component {
         super(props);
         this.state = {
             showRestartCourse: false,
-            profileImage: '',
+            isLoadingAll: true,
             isStarted: true,
             outVideos: false,
             showInfo: false,
@@ -42,47 +42,52 @@ export default class FoundationsLevel extends React.Component {
 
 
     async componentDidMount() {
-        let profileImage = await AsyncStorage.getItem('profileURI')
-        if(profileImage !== null) {
-            await this.setState({profileImage})
-        }
         this.getContent()
     }
 
 
     async getContent() {
-        if(this.state.outVideos == false) {
-            const { response, error } = await getContent({
-                brand:'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types:['song'],
-            });
+        const { response, error } = await getContent({
+            brand:'pianote',
+            limit: '15',
+            page: this.state.page,
+            sort: '-created_on',
+            statuses: ['published'],
+            included_types: ['course'],
+        });
 
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
 
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        progress: (i > 700) ? 'check': ((i == 7) ? 'progress':'none')
-                    })
-                }
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].post.like_count,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                })
             }
-
-            this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-                outVideos: (items.length == 0) ? true : false
-            })
         }
+
+        this.setState({
+            items: [...this.state.items, ...items],
+            page: this.state.page + 1,
+            isLoadingAll: false,
+        })
     }
 
 
@@ -240,7 +245,9 @@ export default class FoundationsLevel extends React.Component {
                                     }]}
                                 >
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => {
+
+                                        }}
                                         style={{
                                             flex: 1,
                                             alignItems: 'center',
@@ -557,19 +564,24 @@ export default class FoundationsLevel extends React.Component {
                     </View>
                     )}
                     <VerticalVideoList
-                        title={'ALL LESSONS'}
-                        outVideos={this.state.outVideos}
-                        //getVideos={() => this.getContent()}
-                        showFilter={false}
-                        items={this.state.items}
-                        imageRadius={5*factorRatio}
-                        containerBorderWidth={0}
-                        containerWidth={fullWidth}
-                        containerHeight={(onTablet) ? fullHeight*0.155 : fullHeight*0.115}
-                        imageHeight={(onTablet) ? fullHeight*0.125 : fullHeight*0.087}
-                        imageWidth={fullWidth*0.315}
-                        imageRadius={5*factorRatio}
-                        showLines={true}
+                            items={this.state.items}
+                            isLoading={this.state.isLoadingAll}
+                            title={'ADDED TO MY LIST'}
+                            type={'MYLIST'} // the type of content on page
+                            showFilter={true} // shows filters button
+                            showType={false} // show course / song by artist name
+                            showArtist={false} // show artist name
+                            showLength={true} // duration of song
+                            showSort={false}
+                            showLines={true}
+                            filters={this.state.filters} // show filter list
+                            filterResults={() => this.filterResults()} // apply from filters page
+                            imageRadius={5*factorRatio} // radius of image shown
+                            containerBorderWidth={0} // border of box
+                            containerWidth={fullWidth} // width of list
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
+                            imageWidth={fullWidth*0.26} // image width
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}

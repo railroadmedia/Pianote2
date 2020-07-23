@@ -238,9 +238,10 @@ class VerticalVideoList extends React.Component {
                                 })
                             }}
                             onPress={() => {
-                                this.props.navigation.navigate('VIDEOPLAYER', {
-                                    data: row
-                                })
+                                (this.props.title == 'FOUNDATIONS') ? 
+                                    this.props.navigation.navigate('FOUNDATIONSLEVEL', {data: row}) 
+                                    : 
+                                    this.props.navigation.navigate('VIDEOPLAYER', {data: row})
                             }}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    
@@ -493,7 +494,7 @@ class VerticalVideoList extends React.Component {
                                 })
                             }}
                             onPress={() => {
-                                this.props.navigation.navigate('VIDEOPLAYER')
+                                (this.props.title == 'FOUNDATIONS') ? this.props.navigation.navigate('FOUNDATIONSLEVEL') : this.props.navigation.navigate('VIDEOPLAYER')
                             }}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    

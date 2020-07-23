@@ -18,7 +18,6 @@ import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -35,6 +34,7 @@ export default class Foundations extends React.Component {
             isStarted: true,
             outVideos: false,
             showInfo: false,
+            isLoadingAll: true,
             level: 3,
             items: [],
             page: 0,
@@ -71,9 +71,20 @@ export default class Foundations extends React.Component {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
-                        progress: (i > 700) ? 'check': ((i == 7) ? 'progress':'none')
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
                     })
                 }
             }
@@ -81,8 +92,27 @@ export default class Foundations extends React.Component {
             this.setState({
                 items: [...this.state.items, ...items],
                 page: this.state.page + 1,
-                outVideos: (items.length == 0) ? true : false
+                isLoadingAll: false,
             })
+        }
+    }
+
+
+    getDuration = (newContent) => {
+        var data = 0
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
         }
     }
 
@@ -378,7 +408,9 @@ export default class Foundations extends React.Component {
                             >
                                 <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                 <TouchableOpacity
-                                    onPress={() => {}}
+                                    onPress={() => {
+                                    
+                                    }}
                                     style={[
                                         styles.centerContent, {
                                         width: 70*factorRatio,
@@ -424,7 +456,7 @@ export default class Foundations extends React.Component {
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        My List
+                                        Download
                                     </Text>
                                 </TouchableOpacity>
                                 <View style={{width: 15*factorRatio}}/>
@@ -521,8 +553,8 @@ export default class Foundations extends React.Component {
                     <VerticalVideoList
                         items={this.state.items}
                         isLoading={this.state.isLoadingAll}
-                        title={'ALL LESSONS'}
-                        type={'COURSES'}
+                        title={'FOUNDATIONS'}
+                        type={'LESSONS'}
                         outVideos={this.state.outVideos}
                         //getVideos={() => this.getContent()}
                         showFilter={false}
@@ -536,29 +568,12 @@ export default class Foundations extends React.Component {
                         containerHeight={fullWidth*0.3}
                         imageHeight={fullWidth*0.26}
                         imageWidth={fullWidth*0.26}
-                        navigator={() => {
-                            this.props.navigation.navigate('FOUNDATIONSLEVEL')
-                        }}
-
-                        
-                        filters={this.state.filters} // show filter list
-                        imageRadius={5*factorRatio}
+                        imageRadius={7.5*factorRatio}
                         containerBorderWidth={0}
-                        currentSort={this.state.currentSort} // relevance sort
-                        changeSort={(currentSort) => { 
-                            this.setState({
-                                currentSort,
-                                allCourses: [],
-                            }),
-                            this.getAllCourses()
-                        }} // change sort and reload videos
-                        filterResults={() => this.filterResults()} // apply from filters page
                         containerWidth={fullWidth}
-                        containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
-                        imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
-                        imageWidth={fullWidth*0.26} // image width
-                        outVideos={this.state.outVideos}
-                        //getVideos={() => this.getContent()}                        
+                        containerHeight={fullWidth*0.285}
+                        imageHeight={fullWidth*0.25}
+                        imageWidth={fullWidth*0.25} // image width
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}
@@ -570,10 +585,10 @@ export default class Foundations extends React.Component {
                         width: fullWidth,
                     }]}
                     animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={false}
-                    hasBackdrop={false}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
                 >
                     <RestartCourse
                         hideRestartCourse={() => {

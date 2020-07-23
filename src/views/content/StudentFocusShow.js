@@ -12,14 +12,10 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
 const packDict = {
@@ -34,7 +30,8 @@ export default class StudentFocusShow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [], // hello
+            items: [],
+            isLoadingAll: true,
             showModalMenu: false, // show navigation menu
             showStarted: false,
             showRestartCourse: false,
@@ -139,44 +136,48 @@ export default class StudentFocusShow extends React.Component {
             var filters = null
         }
 
-        console.log('filters', filters)
+        const { response, error } = await getContent({
+            brand: 'pianote',
+            limit: '15',
+            page: this.state.page,
+            sort: '-created_on',
+            statuses: ['published'],
+            included_types: ['song'],
+        });
 
-        if(this.state.outVideos == false) {
-            const { response, error } = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types: ['song'],
-            });
-
-            const newContent = await response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
-            
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
-                        id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
-                    })
-                }
+        const newContent = await response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
+        
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                })
             }
-
-            await this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-                outVideos: (items.length == 0) ? true : false
-            })
         }
+
+        await this.setState({
+            items: [...this.state.items, ...items],
+            page: this.state.page + 1,
+            isLoadingAll: false,
+            
+        })
     }
 
 
@@ -198,6 +199,25 @@ export default class StudentFocusShow extends React.Component {
                 this.forceUpdate()
             }
         })
+    }
+
+
+    getDuration = (newContent) => {
+        var data = 0
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
+        }
     }
 
 
@@ -308,6 +328,7 @@ export default class StudentFocusShow extends React.Component {
                         <VerticalVideoList
                             items={this.state.items}
                             title={'EPISODES'}
+                            isLoading={this.state.isLoadingAll}
                             type={'STUDENTFOCUSSHOW'} // the type of content on page
                             showFilter={true}
                             showType={true} // show course / song by artist name

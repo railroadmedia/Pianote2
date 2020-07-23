@@ -28,7 +28,7 @@ export default class SongCatalog extends React.Component {
             showChooseInstructors: false,
             showChooseYourLevel: false,
             page: 0, // current page
-            isLoading: true,
+            isLoadingAll: true,
             filtering: false,
             filters: null,
             currentSort: 'Relevance',
@@ -108,9 +108,16 @@ export default class SongCatalog extends React.Component {
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
+                        xp: newContent[i].post.xp,
                         id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
                     })
                 }
             }
@@ -123,7 +130,7 @@ export default class SongCatalog extends React.Component {
 
         await this.setState({
             filtering: false,
-            isLoading: false,
+            isLoadingAll: false,
         })
     }
 
@@ -142,6 +149,8 @@ export default class SongCatalog extends React.Component {
             return new ContentModel(data)
         })
 
+        console.log(response)
+
         items = []
         for(i in newContent) {
             if(newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -153,7 +162,7 @@ export default class SongCatalog extends React.Component {
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
+                    like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].isLiked,
                     isAddedToList: newContent[i].isAddedToList,
@@ -265,9 +274,9 @@ export default class SongCatalog extends React.Component {
                             />
                         </View>
                         <View style={{height: 15*factorVertical}}/>    
-                        {!this.state.filtering && (
                         <VerticalVideoList
                             items={this.state.allSongs}
+                            isLoading={this.state.isLoadingAll}
                             title={'ALL SONGS'} // title for see all page
                             type={'SONGS'} // the type of content on page
                             showFilter={true} // 
@@ -289,12 +298,11 @@ export default class SongCatalog extends React.Component {
                             }} // change sort and reload videos
                             filterResults={() => this.filterResults()} // apply from filters page
                             containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925} // height per row
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065} // image height
-                            imageWidth={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.065} // image height
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.075} // image height
+                            imageWidth={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.075} // image height
                             outVideos={this.state.outVideos} // if paging and out of videos
                             //getVideos={() => this.getContent()} // for paging
                         />
-                        )}
                     </ScrollView>
                 </View>                
                 <NavigationBar

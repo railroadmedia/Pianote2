@@ -10,7 +10,6 @@ import {
     Platform, 
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
 
 class RestartCourse extends React.Component {
     static navigationOptions = {header: null};
@@ -23,16 +22,7 @@ class RestartCourse extends React.Component {
 
     render = () => {
         return (
-            <View style={styles.container}>          
-                <BlurView
-                    style={[
-                        styles.centerContent, {
-                        height: fullHeight,
-                        width: fullWidth,
-                    }]}
-                    blurType={'xlight'}
-                    blurAmount={(Platform.OS == 'ios') ? 7.5 : 1}
-                />
+            <View style={styles.container}>    
                 <View
                     style={{
                         position: 'absolute',

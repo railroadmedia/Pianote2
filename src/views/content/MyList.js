@@ -63,7 +63,7 @@ export default class MyList extends React.Component {
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
+                    like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].isLiked,
                     isAddedToList: newContent[i].isAddedToList,

@@ -13,7 +13,6 @@ import FoundationsLevel from './src/views/content/FoundationsLevel.js';
 import Foundations from './src/views/content/Foundations';
 import VideoPlayer from './src/views/content/VideoPlayer.js';
 import SongCatalog from './src/views/content/SongCatalog.js';
-import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack.js';
 import Downloads from './src/views/content/Downloads.js';
 import Lessons from './src/views/content/Lessons.js';
@@ -67,7 +66,6 @@ const AppNavigator = createStackNavigator({
     VIDEOPLAYERSONG: {screen: VideoPlayerSong},
     FOUNDATIONSLEVEL: {screen: FoundationsLevel},
     FOUNDATIONS: {screen: Foundations},
-    PATHOVERVIEW: {screen: PathOverview},
     SONGCATALOG: {screen: SongCatalog},
     VIDEOPLAYER: {screen: VideoPlayer},
     SINGLEPACK: {screen: SinglePack},

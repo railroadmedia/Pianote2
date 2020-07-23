@@ -31,18 +31,25 @@ export default class SinglePack extends React.Component {
         super(props);
         this.state = {
             showInfo: false,
-            showStarted: this.props.navigation.state.params.data.isStarted,
+            packData: null,
             videos: [],
             pack: this.props.navigation.state.params.data,
+            isAddedToList: this.props.navigation.state.params.data.isAddedToList,
             bundleID: null,
+            isLoadingAll: true,
+            totalLength: 0,
         }
     }
 
 
     componentDidMount = async () => {
-        console.log(this.state.pack, 'PACK DATA')
         await this.getBundle()
         await this.getVideos()
+        for(i in this.state.videos) {
+            this.state.totalLength = this.state.totalLength + Number(this.state.videos[i].duration)
+        }
+        this.state.totalLength = Math.floor(this.state.totalLength/60).toString()
+        this.setState({totalLength: this.state.totalLength})
     }
 
 
@@ -57,9 +64,9 @@ export default class SinglePack extends React.Component {
 
         var bundleID = newContent[0].id
 
-        console.log('BUNDLE ID: ', bundleID)
-
-        await this.setState({bundleID})
+        await this.setState({
+            bundleID,
+        })
     }
 
 
@@ -84,8 +91,6 @@ export default class SinglePack extends React.Component {
                 return new ContentModel(data)
             })
     
-            console.log('VIDEO DATA: ', response)
-    
             items = []
             for(i in newContent) {
                 console.log(newContent[i])
@@ -99,7 +104,7 @@ export default class SinglePack extends React.Component {
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         duration: this.getDuration(newContent[i]),
-                        like_count: newContent[i].likeCount,
+                        like_count: newContent[i].post.like_count,
                         isLiked: newContent[i].isLiked,
                         isAddedToList: newContent[i].isAddedToList,
                         isStarted: newContent[i].isStarted,
@@ -110,13 +115,11 @@ export default class SinglePack extends React.Component {
                 }
             }
     
-            console.log(items, 'IMTEMS')
-    
             this.setState({
                 videos: [...this.state.videos, ...items],
+                isLoadingAll: false,
             })
     
-            console.log('VIDEOS: ', this.state.videos)            
         } catch (error) {
             console.log(error)
         }
@@ -127,6 +130,12 @@ export default class SinglePack extends React.Component {
         this.state.pack.like_count = (this.state.pack.isLiked) ? this.state.pack.like_count - 1 : this.state.pack.like_count + 1
         this.state.pack.isLiked = !this.state.pack.isLiked
         await this.setState({pack: this.state.pack})
+    }
+
+    
+    addPackToMyList = async () => {
+        this.state.pack.isAddedToList = !this.state.pack.isAddedToList
+        this.setState({pack: this.state.pack})
     }
 
 
@@ -267,7 +276,11 @@ export default class SinglePack extends React.Component {
                                             flex: 1,
                                         }]}
                                     >
+                                        {!this.state.pack.isAddedToList && (
                                         <TouchableOpacity
+                                            onPress={() => {
+                                                this.addPackToMyList()
+                                            }}
                                             style={{
                                                 alignItems: 'center',
                                                 flex: 1,
@@ -278,33 +291,41 @@ export default class SinglePack extends React.Component {
                                                 size={30*factorRatio} 
                                                 color={colors.pianoteRed}
                                             />
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    color: 'white',
-                                                    marginTop: 3*factorRatio,
-                                                    fontSize: 12*factorRatio,
-                                                }}
-                                            >
-                                                My List
-                                            </Text>
                                         </TouchableOpacity>
+                                        )}
+                                        {this.state.pack.isAddedToList && (
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.addPackToMyList()
+                                            }}
+                                            style={{
+                                                alignItems: 'center',
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <AntIcon
+                                                name={'close'} 
+                                                size={30*factorRatio} 
+                                                color={colors.pianoteRed}
+                                            />
+                                        </TouchableOpacity>    
+                                        )}
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                color: 'white',
+                                                marginTop: 3*factorRatio,
+                                                fontSize: 12*factorRatio,
+                                            }}
+                                        >
+                                            My List
+                                        </Text>
                                     </View>
                                     <View key={'start'}
                                         style={{width: fullWidth*0.5}}
                                     >
                                         <View style={{flex: 1}}/>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.setState({
-                                                    showStarted: !this.state.showStarted
-                                                })
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                            }}
-                                        >
+                                        {!this.state.pack.isStarted && (
                                             <StartIcon
                                                 pxFromTop={0}
                                                 pxFromLeft={0}
@@ -314,8 +335,8 @@ export default class SinglePack extends React.Component {
                                                     this.props.navigation.navigate('VIDEOPLAYER')
                                                 }}
                                             />
-                                        </TouchableOpacity>
-                                        {this.state.showStarted && (
+                                        )}
+                                        {this.state.pack.isStarted && (
                                         <ContinueIcon
                                             pxFromTop={0}
                                             pxFromLeft={0}
@@ -440,7 +461,7 @@ export default class SinglePack extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            48
+                                            {this.state.totalLength}
                                         </Text>
                                         <Text
                                             style={{
@@ -545,7 +566,7 @@ export default class SinglePack extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            My List
+                                            Download
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{width: 15*factorRatio}}/>
@@ -598,6 +619,7 @@ export default class SinglePack extends React.Component {
                                 items={this.state.videos}
                                 title={'Packs'} // title for see all page
                                 type={'PACK'} // the type of content on page
+                                isLoading={this.state.isLoadingAll}
                                 showFilter={false} // 
                                 showType={false} // show course / song by artist name
                                 showArtist={false} // show artist name
@@ -649,10 +671,10 @@ export default class SinglePack extends React.Component {
                         width: fullWidth,
                     }]}
                     animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={false}
-                    hasBackdrop={false}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}                    
                 >
                     <RestartCourse
                         hideRestartCourse={() => {
