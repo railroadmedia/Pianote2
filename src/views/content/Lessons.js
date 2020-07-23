@@ -101,7 +101,7 @@ export default class Lessons extends React.Component {
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
+                    like_count: newContent[0].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].isLiked,
                     isAddedToList: newContent[i].isAddedToList,
@@ -146,7 +146,6 @@ export default class Lessons extends React.Component {
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)
         })
-
         items = []
         for(i in newContent) {
             if(newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -158,7 +157,7 @@ export default class Lessons extends React.Component {
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
+                    like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].isLiked,
                     isAddedToList: newContent[i].isAddedToList,
@@ -227,7 +226,7 @@ export default class Lessons extends React.Component {
                         description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
-                        like_count: newContent[i].likeCount,
+                        like_count: newContent[0].post.like_count,
                         duration: this.getDuration(newContent[i]),
                         isLiked: newContent[i].isLiked,
                         isAddedToList: newContent[i].isAddedToList,
@@ -543,7 +542,10 @@ export default class Lessons extends React.Component {
                             >
                                 <HorizontalVideoList
                                     Title={'CONTINUE'}
-                                    seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
+                                    seeAll={() => this.props.navigation.navigate('SEEALL', {
+                                        title: 'Continue',
+                                        parent: 'Lessons',
+                                    })}
                                     showArtist={true}
                                     showType={true}
                                     items={this.state.progressLessons}
@@ -562,7 +564,10 @@ export default class Lessons extends React.Component {
                             >
                                 <HorizontalVideoList
                                     Title={'NEW LESSONS'}
-                                    seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'New Lessons'})}
+                                    seeAll={() => this.props.navigation.navigate('SEEALL', {
+                                        title: 'New Lessons',
+                                        parent: 'Lessons',
+                                    })}
                                     showArtist={true}
                                     showType={true}
                                     isLoading={this.state.isLoadingNew}

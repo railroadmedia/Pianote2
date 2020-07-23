@@ -184,6 +184,10 @@ export default class StudentFocusCatalog extends React.Component {
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
                                 seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
+                                seeAll={() => this.props.navigation.navigate('SEEALL', {
+                                    title: 'Continue',
+                                    parent: 'Student Focus',
+                                })}
                                 showArtist={true}
                                 isLoading={this.state.isLoadingProgress}
                                 showType={true}

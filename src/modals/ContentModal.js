@@ -24,6 +24,9 @@ class ContentModal extends React.Component {
         }
     }
 
+    componentWillMount() {
+        console.log(this.state.data)
+    }
 
     capitalize = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -47,9 +50,8 @@ class ContentModal extends React.Component {
 
 
     like = async (contentID) => {
+        console.log('Like on modal', this.state.data)
         email = await AsyncStorage.getItem('email')
-
-        this.props.like(contentID)
 
         this.state.data.isLiked = !this.state.data.isLiked
         this.state.data.like_count = (this.state.data.isLiked) ? this.state.data.like_count + 1 : this.state.data.like_count - 1

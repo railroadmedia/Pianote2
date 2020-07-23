@@ -7,6 +7,7 @@ import {
     Text,
     ActivityIndicator,
     TouchableOpacity,
+    Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Relevance from '../modals/Relevance';
@@ -197,6 +198,7 @@ class VerticalVideoList extends React.Component {
 
 
     like  = (contentID) => {
+        console.log(this.state.items)
         for(i in this.state.items) {
             if(this.state.items[i].id == contentID) {
                 this.state.items[i].isLiked = !this.state.items.isLiked
@@ -616,6 +618,19 @@ class VerticalVideoList extends React.Component {
                     {this.props.showFilter && (
                     <View style={{flexDirection: 'row'}}>
                         <View style={{paddingLeft: 10*factorHorizontal}}>
+                            {(this.props.showLargeTitle) && (
+                            <Text
+                                style={{
+                                    fontSize: 30*factorRatio,
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontWeight: (Platform.OS == 'ios') ? '900' : 'bold',
+                                }}
+                            >
+                                {this.props.title}
+                            </Text>
+                            )}
+                            {(!this.props.showLargeTitle) && (
                             <Text
                                 style={{
                                     fontSize: 18*factorRatio,
@@ -627,6 +642,7 @@ class VerticalVideoList extends React.Component {
                             >
                                 {this.props.title}
                             </Text>
+                            )}
                         </View>
                         <View style={{flex: 1}}/>
                         {!this.props.showTitleOnly && (
@@ -672,31 +688,33 @@ class VerticalVideoList extends React.Component {
                             </TouchableOpacity>
                             )}
                             <View style={{width: 10*factorHorizontal}}/>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.filterResults()
-                                }}
-                                style={[
-                                    styles.centerContent, {
-                                    borderWidth: 1.5*factorRatio,
-                                    borderColor: colors.pianoteRed,
-                                    paddingBottom: 5*factorRatio,
-                                    paddingTop: 5*factorRatio,
-                                    paddingRight: 7.5*factorRatio,
-                                    paddingLeft: 7.5*factorRatio,
-                                    borderRadius: 20*factorRatio,
-                                }]}
-                            >
+                            <View>
                                 <View style={{flex: 1}}/>
-                                <View style={{transform: [{rotate: '90deg'}]}}>
-                                    <IonIcon 
-                                        size={14*factorRatio}
-                                        name={'md-options'}
-                                        color={colors.pianoteRed}
-                                    />
-                                </View>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.filterResults()
+                                    }}
+                                    style={[
+                                        styles.centerContent, {
+                                        borderWidth: 1.5*factorRatio,
+                                        borderColor: colors.pianoteRed,
+                                        height: 30*factorRatio,
+                                        width: 30*factorRatio,
+                                        borderRadius: 20*factorRatio,
+                                    }]}
+                                >
+                                    <View style={{flex: 1}}/>
+                                    <View style={{transform: [{rotate: '90deg'}]}}>
+                                        <IonIcon 
+                                            size={14*factorRatio}
+                                            name={'md-options'}
+                                            color={colors.pianoteRed}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}/>
+                                </TouchableOpacity>
                                 <View style={{flex: 1}}/>
-                            </TouchableOpacity>
+                            </View>
                             <View style={{width: 5*factorHorizontal}}/>
                         </View>
                         )}

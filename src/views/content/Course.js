@@ -239,12 +239,20 @@ export default class Course extends React.Component {
 
 
     getDuration = (newContent) => {
-        if(newContent.post.fields[0].key == 'video') {
-            return newContent.post.fields[0].value.fields[1].value
-        } else if(newContent.post.fields[1].key == 'video') {
-            return newContent.post.fields[1].value.fields[1].value
-        } else if(newContent.post.fields[2].key == 'video') {
-            return newContent.post.fields[2].value.fields[1].value
+        var data = 0
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
         }
     }
 
@@ -326,7 +334,10 @@ export default class Course extends React.Component {
                         >
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
-                                seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
+                                seeAll={() => this.props.navigation.navigate('SEEALL', {
+                                    title: 'Continue',
+                                    parent: 'Courses',
+                                })}
                                 showArtist={true}
                                 items={this.state.progressCourses}
                                 isLoading={this.state.isLoadingProgress}
@@ -343,7 +354,10 @@ export default class Course extends React.Component {
                         >
                             <HorizontalVideoList
                                 Title={'NEW COURSES'}
-                                seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'New Courses'})}
+                                seeAll={() => this.props.navigation.navigate('SEEALL', {
+                                    title: 'New Courses',
+                                    parent: 'Courses',
+                                })}
                                 showArtist={true}
                                 isLoading={this.state.isLoadingNew}
                                 items={this.state.newCourses}

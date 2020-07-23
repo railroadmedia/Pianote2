@@ -254,7 +254,10 @@ export default class SongCatalog extends React.Component {
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
                                 isLoading={this.state.isLoadingProgress}
-                                seeAll={() => this.props.navigation.navigate('SEEALL', {title: 'Continue'})}
+                                seeAll={() => this.props.navigation.navigate('SEEALL', {
+                                    title: 'Continue',
+                                    parent: 'Songs',
+                                })}
                                 showArtist={true}
                                 items={this.state.progressSongs}
                                 itemWidth={isNotch ? fullHeight*0.175 : fullHeight*0.2}
