@@ -848,7 +848,6 @@ export default class VideoPlayer extends React.Component {
                             <VerticalVideoList
                                 title={this.state.data.type == 'course' ? 'COURSE LESSONS' : 'MORE SONGS'}
                                 items={this.state.videos}
-                                renderType={'Mapped'}
                                 type={'LESSONS'}
                                 
                                 showTitleOnly={true}

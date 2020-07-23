@@ -179,7 +179,6 @@ export default class Lessons extends React.Component {
 
     getAllLessons = async () => {
         await this.setState({
-            filtering: true,
             isLoadingAll: true,
         })
 
@@ -572,15 +571,12 @@ export default class Lessons extends React.Component {
                                     itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                                 />
                             </View>
-                            
                             <View style={{height: 5*factorRatio}}/>
-                            
                             {!this.state.filtering && (
                             <VerticalVideoList
                                 items={this.state.allLessons}
                                 isLoading={this.state.isLoadingAll}
                                 title={'ALL LESSONS'} // title for see all page
-                                renderType={'Mapped'} // map vs flatlist
                                 type={'LESSONS'} // the type of content on page
                                 showFilter={true} // 
                                 showType={true} // show course / song by artist name

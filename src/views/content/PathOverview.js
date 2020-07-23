@@ -489,7 +489,6 @@ export default class PathOverview extends React.Component {
                             <VerticalVideoList
                                 outVideos={this.state.outVideos}
                                 fetchVideos={() => this.getContent()}
-                                renderType={'Mapped'}
                                 showNextVideo={false}
                                 showFilters={false}
                                 showMultipleVideos={true}

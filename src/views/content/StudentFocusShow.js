@@ -308,7 +308,6 @@ export default class StudentFocusShow extends React.Component {
                         <VerticalVideoList
                             items={this.state.items}
                             title={'EPISODES'}
-                            renderType={'Mapped'} // map vs flatlist
                             type={'STUDENTFOCUSSHOW'} // the type of content on page
                             showFilter={true}
                             showType={true} // show course / song by artist name

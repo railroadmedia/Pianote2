@@ -560,7 +560,6 @@ export default class FoundationsLevel extends React.Component {
                         title={'ALL LESSONS'}
                         outVideos={this.state.outVideos}
                         //getVideos={() => this.getContent()}
-                        renderType={'Mapped'}
                         showFilter={false}
                         items={this.state.items}
                         imageRadius={5*factorRatio}

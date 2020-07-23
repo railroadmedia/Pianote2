@@ -27,6 +27,17 @@ class VerticalVideoList extends React.Component {
             showModal: false,
             showRelevance: false,
             items: this.props.items,
+            isLoading: this.props.isLoading,
+        }
+    }
+
+
+    componentWillReceiveProps = async (props) => {
+        if(props.isLoading !== this.state.isLoading) {
+            await this.setState({
+                isLoading: props.isLoading,
+                items: [...this.state.items, ...props.items],
+            })
         }
     }
 
@@ -103,6 +114,11 @@ class VerticalVideoList extends React.Component {
             .catch((error) => {
                 console.log('API Error: ', error)
             }) 
+
+
+        if(this.props.type == 'MYLIST') {
+            this.props.removeItem(contentID)
+        }
 
         this.setState({items: this.state.items})            
     }
@@ -192,7 +208,7 @@ class VerticalVideoList extends React.Component {
 
 
     renderMappedList = () => {
-        if(this.state.items.length == 0) {
+        if(this.state.items.length == 0 || this.state.isLoading) {
             return (
                 this.showSpinner()
             )
@@ -725,7 +741,7 @@ class VerticalVideoList extends React.Component {
                 </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {
-                        (this.props.renderType == 'Mapped') ? this.renderMappedList() : null
+                        this.renderMappedList()
                     }
                 </View>
                 <Modal key={'modal'}

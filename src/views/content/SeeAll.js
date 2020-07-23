@@ -29,6 +29,7 @@ export default class SeeAll extends React.Component {
             items: [], // videos loaded
             page: 0, // current page
             filterClicked: false,
+            isLoading: true, 
         }
     }
 
@@ -46,7 +47,7 @@ export default class SeeAll extends React.Component {
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types:['song'],
+                included_types: ['courses'],
             });
             
             if(response.data.data.length == 0) {
@@ -62,8 +63,20 @@ export default class SeeAll extends React.Component {
                 if(newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('artist'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].likeCount,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
                     })
                 }
             }
@@ -71,8 +84,20 @@ export default class SeeAll extends React.Component {
             this.setState({
                 items: [...this.state.items, ...items],
                 page: this.state.page + 1,
+                isLoading: false, 
             })
 
+        }
+    }
+
+    
+    getDuration = (newContent) => {
+        if(newContent.post.fields[0].key == 'video') {
+            return newContent.post.fields[0].value.fields[1].value
+        } else if(newContent.post.fields[1].key == 'video') {
+            return newContent.post.fields[1].value.fields[1].value
+        } else if(newContent.post.fields[2].key == 'video') {
+            return newContent.post.fields[2].value.fields[1].value
         }
     }
 
@@ -160,7 +185,7 @@ export default class SeeAll extends React.Component {
                                         alignSelf: 'stretch',
                                     }}
                                 >
-                                    <View key={'level'}
+                                    <View
                                         style={{flex: 1}}
                                     >
                                         <View 
@@ -485,17 +510,25 @@ export default class SeeAll extends React.Component {
                             contentInsetAdjustmentBehavior={'never'}
                             style={{flex: 0.9, backgroundColor: colors.mainBackground}}
                         >
-                            <VerticalVideoList
-                                title={'ALL LESSONS'}
+                            <VerticalVideoList                            
+                                items={this.state.items}
+                                isLoading={this.state.isLoading}
+                                type={'MYLIST'} // the type of content on page
+
+                                showFilter={true} // shows filters button
+                                showType={false} // show course / song by artist name
+                                showArtist={false} // show artist name
+                                showLength={true} // duration of song
+                                showSort={false}
                                 outVideos={this.state.outVideos}
                                 getVideos={() => this.getContent()}
-                                renderType={'Mapped'}
-                                items={this.state.items}
-                                imageRadius={10*factorRatio}
-                                containerWidth={fullWidth}
-                                containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.0925}
-                                imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.085 :fullHeight*0.07}
-                                imageWidth={fullWidth*0.26}
+                                
+                                imageRadius={5*factorRatio} // radius of image shown
+                                containerBorderWidth={0} // border of box
+                                containerWidth={fullWidth} // width of list
+                                containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
+                                imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
+                                imageWidth={fullWidth*0.26} // image width
                             />
                         </ScrollView>
                     </View>

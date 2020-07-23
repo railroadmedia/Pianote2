@@ -49,7 +49,6 @@ export default class Course extends React.Component {
 
     getAllCourses = async () => {
         await this.setState({
-            filtering: true,
             isLoadingAll: true,
         })
 
@@ -79,7 +78,7 @@ export default class Course extends React.Component {
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types:['course'],
+                included_types: ['course'],
             });
 
             const newContent = response.data.data.map((data) => {
@@ -352,11 +351,10 @@ export default class Course extends React.Component {
                                 itemHeight={isNotch ? fullHeight*0.155 : fullHeight*0.175}
                             />
                         </View>
-                        {!this.state.filtering && (
                         <VerticalVideoList
                             items={this.state.allCourses}
+                            isLoading={this.state.isLoadingAll}
                             title={'COURSES'}
-                            renderType={'Mapped'}
                             type={'COURSES'} // the type of content on page
                             showFilter={true}
                             showType={true} // show course / song by artist name
@@ -381,8 +379,8 @@ export default class Course extends React.Component {
                             imageWidth={fullWidth*0.26} // image width
                             outVideos={this.state.outVideos}
                             //getVideos={() => this.getContent()}
-                        />
-                        )}               
+                        />        
+                        <View style={{height: fullHeight*0.025}}/>
                     </ScrollView>
                 </View>                
                 <Modal key={'restartCourse'}

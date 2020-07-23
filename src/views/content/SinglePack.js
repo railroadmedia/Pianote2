@@ -597,7 +597,6 @@ export default class SinglePack extends React.Component {
                             <VerticalVideoList
                                 items={this.state.videos}
                                 title={'Packs'} // title for see all page
-                                renderType={'Mapped'} // map vs flatlist
                                 type={'PACK'} // the type of content on page
                                 showFilter={false} // 
                                 showType={false} // show course / song by artist name

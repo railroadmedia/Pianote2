@@ -171,7 +171,7 @@ export default class SongCatalog extends React.Component {
         })
     }
 
-    
+
     getDuration = (newContent) => {
         if(newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value
@@ -266,7 +266,6 @@ export default class SongCatalog extends React.Component {
                         <VerticalVideoList
                             items={this.state.allSongs}
                             title={'ALL SONGS'} // title for see all page
-                            renderType={'Mapped'} // map vs flatlist
                             type={'SONGS'} // the type of content on page
                             showFilter={true} // 
                             showType={false} // show course / song by artist name

@@ -22,9 +22,10 @@ export default class MyList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            myList: [], // videos on my list
+            isLoadingAll: true,
             showModalMenu: false,
             outVideos: false, // if no more videos to load
-            items: [], // videos loaded
             page: 0, // current page
             filters: null,
             filtering: true,
@@ -33,53 +34,52 @@ export default class MyList extends React.Component {
 
 
     componentDidMount = async () => {
-        await this.setState({filtering: true})
-        await this.getContent()
-        await this.setState({filtering: false})
+        this.getMyList()
     }
 
 
-    getContent = async () => {
-        if(this.state.outVideos == false) { 
-            const { response, error } = await getContent({
-                brand:'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types:['song'],
-            });
-            
-            if(response.data.data.length == 0) {
-                this.setState({outVideos: true})
+    getMyList = async () => {
+        const { response, error } = await getContent({
+            brand:'pianote',
+            limit: '15',
+            page: this.state.page,
+            sort: 'published_on',
+            statuses: ['published'],
+            included_types:['course'],
+        });
+
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
+
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                })
             }
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
-
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].getField('xp'),
-                        id: newContent[i].id,
-                        likeCount: newContent[i].likeCount,
-                    })
-                }
-            }
-
-            this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-            })
-
         }
+
+        this.setState({
+            myList: [...this.state.myList, ...items],
+            page: this.state.page + 1,
+            isLoadingAll: false,
+        })
     }
 
 
@@ -97,7 +97,7 @@ export default class MyList extends React.Component {
                         filters.topics.length == 0
                     ) ? null : filters, 
                 }),
-                this.getContent(),
+                this.getMyList(),
                 this.forceUpdate()
             }
         })
@@ -105,13 +105,32 @@ export default class MyList extends React.Component {
 
 
     removeFromMyList = async (contentID) => {
-        for(i in this.state.items) {
+        for(i in this.state.myList) {
             // remove if ID matches
-            if(this.state.items[i].id == contentID) {
-                this.state.items.splice(i, 1);
+            if(this.state.myList[i].id == contentID) {
+                this.state.myList.splice(i, 1);
             }
         }
-        await this.setState({items: this.state.items})
+        await this.setState({myList: this.state.myList})
+    }
+
+
+    getDuration = (newContent) => {
+        var data = 0
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
+        }
     }
 
 
@@ -169,7 +188,7 @@ export default class MyList extends React.Component {
                                 fontSize: 30*factorRatio,
                                 color: 'white',
                                 fontFamily: 'OpenSans-Regular',
-                                fontWeight: (Platform.OS == 'ios') ? '900' : 'bold',
+                                fontWeight: 'bold',
                             }}
                         >
                             My List
@@ -177,7 +196,10 @@ export default class MyList extends React.Component {
                         <View style={{height: 30*factorVertical}}/>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.navigation.navigate('SEEALL', {title: 'In Progress'})
+                                this.props.navigation.navigate('SEEALL', {
+                                    title: 'In Progress',
+                                    parent: 'My List',
+                                })
                             }}
                             style={{
                                 height: fullHeight*0.075,
@@ -197,7 +219,7 @@ export default class MyList extends React.Component {
                                         fontSize: 20*factorRatio,
                                         marginBottom: 5*factorVertical,
                                         textAlign: 'left', 
-                                        fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
+                                        fontWeight: 'bold', 
                                         fontFamily: 'RobotoCondensed-Bold',
                                         color: colors.secondBackground,
                                     }}
@@ -223,7 +245,10 @@ export default class MyList extends React.Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.navigation.navigate('SEEALL', {title: 'Completed'})
+                                this.props.navigation.navigate('SEEALL', {
+                                    title: 'Completed',
+                                    parent: 'My List',
+                                })
                             }}
                             style={{
                                 height: fullHeight*0.075,
@@ -241,7 +266,7 @@ export default class MyList extends React.Component {
                                         fontSize: 20*factorRatio,
                                         marginBottom: 5*factorVertical,
                                         textAlign: 'left', 
-                                        fontWeight: (Platform.OS == 'ios') ? '900' : 'bold', 
+                                        fontWeight: 'bold', 
                                         fontFamily: 'RobotoCondensed-Bold',
                                         color: colors.secondBackground,
                                     }}
@@ -262,11 +287,10 @@ export default class MyList extends React.Component {
                             </View>
                         </TouchableOpacity>
                         <View style={{height: 15*factorVertical}}/>
-                        {!this.state.filtering && (
                         <VerticalVideoList
-                            items={this.state.items}
+                            items={this.state.myList}
+                            isLoading={this.state.isLoadingAll}
                             title={'ADDED TO MY LIST'}
-                            renderType={'Mapped'}
                             type={'MYLIST'} // the type of content on page
                             showFilter={true} // shows filters button
                             showType={false} // show course / song by artist name
@@ -286,7 +310,6 @@ export default class MyList extends React.Component {
                             imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
                             imageWidth={fullWidth*0.26} // image width
                         />
-                        )}
                     </ScrollView>
                 </View>                
                 <NavigationBar

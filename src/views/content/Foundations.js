@@ -519,12 +519,17 @@ export default class Foundations extends React.Component {
                     </View>
                     )}
                     <VerticalVideoList
+                        items={this.state.items}
+                        isLoading={this.state.isLoadingAll}
                         title={'ALL LESSONS'}
+                        type={'COURSES'}
                         outVideos={this.state.outVideos}
                         //getVideos={() => this.getContent()}
-                        renderType={'Mapped'}
                         showFilter={false}
-                        items={this.state.items}
+                        showType={true} // 
+                        showArtist={true} // show artist name
+                        showLength={false}
+                        showSort={true}
                         imageRadius={5*factorRatio}
                         containerBorderWidth={0}
                         containerWidth={fullWidth}
@@ -534,6 +539,26 @@ export default class Foundations extends React.Component {
                         navigator={() => {
                             this.props.navigation.navigate('FOUNDATIONSLEVEL')
                         }}
+
+                        
+                        filters={this.state.filters} // show filter list
+                        imageRadius={5*factorRatio}
+                        containerBorderWidth={0}
+                        currentSort={this.state.currentSort} // relevance sort
+                        changeSort={(currentSort) => { 
+                            this.setState({
+                                currentSort,
+                                allCourses: [],
+                            }),
+                            this.getAllCourses()
+                        }} // change sort and reload videos
+                        filterResults={() => this.filterResults()} // apply from filters page
+                        containerWidth={fullWidth}
+                        containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.095} // height per row
+                        imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.075} // image height
+                        imageWidth={fullWidth*0.26} // image width
+                        outVideos={this.state.outVideos}
+                        //getVideos={() => this.getContent()}                        
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}
