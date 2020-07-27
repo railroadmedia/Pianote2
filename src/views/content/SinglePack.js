@@ -9,9 +9,9 @@ import {
     ScrollView, 
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { getContentChildById } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import { getContentChildById } from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
@@ -222,41 +222,33 @@ export default class SinglePack extends React.Component {
                                 height={'70%'}
                                 borderRadius={0}
                             />
-                            <View key={'SVGs'}
-                                style={{
-                                    position: 'absolute',
-                                    bottom: (onTablet) ? fullHeight*0.065/2 : fullHeight*0.053/2,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                {(this.state.pack == 'SIGHT READING') && (
-                                <SightReading
-                                    height={200*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={275*factorVertical}
-                                />
-                                )}
-                                {(this.state.pack == '500 SONGS') && (
-                                <Songs500
-                                    height={200*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={275*factorVertical}
-                                />
-                                )}
-                                {(this.state.pack == 'FASTER FINGERS') && (
-                                <FasterFingers
-                                    height={250*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={300*factorVertical}
-                                />
-                                )}
-                                <View style={{flex: 1}}/>
-                            </View>    
                             <FastImage
                                 style={{flex: 1}}
                                 source={{uri: this.state.pack.thumbnail}}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
+                            <View key={'logo'}
+                                style={{
+                                    position: 'absolute',
+                                    bottom: 30*factorRatio + ((onTablet) ? fullHeight*0.065 : fullHeight*0.053),
+                                    left: 0,
+                                    width: fullWidth,
+                                    zIndex: 10,
+                                    elevation: 10,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <View style={{flex: 1}}/>
+                                <FastImage
+                                    style={{
+                                        height: 100*factorRatio,
+                                        width: '80%',
+                                    }}
+                                    source={{uri: this.state.pack.logo}}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+                                <View style={{flex: 1}}/>
+                            </View>
                             <View key={'buttons'}
                                 style={{
                                     position: 'absolute',
