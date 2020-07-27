@@ -238,6 +238,8 @@ export default class Lessons extends React.Component {
                 }
             }
 
+            console.log(response, error)
+
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
             })
