@@ -1,7 +1,7 @@
 /**
  *  Router
  */
-import { Animated } from 'react-native';
+import { Animated, Dimensions, Easing } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -96,11 +96,40 @@ const AppNavigator = createStackNavigator({
 },
 {
     headerMode:'screen',
-    mode:'card',
-    defaultNavigationOptions: {gesturesEnabled: false},
-    transitionConfig: () => (
-        {transitionSpec: {duration: 0, timing: Animated.timing}}
-    )
+    mode: 'card',
+    defaultNavigationOptions: {
+      gesturesEnabled: true,
+      // if you want to change the back swipe width 
+      //just put the number, e.g. 100 would be fine to get the iOS effect
+      gestureResponseDistance: {
+        horizontal: Dimensions.get('window').width
+      }
+    },
+    transitionConfig: () => ({
+        transitionSpec: {
+            duration: 300,
+            easing: Easing.out(Easing.poly(4)),
+            timing: Animated.timing,
+            useNativeDriver: true,
+        },
+        screenInterpolator: (sceneProps) => {
+            const { layout, position, scene } = sceneProps;
+            const { index } = scene;
+
+            const width = layout.initWidth;
+            const translateX = position.interpolate({
+                inputRange: [index - 1, index, index + 1],
+                outputRange: [width, 0, 0],
+            });
+    
+            const opacity = position.interpolate({
+                inputRange: [index - 1, index - 0.99, index],
+                outputRange: [0, 1, 1],
+            });
+  
+            return { opacity, transform: [{ translateX }] };
+        },
+    })
 });
 
 export default createAppContainer(AppNavigator);

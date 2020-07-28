@@ -131,9 +131,7 @@ export default class LoginCredentials extends React.Component {
 
             // check membership status then navigate
             if('membershipValid' == 'membershipValid') {
-                await configure({
-                    'authToken': response.data.token,
-                })
+                await configure({'authToken': response.data.token})
                 await this.props.navigation.navigate('LESSONS')
             } else {
                 this.props.navigation.navigate('MEMBERSHIPEXPIRED')

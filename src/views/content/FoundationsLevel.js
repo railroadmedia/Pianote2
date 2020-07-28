@@ -53,12 +53,14 @@ export default class FoundationsLevel extends React.Component {
             page: this.state.page,
             sort: '-created_on',
             statuses: ['published'],
-            included_types: ['course'],
+            included_types: ['learning-path-level'],
         });
 
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)
         })
+
+        console.log(response, 'RESPONSE', error)
 
         items = []
         for(i in newContent) {

@@ -44,8 +44,6 @@ export default class Packs extends React.Component {
             return new ContentModel(data)
         })
 
-        console.log('PACKS', response, error)
-
         items = []
         for(i in newContent) {
             if(newContent[i].getData('thumbnail_url') !== 'TBD') {

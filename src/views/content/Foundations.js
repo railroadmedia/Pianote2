@@ -59,12 +59,14 @@ export default class Foundations extends React.Component {
                 page: this.state.page,
                 sort: '-created_on',
                 statuses: ['published'],
-                included_types:['song'],
+                included_types: ['learning-path-level'],
             });
 
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
             })
+
+            console.log('response: ', response)
 
             items = []
             for(i in newContent) {
