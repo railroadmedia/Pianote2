@@ -39,7 +39,7 @@ global.colors = {
 }
 
 configure({
-    'baseURL': 'https://devcaleb.pianote.com',
+    'baseURL': 'https://staging.pianote.com',
     'Content-Type': 'application/x-www-form-urlencoded',
     'Accept': 'application/json',
 })
