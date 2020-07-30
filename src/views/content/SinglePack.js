@@ -9,21 +9,18 @@ import {
     ScrollView, 
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { getContentChildById } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import { getContentChildById } from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import Songs500 from 'Pianote2/src/assets/img/svgs/500SongsLogo.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import SightReading from 'Pianote2/src/assets/img/svgs/sightReadingLogo.svg';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import FasterFingers from 'Pianote2/src/assets/img/svgs/fasterFingersLogo.svg';
 
 export default class SinglePack extends React.Component {
     static navigationOptions = {header: null};
@@ -32,6 +29,7 @@ export default class SinglePack extends React.Component {
         this.state = {
             showInfo: false,
             packData: null,
+            isDisplayingLessons: true, 
             videos: [],
             pack: this.props.navigation.state.params.data,
             isAddedToList: this.props.navigation.state.params.data.isAddedToList,
@@ -44,16 +42,17 @@ export default class SinglePack extends React.Component {
 
     componentDidMount = async () => {
         await this.getBundle()
-        await this.getVideos()
         for(i in this.state.videos) {
             this.state.totalLength = this.state.totalLength + Number(this.state.videos[i].duration)
         }
         this.state.totalLength = Math.floor(this.state.totalLength/60).toString()
+        
         this.setState({totalLength: this.state.totalLength})
     }
 
 
     getBundle = async () => {
+        // get bundles
         const { response, error } = await getContentChildById({
             parentId: this.state.pack.id,
         });
@@ -62,23 +61,84 @@ export default class SinglePack extends React.Component {
             return new ContentModel(data)
         })
 
-        var bundleID = newContent[0].id
+        // if more than one bundle then display bundles otherwise show videos
+        if(this.state.pack.bundle_count > 1) {
+            this.setState({isDisplayingLessons: false})
+            items = []
+            try {
+                for(i in newContent) {
+                    if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                        items.push({
+                            title: newContent[i].getField('title'),
+                            artist: this.getInstructor(newContent[i]),
+                            thumbnail: newContent[i].getData('thumbnail_url'),
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                            type: newContent[i].post.type,
+                            xp: newContent[i].post.xp,
+                            id: newContent[i].id,
+                            duration: this.getDuration(newContent[i]),
+                            like_count: newContent[i].post.like_count,
+                            isLiked: newContent[i].isLiked,
+                            isAddedToList: newContent[i].isAddedToList,
+                            isStarted: newContent[i].isStarted,
+                            isCompleted: newContent[i].isCompleted,
+                            bundle_count: newContent[i].post.bundle_count,
+                            progress_percent: newContent[i].post.progress_percent,
+                        })
+                    }
+                }
+            } catch (error) {
+                console.log(error)            
+            }
 
-        await this.setState({
-            bundleID,
-        })
+            this.setState({
+                videos: [...this.state.videos, ...items],
+                isLoadingAll: false,
+            })    
+        } else {
+            var bundleID = (typeof(this.state.pack.bundle_count) == 'undefined') ? this.state.pack.id : newContent[0].id 
+            await this.setState({bundleID})
+            await this.getVideos()
+        }
     }
 
 
     getDuration = (newContent) => {
-        if(newContent.post.fields[0].key == 'video') {
-            return newContent.post.fields[0].value.fields[1].value
-        } else if(newContent.post.fields[1].key == 'video') {
-            return newContent.post.fields[1].value.fields[1].value
-        } else if(newContent.post.fields[2].key == 'video') {
-            return newContent.post.fields[2].value.fields[1].value
+        var data = 0
+        try {
+            for(i in newContent.post.fields) {
+                if(newContent.post.fields[i].key == 'video') {
+                    var data = newContent.post.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
         }
     }
+
+
+    getInstructor = (newContent) => {
+        var data = ''
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'instructor') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'name') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
+        }
+    }    
 
 
     getVideos = async () => {
@@ -87,38 +147,43 @@ export default class SinglePack extends React.Component {
                 parentId: this.state.bundleID,
             });
     
+            console.log('response get videos: ', response)
+
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data)
             })
     
-            items = []
-            for(i in newContent) {
-                console.log(newContent[i])
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        type: newContent[i].post.type,
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        duration: this.getDuration(newContent[i]),
-                        like_count: newContent[i].post.like_count,
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    })
+            try {
+                items = []
+                for(i in newContent) {
+                    if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                        items.push({
+                            title: newContent[i].getField('title'),
+                            artist: newContent[i].getField('instructor').fields[0].value,
+                            thumbnail: newContent[i].getData('thumbnail_url'),
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                            type: newContent[i].post.type,
+                            xp: newContent[i].post.xp,
+                            id: newContent[i].id,
+                            duration: this.getDuration(newContent[i]),
+                            like_count: newContent[i].post.like_count,
+                            isLiked: newContent[i].isLiked,
+                            isAddedToList: newContent[i].isAddedToList,
+                            isStarted: newContent[i].isStarted,
+                            isCompleted: newContent[i].isCompleted,
+                            bundle_count: newContent[i].post.bundle_count,
+                            progress_percent: newContent[i].post.progress_percent,
+                        })
+                    }
                 }
+        
+                this.setState({
+                    videos: [...this.state.videos, ...items],
+                    isLoadingAll: false,
+                })                
+            } catch (error) {
+                console.log('error: ', error)
             }
-    
-            this.setState({
-                videos: [...this.state.videos, ...items],
-                isLoadingAll: false,
-            })
     
         } catch (error) {
             console.log(error)
@@ -136,6 +201,17 @@ export default class SinglePack extends React.Component {
     addPackToMyList = async () => {
         this.state.pack.isAddedToList = !this.state.pack.isAddedToList
         this.setState({pack: this.state.pack})
+    }
+
+
+    navigate = (row) => {
+        if(row.type == 'pack-bundle-lesson') {
+            this.props.navigation.navigate('VIDEOPLAYER', {data: row})
+        } else {
+            this.props.navigation.push('SINGLEPACK', {
+                data: row,
+            })
+        }
     }
 
 
@@ -222,41 +298,33 @@ export default class SinglePack extends React.Component {
                                 height={'70%'}
                                 borderRadius={0}
                             />
-                            <View key={'SVGs'}
-                                style={{
-                                    position: 'absolute',
-                                    bottom: (onTablet) ? fullHeight*0.065/2 : fullHeight*0.053/2,
-                                    zIndex: 2,
-                                    elevation: 2,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View style={{flex: 1}}/>
-                                {(this.state.pack == 'SIGHT READING') && (
-                                <SightReading
-                                    height={200*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={275*factorVertical}
-                                />
-                                )}
-                                {(this.state.pack == '500 SONGS') && (
-                                <Songs500
-                                    height={200*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={275*factorVertical}
-                                />
-                                )}
-                                {(this.state.pack == 'FASTER FINGERS') && (
-                                <FasterFingers
-                                    height={250*factorVertical + (onTablet ? 20*factorVertical : 0)}
-                                    width={300*factorVertical}
-                                />
-                                )}
-                                <View style={{flex: 1}}/>
-                            </View>    
                             <FastImage
                                 style={{flex: 1}}
                                 source={{uri: this.state.pack.thumbnail}}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
+                            <View key={'logo'}
+                                style={{
+                                    position: 'absolute',
+                                    bottom: 30*factorRatio + ((onTablet) ? fullHeight*0.065 : fullHeight*0.053),
+                                    left: 0,
+                                    width: fullWidth,
+                                    zIndex: 10,
+                                    elevation: 10,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <View style={{flex: 1}}/>
+                                <FastImage
+                                    style={{
+                                        height: 100*factorRatio,
+                                        width: '80%',
+                                    }}
+                                    source={{uri: this.state.pack.logo}}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+                                <View style={{flex: 1}}/>
+                            </View>
                             <View key={'buttons'}
                                 style={{
                                     position: 'absolute',
@@ -445,6 +513,7 @@ export default class SinglePack extends React.Component {
                                         </Text>
                                     </View>
                                     <View style={{width: 15*factorRatio}}/>
+                                    {this.state.isDisplayingLessons && (
                                     <View 
                                         style={[
                                             styles.centerContent, {
@@ -475,6 +544,7 @@ export default class SinglePack extends React.Component {
                                             MINS
                                         </Text>
                                     </View>
+                                    )}
                                     <View style={{width: 15*factorRatio}}/>
                                     <View 
                                         style={[
@@ -622,8 +692,8 @@ export default class SinglePack extends React.Component {
                                 isLoading={this.state.isLoadingAll}
                                 showFilter={false} // 
                                 showType={false} // show course / song by artist name
-                                showArtist={false} // show artist name
-                                showLength={true}
+                                showArtist={(this.state.isDisplayingLessons) ? false : true} // show artist name
+                                showLength={(this.state.isDisplayingLessons) ?  true : false}
                                 imageRadius={5*factorRatio} // radius of image shown
                                 containerBorderWidth={0} // border of box
                                 containerWidth={fullWidth} // width of list
@@ -632,7 +702,7 @@ export default class SinglePack extends React.Component {
                                 imageWidth={fullWidth*0.26} // image width
                                 outVideos={this.state.outVideos} // if paging and out of videos
                                 //getVideos={() => this.getContent()} // for paging
-                                navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
+                                navigator={(row) => this.navigate(row)}
                             />
                         </View>
                         <View style={{height: 15*factorVertical}}/>

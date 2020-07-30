@@ -842,11 +842,11 @@ export default class VideoPlayer extends React.Component {
                                 )}
                             </View>
                             <View key={'buffer'}
-                                style={{height: (this.state.data.type == 'course') ? 
+                                style={{height: (this.state.data.type !== 'song') ? 
                                     20*factorVertical : 10*factorVertical
                                 }}
                             />
-                            {this.state.data.type == 'course' && (
+                            {this.state.data.type !== 'song' && (
                             <View key={'assingmentsHeader'}
                                 style={{paddingLeft: fullWidth*0.035}}
                             >
@@ -862,7 +862,7 @@ export default class VideoPlayer extends React.Component {
                                 <View style={{height: 20*factorVertical}}/>
                             </View>
                             )}
-                            {this.state.data.type == 'course' && (
+                            {this.state.data.type !== 'song' && (
                             <View key={'assignments'}
                                 style={{
                                     width: fullWidth,
@@ -880,7 +880,7 @@ export default class VideoPlayer extends React.Component {
                                 }}
                             >
                             <VerticalVideoList
-                                title={this.state.data.type == 'course' ? 'COURSE LESSONS' : 'MORE SONGS'}
+                                title={this.state.data.type !== 'song' ? 'COURSE LESSONS' : 'MORE SONGS'}
                                 items={this.state.videos}
                                 type={'LESSONS'}
                                 isLoading={this.state.isLoadingAll}
@@ -894,9 +894,9 @@ export default class VideoPlayer extends React.Component {
                                 imageRadius={5*factorRatio}
                                 containerBorderWidth={0}
                                 containerWidth={fullWidth}
-                                containerHeight={(this.state.data.type == 'course') ? ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925) : fullWidth*0.22}
-                                imageHeight={(this.state.data.type == 'course') ? ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.09 : fullHeight*0.08)): fullWidth*0.175}
-                                imageWidth={(this.state.data.type == 'course') ? fullWidth*0.26 : fullWidth*0.175}
+                                containerHeight={(this.state.data.type !== 'song') ? ((onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ? fullHeight*0.115 : fullHeight*0.0925) : fullWidth*0.22}
+                                imageHeight={(this.state.data.type !== 'song') ? ((onTablet) ? fullHeight*0.12 : ((Platform.OS == 'android') ? fullHeight*0.09 : fullHeight*0.08)): fullWidth*0.175}
+                                imageWidth={(this.state.data.type !== 'song') ? fullWidth*0.26 : fullWidth*0.175}
                                 navigator={(row) => this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
                             />
                             </View>
@@ -1351,6 +1351,7 @@ export default class VideoPlayer extends React.Component {
                                 }]}
                             >
                                 <TouchableOpacity
+                                    onPress={() => {}}
                                     style={[
                                         styles.centerContent, {
                                         height: fullWidth*0.1,
@@ -1366,7 +1367,7 @@ export default class VideoPlayer extends React.Component {
                                             fontSize: 14*factorRatio,
                                         }}
                                     >
-                                        COMPLETE {this.state.data == 'course' ? 'COURSE':'SONG'} 
+                                        COMPLETE {this.state.data !== 'song' ? 'COURSE':'SONG'} 
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -1495,8 +1496,8 @@ export default class VideoPlayer extends React.Component {
                     animation={'slideInUp'}
                     animationInTiming={250}
                     animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={false}
+                    coverScreen={true}
+                    hasBackdrop={true}
                 >
                     <LessonComplete
                         hideLessonComplete={() => {

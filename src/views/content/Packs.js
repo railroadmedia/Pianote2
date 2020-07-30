@@ -7,18 +7,16 @@ import {
     Text,
     TouchableOpacity,
     ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import Songs500 from 'Pianote2/src/assets/img/svgs/500SongsLogo.svg';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import SightReading from 'Pianote2/src/assets/img/svgs/sightReadingLogo.svg';
-import FasterFingers from 'Pianote2/src/assets/img/svgs/fasterFingersLogo.svg';
 
 export default class Packs extends React.Component {
     static navigationOptions = {header: null};
@@ -31,12 +29,8 @@ export default class Packs extends React.Component {
         }
     }
 
-
+    
     componentDidMount = async () => {
-        await this.setState({isLoading: true})
-
-        console.log('GET PACKS')
-
         const { response, error } = await getContent({
             brand: 'pianote',
             limit: '30',
@@ -50,8 +44,6 @@ export default class Packs extends React.Component {
             return new ContentModel(data)
         })
 
-        console.log(response, error)
-
         items = []
         for(i in newContent) {
             if(newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -62,6 +54,8 @@ export default class Packs extends React.Component {
                     type: newContent[i].post.type,
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                     xp: newContent[i].getField('xp'),
+                    logo: newContent[i].getData('logo_image_url'),
+                    header: newContent[i].getData('header_image_url'),
                     id: newContent[i].id,
                     like_count: newContent[i].likeCount,
                     isLiked: newContent[i].isLiked,
@@ -80,6 +74,8 @@ export default class Packs extends React.Component {
             packs: [...this.state.packs, ...items],
             isLoading: false,
         })
+
+        console.log(this.state.packs)
     }
 
 
@@ -129,6 +125,21 @@ export default class Packs extends React.Component {
                             Packs
                         </Text>
                         <View style={{height: 20*factorVertical}}/>
+                        {this.state.isLoading && (
+                        <View
+                            style={[
+                                styles.centerContent, {
+                                height: fullHeight*0.4,
+                                width: '100%',
+                            }]}
+                        >
+                            <ActivityIndicator
+                                size={(onTablet) ? 'large' : 'small'}
+                                animating={true}
+                                color={colors.secondBackground}
+                            />
+                        </View>
+                        )}
                         {!this.state.isLoading && (
                         <View
                             style={{
@@ -156,51 +167,43 @@ export default class Packs extends React.Component {
                                     opacity={0.45}
                                     height={'100%'}
                                     borderRadius={0}
-                                />
-                                <View
+                                />      
+                                <View key={'logo'}
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '80%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[0].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                    <View style={{height: 5*factorVertical}}/>
+                                </View>                        
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -230,50 +233,42 @@ export default class Packs extends React.Component {
                                     height={'100%'}
                                     borderRadius={0}
                                 />
-                                <View
+                                <View 
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '90%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[1].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                    <View style={{height: 5*factorVertical}}/>
+                                </View>                        
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -306,47 +301,40 @@ export default class Packs extends React.Component {
                                 <View
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '80%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[2].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
                                     <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                </View>                        
+                                                                
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -389,50 +377,42 @@ export default class Packs extends React.Component {
                                     height={'100%'}
                                     borderRadius={0}
                                 />
-                                <View
+                                <View 
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '90%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[3].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                    <View style={{height: 5*factorVertical}}/>
+                                </View>                        
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -465,47 +445,39 @@ export default class Packs extends React.Component {
                                 <View
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '80%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[4].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
                                     <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                </View>                        
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -538,47 +510,40 @@ export default class Packs extends React.Component {
                                 <View
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '90%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[5].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                    <View style={{height: 5*factorVertical}}/>
+                                </View>                        
+                                                                
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -624,47 +589,39 @@ export default class Packs extends React.Component {
                                 <View
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '80%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[6].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                    <View style={{height: 5*factorVertical}}/>
+                                </View>                        
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -694,50 +651,42 @@ export default class Packs extends React.Component {
                                     height={'100%'}
                                     borderRadius={0}
                                 />
-                                <View
+                                <View key={'logo'}
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '80%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[7].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                    <View style={{height: 5*factorVertical}}/>
+                                </View>                        
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -767,50 +716,43 @@ export default class Packs extends React.Component {
                                     height={'100%'}
                                     borderRadius={0}
                                 />
-                                <View
+                               <View key={'logo'}
                                     style={{
                                         position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
+                                        zIndex: 10,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth*0.285*(95/65),
+                                        width: fullWidth*0.285,
                                         borderRadius: 7.5*factorRatio,
+                                    
                                     }}
                                 >
+
                                     <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
+                                    <View 
+                                        style={{
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
+                                        }}
+                                    >                                        
+                                        <View style={{flex: 1}}/>
+                                        <FastImage
+                                            style={{
+                                                width: '80%',
+                                                height: '100%',
+                                                borderRadius: 7.5*factorRatio,
+                                                alignSelf: 'stretch', 
+                                            }}
+                                            source={{uri: this.state.packs[8].logo}}
+                                            resizeMode={FastImage.resizeMode.contain}
                                         />
+                                        <View style={{flex: 1}}/>
                                     </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
+                                    <View style={{height: 5*factorVertical}}/>
+                                </View>                        
+                                                              
                                 <FastImage
                                     style={{
                                         flex: 1, 
@@ -824,238 +766,6 @@ export default class Packs extends React.Component {
                             )}                                                                       
                         </View>
                         )}
-                        <View style={{height: 20*factorVertical}}/>
-                        {!this.state.isLoading && (
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignContent: 'space-around',
-                                justifyContent: 'space-around',
-                                paddingLeft: 5*factorHorizontal,
-                                paddingRight: 5*factorHorizontal,
-                            }}
-                        >
-                            {(this.state.packs.length > 9) && (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.push('SINGLEPACK', {data: this.state.packs[9]})
-                                }}
-                                style={{
-                                    width: fullWidth*0.285,
-                                    height: fullWidth*0.285*(95/65),
-                                    backgroundColor: colors.secondBackground,
-                                    borderRadius: 7.5*factorRatio,
-                                }}
-                            >
-                                <GradientFeature
-                                    color={'black'}
-                                    opacity={0.45}
-                                    height={'100%'}
-                                    borderRadius={0}
-                                />
-                                <View
-                                    style={{
-                                        position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
-                                        borderRadius: 7.5*factorRatio,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
-                                        />
-                                    </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
-                                <FastImage
-                                    style={{
-                                        flex: 1, 
-                                        borderRadius: 7.5*factorRatio,
-                                        alignSelf: 'stretch', 
-                                    }}
-                                    source={{uri: this.state.packs[9].thumbnail}}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </TouchableOpacity>
-                            )}
-                            {(this.state.packs.length > 10) && (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.push('SINGLEPACK', {data: this.state.packs[10]})
-                                }}
-                                style={{
-                                    width: fullWidth*0.285,
-                                    height: fullWidth*0.285*(95/65),
-                                    backgroundColor: colors.secondBackground,
-                                    borderRadius: 7.5*factorRatio,
-                                }}
-                            >
-                                <GradientFeature
-                                    color={'black'}
-                                    opacity={0.45}
-                                    height={'100%'}
-                                    borderRadius={0}
-                                />
-                                <View
-                                    style={{
-                                        position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
-                                        borderRadius: 7.5*factorRatio,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
-                                        />
-                                    </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
-                                <FastImage
-                                    style={{
-                                        flex: 1, 
-                                        borderRadius: 7.5*factorRatio,
-                                        alignSelf: 'stretch', 
-                                    }}
-                                    source={{uri: this.state.packs[10].thumbnail}}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </TouchableOpacity>
-                            )}   
-                            {(this.state.packs.length > 11) && (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.push('SINGLEPACK', {data: this.state.packs[11]})
-                                }}
-                                style={{
-                                    width: fullWidth*0.285,
-                                    height: fullWidth*0.285*(95/65),
-                                    backgroundColor: colors.secondBackground,
-                                    borderRadius: 7.5*factorRatio,
-                                }}
-                            >
-                                <GradientFeature
-                                    color={'black'}
-                                    opacity={0.45}
-                                    height={'100%'}
-                                    borderRadius={0}
-                                />
-                                <View
-                                    style={{
-                                        position: 'absolute',
-                                        zIndex: 2,
-                                        elevation: 2,
-                                        height: '100%',
-                                        width: '100%',
-                                        borderRadius: 7.5*factorRatio,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View style={styles.centerContent}>
-                                        <View>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    backgroundColor: colors.pianoteRed,
-                                                    paddingLeft: 3.5*factorRatio,
-                                                    paddingRight: 3.5*factorRatio,
-                                                    paddingTop: 2.5*factorRatio,
-                                                    paddingBottom: 2.5*factorRatio,
-                                                    borderRadius: 20*factorRatio,
-                                                    alignSelf: 'stretch',
-                                                }]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontSize: 8*factorRatio,
-                                                        fontWeight: 'bold',
-                                                        color: 'white',
-                                                    }}
-                                                >
-                                                    NEW PACK!
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <Songs500
-                                            height={32.5*factorVertical}
-                                            width={fullWidth*0.2}
-                                        />
-                                    </View>
-                                    <View style={{height: 10*factorVertical}}/>
-                                </View>                                
-                                <FastImage
-                                    style={{
-                                        flex: 1, 
-                                        borderRadius: 7.5*factorRatio,
-                                        alignSelf: 'stretch', 
-                                    }}
-                                    source={{uri: this.state.packs[11].thumbnail}}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </TouchableOpacity>
-                            )}                                                                       
-                        </View>
-                        )}                                                                        
                         <View style={{height: 20*factorVertical}}/>
                     </ScrollView>
                     <NavigationBar

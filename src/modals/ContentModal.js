@@ -116,6 +116,8 @@ class ContentModal extends React.Component {
                         <View 
                             style={{
                                 width: fullWidth*0.9,
+                                paddingLeft: 10*factorHorizontal,
+                                paddingRight: 10*factorHorizontal,
                                 borderRadius: 10*factorRatio,
                                 shadowOffset: { 
                                     width: 5*factorRatio, 

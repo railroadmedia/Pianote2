@@ -16,7 +16,6 @@ import NextVideo from 'Pianote2/src/components/NextVideo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -41,19 +40,14 @@ export default class FoundationsLevel extends React.Component {
     }
 
 
-    async componentDidMount() {
+    componentDidMount = () => {
         this.getContent()
     }
 
 
-    async getContent() {
-        const { response, error } = await getContent({
-            brand:'pianote',
-            limit: '15',
-            page: this.state.page,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['course'],
+    getContent = async () => {
+        const { response, error } = await getContentChildById({
+            parentId: '215952',
         });
 
         const newContent = response.data.data.map((data) => {
@@ -85,7 +79,6 @@ export default class FoundationsLevel extends React.Component {
 
         this.setState({
             items: [...this.state.items, ...items],
-            page: this.state.page + 1,
             isLoadingAll: false,
         })
     }

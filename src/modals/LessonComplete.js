@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
@@ -28,16 +27,6 @@ class LessonComplete extends React.Component {
     render = () => {
         return (
             <View style={styles.container}>
-                <BlurView
-                    style={[
-                        styles.centerContent, {
-                        height: fullHeight,
-                        width: fullWidth,
-                        backgroundColor: 'transparent',
-                    }]}
-                    blurType={'xlight'}
-                    blurAmount={(Platform.OS == 'android') ? 1 : 10}
-                />
                 <View
                     style={{
                         position: 'absolute',

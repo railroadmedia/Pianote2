@@ -13,11 +13,13 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import { getContentChildById } from '@musora/services';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
+import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -29,20 +31,18 @@ export default class Foundations extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            items: [],
             showRestartCourse: false,
             profileImage: '',
             isStarted: true,
-            outVideos: false,
             showInfo: false,
             isLoadingAll: true,
             level: 3,
-            items: [],
-            page: 0,
         }
     }
 
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         let profileImage = await AsyncStorage.getItem('profileURI')
         if(profileImage !== null) {
             await this.setState({profileImage})
@@ -51,50 +51,44 @@ export default class Foundations extends React.Component {
     }
 
 
-    async getContent() {
-        if(this.state.outVideos == false) {
-            const { response, error } = await getContent({
-                brand:'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types:['song'],
-            });
+    getContent = async () => {
+        const { response, error } = await getContentChildById({
+            parentId: '215952',
+        });
 
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data)
-            })
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
 
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    })
-                }
+        items = []
+        for(i in newContent) {
+            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].post.like_count,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                })
             }
-
-            this.setState({
-                items: [...this.state.items, ...items],
-                page: this.state.page + 1,
-                isLoadingAll: false,
-            })
         }
+
+        this.setState({
+            items: [...this.state.items, ...items],
+            isLoadingAll: false,
+        })
+
+        console.log(items)
     }
 
 
@@ -222,7 +216,16 @@ export default class Foundations extends React.Component {
                                 FOUNDATIONS
                             </Text>
                             <View style={{flex: 0.6}}/>
-                            
+                            {this.state.isStarted && (
+                            <ContinueIcon
+                                pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
+                                buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
+                                pxFromLeft={fullWidth*0.5/2}
+                                buttonWidth={fullWidth*0.5}
+                                pressed={() => this.props.navigation.navigate('COURSECATALOG')}
+                            />
+                            )}
+                            {!this.state.isStarted && (
                             <StartIcon
                                 pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
                                 buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
@@ -230,6 +233,7 @@ export default class Foundations extends React.Component {
                                 buttonWidth={fullWidth*0.5}
                                 pressed={() => this.props.navigation.navigate('COURSECATALOG')}
                             />
+                            )}
                             <View key={'info'}
                                 style={[ 
                                     styles.centerContent, {
@@ -319,7 +323,7 @@ export default class Foundations extends React.Component {
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        11
+                                        {this.state.items.length}
                                     </Text>
                                     <Text
                                         style={{
@@ -555,13 +559,12 @@ export default class Foundations extends React.Component {
                         isLoading={this.state.isLoadingAll}
                         title={'FOUNDATIONS'}
                         type={'LESSONS'}
-                        outVideos={this.state.outVideos}
-                        //getVideos={() => this.getContent()}
                         showFilter={false}
-                        showType={true} // 
-                        showArtist={true} // show artist name
+                        showType={false} 
+                        showArtist={false}
                         showLength={false}
-                        showSort={true}
+                        showSort={false}
+                        isFoundationsLevel={true}
                         imageRadius={5*factorRatio}
                         containerBorderWidth={0}
                         containerWidth={fullWidth}
@@ -573,8 +576,10 @@ export default class Foundations extends React.Component {
                         containerWidth={fullWidth}
                         containerHeight={fullWidth*0.285}
                         imageHeight={fullWidth*0.25}
-                        imageWidth={fullWidth*0.25} // image width
-                        navigator={(row) => this.props.navigation.navigate('FOUNDATIONSLEVEL', {data: row})}
+                        imageWidth={fullWidth*0.25}
+                        navigator={(row) => {
+                            this.props.navigation.navigate('FOUNDATIONSLEVEL', {data: row})
+                        }}
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}

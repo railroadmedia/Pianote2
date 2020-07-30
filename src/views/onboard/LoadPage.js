@@ -6,6 +6,12 @@ import { View } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationActions, StackActions } from 'react-navigation';
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+})
 
 export default class LoadPage extends React.Component {
     static navigationOptions = {header: null};
@@ -37,7 +43,7 @@ export default class LoadPage extends React.Component {
             .then((response) => response.json())
             .then((response) => {
                 if(response == 'success') {
-                    setTimeout(() => this.props.navigation.navigate('LESSONS'), 1000)
+                    setTimeout(() => this.props.navigation.dispatch(resetAction), 1000)
                 } else {
                     setTimeout(() => this.props.navigation.navigate('MEMBERSHIPEXPIRED'), 1000)
                 }

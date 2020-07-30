@@ -57,6 +57,8 @@ target 'Pianote2' do
   
   pod 'react-native-video', :path => '../node_modules/react-native-video'
   
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'Pianote2Tests' do
     inherit! :search_paths
     # Pods for testing

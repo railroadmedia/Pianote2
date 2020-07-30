@@ -18,6 +18,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-community/async-storage';
+import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
 class VerticalVideoList extends React.Component {
@@ -332,11 +333,43 @@ class VerticalVideoList extends React.Component {
                                     />
                                 </View>
                                 )}
+                                {(this.props.isFoundationsLevel) && (
+                                <View
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: 0,
+                                        zIndex: 15,
+                                    }}
+                                >
+                                    <GradientFeature
+                                        color={'red'}
+                                        opacity={1}
+                                        height={'100%'}
+                                        borderRadius={this.props.imageRadius}
+                                    />
+                                    <View style={{flex: 1}}/>
+                                    <Text
+                                        style={{
+                                            zIndex: 20,
+                                            textAlign: 'center',
+                                            color: 'white',
+                                            fontFamily: 'RobotoCondensed-Bold',
+                                            fontSize: 21*factorRatio,
+                                        }}
+                                    >
+                                        LEVEL {index+1}
+                                    </Text>
+                                    <View style={{flex: 0.2}}/>
+                                </View>
+                                )}
                                 <FastImage
                                     style={{
                                         flex: 1, 
                                         zIndex: 10, 
-                                        borderRadius: this.props.imageRadius
+                                        borderRadius: this.props.imageRadius,
                                     }}
                                     source={{uri: row.thumbnail}}
                                     resizeMode={FastImage.resizeMode.cover}
@@ -345,6 +378,20 @@ class VerticalVideoList extends React.Component {
                         </TouchableOpacity>
                         <View style={{width: 10*factorHorizontal}}/>
                         <View style={{flex: 1.5, justifyContent: 'center'}}>
+                            {(this.props.isFoundationsLevel) && (
+                            <Text
+                                style={{
+                                    fontSize: 10*factorRatio,
+                                    marginBottom: 2*factorRatio,
+                                    textAlign: 'left',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'OpenSans-Regular',
+                                    color: colors.pianoteRed,
+                                }}
+                            >
+                                {row.artist}
+                            </Text>
+                            )}
                             <Text
                                 style={{
                                     fontSize: 15*factorRatio,
@@ -356,12 +403,23 @@ class VerticalVideoList extends React.Component {
                             >
                                 {row.title}
                             </Text>
-                            <View style={{height: 2*factorVertical}}/>
-                            <View
+                            {(this.props.isFoundationsLevel) && (
+                            <Text
+                                numberOfLines={2}
                                 style={{
-                                    flexDirection: 'row',
+                                    marginTop: 2*factorRatio,
+                                    fontSize: 12*factorRatio,
+                                    color: colors.secondBackground,
+                                    textAlign: 'left',
+                                    fontFamily: 'OpenSans-Regular',
+                                    paddingRight: 20*factorHorizontal,
                                 }}
                             >
+                                {row.description}
+                            </Text>
+                            )}
+                            <View style={{height: 2*factorVertical}}/>
+                            <View style={{flexDirection: 'row'}}>
                                 {this.props.showLength && (
                                 <Text
                                     numberOfLines={2}
@@ -402,6 +460,7 @@ class VerticalVideoList extends React.Component {
                                 )}
                             </View>
                         </View>
+                        {(!this.props.isFoundationsLevel) && (
                         <View style={{flex: 0.5}}>
                             <View style={[styles.centerContent, {flex: 1}]}>
                                 {!row.isAddedToList && (
@@ -430,6 +489,7 @@ class VerticalVideoList extends React.Component {
                                 )}                             
                             </View>                            
                         </View>
+                        )}
                     </View>
                     )}
                     {(index == 0 && this.props.showNextVideo == true) && (
