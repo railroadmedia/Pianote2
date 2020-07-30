@@ -8,11 +8,13 @@ import {
     TouchableOpacity,
     Keyboard, 
     Platform,
+    StatusBar,
     ActivityIndicator,
     TextInput,
     Animated,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import Video, { videoMock }from 'RNVideoEnhanced';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -606,27 +608,38 @@ export default class VideoPlayer extends React.Component {
 
     render() {
         return (
-            <View styles={styles.container}>
+            <View style={[styles.container, {flex: 1}]}>
+                <StatusBar backgroundColor={'black'} barStyle={'light-content'}/>
                 <View key={'container2'}
                     style={{
-                        height: fullHeight, 
+                        flex: 1,
                         alignSelf: 'stretch',
                         backgroundColor: colors.mainBackground,
                     }}
                 >
-                    <View style={{height: (isNotch) ? fullHeight*0.05 : fullHeight*0.03}}/>
-                    <View key={'video'}
-                        style={{
-                            height: (onTablet) ? fullHeight*0.375 : fullHeight*0.275,
-                            backgroundColor: colors.mainBackground
-                        }}
-                    >
-                        <FastImage
-                            style={{flex: 1}}
-                            source={{uri: this.state.data.thumbnail}}
-                            resizeMode={FastImage.resizeMode.stretch}
-                        />
-                    </View>
+                    <Video
+                        quality={''}
+                        type={'video'}
+                        offlinePath={''}
+                        aCasting={false}
+                        gCasting={false}
+                        connection={true}
+                        deviceProps={{}}
+                        onBack={() => {}}
+                        onRefresh={() => {}}
+                        maxFontMultiplier={1}
+                        onToSupport={() => {}}
+                        onFullscreen={() => {}}
+                        goToNextLesson={() => {}}
+                        onQualityChange={() => {}}
+                        onACastingChange={() => {}}
+                        onGCastingChange={() => {}}
+                        ref={r => (this.video = r)}
+                        goToPreviousLesson={() => {}}
+                        onOrientationChange={() => {}}
+                        onUpdateVideoProgress={() => {}}
+                        content={this.state.content || videoMock}
+                    />
                     <View key={'belowVideo'}
                         style={{flex: 1}}
                     >
@@ -1276,7 +1289,6 @@ export default class VideoPlayer extends React.Component {
                             left: 0*factorHorizontal,
                             width: fullWidth,
                             backgroundColor: colors.mainBackground,
-                            zIndex: 5,
                             bottom: 0,
                             paddingBottom: (isNotch) ? fullHeight*0.035 : fullHeight*0.015,
                         }]}
@@ -1405,45 +1417,6 @@ export default class VideoPlayer extends React.Component {
                             zIndex: 5,
                         }]}
                     >
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.props.navigation.goBack()
-                            }}
-                            style={[
-                                styles.centerContent, {
-                                height: '100%',
-                                width: '100%',
-                                borderRadius: 100,
-                                backgroundColor: 'black',
-                                opacity: 0.4,
-                            }]}
-                        >
-                            <EntypoIcon
-                                name={'chevron-thin-left'}
-                                size={22.5*factorRatio}
-                                color={'white'}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.props.navigation.goBack()
-                            }}
-                            style={[
-                                styles.centerContent, {
-                                height: '100%',
-                                width: '100%',
-                                borderRadius: 100,
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                            }]}
-                        >
-                            <EntypoIcon
-                                name={'chevron-thin-left'}
-                                size={22.5*factorRatio}
-                                color={'white'}
-                            />
-                        </TouchableOpacity>
                     </View>
                 </View>
                 <Modal key={'VideoPlayerOptions'}

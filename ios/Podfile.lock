@@ -21,6 +21,11 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - google-cast-sdk-no-bluetooth (4.4.7):
+    - google-cast-sdk-no-bluetooth/Core (= 4.4.7)
+    - Protobuf (~> 3.0)
+  - google-cast-sdk-no-bluetooth/Core (4.4.7):
+    - Protobuf (~> 3.0)
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
     - libwebp/mux (= 1.1.0)
@@ -30,6 +35,7 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
+  - Protobuf (3.12.0)
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
@@ -195,16 +201,24 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-blur (0.8.0):
     - React
+  - react-native-google-cast/NoBluetooth (3.3.0):
+    - google-cast-sdk-no-bluetooth
+    - React
+    - react-native-google-cast/RNGoogleCast
+  - react-native-google-cast/RNGoogleCast (3.3.0):
+    - React
+  - react-native-home-indicator (0.2.5):
+    - React
   - react-native-image-picker (1.1.0):
     - React
   - react-native-orientation-locker (1.1.8):
     - React
   - react-native-splash-screen (3.2.0):
     - React
-  - react-native-video (5.0.2):
+  - react-native-video (5.1.0-alpha1):
     - React
-    - react-native-video/Video (= 5.0.2)
-  - react-native-video/Video (5.0.2):
+    - react-native-video/Video (= 5.1.0-alpha1)
+  - react-native-video/Video (5.1.0-alpha1):
     - React
   - react-native-viewpager (3.3.0):
     - React
@@ -245,6 +259,10 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - ReactNativeNavigation (3.7.0):
     - React
+  - rn-fetch-blob (0.12.0):
+    - React-Core
+  - RNAirplay (1.0.9):
+    - React
   - RNCAsyncStorage (1.9.0):
     - React
   - RNDeviceInfo (5.5.6):
@@ -261,9 +279,9 @@ PODS:
     - React
   - RNVectorIcons (6.6.0):
     - React
-  - SDWebImage (5.8.0):
-    - SDWebImage/Core (= 5.8.0)
-  - SDWebImage/Core (5.8.0)
+  - SDWebImage (5.8.4):
+    - SDWebImage/Core (= 5.8.4)
+  - SDWebImage/Core (5.8.4)
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
@@ -288,6 +306,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
+  - react-native-google-cast/NoBluetooth (from `../node_modules/react-native-google-cast/ios/`)
+  - react-native-home-indicator (from `../node_modules/react-native-home-indicator`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -305,6 +325,8 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
+  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
+  - RNAirplay (from `../node_modules/react-native-airplay-ios`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
@@ -315,9 +337,11 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - boost-for-react-native
+    - google-cast-sdk-no-bluetooth
     - libwebp
+    - Protobuf
     - SDWebImage
     - SDWebImageWebPCoder
 
@@ -354,6 +378,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
+  react-native-google-cast:
+    :path: "../node_modules/react-native-google-cast/ios/"
+  react-native-home-indicator:
+    :path: "../node_modules/react-native-home-indicator"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-orientation-locker:
@@ -386,6 +414,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeNavigation:
     :path: "../node_modules/react-native-navigation"
+  rn-fetch-blob:
+    :path: "../node_modules/rn-fetch-blob"
+  RNAirplay:
+    :path: "../node_modules/react-native-airplay-ios"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNDeviceInfo:
@@ -411,7 +443,9 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  google-cast-sdk-no-bluetooth: 197acace9d5a78380bdaef8d45439b2250fa050b
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -422,10 +456,12 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
+  react-native-google-cast: 410619ef162b8b91815ecf7271502224998dee8e
+  react-native-home-indicator: c886445b4bf6f97f7c96731e426b80ad638fd4f8
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
   react-native-orientation-locker: f0ca1a8e5031dab6b74bfb4ab33a17ed2c2fcb0d
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
+  react-native-video: 31f90922291b3a3378ee4fa0d74e606646c05231
   react-native-viewpager: 118e65d8c65c56fe48d12a35cdcf1fe7e027a366
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -438,6 +474,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   ReactNativeNavigation: bed6f504aa1a4dadd151503bf99d0ef96d06847f
+  rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
+  RNAirplay: d863b69586b2ac0270cbb349c44c37a525681329
   RNCAsyncStorage: b16697280b08bab4b5f2f67f752d93d13a52e9ed
   RNDeviceInfo: c3ea4a4d4547740c548cdd1e5a78f9b04e524688
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
@@ -445,10 +483,10 @@ SPEC CHECKSUMS:
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
   RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
-  SDWebImage: 84000f962cbfa70c07f19d2234cbfcf5d779b5dc
+  SDWebImage: cf6922231e95550934da2ada0f20f2becf2ceba9
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: ea4ff2b7dfd538cad175f7fd51ba5204629c059e
+PODFILE CHECKSUM: 3f05c2b6cbf14a7090eaeaf5f7087111d63011bb
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.9.1

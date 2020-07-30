@@ -47,6 +47,16 @@ target 'Pianote2' do
 
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
+  pod 'react-native-home-indicator', :path => '../node_modules/react-native-home-indicator'
+
+  pod 'react-native-google-cast/NoBluetooth', path: '../node_modules/react-native-google-cast/ios/'
+
+  pod 'RNAirplay', :path => '../node_modules/react-native-airplay-ios'
+
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+  
+  pod 'react-native-video', :path => '../node_modules/react-native-video'
+  
   target 'Pianote2Tests' do
     inherit! :search_paths
     # Pods for testing
