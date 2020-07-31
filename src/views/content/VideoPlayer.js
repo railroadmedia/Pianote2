@@ -17,6 +17,7 @@ import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Replies from '../../components/Replies.js';
+import CommentSort from '../../modals/CommentSort.js';
 import SoundSlice from '../../components/SoundSlice.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -40,10 +41,12 @@ export default class VideoPlayer extends React.Component {
         super(props);
         this.state = {
             data: this.props.navigation.state.params.data, // data about incoming video
+            commentSort: 'Popular', // Newest, Oldest, Mine, Popular
             profileImage: '',
             isLoadingAll: true,
             showReplies: false, 
             showAssignment: false,
+            showCommentSort: false,
             showSoundSlice: false,
             showMakeComment: false,
             showInfo: false,
@@ -951,7 +954,9 @@ export default class VideoPlayer extends React.Component {
                                                     marginLeft: factorHorizontal*10,
                                                 }}
                                                 onPress={() => {
-
+                                                    this.setState({
+                                                        showCommentSort: true,
+                                                    })
                                                 }}
                                             >
                                                 <FontIcon
@@ -1531,7 +1536,34 @@ export default class VideoPlayer extends React.Component {
                             this.setState({showLessonComplete: false})
                         }}
                     />
-                </Modal>                                 
+                </Modal>     
+                <Modal key={'modalCommentSort'}
+                    isVisible={this.state.showCommentSort}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={false}
+                    backdropColor={'white'}
+                    backdropOpacity={0.79}
+                >
+                    <CommentSort
+                        hideCommentSort={() => {
+                            this.setState({showCommentSort: false})
+                        }}
+                        currentSort={this.state.commentSort}
+                        changeSort={(commentSort) => {
+                            this.setState({commentSort})
+                        }}
+                    />
+                </Modal>
+                                                       
                 <Modal key={'soundSlice'}
                     isVisible={this.state.showSoundSlice}
                     style={[

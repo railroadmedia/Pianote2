@@ -17,7 +17,7 @@ class NextVideo extends React.Component {
         super(props);
         this.state = {
             hasNotch: 0,
-            progress: 0.4,
+            progress: this.props.currentCompletion,
         }
     }
 
@@ -77,7 +77,7 @@ class NextVideo extends React.Component {
                                     textAlign: 'right',
                                 }}
                             >
-                                LEVEl - {this.state.progress*100}% COMPLETE
+                                LEVEL - {this.state.progress*100}% COMPLETE
                             </Text>
                             <View style={{flex: 1}}/>
                         </View>

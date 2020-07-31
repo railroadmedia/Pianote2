@@ -238,7 +238,7 @@ class VerticalVideoList extends React.Component {
                                     item: row,
                                 })
                             }}
-                            onPress={() => this.props.navigator(row)}
+                            onPress={() => this.props.navigator(row, index)}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    
                         >
@@ -433,6 +433,20 @@ class VerticalVideoList extends React.Component {
                                     {Math.floor(row.duration/60)} {(Math.floor(row.duration/60) == 1) ? 'min' : 'mins'} 
                                 </Text>
                                 )}
+                                {this.props.showLines && (
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        fontSize: 12*factorRatio,
+                                        color: colors.secondBackground,
+                                        textAlign: 'left',
+                                        fontFamily: 'OpenSans-Regular',
+                                    }}
+                                >
+                                    
+                                    Level {(1.1 + index/10).toFixed(1)} 
+                                </Text>
+                                )}
                                 {this.props.showType && (
                                 <Text
                                     numberOfLines={2}
@@ -548,7 +562,7 @@ class VerticalVideoList extends React.Component {
                                     item: row,
                                 })
                             }}
-                            onPress={() => this.props.navigator(row)}
+                            onPress={() => this.props.navigator(row, index)}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}    
                         >

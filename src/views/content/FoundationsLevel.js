@@ -9,18 +9,18 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import { getContentChildById } from '@musora/services';
 import NextVideo from 'Pianote2/src/components/NextVideo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
 export default class FoundationsLevel extends React.Component {
@@ -28,68 +28,89 @@ export default class FoundationsLevel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            items: [],
+            level: this.props.navigation.state.params.level,
+            data: this.props.navigation.state.params.data,
+            isLiked: this.props.navigation.state.params.data.isLiked,
+            isStarted: this.props.navigation.state.params.data.isStarted,
+            currentLessonIndex: this.props.navigation.state.params.data.current_lesson_index,
+            nextLesson: null,
             showRestartCourse: false,
             isLoadingAll: true,
             isStarted: true,
             outVideos: false,
             showInfo: false,
-            level: 3,
-            items: [],
-            page: 0,
+            totalLength: 0,
         }
     }
 
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
+        console.log(this.state.data)
         this.getContent()
     }
 
 
     getContent = async () => {
         const { response, error } = await getContentChildById({
-            parentId: '215952',
+            parentId: this.state.data.id,
         });
 
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)
-        })
+        });
 
-        items = []
-        for(i in newContent) {
-            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0].value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].isLiked,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                })
+        console.log('FOUNDATIONS LEVEL', newContent)
+
+        try {
+            items = []
+            for(i in newContent) {
+                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructors'),
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
+                    })
+                }
             }
+    
+            for(i in items) {
+                this.state.totalLength = this.state.totalLength + Number(items[i].duration)
+            }
+            this.state.totalLength = Math.floor(this.state.totalLength/60).toString()
+            
+
+            this.setState({
+                items: [...this.state.items, ...items],
+                isLoadingAll: false,
+                totalLength: this.state.totalLength,
+            })    
+            
+        } catch (error) {
+            console.log(error)
         }
 
-        this.setState({
-            items: [...this.state.items, ...items],
-            isLoadingAll: false,
-        })
     }
 
 
     getDuration = (newContent) => {
         var data = 0
         try {
-            for(i in newContent.post.current_lesson.fields) {
-                if(newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data = newContent.post.current_lesson.fields[i].value.fields
+            for(i in newContent.post.fields) {
+                if(newContent.post.fields[i].key == 'video') {
+                    var data = newContent.post.fields[i].value.fields
                     for(var i=0; i < data.length; i++) {
                         if(data[i].key == 'length_in_seconds') {
                             return data[i].value
@@ -102,6 +123,30 @@ export default class FoundationsLevel extends React.Component {
         }
     }
 
+
+    like = () => {
+        // api call like
+        this.state.data.like_count = (this.state.isLiked) ?  this.state.data.like_count - 1 : this.state.data.like_count + 1
+
+        this.setState({
+            isLiked: !this.state.isLiked,
+            data: this.state.data,
+        })
+    }
+
+
+    addToMyList = () => {
+        // api call here
+
+        this.state.data.isAddedToList = !this.state.data.isAddedToList
+
+        this.setState({
+            data: this.state.data,
+        })
+        
+        
+    }
+  
 
     render() {
         return (
@@ -133,7 +178,7 @@ export default class FoundationsLevel extends React.Component {
                             style={[
                                 styles.centerContent, {
                                 position: 'absolute',
-                                left: 10*factorHorizontal,
+                                left: 7.5*factorHorizontal,
                                 top: (isNotch) ? 10*factorVertical : 10*factorVertical,
                                 height: 35*factorRatio,
                                 width: 35*factorRatio,
@@ -151,7 +196,7 @@ export default class FoundationsLevel extends React.Component {
                                     width: '100%',
                                     borderRadius: 100,
                                     backgroundColor: 'black',
-                                    opacity: 0.5,
+                                    opacity: 0.4,
                                 }]}
                             >
                                 <EntypoIcon
@@ -180,8 +225,8 @@ export default class FoundationsLevel extends React.Component {
                                     color={'white'}
                                 />
                             </TouchableOpacity>
-                        </View>
-
+                        </View>                
+                            
                         <GradientFeature
                             color={'blue'}
                             opacity={1}
@@ -232,7 +277,7 @@ export default class FoundationsLevel extends React.Component {
                             <Text key={'level'}
                                 style={{
                                     fontSize: 60*factorRatio,
-                                    fontWeight: '700',
+                                    fontWeight: 'bold',
                                     color: 'white',
                                     fontFamily: 'RobotoCondensed-Regular',
                                     textAlign: 'center',
@@ -258,18 +303,27 @@ export default class FoundationsLevel extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-
+                                            this.addToMyList()
                                         }}
                                         style={{
                                             flex: 1,
                                             alignItems: 'center',
                                         }}
                                     >
+                                        {!this.state.data.isAddedToList && (
                                         <AntIcon
                                             name={'plus'} 
                                             size={27.5*factorRatio} 
                                             color={colors.pianoteRed}
                                         />
+                                        )}
+                                        {this.state.data.isAddedToList && (
+                                        <AntIcon
+                                            name={'close'} 
+                                            size={27.5*factorRatio} 
+                                            color={colors.pianoteRed}
+                                        />
+                                        )}
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
@@ -282,13 +336,28 @@ export default class FoundationsLevel extends React.Component {
                                     </TouchableOpacity>
                                                                  
                                 </View>
+                                {!this.state.isStarted && (
                                 <ContinueIcon
                                     pxFromTop={0}
                                     buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.05}
                                     pxFromLeft={fullWidth*0.5/2}
                                     buttonWidth={fullWidth*0.5}
-                                    pressed={() => this.props.navigation.navigate('PATHOVERVIEW')}
+                                    pressed={() => {
+                                        this.props.navigation.navigate('PATHOVERVIEW', {data: this.state.items[0]})
+                                    }}
                                 />
+                                )}
+                                {this.state.isStarted && (
+                                <StartIcon
+                                    pxFromTop={0}
+                                    buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.05}
+                                    pxFromLeft={fullWidth*0.5/2}
+                                    buttonWidth={fullWidth*0.5}
+                                    pressed={() => {
+                                        this.props.navigation.navigate('PATHOVERVIEW', {data: this.state.items[0]})
+                                    }}
+                                />
+                                )}
                                 <View key={'info'}
                                     style={[ 
                                         styles.centerContent, {
@@ -351,7 +420,7 @@ export default class FoundationsLevel extends React.Component {
                                 textAlign: 'center',
                             }}
                         >
-                            Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. 
+                            {this.state.data.description}
                         </Text>
                         <View style={{height: 15*factorVertical}}/>
                         <TouchableOpacity
@@ -374,224 +443,24 @@ export default class FoundationsLevel extends React.Component {
                                 /> WATCH THE TRAILER
                             </Text>
                         </TouchableOpacity>
-                        <View style={{height: 10*factorVertical}}/>
-                        <View key={'containStats'}>
-                            <View style={{height: 10*factorVertical}}/>
-                            <View key={'stats'}
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 0.22,
-                                    flexDirection: 'row',
-                                }]}
-                            >
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                                <View 
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: 17*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        11
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        LESSONS
-                                    </Text>
-                                </View>
-                                <View style={{width: 15*factorRatio}}/>
-                                <View 
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: 17*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        48
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        MINS
-                                    </Text>
-                                </View>
-                                <View style={{width: 15*factorRatio}}/>
-                                <View 
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontWeight: '700',
-                                            fontSize: 17*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        2400
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        XP
-                                    </Text>
-                                </View>
-                                
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                            </View>
-                            <View style={{height: 15*factorVertical}}/>
-                            <View key={'buttons'}
-                                style={[
-                                    styles.centerContent, {
-                                    flex: 0.25,
-                                    flexDirection: 'row',
-                                }]}
-                            >
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                                <TouchableOpacity
-                                    onPress={() => {}}
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <AntIcon
-                                        name={'like2'}
-                                        size={27.5*factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        34
-                                    </Text>
-                                </TouchableOpacity>
-                                <View style={{width: 15*factorRatio}}/>
-                                <TouchableOpacity
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <MaterialIcon
-                                        name={'arrow-collapse-down'}
-                                        size={27.5*factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        My List
-                                    </Text>
-                                </TouchableOpacity>
-                                <View style={{width: 15*factorRatio}}/>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.setState({
-                                            showRestartCourse: true
-                                        })
-                                    }}
-                                    style={[
-                                        styles.centerContent, {
-                                        width: 70*factorRatio,
-                                    }]}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <MaterialIcon
-                                        name={'replay'}
-                                        size={27.5*factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontSize: 13*factorRatio,
-                                            textAlign: 'left',
-                                            color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
-                                            marginTop: 10*factorVertical,
-                                        }}
-                                    >
-                                        Restart
-                                    </Text>
-                                </TouchableOpacity>
-                                <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                            </View>
-                            <View style={{height: 30*factorVertical}}/>
-                        </View>
+                        <View style={{height: 20*factorVertical}}/>
                     </View>
                     )}
                     <VerticalVideoList
                             items={this.state.items}
                             isLoading={this.state.isLoadingAll}
-                            title={'ADDED TO MY LIST'}
-                            type={'MYLIST'} // the type of content on page
                             showFilter={false} // shows filters button
                             showType={false} // show course / song by artist name
                             showArtist={false} // show artist name
-                            showLength={true} // duration of song
+                            showLength={false} // duration of song
                             showSort={false}
                             showLines={true}
                             imageRadius={5*factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list
-                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.1} // height per row
-                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.095 : fullHeight*0.0825} // image height
-                            imageWidth={fullWidth*0.26} // image width
+                            containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.11} // height per row
+                            imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.09 :fullHeight*0.0825} // image height
+                            imageWidth={fullWidth*0.3} // image width
                             navigator={(row) => this.props.navigation.navigate('PATHOVERVIEW', {data: row})}
                     />
                 </ScrollView>
@@ -617,9 +486,16 @@ export default class FoundationsLevel extends React.Component {
                         }}
                     />
                 </Modal>
-                <NextVideo
-                    item={this.state.items[0]}
-                />
+                {(this.state.currentLessonIndex + 1 !== this.state.items.length) && (
+                <View>
+                    {!this.state.isLoadingAll && (
+                    <NextVideo
+                        item={this.state.items[this.state.currentLessonIndex+1]}
+                        currentCompletion={this.state.items[this.state.currentLessonIndex].progress_percent}
+                    />
+                    )}
+                </View>
+                )}
                 <NavigationBar
                     currentPage={''}
                 />

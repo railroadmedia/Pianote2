@@ -34,10 +34,11 @@ export default class Foundations extends React.Component {
             items: [],
             showRestartCourse: false,
             profileImage: '',
-            isStarted: true,
+            isStarted: false,
             showInfo: false,
             isLoadingAll: true,
-            level: 3,
+            totalLength: 0,
+            level: 1,
         }
     }
 
@@ -47,6 +48,7 @@ export default class Foundations extends React.Component {
         if(profileImage !== null) {
             await this.setState({profileImage})
         }
+
         this.getContent()
     }
 
@@ -60,6 +62,8 @@ export default class Foundations extends React.Component {
             return new ContentModel(data)
         })
 
+        console.log('FOUNDATIONS', newContent)
+
         items = []
         for(i in newContent) {
             if(newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -68,9 +72,13 @@ export default class Foundations extends React.Component {
                     artist: newContent[i].getField('instructor').fields[0].value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
+                    current_lesson_index: newContent[i].post.current_lesson_index,
+                    current_lesson: newContent[i].post.current_lesson,
+                    next_lesson: newContent[i].post.next_lesson,
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
+                    lesson_count: newContent[i].post.lesson_count,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].isLiked,
@@ -83,12 +91,16 @@ export default class Foundations extends React.Component {
             }
         }
 
+        for(i in items) {
+            this.state.totalLength = this.state.totalLength + Number(items[i].duration)
+        }
+        this.state.totalLength = Math.floor(this.state.totalLength/60).toString()
+        
         this.setState({
             items: [...this.state.items, ...items],
             isLoadingAll: false,
+            totalLength: this.state.totalLength
         })
-
-        console.log(items)
     }
 
 
@@ -222,7 +234,12 @@ export default class Foundations extends React.Component {
                                 buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
                                 pxFromLeft={fullWidth*0.5/2}
                                 buttonWidth={fullWidth*0.5}
-                                pressed={() => this.props.navigation.navigate('COURSECATALOG')}
+                                pressed={() => {
+                                    this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+                                        level: 1,
+                                        data: this.state.items[0],
+                                    })
+                                }}
                             />
                             )}
                             {!this.state.isStarted && (
@@ -231,7 +248,12 @@ export default class Foundations extends React.Component {
                                 buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
                                 pxFromLeft={fullWidth*0.5/2}
                                 buttonWidth={fullWidth*0.5}
-                                pressed={() => this.props.navigation.navigate('COURSECATALOG')}
+                                pressed={() => {
+                                    this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+                                        level: 1,
+                                        data: this.state.items[0],
+                                    })
+                                }}
                             />
                             )}
                             <View key={'info'}
@@ -354,7 +376,7 @@ export default class Foundations extends React.Component {
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        48
+                                        {this.state.totalLength}
                                     </Text>
                                     <Text
                                         style={{
@@ -577,8 +599,11 @@ export default class Foundations extends React.Component {
                         containerHeight={fullWidth*0.285}
                         imageHeight={fullWidth*0.25}
                         imageWidth={fullWidth*0.25}
-                        navigator={(row) => {
-                            this.props.navigation.navigate('FOUNDATIONSLEVEL', {data: row})
+                        navigator={(row, index) => {
+                            this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+                                level: index + 1,
+                                data: row,
+                            })
                         }}
                     />
                 </ScrollView>

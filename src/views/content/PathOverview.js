@@ -9,9 +9,9 @@ import {
     ScrollView, 
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import { getContentChildById } from '@musora/services';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
@@ -25,102 +25,81 @@ export default class PathOverview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            lesson: this.props.navigation.state.params.data,
+            data: this.props.navigation.state.params.data,
             showInfo: false,
-            outVideos: false,
-            items: [],
             isLoadingAll: true,
-            page: 0,
+            items: [],
+            
         }
     }
 
 
-    componentDidMount() {
-        console.log(this.state.data, ';data')
+    componentDidMount = async () => {
+        console.log(this.state.data)
         this.getContent()
     }
 
 
-    async getContent() {
-        const { response, error } = await getContent({
-            brand:'pianote',
-            limit: '15',
-            page: this.state.page,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['course'],
+    getContent = async () => {
+        const { response, error } = await getContentChildById({
+            parentId: this.state.data.id,
         });
 
-        console.log( 'response :', response, 'error : ', error)
+        console.log(response, 'SPOINSE')
 
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)
-        })
-try {
-    items = []
-    for(i in newContent) {
-        if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-            items.push({
-                title: newContent[i].getField('title'),
-                artist: newContent[i].getField('instructor').fields[0].value,
-                thumbnail: newContent[i].getData('thumbnail_url'),
-                type: newContent[i].post.type,
-                description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                xp: newContent[i].post.xp,
-                id: newContent[i].id,
-                like_count: newContent[i].post.like_count,
-                duration: this.getDuration(newContent[i]),
-                isLiked: newContent[i].isLiked,
-                isAddedToList: newContent[i].isAddedToList,
-                isStarted: newContent[i].isStarted,
-                isCompleted: newContent[i].isCompleted,
-                bundle_count: newContent[i].post.bundle_count,
-                progress_percent: newContent[i].post.progress_percent,
-            })
-        }
-    }
-} catch (error) {
-    console.log(error)
-}
-        items = []
-        for(i in newContent) {
-            if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0].value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].isLiked,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                })
+        });
+
+        try {
+            items = []
+            for(i in newContent) {
+                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructors'),
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
+                    })
+                }
             }
+    
+            for(i in items) {
+                this.state.totalLength = this.state.totalLength + Number(items[i].duration)
+            }
+            this.state.totalLength = Math.floor(this.state.totalLength/60).toString()
+            
+
+            this.setState({
+                items: [...this.state.items, ...items],
+                isLoadingAll: false,
+                totalLength: this.state.totalLength,
+            })    
+            
+        } catch (error) {
+            console.log(error)
         }
 
-        this.setState({
-            items: [...this.state.items, ...items],
-            page: this.state.page + 1,
-            isLoadingAll: false,
-        })
-
-        console.log(this.state.items)
     }
 
 
     getDuration = (newContent) => {
         var data = 0
         try {
-            for(i in newContent.post.current_lesson.fields) {
-                if(newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data = newContent.post.current_lesson.fields[i].value.fields
+            for(i in newContent.post.fields) {
+                if(newContent.post.fields[i].key == 'video') {
+                    var data = newContent.post.fields[i].value.fields
                     for(var i=0; i < data.length; i++) {
                         if(data[i].key == 'length_in_seconds') {
                             return data[i].value
@@ -162,7 +141,7 @@ try {
                                     alignSelf: 'stretch', 
                                     backgroundColor: colors.mainBackground,
                                 }}
-                                source={{uri: this.state.lesson.thumbnail}}
+                                source={{uri: this.state.data.thumbnail}}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
                             <View key={'goBackIcon'}
@@ -231,7 +210,7 @@ try {
                                         fontSize: 24*factorRatio,
                                     }}
                                 >
-                                    {this.state.lesson.title}
+                                    {this.state.data.title}
                                 </Text>
                                 <View style={{height: 10*factorVertical}}/>
                                 <Text
@@ -244,7 +223,7 @@ try {
 
                                     }}
                                 >
-                                    {this.state.lesson.artist} | LEVEL 5 | {this.state.lesson.xp}XP
+                                    {this.state.data.artist} | LEVEL 5 | {this.state.data.xp}XP
                                 </Text>
                             </View>
                             <View style={{height: 20*factorVertical}}/>
@@ -354,7 +333,7 @@ try {
                                     textAlign: 'center',
                                 }}
                             >
-                                Hanon exercises have been around forever and there is a great reason for their sticking power. Therese exercises make the perfect warm up for daily practice. They will help you to develop speed, dexterity and finer independence as well as give you a  platform to practice dynamics and articulations. 
+                                {this.state.data.description}
                             </Text>
                             <View key={'containStats'}>
                                 <View style={{height: 10*factorVertical}}/>

@@ -10,10 +10,12 @@ import {
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import { getContentChildById } from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
+import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -28,10 +30,12 @@ export default class Lessons extends React.Component {
             progressLessons: [],
             newLessons: [],
             allLessons: [],
+            foundations: [],
+            startedFoundations: false, // for showing start icon or continue
             outVideos: false, 
             page: 0,
             showModalMenu: false, // show navigation menu
-            lessonsStarted: true,
+            lessonsStarted: true, // for showing continue lessons
             profileImage: '',
             xp: '', // user's XP
             rank: '', // user's level
@@ -44,8 +48,7 @@ export default class Lessons extends React.Component {
         }
     }
 
-
-    componentDidMount = async () => {
+    componentWillMount = async () => {
         email = await AsyncStorage.getItem('email')
         profileURI = await AsyncStorage.getItem('profileURI')
 
@@ -68,10 +71,85 @@ export default class Lessons extends React.Component {
             .catch((error) => {
                 console.log('API Error: ', error)
             })    
-        
+
+        this.getFoundations()
+    }
+
+
+    componentDidMount = async () => {
         this.getProgressLessons()
         this.getNewLessons()
         this.getAllLessons()
+    }
+
+    
+    getFoundations = async () => {
+        const { response, error } = await getContentChildById({
+            parentId: '215952',
+        });
+
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data)
+        })
+
+        try {
+            items = []
+            for(i in newContent) {
+                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor').fields[0].value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDurationFoundations(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
+                    })
+                }
+            }
+
+            var startedFoundations = false
+
+            for(i in items) {
+                if(items[i].isStarted == true) {
+                    startedFoundations == true 
+                }
+            }
+
+            this.setState({
+                startedFoundations,
+                foundations: [...this.state.foundations, ...items],
+            })   
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    getDurationFoundations = (newContent) => {
+        var data = 0
+        try {
+            for(i in newContent.post.current_lesson.fields) {
+                if(newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data = newContent.post.current_lesson.fields[i].value.fields
+                    for(var i=0; i < data.length; i++) {
+                        if(data[i].key == 'length_in_seconds') {
+                            return data[i].value
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)    
+        }
     }
 
 
@@ -411,21 +489,39 @@ export default class Lessons extends React.Component {
                                     FOUNDATIONS
                                 </Text>
                                 <View style={{flex: 0.6}}/>
+
+                                {(!this.state.startedFoundations) && (
                                 <StartIcon
                                     pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
                                     buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
                                     pxFromLeft={fullWidth*0.065}
                                     buttonWidth={fullWidth*0.42}
                                     pressed={() => {
-                                        this.props.navigation.navigate('VIDEOPLAYER')
+                                      //  this.props.navigation.navigate('VIDEOPLAYER')
                                     }}
                                 />
+                                )}
+                                {(this.state.startedFoundations) && (
+                                <ContinueIcon
+                                    pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
+                                    buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
+                                    pxFromLeft={fullWidth*0.065}
+                                    buttonWidth={fullWidth*0.42}
+                                    pressed={() => {
+                                       // this.props.navigation.navigate('VIDEOPLAYER')
+                                    }}
+                                />  
+                                )}
                                 <MoreInfoIcon
                                     pxFromTop={(onTablet) ? fullHeight*0.32*0.725 : fullHeight*0.305*0.725}
                                     buttonHeight={(onTablet) ? fullHeight*0.06 : (Platform.OS == 'ios') ? fullHeight*0.05 : fullHeight*0.055}
                                     pxFromRight={fullWidth*0.065}
                                     buttonWidth={fullWidth*0.42}
-                                    pressed={() => this.props.navigation.navigate('FOUNDATIONS')}
+                                    pressed={() => {
+                                        this.props.navigation.navigate('FOUNDATIONS', {
+                                            foundations: this.state.foundations
+                                        })
+                                    }}
                                 />  
                             </View> 
                         </View>

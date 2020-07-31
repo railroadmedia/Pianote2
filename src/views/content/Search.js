@@ -143,12 +143,17 @@ export default class Search extends React.Component {
 
         const { response, error } = await searchContent({
             brand: 'pianote',
-            limit: '15',
+            limit: '25',
             page: 1,
             sort: '-created_on',
             statuses: ['published'],
-            included_types: ['song'],
+            included_types: ['song', 'course'],
+            statuses: ['published'],
+            sort: '-score',            
+            term,
         });
+
+        console.log(response, error)
 
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)

@@ -205,7 +205,7 @@ class ContentModal extends React.Component {
                                 }]}
                             >
                                 <View style={{flex: 1, alignSelf: 'stretch'}}/>
-                                {(this.state.data.bundle_count > 1) && (
+                                {(this.state.data.bundle_count > 1 || this.state.data.lesson_count) && (
                                 <View 
                                     style={[
                                         styles.centerContent, {
@@ -221,7 +221,9 @@ class ContentModal extends React.Component {
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        {this.state.data.bundle_count}
+                                        {(this.state.data.lesson_count > 1) ? 
+                                            this.state.data.lesson_count : this.state.data.bundle_count
+                                        }
                                     </Text>
                                     <Text
                                         style={{
