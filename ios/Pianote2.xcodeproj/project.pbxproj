@@ -429,8 +429,8 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 7RM4D35J2P;
 						LastSwiftMigration = 1150;
-						DevelopmentTeam = 4BNNP9NY6A;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -860,7 +860,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 4BNNP9NY6A;
+				DEVELOPMENT_TEAM = 7RM4D35J2P;
 				INFOPLIST_FILE = Pianote2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.03;
@@ -889,7 +889,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 4BNNP9NY6A;
+				DEVELOPMENT_TEAM = 7RM4D35J2P;
 				INFOPLIST_FILE = Pianote2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.03;

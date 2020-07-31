@@ -14,7 +14,6 @@ import {
     Animated,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import Video, { videoMock }from 'RNVideoEnhanced';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -26,6 +25,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import LessonComplete from '../../modals/LessonComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Video, { videoMock, mp3VideoMock }from 'RNVideoEnhanced';
 import AsyncStorage from '@react-native-community/async-storage';
 import Resources from 'Pianote2/src/assets/img/svgs/resources.svg';
 import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
@@ -619,13 +619,13 @@ export default class VideoPlayer extends React.Component {
                 >
                     <Video
                         quality={''}
-                        type={'video'}
                         offlinePath={''}
                         aCasting={false}
                         gCasting={false}
                         connection={true}
                         deviceProps={{}}
                         onBack={() => {}}
+                        toSupport={() => {}}
                         onRefresh={() => {}}
                         maxFontMultiplier={1}
                         onToSupport={() => {}}
@@ -637,8 +637,63 @@ export default class VideoPlayer extends React.Component {
                         ref={r => (this.video = r)}
                         goToPreviousLesson={() => {}}
                         onOrientationChange={() => {}}
+                        type={true ? 'audio' : 'video'}
                         onUpdateVideoProgress={() => {}}
-                        content={this.state.content || videoMock}
+                        content={this.state.content || mp3VideoMock}
+                        styles={
+                        {
+                            //   smallPlayerControls: {
+                            //     width: 20,
+                            //     height: 20,
+                            //     fill: 'green',
+                            //     color: 'green',
+                            //     tintColor: 'green',
+                            //   },
+                            //   largePlayerControls: {
+                            //     width: 40,
+                            //     height: 40,
+                            //     fill: 'green',
+                            //     color: 'green',
+                            //     tintColor: 'green',
+                            //   },
+                            //   mp3ListPopup: {
+                            //     background: 'red',
+                            //     borderBottomColor: 'green',
+                            //     selectedTextColor: 'green',
+                            //     unselectedTextColor: 'black',
+                            //     checkIcon: {
+                            //       width: 20,
+                            //       height: 20,
+                            //       fill: 'green',
+                            //     },
+                            //   },
+                            //   mp3TogglerTextColor: 'green',
+                            //   afterTimerCursorBackground: '#2F3334',
+                            //   timerCursorBackground: colors.pianoteRed,
+                            //   beforeTimerCursorBackground: colors.pianoteRed,
+                            //   timerText: {
+                            //     left: {padding: 10, color: 'green'},
+                            //     right: {padding: 10, color: 'red'},
+                            //   },
+                            //   settings: {
+                            //     background: 'purple',
+                            //     separatorColor: 'red',
+                            //     optionsBorderColor: 'red',
+                            //     selectedOptionTextColor: 'red',
+                            //     unselectedOptionTextColor: 'green',
+                            //     save: {background: 'green', color: 'yellow'},
+                            //     cancel: {background: 'yellow', color: 'green'},
+                            //     downloadIcon: {width: 20, height: 20, fill: 'pink'},
+                            //   },
+                            //   alert: {
+                            //     background: 'purple',
+                            //     titleTextColor: 'blue',
+                            //     subtitleTextColor: 'green',
+                            //     reloadLesson: {color: 'green', background: 'blue'},
+                            //     contactSupport: {color: 'green', background: 'blue'},
+                            //   },
+                        }
+                        }
                     />
                     <View key={'belowVideo'}
                         style={{flex: 1}}
