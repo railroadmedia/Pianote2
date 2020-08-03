@@ -623,12 +623,10 @@ export default class VideoPlayer extends React.Component {
                         aCasting={false}
                         gCasting={false}
                         connection={true}
-                        deviceProps={{}}
                         onBack={() => {}}
                         toSupport={() => {}}
                         onRefresh={() => {}}
                         maxFontMultiplier={1}
-                        onToSupport={() => {}}
                         onFullscreen={() => {}}
                         goToNextLesson={() => {}}
                         onQualityChange={() => {}}
