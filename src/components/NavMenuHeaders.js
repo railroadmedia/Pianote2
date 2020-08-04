@@ -72,6 +72,9 @@ class NavMenuHeaders extends React.Component {
                                     fill={'#fb1b2f'}
                                 />
                                 <View style={{flex: 0.25}}/>
+                                {(!isNotch) && (
+                                <View style={{flex: 0.5}}/>
+                                )}
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity key={'lessons'}
@@ -102,6 +105,9 @@ class NavMenuHeaders extends React.Component {
                                     size={20*factorRatio}
                                 />
                             </View>
+                            {(!isNotch) && (
+                            <View style={{flex: 0.5}}/>
+                            )}
                         </TouchableOpacity>
                         <View style={{flex: 1}}/>
                         <TouchableOpacity key={'packs'}
@@ -127,6 +133,9 @@ class NavMenuHeaders extends React.Component {
                                     PACKS{' '}
                                 </Text>
                             </View>
+                            {(!isNotch) && (
+                            <View style={{flex: 0.5}}/>
+                            )}
                         </TouchableOpacity>
                         <View style={{flex: 1}}/>
                         <TouchableOpacity key={'mylist'}
@@ -152,6 +161,9 @@ class NavMenuHeaders extends React.Component {
                                     MY LIST{' '}
                                 </Text>
                             </View>
+                            {(!isNotch) && (
+                            <View style={{flex: 0.5}}/>
+                            )}
                         </TouchableOpacity>
                         <View style={{flex: 1}}/>
                     </View>

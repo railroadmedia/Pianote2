@@ -2,12 +2,10 @@
  * Taskbar for navigation
 */
 import React from 'react';
-import { 
-    View, 
-    TouchableOpacity,
-} from 'react-native';
-import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
+import { withNavigation } from 'react-navigation';
+import { View, TouchableOpacity } from 'react-native';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
@@ -27,6 +25,31 @@ class NavigationBar extends React.Component {
         let profileImage = await AsyncStorage.getItem('profileURI')
         if(profileImage !== null) {
             await this.setState({profileImage})
+        }
+    }
+
+    profile = () => {
+        if(this.state.profileImage.length == 0) {
+            return (
+                <AntIcon
+                    name={'user'}
+                    color={(this.props.currentPage == 'PROFILE') ? 'white' : colors.secondBackground}
+                    size={27.5*factorRatio}
+                />
+            )
+        } else {
+            return (
+                <FastImage
+                    style={{
+                        flex: 1, 
+                        borderRadius: 100, 
+                        backgroundColor: colors.secondBackground,
+                        backgroundColor: 'red',
+                    }}
+                    source={{uri: this.state.profileImage}}
+                    resizeMode={FastImage.resizeMode.cover}
+                />
+            )
         }
     }
 
@@ -83,19 +106,18 @@ class NavigationBar extends React.Component {
                         onPress={() => this.props.navigation.navigate('PROFILE')}
                     >
                         <View 
-                            style={{
+                            style={[(this.state.profileImage.length > 0) ? null : styles.centerContent, {
                                 width: 37.5*factorRatio,
                                 height: 37.5*factorRatio,
                                 borderRadius: 100,
                                 borderWidth: 2.25*factorRatio,
-                                borderColor: (this.props.currentPage == 'PROFILE') ? 'white' : 'transparent',
-                            }} 
+                                borderColor: (
+                                    this.props.currentPage == 'PROFILE' && 
+                                    this.state.profileImage.length > 0
+                                ) ? 'white' : 'transparent',
+                            }]}
                         >
-                            <FastImage
-                                style={{flex: 1, borderRadius: 100, backgroundColor: colors.secondBackground}}
-                                source={{uri: this.state.profileImage}}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
+                            {this.profile()}
                         </View>
                         <View style={{height: 2*factorVertical}}/>
                     </TouchableOpacity>

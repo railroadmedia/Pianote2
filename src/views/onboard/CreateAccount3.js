@@ -18,17 +18,24 @@ import FastImage from 'react-native-fast-image';
 import X from 'Pianote2/src/assets/img/svgs/X.svg';
 import ImagePicker from 'react-native-image-picker';
 import DisplayName from '../../modals/DisplayName.js';
+import { userLogin, configure } from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Courses from 'Pianote2/src/assets/img/svgs/courses.svg';
 import Support from 'Pianote2/src/assets/img/svgs/support.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationActions, StackActions } from 'react-navigation';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 
 var showListener = (Platform.OS == 'ios') ? 'keyboardWillShow' : 'keyboardDidShow'
 var hideListener = (Platform.OS == 'ios') ? 'keyboardWillHide' : 'keyboardDidHide'
 var data = new FormData()
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+})
 
 export default class CreateAccount3 extends React.Component {
     static navigationOptions = {header: null};
@@ -43,9 +50,9 @@ export default class CreateAccount3 extends React.Component {
             displayNameValid: false,
             displayName: '',
             imageURI: '',
-            plan: this.props.navigation.state.params.data.plan,
-            email: this.props.navigation.state.params.data.email,
-            password: this.props.navigation.state.params.data.password,
+            plan: this.props.navigation.state.params.plan,
+            email: this.props.navigation.state.params.email,
+            password: this.props.navigation.state.params.password,
         }
     }
 
@@ -175,7 +182,6 @@ export default class CreateAccount3 extends React.Component {
             })
             .then((response) => {
                 console.log('API response: ', response)
-                this.props.navigation.navigate('LESSONS')
                 AsyncStorage.multiSet([
                     ['plan', this.state.plan], 
                     ['email', this.state.email],
@@ -189,6 +195,22 @@ export default class CreateAccount3 extends React.Component {
             .catch((error) => {
                 console.log('API error', error)
             })
+
+            const { response, error } = await userLogin({
+                email: 'kentonp@drumeo.com',
+                password: 'Katrinapalmer7!',
+            });
+
+            // store data
+            await AsyncStorage.multiSet([
+                ['token', JSON.stringify(response.data.token)],
+                ['tokenTime', JSON.stringify(response.data.token)],
+            ])
+
+            // check membership status then navigate
+            await configure({'authToken': response.data.token})
+            await this.props.navigation.dispatch(resetAction)
+
     }
 
 
@@ -265,6 +287,7 @@ export default class CreateAccount3 extends React.Component {
                                     flexDirection: 'row',
                                 }]}
                             >
+                                
                                 <TouchableOpacity
                                     onPress={() => this.props.navigation.goBack()}
                                     style={{
@@ -275,12 +298,15 @@ export default class CreateAccount3 extends React.Component {
                                         justifyContent: 'center',
                                     }}
                                 >
+                                    {false && (
                                     <EntypoIcon
                                         name={'chevron-thin-left'}
                                         size={22.5*factorRatio}
                                         color={'black'}
                                     />
+                                    )}
                                 </TouchableOpacity>
+
                                 <Text
                                     style={{
                                         fontFamily: 'OpenSans-Regular',

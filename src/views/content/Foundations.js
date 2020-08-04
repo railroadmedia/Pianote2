@@ -10,7 +10,6 @@ import {
     Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import { getContentChildById } from '@musora/services';
@@ -35,6 +34,7 @@ export default class Foundations extends React.Component {
             showRestartCourse: false,
             profileImage: '',
             isStarted: false,
+            isLiked: false, 
             showInfo: false,
             isLoadingAll: true,
             totalLength: 0,
@@ -435,7 +435,9 @@ export default class Foundations extends React.Component {
                                 <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                 <TouchableOpacity
                                     onPress={() => {
-                                    
+                                        this.setState({
+                                            isLiked: !this.state.isLiked
+                                        })
                                     }}
                                     style={[
                                         styles.centerContent, {
@@ -444,7 +446,7 @@ export default class Foundations extends React.Component {
                                 >
                                     <View style={{flex: 1}}/>
                                     <AntIcon
-                                        name={'like2'}
+                                        name={(this.state.isLiked) ? 'like1':'like2'}
                                         size={27.5*factorRatio}
                                         color={colors.pianoteRed}
                                     />
@@ -457,7 +459,7 @@ export default class Foundations extends React.Component {
                                             marginTop: 10*factorVertical,
                                         }}
                                     >
-                                        34
+                                         {34 + (this.state.isLiked ? 1 : 0)}
                                     </Text>
                                 </TouchableOpacity>
                                 <View style={{width: 15*factorRatio}}/>

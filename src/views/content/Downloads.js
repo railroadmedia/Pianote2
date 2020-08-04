@@ -162,7 +162,7 @@ export default class Downloads extends React.Component {
                         style={[
                             styles.centerContent, {
                             height: (Platform.OS == 'android') ?  fullHeight*0.1 : 
-                                (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                                (isNotch ? fullHeight*0.12 : fullHeight*0.1),
                             backgroundColor: colors.thirdBackground,
                         }]}
                     >

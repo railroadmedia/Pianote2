@@ -124,22 +124,35 @@ export default class Search extends React.Component {
 
 
     search = async (term) => {
+        // if not in search histry
         // add term to user's recent searches in local storage
         // if list is 8+ items take oldest one off
-        if(this.state.recentSearchResults.length > 7) {
-            this.state.recentSearchResults.pop(this.state.recentSearchResults.length)
+        var isNewTerm = true
+
+        for(i in this.state.recentSearchResults) {
+            if(this.state.recentSearchResults[i][0] == term) {
+                isNewTerm = false                
+            }
         }
 
-        await this.state.recentSearchResults.unshift([term, Date.now()])
-        
-        await AsyncStorage.setItem(
-            'recentSearches', JSON.stringify(this.state.recentSearchResults)
-        )
-
-        await this.setState({
-            recentSearchResults: this.state.recentSearchResults,
-            searchEntered: true,
-        })
+        if(isNewTerm) {
+            if(this.state.recentSearchResults.length > 7) {
+                this.state.recentSearchResults.pop(this.state.recentSearchResults.length)
+            }
+    
+            await this.state.recentSearchResults.unshift([term, Date.now()])
+            
+            await AsyncStorage.setItem(
+                'recentSearches', JSON.stringify(this.state.recentSearchResults)
+            )
+    
+            await this.setState({
+                recentSearchResults: this.state.recentSearchResults,
+                searchEntered: true,
+            })
+    
+        }
+  
 
         const { response, error } = await searchContent({
             brand: 'pianote',
@@ -206,7 +219,7 @@ export default class Search extends React.Component {
                                 style={[
                                     styles.centerContent, {
                                     height: (Platform.OS == 'android') ?  fullHeight*0.1 : 
-                                        (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                                        (isNotch ? fullHeight*0.12 : fullHeight*0.1),
                                     backgroundColor: colors.thirdBackground,
                                 }]}
                             >

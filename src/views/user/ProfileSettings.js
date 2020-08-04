@@ -3,11 +3,11 @@
  */
 import React from 'react';
 import { 
-    View, 
-    Text, 
-    ScrollView, 
-    TouchableOpacity, 
-    TextInput, 
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    TextInput,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ChangeEmail from '../../modals/ChangeEmail';
@@ -36,7 +36,7 @@ export default class ProfileSettings extends React.Component {
 
     componentDidMount = async () => {
         let imageURI = await AsyncStorage.getItem('profileURI')
-        await this.setState({imageURI})
+        await this.setState({imageURI: (imageURI == null) ? '' : imageURI})
     }
 
 
@@ -346,7 +346,7 @@ export default class ProfileSettings extends React.Component {
                                             height: fullWidth* 0.65,
                                             width: fullWidth* 0.65,
                                             borderRadius: 200*factorRatio,
-                                            backgroundColor: '#ececec',
+                                            backgroundColor: colors.secondBackground,
                                         }]}
                                     >
                                         {(this.state.imageURI !== '') && (

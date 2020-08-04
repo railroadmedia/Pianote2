@@ -31,6 +31,7 @@ export default class Lessons extends React.Component {
             newLessons: [],
             allLessons: [],
             foundations: [],
+            currentLesson: [],
             startedFoundations: false, // for showing start icon or continue
             outVideos: false, 
             page: 0,
@@ -50,7 +51,7 @@ export default class Lessons extends React.Component {
 
     componentWillMount = async () => {
         email = await AsyncStorage.getItem('email')
-        profileURI = await AsyncStorage.getItem('profileURI')
+        profileImage = await AsyncStorage.getItem('profileURI')
 
         await fetch('http://127.0.0.1:5000/accountDetails', {
             method: 'POST',
@@ -64,13 +65,13 @@ export default class Lessons extends React.Component {
                 this.setState({
                     xp: response.XP,
                     rank: response.rank,
-                    profileImage: profileURI,
+                    profileImage: (profileImage !== null) ? '' : profileImage,
                     lessonsStarted: (response.lessonsStarted == 1) ? true : false,
                 })
             })
             .catch((error) => {
                 console.log('API Error: ', error)
-            })    
+            })
 
         this.getFoundations()
     }
@@ -91,7 +92,7 @@ export default class Lessons extends React.Component {
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)
         })
-
+        
         try {
             items = []
             for(i in newContent) {
@@ -128,6 +129,8 @@ export default class Lessons extends React.Component {
                 startedFoundations,
                 foundations: [...this.state.foundations, ...items],
             })   
+
+            console.log(this.state.foundations, 'foundations')
         } catch (error) {
             console.log(error)
         }
@@ -497,7 +500,9 @@ export default class Lessons extends React.Component {
                                     pxFromLeft={fullWidth*0.065}
                                     buttonWidth={fullWidth*0.42}
                                     pressed={() => {
-                                      //  this.props.navigation.navigate('VIDEOPLAYER')
+                                        this.props.navigation.navigate(
+                                            'VIDEOPLAYER', {data: this.state.allLessons[0]}
+                                        )
                                     }}
                                 />
                                 )}
@@ -538,7 +543,8 @@ export default class Lessons extends React.Component {
                                 flexDirection: 'row',
                             }}
                         >
-                            <View
+                            {(this.state.profileImage !== null && this.state.profileImage.length > 0) && (
+                            <View key={'profile-picture'}
                                 style={[
                                     styles.centerContent, {
                                     flex: 1,
@@ -582,14 +588,15 @@ export default class Lessons extends React.Component {
                                 </View>
                                 <View style={{flex: 1}}/>
                             </View>
-                            <View
+                            )}
+                            <View key={'XP-rank'}
                                 style={{
                                     flex: 3,
                                     flexDirection: 'row',
                                     alignSelf: 'stretch',
                                 }}
                             >
-                                <View style={{flex: 0.5}}/>
+                                <View style={{flex: (this.state.profileImage !== null && this.state.profileImage.length > 0) ? 0.5 : 1}}/>
                                 <View>
                                     <View style={{flex: 1}}/>
                                     <View>

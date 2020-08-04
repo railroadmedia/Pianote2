@@ -26,6 +26,7 @@ export default class PathOverview extends React.Component {
         super(props);
         this.state = {
             data: this.props.navigation.state.params.data,
+            level: this.props.navigation.state.params.level,
             showInfo: false,
             isLoadingAll: true,
             items: [],
@@ -223,7 +224,7 @@ export default class PathOverview extends React.Component {
 
                                     }}
                                 >
-                                    {this.state.data.artist} | LEVEL 5 | {this.state.data.xp}XP
+                                    {this.state.data.artist} | LEVEL {this.state.level} | {this.state.data.xp}XP
                                 </Text>
                             </View>
                             <View style={{height: 20*factorVertical}}/>

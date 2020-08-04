@@ -8,7 +8,6 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { BlurView } from '@react-native-community/blur';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 class NavigationMenu extends React.Component {

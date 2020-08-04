@@ -17,6 +17,7 @@ import { userLogin, configure } from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationActions, StackActions } from 'react-navigation';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
@@ -24,6 +25,11 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 
 var showListener = (Platform.OS == 'ios') ? 'keyboardWillShow' : 'keyboardDidShow'
 var hideListener = (Platform.OS == 'ios') ? 'keyboardWillHide' : 'keyboardDidHide'
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+})
 
 export default class LoginCredentials extends React.Component {
     static navigationOptions = {header: null};
@@ -123,22 +129,21 @@ export default class LoginCredentials extends React.Component {
         } else if(response.data.success) {
             // store data
             await AsyncStorage.multiSet([
-                ['token', JSON.stringify(response.data.token)],
-                ['tokenTime', JSON.stringify(response.data.token)],
+                ['loggedInStatus', 'true'],
                 ['email', this.state.email],
                 ['password', this.state.password],
+                ['token', JSON.stringify(response.data.token)],
+                ['tokenTime', JSON.stringify(response.data.token)],
             ])
 
             // check membership status then navigate
             if('membershipValid' == 'membershipValid') {
                 await configure({'authToken': response.data.token})
-                await this.props.navigation.navigate('LESSONS')
+                await this.props.navigation.dispatch(resetAction)
             } else {
                 this.props.navigation.navigate('MEMBERSHIPEXPIRED')
             }
         }
-
-        //this.props.navigation.navigate('MEMBERSHIPEXPIRED')
     }
 
 

@@ -8,6 +8,13 @@ import {
     TouchableOpacity, 
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationActions, StackActions } from 'react-navigation';
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LOGIN'})],
+})
 
 class LogOut extends React.Component {
     static navigationOptions = {header: null};
@@ -16,6 +23,13 @@ class LogOut extends React.Component {
         this.state = {
             chosenInstructor: 2,
         }
+    }
+
+
+    logOut = async () => {
+        await AsyncStorage.clear()
+        await AsyncStorage.setItem('loggedInStatus', 'false')
+        await this.props.navigation.dispatch(resetAction)
     }
 
 
@@ -105,6 +119,7 @@ class LogOut extends React.Component {
                                     }]}
                                 >
                                     <TouchableOpacity
+                                        onPress={() => {this.logOut()}}
                                         style={[
                                             styles.centerContent, {
                                             flex:1,

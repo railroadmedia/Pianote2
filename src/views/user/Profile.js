@@ -12,6 +12,7 @@ import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import XpRank from 'Pianote2/src/modals/XpRank.js';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
@@ -32,9 +33,11 @@ export default class Profile extends React.Component {
 
 
     componentDidMount = async () => {
-        profileImage = await AsyncStorage.getItem('profileURI')
+        let profileImage = await AsyncStorage.getItem('profileURI')
+        if(profileImage !== null) {
+            await this.setState({profileImage})
+        }
         username = await AsyncStorage.getItem('username')
-        profileImage = await AsyncStorage.getItem('profileURI')
         email = await AsyncStorage.getItem('email')
 
         await fetch('http://127.0.0.1:5000/accountDetails', {
@@ -206,6 +209,32 @@ export default class Profile extends React.Component {
     }
 
 
+    profile = () => {
+        if(this.state.profileImage.length == 0) {
+            return (
+                <AntIcon
+                    name={'user'}
+                    color={colors.pianoteRed}
+                    size={75*factorRatio}
+                />
+            )
+        } else {
+            return (
+                <FastImage
+                    style={{
+                        flex: 1, 
+                        borderRadius: 100, 
+                        backgroundColor: colors.secondBackground,
+                        backgroundColor: 'red',
+                    }}
+                    source={{uri: this.state.profileImage}}
+                    resizeMode={FastImage.resizeMode.cover}
+                />
+            )
+        }
+    }
+
+
     render() {
         return (
             <View styles={{flex: 1, alignSelf: 'stretch'}}>
@@ -222,7 +251,7 @@ export default class Profile extends React.Component {
                             style={[
                                 styles.centerContent, {
                                 height: (Platform.OS == 'android') ?  fullHeight*0.1 : 
-                                    (isNotch ? fullHeight*0.12 : fullHeight*0.055),
+                                    (isNotch ? fullHeight*0.12 : fullHeight*0.1),
                                 backgroundColor: colors.thirdBackground,
                             }]}
                         >
@@ -288,15 +317,7 @@ export default class Profile extends React.Component {
                                     <View style={{flex: 1}}/>
                                     <View style={{flexDirection: 'row'}}>
                                         <View style={{flex: 1}}/>
-                                        <FastImage
-                                            style={{
-                                                height: (onTablet) ? 100*factorRatio : 125*factorRatio,
-                                                width: (onTablet) ? 100*factorRatio : 125*factorRatio,
-                                                borderRadius: 250
-                                            }}
-                                            source={{uri: this.state.profileImage}}
-                                            resizeMode={FastImage.resizeMode.stretch}
-                                        />
+                                        {this.profile()}
                                         <View style={{flex: 1}}/>
                                     </View>
                                     <View style={{flex: 1}}/>

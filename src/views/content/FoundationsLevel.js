@@ -46,7 +46,6 @@ export default class FoundationsLevel extends React.Component {
 
 
     componentDidMount = async () => {
-        console.log(this.state.data)
         this.getContent()
     }
 
@@ -59,8 +58,6 @@ export default class FoundationsLevel extends React.Component {
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data)
         });
-
-        console.log('FOUNDATIONS LEVEL', newContent)
 
         try {
             items = []
@@ -89,15 +86,14 @@ export default class FoundationsLevel extends React.Component {
             for(i in items) {
                 this.state.totalLength = this.state.totalLength + Number(items[i].duration)
             }
+
             this.state.totalLength = Math.floor(this.state.totalLength/60).toString()
-            
 
             this.setState({
                 items: [...this.state.items, ...items],
                 isLoadingAll: false,
                 totalLength: this.state.totalLength,
             })    
-            
         } catch (error) {
             console.log(error)
         }
@@ -343,7 +339,12 @@ export default class FoundationsLevel extends React.Component {
                                     pxFromLeft={fullWidth*0.5/2}
                                     buttonWidth={fullWidth*0.5}
                                     pressed={() => {
-                                        this.props.navigation.navigate('PATHOVERVIEW', {data: this.state.items[0]})
+                                        this.props.navigation.navigate(
+                                            'PATHOVERVIEW', {
+                                                data: this.state.items[0],
+                                                level: this.props.navigation.state.params.level
+                                            }
+                                        )
                                     }}
                                 />
                                 )}
@@ -354,7 +355,12 @@ export default class FoundationsLevel extends React.Component {
                                     pxFromLeft={fullWidth*0.5/2}
                                     buttonWidth={fullWidth*0.5}
                                     pressed={() => {
-                                        this.props.navigation.navigate('PATHOVERVIEW', {data: this.state.items[0]})
+                                        this.props.navigation.navigate(
+                                            'PATHOVERVIEW', {
+                                                data: this.state.items[0],
+                                                level: this.props.navigation.state.params.level
+                                            }
+                                        )
                                     }}
                                 />
                                 )}
@@ -461,7 +467,12 @@ export default class FoundationsLevel extends React.Component {
                             containerHeight={(onTablet) ? fullHeight*0.15 : (Platform.OS == 'android') ?  fullHeight*0.115 : fullHeight*0.11} // height per row
                             imageHeight={(onTablet) ? fullHeight*0.12 : (Platform.OS == 'android') ? fullHeight*0.09 :fullHeight*0.0825} // image height
                             imageWidth={fullWidth*0.3} // image width
-                            navigator={(row) => this.props.navigation.navigate('PATHOVERVIEW', {data: row})}
+                            navigator={(row) => {
+                                this.props.navigation.navigate('PATHOVERVIEW', {
+                                    data: this.state.items,
+                                    level: this.props.navigation.state.params.level,
+                                })
+                            }}
                     />
                 </ScrollView>
                 <Modal key={'restartCourse'}
