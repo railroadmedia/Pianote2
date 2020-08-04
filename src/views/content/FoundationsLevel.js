@@ -329,8 +329,7 @@ export default class FoundationsLevel extends React.Component {
                                         >
                                             My List
                                         </Text>
-                                    </TouchableOpacity>
-                                                                 
+                                    </TouchableOpacity>       
                                 </View>
                                 {!this.state.isStarted && (
                                 <ContinueIcon
@@ -342,6 +341,7 @@ export default class FoundationsLevel extends React.Component {
                                         this.props.navigation.navigate(
                                             'PATHOVERVIEW', {
                                                 data: this.state.items[0],
+                                                items: this.state.items,
                                                 level: this.props.navigation.state.params.level
                                             }
                                         )
@@ -358,6 +358,7 @@ export default class FoundationsLevel extends React.Component {
                                         this.props.navigation.navigate(
                                             'PATHOVERVIEW', {
                                                 data: this.state.items[0],
+                                                items: this.state.items,
                                                 level: this.props.navigation.state.params.level
                                             }
                                         )
@@ -469,7 +470,8 @@ export default class FoundationsLevel extends React.Component {
                             imageWidth={fullWidth*0.3} // image width
                             navigator={(row) => {
                                 this.props.navigation.navigate('PATHOVERVIEW', {
-                                    data: this.state.items,
+                                    data: row,
+                                    items: this.state.items,
                                     level: this.props.navigation.state.params.level,
                                 })
                             }}
@@ -501,7 +503,7 @@ export default class FoundationsLevel extends React.Component {
                 <View>
                     {!this.state.isLoadingAll && (
                     <NextVideo
-                        item={this.state.items[this.state.currentLessonIndex+1]}
+                        item={this.state.items[this.state.currentLessonIndex]}
                         currentCompletion={this.state.items[this.state.currentLessonIndex].progress_percent}
                     />
                     )}

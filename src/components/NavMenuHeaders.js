@@ -7,8 +7,12 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
+import { 
+    withNavigation,
+    NavigationActions,
+    StackActions 
+} from 'react-navigation';
 import Modal from 'react-native-modal';
-import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -58,7 +62,14 @@ class NavMenuHeaders extends React.Component {
                             }}
                         >
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('LESSONS')}
+                                onPress={() => {
+                                    this.props.navigation.dispatch(
+                                        StackActions.reset({
+                                            index: 0,
+                                            actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+                                        })
+                                    )
+                                }}
                                 style={[
                                     styles.centerContent, {
                                     height: '100%',

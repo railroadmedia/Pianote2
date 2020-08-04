@@ -33,12 +33,13 @@ export default class Profile extends React.Component {
 
 
     componentDidMount = async () => {
-        let profileImage = await AsyncStorage.getItem('profileURI')
+        email = await AsyncStorage.getItem('email')
+        username = await AsyncStorage.getItem('username')
+        profileImage = await AsyncStorage.getItem('profileURI')
+        
         if(profileImage !== null) {
             await this.setState({profileImage})
         }
-        username = await AsyncStorage.getItem('username')
-        email = await AsyncStorage.getItem('email')
 
         await fetch('http://127.0.0.1:5000/accountDetails', {
             method: 'POST',
@@ -52,8 +53,8 @@ export default class Profile extends React.Component {
                 this.setState({
                     xp: response.XP,
                     rank: response.rank,
-                    profileImage: profileURI,
-                    username: username,
+                    profileImage: (profileImage !== null) ? profileImage : '',
+                    username: (username !== null) ? username : 'Testuser98',
                     memberSince: 2017,
                     lessonsStarted: (response.lessonsStarted == 1) ? true : false,
                 })

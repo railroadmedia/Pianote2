@@ -9,9 +9,7 @@ import {
     ScrollView, 
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import { getContentChildById } from '@musora/services';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
@@ -27,92 +25,24 @@ export default class PathOverview extends React.Component {
         this.state = {
             data: this.props.navigation.state.params.data,
             level: this.props.navigation.state.params.level,
+            items: this.props.navigation.state.params.items,
+            isLiked: this.props.navigation.state.params.data.isLiked,
+            isAddedToList: this.props.navigation.state.params.data.isAddedToList,
             showInfo: false,
-            isLoadingAll: true,
-            items: [],
-            
+            totalLength: 0,
         }
     }
 
 
-    componentDidMount = async () => {
-        console.log(this.state.data)
-        this.getContent()
-    }
-
-
-    getContent = async () => {
-        const { response, error } = await getContentChildById({
-            parentId: this.state.data.id,
-        });
-
-        console.log(response, 'SPOINSE')
-
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data)
-        });
-
-        try {
-            items = []
-            for(i in newContent) {
-                if(newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructors'),
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/ig, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    })
-                }
-            }
-    
-            for(i in items) {
-                this.state.totalLength = this.state.totalLength + Number(items[i].duration)
-            }
-            this.state.totalLength = Math.floor(this.state.totalLength/60).toString()
-            
-
-            this.setState({
-                items: [...this.state.items, ...items],
-                isLoadingAll: false,
-                totalLength: this.state.totalLength,
-            })    
-            
-        } catch (error) {
-            console.log(error)
-        }
+    like = () => {
 
     }
 
 
-    getDuration = (newContent) => {
-        var data = 0
-        try {
-            for(i in newContent.post.fields) {
-                if(newContent.post.fields[i].key == 'video') {
-                    var data = newContent.post.fields[i].value.fields
-                    for(var i=0; i < data.length; i++) {
-                        if(data[i].key == 'length_in_seconds') {
-                            return data[i].value
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error)    
-        }
+    addToMyList = () => {
+
     }
- 
+
 
     render() {
         return (
@@ -241,37 +171,49 @@ export default class PathOverview extends React.Component {
                                         height: (onTablet) ? fullHeight*0.065 : fullHeight*0.053,
                                         zIndex: 3,
                                         elevation: 3,
-                                }]}
-                            >
-                                <TouchableOpacity
-                                    style={{
-                                        alignItems: 'center',
-                                        flex: 1,
-                                    }}
+                                    }]}
                                 >
-                                    <AntIcon
-                                        name={'plus'}
-                                        size={24.5*factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                    <Text
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.addToMyList(),
+                                            this.setState({isAddedToList: !this.state.isAddedToList})
+                                        }}
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            color: 'white',
-                                            marginTop: 3*factorRatio,
-                                            fontSize: 12*factorRatio,
+                                            flex: 1,
+                                            alignItems: 'center',
                                         }}
                                     >
-                                        My List
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                                        {!this.state.isAddedToList && (
+                                        <AntIcon
+                                            name={'plus'} 
+                                            size={27.5*factorRatio} 
+                                            color={colors.pianoteRed}
+                                        />
+                                        )}
+                                        {this.state.isAddedToList && (
+                                        <AntIcon
+                                            name={'close'} 
+                                            size={27.5*factorRatio} 
+                                            color={colors.pianoteRed}
+                                        />
+                                        )}
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                color: 'white',
+                                                fontSize: 12*factorRatio,
+                                            }}
+                                        >
+                                            My List
+                                        </Text>
+                                    </TouchableOpacity>                                  
+                                </View>
                                 <StartIcon
                                     pxFromTop={0}
                                     buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
                                     pxFromLeft={fullWidth*0.5/2}
                                     buttonWidth={fullWidth*0.5}
-                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER')}
+                                    pressed={() => this.props.navigation.navigate('VIDEOPLAYER', {data: this.state.data})}
                                 />
                                 <View key={'info'}
                                         style={[ 
@@ -287,6 +229,7 @@ export default class PathOverview extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
+                                                this.like(),
                                                 this.setState({
                                                     showInfo: !this.state.showInfo
                                                 })
@@ -315,7 +258,6 @@ export default class PathOverview extends React.Component {
                                     </View>
                             </View>
                         </View>
-                        
                         {this.state.showInfo && (
                         <View key={'info'}
                             style={{
@@ -362,38 +304,7 @@ export default class PathOverview extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            11
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                fontSize: 13*factorRatio,
-                                                textAlign: 'left',
-                                                color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
-                                                marginTop: 10*factorVertical,
-                                            }}
-                                        >
-                                            LESSONS
-                                        </Text>
-                                    </View>
-                                    <View style={{width: 15*factorRatio}}/>
-                                    <View 
-                                        style={[
-                                            styles.centerContent, {
-                                            width: 70*factorRatio,
-                                        }]}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontWeight: '700',
-                                                fontSize: 17*factorRatio,
-                                                textAlign: 'left',
-                                                color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
-                                                marginTop: 10*factorVertical,
-                                            }}
-                                        >
-                                            48
+                                            {Math.floor(Number(this.state.data.duration)/60).toString()}
                                         </Text>
                                         <Text
                                             style={{
@@ -424,7 +335,7 @@ export default class PathOverview extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            2400
+                                            {this.state.data.xp}
                                         </Text>
                                         <Text
                                             style={{
@@ -438,7 +349,6 @@ export default class PathOverview extends React.Component {
                                             XP
                                         </Text>
                                     </View>
-                                    
                                     <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                 </View>
                                 <View style={{height: 15*factorVertical}}/>
@@ -451,7 +361,9 @@ export default class PathOverview extends React.Component {
                                 >
                                     <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.setState({isLiked: !this.state.isLiked})
+                                        }}
                                         style={[
                                             styles.centerContent, {
                                             width: 70*factorRatio,
@@ -459,7 +371,7 @@ export default class PathOverview extends React.Component {
                                     >
                                         <View style={{flex: 1}}/>
                                         <AntIcon
-                                            name={'like2'}
+                                            name={this.state.isLiked ? 'like1' : 'like2'}
                                             size={27.5*factorRatio}
                                             color={colors.pianoteRed}
                                         />
@@ -472,7 +384,7 @@ export default class PathOverview extends React.Component {
                                                 marginTop: 10*factorVertical,
                                             }}
                                         >
-                                            34
+                                            {(this.state.isLiked) ? this.state.data.like_count+1 : this.state.data.like_count}
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{width: 15*factorRatio}}/>
@@ -548,13 +460,12 @@ export default class PathOverview extends React.Component {
                         >
                             <VerticalVideoList
                                 items={this.state.items}
-                                isLoading={this.state.isLoadingAll}
+                                isLoading={false}
                                 title={'Foundations'} // title for see all page
-                                type={'FOUNDATIONS'} // the type of content on page
-                                showFilter={false} // 
-                                showType={true} // show course / song by artist name
-                                showArtist={false} // show artist name
-                                showLength={false}
+                                showFilter={false} 
+                                showType={false}
+                                showArtist={false}
+                                showLength={true}
                                 showSort={false}
                                 imageRadius={5*factorRatio} // radius of image shown
                                 containerBorderWidth={0} // border of box
@@ -568,27 +479,27 @@ export default class PathOverview extends React.Component {
                     </ScrollView>
                 </View>
                 <Modal key={'restartCourse'}
-                        isVisible={this.state.showRestartCourse}
-                        style={[
-                            styles.centerContent, {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        }]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={true}
-                    >
-                        <RestartCourse
-                            hideRestartCourse={() => {
-                                this.setState({
-                                    showRestartCourse: false
-                                })
-                            }}
-                        />
-                    </Modal>
+                    isVisible={this.state.showRestartCourse}
+                    style={[
+                        styles.centerContent, {
+                        margin: 0,
+                        height: fullHeight,
+                        width: fullWidth,
+                    }]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <RestartCourse
+                        hideRestartCourse={() => {
+                            this.setState({
+                                showRestartCourse: false
+                            })
+                        }}
+                    />
+                </Modal>
                 <NavigationBar
                     currentPage={'LessonsPathOverview'}
                 />

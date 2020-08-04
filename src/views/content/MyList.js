@@ -188,7 +188,7 @@ export default class MyList extends React.Component {
                                 fontSize: 30*factorRatio,
                                 color: 'white',
                                 fontFamily: 'OpenSans-Regular',
-                                fontWeight: 'bold',
+                                fontWeight: (Platform.OS == 'ios') ? '900' : 'bold',
                             }}
                         >
                             My List

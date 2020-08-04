@@ -400,7 +400,7 @@ export default class SinglePack extends React.Component {
                                                 buttonWidth={fullWidth*0.5}
                                                 buttonHeight={(onTablet) ? fullHeight*0.065 : fullHeight*0.053}
                                                 pressed={() => {
-                                                    this.props.navigation.navigate('VIDEOPLAYER')
+                                                    this.props.navigation.navigate('VIDEOPLAYER', {data: this.state.videos[0]})
                                                 }}
                                             />
                                         )}
