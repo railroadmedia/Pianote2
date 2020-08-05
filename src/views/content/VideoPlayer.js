@@ -17,6 +17,7 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import { Download, mock, mockExtended } from 'RNDownload';
 import Replies from '../../components/Replies.js';
 import SoundSlice from '../../components/SoundSlice.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -815,32 +816,41 @@ export default class VideoPlayer extends React.Component {
                       Resources
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    key={'download'}
-                    onPress={() => {
-                      console.log('dld');
+                  <Download
+                    iconColor={colors.pianoteRed}
+                    textColor={'white'}
+                    entity={mock}
+                    additionalData={{ comments: mock.comments }}
+                    parentStyle={{ flex: 1 }}
+                    downloadExtendedEntity={async () => {
+                      return mockExtended;
                     }}
-                    style={{
-                      flex: 1,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <MaterialIcon
-                      name={'arrow-collapse-down'}
-                      size={27.5 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                    <View style={{ height: 5 * factorVertical }} />
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontSize: 12 * factorRatio,
-                        color: 'white'
-                      }}
-                    >
-                      Download
-                    </Text>
-                  </TouchableOpacity>
+                  />
+                  {/* <TouchableOpacity key={'download'}
+                                        onPress={() => {
+                                            console.log('dld');
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <MaterialIcon
+                                            name={'arrow-collapse-down'}
+                                            size={27.5*factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
+                                        <View style={{height: 5*factorVertical}}/>
+                                        <Text
+                                            style={{
+                                                textAlign: 'center',
+                                                fontSize: 12*factorRatio,
+                                                color: 'white',
+                                            }}
+                                        >
+                                            Download
+                                        </Text>
+                                    </TouchableOpacity> */}
                   <TouchableOpacity
                     key={'info'}
                     onPress={() => {

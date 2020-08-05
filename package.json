@@ -22,6 +22,7 @@
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/blur": "^3.3.1",
     "@react-native-community/viewpager": "^3.3.0",
+    "RNDownload": "git+https://github.com/bogdan-vol/RNDownload.git",
     "RNVideoEnhanced": "git+https://github.com/bogdan-vol/RNVideoEnhanced.git",
     "link": "^0.1.5",
     "opentype.js": "^1.1.0",
@@ -61,5 +62,14 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "prettier": {
+    "bracketSpacing": true,
+    "singleQuote": true,
+    "jsxBracketSameLine": false,
+    "trailingComma": "none",
+    "semi": true,
+    "arrowParens": "avoid",
+    "jsxSingleQuote": true
   }
 }
