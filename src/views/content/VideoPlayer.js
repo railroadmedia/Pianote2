@@ -74,9 +74,9 @@ export default class VideoPlayer extends React.Component {
             commentID: null,
 
             assignmentList: [
-                ['Learn The Fill', 1, 1],
-                ['Learn The Beat', 2, 0],
-                ['Put It Together', 3, 0],
+                ['Learn The Fill', 1, 1, 170401],
+                ['Learn The Beat', 2, 0, 170401],
+                ['Put It Together', 3, 0, 170401],
             ],
 
             clickedAssignment: {'name': '', 'num': ''},
@@ -532,11 +532,12 @@ export default class VideoPlayer extends React.Component {
             return (
                 <TouchableOpacity
                     onPress={() => {
-                    //    this.props.navigation.navigate('VIDEOPLAYERSONG', {
-                      //      assignmentName: row[0], 
-                        //    assignmentNum: index+1,
-                          //  showAssignment: true,
-                        //})
+                       this.props.navigation.navigate('VIDEOPLAYERSONG', {
+                           assignmentName: row[0], 
+                           assignmentNum: index+1,
+                           showAssignment: true,
+                           slug: row[3]
+                        })
                     }}
                     style={{
                         height: 55*factorVertical,

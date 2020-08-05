@@ -28,8 +28,7 @@ export default class LoadPage extends React.Component {
         await SplashScreen.hide();
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus')
         email = await AsyncStorage.getItem('email')
-        
-        if(isLoggedIn !== 'true') {
+        if(true) {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000)
         } else {
             // membership expired
