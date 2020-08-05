@@ -7,6 +7,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
+import purchaseService from '../../services/purchase.service';
 
 export default class NewMembership extends React.Component {
     static navigationOptions = {header: null};
@@ -17,34 +18,43 @@ export default class NewMembership extends React.Component {
             newUser: this.props.navigation.state.params.data.type,
             email: this.props.navigation.state.params.data.email,
             password: this.props.navigation.state.params.data.password,
-            plan: '',
         };
     }
 
     paid = async plan => {
+        // if successful payment and new plan
         if ('paymentSuccessful' == 'paymentSuccessful') {
             if (this.state.newUser == 'SIGNUP') {
-                await this.props.navigation.dispatch(
-                    StackActions.reset({
-                        index: 0,
-                        actions: [
-                            NavigationActions.navigate({
-                                routeName: 'CREATEACCOUNT3',
-                                params: {
-                                    email: this.state.email,
-                                    password: this.state.password,
-                                    plan: 'beginner',
-                                },
-                            }),
-                        ],
-                    }),
-                );
+                await this.props.navigation.navigate('CREATEACCOUNT3', {
+                    data: {
+                        email: this.state.email,
+                        password: this.state.password,
+                        plan,
+                    },
+                });
             } else if (this.state.newUser == 'EXPIRED') {
                 // save plan details
                 await AsyncStorage.setItem('plan', plan);
                 await this.props.navigation.navigate('GETRESTARTED');
             }
         }
+    };
+
+    initIap(slug) {
+        console.log(purchaseService);
+        purchaseService.purchase.addListeners(
+            this.purchaseUpdateCallback,
+            this.purchaseErrorCallback,
+        );
+        purchaseService.purchase.buy(slug, this.purchaseErrorCallback);
+    }
+
+    purchaseUpdateCallback = () => {};
+
+    purchaseErrorCallback = error => {
+        Alert.alert(error.title, error.message, [{text: 'OK'}], {
+            cancelable: false,
+        });
     };
 
     render() {
@@ -270,7 +280,7 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.paid('plan1')
+                                                    this.initIap('plan1')
                                                 }
                                                 style={{
                                                     height: '80%',
@@ -419,7 +429,7 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.paid('plan2')
+                                                    this.initIap('plan2')
                                                 }
                                                 style={{
                                                     height: '80%',

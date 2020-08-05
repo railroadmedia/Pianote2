@@ -12,6 +12,7 @@ import {
     Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
 import {userLogin, configure} from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -23,6 +24,8 @@ import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import Loading from '../../components/Loading.js';
+import CustomModal from '../../modals/CustomModal.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -141,6 +144,57 @@ export default class LoginCredentials extends React.Component {
                 this.props.navigation.navigate('MEMBERSHIPEXPIRED');
             }
         }
+
+        //this.props.navigation.navigate('MEMBERSHIPEXPIRED')
+    };
+
+    restorePurchases = async () => {
+        try {
+            await RNIap.initConnection();
+        } catch (e) {
+            return this.customModal.toggle(
+                'Connection to app store refused',
+                'Please try again later.',
+            );
+        }
+        this.loadingRef?.toggleLoading();
+        try {
+            const purchases = await RNIap.getAvailablePurchases();
+            if (!purchases.length) {
+                this.loadingRef?.toggleLoading();
+                return this.customModal.toggle(
+                    'No purchases',
+                    'There are no active purchases for this account.',
+                );
+            }
+            let reducedPurchase;
+            if (isiOS) {
+                reducedPurchase = purchases;
+            } else {
+                reducedPurchase = purchases.map(m => {
+                    return {
+                        purchase_token: m.purchaseToken,
+                        package_name: 'com.drumeo',
+                        product_id: m.productId,
+                    };
+                });
+            }
+            //   let resp = await authService.restorePurchase(reducedPurchase);
+            // if (this.loadingRef) this.loadingRef.toggleLoading();
+            //   if (resp) {
+            //     if (resp.shouldCreateAccount) {
+            //       // redirect to sign up
+            //     } else if (resp.shouldLogin) {
+            //       this.setState({email: resp.email});
+            //     }
+            //   }
+        } catch (err) {
+            this.loadingRef?.toggleLoading();
+            this.customModal.toggle(
+                'Something went wrong',
+                'Something went wrong.\nPlease try Again later.',
+            );
+        }
     };
 
     render() {
@@ -185,6 +239,19 @@ export default class LoginCredentials extends React.Component {
                             }}
                         >
                             Forgot your password?
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.restorePurchases}>
+                        <Text
+                            style={{
+                                fontSize: 16 * factorRatio,
+                                fontFamily: 'OpenSans',
+                                color: 'grey',
+                                textAlign: 'center',
+                                textDecorationLine: 'underline',
+                            }}
+                        >
+                            Restore Purchases
                         </Text>
                     </TouchableOpacity>
                     <View style={{height: 7.5 * factorVertical}} />
@@ -443,6 +510,16 @@ export default class LoginCredentials extends React.Component {
                         }}
                     />
                 </Modal>
+                <Loading
+                    ref={ref => {
+                        this.loadingRef = ref;
+                    }}
+                />
+                <CustomModal
+                    ref={ref => {
+                        this.customModal = ref;
+                    }}
+                />
             </View>
         );
     }

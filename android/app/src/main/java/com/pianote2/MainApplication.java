@@ -9,6 +9,8 @@ import io.invertase.firebase.RNFirebasePackage;
 
 import com.robinpowered.react.Intercom.IntercomPackage;
 import io.intercom.android.sdk.Intercom;
+import com.dooboolab.RNIap.RNIapPackage;
+import com.horcrux.svg.SvgPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
