@@ -126,7 +126,7 @@ export default class CreateAccount3 extends React.Component {
     setName = async () => {
         if(this.state.displayName.length > 0) {
             // check if valid
-            await fetch('http://127.0.0.1:5000/displayNameAvailable', {
+            await fetch('http://3.17.144.93:5000/displayNameAvailable', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -176,7 +176,7 @@ export default class CreateAccount3 extends React.Component {
 
         await axios({
                 method: 'POST',
-                url: 'http://127.0.0.1:5000/createAccount',
+                url: 'http://3.17.144.93:5000/createAccount',
                 data,
                 config: {headers: {'Content-Type':'multipart/form-data'}}
             })

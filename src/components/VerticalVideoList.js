@@ -72,7 +72,7 @@ class VerticalVideoList extends React.Component {
             }
         }
 
-        await fetch('http://127.0.0.1:5000/addToMyList', {
+        await fetch('http://3.17.144.93:5000/addToMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -101,7 +101,7 @@ class VerticalVideoList extends React.Component {
             }
         }
         
-        await fetch('http://127.0.0.1:5000/removeFromMyList', {
+        await fetch('http://3.17.144.93:5000/removeFromMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

@@ -135,7 +135,7 @@ class Replies extends React.Component {
 
         email = await AsyncStorage.getItem('email')
 
-        await fetch('http://127.0.0.1:5000/getComments', {
+        await fetch('http://3.17.144.93:5000/getComments', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -300,7 +300,7 @@ class Replies extends React.Component {
         if(this.state.parentComment[8] == 0) {
             this.state.parentComment[8] = 1
             this.state.parentComment[6] = this.state.parentComment[6] + 1
-            await fetch('http://127.0.0.1:5000/likeComment', {
+            await fetch('http://3.17.144.93:5000/likeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -318,7 +318,7 @@ class Replies extends React.Component {
         } else {
             this.state.parentComment[8] = 0
             this.state.parentComment[6] = this.state.parentComment[6] - 1
-            await fetch('http://127.0.0.1:5000/unlikeComment', {
+            await fetch('http://3.17.144.93:5000/unlikeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -346,7 +346,7 @@ class Replies extends React.Component {
         if(this.state.replies[index][8] == 0) {
             this.state.replies[index][8] = 1
             this.state.replies[index][6] = this.state.replies[index][6] + 1
-            await fetch('http://127.0.0.1:5000/likeComment', {
+            await fetch('http://3.17.144.93:5000/likeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -364,7 +364,7 @@ class Replies extends React.Component {
         } else {
             this.state.replies[index][8] = 0
             this.state.replies[index][6] = this.state.replies[index][6] - 1
-            await fetch('http://127.0.0.1:5000/unlikeComment', {
+            await fetch('http://3.17.144.93:5000/unlikeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({

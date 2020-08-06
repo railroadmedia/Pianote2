@@ -53,7 +53,7 @@ export default class Lessons extends React.Component {
         email = await AsyncStorage.getItem('email')
         profileImage = await AsyncStorage.getItem('profileURI')
 
-        await fetch('http://127.0.0.1:5000/accountDetails', {
+        await fetch('http://3.17.144.93:5000/accountDetails', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

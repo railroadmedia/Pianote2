@@ -33,7 +33,7 @@ export default class LoadPage extends React.Component {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000)
         } else {
             // membership expired
-            await fetch('http://127.0.0.1:5000/checkMembershipStatus', {
+            await fetch('http://3.17.144.93:5000/checkMembershipStatus', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({

@@ -35,7 +35,7 @@ export default class StudentFocusCatalog extends React.Component {
     componentDidMount = async () => {
         email = await AsyncStorage.getItem('email')
 
-        await fetch('http://127.0.0.1:5000/accountDetails', {
+        await fetch('http://3.17.144.93:5000/accountDetails', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
