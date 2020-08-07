@@ -2,6 +2,7 @@
  * Downloads
  */
 import React from 'react';
+import { getOfflineContent } from 'RNDownload';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IconFeather from 'react-native-vector-icons/Feather';
@@ -99,13 +100,35 @@ export default class Downloads extends React.Component {
     };
   }
 
+  componentDidMount() {
+    getOfflineContent().then(downloads => {
+      console.log(1, downloads);
+      this.setState(
+        ({ items }) => ({
+          items: downloads
+            .map(({ entity }) => [
+              entity?.fields?.find(f => f.key === 'title')?.value,
+              entity.type,
+              `${Math.floor(entity.offlineSize / 1024 / 1024)}MB`,
+              entity.published_on,
+              true,
+              0.5,
+              entity.id
+            ])
+            .concat(items)
+        }),
+        () => console.log(2, this.state.items)
+      );
+    });
+  }
+
   renderItems() {
     if (this.state.items.length > 0) {
       return this.state.items.map((data, index) => {
         return (
           <TouchableOpacity
             onPress={() => {
-              this.props.navigation.navigate('VIDEOPLAYER');
+              this.props.navigation.navigate('VIDEOPLAYER', { data });
             }}
             style={[
               styles.centerContent,

@@ -9,6 +9,7 @@ import {
   Keyboard,
   Platform,
   StatusBar,
+  DeviceEventEmitter,
   ActivityIndicator,
   TextInput,
   Animated
@@ -17,7 +18,7 @@ import Modal from 'react-native-modal';
 import { getContent } from '@musora/services';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import { Download, mock, mockExtended } from 'RNDownload';
+import { Download, videoMock as dldVideoMock } from 'RNDownload';
 import Replies from '../../components/Replies.js';
 import SoundSlice from '../../components/SoundSlice.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -86,8 +87,10 @@ export default class VideoPlayer extends React.Component {
   }
 
   componentDidMount = async () => {
-    console.log(1, mock, mockExtended);
     // get profile image
+    DeviceEventEmitter.addListener('dldProgress', a => {
+      console.log(1, a);
+    });
     let profileImage = await AsyncStorage.getItem('profileURI');
     if (profileImage !== null) {
       await this.setState({ profileImage });
@@ -514,6 +517,7 @@ export default class VideoPlayer extends React.Component {
     return this.state.assignmentList.map((row, index) => {
       return (
         <TouchableOpacity
+          key={index}
           onPress={() => {
             //    this.props.navigation.navigate('VIDEOPLAYERSONG', {
             //      assignmentName: row[0],
@@ -612,7 +616,7 @@ export default class VideoPlayer extends React.Component {
             aCasting={false}
             gCasting={false}
             connection={true}
-            onBack={() => {}}
+            content={videoMock}
             toSupport={() => {}}
             onRefresh={() => {}}
             maxFontMultiplier={1}
@@ -624,9 +628,9 @@ export default class VideoPlayer extends React.Component {
             ref={r => (this.video = r)}
             goToPreviousLesson={() => {}}
             onOrientationChange={() => {}}
-            type={true ? 'audio' : 'video'}
+            type={false ? 'audio' : 'video'}
             onUpdateVideoProgress={() => {}}
-            content={this.state.content || mp3VideoMock}
+            onBack={this.props.navigation.goBack}
             styles={
               {
                 //   smallPlayerControls: {
@@ -819,11 +823,11 @@ export default class VideoPlayer extends React.Component {
                   <Download
                     iconColor={colors.pianoteRed}
                     textColor={'white'}
-                    entity={mock}
-                    additionalData={{ comments: mock.comments }}
+                    entity={dldVideoMock}
+                    additionalData={{ comments: dldVideoMock.comments }}
                     parentStyle={{ flex: 1 }}
                     downloadExtendedEntity={async () => {
-                      return mockExtended;
+                      return dldVideoMock;
                     }}
                   />
                   {/* <TouchableOpacity key={'download'}
@@ -1552,21 +1556,6 @@ export default class VideoPlayer extends React.Component {
               </View>
             </View>
           </View>
-          <View
-            key={'goBackIcon'}
-            style={[
-              styles.centerContent,
-              {
-                position: 'absolute',
-                left: 10 * factorHorizontal,
-                top: isNotch ? 55 * factorVertical : 45 * factorVertical,
-                height: 35 * factorRatio,
-                width: 35 * factorRatio,
-                borderRadius: 100,
-                zIndex: 5
-              }
-            ]}
-          />
         </View>
         <Modal
           key={'VideoPlayerOptions'}

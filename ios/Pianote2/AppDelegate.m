@@ -13,6 +13,7 @@
 #import <React/RCTRootView.h>
 #import "RNSplashScreen.h"
 #import <GoogleCast/GoogleCast.h>
+#import <RNBackgroundDownloader.h>
 
 @implementation AppDelegate
 
@@ -48,6 +49,11 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
+{
+  [RNBackgroundDownloader setCompletionHandlerWithIdentifier:identifier completionHandler:completionHandler];
 }
 
 @end

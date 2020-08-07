@@ -213,6 +213,8 @@ PODS:
     - React
   - react-native-image-picker (1.1.0):
     - React
+  - react-native-netinfo (5.9.5):
+    - React
   - react-native-orientation-locker (1.1.8):
     - React
   - react-native-splash-screen (3.2.0):
@@ -312,6 +314,7 @@ DEPENDENCIES:
   - react-native-google-cast/NoBluetooth (from `../node_modules/react-native-google-cast/ios/`)
   - react-native-home-indicator (from `../node_modules/react-native-home-indicator`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -389,6 +392,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-home-indicator"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-orientation-locker:
     :path: "../node_modules/react-native-orientation-locker"
   react-native-splash-screen:
@@ -465,6 +470,7 @@ SPEC CHECKSUMS:
   react-native-google-cast: 410619ef162b8b91815ecf7271502224998dee8e
   react-native-home-indicator: c886445b4bf6f97f7c96731e426b80ad638fd4f8
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
+  react-native-netinfo: 7f3f3ed9e8f0e7ab3e7cac00cbfdc6997e25ecaf
   react-native-orientation-locker: f0ca1a8e5031dab6b74bfb4ab33a17ed2c2fcb0d
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-video: 31f90922291b3a3378ee4fa0d74e606646c05231
@@ -493,6 +499,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 6b51982c5b7b5bfa9fdd7c0dab2af1c2e5e0a34a
+PODFILE CHECKSUM: 77e17e4566243023a19999395ea06106a51f8b5b
 
 COCOAPODS: 1.9.1
