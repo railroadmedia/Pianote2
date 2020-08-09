@@ -2,27 +2,23 @@
  * SoundSlice
  */
 import React from 'react';
-import { 
-    View, 
-    Text, 
-} from 'react-native';
-import { withNavigation } from 'react-navigation';
+import {View, Text} from 'react-native';
+import {withNavigation} from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 class SoundSlice extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        this.state = {
-        }
+        this.state = {};
     }
-
 
     render = () => {
         return (
-            <View style={styles.container}>                 
-                <View key={'contentContainer'}
+            <View style={styles.container}>
+                <View
+                    key={'contentContainer'}
                     style={{
                         height: '100%',
                         width: '100%',
@@ -30,18 +26,18 @@ class SoundSlice extends React.Component {
                     }}
                 >
                     <View style={{height: '20%'}}>
-                        <View 
+                        <View
                             style={{
                                 position: 'absolute',
-                                top: 50*factorRatio,
-                                left: 20*factorRatio,
+                                top: 50 * factorRatio,
+                                left: 20 * factorRatio,
                                 zIndex: 10,
                             }}
                         >
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                             <TouchableOpacity
                                 onPress={() => {
-                                    this.props.hideSoundSlice()
+                                    this.props.hideSoundSlice();
                                 }}
                                 style={{
                                     height: '100%',
@@ -50,18 +46,18 @@ class SoundSlice extends React.Component {
                                 }}
                             >
                                 <FeatherIcon
-                                    size={40*factorRatio}
+                                    size={40 * factorRatio}
                                     name={'x'}
                                     color={'black'}
                                 />
                             </TouchableOpacity>
                         </View>
-                        <View style={{flex: 1}}/>
+                        <View style={{flex: 1}} />
                         <View style={{flex: 1}}>
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontSize: 16*factorRatio,
+                                    fontSize: 16 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
                                     color: '#b9b9b9',
@@ -69,11 +65,11 @@ class SoundSlice extends React.Component {
                             >
                                 ASSIGNMENT #1
                             </Text>
-                            <View style={{height: 10*factorVertical}}/>
+                            <View style={{height: 10 * factorVertical}} />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontSize: 30*factorRatio,
+                                    fontSize: 30 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
                                 }}
@@ -84,9 +80,8 @@ class SoundSlice extends React.Component {
                     </View>
                 </View>
             </View>
-        )
-    }
+        );
+    };
 }
-
 
 export default withNavigation(SoundSlice);

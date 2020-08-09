@@ -2,11 +2,7 @@
  * NotificationSettings
  */
 import React from 'react';
-import { 
-    View, 
-    Text, 
-    TouchableOpacity,
-} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
@@ -16,17 +12,16 @@ export default class NotificationSettings extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        this.imageIURL = require('Pianote2/src/assets/img/imgs/lisa-foundations.png')
+        this.imageIURL = require('Pianote2/src/assets/img/imgs/lisa-foundations.png');
         this.state = {
             weeklyCommunityUpdatesClicked: true,
-            commentRepliesClicked: false, 
+            commentRepliesClicked: false,
             commentLikesClicked: true,
             forumPostRepliesClicked: false,
             forumPostLikesClicked: true,
             frequency: 'Immediate',
-        }
+        };
     }
-
 
     render() {
         return (
@@ -38,55 +33,64 @@ export default class NotificationSettings extends React.Component {
                         backgroundColor: colors.mainBackground,
                     }}
                 >
-                    <View key={'contentContainer'}
-                        style={{flex: 1}}
-                    >
-                        <View key={'buffer'}
+                    <View key={'contentContainer'} style={{flex: 1}}>
+                        <View
+                            key={'buffer'}
                             style={{
-                                height: (isNotch) ? 15*factorVertical : 0,
+                                height: isNotch ? 15 * factorVertical : 0,
                             }}
-                        >
-                        </View>
-                        <View key={'header'}
+                        ></View>
+                        <View
+                            key={'header'}
                             style={[
-                                styles.centerContent, {
-                                flex: 0.1,
-                            }]}
+                                styles.centerContent,
+                                {
+                                    flex: 0.1,
+                                },
+                            ]}
                         >
-                            <View key={'goback'}
+                            <View
+                                key={'goback'}
                                 style={[
-                                    styles.centerContent, {
-                                    position: 'absolute',
-                                    left: 0, 
-                                    bottom: 0*factorRatio,
-                                    height: 50*factorRatio,
-                                    width: 50*factorRatio,
-                                }]}
+                                    styles.centerContent,
+                                    {
+                                        position: 'absolute',
+                                        left: 0,
+                                        bottom: 0 * factorRatio,
+                                        height: 50 * factorRatio,
+                                        width: 50 * factorRatio,
+                                    },
+                                ]}
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        (this.state.currentlyView == 'Profile Settings') ? 
-                                            this.props.navigation.goBack() 
-                                            :
-                                            this.setState({currentlyView: 'Profile Settings'})
+                                        this.state.currentlyView ==
+                                        'Profile Settings'
+                                            ? this.props.navigation.goBack()
+                                            : this.setState({
+                                                  currentlyView:
+                                                      'Profile Settings',
+                                              });
                                     }}
                                     style={[
-                                        styles.centerContent, {
-                                        height: '100%',
-                                        width: '100%',
-                                    }]}
+                                        styles.centerContent,
+                                        {
+                                            height: '100%',
+                                            width: '100%',
+                                        },
+                                    ]}
                                 >
                                     <EntypoIcon
                                         name={'chevron-thin-left'}
-                                        size={22.5*factorRatio}
+                                        size={22.5 * factorRatio}
                                         color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{flex: 0.66}}/>
+                            <View style={{flex: 0.66}} />
                             <Text
                                 style={{
-                                    fontSize: 22*factorRatio,
+                                    fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
                                     fontFamily: 'OpenSans-Regular',
                                     color: colors.secondBackground,
@@ -94,430 +98,502 @@ export default class NotificationSettings extends React.Component {
                             >
                                 Notification Settings
                             </Text>
-                            <View style={{flex: 0.33}}/>
+                            <View style={{flex: 0.33}} />
                         </View>
                         <View style={{flex: 0.95}}>
-                            <View key={'notifcationTypes'}
+                            <View
+                                key={'notifcationTypes'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
                                 <Text
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
-                                        fontSize: 16*factorRatio,
+                                        fontSize: 16 * factorRatio,
                                         color: colors.secondBackground,
                                     }}
                                 >
                                     Notification Types
                                 </Text>
                             </View>
-                            <View key={'weeklyCommunityUpdates'}
+                            <View
+                                key={'weeklyCommunityUpdates'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
-                                    paddingRight: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
-                                    
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontSize: 16*factorRatio,
+                                                fontSize: 16 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
                                         >
                                             Weekly community updates
                                         </Text>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                     </View>
-                                    <View style={{flex: 1}}/>
+                                    <View style={{flex: 1}} />
                                     <CustomSwitch
-                                        isClicked={this.state.weeklyCommunityUpdatesClicked}
-                                        clicked={(bool) => this.setState({ 
-                                            weeklyCommunityUpdatesClicked: bool,
-                                        })}
+                                        isClicked={
+                                            this.state
+                                                .weeklyCommunityUpdatesClicked
+                                        }
+                                        clicked={(bool) =>
+                                            this.setState({
+                                                weeklyCommunityUpdatesClicked: bool,
+                                            })
+                                        }
                                     />
                                 </View>
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                             </View>
-                            <View key={'commentReplies'}
+                            <View
+                                key={'commentReplies'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
-                                    paddingRight: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontSize: 16*factorRatio,
+                                                fontSize: 16 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
                                         >
                                             Comment replies
                                         </Text>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                     </View>
-                                    <View style={{flex: 1}}/>
+                                    <View style={{flex: 1}} />
                                     <CustomSwitch
-                                        isClicked={this.state.commentRepliesClicked}
-                                        clicked={() => this.setState({ 
-                                            commentRepliesClicked: this.state.commentRepliesClicked,
-                                        })}
+                                        isClicked={
+                                            this.state.commentRepliesClicked
+                                        }
+                                        clicked={() =>
+                                            this.setState({
+                                                commentRepliesClicked: this
+                                                    .state
+                                                    .commentRepliesClicked,
+                                            })
+                                        }
                                     />
                                 </View>
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                             </View>
-                            <View key={'commentLikes'}
+                            <View
+                                key={'commentLikes'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
-                                    paddingRight: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontSize: 16*factorRatio,
+                                                fontSize: 16 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
                                         >
                                             Comment likes
                                         </Text>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                     </View>
-                                    <View style={{flex: 1}}/>
+                                    <View style={{flex: 1}} />
                                     <CustomSwitch
-                                        isClicked={this.state.commentLikesClicked}
-                                        clicked={() => this.setState({ 
-                                            commentLikesClicked: this.state.commentLikesClicked,
-                                        })}
+                                        isClicked={
+                                            this.state.commentLikesClicked
+                                        }
+                                        clicked={() =>
+                                            this.setState({
+                                                commentLikesClicked: this.state
+                                                    .commentLikesClicked,
+                                            })
+                                        }
                                     />
                                 </View>
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                             </View>
-                            <View key={'forumPostReplies'}
+                            <View
+                                key={'forumPostReplies'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
-                                    paddingRight: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontSize: 16*factorRatio,
+                                                fontSize: 16 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
                                         >
                                             Forum post replies
                                         </Text>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                     </View>
-                                    <View style={{flex: 1}}/>
+                                    <View style={{flex: 1}} />
                                     <CustomSwitch
-                                        isClicked={this.state.forumPostRepliesClicked}
-                                        clicked={() => this.setState({ 
-                                            forumPostRepliesClicked: this.state.forumPostRepliesClicked,
-                                        })}
+                                        isClicked={
+                                            this.state.forumPostRepliesClicked
+                                        }
+                                        clicked={() =>
+                                            this.setState({
+                                                forumPostRepliesClicked: this
+                                                    .state
+                                                    .forumPostRepliesClicked,
+                                            })
+                                        }
                                     />
                                 </View>
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                             </View>
-                            <View key={'forumPostLikes'}
+                            <View
+                                key={'forumPostLikes'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
-                                    paddingRight: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontSize: 16*factorRatio,
+                                                fontSize: 16 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
                                         >
                                             Forum post likes
                                         </Text>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                     </View>
-                                    <View style={{flex: 1}}/>
+                                    <View style={{flex: 1}} />
                                     <CustomSwitch
-                                        isClicked={this.state.forumPostLikesClicked}
-                                        clicked={() => this.setState({ 
-                                            forumPostLikesClicked: this.state.forumPostLikesClicked,
-                                        })}
+                                        isClicked={
+                                            this.state.forumPostLikesClicked
+                                        }
+                                        clicked={() =>
+                                            this.setState({
+                                                forumPostLikesClicked: this
+                                                    .state
+                                                    .forumPostLikesClicked,
+                                            })
+                                        }
                                     />
                                 </View>
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                             </View>
-                            <View key={'border'}
+                            <View
+                                key={'border'}
                                 style={{
-                                    height: 25*factorVertical,
+                                    height: 25 * factorVertical,
                                     borderBottomColor: colors.secondBackground,
-                                    borderBottomWidth: 1*factorRatio,
+                                    borderBottomWidth: 1 * factorRatio,
                                 }}
                             />
-                            <View style={{height: 15*factorVertical}}/>
-                            <View key={'emailNotificationFrequency'}
+                            <View style={{height: 15 * factorVertical}} />
+                            <View
+                                key={'emailNotificationFrequency'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
                                 <Text
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
-                                        fontSize: 16*factorRatio,
+                                        fontSize: 16 * factorRatio,
                                         color: colors.secondBackground,
                                     }}
                                 >
                                     Email Notification Frequency
                                 </Text>
                             </View>
-                            <View key={'immediate'}
+                            <View
+                                key={'immediate'}
                                 style={{
-                                    height: fullHeight*0.065,
-                                    paddingLeft: fullWidth*0.045,
-                                    paddingRight: fullWidth*0.045,
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
                                     width: fullWidth,
                                     justifyContent: 'center',
-                                    fontSize: 18*factorRatio,
+                                    fontSize: 18 * factorRatio,
                                 }}
                             >
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                         <Text
                                             style={{
                                                 fontFamily: 'OpenSans-Regular',
-                                                fontSize: 16*factorRatio,
+                                                fontSize: 16 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
                                         >
                                             Immediate
                                         </Text>
-                                        <View style={{flex: 1}}/>
+                                        <View style={{flex: 1}} />
                                     </View>
-                                    <View style={{flex: 1}}/>
+                                    <View style={{flex: 1}} />
                                     <View
                                         style={[
-                                            styles.centerContent, {
-                                            height: fullHeight*0.0375,
-                                            width: fullHeight*0.0375,
-                                            backgroundColor: (this.state.frequency == 'Immediate') ?
-                                                '#fb1b2f' : colors.secondBackground,
-                                            borderRadius: 100,
-                                        }]}
+                                            styles.centerContent,
+                                            {
+                                                height: fullHeight * 0.0375,
+                                                width: fullHeight * 0.0375,
+                                                backgroundColor:
+                                                    this.state.frequency ==
+                                                    'Immediate'
+                                                        ? '#fb1b2f'
+                                                        : colors.secondBackground,
+                                                borderRadius: 100,
+                                            },
+                                        ]}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => this.setState({frequency: 'Immediate'})}
+                                            onPress={() =>
+                                                this.setState({
+                                                    frequency: 'Immediate',
+                                                })
+                                            }
                                             style={[
-                                                styles.centerContent, {
-                                                height: '100%',
-                                                width: '100%',
-                                            }]}
+                                                styles.centerContent,
+                                                {
+                                                    height: '100%',
+                                                    width: '100%',
+                                                },
+                                            ]}
                                         >
-                                            {(this.state.frequency == 'Immediate') && (
-                                            <FontIcon
-                                                name={'check'}
-                                                size={20*factorRatio}
-                                                color={'white'}
-                                            />
-                                            
+                                            {this.state.frequency ==
+                                                'Immediate' && (
+                                                <FontIcon
+                                                    name={'check'}
+                                                    size={20 * factorRatio}
+                                                    color={'white'}
+                                                />
                                             )}
-                                            {(this.state.frequency !== 'Immediate') && (
-                                            <EntypoIcon
-                                                name={'cross'}
-                                                size={22.5*factorRatio}
-                                                color={'white'}
-                                            />
+                                            {this.state.frequency !==
+                                                'Immediate' && (
+                                                <EntypoIcon
+                                                    name={'cross'}
+                                                    size={22.5 * factorRatio}
+                                                    color={'white'}
+                                                />
                                             )}
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
                             </View>
-                            <View key={'OncePerDay'}
-                                    style={{
-                                        height: fullHeight*0.065,
-                                        paddingLeft: fullWidth*0.045,
-                                        paddingRight: fullWidth*0.045,
-                                        width: fullWidth,
-                                        justifyContent: 'center',
-                                        fontSize: 18*factorRatio,
-                                    }}
-                                >
-                                    <View style={{flex: 1}}/>
-                                    <View style={{flexDirection: 'row'}}>
-                                        <View>
-                                            <View style={{flex: 1}}/>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    fontSize: 16*factorRatio,
-                                                    color: colors.secondBackground,
-                                                }}
-                                            >
-                                                Once per day
-                                            </Text>
-                                            <View style={{flex: 1}}/>
-                                        </View>
-                                        <View style={{flex: 1}}/>
-                                        <View
-                                            style={[
-                                                styles.centerContent, {
-                                                height: fullHeight*0.0375,
-                                                width: fullHeight*0.0375,
-                                                backgroundColor: (this.state.frequency == 'OncePerDay') ?
-                                                    '#fb1b2f' : colors.secondBackground,
-                                                borderRadius: 100,
-                                            }]}
+                            <View
+                                key={'OncePerDay'}
+                                style={{
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
+                                    width: fullWidth,
+                                    justifyContent: 'center',
+                                    fontSize: 18 * factorRatio,
+                                }}
+                            >
+                                <View style={{flex: 1}} />
+                                <View style={{flexDirection: 'row'}}>
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                fontSize: 16 * factorRatio,
+                                                color: colors.secondBackground,
+                                            }}
                                         >
-                                            <TouchableOpacity
-                                                onPress={() => this.setState({frequency: 'OncePerDay'})}
-                                                style={[
-                                                    styles.centerContent, {
+                                            Once per day
+                                        </Text>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                    <View style={{flex: 1}} />
+                                    <View
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                height: fullHeight * 0.0375,
+                                                width: fullHeight * 0.0375,
+                                                backgroundColor:
+                                                    this.state.frequency ==
+                                                    'OncePerDay'
+                                                        ? '#fb1b2f'
+                                                        : colors.secondBackground,
+                                                borderRadius: 100,
+                                            },
+                                        ]}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                this.setState({
+                                                    frequency: 'OncePerDay',
+                                                })
+                                            }
+                                            style={[
+                                                styles.centerContent,
+                                                {
                                                     height: '100%',
                                                     width: '100%',
-                                                }]}
-                                            >
-                                                {(this.state.frequency == 'OncePerDay') && (
+                                                },
+                                            ]}
+                                        >
+                                            {this.state.frequency ==
+                                                'OncePerDay' && (
                                                 <FontIcon
                                                     name={'check'}
-                                                    size={20*factorRatio}
+                                                    size={20 * factorRatio}
                                                     color={'white'}
                                                 />
-                                                
-                                                )}
-                                                {(this.state.frequency !== 'OncePerDay') && (
+                                            )}
+                                            {this.state.frequency !==
+                                                'OncePerDay' && (
                                                 <EntypoIcon
                                                     name={'cross'}
-                                                    size={22.5*factorRatio}
+                                                    size={22.5 * factorRatio}
                                                     color={'white'}
                                                 />
-                                                )}
-                                            </TouchableOpacity>
-                                        </View>
+                                            )}
+                                        </TouchableOpacity>
                                     </View>
-                                    <View style={{flex: 1}}/>
                                 </View>
-                                <View key={'never'}
-                                        style={{
-                                            height: fullHeight*0.065,
-                                            paddingLeft: fullWidth*0.045,
-                                            paddingRight: fullWidth*0.045,
-                                            width: fullWidth,
-                                            justifyContent: 'center',
-                                            fontSize: 18*factorRatio,
-                                        }}
-                                    >
-                                        <View style={{flex: 1}}/>
-                                        <View style={{flexDirection: 'row'}}>
-                                            <View>
-                                                <View style={{flex: 1}}/>
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        fontSize: 16*factorRatio,
-                                                        color: colors.secondBackground,
-                                                    }}
-                                                >
-                                                    Never
-                                                </Text>
-                                                <View style={{flex: 1}}/>
-                                            </View>
-                                            <View style={{flex: 1}}/>
-                                            <View
-                                                style={[
-                                                    styles.centerContent, {
-                                                    height: fullHeight*0.0375,
-                                                    width: fullHeight*0.0375,
-                                                    backgroundColor: (this.state.frequency == 'Never') ?
-                                                        '#fb1b2f' : colors.secondBackground,
-                                                    borderRadius: 100,
-                                                }]}
-                                            >
-                                                <TouchableOpacity
-                                                    onPress={() => this.setState({frequency: 'Never'})}
-                                                    style={[
-                                                        styles.centerContent, {
-                                                        height: '100%',
-                                                        width: '100%',
-                                                    }]}
-                                                >
-                                                    {(this.state.frequency == 'Never') && (
-                                                    <FontIcon
-                                                        name={'check'}
-                                                        size={20*factorRatio}
-                                                        color={'white'}
-                                                    />
-                                                    
-                                                    )}
-                                                    {(this.state.frequency !== 'Never') && (
-                                                    <EntypoIcon
-                                                        name={'cross'}
-                                                        size={22.5*factorRatio}
-                                                        color={'white'}
-                                                    />
-                                                    )}
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                        <View style={{flex: 1}}/>
+                                <View style={{flex: 1}} />
+                            </View>
+                            <View
+                                key={'never'}
+                                style={{
+                                    height: fullHeight * 0.065,
+                                    paddingLeft: fullWidth * 0.045,
+                                    paddingRight: fullWidth * 0.045,
+                                    width: fullWidth,
+                                    justifyContent: 'center',
+                                    fontSize: 18 * factorRatio,
+                                }}
+                            >
+                                <View style={{flex: 1}} />
+                                <View style={{flexDirection: 'row'}}>
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                fontSize: 16 * factorRatio,
+                                                color: colors.secondBackground,
+                                            }}
+                                        >
+                                            Never
+                                        </Text>
+                                        <View style={{flex: 1}} />
                                     </View>
+                                    <View style={{flex: 1}} />
+                                    <View
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                height: fullHeight * 0.0375,
+                                                width: fullHeight * 0.0375,
+                                                backgroundColor:
+                                                    this.state.frequency ==
+                                                    'Never'
+                                                        ? '#fb1b2f'
+                                                        : colors.secondBackground,
+                                                borderRadius: 100,
+                                            },
+                                        ]}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                this.setState({
+                                                    frequency: 'Never',
+                                                })
+                                            }
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    height: '100%',
+                                                    width: '100%',
+                                                },
+                                            ]}
+                                        >
+                                            {this.state.frequency ==
+                                                'Never' && (
+                                                <FontIcon
+                                                    name={'check'}
+                                                    size={20 * factorRatio}
+                                                    color={'white'}
+                                                />
+                                            )}
+                                            {this.state.frequency !==
+                                                'Never' && (
+                                                <EntypoIcon
+                                                    name={'cross'}
+                                                    size={22.5 * factorRatio}
+                                                    color={'white'}
+                                                />
+                                            )}
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View style={{flex: 1}} />
+                            </View>
                         </View>
                     </View>
-                    <NavigationBar
-                        currentPage={'PROFILE'}
-                    />
+                    <NavigationBar currentPage={'PROFILE'} />
                 </View>
             </View>
-        )
+        );
     }
 }

@@ -1,13 +1,9 @@
 /**
  * Taskbar for navigation
-*/
+ */
 import React from 'react';
-import { 
-    View, 
-    Text,
-    TouchableOpacity,
-} from 'react-native';
-import { withNavigation } from 'react-navigation';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {withNavigation} from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
@@ -18,45 +14,55 @@ class NextVideo extends React.Component {
         this.state = {
             hasNotch: 0,
             progress: this.props.currentCompletion,
-        }
+        };
     }
 
-    componentDidMount = async () => {
-    }
-
+    componentDidMount = async () => {};
 
     render = () => {
         return (
-            <View 
+            <View
                 style={{
                     backgroundColor: colors.mainBackground,
                     borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 0.25*factorRatio,
+                    borderBottomWidth: 0.25 * factorRatio,
                 }}
             >
                 <View style={{width: fullWidth}}>
-                    <View key={'progress'}
+                    <View
+                        key={'progress'}
                         style={{
-                            height: 3*factorVertical,
+                            height: 3 * factorVertical,
                             flexDirection: 'row',
                         }}
                     >
-                        <View style={{flex: this.state.progress, backgroundColor: colors.pianoteRed}}/>
-                        <View style={{flex: 1-this.state.progress, backgroundColor: colors.secondBackground}}/>
+                        <View
+                            style={{
+                                flex: this.state.progress,
+                                backgroundColor: colors.pianoteRed,
+                            }}
+                        />
+                        <View
+                            style={{
+                                flex: 1 - this.state.progress,
+                                backgroundColor: colors.secondBackground,
+                            }}
+                        />
                     </View>
-                    <View style={{height: 10*factorVertical}}/>
-                    <View key={'nextLesson'}
+                    <View style={{height: 10 * factorVertical}} />
+                    <View
+                        key={'nextLesson'}
                         style={{
                             flexDirection: 'row',
-                            paddingLeft: fullWidth*0.035,
-                            paddingRight: fullWidth*0.035,
+                            paddingLeft: fullWidth * 0.035,
+                            paddingRight: fullWidth * 0.035,
                         }}
                     >
                         <View>
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontSize: 16*factorRatio,
+                                    fontSize: 16 * factorRatio,
                                     textAlign: 'left',
                                     fontFamily: 'RobotoCondensed-Bold',
                                     color: colors.secondBackground,
@@ -64,85 +70,92 @@ class NextVideo extends React.Component {
                             >
                                 YOUR NEXT LESSON
                             </Text>
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                         </View>
-                        <View style={{flex: 1}}/>
+                        <View style={{flex: 1}} />
                         <View>
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontSize: 12*factorRatio,
+                                    fontSize: 12 * factorRatio,
                                     fontFamily: 'OpenSans-Regular',
                                     color: colors.secondBackground,
                                     textAlign: 'right',
                                 }}
                             >
-                                LEVEL - {this.state.progress*100}% COMPLETE
+                                LEVEL - {this.state.progress * 100}% COMPLETE
                             </Text>
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                         </View>
                     </View>
-                    <View style={{height: 5*factorVertical}}/>
-                    <View key={'video'}
+                    <View style={{height: 5 * factorVertical}} />
+                    <View
+                        key={'video'}
                         style={{
                             flexDirection: 'row',
-                            paddingLeft: fullWidth*0.035,
-                            paddingRight: fullWidth*0.035,
+                            paddingLeft: fullWidth * 0.035,
+                            paddingRight: fullWidth * 0.035,
                         }}
                     >
-                        <TouchableOpacity key={'thumbnail'}
+                        <TouchableOpacity
+                            key={'thumbnail'}
                             onPress={() => {}}
                             style={{justifyContent: 'center'}}
-                            underlayColor={'transparent'}    
+                            underlayColor={'transparent'}
                         >
-                            <View style={{flex: 2}}/>
+                            <View style={{flex: 2}} />
                             <View
                                 style={{
-                                    width: fullWidth*0.24,
-                                    height: (onTablet) ? fullWidth*0.14 : fullWidth*0.14,
-                                    borderRadius: 7*factorRatio,
+                                    width: fullWidth * 0.24,
+                                    height: onTablet
+                                        ? fullWidth * 0.14
+                                        : fullWidth * 0.14,
+                                    borderRadius: 7 * factorRatio,
                                 }}
                             >
                                 <FastImage
                                     style={{
-                                        flex: 1, 
-                                        borderRadius: 7*factorRatio,
+                                        flex: 1,
+                                        borderRadius: 7 * factorRatio,
                                     }}
                                     source={{
-                                        uri: typeof(this.props.item) == 'undefined' ? 
-                                        '' : this.props.item.thumbnail
+                                        uri:
+                                            typeof this.props.item ==
+                                            'undefined'
+                                                ? ''
+                                                : this.props.item.thumbnail,
                                     }}
                                     resizeMode={FastImage.resizeMode.cover}
                                 />
                             </View>
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                         </TouchableOpacity>
-                        <View key={'titles'}
+                        <View
+                            key={'titles'}
                             style={{
-                                paddingLeft: fullWidth*0.035,
+                                paddingLeft: fullWidth * 0.035,
                             }}
                         >
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                             <View>
                                 <Text
                                     style={{
-                                        fontSize: 15*factorRatio,
+                                        fontSize: 15 * factorRatio,
                                         textAlign: 'left',
                                         fontWeight: 'bold',
                                         fontFamily: 'OpenSans-Regular',
                                         color: 'white',
                                     }}
                                 >
-                                    {
-                                        typeof(this.props.item) == 'undefined' ? 
-                                        '' : this.props.item.title
-                                    }
+                                    {typeof this.props.item == 'undefined'
+                                        ? ''
+                                        : this.props.item.title}
                                 </Text>
-                                <View style={{height: 2*factorVertical}}/>
+                                <View style={{height: 2 * factorVertical}} />
                                 <Text
                                     numberOfLines={2}
                                     style={{
-                                        fontSize: 12*factorRatio,
+                                        fontSize: 12 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
                                         textAlign: 'left',
                                         color: colors.secondBackground,
@@ -152,29 +165,32 @@ class NextVideo extends React.Component {
                                     {/* {this.props.items[index].artist} */}
                                 </Text>
                             </View>
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                         </View>
-                        <TouchableOpacity key={'play'}
+                        <TouchableOpacity
+                            key={'play'}
                             onPress={() => {}}
                             style={[
-                                styles.centerContent, {
-                                flex: 1,
-                                flexDirection: 'row',
-                            }]}
+                                styles.centerContent,
+                                {
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                },
+                            ]}
                         >
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                             <EntypoIcon
-                                name={'controller-play'} 
-                                size={30*factorRatio} 
+                                name={'controller-play'}
+                                size={30 * factorRatio}
                                 color={colors.pianoteRed}
                             />
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={{height: 15*factorVertical}}/>
+                <View style={{height: 15 * factorVertical}} />
             </View>
-        )
-    }
+        );
+    };
 }
 
 export default withNavigation(NextVideo);

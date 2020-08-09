@@ -4,11 +4,9 @@
 
 Repository for the Pianote Mobile App for education in piano. Developed using React Native. An overview of installation and running the app is provided here, see the React Native Docs for more in-depth information.
 
-
 <H1>Installation</H1>
 
 Development was completed using Mac OS, and is required to develop iOS, so these instructions are for Mac OS although React Native Android development can be done on Windows and Linux.
-
 
 <H2>Install React Native CLI and Dependencies</H2>
 
@@ -18,7 +16,7 @@ Follow the React Native CLI Quick Start guide on React Native Getting Started fo
 
 In addition to the installation from React Native CLI Quick Start, Yarn is used for package management
 
-```brew install yarn```
+`brew install yarn`
 
 <H3>Clone repo and download dependencies</H3>
 
@@ -32,30 +30,29 @@ yarn install
 
 <H3>iOS</H3>
 
-```react-native run-ios```
+`react-native run-ios`
 
 first, to see a list of available iOS simulators:
 
-```xcrun simctl list```
+`xcrun simctl list`
 
 then specify a specific simulator:
 
-```react-native run-ios --simulator "iPhone X"```
-
+`react-native run-ios --simulator "iPhone X"`
 
 To run on a physical iOS device:
 
 Plugin device
-    • Open the XCode project located in the ios directory
-    • Set the active scheme to DrumeoKidsApp > 'Your Device'
-    • Make sure the correct signing is set up, for team Musora Media Inc.
-    • Build and run current scheme
-    
+• Open the XCode project located in the ios directory
+• Set the active scheme to DrumeoKidsApp > 'Your Device'
+• Make sure the correct signing is set up, for team Musora Media Inc.
+• Build and run current scheme
+
 <H3>Android</H3>
 
 Open a simulator from Android Studio > Tools > AVD Manager or plug in an android device A physical device needs to have usb debugging enabled
 
-```react-native run-android```
+`react-native run-android`
 
 <H2>Running Release App Versions</H2>
 
@@ -69,7 +66,7 @@ Release versions of Android need to be signed. See instructions on generating an
 
 Once the key is setup, the app can be run on an android simulator or device in release mode:
 
-```react-native run-android --variant=release```
+`react-native run-android --variant=release`
 
 <H2>In-App Purchases</H2>
 
