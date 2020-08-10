@@ -1,10 +1,10 @@
 /**
  * Taskbar for navigation
-*/
+ */
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { withNavigation } from 'react-navigation';
-import { View, TouchableOpacity } from 'react-native';
+import {withNavigation} from 'react-navigation';
+import {View, TouchableOpacity} from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -18,54 +18,61 @@ class NavigationBar extends React.Component {
         this.state = {
             profileImage: '',
             hasNotch: 0,
-        }
+        };
     }
 
     componentDidMount = async () => {
-        let profileImage = await AsyncStorage.getItem('profileURI')
-        if(profileImage !== null) {
-            await this.setState({profileImage})
+        let profileImage = await AsyncStorage.getItem('profileURI');
+        if (profileImage !== null) {
+            await this.setState({profileImage});
         }
-    }
+    };
 
     profile = () => {
-        if(this.state.profileImage.length == 0) {
+        if (this.state.profileImage.length == 0) {
             return (
                 <AntIcon
                     name={'user'}
-                    color={(this.props.currentPage == 'PROFILE') ? 'white' : colors.secondBackground}
-                    size={27.5*factorRatio}
+                    color={
+                        this.props.currentPage == 'PROFILE'
+                            ? 'white'
+                            : colors.secondBackground
+                    }
+                    size={27.5 * factorRatio}
                 />
-            )
+            );
         } else {
             return (
                 <FastImage
                     style={{
-                        flex: 1, 
-                        borderRadius: 100, 
+                        flex: 1,
+                        borderRadius: 100,
                         backgroundColor: colors.secondBackground,
                         backgroundColor: 'red',
                     }}
-                    source={{uri: this.state.profileImage}}
+                    source={
+                        require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
+                        //    {uri: this.state.profileImage}
+                    }
                     resizeMode={FastImage.resizeMode.cover}
                 />
-            )
+            );
         }
-    }
-
+    };
 
     render = () => {
         return (
-            <View 
+            <View
                 style={{
                     backgroundColor: colors.mainBackground,
-                    height: fullHeight*0.09375,
+                    height: fullHeight * 0.09375,
                     borderTopColor: colors.mainBackground,
-                    borderTopWidth: 2*factorRatio,
+                    borderTopWidth: 2 * factorRatio,
                 }}
             >
-                <View style={{flex: 1}}/>
-                <View key={'icons'}
+                <View style={{flex: 1}} />
+                <View
+                    key={'icons'}
                     style={{
                         alignSelf: 'stretch',
                         flexDirection: 'row',
@@ -75,58 +82,86 @@ class NavigationBar extends React.Component {
                         alignContent: 'space-around',
                     }}
                 >
-                    <TouchableOpacity key={'lessons'}
-                        onPress={() => this.props.navigation.navigate('LESSONS')}
+                    <TouchableOpacity
+                        key={'lessons'}
+                        onPress={() =>
+                            this.props.navigation.navigate('LESSONS')
+                        }
                     >
                         <SimpleLineIcon
                             name={'home'}
-                            size={30*factorRatio}
-                            color={(this.props.currentPage == 'LESSONS') ? 'white' : colors.secondBackground}
+                            size={30 * factorRatio}
+                            color={
+                                this.props.currentPage == 'LESSONS'
+                                    ? 'white'
+                                    : colors.secondBackground
+                            }
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity key={'search'}
+                    <TouchableOpacity
+                        key={'search'}
                         onPress={() => this.props.navigation.navigate('SEARCH')}
                     >
                         <EvilIcons
                             name={'search'}
-                            size={40*factorRatio}
-                            color={(this.props.currentPage == 'SEARCH') ? 'white' : colors.secondBackground}
+                            size={40 * factorRatio}
+                            color={
+                                this.props.currentPage == 'SEARCH'
+                                    ? 'white'
+                                    : colors.secondBackground
+                            }
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity key={'download'}
-                        onPress={() => this.props.navigation.navigate('DOWNLOADS')}
+                    <TouchableOpacity
+                        key={'download'}
+                        onPress={() =>
+                            this.props.navigation.navigate('DOWNLOADS')
+                        }
                     >
                         <MaterialIcon
                             name={'arrow-collapse-down'}
-                            size={30*factorRatio}
-                            color={(this.props.currentPage == 'DOWNLOAD') ? 'white' : colors.secondBackground}
+                            size={30 * factorRatio}
+                            color={
+                                this.props.currentPage == 'DOWNLOAD'
+                                    ? 'white'
+                                    : colors.secondBackground
+                            }
                         />
-                    </TouchableOpacity>                            
-                    <TouchableOpacity key={'profile'}
-                        onPress={() => this.props.navigation.navigate('PROFILE')}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        key={'profile'}
+                        onPress={() =>
+                            this.props.navigation.navigate('PROFILE')
+                        }
                     >
-                        <View 
-                            style={[(this.state.profileImage.length > 0) ? null : styles.centerContent, {
-                                width: 37.5*factorRatio,
-                                height: 37.5*factorRatio,
-                                borderRadius: 100,
-                                borderWidth: 2.25*factorRatio,
-                                borderColor: (
-                                    this.props.currentPage == 'PROFILE' && 
-                                    this.state.profileImage.length > 0
-                                ) ? 'white' : 'transparent',
-                            }]}
+                        <View
+                            style={[
+                                this.state.profileImage.length > 0
+                                    ? null
+                                    : styles.centerContent,
+                                {
+                                    width: 37.5 * factorRatio,
+                                    height: 37.5 * factorRatio,
+                                    borderRadius: 100,
+                                    borderWidth: 2.25 * factorRatio,
+                                    borderColor:
+                                        this.props.currentPage == 'PROFILE' &&
+                                        this.state.profileImage.length > 0
+                                            ? 'white'
+                                            : 'transparent',
+                                },
+                            ]}
                         >
                             {this.profile()}
                         </View>
-                        <View style={{height: 2*factorVertical}}/>
+                        <View style={{height: 2 * factorVertical}} />
                     </TouchableOpacity>
                 </View>
-                <View style={{flex: 1}}/>
-                <View style={{height: isNotch ? 15 : 0}}/>
+                <View style={{flex: 1}} />
+                <View style={{height: isNotch ? 15 : 0}} />
             </View>
-        )
-    }
+        );
+    };
 }
 
 export default withNavigation(NavigationBar);

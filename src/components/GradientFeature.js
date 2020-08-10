@@ -1,10 +1,10 @@
-/* 
-* GradientFeature
-*/
+/*
+ * GradientFeature
+ */
 import React from 'react';
-import { View, Platform } from 'react-native';
+import {View, Platform} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { withNavigation } from 'react-navigation';
+import {withNavigation} from 'react-navigation';
 
 const colorDict = {
     blue: ['rgba(0, 16, 29, 0)', 'rgba(0, 16, 29, 1)'],
@@ -12,19 +12,20 @@ const colorDict = {
     red: ['transparent', 'rgba(80, 15, 25, 0.4)', 'rgba(80, 15, 25, 0.98)'],
     black: ['transparent', 'rgba(20, 20, 20, 0.5)', 'rgba(15, 15, 15, 0.98)'],
     dark: ['rgba(23, 26, 26, 1)', 'rgba(23, 26, 26, 1)', 'rgba(23, 26, 26, 1)'],
-    brown: ['rgba(65, 11, 17, 0)', 'rgba(65, 11, 17, 0.7)', 'rgba(65, 11, 17, 1)'],
-}
+    brown: [
+        'rgba(65, 11, 17, 0)',
+        'rgba(65, 11, 17, 0.7)',
+        'rgba(65, 11, 17, 1)',
+    ],
+};
 
 class GradientFeature extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        this.state = {
-            
-        }
+        this.state = {};
     }
 
-    
     render = () => {
         return (
             <View
@@ -35,11 +36,11 @@ class GradientFeature extends React.Component {
                     width: '100%',
                     bottom: 0,
                     zIndex: 2,
-                    elevation: (Platform.OS === 'android') ? 2 : 0,
+                    elevation: Platform.OS === 'android' ? 2 : 0,
                     left: 0,
                 }}
             >
-                <LinearGradient 
+                <LinearGradient
                     colors={colorDict[this.props.color]}
                     style={{
                         borderRadius: this.props.borderRadius,
@@ -48,8 +49,8 @@ class GradientFeature extends React.Component {
                     }}
                 />
             </View>
-        )
-    }
+        );
+    };
 }
 
 export default withNavigation(GradientFeature);

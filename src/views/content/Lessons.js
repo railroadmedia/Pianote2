@@ -49,7 +49,7 @@ export default class Lessons extends React.Component {
         email = await AsyncStorage.getItem('email');
         profileImage = await AsyncStorage.getItem('profileURI');
 
-        await fetch('http://3.17.144.93:5000/accountDetails', {
+        await fetch('http://18.218.118.227:5000/accountDetails', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -589,66 +589,62 @@ export default class Lessons extends React.Component {
                                 flexDirection: 'row',
                             }}
                         >
-                            {this.state.profileImage !== null &&
-                                this.state.profileImage.length > 0 && (
+                            <View
+                                key={'profile-picture'}
+                                style={[
+                                    styles.centerContent,
+                                    {
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignSelf: 'stretch',
+                                    },
+                                ]}
+                            >
+                                <View style={{flex: 1}} />
+                                <View>
+                                    <View style={{flex: 1}} />
                                     <View
-                                        key={'profile-picture'}
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                flex: 1,
-                                                flexDirection: 'row',
-                                                alignSelf: 'stretch',
-                                            },
-                                        ]}
+                                        style={{
+                                            height: fullHeight * 0.075,
+                                            width: fullHeight * 0.075,
+                                            borderRadius: 100,
+                                            backgroundColor:
+                                                colors.secondBackground,
+                                            alignSelf: 'stretch',
+                                            borderWidth: 3 * factorRatio,
+                                            borderColor:
+                                                colors.secondBackground,
+                                        }}
                                     >
-                                        <View style={{flex: 1}} />
-                                        <View>
-                                            <View style={{flex: 1}} />
-                                            <View
+                                        <View
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                alignSelf: 'center',
+                                            }}
+                                        >
+                                            <FastImage
                                                 style={{
-                                                    height: fullHeight * 0.075,
-                                                    width: fullHeight * 0.075,
+                                                    flex: 1,
                                                     borderRadius: 100,
                                                     backgroundColor:
                                                         colors.secondBackground,
-                                                    alignSelf: 'stretch',
-                                                    borderWidth:
-                                                        3 * factorRatio,
-                                                    borderColor:
-                                                        colors.secondBackground,
                                                 }}
-                                            >
-                                                <View
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '100%',
-                                                        alignSelf: 'center',
-                                                    }}
-                                                >
-                                                    <FastImage
-                                                        style={{
-                                                            flex: 1,
-                                                            borderRadius: 100,
-                                                            backgroundColor:
-                                                                colors.secondBackground,
-                                                        }}
-                                                        source={{
-                                                            uri: this.state
-                                                                .profileImage,
-                                                        }}
-                                                        resizeMode={
-                                                            FastImage.resizeMode
-                                                                .cover
-                                                        }
-                                                    />
-                                                </View>
-                                            </View>
-                                            <View style={{flex: 1}} />
+                                                source={
+                                                    require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
+                                                    //    {uri: this.state.profileImage}
+                                                }
+                                                resizeMode={
+                                                    FastImage.resizeMode.cover
+                                                }
+                                            />
                                         </View>
                                         <View style={{flex: 1}} />
                                     </View>
-                                )}
+                                    <View style={{flex: 1}} />
+                                </View>
+                                <View style={{flex: 1}} />
+                            </View>
                             <View
                                 key={'XP-rank'}
                                 style={{
@@ -663,7 +659,7 @@ export default class Lessons extends React.Component {
                                             this.state.profileImage !== null &&
                                             this.state.profileImage.length > 0
                                                 ? 0.5
-                                                : 1,
+                                                : 0.5,
                                     }}
                                 />
                                 <View>

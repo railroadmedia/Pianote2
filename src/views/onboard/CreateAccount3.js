@@ -117,7 +117,7 @@ export default class CreateAccount3 extends React.Component {
     setName = async () => {
         if (this.state.displayName.length > 0) {
             // check if valid
-            await fetch('http://3.17.144.93:5000/displayNameAvailable', {
+            await fetch('http://18.218.118.227:5000/displayNameAvailable', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -169,7 +169,7 @@ export default class CreateAccount3 extends React.Component {
 
         await axios({
             method: 'POST',
-            url: 'http://3.17.144.93:5000/createAccount',
+            url: 'http://18.218.118.227:5000/createAccount',
             data,
             config: {headers: {'Content-Type': 'multipart/form-data'}},
         })
@@ -502,7 +502,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                                 <View
                                                     style={{
                                                         width:
@@ -523,7 +523,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                                 <View
                                                     style={{
                                                         width:
@@ -544,7 +544,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                                 <View
                                                     style={{
                                                         width:
@@ -565,7 +565,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                             </View>
                                         </View>
                                         <View style={{flex: 1}} />
@@ -920,7 +920,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                                 <View
                                                     style={{
                                                         width:
@@ -941,7 +941,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                                 <View
                                                     style={{
                                                         width:
@@ -962,7 +962,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                                 <View
                                                     style={{
                                                         width:
@@ -983,7 +983,7 @@ export default class CreateAccount3 extends React.Component {
                                                         borderWidth: 1,
                                                         borderColor: '#fb1b2f',
                                                     }}
-                                                />
+                                                ></View>
                                             </View>
                                         </View>
                                         <View style={{flex: 1}} />
@@ -1515,7 +1515,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                         <View
                                             style={{
                                                 width: 7.5 * factorHorizontal,
@@ -1533,7 +1533,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                         <View
                                             style={{
                                                 width: 7.5 * factorHorizontal,
@@ -1551,7 +1551,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                         <View
                                             style={{
                                                 width: 7.5 * factorHorizontal,
@@ -1569,7 +1569,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                     </View>
                                 </View>
                                 <View style={{flex: 1}} />
@@ -1722,7 +1722,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                         <View
                                             style={{
                                                 width: 7.5 * factorHorizontal,
@@ -1740,7 +1740,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                         <View
                                             style={{
                                                 width: 7.5 * factorHorizontal,
@@ -1758,7 +1758,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                         <View
                                             style={{
                                                 width: 7.5 * factorHorizontal,
@@ -1776,7 +1776,7 @@ export default class CreateAccount3 extends React.Component {
                                                 borderWidth: 1,
                                                 borderColor: '#fb1b2f',
                                             }}
-                                        />
+                                        ></View>
                                     </View>
                                 </View>
                                 <View style={{flex: 1}} />

@@ -2,11 +2,7 @@
  * MembershipExpired
  */
 import React from 'react';
-import { 
-    View, 
-    Text,
-    TouchableOpacity,
-} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -15,35 +11,40 @@ export default class MembershipExpired extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        this.state = {
-        }
+        this.state = {};
     }
 
-    
     render() {
         return (
-            <View style={[
-                    styles.centerContent, {
-                    height: fullHeight,
-                }]}
-            >
-                <View key={'MembershipExpiredSignup'} 
-                    style={[
-                        styles.centerContent, {
-                        width: fullWidth,
+            <View
+                style={[
+                    styles.centerContent,
+                    {
                         height: fullHeight,
-                    }]}
+                    },
+                ]}
+            >
+                <View
+                    key={'MembershipExpiredSignup'}
+                    style={[
+                        styles.centerContent,
+                        {
+                            width: fullWidth,
+                            height: fullHeight,
+                        },
+                    ]}
                 >
-                    <View key={'pianote1'}
+                    <View
+                        key={'pianote1'}
                         style={{
-                            position: 'absolute', 
-                            top: fullHeight*0.03,
+                            position: 'absolute',
+                            top: fullHeight * 0.03,
                             zIndex: 2,
                         }}
                     >
                         <Pianote
-                            height={75*factorRatio}
-                            width={125*factorRatio}
+                            height={75 * factorRatio}
+                            width={125 * factorRatio}
                             fill={'#fb1b2f'}
                         />
                     </View>
@@ -53,9 +54,10 @@ export default class MembershipExpired extends React.Component {
                         height={'70%'}
                         borderRadius={0}
                     />
-                    <View key={'image1'}
+                    <View
+                        key={'image1'}
                         style={{
-                            flex: 0.75, 
+                            flex: 0.75,
                             alignSelf: 'stretch',
                         }}
                     >
@@ -65,72 +67,81 @@ export default class MembershipExpired extends React.Component {
                             resizeMode={FastImage.resizeMode.cover}
                         />
                     </View>
-                    <View key={'buffer1'}
+                    <View
+                        key={'buffer1'}
                         style={{
                             flex: 0.25,
                             backgroundColor: 'rgba(23, 26, 26, 1)',
                             alignSelf: 'stretch',
                         }}
                     />
-                    <View key={'content1'}
+                    <View
+                        key={'content1'}
                         style={{
                             position: 'absolute',
-                            bottom: fullHeight*0.165,
+                            bottom: fullHeight * 0.165,
                             width: fullWidth,
                             zIndex: 3,
                         }}
                     >
-                        <View style={{flex: 1}}/>
+                        <View style={{flex: 1}} />
                         <Text
                             style={{
                                 fontFamily: 'OpenSans-Regular',
-                                fontSize: 28*factorRatio,
-                                paddingLeft: fullWidth*0.15,
-                                paddingRight: fullWidth*0.15,
+                                fontSize: 28 * factorRatio,
+                                paddingLeft: fullWidth * 0.15,
+                                paddingRight: fullWidth * 0.15,
                                 fontWeight: '800',
                                 textAlign: 'center',
                                 color: 'white',
                             }}
                         >
-                            Your Membership {"\n"} Has Expired
+                            Your Membership {'\n'} Has Expired
                         </Text>
-                        <View style={{height: 25*factorVertical}}/>
+                        <View style={{height: 25 * factorVertical}} />
                         <Text
                             style={{
                                 fontFamily: 'OpenSans-Regular',
-                                fontSize: 18*factorRatio,
-                                paddingLeft: fullWidth*0.05,
-                                paddingRight: fullWidth*0.05,
+                                fontSize: 18 * factorRatio,
+                                paddingLeft: fullWidth * 0.05,
+                                paddingRight: fullWidth * 0.05,
                                 textAlign: 'center',
                                 color: 'white',
                             }}
                         >
-                            Your account no longer has access to Pianote. Click the button below to renew your membership - or, if you believe this is an error, please contact support@pianote.com
+                            Your account no longer has access to Pianote. Click
+                            the button below to renew your membership - or, if
+                            you believe this is an error, please contact
+                            support@pianote.com
                         </Text>
                     </View>
-                    <View key={'content1b'}
+                    <View
+                        key={'content1b'}
                         style={{
                             position: 'absolute',
-                            bottom: fullHeight*0.055,
+                            bottom: fullHeight * 0.055,
                             width: fullWidth,
                             zIndex: 3,
                         }}
                     >
-                        <View key={'buttons'}
+                        <View
+                            key={'buttons'}
                             style={{
-                                height: fullHeight*0.075,
+                                height: fullHeight * 0.075,
                                 flexDirection: 'row',
-                                paddingLeft: fullWidth*0.02,
-                                paddingRight: fullWidth*0.02,
+                                paddingLeft: fullWidth * 0.02,
+                                paddingRight: fullWidth * 0.02,
                             }}
                         >
-                            <View 
+                            <View
                                 style={[
-                                    styles.centerContent, {
-                                    flex: 1,
-                                }]}
+                                    styles.centerContent,
+                                    {
+                                        flex: 1,
+                                    },
+                                ]}
                             >
-                                <View 
+                                <View
                                     style={{
                                         height: '80%',
                                         width: '95%',
@@ -140,13 +151,16 @@ export default class MembershipExpired extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.props.navigation.navigate('NEWMEMBERSHIP', {
-                                                data: {
-                                                    type: 'EXPIRED',
-                                                    email: '',
-                                                    password: '',
-                                                }
-                                            })
+                                            this.props.navigation.navigate(
+                                                'NEWMEMBERSHIP',
+                                                {
+                                                    data: {
+                                                        type: 'EXPIRED',
+                                                        email: '',
+                                                        password: '',
+                                                    },
+                                                },
+                                            );
                                         }}
                                         style={{
                                             height: '100%',
@@ -156,10 +170,11 @@ export default class MembershipExpired extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontSize: 18*factorRatio,
+                                                fontSize: 18 * factorRatio,
                                                 textAlign: 'center',
                                                 color: 'white',
-                                                fontFamily: 'RobotoCondensed-Bold',
+                                                fontFamily:
+                                                    'RobotoCondensed-Bold',
                                             }}
                                         >
                                             RENEW MEMBERSHIP
@@ -171,6 +186,6 @@ export default class MembershipExpired extends React.Component {
                     </View>
                 </View>
             </View>
-        )
+        );
     }
 }

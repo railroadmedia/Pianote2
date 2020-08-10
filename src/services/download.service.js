@@ -28,7 +28,7 @@ export default {
         assignments.map((a) => {
             let svgs = [],
                 nsvgs = [];
-            a[3].map((d) => {
+            a[4].map((d) => {
                 if (
                     d.key === 'sheet_music_image_url' &&
                     d.value.indexOf('.pdf') > -1

@@ -94,7 +94,7 @@ export default class CreateAccount extends React.Component {
     verifyEmail = async () => {
         if (this.state.email.length > 0) {
             // check if email valid
-            await fetch('http://3.17.144.93:5000/checkEmailTaken', {
+            await fetch('http://18.218.118.227:5000/checkEmailTaken', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({

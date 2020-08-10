@@ -326,6 +326,7 @@ export default class VideoPlayerSong extends React.Component {
                                 showSoundSlice: false,
                             });
                         }}
+                        slug={this.props.navigation.state.params.slug}
                     />
                 </Modal>
                 <Modal
@@ -351,69 +352,6 @@ export default class VideoPlayerSong extends React.Component {
                         }}
                     />
                 </Modal>
-            </View>
-        );
-        return (
-            <View styles={{flex: 1, height: 500}}>
-                <View
-                    key={'container'}
-                    style={{
-                        flex: 1,
-                    }}
-                >
-                    <View
-                        key={'buttons'}
-                        style={{
-                            position: 'absolute',
-                            height: fullHeight * 0.195,
-                            backgroundColor: 'white',
-                            width: '100%',
-                            bottom: 0,
-                        }}
-                    >
-                        <View
-                            key={'practice'}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    alignSelf: 'stretch',
-                                    flex: 1,
-                                },
-                            ]}
-                        >
-                            <View
-                                style={{
-                                    height: '85%',
-                                    width: '90%',
-                                    backgroundColor: 'white',
-                                    borderColor: '#fb1b2f',
-                                    borderWidth: 2.5 * factorRatio,
-                                    borderRadius: 100 * factorRatio,
-                                }}
-                            />
-                        </View>
-                        <View
-                            key={'completeAssignment'}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    alignSelf: 'stretch',
-                                    flex: 1,
-                                },
-                            ]}
-                        >
-                            <View
-                                style={{
-                                    height: '85%',
-                                    width: '90%',
-                                    backgroundColor: '#fb1b2f',
-                                    borderRadius: 100 * factorRatio,
-                                }}
-                            />
-                        </View>
-                        <View style={{height: 40 * factorVertical}} />
-                    </View>
-                </View>
             </View>
         );
     }

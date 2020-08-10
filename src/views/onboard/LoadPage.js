@@ -26,12 +26,11 @@ export default class LoadPage extends React.Component {
         await SplashScreen.hide();
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
         email = await AsyncStorage.getItem('email');
-
         if (isLoggedIn !== 'true') {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
         } else {
             // membership expired
-            await fetch('http://3.17.144.93:5000/checkMembershipStatus', {
+            await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({

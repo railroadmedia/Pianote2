@@ -81,6 +81,7 @@ export default class VideoPlayer extends React.Component {
                     'Learn The Fill',
                     1,
                     1,
+                    170401,
                     [
                         {
                             key: 'sheet_music_image_url',
@@ -93,6 +94,7 @@ export default class VideoPlayer extends React.Component {
                     'Learn The Beat',
                     2,
                     0,
+                    170401,
                     [
                         {
                             key: 'sheet_music_image_url',
@@ -105,6 +107,7 @@ export default class VideoPlayer extends React.Component {
                     'Put It Together',
                     3,
                     0,
+                    170401,
                     [
                         {
                             key: 'sheet_music_image_url',
@@ -240,7 +243,7 @@ export default class VideoPlayer extends React.Component {
 
         email = await AsyncStorage.getItem('email');
 
-        await fetch('http://3.17.144.93:5000/getComments', {
+        await fetch('http://18.218.118.227:5000/getComments', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -289,7 +292,7 @@ export default class VideoPlayer extends React.Component {
         if (this.state.comments[index][8] == 0) {
             this.state.comments[index][8] = 1;
             this.state.comments[index][6] = this.state.comments[index][6] + 1;
-            await fetch('http://3.17.144.93:5000/likeComment', {
+            await fetch('http://18.218.118.227:5000/likeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -307,7 +310,7 @@ export default class VideoPlayer extends React.Component {
         } else {
             this.state.comments[index][8] = 0;
             this.state.comments[index][6] = this.state.comments[index][6] - 1;
-            await fetch('http://3.17.144.93:5000/unlikeComment', {
+            await fetch('http://18.218.118.227:5000/unlikeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -592,7 +595,8 @@ export default class VideoPlayer extends React.Component {
                             assignmentName: row[0],
                             assignmentNum: index + 1,
                             showAssignment: true,
-                            sheets: row[3],
+                            sheets: row[4],
+                            slug: row[3],
                         });
                     }}
                     style={{
@@ -678,7 +682,7 @@ export default class VideoPlayer extends React.Component {
                 <View
                     key={'container2'}
                     style={{
-                        height: fullHeight,
+                        height: fullHeight - navHeight,
                         alignSelf: 'stretch',
                         backgroundColor: colors.mainBackground,
                     }}
@@ -1546,11 +1550,10 @@ export default class VideoPlayer extends React.Component {
                                                                         factorHorizontal,
                                                                     borderRadius: 100,
                                                                 }}
-                                                                source={{
-                                                                    uri: this
-                                                                        .state
-                                                                        .profileImage,
-                                                                }}
+                                                                source={
+                                                                    require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
+                                                                    //    {uri: this.state.profileImage}
+                                                                }
                                                                 resizeMode={
                                                                     FastImage
                                                                         .resizeMode
@@ -1693,6 +1696,12 @@ export default class VideoPlayer extends React.Component {
                             >
                                 <View style={{flex: 1}} />
                                 <TouchableOpacity
+                                    style={{
+                                        marginBottom:
+                                            Platform.OS == 'android'
+                                                ? 10 * factorVertical
+                                                : 0,
+                                    }}
                                     onPress={() => {
                                         this.state.commentID !== null
                                             ? this.makeReply()

@@ -1,16 +1,12 @@
 /**
  * NavMenuHeaders
-*/
+ */
 import React from 'react';
-import { 
-    View,
-    Text,
-    TouchableOpacity,
-} from 'react-native';
-import { 
+import {View, Text, TouchableOpacity, Platform} from 'react-native';
+import {
     withNavigation,
     NavigationActions,
-    StackActions 
+    StackActions,
 } from 'react-navigation';
 import Modal from 'react-native-modal';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -23,22 +19,26 @@ class NavMenuHeaders extends React.Component {
         super(props);
         this.state = {
             showModalMenu: false,
-        }
+        };
     }
 
     render = () => {
         return (
-            <View 
+            <View
                 style={[
-                    styles.centerContent, {
-                    top: 0,
-                    height: fullHeight*0.1 + (isNotch ? 10*factorVertical : 0), 
-                    flexDirection: 'row',
-                    left: 0,
-                    backgroundColor: colors.mainBackground,
-                }]}
+                    styles.centerContent,
+                    {
+                        top: 0,
+                        height:
+                            fullHeight * 0.1 +
+                            (isNotch ? 10 * factorVertical : 0),
+                        flexDirection: 'row',
+                        left: 0,
+                        backgroundColor: colors.mainBackground,
+                    },
+                ]}
             >
-                <View 
+                <View
                     style={{
                         flex: 1,
                         backgroundColor: colors.thirdBackground,
@@ -52,13 +52,18 @@ class NavMenuHeaders extends React.Component {
                             backgroundColor: colors.thirdBackground,
                         }}
                     >
-                        <View key={'pianoteSign'}
+                        <View
+                            key={'pianoteSign'}
                             style={{
                                 position: 'relative',
                                 left: 0,
                                 bottom: 0,
-                                height: fullHeight*0.1,
-                                width: 0.33*fullWidth,
+                                height: fullHeight * 0.1,
+                                width: 0.33 * fullWidth,
+                                paddingBottom:
+                                    Platform.OS == 'android'
+                                        ? 5 * factorVertical
+                                        : 0,
                             }}
                         >
                             <TouchableOpacity
@@ -66,123 +71,159 @@ class NavMenuHeaders extends React.Component {
                                     this.props.navigation.dispatch(
                                         StackActions.reset({
                                             index: 0,
-                                            actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
-                                        })
-                                    )
+                                            actions: [
+                                                NavigationActions.navigate({
+                                                    routeName: 'LESSONS',
+                                                }),
+                                            ],
+                                        }),
+                                    );
                                 }}
                                 style={[
-                                    styles.centerContent, {
-                                    height: '100%',
-                                    width: '100%',
-                                }]}
+                                    styles.centerContent,
+                                    {
+                                        height: '100%',
+                                        width: '100%',
+                                    },
+                                ]}
                             >
-                                <View style={{flex: 2.5}}/>
+                                <View style={{flex: 2.5}} />
                                 <Pianote
-                                    height={30*factorHorizontal}
-                                    width={fullWidth*0.25}
+                                    height={30 * factorHorizontal}
+                                    width={fullWidth * 0.25}
                                     fill={'#fb1b2f'}
                                 />
-                                <View style={{flex: 0.25}}/>
-                                {(!isNotch) && (
-                                <View style={{flex: 0.5}}/>
-                                )}
+                                <View style={{flex: 0.25}} />
+                                {!isNotch && <View style={{flex: 0.5}} />}
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity key={'lessons'}
+                        <TouchableOpacity
+                            key={'lessons'}
                             onPress={() => {
-                                this.setState({showModalMenu: true})
+                                this.setState({showModalMenu: true});
                             }}
                         >
-                            <View style={{flex: 2}}/>
-                            <View 
+                            <View style={{flex: 2}} />
+                            <View
                                 style={{
                                     flexDirection: 'row',
                                     flex: 1,
+                                    paddingBottom:
+                                        Platform.OS == 'android'
+                                            ? 5 * factorVertical
+                                            : 0,
                                 }}
                             >
                                 <Text
                                     style={{
-                                        fontSize: 14*factorRatio,
+                                        fontSize: 14 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                        color: (this.props.currentPage == 'LESSONS') ? 'white' : colors.secondBackground,
+                                        fontWeight:
+                                            Platform.OS == 'android'
+                                                ? 'bold'
+                                                : '900',
+                                        color:
+                                            this.props.currentPage == 'LESSONS'
+                                                ? 'white'
+                                                : colors.secondBackground,
                                     }}
                                 >
                                     LESSONS{' '}
                                 </Text>
                                 <EntypoIcon
                                     name={'chevron-down'}
-                                    color={(this.props.currentPage == 'LESSONS') ? 'white' : colors.secondBackground}
-                                    size={20*factorRatio}
+                                    color={
+                                        this.props.currentPage == 'LESSONS'
+                                            ? 'white'
+                                            : colors.secondBackground
+                                    }
+                                    size={20 * factorRatio}
                                 />
                             </View>
-                            {(!isNotch) && (
-                            <View style={{flex: 0.5}}/>
-                            )}
+                            {!isNotch && <View style={{flex: 0.5}} />}
                         </TouchableOpacity>
-                        <View style={{flex: 1}}/>
-                        <TouchableOpacity key={'packs'}
+                        <View style={{flex: 1}} />
+                        <TouchableOpacity
+                            key={'packs'}
                             onPress={() => {
-                                this.props.navigation.navigate('PACKS')
+                                this.props.navigation.navigate('PACKS');
                             }}
                         >
-                            <View style={{flex: 2}}/>
-                            <View 
+                            <View style={{flex: 2}} />
+                            <View
                                 style={{
                                     flexDirection: 'row',
                                     flex: 1,
+                                    paddingBottom:
+                                        Platform.OS == 'android'
+                                            ? 5 * factorVertical
+                                            : 0,
                                 }}
                             >
                                 <Text
                                     style={{
-                                        fontSize: 14*factorRatio,
+                                        fontSize: 14 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                        color: (this.props.currentPage == 'PACKS') ? 'white' : colors.secondBackground,
+                                        fontWeight:
+                                            Platform.OS == 'android'
+                                                ? 'bold'
+                                                : '900',
+                                        color:
+                                            this.props.currentPage == 'PACKS'
+                                                ? 'white'
+                                                : colors.secondBackground,
                                     }}
                                 >
                                     PACKS{' '}
                                 </Text>
                             </View>
-                            {(!isNotch) && (
-                            <View style={{flex: 0.5}}/>
-                            )}
+                            {!isNotch && <View style={{flex: 0.5}} />}
                         </TouchableOpacity>
-                        <View style={{flex: 1}}/>
-                        <TouchableOpacity key={'mylist'}
+                        <View style={{flex: 1}} />
+                        <TouchableOpacity
+                            key={'mylist'}
                             onPress={() => {
-                                this.props.navigation.navigate('MYLIST')
+                                this.props.navigation.navigate('MYLIST');
                             }}
                         >
-                            <View style={{flex: 2}}/>
-                            <View 
+                            <View style={{flex: 2}} />
+                            <View
                                 style={{
                                     flexDirection: 'row',
                                     flex: 1,
+                                    paddingBottom:
+                                        Platform.OS == 'android'
+                                            ? 5 * factorVertical
+                                            : 0,
                                 }}
                             >
                                 <Text
                                     style={{
-                                        fontSize: 14*factorRatio,
+                                        fontSize: 14 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: (Platform.OS == 'android') ? 'bold' : '900',
-                                        color: (this.props.currentPage == 'MYLIST') ? 'white' : colors.secondBackground,
+                                        fontWeight:
+                                            Platform.OS == 'android'
+                                                ? 'bold'
+                                                : '900',
+                                        color:
+                                            this.props.currentPage == 'MYLIST'
+                                                ? 'white'
+                                                : colors.secondBackground,
                                     }}
                                 >
                                     MY LIST{' '}
                                 </Text>
                             </View>
-                            {(!isNotch) && (
-                            <View style={{flex: 0.5}}/>
-                            )}
+                            {!isNotch && <View style={{flex: 0.5}} />}
                         </TouchableOpacity>
-                        <View style={{flex: 1}}/>
+                        <View style={{flex: 1}} />
                     </View>
                 </View>
-                <Modal key={'navMenu'}
+                <Modal
+                    key={'navMenu'}
                     isVisible={this.state.showModalMenu}
                     style={{
-                        margin: 0, 
+                        margin: 0,
                         height: fullHeight,
                         width: fullWidth,
                     }}
@@ -199,8 +240,8 @@ class NavMenuHeaders extends React.Component {
                     />
                 </Modal>
             </View>
-        )
-    }
+        );
+    };
 }
 
 export default withNavigation(NavMenuHeaders);

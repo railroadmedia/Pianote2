@@ -35,7 +35,7 @@ export default class Profile extends React.Component {
             await this.setState({profileImage});
         }
 
-        await fetch('http://3.17.144.93:5000/accountDetails', {
+        await fetch('http://18.218.118.227:5000/accountDetails', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -223,28 +223,16 @@ export default class Profile extends React.Component {
     }
 
     profile = () => {
-        if (this.state.profileImage.length == 0) {
+        /**  if(this.state.profileImage.length == 0) {
             return (
                 <AntIcon
                     name={'user'}
                     color={colors.pianoteRed}
                     size={75 * factorRatio}
                 />
-            );
-        } else {
-            return (
-                <FastImage
-                    style={{
-                        flex: 1,
-                        borderRadius: 100,
-                        backgroundColor: colors.secondBackground,
-                        backgroundColor: 'red',
-                    }}
-                    source={{uri: this.state.profileImage}}
-                    resizeMode={FastImage.resizeMode.cover}
-                />
-            );
-        }
+            )
+        } else { */
+        return <View></View>;
     };
 
     render() {
@@ -345,13 +333,18 @@ export default class Profile extends React.Component {
                                             : 140 * factorRatio,
                                     }}
                                 >
-                                    <View style={{flex: 1}} />
-                                    <View style={{flexDirection: 'row'}}>
-                                        <View style={{flex: 1}} />
-                                        {this.profile()}
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <View style={{flex: 1}} />
+                                    <FastImage
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            borderRadius: 250,
+                                            backgroundColor:
+                                                colors.secondBackground,
+                                        }}
+                                        source={require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')}
+                                        resizeMode={FastImage.resizeMode.cover}
+                                        //{uri: this.state.profileImage}
+                                    />
                                 </View>
                                 <View style={{height: 10 * factorVertical}} />
                                 <View
