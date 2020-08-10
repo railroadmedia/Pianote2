@@ -22,62 +22,67 @@ export default class VideoPlayerSong extends React.Component {
             showQualitySettings: false,
             showAssignmentComplete: false,
             showLessonComplete: false,
+            hideTitles: false,
         };
     }
 
     render() {
         return (
             <View style={{flex: 1}}>
-                <View
-                    key={'video'}
-                    style={{
-                        height: onTablet
-                            ? fullHeight * 0.4
-                            : fullHeight * 0.3025,
-                        backgroundColor: 'black',
-                    }}
-                >
-                    <FastImage
-                        style={{flex: 1}}
-                        source={{
-                            uri:
-                                'https://facebook.github.io/react-native/img/tiny_logo.png',
-                        }}
-                        resizeMode={FastImage.resizeMode.cover}
-                    />
-                </View>
-                <View
-                    key={'goBackIcon'}
-                    style={[
-                        styles.centerContent,
-                        {
-                            position: 'absolute',
-                            left: 10 * factorHorizontal,
-                            top: isNotch
-                                ? 40 * factorVertical
-                                : 30 * factorVertical,
-                            height: 50 * factorRatio,
-                            width: 50 * factorRatio,
-                            zIndex: 10,
-                        },
-                    ]}
-                >
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.props.navigation.goBack();
-                        }}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    >
-                        <EntypoIcon
-                            name={'chevron-thin-left'}
-                            size={25 * factorRatio}
-                            color={'white'}
-                        />
-                    </TouchableOpacity>
-                </View>
+                {!this.state.hideTitles && (
+                    <>
+                        <View
+                            key={'video'}
+                            style={{
+                                height: onTablet
+                                    ? fullHeight * 0.4
+                                    : fullHeight * 0.3025,
+                                backgroundColor: 'black',
+                            }}
+                        >
+                            <FastImage
+                                style={{flex: 1}}
+                                source={{
+                                    uri:
+                                        'https://facebook.github.io/react-native/img/tiny_logo.png',
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
+                        </View>
+                        <View
+                            key={'goBackIcon'}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    position: 'absolute',
+                                    left: 10 * factorHorizontal,
+                                    top: isNotch
+                                        ? 40 * factorVertical
+                                        : 30 * factorVertical,
+                                    height: 50 * factorRatio,
+                                    width: 50 * factorRatio,
+                                    zIndex: 10,
+                                },
+                            ]}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.goBack();
+                                }}
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                }}
+                            >
+                                <EntypoIcon
+                                    name={'chevron-thin-left'}
+                                    size={25 * factorRatio}
+                                    color={'white'}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </>
+                )}
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
@@ -87,172 +92,186 @@ export default class VideoPlayerSong extends React.Component {
                     }}
                 >
                     <View style={{height: 25 * factorVertical}} />
-                    <Text
-                        key={'assignmentNumber'}
-                        style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 16 * factorRatio,
-                            fontWeight: '700',
-                            textAlign: 'center',
-                            color: '#b9b9b9',
-                        }}
-                    >
-                        ASSIGNMENT #
-                        {this.props.navigation.state.params.assignmentNum}
-                    </Text>
-                    <View style={{height: 10 * factorVertical}} />
-                    <Text
-                        key={'assignmentName'}
-                        style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 28 * factorRatio,
-                            fontWeight: '700',
-                            textAlign: 'center',
-                        }}
-                    >
-                        {this.props.navigation.state.params.assignmentName}
-                    </Text>
-                    <View style={{height: 10 * factorVertical}} />
-                    <View
-                        key={'skipTo'}
-                        style={[
-                            styles.centerContent,
-                            {
-                                height: fullHeight * 0.025,
-                                width: '100%',
-                            },
-                        ]}
-                    >
-                        <View
-                            style={[
-                                styles.centerContent,
+                    {!this.state.hideTitles && (
+                        <>
+                            <Text
+                                key={'assignmentNumber'}
+                                style={{
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontSize: 16 * factorRatio,
+                                    fontWeight: '700',
+                                    textAlign: 'center',
+                                    color: '#b9b9b9',
+                                }}
+                            >
+                                ASSIGNMENT #
                                 {
-                                    width: '40%',
-                                    height: '100%',
-                                    borderRadius: 30 * factorRatio,
-                                    backgroundColor: '#ececec',
-                                    alignSelf: 'center',
-                                },
-                            ]}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {}}
+                                    this.props.navigation.state.params
+                                        .assignmentNum
+                                }
+                            </Text>
+                            <View style={{height: 10 * factorVertical}} />
+                            <Text
+                                key={'assignmentName'}
+                                style={{
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontSize: 28 * factorRatio,
+                                    fontWeight: '700',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                {
+                                    this.props.navigation.state.params
+                                        .assignmentName
+                                }
+                            </Text>
+                            <View style={{height: 10 * factorVertical}} />
+                            <View
+                                key={'skipTo'}
                                 style={[
                                     styles.centerContent,
                                     {
-                                        height: '100%',
+                                        height: fullHeight * 0.025,
                                         width: '100%',
-                                        alignItems: 'center',
                                     },
                                 ]}
                             >
+                                <View
+                                    style={[
+                                        styles.centerContent,
+                                        {
+                                            width: '40%',
+                                            height: '100%',
+                                            borderRadius: 30 * factorRatio,
+                                            backgroundColor: '#ececec',
+                                            alignSelf: 'center',
+                                        },
+                                    ]}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {}}
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                height: '100%',
+                                                width: '100%',
+                                                alignItems: 'center',
+                                            },
+                                        ]}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                fontWeight: '700',
+                                                color: 'grey',
+                                                fontSize: 12 * factorRatio,
+                                                alignSelf: 'center',
+                                            }}
+                                        >
+                                            SKIP VIDEO TO 2:01
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 1}} />
+                            </View>
+                            <View
+                                style={{
+                                    height: 25 * factorVertical,
+                                    borderBottomColor: '#ececec',
+                                    borderBottomWidth: 1 * factorRatio,
+                                }}
+                            />
+                            <View key={'blurb'} style={{width: '100%'}}>
                                 <Text
                                     style={{
+                                        paddingTop: '5%',
+                                        paddingBottom: '5%',
+                                        paddingLeft: '5%',
+                                        paddingRight: '5%',
+                                        fontSize: 16 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
-                                        fontWeight: '700',
-                                        color: 'grey',
-                                        fontSize: 12 * factorRatio,
-                                        alignSelf: 'center',
                                     }}
                                 >
-                                    SKIP VIDEO TO 2:01
+                                    Lorem ipsum dolor sit smart cosaf adlsafdd.
+                                    elit, Prascent quie eros magna. Etrian
+                                    tincidunt Lorem ipsum dolor sit smart cosaf
+                                    adlsafdd. elit.
                                 </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{flex: 1}} />
-                    </View>
-                    <View
-                        style={{
-                            height: 25 * factorVertical,
-                            borderBottomColor: '#ececec',
-                            borderBottomWidth: 1 * factorRatio,
-                        }}
-                    />
-                    <View key={'blurb'} style={{width: '100%'}}>
-                        <Text
-                            style={{
-                                paddingTop: '5%',
-                                paddingBottom: '5%',
-                                paddingLeft: '5%',
-                                paddingRight: '5%',
-                                fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
-                            }}
-                        >
-                            Lorem ipsum dolor sit smart cosaf adlsafdd. elit,
-                            Prascent quie eros magna. Etrian tincidunt Lorem
-                            ipsum dolor sit smart cosaf adlsafdd. elit.
-                        </Text>
-                    </View>
+                            </View>
+                        </>
+                    )}
                     <AssignmentResource
-                        onZoom={this.onZoom}
                         ref={(r) => (this.ptzhsvRef = r)}
                         data={this.props.navigation.state.params.sheets}
-                        onDoubleTap={(state) => {}}
+                        onDoubleTap={() => {
+                            this.setState({hideTitles: !this.state.hideTitles});
+                        }}
                     />
                 </ScrollView>
-                <View style={{backgroundColor: '#ffffff'}}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            console.log('asd');
-                            this.setState({showSoundSlice: true});
-                        }}
-                        style={[
-                            styles.centerContent,
-                            {
-                                borderWidth: 2.5 * factorRatio,
-                                borderColor: '#fb1b2f',
-                                width: '90%',
-                                alignSelf: 'center',
-                                borderRadius: 100 * factorRatio,
-                                marginTop: 10 * factorRatio,
-                                marginBottom: 5 * factorRatio,
-                            },
-                        ]}
-                    >
-                        <Text
-                            style={{
-                                fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
-                                fontWeight: '800',
-                                color: '#fb1b2f',
-                                paddingVertical: 10,
+                {!this.state.hideTitles && (
+                    <View style={{backgroundColor: '#ffffff'}}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                console.log('asd');
+                                this.setState({showSoundSlice: true});
                             }}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    borderWidth: 2.5 * factorRatio,
+                                    borderColor: '#fb1b2f',
+                                    width: '90%',
+                                    alignSelf: 'center',
+                                    borderRadius: 100 * factorRatio,
+                                    marginTop: 10 * factorRatio,
+                                    marginBottom: 5 * factorRatio,
+                                },
+                            ]}
                         >
-                            PRACTICE
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.setState({showAssignmentComplete: true});
-                        }}
-                        style={[
-                            styles.centerContent,
-                            {
-                                borderWidth: 2.5 * factorRatio,
-                                borderColor: '#fb1b2f',
-                                backgroundColor: '#fb1b2f',
-                                width: '90%',
-                                alignSelf: 'center',
-                                borderRadius: 100 * factorRatio,
-                                marginTop: 5 * factorRatio,
-                                marginBottom: 10 * factorRatio,
-                            },
-                        ]}
-                    >
-                        <Text
-                            style={{
-                                fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
-                                fontWeight: '800',
-                                color: 'white',
-                                paddingVertical: 10,
+                            <Text
+                                style={{
+                                    fontSize: 16 * factorRatio,
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontWeight: '800',
+                                    color: '#fb1b2f',
+                                    paddingVertical: 10,
+                                }}
+                            >
+                                PRACTICE
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.setState({showAssignmentComplete: true});
                             }}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    borderWidth: 2.5 * factorRatio,
+                                    borderColor: '#fb1b2f',
+                                    backgroundColor: '#fb1b2f',
+                                    width: '90%',
+                                    alignSelf: 'center',
+                                    borderRadius: 100 * factorRatio,
+                                    marginTop: 5 * factorRatio,
+                                    marginBottom: 10 * factorRatio,
+                                },
+                            ]}
                         >
-                            COMPLETE ASSIGNMENT
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                            <Text
+                                style={{
+                                    fontSize: 16 * factorRatio,
+                                    fontFamily: 'OpenSans-Regular',
+                                    fontWeight: '800',
+                                    color: 'white',
+                                    paddingVertical: 10,
+                                }}
+                            >
+                                COMPLETE ASSIGNMENT
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
                 <Modal
                     key={'VideoPlayerOptions'}
                     isVisible={this.state.showVideoPlayerOptions}

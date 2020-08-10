@@ -101,6 +101,11 @@ export default class VideoPlayer extends React.Component {
                             value:
                                 'https://d1923uyy6spedc.cloudfront.net/246346-sheet-image-1582300437.svg',
                         },
+                        {
+                            key: 'sheet_music_image_url',
+                            value:
+                                'https://d1923uyy6spedc.cloudfront.net/246345-sheet-image-1582300289.svg',
+                        },
                     ],
                 ],
                 [
