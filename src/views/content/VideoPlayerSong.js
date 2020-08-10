@@ -2,7 +2,7 @@
  * VideoPlayerSong
  */
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import SoundSlice from '../../components/SoundSlice.js';
@@ -10,7 +10,6 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AssignmentComplete from '../../modals/AssignmentComplete.js';
 import QualitySettings from '../../modals/QualitySettings.js';
 import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
-import {ScrollView} from 'react-native-gesture-handler';
 
 export default class VideoPlayerSong extends React.Component {
     static navigationOptions = {header: null};
