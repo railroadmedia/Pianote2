@@ -2,28 +2,23 @@
  * SoundSlice
  */
 import React from 'react';
-import { 
-    View, 
-    Text,
-    TouchableOpacity
-} from 'react-native';
-import { WebView } from 'react-native-webview';
-import { withNavigation } from 'react-navigation';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {WebView} from 'react-native-webview';
+import {withNavigation} from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 class SoundSlice extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        this.state = {
-        }
+        this.state = {};
     }
-
 
     render = () => {
         return (
-            <View style={styles.container}>                 
-                <View key={'contentContainer'}
+            <View style={styles.container}>
+                <View
+                    key={'contentContainer'}
                     style={{
                         height: '100%',
                         width: '100%',
@@ -31,18 +26,18 @@ class SoundSlice extends React.Component {
                     }}
                 >
                     <View style={{height: '20%'}}>
-                        <View 
+                        <View
                             style={{
                                 position: 'absolute',
-                                top: 50*factorRatio,
-                                left: 20*factorRatio,
+                                top: 50 * factorRatio,
+                                left: 20 * factorRatio,
                                 zIndex: 10,
                             }}
                         >
-                            <View style={{flex: 1}}/>
+                            <View style={{flex: 1}} />
                             <TouchableOpacity
                                 onPress={() => {
-                                    this.props.hideSoundSlice()
+                                    this.props.hideSoundSlice();
                                 }}
                                 style={{
                                     height: '100%',
@@ -51,7 +46,7 @@ class SoundSlice extends React.Component {
                                 }}
                             >
                                 <FeatherIcon
-                                    size={40*factorRatio}
+                                    size={40 * factorRatio}
                                     name={'x'}
                                     color={'black'}
                                 />
@@ -59,7 +54,7 @@ class SoundSlice extends React.Component {
                         </View>
                     </View>
                     <WebView
-                        style={{flex:1}}
+                        style={{flex: 1}}
                         javaScriptEnabled={true}
                         domStorageEnabled={true}
                         startInLoadingState={true}
@@ -67,12 +62,14 @@ class SoundSlice extends React.Component {
                         automaticallyAdjustContentInsets={true}
                         mediaPlaybackRequiresUserAction={false}
                         source={{
-                        uri: `https://www.soundslice.com/${
-                            /^\d+$/.test(this.props.slug) ? 'scores' : 'slices'
-                        }/${
-                            this.props.slug
-                        }/embed/?api=1&scroll_type=2&branding=0&enable_mixer=0`,
-                        headers: { referer: 'https://www.drumeo.com/' }
+                            uri: `https://www.soundslice.com/${
+                                /^\d+$/.test(this.props.slug)
+                                    ? 'scores'
+                                    : 'slices'
+                            }/${
+                                this.props.slug
+                            }/embed/?api=1&scroll_type=2&branding=0&enable_mixer=0`,
+                            headers: {referer: 'https://www.drumeo.com/'},
                         }}
                         injectedJavaScript={`
                             setTimeout(() => {
@@ -88,7 +85,7 @@ class SoundSlice extends React.Component {
                             }, 500)
                         `}
                     />
-                        {/* <View style={{flex: 1}}/>
+                    {/* <View style={{flex: 1}}/>
                         <View style={{flex: 1}}>
                             <Text
                                 style={{
@@ -113,12 +110,10 @@ class SoundSlice extends React.Component {
                                 Learn The Song
                             </Text>
                         </View>*/}
-                </View> 
+                </View>
             </View>
-    
-        )
-    }
+        );
+    };
 }
-
 
 export default withNavigation(SoundSlice);
