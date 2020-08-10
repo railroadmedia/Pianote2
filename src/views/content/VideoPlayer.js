@@ -203,7 +203,7 @@ export default class VideoPlayer extends React.Component {
 
         email = await AsyncStorage.getItem('email');
 
-        await fetch('http://3.17.144.93:5000/getComments', {
+        await fetch('http://18.218.118.227:5000/getComments', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -252,7 +252,7 @@ export default class VideoPlayer extends React.Component {
         if (this.state.comments[index][8] == 0) {
             this.state.comments[index][8] = 1;
             this.state.comments[index][6] = this.state.comments[index][6] + 1;
-            await fetch('http://3.17.144.93:5000/likeComment', {
+            await fetch('http://18.218.118.227:5000/likeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -270,7 +270,7 @@ export default class VideoPlayer extends React.Component {
         } else {
             this.state.comments[index][8] = 0;
             this.state.comments[index][6] = this.state.comments[index][6] - 1;
-            await fetch('http://3.17.144.93:5000/unlikeComment', {
+            await fetch('http://18.218.118.227:5000/unlikeComment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({

@@ -47,7 +47,7 @@ export default class StudentFocusShow extends React.Component {
         email = await AsyncStorage.getItem('email');
         contentID = 0;
 
-        await fetch('http://3.17.144.93:5000/restartCourse', {
+        await fetch('http://18.218.118.227:5000/restartCourse', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -68,7 +68,7 @@ export default class StudentFocusShow extends React.Component {
         email = await AsyncStorage.getItem('email');
         contentID = 0;
 
-        await fetch('http://3.17.144.93:5000/like', {
+        await fetch('http://18.218.118.227:5000/like', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -89,7 +89,7 @@ export default class StudentFocusShow extends React.Component {
         email = await AsyncStorage.getItem('email');
         contentID = 0;
 
-        await fetch('http://3.17.144.93:5000/addToMyList', {
+        await fetch('http://18.218.118.227:5000/addToMyList', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
