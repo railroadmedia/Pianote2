@@ -6,8 +6,10 @@ import PDFView from 'react-native-view-pdf';
 import Orientation from 'react-native-orientation-locker';
 
 import dldService from '../../services/download.service';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class AssignmentResource extends React.Component {
+    static contextType = NetworkContext;
     state = {
         scroll: true,
         width: Dimensions.get('window').width,
@@ -142,6 +144,7 @@ export default class AssignmentResource extends React.Component {
 
     render() {
         let {width} = this.state;
+        console.log(this.context.isConnected);
         return (
             <ScrollView
                 horizontal={true}
@@ -199,7 +202,7 @@ export default class AssignmentResource extends React.Component {
                                 </View>
                             );
                         } else {
-                            if (true)
+                            if (this.context.isConnected)
                                 return (
                                     <View
                                         key={sheet.id}
