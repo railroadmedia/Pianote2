@@ -924,6 +924,7 @@ class VerticalVideoList extends React.Component {
                 </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {this.renderMappedList()}
+                    <View style={{flex: 1}} />
                 </View>
                 <Modal
                     key={'modal'}
