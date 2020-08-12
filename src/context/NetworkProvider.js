@@ -1,7 +1,9 @@
 import React from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import {Text} from 'react-native';
-export const NetworkContext = React.createContext({isConnected: true});
+
+export const NetworkContext = React.createContext({
+    isConnected: true,
+});
 
 export default class NetworkProvider extends React.PureComponent {
     state = {

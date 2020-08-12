@@ -144,7 +144,6 @@ export default class AssignmentResource extends React.Component {
 
     render() {
         let {width} = this.state;
-        console.log(this.context.isConnected);
         return (
             <ScrollView
                 horizontal={true}
