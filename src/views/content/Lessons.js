@@ -2,14 +2,14 @@
  * Lessons
  */
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
-import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import {View, Text, ScrollView} from 'react-native';
 import {getContentChildById} from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
+import {getContent, userLogin, configure} from '@musora/services';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -48,6 +48,15 @@ export default class Lessons extends React.Component {
     componentWillMount = async () => {
         email = await AsyncStorage.getItem('email');
         profileImage = await AsyncStorage.getItem('profileURI');
+
+        const {response, error} = await userLogin({
+            email: 'kentonp@drumeo.com',
+            password: 'Katrinapalmer7!',
+        });
+
+        console.log('AUTHENTICIATION: ', response, error);
+
+        await configure({authToken: response.data.token});
 
         await fetch('http://18.218.118.227:5000/accountDetails', {
             method: 'POST',
@@ -164,6 +173,8 @@ export default class Lessons extends React.Component {
                 included_types: ['course'],
             });
 
+            console.log(response, error);
+
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data);
             });
@@ -265,7 +276,7 @@ export default class Lessons extends React.Component {
                 isLoadingNew: false,
             });
         } catch (error) {
-            console.log('new lesson error');
+            console.log('new lesson error: ', error);
         }
     };
 
