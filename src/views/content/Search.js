@@ -5,10 +5,8 @@ import React from 'react';
 import {
     View,
     Text,
-    Keyboard,
     TextInput,
     Animated,
-    TouchableWithoutFeedback,
     TouchableOpacity,
     ScrollView,
     Platform,
@@ -29,13 +27,15 @@ export default class Search extends React.Component {
             searchResults: [],
             searchEntered: false,
             outVideos: false,
-            numSearchResults: null,
-            searchTerm: '',
-            isLoading: false,
-            currentSort: 'Relevance',
             filterClicked: false,
             showFilters: false,
+            isLoading: false,
+            showCancel: false,
+            noResults: false,
             filters: null,
+            numSearchResults: null,
+            searchTerm: '',
+            currentSort: 'Relevance',
         };
     }
 
@@ -110,6 +110,7 @@ export default class Search extends React.Component {
                             style={{
                                 fontSize: 18 * factorRatio,
                                 fontFamily: 'OpenSans-Regular',
+                                fontWeight: 'bold',
                                 color: 'white',
                             }}
                         >
@@ -124,8 +125,12 @@ export default class Search extends React.Component {
     search = async (term) => {
         if (term.length > 0) {
             this.setState({
-                items: [],
                 isLoading: true,
+            });
+
+            this.setState({
+                searchResults: [],
+                showCancel: true,
             });
 
             var isNewTerm = true;
@@ -164,49 +169,66 @@ export default class Search extends React.Component {
             await fetch(url)
                 .then((response) => response.json())
                 .then((response) => {
-                    if (response.length == 0) {
-                        this.setState({searchEntered: false});
+                    console.log(response.data.length == 0);
+                    if (response.data.length == 0) {
+                        this.setState({
+                            searchEntered: false,
+                            isLoading: false,
+                            noResults: true,
+                            showCancel: true,
+                        });
+                    } else {
+                        console.log('RESPONSE: ', response);
+                        newContent = response.data.map((data) => {
+                            return new ContentModel(data);
+                        });
+
+                        items = [];
+                        for (i in newContent) {
+                            if (
+                                newContent[i].getData('thumbnail_url') !== 'TBD'
+                            ) {
+                                items.push({
+                                    title: newContent[i].getField('title'),
+                                    artist: newContent[i].getField('instructor')
+                                        .fields[0].value,
+                                    thumbnail: newContent[i].getData(
+                                        'thumbnail_url',
+                                    ),
+                                    type: newContent[i].post.type,
+                                    description: newContent[i]
+                                        .getData('description')
+                                        .replace(/(<([^>]+)>)/gi, ''),
+                                    xp: newContent[i].post.xp,
+                                    id: newContent[i].id,
+                                    like_count: newContent[i].post.like_count,
+                                    duration: this.getDuration(newContent[i]),
+                                    isLiked: newContent[i].isLiked,
+                                    isAddedToList: newContent[i].isAddedToList,
+                                    isStarted: newContent[i].isStarted,
+                                    isCompleted: newContent[i].isCompleted,
+                                    bundle_count:
+                                        newContent[i].post.bundle_count,
+                                    progress_percent:
+                                        newContent[i].post.progress_percent,
+                                });
+                            }
+                        }
+
+                        this.setState({
+                            searchEntered: true,
+                            noResults: false,
+                            isLoading: false,
+                            searchResults: [
+                                ...this.state.searchResults,
+                                ...items,
+                            ],
+                        });
                     }
-                    console.log('RESPONSE: ', response);
-                    newContent = response.data.map((data) => {
-                        return new ContentModel(data);
-                    });
                 })
                 .catch((error) => {
                     console.log('API Error: ', error);
                 });
-
-            items = [];
-            for (i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
-            }
-
-            this.setState({
-                searchEntered: true,
-                isLoading: false,
-                searchResults: [...this.state.searchResults, ...items],
-            });
         }
     };
 
@@ -334,7 +356,8 @@ export default class Search extends React.Component {
                                                 this.state.searchTerm.length >
                                                     0 ||
                                                 this.state.searchResults
-                                                    .length > 0
+                                                    .length > 0 ||
+                                                this.state.showCancel
                                                     ? fullWidth * 0.765
                                                     : fullWidth * 0.93,
                                             backgroundColor: '#f3f6f6',
@@ -389,6 +412,7 @@ export default class Search extends React.Component {
                                             styles.centerContent,
                                             {
                                                 width:
+                                                    this.state.showCancel ||
                                                     this.state.searchTerm
                                                         .length > 0
                                                         ? fullWidth * 0.2
@@ -396,7 +420,9 @@ export default class Search extends React.Component {
                                             },
                                         ]}
                                     >
-                                        {this.state.searchTerm.length > 0 && (
+                                        {(this.state.showCancel ||
+                                            this.state.searchTerm.length >
+                                                0) && (
                                             <TouchableOpacity
                                                 style={[
                                                     styles.centerContent,
@@ -409,6 +435,9 @@ export default class Search extends React.Component {
                                                             searchResults: [],
                                                             searchEntered: false,
                                                             showFilters: false,
+                                                            showCancel: false,
+                                                            noResults: false,
+                                                            isLoading: false,
                                                         });
                                                 }}
                                             >
@@ -513,10 +542,15 @@ export default class Search extends React.Component {
                                 </View>
                                 <View style={{height: fullHeight * 0.015}} />
                                 <View style={{flex: 1}}>
-                                    {!this.state.searchEntered && (
-                                        <View>{this.mapRecentResults()}</View>
-                                    )}
+                                    {!this.state.searchEntered &&
+                                        !this.state.isLoading &&
+                                        !this.state.noResults && (
+                                            <View>
+                                                {this.mapRecentResults()}
+                                            </View>
+                                        )}
                                     {this.state.searchEntered &&
+                                        !this.state.noResults &&
                                         !this.state.isLoading && (
                                             <View>
                                                 <VerticalVideoList
@@ -547,9 +581,12 @@ export default class Search extends React.Component {
                                                     changeSort={(sort) => {
                                                         this.setState({
                                                             currentSort: sort,
-                                                            allLessons: [],
+                                                            searchResults: [],
                                                         }),
-                                                            this.getAllLessons();
+                                                            this.search(
+                                                                this.state
+                                                                    .searchTerm,
+                                                            );
                                                     }}
                                                     filterResults={() =>
                                                         this.filterResults()
@@ -594,6 +631,40 @@ export default class Search extends React.Component {
                                                 />
                                             </View>
                                         )}
+                                    {this.state.noResults && (
+                                        <View
+                                            key={'noResults'}
+                                            style={{
+                                                height: fullHeight * 0.07,
+                                                borderTopWidth: 1 * factorRatio,
+                                                borderTopColor:
+                                                    colors.secondBackground,
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    paddingLeft:
+                                                        fullWidth * 0.05,
+                                                    height: '100%',
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize:
+                                                            18 * factorRatio,
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
+                                                        color: 'white',
+                                                        fontWeight: 'bold',
+                                                    }}
+                                                >
+                                                    No Results
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )}
                                 </View>
                             </ScrollView>
                         </View>

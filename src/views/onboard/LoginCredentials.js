@@ -111,7 +111,12 @@ export default class LoginCredentials extends React.Component {
             email: this.state.email,
             password: this.state.password,
         });
-        console.log('RESPONSE: ', response, 'ERROR: ', error);
+
+        await configure({authToken: response.data.token});
+
+        console.log('RESPONSE: ', response);
+        console.log('ERROR: ', error);
+
         if (typeof response == 'undefined') {
             this.setState({showPasswordEmailMatch: true});
         } else if (response.data.success) {
@@ -122,6 +127,7 @@ export default class LoginCredentials extends React.Component {
                 ['password', this.state.password],
                 ['token', JSON.stringify(response.data.token)],
                 ['tokenTime', JSON.stringify(response.data.token)],
+                ['userId', JSON.stringify(response.data.userId)],
             ]);
 
             // check membership status then navigate

@@ -26,9 +26,22 @@ export default class LoadPage extends React.Component {
         await SplashScreen.hide();
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
         email = await AsyncStorage.getItem('email');
+        userId = await AsyncStorage.getItem('userId');
+
+        console.log(userId);
+
         if (isLoggedIn !== 'true') {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
         } else {
+            await fetch('https://staging.pianote.com/members/profile/155577')
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log('PROFILE RESPONSE: ', response);
+                })
+                .catch((error) => {
+                    console.log('API Error members/profile: ', error);
+                });
+
             // membership expired
             await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
                 method: 'POST',
