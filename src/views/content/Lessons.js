@@ -3,19 +3,20 @@
  */
 import React from 'react';
 import {ContentModel} from '@musora/models';
+import {getContent} from '@musora/services';
 import FastImage from 'react-native-fast-image';
 import {View, Text, ScrollView} from 'react-native';
 import {getContentChildById} from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
-import {getContent, userLogin, configure} from '@musora/services';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import {getToken, getUserData} from 'Pianote2/src/services/Authentication.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
 export default class Lessons extends React.Component {
@@ -47,16 +48,12 @@ export default class Lessons extends React.Component {
 
     componentWillMount = async () => {
         email = await AsyncStorage.getItem('email');
-        profileImage = await AsyncStorage.getItem('profileURI');
+        password = await AsyncStorage.getItem('password');
 
-        const {response, error} = await userLogin({
-            email: 'kentonp@drumeo.com',
-            password: 'Katrinapalmer7!',
-        });
+        var auth = await getToken(email, password);
+        var userData = await getUserData(auth.token);
 
-        console.log('AUTHENTICIATION: ', response, error);
-
-        await configure({authToken: response.data.token});
+        console.log('USER DATA: ', userData);
 
         await fetch('http://18.218.118.227:5000/accountDetails', {
             method: 'POST',

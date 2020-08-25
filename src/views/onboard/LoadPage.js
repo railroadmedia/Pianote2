@@ -7,6 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {getToken, getUserData} from 'Pianote2/src/services/Authentication.js';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -26,22 +27,15 @@ export default class LoadPage extends React.Component {
         await SplashScreen.hide();
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
         email = await AsyncStorage.getItem('email');
+        password = await AsyncStorage.getItem('password');
         userId = await AsyncStorage.getItem('userId');
 
-        console.log(userId);
+        var auth = await getToken('kentonp@drumeo.com', 'Katrinapalmer7!');
+        var token = await getUserData(auth.token);
 
         if (isLoggedIn !== 'true') {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
         } else {
-            await fetch('https://staging.pianote.com/members/profile/155577')
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('PROFILE RESPONSE: ', response);
-                })
-                .catch((error) => {
-                    console.log('API Error members/profile: ', error);
-                });
-
             // membership expired
             await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
                 method: 'POST',
