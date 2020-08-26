@@ -1,12 +1,17 @@
 import {configure} from '@musora/services';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export async function getToken(username, password) {
+export async function getToken() {
     // return userID, expiry, token, tokenType
     try {
+        const email = await AsyncStorage.getItem('email');
+        const password = await AsyncStorage.getItem('password');
+
         let response = await fetch(
-            `https://staging.pianote.com/usora/api/login?email=${username}&password=${password}`,
+            `https://staging.pianote.com/usora/api/login?email=${email}&password=${password}`,
             {method: 'PUT'},
         );
+
         let data = await response.json();
         console.log('TOKEN DATA: ', data);
         await configure({authToken: data.token});

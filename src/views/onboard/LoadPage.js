@@ -7,7 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getToken, getUserData} from 'Pianote2/src/services/Authentication.js';
+import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 
 const resetAction = StackActions.reset({
     index: 0,

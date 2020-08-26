@@ -15,8 +15,8 @@ import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import {getToken, getUserData} from 'Pianote2/src/services/Authentication.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
 export default class Lessons extends React.Component {
