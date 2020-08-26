@@ -13,6 +13,7 @@ import {
     TouchableOpacity,
     Platform,
 } from 'react-native';
+import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -20,6 +21,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import commentsService from '../services/comments.service';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -30,23 +32,24 @@ class Replies extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
+        console.log(props.parentComment);
         this.state = {
-            replies: [], // video's comments
+            replies: props.parentComment.replies, // video's comments
             profileImage: '',
-            parentComment: this.props.parentComment,
+            parentComment: props.parentComment,
             makeCommentVertDelta: new Animated.Value(0.01),
             showMakeComment: false,
             comment: '',
-            commentsLoading: false,
+            userId: null,
         };
     }
 
     componentDidMount = async () => {
         // get profile image
         let profileImage = await AsyncStorage.getItem('profileURI');
-        if (profileImage !== null) {
-            await this.setState({profileImage});
-        }
+        this.userId = JSON.parse(await AsyncStorage.getItem('userId'));
+
+        await this.setState({profileImage, userId});
 
         this.keyboardDidShowListener = Keyboard.addListener(
             showListener,
@@ -56,8 +59,6 @@ class Replies extends React.Component {
             hideListener,
             this._keyboardDidHide,
         );
-
-        this.fetchReplies();
     };
 
     componentWillUnmount() {
@@ -89,12 +90,39 @@ class Replies extends React.Component {
     };
 
     makeReply = async () => {
-        // reply to comment
-        console.log('reply to commentID: ', this.state.parentComment[9]);
-        this.setState({
-            comment: '',
-        });
+        if (this.state.comment.length > 0) {
+            let encodedReply = encodeURIComponent(this.state.comment);
+            let res = await commentsService.addReplyToComment(
+                encodedReply,
+                this.state.parentComment.id,
+            );
+            let replies = [...this.state.replies];
+            let parentComment = {...this.state.parentComment};
+            replies.push(res.data[0]);
+            parentComment.replies.push(res.data[0]);
+            this.props.onAddReply(this.state.parentComment.id);
+            this.setState({
+                replies,
+                comment: '',
+                parentComment,
+            });
+        }
+
         this.textInputRef.blur();
+    };
+
+    deleteReply = (id) => {
+        let replies = [...this.state.replies];
+        let parentComment = {...this.state.parentComment};
+        parentComment.replies = parentComment.replies.filter(
+            (c) => c.id !== id,
+        );
+        this.setState({
+            replies: replies.filter((c) => c.id !== id),
+            parentComment,
+        });
+        commentsService.deleteComment(id);
+        this.props.onDeleteReply();
     };
 
     showFooter() {
@@ -120,35 +148,8 @@ class Replies extends React.Component {
         }
     }
 
-    fetchReplies = async () => {
-        await this.setState({commentsLoading: true});
-
-        email = await AsyncStorage.getItem('email');
-
-        await fetch('http://18.218.118.227:5000/getComments', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                contentID: this.state.parentComment[9],
-                email,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('comments: ', response);
-                this.setState({
-                    replies: [...response, ...this.state.replies],
-                });
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
-        await this.setState({commentsLoading: false});
-    };
-
     mapReplies() {
-        return this.state.replies.map((row, index) => {
+        return this.state.replies.map((reply, index) => {
             return (
                 <View
                     style={{
@@ -170,7 +171,9 @@ class Replies extends React.Component {
                                 }}
                                 source={{
                                     uri:
-                                        'https://facebook.github.io/react-native/img/tiny_logo.png',
+                                        reply.user[
+                                            'fields.profile_picture_image_url'
+                                        ],
                                 }}
                                 resizeMode={FastImage.resizeMode.stretch}
                             />
@@ -184,7 +187,7 @@ class Replies extends React.Component {
                                     color: 'grey',
                                 }}
                             >
-                                {row[4]}
+                                {reply.user.display_name}
                             </Text>
                         </View>
                         <View style={{flex: 1}} />
@@ -203,7 +206,7 @@ class Replies extends React.Component {
                                 color: 'white',
                             }}
                         >
-                            {row[0]}
+                            {reply.comment}
                         </Text>
                         <View style={{height: 7.5 * factorVertical}} />
                         <Text
@@ -213,7 +216,8 @@ class Replies extends React.Component {
                                 color: 'grey',
                             }}
                         >
-                            {row[1]} | {row[2]} | {row[3]}
+                            {reply.user['display_name']} | {reply.user.rank} |{' '}
+                            {moment.utc(reply.created_on).local().fromNow()}
                         </Text>
                         <View
                             style={{
@@ -225,13 +229,12 @@ class Replies extends React.Component {
                                 <View style={{flexDirection: 'row'}}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.likeReply(index);
+                                            this.likeOrDislikeReply(reply.id);
                                         }}
                                     >
                                         <AntIcon
                                             name={
-                                                this.state.replies[index][8] ==
-                                                1
+                                                reply.is_liked
                                                     ? 'like1'
                                                     : 'like2'
                                             }
@@ -242,7 +245,7 @@ class Replies extends React.Component {
                                     <View
                                         style={{width: 10 * factorHorizontal}}
                                     />
-                                    {row[6] > 0 && (
+                                    {reply.like_count > 0 && (
                                         <View>
                                             <View style={{flex: 1}} />
                                             <View
@@ -275,10 +278,10 @@ class Replies extends React.Component {
                                                             colors.pianoteRed,
                                                     }}
                                                 >
-                                                    {row[6]}{' '}
-                                                    {row[6] == 1
-                                                        ? 'Like'
-                                                        : 'Likes'}
+                                                    {reply.like_count}{' '}
+                                                    {reply.like_count === 1
+                                                        ? 'LIKE'
+                                                        : 'LIKES'}
                                                 </Text>
                                             </View>
                                             <View style={{flex: 1}} />
@@ -286,6 +289,19 @@ class Replies extends React.Component {
                                     )}
                                 </View>
                                 <View style={{width: 20 * factorHorizontal}} />
+                                {this.userId === reply.user_id && (
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            this.deleteReply(reply.id)
+                                        }
+                                    >
+                                        <AntIcon
+                                            name={'delete'}
+                                            size={20 * factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
+                                    </TouchableOpacity>
+                                )}
                             </View>
                             <View style={{flex: 1}} />
                         </View>
@@ -300,103 +316,45 @@ class Replies extends React.Component {
             num = Number(num);
             if (num < 10000) {
                 num = num.toString();
-                return num;
+                return num + ' XP';
             } else {
                 num = (num / 1000).toFixed(1).toString();
                 num = num + 'k';
-                return num;
+                return num + ' XP';
             }
         }
     };
 
-    likeParentComment = async () => {
-        if (this.state.parentComment[8] == 0) {
-            this.state.parentComment[8] = 1;
-            this.state.parentComment[6] = this.state.parentComment[6] + 1;
-            await fetch('http://18.218.118.227:5000/likeComment', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    commentID: this.state.parentComment[9],
-                    email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('liked : ', response);
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
+    likeOrDislikeParentComment = () => {
+        let parentComment = {...this.state.parentComment};
+        if (parentComment.is_liked) {
+            parentComment.like_count--;
+            parentComment.is_liked = false;
+            commentsService.dislikeComment(parentComment.id);
         } else {
-            this.state.parentComment[8] = 0;
-            this.state.parentComment[6] = this.state.parentComment[6] - 1;
-            await fetch('http://18.218.118.227:5000/unlikeComment', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    commentID: this.state.parentComment[9],
-                    email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('unliked : ', response);
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
+            parentComment.like_count++;
+            parentComment.is_liked = true;
+            commentsService.likeComment(parentComment.id);
         }
-
-        await this.setState({
-            parentComment: this.state.parentComment,
-        });
+        this.props.onLikeOrDisikeParentComment(this.state.parentComment.id);
+        this.setState({parentComment});
     };
 
-    likeReply = async (index) => {
-        console.log(this.state.replies);
-        if (this.state.replies[index][8] == 0) {
-            this.state.replies[index][8] = 1;
-            this.state.replies[index][6] = this.state.replies[index][6] + 1;
-            await fetch('http://18.218.118.227:5000/likeComment', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    commentID: this.state.replies[index][9],
-                    email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('liked : ', response);
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
-        } else {
-            this.state.replies[index][8] = 0;
-            this.state.replies[index][6] = this.state.replies[index][6] - 1;
-            await fetch('http://18.218.118.227:5000/unlikeComment', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    commentID: this.state.replies[index][9],
-                    email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('unliked : ', response);
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
+    likeOrDislikeReply = (id) => {
+        let replies = [...this.state.replies];
+        let reply = replies.find((f) => f.id === id);
+        if (reply) {
+            if (reply.is_liked) {
+                reply.like_count--;
+                reply.is_liked = false;
+                commentsService.dislikeComment(id);
+            } else {
+                reply.like_count++;
+                reply.is_liked = true;
+                commentsService.likeComment(id);
+            }
+            this.setState({replies});
         }
-
-        await this.setState({
-            replies: this.state.replies,
-        });
-        console.log(this.state.replies);
     };
 
     render = () => {
@@ -494,8 +452,10 @@ class Replies extends React.Component {
                                                 borderRadius: 100,
                                             }}
                                             source={{
-                                                uri:
-                                                    'https://facebook.github.io/react-native/img/tiny_logo.png',
+                                                uri: this.state.parentComment
+                                                    .user[
+                                                    'fields.profile_picture_image_url'
+                                                ],
                                             }}
                                             resizeMode={
                                                 FastImage.resizeMode.stretch
@@ -514,7 +474,8 @@ class Replies extends React.Component {
                                             }}
                                         >
                                             {this.changeXP(
-                                                this.state.parentComment[4],
+                                                this.state.parentComment.user
+                                                    .xp,
                                             )}
                                         </Text>
                                     </View>
@@ -536,7 +497,7 @@ class Replies extends React.Component {
                                             color: 'white',
                                         }}
                                     >
-                                        {this.state.parentComment[0]}
+                                        {this.state.parentComment.comment}
                                     </Text>
                                     <View
                                         style={{height: 7.5 * factorVertical}}
@@ -548,9 +509,18 @@ class Replies extends React.Component {
                                             color: colors.secondBackground,
                                         }}
                                     >
-                                        {this.state.parentComment[1]} |{' '}
-                                        {this.state.parentComment[2]} |{' '}
-                                        {this.state.parentComment[3]}
+                                        {
+                                            this.state.parentComment.user
+                                                .display_name
+                                        }{' '}
+                                        | {this.state.parentComment.user.rank} |{' '}
+                                        {moment
+                                            .utc(
+                                                this.state.parentComment
+                                                    .created_on,
+                                            )
+                                            .local()
+                                            .fromNow()}
                                     </Text>
                                     <View style={{height: 50 * factorVertical}}>
                                         <View style={{flex: 1}} />
@@ -560,14 +530,14 @@ class Replies extends React.Component {
                                             >
                                                 <TouchableOpacity
                                                     onPress={() => {
-                                                        this.likeParentComment();
+                                                        this.likeOrDislikeParentComment();
                                                     }}
                                                 >
                                                     <AntIcon
                                                         name={
                                                             this.state
-                                                                .parentComment[8] ==
-                                                            1
+                                                                .parentComment
+                                                                .is_liked
                                                                 ? 'like1'
                                                                 : 'like2'
                                                         }
@@ -584,8 +554,8 @@ class Replies extends React.Component {
                                                             factorHorizontal,
                                                     }}
                                                 />
-                                                {this.state
-                                                    .parentComment[5] && (
+                                                {this.state.parentComment
+                                                    .like_count > 0 && (
                                                     <View>
                                                         <View
                                                             style={{flex: 1}}
@@ -625,9 +595,15 @@ class Replies extends React.Component {
                                                             >
                                                                 {
                                                                     this.state
-                                                                        .parentComment[6]
+                                                                        .parentComment
+                                                                        .like_count
                                                                 }{' '}
-                                                                LIKES
+                                                                {this.state
+                                                                    .parentComment
+                                                                    .like_count ===
+                                                                1
+                                                                    ? 'LIKE'
+                                                                    : 'LIKES'}
                                                             </Text>
                                                         </View>
                                                         <View
@@ -659,8 +635,8 @@ class Replies extends React.Component {
                                                             factorHorizontal,
                                                     }}
                                                 />
-                                                {this.state
-                                                    .parentComment[6] && (
+                                                {this.state.parentComment
+                                                    .replies.length > 0 && (
                                                     <View>
                                                         <View
                                                             style={{flex: 1}}
@@ -700,11 +676,14 @@ class Replies extends React.Component {
                                                             >
                                                                 {
                                                                     this.state
-                                                                        .parentComment[5]
+                                                                        .parentComment
+                                                                        .replies
+                                                                        .length
                                                                 }{' '}
                                                                 {this.state
-                                                                    .parentComment[5] ==
-                                                                1
+                                                                    .parentComment
+                                                                    .replies
+                                                                    .length == 1
                                                                     ? 'REPLY'
                                                                     : 'REPLIES'}
                                                             </Text>
@@ -715,6 +694,33 @@ class Replies extends React.Component {
                                                     </View>
                                                 )}
                                             </View>
+                                            <View
+                                                style={{
+                                                    width:
+                                                        20 * factorHorizontal,
+                                                }}
+                                            />
+                                            {this.userId ===
+                                                this.state.parentComment
+                                                    .user_id && (
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.props.onDeleteComment(
+                                                            this.state
+                                                                .parentComment
+                                                                .id,
+                                                        )
+                                                    }
+                                                >
+                                                    <AntIcon
+                                                        name={'delete'}
+                                                        size={20 * factorRatio}
+                                                        color={
+                                                            colors.pianoteRed
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                            )}
                                         </View>
                                         <View style={{flex: 1}} />
                                     </View>
@@ -794,9 +800,8 @@ class Replies extends React.Component {
                             </View>
                             <View style={{flex: 1}} />
                         </View>
-                        {!this.state.commentsLoading && (
-                            <View>{this.mapReplies()}</View>
-                        )}
+
+                        <View>{this.mapReplies()}</View>
                     </View>
                     <View
                         style={{

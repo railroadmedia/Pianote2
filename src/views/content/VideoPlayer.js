@@ -12,6 +12,7 @@ import {
     TextInput,
     Animated,
 } from 'react-native';
+import moment from 'moment';
 import Modal from 'react-native-modal';
 import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
@@ -32,12 +33,48 @@ import VerticalVideoList from '../../components/VerticalVideoList.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import downloadService from '../../services/download.service.js';
+import commentsService from '../../services/comments.service.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
     Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-
+const mockComments = [
+    {
+        id: 1,
+        comment:
+            'I love the embedded Youtube Video added to the practice section, super cool and helpful!',
+        is_liked: true,
+        like_count: 1,
+        user_id: 234,
+        replies: [
+            {
+                id: 1,
+                comment:
+                    'I love the embedded Youtube Video added to the practice section, super cool and helpful!',
+                is_liked: true,
+                like_count: 1,
+                user_id: 234,
+                user: {
+                    'fields.profile_picture_image_url':
+                        'https://musora.imgix.net/https%3A%2F%2Fdzryyo1we6bm3.cloudfront.net%2Favatars%2F349787_1583823650413.jpg?fit=crop&crop=faces%2Cedges&auto=format&w=59&h=59&dpr=1.25&ixlib=js-2.3.1&s=eae6008986329b241f37677f33a97e51',
+                    xp: 10,
+                    display_name: 'John Doe',
+                    xp_level: 'master',
+                },
+                created_on: '2020-08-02',
+            },
+        ],
+        user: {
+            'fields.profile_picture_image_url':
+                'https://musora.imgix.net/https%3A%2F%2Fdzryyo1we6bm3.cloudfront.net%2Favatars%2F349787_1583823650413.jpg?fit=crop&crop=faces%2Cedges&auto=format&w=59&h=59&dpr=1.25&ixlib=js-2.3.1&s=eae6008986329b241f37677f33a97e51',
+            xp: 10,
+            display_name: 'John Doe',
+            xp_level: 'master',
+        },
+        created_on: '2020-08-02',
+    },
+];
 export default class VideoPlayer extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -59,7 +96,6 @@ export default class VideoPlayer extends React.Component {
             showAssignmentComplete: false,
             showLessonComplete: false,
             isReply: false,
-            showMakeComment: false,
             selectedComment: null,
 
             makeCommentVertDelta: new Animated.Value(0.01),
@@ -74,7 +110,6 @@ export default class VideoPlayer extends React.Component {
             likes: 34,
             isLiked: false,
             comment: '',
-            commentID: null,
 
             assignmentList: [
                 [
@@ -145,7 +180,8 @@ export default class VideoPlayer extends React.Component {
             hideListener,
             this._keyboardDidHide,
         );
-
+        this.limit = 10;
+        this.userId = JSON.parse(await AsyncStorage.getItem('userId'));
         this.getVideos();
         this.fetchComments();
     };
@@ -244,30 +280,16 @@ export default class VideoPlayer extends React.Component {
     };
 
     fetchComments = async () => {
-        await this.setState({commentsLoading: true});
+        this.setState({commentsLoading: true});
 
-        email = await AsyncStorage.getItem('email');
-
-        await fetch('http://18.218.118.227:5000/getComments', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                contentID: this.state.data.id,
-                email,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('comments: ', response);
-                this.setState({
-                    comments: [...response, ...this.state.comments],
-                });
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
-        await this.setState({commentsLoading: false});
+        let comments = await commentsService.getComments(
+            this.state.data.id,
+            this.state.commentSort,
+            10,
+        );
+        console.log('fetchComm', comments);
+        this.allCommentsNum = comments.meta.totalResults;
+        await this.setState({commentsLoading: false, comments: comments.data});
     };
 
     showFooter() {
@@ -293,69 +315,56 @@ export default class VideoPlayer extends React.Component {
         }
     }
 
-    likeComment = async (index) => {
-        if (this.state.comments[index][8] == 0) {
-            this.state.comments[index][8] = 1;
-            this.state.comments[index][6] = this.state.comments[index][6] + 1;
-            await fetch('http://18.218.118.227:5000/likeComment', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    commentID: this.state.comments[index][9],
-                    email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('liked : ', response);
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
-        } else {
-            this.state.comments[index][8] = 0;
-            this.state.comments[index][6] = this.state.comments[index][6] - 1;
-            await fetch('http://18.218.118.227:5000/unlikeComment', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    commentID: this.state.comments[index][9],
-                    email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    console.log('unliked : ', response);
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
+    likeComment = async (id) => {
+        let comments = [...this.state.comments];
+        let comment = comments.find((f) => f.id === id);
+        if (comment) {
+            if (comment.is_liked) {
+                comment.like_count--;
+                comment.is_liked = false;
+                commentsService.dislikeComment(id);
+            } else {
+                comment.like_count++;
+                comment.is_liked = true;
+                commentsService.likeComment(id);
+            }
+            this.setState({comments});
         }
-
-        await this.setState({
-            comments: this.state.comments,
-        });
     };
 
     makeComment = async () => {
-        // reply to main video
-        console.log('comment on video: ', this.state.data.id);
-        this.setState({comment: ''});
-        this.textInputRef.blur();
+        if (this.state.comment.length > 0) {
+            let encodedCommentText = encodeURIComponent(this.state.comment);
+            await commentsService.addComment(
+                encodedCommentText,
+                this.state.data.id,
+            );
+
+            const comments = await commentsService.getComments(
+                this.state.data.id,
+                this.state.commentSort,
+                this.allCommentsNum + 1,
+            );
+            console.log(comments);
+            this.allCommentsNum = comments.meta.totalResults;
+            this.setState({comment: '', comments: comments.data});
+
+            this.textInputRef.blur();
+        }
     };
 
-    makeReply = async () => {
-        // reply to comment
-        console.log('reply to commentID: ', this.state.commentID);
+    deleteComment = (id) => {
+        let {comments} = this.state;
+        this.allCommentsNum -= 1;
         this.setState({
-            comment: '',
-            commentID: null,
+            comments: comments.filter((c) => c.id !== id),
+            showReplies: false,
         });
-        this.textInputRef.blur();
+        commentsService.deleteComment(id);
     };
 
     mapComments() {
-        return this.state.comments.map((row, index) => {
+        return this.state.comments.map((comment, index) => {
             return (
                 <View
                     style={{
@@ -378,7 +387,12 @@ export default class VideoPlayer extends React.Component {
                                     width: 40 * factorHorizontal,
                                     borderRadius: 100,
                                 }}
-                                source={{uri: row[7]}}
+                                source={{
+                                    uri:
+                                        comment.user[
+                                            'fields.profile_picture_image_url'
+                                        ],
+                                }}
                                 resizeMode={FastImage.resizeMode.stretch}
                             />
                             <Text
@@ -390,7 +404,7 @@ export default class VideoPlayer extends React.Component {
                                     color: 'grey',
                                 }}
                             >
-                                {this.changeXP(row[4])}
+                                {this.changeXP(comment.user.xp)}
                             </Text>
                         </View>
                         <View style={{flex: 1}} />
@@ -409,7 +423,7 @@ export default class VideoPlayer extends React.Component {
                                 color: 'white',
                             }}
                         >
-                            {row[0]}
+                            {comment.comment}
                         </Text>
                         <View style={{height: 7.5 * factorVertical}} />
                         <Text
@@ -419,7 +433,8 @@ export default class VideoPlayer extends React.Component {
                                 color: colors.secondBackground,
                             }}
                         >
-                            {row[1]} | {row[2]} | {row[3]}
+                            {comment.user['display_name']} | {comment.user.rank}{' '}
+                            | {moment.utc(comment.created_on).local().fromNow()}
                         </Text>
                         <View
                             style={{
@@ -432,11 +447,15 @@ export default class VideoPlayer extends React.Component {
                                 <View style={{flexDirection: 'row'}}>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.likeComment(index);
+                                            this.likeComment(comment.id);
                                         }}
                                     >
                                         <AntIcon
-                                            name={row[8] ? 'like1' : 'like2'}
+                                            name={
+                                                comment.is_liked
+                                                    ? 'like1'
+                                                    : 'like2'
+                                            }
                                             size={20 * factorRatio}
                                             color={colors.pianoteRed}
                                         />
@@ -444,7 +463,7 @@ export default class VideoPlayer extends React.Component {
                                     <View
                                         style={{width: 10 * factorHorizontal}}
                                     />
-                                    {row[6] > 0 && (
+                                    {comment.like_count > 0 && (
                                         <View>
                                             <View style={{flex: 1}} />
                                             <View
@@ -477,7 +496,10 @@ export default class VideoPlayer extends React.Component {
                                                             colors.pianoteRed,
                                                     }}
                                                 >
-                                                    {row[6]} LIKES
+                                                    {comment.like_count}{' '}
+                                                    {comment.like_count === 1
+                                                        ? 'LIKE'
+                                                        : 'LIKES'}
                                                 </Text>
                                             </View>
                                             <View style={{flex: 1}} />
@@ -489,14 +511,9 @@ export default class VideoPlayer extends React.Component {
                                     <TouchableOpacity
                                         onPress={() => {
                                             this.setState({
-                                                showMakeComment: true,
-                                                commentID: row[9],
-                                            }),
-                                                setTimeout(
-                                                    () =>
-                                                        this.textInputRef.focus(),
-                                                    100,
-                                                );
+                                                showReplies: true,
+                                                selectedComment: comment,
+                                            });
                                         }}
                                     >
                                         <MaterialIcon
@@ -508,7 +525,7 @@ export default class VideoPlayer extends React.Component {
                                     <View
                                         style={{width: 10 * factorHorizontal}}
                                     />
-                                    {row[5] > 0 && (
+                                    {comment.replies.length > 0 && (
                                         <View>
                                             <View style={{flex: 1}} />
                                             <View
@@ -541,22 +558,40 @@ export default class VideoPlayer extends React.Component {
                                                             colors.pianoteRed,
                                                     }}
                                                 >
-                                                    {row[5]} REPLIES
+                                                    {comment.replies.length}{' '}
+                                                    {comment.replies.length ===
+                                                    1
+                                                        ? 'REPLY'
+                                                        : 'REPLIES'}
                                                 </Text>
                                             </View>
                                             <View style={{flex: 1}} />
                                         </View>
                                     )}
                                 </View>
+                                <View style={{width: 20 * factorHorizontal}} />
+                                {this.userId === comment.user_id && (
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            this.deleteComment(comment.id)
+                                        }
+                                    >
+                                        <AntIcon
+                                            name={'delete'}
+                                            size={20 * factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
+                                    </TouchableOpacity>
+                                )}
                             </View>
                             <View style={{flex: 1}} />
                         </View>
-                        {row[5] !== 0 && (
+                        {comment.replies.length !== 0 && (
                             <TouchableOpacity
                                 onPress={() => {
                                     this.setState({
                                         showReplies: true,
-                                        selectedComment: row,
+                                        selectedComment: comment,
                                     });
                                 }}
                             >
@@ -567,7 +602,10 @@ export default class VideoPlayer extends React.Component {
                                         color: colors.secondBackground,
                                     }}
                                 >
-                                    VIEW {row[5]} REPLIES
+                                    VIEW {comment.replies.length}{' '}
+                                    {comment.replies.length === 1
+                                        ? 'REPLY'
+                                        : 'REPLIES'}
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -582,11 +620,11 @@ export default class VideoPlayer extends React.Component {
             num = Number(num);
             if (num < 10000) {
                 num = num.toString();
-                return num;
+                return num + ' XP';
             } else {
                 num = (num / 1000).toFixed(1).toString();
                 num = num + 'k';
-                return num;
+                return num + ' XP';
             }
         }
     };
@@ -1106,7 +1144,8 @@ export default class VideoPlayer extends React.Component {
                                                         >
                                                             {this.state.isReply
                                                                 ? 'REPLIES'
-                                                                : this.state.comments.length.toString() +
+                                                                : this
+                                                                      .allCommentsNum +
                                                                   ' COMMENTS'}
                                                         </Text>
                                                         <View
@@ -1672,10 +1711,8 @@ export default class VideoPlayer extends React.Component {
                                         color: colors.secondBackground,
                                     }}
                                     onSubmitEditing={() => {
-                                        this.state.commentID !== null
-                                            ? this.makeReply()
-                                            : this.makeComment(),
-                                            this.textInputRef.clear();
+                                        this.makeComment();
+                                        this.textInputRef.clear();
                                     }}
                                     returnKeyType={'go'}
                                     onChangeText={(comment) =>
@@ -1708,10 +1745,8 @@ export default class VideoPlayer extends React.Component {
                                                 : 0,
                                     }}
                                     onPress={() => {
-                                        this.state.commentID !== null
-                                            ? this.makeReply()
-                                            : this.makeComment(),
-                                            this.textInputRef.clear();
+                                        this.makeComment();
+                                        this.textInputRef.clear();
                                     }}
                                 >
                                     <IonIcon
@@ -2004,6 +2039,10 @@ export default class VideoPlayer extends React.Component {
                             this.setState({showReplies: false});
                         }}
                         parentComment={this.state.selectedComment}
+                        onLikeOrDisikeParentComment={this.likeComment}
+                        onAddReply={this.fetchComments}
+                        onDeleteReply={this.fetchComments}
+                        onDeleteComment={this.deleteComment}
                     />
                 </Modal>
                 <Modal
@@ -2054,7 +2093,9 @@ export default class VideoPlayer extends React.Component {
                         }}
                         currentSort={this.state.commentSort}
                         changeSort={(commentSort) => {
-                            this.setState({commentSort});
+                            this.setState({commentSort}, () =>
+                                this.fetchComments(),
+                            );
                         }}
                     />
                 </Modal>

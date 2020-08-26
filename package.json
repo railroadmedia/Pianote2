@@ -24,6 +24,7 @@
         "@react-native-community/netinfo": "^5.9.6",
         "@react-native-community/viewpager": "^3.3.0",
         "link": "^0.1.5",
+        "moment": "^2.27.0",
         "opentype.js": "^1.1.0",
         "react": "16.9.0",
         "react-native": "^0.61.4",
