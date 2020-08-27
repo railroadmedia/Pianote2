@@ -13,6 +13,10 @@ import {withNavigation} from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+    likeContent,
+    dislikeContent,
+} from 'Pianote2/src/services/UserActions.js';
 
 class ContentModal extends React.Component {
     static navigationOptions = {header: null};
@@ -46,9 +50,6 @@ class ContentModal extends React.Component {
     };
 
     like = async (contentID) => {
-        console.log('Like on modal', this.state.data);
-        email = await AsyncStorage.getItem('email');
-
         this.state.data.isLiked = !this.state.data.isLiked;
         this.state.data.like_count = this.state.data.isLiked
             ? this.state.data.like_count + 1
@@ -56,21 +57,7 @@ class ContentModal extends React.Component {
 
         await this.setState({data: this.state.data});
 
-        await fetch('http://18.218.118.227:5000/like', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, liked: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
+        await likeContent(contentID);
     };
 
     download = async (contentID) => {};
