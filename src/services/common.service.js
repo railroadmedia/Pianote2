@@ -30,6 +30,11 @@ export default {
                     ['token', JSON.stringify(response.data.token)],
                     ['tokenTime', JSON.stringify(response.data.token)],
                 ]);
+                response = await fetch(url, {
+                    headers,
+                    method: method || 'GET',
+                });
+                return await response.json();
             }
             return json;
         } catch (error) {
