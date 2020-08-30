@@ -10,12 +10,15 @@ import {
     TouchableOpacity,
     TouchableHighlight,
 } from 'react-native';
+import {
+    addToMyList,
+    removeFromMyList,
+} from 'Pianote2/src/services/UserActions.js';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
 import ContentModal from '../modals/ContentModal';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import AsyncStorage from '@react-native-community/async-storage';
 
 class HorizontalVideoList extends React.Component {
     static navigationOptions = {header: null};
@@ -38,63 +41,26 @@ class HorizontalVideoList extends React.Component {
     };
 
     addToMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-
+        // change data structure
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = true;
             }
         }
-
-        await fetch('http://18.218.118.227:5000/addToMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, addded to my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
         this.setState({items: this.state.items});
 
-        console.log(this.state.items);
+        // add to list on backend
+        addToMyList(contentID)
     };
 
     removeFromMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
             }
         }
-
-        await fetch('http://18.218.118.227:5000/removeFromMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, removed from my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
         this.setState({items: this.state.items});
-
-        console.log(this.state.items);
+        removeFromMyList(contentID);
     };
 
     showFooter = () => {
@@ -118,10 +84,6 @@ class HorizontalVideoList extends React.Component {
                 </View>
             );
         }
-    };
-
-    capitalize = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     like = (contentID) => {
@@ -338,9 +300,7 @@ class HorizontalVideoList extends React.Component {
                                                                 factorRatio,
                                                         }}
                                                     >
-                                                        {this.capitalize(
-                                                            item.type,
-                                                        )}{' '}
+                                                        {item.type.charAt(0).toUpperCase() + item.type.slice(1)}{' '}
                                                         /
                                                     </Text>
                                                 )}

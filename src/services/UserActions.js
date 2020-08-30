@@ -1,17 +1,75 @@
-import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+
+export async function likeContent(contentID) {
+    try {
+        const auth = await getToken();
+        let response = await fetch(
+            `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
+            {
+                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
+            }},
+        );
+        console.log('LIKE CONTENT: ', await response.json());
+        return await response.json();
+    } catch (error) {
+        console.log('ERROR LIKING CONTENT: ', error);
+        return new Error(error);
+    }
+}
+
+export async function unlikeContent(contentID) {
+    try {
+        const auth = await getToken();
+        console.log(auth.token, 'LIKE AUTH');
+        let response = await fetch(
+            `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
+            {
+                method: 'DELETE',
+                headers: {Authorization: `Bearer ${auth.token}`},
+            },
+        );
+        console.log('DISLIKE CONTENT: ', await response.json());
+        return await response.json();
+    } catch (error) {
+        console.log('ERROR DISLIKING CONTENT: ', error);
+        return new Error(error);
+    }
+}
 
 export async function addToMyList(contentID) {
-    return this.tryCall(
-        `${auth.rootUrl}/add-to-my-list?content_id=${contentID}`,
-        'PUT',
-    );
+    console.log('Add to list', contentID)
+    try {
+        const auth = await getToken();
+        let response = await fetch(
+            `https://staging.pianote.com/add-to-my-list?content_id=${contentID}`,
+            {
+                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
+            }},
+        );
+        console.log('content added to list: ', await response.json());
+        return await response.json();
+    } catch (error) {
+        console.log('error adding to list: ', error);
+        return new Error(error);
+    }    
 }
 
 export async function removeFromMyList(contentID) {
-    return this.tryCall(
-        `${auth.rootUrl}/remove-from-my-list?content_id=${id}`,
-        'PUT',
-    );
+    console.log('Remove from list', contentID)
+    try {
+        const auth = await getToken();
+        let response = await fetch(
+            `https://staging.pianote.com//remove-from-my-list?content_id=${contentID}`,
+            {
+                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
+            }},
+        );
+        console.log('remove from list: ', await response.json());
+        return await response.json();
+    } catch (error) {
+        console.log('error removing from list: ', error);
+        return new Error(error);
+    }
 }
 
 export async function resetProgress(contentID) {
@@ -34,41 +92,6 @@ export async function getUserDetails() {
 
 export async function logout() {
     return this.tryCall(`${auth.rootUrl}/laravel/public/api/logout`, 'PUT');
-}
-
-export async function likeContent(contentID) {
-    try {
-        const auth = await getToken();
-        console.log(contentID, auth);
-        let response = await fetch(
-            `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
-            {method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`}},
-        );
-        console.log('LIKE CONTENT: ', await response.json());
-        return await response.json();
-    } catch (error) {
-        console.log('ERROR LIKING CONTENT: ', error);
-        return new Error(error);
-    }
-}
-
-export async function dislikeContent(contentID) {
-    try {
-        const auth = await getToken();
-        console.log(auth.token, 'LIKE AUTH');
-        let response = await fetch(
-            `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
-            {
-                method: 'DELETE',
-                headers: {Authorization: `Bearer ${auth.token}`},
-            },
-        );
-        console.log('DISLIKE CONTENT: ', await response.json());
-        return await response.json();
-    } catch (error) {
-        console.log('ERROR DISLIKING CONTENT: ', error);
-        return new Error(error);
-    }
 }
 
 export async function myList(filters, page, limit) {

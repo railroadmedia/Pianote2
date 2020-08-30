@@ -8,15 +8,16 @@ import {
     TouchableWithoutFeedback,
     TouchableOpacity,
 } from 'react-native';
+import {
+    likeContent,
+    unlikeContent,
+    addToMyList,
+    removeFromMyList,
+} from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-    likeContent,
-    dislikeContent,
-} from 'Pianote2/src/services/UserActions.js';
 
 class ContentModal extends React.Component {
     static navigationOptions = {header: null};
@@ -31,33 +32,46 @@ class ContentModal extends React.Component {
         console.log(this.state.data);
     }
 
-    capitalize = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    };
-
     addToMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
+        // change status of content on parent data structure
+        this.props.addToMyList(contentID);        
+        // make added to list on current data structure 
         this.state.data.isAddedToList = true;
-        this.props.addToMyList(contentID);
         this.setState({data: this.state.data});
+        // add to list on backend
+        addToMyList(contentID)
     };
 
     removeFromMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-        this.state.data.isAddedToList = false;
+        // change status of parent data
         this.props.removeFromMyList(contentID);
+        // change data on modal
+        this.state.data.isAddedToList = false;
         this.setState({data: this.state.data});
+        // change data on backend
+        removeFromMyList(contentID)
     };
 
     like = async (contentID) => {
+        // change data on modal
         this.state.data.isLiked = !this.state.data.isLiked;
-        this.state.data.like_count = this.state.data.isLiked
-            ? this.state.data.like_count + 1
-            : this.state.data.like_count - 1;
+        this.state.data.like_count = this.state.data.like_count + 1
+        this.setState({data: this.state.data});
+        // change data on parent data
+        // ADD IN
+        // like on backend
+        likeContent(contentID)
+    };
 
-        await this.setState({data: this.state.data});
-
-        await likeContent(contentID);
+    unlike = async (contentID) => {
+        // change data on modal
+        this.state.data.isLiked = !this.state.data.isLiked;
+        this.state.data.like_count = this.state.data.like_count - 1;
+        this.setState({data: this.state.data});
+        // change data on parent data
+        // ADD IN
+        // unlike on backend
+        unlikeContent(contentID);
     };
 
     download = async (contentID) => {};
@@ -169,7 +183,7 @@ class ContentModal extends React.Component {
                                         color: 'grey',
                                     }}
                                 >
-                                    {this.capitalize(this.state.data.type)} /{' '}
+                                    {this.state.data.type.charAt(0).toUpperCase() + this.state.data.type.slice(1)} /{' '}
                                     {this.state.data.artist}
                                 </Text>
                             </View>
@@ -295,7 +309,9 @@ class ContentModal extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.like(this.state.data.id);
+                                            this.state.data.isLiked
+                                            ? this.unlike(this.state.data.id)
+                                            : this.like(this.state.data.id)
                                         }}
                                     >
                                         <AntIcon

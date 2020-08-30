@@ -9,6 +9,10 @@ import {
     TouchableOpacity,
     Platform,
 } from 'react-native';
+import {
+    addToMyList,
+    removeFromMyList,
+} from 'Pianote2/src/services/UserActions.js';
 import Modal from 'react-native-modal';
 import Relevance from '../modals/Relevance';
 import FastImage from 'react-native-fast-image';
@@ -63,67 +67,27 @@ class VerticalVideoList extends React.Component {
     };
 
     addToMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = true;
             }
         }
-
-        await fetch('http://18.218.118.227:5000/addToMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, added to my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
+        addToMyList(contentID)
         this.setState({items: this.state.items});
     };
 
     removeFromMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
             }
         }
-
-        await fetch('http://18.218.118.227:5000/removeFromMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, removed from my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
+        removeFromMyList(contentID)
+        // if on my list page and user removes then delete item from listview
         if (this.props.type == 'MYLIST') {
             this.props.removeItem(contentID);
         }
-
         this.setState({items: this.state.items});
-    };
-
-    capitalize = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     topics = () => {
@@ -484,7 +448,7 @@ class VerticalVideoList extends React.Component {
                                                 fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
-                                            {this.capitalize(row.type)} /
+                                            {row.type.charAt(0).toUpperCase() + row.type.slice(1)} /
                                         </Text>
                                     )}
                                     {this.props.showArtist && (

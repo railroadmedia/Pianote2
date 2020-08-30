@@ -7,7 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -19,51 +19,33 @@ export default class LoadPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
         };
     }
 
     componentDidMount = async () => {
         await SplashScreen.hide();
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-        email = await AsyncStorage.getItem('email');
-        password = await AsyncStorage.getItem('password');
-        userId = await AsyncStorage.getItem('userId');
-
-        var auth = await getToken('kentonp@drumeo.com', 'Katrinapalmer7!');
-        var token = await getUserData(auth.token);
+        let userData = await getUserData();
 
         if (isLoggedIn !== 'true') {
             setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
         } else {
             // membership expired
-            await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    email: email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    if (response == 'success') {
-                        setTimeout(
-                            () => this.props.navigation.dispatch(resetAction),
-                            1000,
-                        );
-                    } else {
-                        setTimeout(
-                            () =>
-                                this.props.navigation.navigate(
-                                    'MEMBERSHIPEXPIRED',
-                                ),
-                            1000,
-                        );
-                    }
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
+            if ('membershipValid' == 'membershipValid') {
+                console.log(userData)
+                setTimeout(
+                    () => this.props.navigation.dispatch(resetAction),
+                    1000,
+                );
+            } else {
+                setTimeout(
+                    () =>
+                        this.props.navigation.navigate(
+                            'MEMBERSHIPEXPIRED',
+                        ),
+                    1000,
+                );
+            }         
         }
     };
 

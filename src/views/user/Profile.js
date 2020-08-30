@@ -2,16 +2,16 @@
  * Profile
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import XpRank from 'Pianote2/src/modals/XpRank.js';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
 
 export default class Profile extends React.Component {
@@ -26,41 +26,19 @@ export default class Profile extends React.Component {
         };
     }
 
-    componentDidMount = async () => {
-        email = await AsyncStorage.getItem('email');
-        username = await AsyncStorage.getItem('username');
-        profileImage = await AsyncStorage.getItem('profileURI');
+    componentWillMount = async () => {
+        let userData = await getUserData()
+        console.log('USER DATA : ', userData)
 
-        if (profileImage !== null) {
-            await this.setState({profileImage});
-        }
-
-        await fetch('http://18.218.118.227:5000/accountDetails', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                this.setState({
-                    xp: response.XP,
-                    rank: response.rank,
-                    profileImage: profileImage !== null ? profileImage : '',
-                    username: username !== null ? username : 'Testuser98',
-                    memberSince: 2017,
-                    lessonsStarted: response.lessonsStarted == 1 ? true : false,
-                });
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
-        if (profileImage !== null) {
-            await this.setState({profileImage});
-        }
-    };
+        this.setState({
+            xp: 2400,
+            rank: 'MASTERO',
+            profileImage: '',
+            username: 'Testuser98',
+            memberSince: 2017,
+            lessonsStarted: false,
+        });
+    }
 
     changeXP = (num) => {
         if (num !== '') {
@@ -221,19 +199,6 @@ export default class Profile extends React.Component {
             );
         });
     }
-
-    profile = () => {
-        /**  if(this.state.profileImage.length == 0) {
-            return (
-                <AntIcon
-                    name={'user'}
-                    color={colors.pianoteRed}
-                    size={75*factorRatio}
-                />
-            )
-        } else { */
-        return <View></View>;
-    };
 
     render() {
         return (

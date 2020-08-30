@@ -47,34 +47,16 @@ export default class Lessons extends React.Component {
     }
 
     componentWillMount = async () => {
-        email = await AsyncStorage.getItem('email');
-        password = await AsyncStorage.getItem('password');
-
-        var auth = await getToken(email, password);
-        var userData = await getUserData(auth.token);
-
-        console.log('USER DATA: ', userData);
-
-        await fetch('http://18.218.118.227:5000/accountDetails', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                this.setState({
-                    xp: response.XP,
-                    rank: response.rank,
-                    profileImage: profileImage !== null ? '' : profileImage,
-                    lessonsStarted: response.lessonsStarted == 1 ? true : false,
-                });
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
+        // get user data
+        const userData = await getUserData();
+        // set user data
+        this.setState({
+            xp: 2500,
+            rank: 'Mastero',
+            profileImage: '',
+            lessonsStarted: false,
+        });
+        // get foundations data
         this.getFoundations();
     };
 
@@ -85,15 +67,18 @@ export default class Lessons extends React.Component {
     };
 
     getFoundations = async () => {
+        // get highest level foundations content
         const {response, error} = await getContentChildById({
             parentId: '215952',
         });
 
+        // return structured data
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data);
         });
 
         try {
+            // create simplified data structure
             items = [];
             for (i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -120,8 +105,8 @@ export default class Lessons extends React.Component {
                 }
             }
 
+            // check if any items started
             var startedFoundations = false;
-
             for (i in items) {
                 if (items[i].isStarted == true) {
                     startedFoundations == true;
@@ -132,8 +117,6 @@ export default class Lessons extends React.Component {
                 startedFoundations,
                 foundations: [...this.state.foundations, ...items],
             });
-
-            console.log(this.state.foundations, 'foundations');
         } catch (error) {
             console.log(error);
         }
