@@ -111,17 +111,17 @@ export default class Filters extends React.Component {
 
             // currently selected progress
             if (filters.progress.length > 0) {
-                if ((await filters.progress.indexOf('ALL')) !== -1) {
+                if ((await filters.progress.indexOf('all')) !== -1) {
                     progressAll = true;
                     openProgress = true;
                 }
 
-                if ((await filters.progress.indexOf('STARTED')) !== -1) {
+                if ((await filters.progress.indexOf('started')) !== -1) {
                     progressProgress = true;
                     openProgress = true;
                 }
 
-                if ((await filters.progress.indexOf('COMPLETE')) !== -1) {
+                if ((await filters.progress.indexOf('completed')) !== -1) {
                     progressComplete = true;
                     openProgress = true;
                 }
@@ -494,8 +494,7 @@ export default class Filters extends React.Component {
 
         var progress = [];
         if (this.state.progressAll) {
-            progress.push('started');
-            progress.push('completed');
+            progress.push('all');
         }
         if (this.state.progressProgress) {
             progress.push('started');

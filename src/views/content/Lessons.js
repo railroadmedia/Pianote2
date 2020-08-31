@@ -18,6 +18,12 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+};
+
 export default class Lessons extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -29,7 +35,6 @@ export default class Lessons extends React.Component {
             foundations: [],
             currentLesson: [],
             startedFoundations: false, // for showing start icon or continue
-            outVideos: false,
             page: 0,
             showModalMenu: false, // show navigation menu
             lessonsStarted: true, // for showing continue lessons
@@ -39,6 +44,7 @@ export default class Lessons extends React.Component {
             isLoadingNew: true, // new lessons
             isLoadingAll: true, // all lessons
             isLoadingProgress: true,
+            isPaging: false, // scrolling more
             filtering: false,
             filters: null,
             currentSort: 'Relevance',
@@ -139,8 +145,6 @@ export default class Lessons extends React.Component {
                 return new ContentModel(data);
             });
 
-            console.log('new lessons: ', response, error);
-
             items = [];
             for (i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -179,17 +183,17 @@ export default class Lessons extends React.Component {
     getAllLessons = async () => {
         try {
             await this.setState({
-                isLoadingAll: true,
+                //isLoadingAll: true,
+                page: this.state.page + 1
             });
-
-            var filterLevel = false
-            var filterInstructor = false
-            var filterProgress = false
-            var filterTopic = false
 
             // see if importing filters
             try {
                 var filters = this.state.filters;
+                var filterLevel = false
+                var filterInstructor = false
+                var filterProgress = false
+                var filterTopic = false
                 if (
                     filters.instructors.length !== 0 ||
                     filters.level.length !== 0 ||
@@ -207,59 +211,54 @@ export default class Lessons extends React.Component {
                 var filters = null;
             }
 
-            if (this.state.outVideos == false) {
-                const {response, error} = await getContent({
-                    brand: 'pianote',
-                    limit: '20',
-                    page: this.state.page,
-                    sort: 'published_on', // -published_on
-                    statuses: ['published'],
-                    included_types: ['course'],
-                    required_user_states: (filterLevel) ? this.state.filters.progress : [],
-                    //required_fields: []
-                });
+            const {response, error} = await getContent({
+                brand: 'pianote',
+                limit: '20',
+                page: this.state.page,
+                sort: 'published_on', // -published_on
+                statuses: ['published'],
+                included_types: ['course'],
+                required_user_states: [],
+            });
 
-                const newContent = await response.data.data.map((data) => {
-                    return new ContentModel(data);
-                });
+            const newContent = await response.data.data.map((data) => {
+                return new ContentModel(data);
+            });
 
-                items = [];
-                for (i in newContent) {
-                    if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                        items.push({
-                            title: newContent[i].getField('title'),
-                            artist: newContent[i].getField('instructor')
-                                .fields[0].value,
-                            thumbnail: newContent[i].getData('thumbnail_url'),
-                            type: newContent[i].post.type,
-                            description: newContent[i]
-                                .getData('description')
-                                .replace(/(<([^>]+)>)/gi, ''),
-                            xp: newContent[i].post.xp,
-                            id: newContent[i].id,
-                            like_count: newContent[i].post.like_count,
-                            duration: this.getDuration(newContent[i]),
-                            isLiked: newContent[i].isLiked,
-                            isAddedToList: newContent[i].isAddedToList,
-                            isStarted: newContent[i].isStarted,
-                            isCompleted: newContent[i].isCompleted,
-                            bundle_count: newContent[i].post.bundle_count,
-                            progress_percent:
-                                newContent[i].post.progress_percent,
-                        });
-                    }
+            items = [];
+            for (i in newContent) {
+                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor')
+                            .fields[0].value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/gi, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent:
+                            newContent[i].post.progress_percent,
+                    });
                 }
-
-                console.log('all lessons', response, error);
-
-                await this.setState({
-                    allLessons: [...this.state.allLessons, ...items],
-                });
             }
 
+            console.log(items)
+
             await this.setState({
+                allLessons: [...this.state.allLessons, ...items],
                 filtering: false,
                 isLoadingAll: false,
+                isPaging: false,
             });
         } catch (error) {
             console.log('all lessons', error);
@@ -406,6 +405,13 @@ export default class Lessons extends React.Component {
                             flex: 1,
                             backgroundColor: colors.mainBackground,
                         }}
+                        onScroll={({nativeEvent}) => {
+                            if(isCloseToBottom(nativeEvent) && this.state.isPaging == false) {
+                                this.setState({isPaging: true}),
+                                this.getAllLessons()
+                            }
+                        }}
+                        scrollEventThrottle={400}
                     >
                         <View
                             key={'backgroundColoring'}
@@ -827,7 +833,7 @@ export default class Lessons extends React.Component {
                                     } // image height
                                     imageWidth={fullWidth * 0.26} // image width
                                     outVideos={this.state.outVideos} // if paging and out of videos
-                                    //getVideos={() => this.getContent()} // for paging
+                                    getVideos={() => this.getAllLessons()} // for paging
                                     navigator={(row) =>
                                         this.props.navigation.navigate(
                                             'VIDEOPLAYER',

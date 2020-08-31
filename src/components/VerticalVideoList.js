@@ -21,7 +21,6 @@ import ContentModal from '../modals/ContentModal';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
@@ -42,6 +41,10 @@ class VerticalVideoList extends React.Component {
             await this.setState({
                 isLoading: props.isLoading,
                 items: [...this.state.items, ...props.items],
+            });
+        } else if(props.items !== this.state.items) {
+            await this.setState({
+                items: props.items,
             });
         }
     };
@@ -888,7 +891,7 @@ class VerticalVideoList extends React.Component {
                 </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {this.renderMappedList()}
-                    <View style={{flex: 1}} />
+                <View style={{flex: 1}} />
                 </View>
                 <Modal
                     key={'modal'}

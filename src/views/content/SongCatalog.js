@@ -12,6 +12,12 @@ import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+};
+
 export default class SongCatalog extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -24,6 +30,7 @@ export default class SongCatalog extends React.Component {
             showChooseInstructors: false,
             showChooseYourLevel: false,
             page: 0, // current page
+            isPaging: false, 
             isLoadingAll: true,
             filtering: false,
             filters: null,
@@ -58,7 +65,10 @@ export default class SongCatalog extends React.Component {
     };
 
     getAllSongs = async () => {
-        await this.setState({filtering: true});
+        await this.setState({
+            filtering: true,
+            page: this.state.page + 1
+        });
 
         // see if importing filters
         try {
@@ -79,53 +89,49 @@ export default class SongCatalog extends React.Component {
             var filters = null;
         }
 
-        if (this.state.outVideos == false) {
-            const {response, error} = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types: ['song'],
-            });
+        const {response, error} = await getContent({
+            brand: 'pianote',
+            limit: '20',
+            page: this.state.page,
+            sort: '-created_on',
+            statuses: ['published'],
+            included_types: ['song'],
+        });
 
-            const newContent = await response.data.data.map((data) => {
-                return new ContentModel(data);
-            });
+        const newContent = await response.data.data.map((data) => {
+            return new ContentModel(data);
+        });
 
-            items = [];
-            for (i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
+        items = [];
+        for (i in newContent) {
+            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0]
+                        .value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].post.like_count,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                });
             }
-
-            await this.setState({
-                allSongs: [...this.state.allSongs, ...items],
-            });
         }
 
         await this.setState({
+            allSongs: [...this.state.allSongs, ...items],
             filtering: false,
+            isPaging: false,
             isLoadingAll: false,
         });
     };
@@ -178,7 +184,7 @@ export default class SongCatalog extends React.Component {
         });
     };
 
-    getDuration = (newContent) => {
+    getDuration = async (newContent) => {
         if (newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value;
         } else if (newContent.post.fields[1].key == 'video') {
@@ -216,6 +222,13 @@ export default class SongCatalog extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
+                        scrollEventThrottle={400}
+                        onScroll={({nativeEvent}) => {
+                            if(isCloseToBottom(nativeEvent) && this.state.isPaging == false) {
+                                this.setState({isPaging: true}),
+                                this.getAllSongs()
+                            }
+                        }}
                         style={{
                             flex: 1,
                             backgroundColor: colors.mainBackground,
@@ -292,7 +305,7 @@ export default class SongCatalog extends React.Component {
                             isLoading={this.state.isLoadingAll}
                             title={'ALL SONGS'} // title for see all page
                             type={'SONGS'} // the type of content on page
-                            showFilter={true} //
+                            showFilter={true}
                             showType={false} // show course / song by artist name
                             showArtist={true} // show artist name
                             showLength={false}
@@ -331,8 +344,6 @@ export default class SongCatalog extends React.Component {
                                     ? fullHeight * 0.125
                                     : fullHeight * 0.09
                             } // image height
-                            outVideos={this.state.outVideos} // if paging and out of videos
-                            //getVideos={() => this.getContent()} // for paging
                             navigator={(row) =>
                                 this.props.navigation.navigate('VIDEOPLAYER', {
                                     data: row,
