@@ -133,6 +133,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     signingConfigs {
         release {
@@ -175,8 +176,8 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            signingConfig signingConfigs.release
+            // signingConfig signingConfigs.debug
+            // signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -199,15 +200,12 @@ android {
 
 dependencies {
     implementation project(':react-native-svg')
-    implementation project(':@react-native-community_viewpager')
-    implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-device-info')
-    implementation project(':@react-native-community_blur')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation 'com.android.support:multidex:1.0.3'
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")

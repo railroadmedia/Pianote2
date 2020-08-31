@@ -238,7 +238,7 @@ class VerticalVideoList extends React.Component {
                                                         : 'transparent',
                                             },
                                         ]}
-                                    ></View>
+                                    />
                                     <View
                                         style={[
                                             styles.centerContent,
@@ -287,7 +287,7 @@ class VerticalVideoList extends React.Component {
                                                     height: '100%',
                                                     borderRadius: 20,
                                                 }}
-                                            ></View>
+                                            />
                                         </View>
                                     )}
                                     {this.props.showLines && (

@@ -9,13 +9,12 @@ import {View, Text, ScrollView} from 'react-native';
 import {getContentChildById} from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import AsyncStorage from '@react-native-community/async-storage';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 
@@ -35,7 +34,7 @@ export default class Lessons extends React.Component {
             showModalMenu: false, // show navigation menu
             lessonsStarted: true, // for showing continue lessons
             profileImage: '',
-            xp: '', // user's XP
+            xp: '2500', // user's XP
             rank: '', // user's level
             isLoadingNew: true, // new lessons
             isLoadingAll: true, // all lessons
@@ -49,13 +48,15 @@ export default class Lessons extends React.Component {
     componentWillMount = async () => {
         // get user data
         const userData = await getUserData();
+
         // set user data
         this.setState({
-            xp: 2500,
+            xp: '2500',
             rank: 'Mastero',
             profileImage: '',
             lessonsStarted: false,
         });
+
         // get foundations data
         this.getFoundations();
     };
@@ -122,91 +123,6 @@ export default class Lessons extends React.Component {
         }
     };
 
-    getDurationFoundations = (newContent) => {
-        var data = 0;
-        try {
-            for (i in newContent.post.current_lesson.fields) {
-                if (newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data =
-                        newContent.post.current_lesson.fields[i].value.fields;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].key == 'length_in_seconds') {
-                            return data[i].value;
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    getProgressLessons = async () => {
-        try {
-            const {response, error} = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: 1,
-                sort: '-created_on',
-                statuses: ['published'],
-                required_user_states: ['started'],
-                included_types: ['course'],
-            });
-
-            console.log(response, error);
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data);
-            });
-
-            items = [];
-            for (i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[0].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
-            }
-
-            console.log('progress lessons: ', response, error);
-
-            await this.setState({
-                progressLessons: [...this.state.progressLessons, ...items],
-                lessonsStarted: items.length > 0 ? true : false,
-                isLoadingProgress: false,
-            });
-        } catch (error) {
-            console.log('error progress: ', error);
-        }
-    };
-
-    getDuration = (newContent) => {
-        if (newContent.post.fields[0].key == 'video') {
-            return newContent.post.fields[0].value.fields[1].value;
-        } else if (newContent.post.fields[1].key == 'video') {
-            return newContent.post.fields[1].value.fields[1].value;
-        } else if (newContent.post.fields[2].key == 'video') {
-            return newContent.post.fields[2].value.fields[1].value;
-        }
-    };
-
     getNewLessons = async () => {
         try {
             const {response, error} = await getContent({
@@ -266,6 +182,11 @@ export default class Lessons extends React.Component {
                 isLoadingAll: true,
             });
 
+            var filterLevel = false
+            var filterInstructor = false
+            var filterProgress = false
+            var filterTopic = false
+
             // see if importing filters
             try {
                 var filters = this.state.filters;
@@ -276,10 +197,11 @@ export default class Lessons extends React.Component {
                     filters.topics.length !== 0
                 ) {
                     // if has a filter then send filters to vertical list
+                    if(filters.level.length !== 0) {filterLevel = true}
+                    if(filters.instructors.length !== 0) {filterInstructor = true}
+                    if(filters.progress.length !== 0) {filterProgress = true}
+                    if(filters.topics.length !== 0) {filterTopic = true}
                     this.setState({filters});
-                } else {
-                    // if no filters selected then null
-                    var filters = null;
                 }
             } catch (error) {
                 var filters = null;
@@ -288,11 +210,12 @@ export default class Lessons extends React.Component {
             if (this.state.outVideos == false) {
                 const {response, error} = await getContent({
                     brand: 'pianote',
-                    limit: '15',
+                    limit: '20',
                     page: this.state.page,
                     sort: 'published_on', // -published_on
                     statuses: ['published'],
                     included_types: ['course'],
+                    required_user_states: (filterLevel) ? this.state.filters.progress : [],
                     //required_fields: []
                 });
 
@@ -343,25 +266,68 @@ export default class Lessons extends React.Component {
         }
     };
 
-    changeXP = (num) => {
-        if (num !== '') {
-            num = Number(num);
-            if (num < 10000) {
-                num = num.toString();
-                return num;
-            } else {
-                num = (num / 1000).toFixed(1).toString();
-                num = num + 'k';
-                return num;
+    getProgressLessons = async () => {
+        try {
+            const {response, error} = await getContent({
+                brand: 'pianote',
+                limit: '15',
+                page: 1,
+                sort: '-created_on',
+                statuses: ['published'],
+                required_user_states: ['started'],
+                included_types: ['course'],
+            });
+    
+            console.log(response, error);
+    
+            const newContent = response.data.data.map((data) => {
+                return new ContentModel(data);
+            });
+    
+            items = [];
+            for (i in newContent) {
+                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor').fields[0]
+                            .value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/gi, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[0].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
+                    });
+                }
             }
+    
+            console.log('progress lessons: ', response, error);
+    
+            await this.setState({
+                progressLessons: [...this.state.progressLessons, ...items],
+                lessonsStarted: items.length > 0 ? true : false,
+                isLoadingProgress: false,
+            });
+        } catch (error) {
+            console.log('error progress: ', error);
         }
-    };
+    };    
 
     filterResults = async () => {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'LESSONS',
             onGoBack: (filters) => {
+                console.log('filters: ', filters)
                 this.setState({
                     allLessons: [],
                     filters:
@@ -378,6 +344,35 @@ export default class Lessons extends React.Component {
         });
     };
 
+    getDurationFoundations = async (newContent) => {
+        var data = 0;
+        try {
+            for (i in newContent.post.current_lesson.fields) {
+                if (newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data =
+                        newContent.post.current_lesson.fields[i].value.fields;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].key == 'length_in_seconds') {
+                            return data[i].value;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    
+    getDuration = async (newContent) => {
+        if (newContent.post.fields[0].key == 'video') {
+            return newContent.post.fields[0].value.fields[1].value;
+        } else if (newContent.post.fields[1].key == 'video') {
+            return newContent.post.fields[1].value.fields[1].value;
+        } else if (newContent.post.fields[2].key == 'video') {
+            return newContent.post.fields[2].value.fields[1].value;
+        }
+    };
+    
     render() {
         return (
             <View styles={styles.container}>
@@ -676,7 +671,7 @@ export default class Lessons extends React.Component {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            {this.changeXP(this.state.xp)}
+                                            {(this.state.xp.length > 4) ? (Number(this.state.xp) / 1000).toFixed(1).toString()+ 'k': this.state.xp.toString()}
                                         </Text>
                                     </View>
                                     <View style={{flex: 1}} />

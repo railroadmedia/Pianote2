@@ -7,7 +7,6 @@ import FastImage from 'react-native-fast-image';
 import XpRank from 'Pianote2/src/modals/XpRank.js';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-community/async-storage';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';

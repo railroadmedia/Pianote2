@@ -161,7 +161,7 @@ export default class StudentFocusCatalog extends React.Component {
                                 zIndex: 10,
                                 elevation: 10,
                             }}
-                        ></View>
+                        />
                         <View style={{height: 20 * factorVertical}} />
                         <Text
                             style={{

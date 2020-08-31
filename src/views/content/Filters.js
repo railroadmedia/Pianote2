@@ -494,13 +494,14 @@ export default class Filters extends React.Component {
 
         var progress = [];
         if (this.state.progressAll) {
-            progress.push('ALL');
+            progress.push('started');
+            progress.push('completed');
         }
         if (this.state.progressProgress) {
-            progress.push('STARTED');
+            progress.push('started');
         }
         if (this.state.progressComplete) {
-            progress.push('COMPLETE');
+            progress.push('completed');
         }
 
         var instructors = [];
