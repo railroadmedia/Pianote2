@@ -1,4 +1,7 @@
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from './common.service';
+
+const rootUrl = 'https://staging.pianote.com';
 
 export async function likeContent(contentID) {
     try {
@@ -37,51 +40,20 @@ export async function unlikeContent(contentID) {
 }
 
 export async function addToMyList(contentID) {
-    console.log('Add to list', contentID)
-    try {
-        const auth = await getToken();
-        let response = await fetch(
-            `https://staging.pianote.com/add-to-my-list?content_id=${contentID}`,
-            {
-                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
-            }},
-        );
-        console.log('content added to list: ', await response.json());
-        return await response.json();
-    } catch (error) {
-        console.log('error adding to list: ', error);
-        return new Error(error);
-    }    
+    return commonService.tryCall(`${rootUrl}/add-to-my-list?content_id=${contentID}`,'PUT');
 }
 
 export async function removeFromMyList(contentID) {
-    console.log('Remove from list', contentID)
-    try {
-        const auth = await getToken();
-        let response = await fetch(
-            `https://staging.pianote.com//remove-from-my-list?content_id=${contentID}`,
-            {
-                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
-            }},
-        );
-        console.log('remove from list: ', await response.json());
-        return await response.json();
-    } catch (error) {
-        console.log('error removing from list: ', error);
-        return new Error(error);
-    }
+    return commonService.tryCall(`${rootUrl}/remove-from-my-list?content_id=${contentID}`,'PUT');
 }
 
 export async function resetProgress(contentID) {
-    return this.tryCall(
-        `${auth.rootUrl}/railcontent/reset?content_id=${contentID}`,
-        'PUT',
-    );
+    return commonService.tryCall(`${rootUrl}/railcontent/reset?content_id=${contentID}`,'PUT');
 }
 
 export async function updateUsersVideoProgress(contentID, progress) {
-    return this.tryCall(
-        `${auth.rootUrl}/railcontent/video/progress?content_id=${contentID}&progress=${progress}`,
+    return commonService.tryCall(
+        `${rootUrl}/railcontent/video/progress?content_id=${contentID}&progress=${progress}`,
         'PUT',
     );
 }

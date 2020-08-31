@@ -13,6 +13,7 @@ import {
     unlikeContent,
     addToMyList,
     removeFromMyList,
+    resetProgress,
 } from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
@@ -406,6 +407,7 @@ class ContentModal extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
+                                            resetProgress(this.state.data.id),
                                             this.download(this.state.data.id);
                                         }}
                                     >

@@ -3,18 +3,15 @@
  */
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
-import Modal from 'react-native-modal';
 import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AsyncStorage from '@react-native-community/async-storage';
-import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
 const packDict = {
-    Bootcamps: require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
+    'Bootcamps': require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
     'Q&A': require('Pianote2/src/assets/img/imgs/questionAnswer.jpg'),
     'Quick Tips': require('Pianote2/src/assets/img/imgs/quickTips.jpg'),
     'Student Review': require('Pianote2/src/assets/img/imgs/studentReview.jpg'),
@@ -29,8 +26,6 @@ export default class StudentFocusShow extends React.Component {
             isLoadingAll: true,
             showModalMenu: false, // show navigation menu
             showStarted: false,
-            showRestartCourse: false,
-            outVideos: false, // if no more videos
             page: 1, // page of content
             filters: null,
             currentSort: 'Relevance',
@@ -41,69 +36,6 @@ export default class StudentFocusShow extends React.Component {
 
     componentDidMount = async () => {
         this.getContent();
-    };
-
-    restartCourse = async () => {
-        email = await AsyncStorage.getItem('email');
-        contentID = 0;
-
-        await fetch('http://18.218.118.227:5000/restartCourse', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, addded to my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-    };
-
-    like = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-        contentID = 0;
-
-        await fetch('http://18.218.118.227:5000/like', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, liked: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-    };
-
-    addToMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-        contentID = 0;
-
-        await fetch('http://18.218.118.227:5000/addToMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, addded to my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
     };
 
     async getContent() {
@@ -395,33 +327,6 @@ export default class StudentFocusShow extends React.Component {
                             }
                         />
                     </ScrollView>
-                    <Modal
-                        key={'restartCourse'}
-                        isVisible={this.state.showRestartCourse}
-                        style={[
-                            styles.centerContent,
-                            {
-                                margin: 0,
-                                height: fullHeight,
-                                width: fullWidth,
-                                elevation: 5,
-                            },
-                        ]}
-                        animation={'slideInUp'}
-                        animationInTiming={350}
-                        animationOutTiming={350}
-                        coverScreen={false}
-                        hasBackdrop={false}
-                    >
-                        <RestartCourse
-                            hideRestartCourse={() => {
-                                this.restartCourse(),
-                                    this.setState({
-                                        showRestartCourse: false,
-                                    });
-                            }}
-                        />
-                    </Modal>
                     <NavigationBar currentPage={'NONE'} />
                 </View>
             </View>
