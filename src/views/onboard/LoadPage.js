@@ -31,40 +31,47 @@ export default class LoadPage extends React.Component {
         userId = await AsyncStorage.getItem('userId');
 
         var auth = await getToken('kentonp@drumeo.com', 'Katrinapalmer7!');
+        console.log(auth);
         var token = await getUserData(auth.token);
-
-        if (isLoggedIn !== 'true') {
-            setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
-        } else {
-            // membership expired
-            await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    email: email,
-                }),
-            })
-                .then((response) => response.json())
-                .then((response) => {
-                    if (response == 'success') {
-                        setTimeout(
-                            () => this.props.navigation.dispatch(resetAction),
-                            1000,
-                        );
-                    } else {
-                        setTimeout(
-                            () =>
-                                this.props.navigation.navigate(
-                                    'MEMBERSHIPEXPIRED',
-                                ),
-                            1000,
-                        );
-                    }
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
+        if (auth.success) {
+            setTimeout(() => this.props.navigation.dispatch(resetAction), 1000);
         }
+        // if (isLoggedIn !== 'true') {
+        //     setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
+        // } else {
+        //     // membership expired
+        //     await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //         body: JSON.stringify({
+        //             email: email,
+        //         }),
+        //     })
+        //         .then((response) => response.json())
+        //         .then((response) => {
+        //             if (response == 'success') {
+        //                 setTimeout(
+        //                     () => this.props.navigation.dispatch(resetAction),
+        //                     1000,
+        //                 );
+        //             } else {
+        //                 setTimeout(
+        //                     () =>
+        //                         this.props.navigation.navigate(
+        //                             'MEMBERSHIPEXPIRED',
+        //                         ),
+        //                     1000,
+        //                 );
+        //             }
+        //         })
+        //         .catch((error) => {
+        //             console.log('API Error: ', error);
+        //             setTimeout(
+        //                 () => this.props.navigation.dispatch(resetAction),
+        //                 1000,
+        //             );
+        //         });
+        // }
     };
 
     render() {

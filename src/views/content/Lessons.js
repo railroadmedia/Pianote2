@@ -5,7 +5,7 @@ import React from 'react';
 import {ContentModel} from '@musora/models';
 import {getContent} from '@musora/services';
 import FastImage from 'react-native-fast-image';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, Platform} from 'react-native';
 import {getContentChildById} from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
@@ -18,6 +18,7 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import firebase from 'react-native-firebase';
 
 export default class Lessons extends React.Component {
     static navigationOptions = {header: null};
@@ -79,9 +80,59 @@ export default class Lessons extends React.Component {
     };
 
     componentDidMount = async () => {
+        this.initializeFirebase();
         this.getProgressLessons();
         this.getNewLessons();
         this.getAllLessons();
+    };
+
+    initializeFirebase = async () => {
+        await firebase.messaging().requestPermission();
+        const enabled = await firebase.messaging().hasPermission();
+        if (enabled) {
+            const fcmToken = await firebase.messaging().getToken();
+            if (fcmToken) {
+                // userService.updateUserDetails(null, null, null, fcmToken);
+            }
+        }
+        if (Platform.OS === 'ios') {
+            this.removeNotificationListener = firebase
+                .notifications()
+                .onNotification((notification) => {
+                    firebase
+                        .notifications()
+                        .displayNotification(
+                            new firebase.notifications.Notification()
+                                .setNotificationId(notification._notificationId)
+                                .setTitle(notification._title)
+                                .setBody(notification._body)
+                                .setData(notification._data),
+                        );
+                });
+        } else {
+            this.removeNotificationListener = firebase
+                .notifications()
+                .onNotification((notification) => {
+                    // Build a channel
+                    console.log('NOTIFICAION', notification);
+                    const channel = new firebase.notifications.Android.Channel(
+                        'pianote-channel',
+                        'Pianote Channel',
+                        firebase.notifications.Android.Importance.Max,
+                    ).setDescription('Pianote notification channel');
+                    console.log('chanel', channel);
+                    // Create the channel
+                    firebase.notifications().android.createChannel(channel);
+                    notification.android.setChannelId(channel.channelId);
+                    notification.android.setSmallIcon('notifications_logo');
+                    notification.android.setLargeIcon(
+                        notification._data?.image,
+                    );
+                    notification.android.setColor(colors.pianoteRed);
+                    notification.android.setAutoCancel(true);
+                    firebase.notifications().displayNotification(notification);
+                });
+        }
     };
 
     getFoundations = async () => {
