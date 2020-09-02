@@ -9,6 +9,10 @@ import {
     TouchableOpacity,
     Platform,
 } from 'react-native';
+import {
+    addToMyList,
+    removeFromMyList,
+} from 'Pianote2/src/services/UserActions.js';
 import Modal from 'react-native-modal';
 import Relevance from '../modals/Relevance';
 import FastImage from 'react-native-fast-image';
@@ -17,7 +21,6 @@ import ContentModal from '../modals/ContentModal';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-community/async-storage';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
@@ -38,6 +41,10 @@ class VerticalVideoList extends React.Component {
             await this.setState({
                 isLoading: props.isLoading,
                 items: [...this.state.items, ...props.items],
+            });
+        } else if(props.items !== this.state.items) {
+            await this.setState({
+                items: props.items,
             });
         }
     };
@@ -63,67 +70,27 @@ class VerticalVideoList extends React.Component {
     };
 
     addToMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = true;
             }
         }
-
-        await fetch('http://18.218.118.227:5000/addToMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, added to my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
+        addToMyList(contentID)
         this.setState({items: this.state.items});
     };
 
     removeFromMyList = async (contentID) => {
-        email = await AsyncStorage.getItem('email');
-
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
             }
         }
-
-        await fetch('http://18.218.118.227:5000/removeFromMyList', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-                ID: contentID,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                console.log('response, removed from my list: ', response);
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
+        removeFromMyList(contentID)
+        // if on my list page and user removes then delete item from listview
         if (this.props.type == 'MYLIST') {
             this.props.removeItem(contentID);
         }
-
         this.setState({items: this.state.items});
-    };
-
-    capitalize = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     topics = () => {
@@ -484,7 +451,7 @@ class VerticalVideoList extends React.Component {
                                                 fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
-                                            {this.capitalize(row.type)} /
+                                            {row.type.charAt(0).toUpperCase() + row.type.slice(1)} /
                                         </Text>
                                     )}
                                     {this.props.showArtist && (
@@ -924,7 +891,7 @@ class VerticalVideoList extends React.Component {
                 </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {this.renderMappedList()}
-                    <View style={{flex: 1}} />
+                <View style={{flex: 1}} />
                 </View>
                 <Modal
                     key={'modal'}

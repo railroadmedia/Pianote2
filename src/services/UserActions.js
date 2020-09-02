@@ -1,48 +1,16 @@
-import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from './common.service';
 
-export async function addToMyList(contentID) {
-    return this.tryCall(
-        `${auth.rootUrl}/add-to-my-list?content_id=${contentID}`,
-        'PUT',
-    );
-}
-
-export async function removeFromMyList(contentID) {
-    return this.tryCall(
-        `${auth.rootUrl}/remove-from-my-list?content_id=${id}`,
-        'PUT',
-    );
-}
-
-export async function resetProgress(contentID) {
-    return this.tryCall(
-        `${auth.rootUrl}/railcontent/reset?content_id=${contentID}`,
-        'PUT',
-    );
-}
-
-export async function updateUsersVideoProgress(contentID, progress) {
-    return this.tryCall(
-        `${auth.rootUrl}/railcontent/video/progress?content_id=${contentID}&progress=${progress}`,
-        'PUT',
-    );
-}
-
-export async function getUserDetails() {
-    return this.tryCall(`${auth.rootUrl}/laravel/public/api/me`);
-}
-
-export async function logout() {
-    return this.tryCall(`${auth.rootUrl}/laravel/public/api/logout`, 'PUT');
-}
+const rootUrl = 'https://staging.pianote.com';
 
 export async function likeContent(contentID) {
     try {
         const auth = await getToken();
-        console.log(contentID, auth);
         let response = await fetch(
             `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
-            {method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`}},
+            {
+                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
+            }},
         );
         console.log('LIKE CONTENT: ', await response.json());
         return await response.json();
@@ -52,7 +20,7 @@ export async function likeContent(contentID) {
     }
 }
 
-export async function dislikeContent(contentID) {
+export async function unlikeContent(contentID) {
     try {
         const auth = await getToken();
         console.log(auth.token, 'LIKE AUTH');
@@ -69,6 +37,33 @@ export async function dislikeContent(contentID) {
         console.log('ERROR DISLIKING CONTENT: ', error);
         return new Error(error);
     }
+}
+
+export async function addToMyList(contentID) {
+    return commonService.tryCall(`${rootUrl}/add-to-my-list?content_id=${contentID}`,'PUT');
+}
+
+export async function removeFromMyList(contentID) {
+    return commonService.tryCall(`${rootUrl}/remove-from-my-list?content_id=${contentID}`,'PUT');
+}
+
+export async function resetProgress(contentID) {
+    return commonService.tryCall(`${rootUrl}/railcontent/reset?content_id=${contentID}`,'PUT');
+}
+
+export async function updateUsersVideoProgress(contentID, progress) {
+    return commonService.tryCall(
+        `${rootUrl}/railcontent/video/progress?content_id=${contentID}&progress=${progress}`,
+        'PUT',
+    );
+}
+
+export async function getUserDetails() {
+    return this.tryCall(`${auth.rootUrl}/laravel/public/api/me`);
+}
+
+export async function logout() {
+    return this.tryCall(`${auth.rootUrl}/laravel/public/api/logout`, 'PUT');
 }
 
 export async function myList(filters, page, limit) {

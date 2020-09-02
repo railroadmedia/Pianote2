@@ -2,12 +2,17 @@
  * StudentFocusCatalog
  */
 import React from 'react';
-import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {
+    View, 
+    ScrollView, 
+    Text, 
+    TouchableOpacity
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import AsyncStorage from '@react-native-community/async-storage';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -27,24 +32,8 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     componentDidMount = async () => {
-        email = await AsyncStorage.getItem('email');
-
-        await fetch('http://18.218.118.227:5000/accountDetails', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                this.setState({
-                    lessonsStarted: response.lessonsStarted == 1 ? true : false,
-                });
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
+        const userData = await getUserData();
+        await this.setState({lessonsStarted: false})
         await this.getProgressStudentFocus();
     };
 

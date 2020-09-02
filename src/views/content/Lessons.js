@@ -9,16 +9,21 @@ import {View, Text, ScrollView, Platform} from 'react-native';
 import {getContentChildById} from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import AsyncStorage from '@react-native-community/async-storage';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 import firebase from 'react-native-firebase';
+
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+};
 
 export default class Lessons extends React.Component {
     static navigationOptions = {header: null};
@@ -31,16 +36,16 @@ export default class Lessons extends React.Component {
             foundations: [],
             currentLesson: [],
             startedFoundations: false, // for showing start icon or continue
-            outVideos: false,
             page: 0,
             showModalMenu: false, // show navigation menu
             lessonsStarted: true, // for showing continue lessons
             profileImage: '',
-            xp: '', // user's XP
+            xp: '2500', // user's XP
             rank: '', // user's level
             isLoadingNew: true, // new lessons
             isLoadingAll: true, // all lessons
             isLoadingProgress: true,
+            isPaging: false, // scrolling more
             filtering: false,
             filters: null,
             currentSort: 'Relevance',
@@ -48,34 +53,18 @@ export default class Lessons extends React.Component {
     }
 
     componentWillMount = async () => {
-        email = await AsyncStorage.getItem('email');
-        password = await AsyncStorage.getItem('password');
+        // get user data
+        const userData = await getUserData();
 
-        var auth = await getToken(email, password);
-        var userData = await getUserData(auth.token);
+        // set user data
+        this.setState({
+            xp: '2500',
+            rank: 'Mastero',
+            profileImage: '',
+            lessonsStarted: false,
+        });
 
-        console.log('USER DATA: ', userData);
-
-        await fetch('http://18.218.118.227:5000/accountDetails', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                email: email,
-            }),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                this.setState({
-                    xp: response.XP,
-                    rank: response.rank,
-                    profileImage: profileImage !== null ? '' : profileImage,
-                    lessonsStarted: response.lessonsStarted == 1 ? true : false,
-                });
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
-
+        // get foundations data
         this.getFoundations();
     };
 
@@ -136,15 +125,18 @@ export default class Lessons extends React.Component {
     };
 
     getFoundations = async () => {
+        // get highest level foundations content
         const {response, error} = await getContentChildById({
             parentId: '215952',
         });
 
+        // return structured data
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data);
         });
 
         try {
+            // create simplified data structure
             items = [];
             for (i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -171,8 +163,8 @@ export default class Lessons extends React.Component {
                 }
             }
 
+            // check if any items started
             var startedFoundations = false;
-
             for (i in items) {
                 if (items[i].isStarted == true) {
                     startedFoundations == true;
@@ -183,95 +175,8 @@ export default class Lessons extends React.Component {
                 startedFoundations,
                 foundations: [...this.state.foundations, ...items],
             });
-
-            console.log(this.state.foundations, 'foundations');
         } catch (error) {
             console.log(error);
-        }
-    };
-
-    getDurationFoundations = (newContent) => {
-        var data = 0;
-        try {
-            for (i in newContent.post.current_lesson.fields) {
-                if (newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data =
-                        newContent.post.current_lesson.fields[i].value.fields;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].key == 'length_in_seconds') {
-                            return data[i].value;
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    getProgressLessons = async () => {
-        try {
-            const {response, error} = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: 1,
-                sort: '-created_on',
-                statuses: ['published'],
-                required_user_states: ['started'],
-                included_types: ['course'],
-            });
-
-            console.log(response, error);
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data);
-            });
-
-            items = [];
-            for (i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[0].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
-            }
-
-            console.log('progress lessons: ', response, error);
-
-            await this.setState({
-                progressLessons: [...this.state.progressLessons, ...items],
-                lessonsStarted: items.length > 0 ? true : false,
-                isLoadingProgress: false,
-            });
-        } catch (error) {
-            console.log('error progress: ', error);
-        }
-    };
-
-    getDuration = (newContent) => {
-        if (newContent.post.fields[0].key == 'video') {
-            return newContent.post.fields[0].value.fields[1].value;
-        } else if (newContent.post.fields[1].key == 'video') {
-            return newContent.post.fields[1].value.fields[1].value;
-        } else if (newContent.post.fields[2].key == 'video') {
-            return newContent.post.fields[2].value.fields[1].value;
         }
     };
 
@@ -290,8 +195,6 @@ export default class Lessons extends React.Component {
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data);
             });
-
-            console.log('new lessons: ', response, error);
 
             items = [];
             for (i in newContent) {
@@ -331,12 +234,17 @@ export default class Lessons extends React.Component {
     getAllLessons = async () => {
         try {
             await this.setState({
-                isLoadingAll: true,
+                //isLoadingAll: true,
+                page: this.state.page + 1
             });
 
             // see if importing filters
             try {
                 var filters = this.state.filters;
+                var filterLevel = false
+                var filterInstructor = false
+                var filterProgress = false
+                var filterTopic = false
                 if (
                     filters.instructors.length !== 0 ||
                     filters.level.length !== 0 ||
@@ -344,92 +252,132 @@ export default class Lessons extends React.Component {
                     filters.topics.length !== 0
                 ) {
                     // if has a filter then send filters to vertical list
+                    if(filters.level.length !== 0) {filterLevel = true}
+                    if(filters.instructors.length !== 0) {filterInstructor = true}
+                    if(filters.progress.length !== 0) {filterProgress = true}
+                    if(filters.topics.length !== 0) {filterTopic = true}
                     this.setState({filters});
-                } else {
-                    // if no filters selected then null
-                    var filters = null;
                 }
             } catch (error) {
                 var filters = null;
             }
 
-            if (this.state.outVideos == false) {
-                const {response, error} = await getContent({
-                    brand: 'pianote',
-                    limit: '15',
-                    page: this.state.page,
-                    sort: 'published_on', // -published_on
-                    statuses: ['published'],
-                    included_types: ['course'],
-                    //required_fields: []
-                });
+            const {response, error} = await getContent({
+                brand: 'pianote',
+                limit: '20',
+                page: this.state.page,
+                sort: 'published_on', // -published_on
+                statuses: ['published'],
+                included_types: ['course'],
+                required_user_states: [],
+            });
 
-                const newContent = await response.data.data.map((data) => {
-                    return new ContentModel(data);
-                });
+            const newContent = await response.data.data.map((data) => {
+                return new ContentModel(data);
+            });
 
-                items = [];
-                for (i in newContent) {
-                    if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                        items.push({
-                            title: newContent[i].getField('title'),
-                            artist: newContent[i].getField('instructor')
-                                .fields[0].value,
-                            thumbnail: newContent[i].getData('thumbnail_url'),
-                            type: newContent[i].post.type,
-                            description: newContent[i]
-                                .getData('description')
-                                .replace(/(<([^>]+)>)/gi, ''),
-                            xp: newContent[i].post.xp,
-                            id: newContent[i].id,
-                            like_count: newContent[i].post.like_count,
-                            duration: this.getDuration(newContent[i]),
-                            isLiked: newContent[i].isLiked,
-                            isAddedToList: newContent[i].isAddedToList,
-                            isStarted: newContent[i].isStarted,
-                            isCompleted: newContent[i].isCompleted,
-                            bundle_count: newContent[i].post.bundle_count,
-                            progress_percent:
-                                newContent[i].post.progress_percent,
-                        });
-                    }
+            items = [];
+            for (i in newContent) {
+                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor')
+                            .fields[0].value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/gi, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent:
+                            newContent[i].post.progress_percent,
+                    });
                 }
-
-                console.log('all lessons', response, error);
-
-                await this.setState({
-                    allLessons: [...this.state.allLessons, ...items],
-                });
             }
 
+            console.log(items)
+
             await this.setState({
+                allLessons: [...this.state.allLessons, ...items],
                 filtering: false,
                 isLoadingAll: false,
+                isPaging: false,
             });
         } catch (error) {
             console.log('all lessons', error);
         }
     };
 
-    changeXP = (num) => {
-        if (num !== '') {
-            num = Number(num);
-            if (num < 10000) {
-                num = num.toString();
-                return num;
-            } else {
-                num = (num / 1000).toFixed(1).toString();
-                num = num + 'k';
-                return num;
+    getProgressLessons = async () => {
+        try {
+            const {response, error} = await getContent({
+                brand: 'pianote',
+                limit: '15',
+                page: 1,
+                sort: '-created_on',
+                statuses: ['published'],
+                required_user_states: ['started'],
+                included_types: ['course'],
+            });
+    
+            console.log(response, error);
+    
+            const newContent = response.data.data.map((data) => {
+                return new ContentModel(data);
+            });
+    
+            items = [];
+            for (i in newContent) {
+                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor').fields[0]
+                            .value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/gi, ''),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[0].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
+                    });
+                }
             }
+    
+            console.log('progress lessons: ', response, error);
+    
+            await this.setState({
+                progressLessons: [...this.state.progressLessons, ...items],
+                lessonsStarted: items.length > 0 ? true : false,
+                isLoadingProgress: false,
+            });
+        } catch (error) {
+            console.log('error progress: ', error);
         }
-    };
+    };    
 
     filterResults = async () => {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'LESSONS',
             onGoBack: (filters) => {
+                console.log('filters: ', filters)
                 this.setState({
                     allLessons: [],
                     filters:
@@ -446,6 +394,35 @@ export default class Lessons extends React.Component {
         });
     };
 
+    getDurationFoundations = async (newContent) => {
+        var data = 0;
+        try {
+            for (i in newContent.post.current_lesson.fields) {
+                if (newContent.post.current_lesson.fields[i].key == 'video') {
+                    var data =
+                        newContent.post.current_lesson.fields[i].value.fields;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].key == 'length_in_seconds') {
+                            return data[i].value;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    
+    getDuration = async (newContent) => {
+        if (newContent.post.fields[0].key == 'video') {
+            return newContent.post.fields[0].value.fields[1].value;
+        } else if (newContent.post.fields[1].key == 'video') {
+            return newContent.post.fields[1].value.fields[1].value;
+        } else if (newContent.post.fields[2].key == 'video') {
+            return newContent.post.fields[2].value.fields[1].value;
+        }
+    };
+    
     render() {
         return (
             <View styles={styles.container}>
@@ -479,6 +456,13 @@ export default class Lessons extends React.Component {
                             flex: 1,
                             backgroundColor: colors.mainBackground,
                         }}
+                        onScroll={({nativeEvent}) => {
+                            if(isCloseToBottom(nativeEvent) && this.state.isPaging == false) {
+                                this.setState({isPaging: true}),
+                                this.getAllLessons()
+                            }
+                        }}
+                        scrollEventThrottle={400}
                     >
                         <View
                             key={'backgroundColoring'}
@@ -698,7 +682,6 @@ export default class Lessons extends React.Component {
                                                 }
                                             />
                                         </View>
-                                        <View style={{flex: 1}} />
                                     </View>
                                     <View style={{flex: 1}} />
                                 </View>
@@ -745,7 +728,7 @@ export default class Lessons extends React.Component {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            {this.changeXP(this.state.xp)}
+                                            {(this.state.xp.length > 4) ? (Number(this.state.xp) / 1000).toFixed(1).toString()+ 'k': this.state.xp.toString()}
                                         </Text>
                                     </View>
                                     <View style={{flex: 1}} />
@@ -901,7 +884,7 @@ export default class Lessons extends React.Component {
                                     } // image height
                                     imageWidth={fullWidth * 0.26} // image width
                                     outVideos={this.state.outVideos} // if paging and out of videos
-                                    //getVideos={() => this.getContent()} // for paging
+                                    getVideos={() => this.getAllLessons()} // for paging
                                     navigator={(row) =>
                                         this.props.navigation.navigate(
                                             'VIDEOPLAYER',
