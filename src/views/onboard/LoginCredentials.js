@@ -18,6 +18,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
@@ -114,14 +115,19 @@ export default class LoginCredentials extends React.Component {
 
         await configure({authToken: response.data.token});
 
-        console.log('RESPONSE: ', response);
-        console.log('ERROR: ', error);
-
         if (typeof response == 'undefined') {
             this.setState({showPasswordEmailMatch: true});
         } else if (response.data.success) {
             // store data
+            let userData = await getUserData();
+            console.log(userData)
+            const userID = await userData.id.toString()
+            
             await AsyncStorage.multiSet([
+                ['profileURI', userData.profile_picture_url],
+                ['joined', userData.created_at],
+                ['displayName', userData.display_name],
+                ['userID', userID],
                 ['loggedInStatus', 'true'],
                 ['email', this.state.email],
                 ['password', this.state.password],

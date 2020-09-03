@@ -14,6 +14,11 @@ const resetAction = StackActions.reset({
     actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
 });
 
+const resetAction2 = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LOGIN'})],
+});
+
 export default class LoadPage extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -24,14 +29,16 @@ export default class LoadPage extends React.Component {
 
     componentDidMount = async () => {
         await SplashScreen.hide();
+        
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
+        
         let userData = await getUserData();
 
         if (isLoggedIn !== 'true') {
-            setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
+            setTimeout(() => this.props.navigation.dispatch(resetAction2), 1000);
         } else {
             // membership expired
-            if ('membershipValid' == 'membershipValid') {
+            if ('membershipVwrertwretgalid' == 'memsbershipValid') {
                 console.log(userData)
                 const userID = await userData.id.toString()
                 await AsyncStorage.setItem('userID', userID)

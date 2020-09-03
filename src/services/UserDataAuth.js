@@ -34,3 +34,22 @@ export async function getUserData() {
         return new Error(error);
     }
 }
+
+export async function logOut() {
+    // return profile details
+    try {
+        const auth = await getToken();
+        let response = await fetch(
+            'https://staging.pianote.com/usora/api/logout',
+            {
+                headers: {Authorization: `Bearer ${auth.token}`}
+            },
+        );
+        console.log(await response.json());
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        return new Error(error);
+    }
+}
+

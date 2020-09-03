@@ -146,7 +146,7 @@ export default class Terms extends React.Component {
                             <View style={{height: 5 * factorRatio}} />
                             <Text style={styles.text}>
                                 Unless otherwise noted, all of the text, audio,
-                                and video content within Drumeo.com is the
+                                and video content within Pianote.com is the
                                 copyrighted property of Musora Media, Inc. This
                                 copyrighted material includes all writing by
                                 staff, video lessons, and some of the artwork,
@@ -163,7 +163,7 @@ export default class Terms extends React.Component {
                                 is expressly prohibited. Certain names, logos,
                                 phrases, and artwork on these pages may
                                 constitute trademarks of Musora Media or its
-                                sponsors. The mark "Drumeo.com" and the contents
+                                sponsors. The mark "Pianote.com" and the contents
                                 of its Web site are the sole property of Musora
                                 Media. Reproduction in whole or in part is
                                 strictly prohibited without written permission

@@ -385,9 +385,7 @@ export default class Settings extends React.Component {
                                 <TouchableOpacity
                                     key={'privacyPolicy'}
                                     onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'SUPPORT',
-                                        );
+                                        this.props.navigation.navigate('PRIVACYPOLICY');
                                     }}
                                     style={[
                                         styles.centerContent,
