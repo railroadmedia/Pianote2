@@ -35,12 +35,12 @@ class ContentModal extends React.Component {
 
     addToMyList = async (contentID) => {
         // change status of content on parent data structure
-        this.props.addToMyList(contentID);        
-        // make added to list on current data structure 
+        this.props.addToMyList(contentID);
+        // make added to list on current data structure
         this.state.data.isAddedToList = true;
         this.setState({data: this.state.data});
         // add to list on backend
-        addToMyList(contentID)
+        addToMyList(contentID);
     };
 
     removeFromMyList = async (contentID) => {
@@ -50,18 +50,18 @@ class ContentModal extends React.Component {
         this.state.data.isAddedToList = false;
         this.setState({data: this.state.data});
         // change data on backend
-        removeFromMyList(contentID)
+        removeFromMyList(contentID);
     };
 
     like = async (contentID) => {
         // change data on modal
         this.state.data.isLiked = !this.state.data.isLiked;
-        this.state.data.like_count = this.state.data.like_count + 1
+        this.state.data.like_count = this.state.data.like_count + 1;
         this.setState({data: this.state.data});
         // change data on parent data
         // ADD IN
         // like on backend
-        likeContent(contentID)
+        likeContent(contentID);
     };
 
     unlike = async (contentID) => {
@@ -184,8 +184,11 @@ class ContentModal extends React.Component {
                                         color: 'grey',
                                     }}
                                 >
-                                    {this.state.data.type.charAt(0).toUpperCase() + this.state.data.type.slice(1)} /{' '}
-                                    {this.state.data.artist}
+                                    {this.state.data.type
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                        this.state.data.type.slice(1)}{' '}
+                                    / {this.state.data.artist}
                                 </Text>
                             </View>
                             <View style={{height: 10 * factorVertical}} />
@@ -311,8 +314,10 @@ class ContentModal extends React.Component {
                                     <TouchableOpacity
                                         onPress={() => {
                                             this.state.data.isLiked
-                                            ? this.unlike(this.state.data.id)
-                                            : this.like(this.state.data.id)
+                                                ? this.unlike(
+                                                      this.state.data.id,
+                                                  )
+                                                : this.like(this.state.data.id);
                                         }}
                                     >
                                         <AntIcon
@@ -408,7 +413,9 @@ class ContentModal extends React.Component {
                                     <TouchableOpacity
                                         onPress={() => {
                                             resetProgress(this.state.data.id),
-                                            this.download(this.state.data.id);
+                                                this.download(
+                                                    this.state.data.id,
+                                                );
                                         }}
                                     >
                                         <MaterialIcon

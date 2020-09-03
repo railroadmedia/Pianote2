@@ -9,8 +9,9 @@ export async function likeContent(contentID) {
         let response = await fetch(
             `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
             {
-                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
-            }},
+                method: 'PUT',
+                headers: {Authorization: `Bearer ${auth.token}`},
+            },
         );
         console.log('LIKE CONTENT: ', await response.json());
         return await response.json();
@@ -40,15 +41,24 @@ export async function unlikeContent(contentID) {
 }
 
 export async function addToMyList(contentID) {
-    return commonService.tryCall(`${rootUrl}/add-to-my-list?content_id=${contentID}`,'PUT');
+    return commonService.tryCall(
+        `${rootUrl}/add-to-my-list?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function removeFromMyList(contentID) {
-    return commonService.tryCall(`${rootUrl}/remove-from-my-list?content_id=${contentID}`,'PUT');
+    return commonService.tryCall(
+        `${rootUrl}/remove-from-my-list?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function resetProgress(contentID) {
-    return commonService.tryCall(`${rootUrl}/railcontent/reset?content_id=${contentID}`,'PUT');
+    return commonService.tryCall(
+        `${rootUrl}/railcontent/reset?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function updateUsersVideoProgress(contentID, progress) {

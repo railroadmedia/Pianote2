@@ -26,8 +26,8 @@ export default class Profile extends React.Component {
     }
 
     componentWillMount = async () => {
-        let userData = await getUserData()
-        console.log('USER DATA : ', userData)
+        let userData = await getUserData();
+        console.log('USER DATA : ', userData);
 
         this.setState({
             xp: 2400,
@@ -37,7 +37,7 @@ export default class Profile extends React.Component {
             memberSince: 2017,
             lessonsStarted: false,
         });
-    }
+    };
 
     changeXP = (num) => {
         if (num !== '') {

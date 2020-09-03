@@ -6,6 +6,7 @@ export async function getToken() {
     try {
         const email = await AsyncStorage.getItem('email');
         const password = await AsyncStorage.getItem('password');
+
         let response = await fetch(
             `https://staging.pianote.com/usora/api/login?email=${email}&password=${password}`,
             {method: 'PUT'},
@@ -42,7 +43,7 @@ export async function logOut() {
         let response = await fetch(
             'https://staging.pianote.com/usora/api/logout',
             {
-                headers: {Authorization: `Bearer ${auth.token}`}
+                headers: {Authorization: `Bearer ${auth.token}`},
             },
         );
         console.log(await response.json());
@@ -52,4 +53,3 @@ export async function logOut() {
         return new Error(error);
     }
 }
-

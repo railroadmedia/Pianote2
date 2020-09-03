@@ -163,12 +163,12 @@ export default class Terms extends React.Component {
                                 is expressly prohibited. Certain names, logos,
                                 phrases, and artwork on these pages may
                                 constitute trademarks of Musora Media or its
-                                sponsors. The mark "Pianote.com" and the contents
-                                of its Web site are the sole property of Musora
-                                Media. Reproduction in whole or in part is
-                                strictly prohibited without written permission
-                                of Musora Media. Musora Media also cannot
-                                guarantee that all content and material
+                                sponsors. The mark "Pianote.com" and the
+                                contents of its Web site are the sole property
+                                of Musora Media. Reproduction in whole or in
+                                part is strictly prohibited without written
+                                permission of Musora Media. Musora Media also
+                                cannot guarantee that all content and material
                                 appearing in the Musora Media Web site is not
                                 infringing on any registered or non-registered
                                 copyrights.

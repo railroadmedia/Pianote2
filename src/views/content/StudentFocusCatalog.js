@@ -2,12 +2,7 @@
  * StudentFocusCatalog
  */
 import React from 'react';
-import {
-    View, 
-    ScrollView, 
-    Text, 
-    TouchableOpacity
-} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
@@ -31,7 +26,7 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     componentDidMount = async () => {
-        await this.setState({lessonsStarted: false})
+        await this.setState({lessonsStarted: false});
         await this.getProgressStudentFocus();
     };
 

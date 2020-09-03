@@ -113,21 +113,11 @@ export default class LoginCredentials extends React.Component {
             password: this.state.password,
         });
 
-        await configure({authToken: response.data.token});
-
         if (typeof response == 'undefined') {
             this.setState({showPasswordEmailMatch: true});
         } else if (response.data.success) {
-            // store data
-            let userData = await getUserData();
-            console.log(userData)
-            const userID = await userData.id.toString()
-            
+            // store auth data
             await AsyncStorage.multiSet([
-                ['profileURI', userData.profile_picture_url],
-                ['joined', userData.created_at],
-                ['displayName', userData.display_name],
-                ['userID', userID],
                 ['loggedInStatus', 'true'],
                 ['email', this.state.email],
                 ['password', this.state.password],
@@ -136,7 +126,19 @@ export default class LoginCredentials extends React.Component {
                 ['userId', JSON.stringify(response.data.userId)],
             ]);
 
-            // check membership status then navigate
+            // configure token
+            await configure({authToken: response.data.token});
+
+            let userData = await getUserData();
+
+            await AsyncStorage.multiSet([
+                ['profileURI', userData.profile_picture_url],
+                ['joined', userData.created_at],
+                ['displayName', userData.display_name],
+                ['userID', userData.id.toString()],
+            ]);
+
+            // check membership status then navigate to lessons or other
             if ('membershipValid' == 'membershipValid') {
                 await configure({authToken: response.data.token});
                 await this.props.navigation.dispatch(resetAction);

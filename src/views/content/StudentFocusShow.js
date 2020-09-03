@@ -11,7 +11,7 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
 const packDict = {
-    'Bootcamps': require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
+    Bootcamps: require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
     'Q&A': require('Pianote2/src/assets/img/imgs/questionAnswer.jpg'),
     'Quick Tips': require('Pianote2/src/assets/img/imgs/quickTips.jpg'),
     'Student Review': require('Pianote2/src/assets/img/imgs/studentReview.jpg'),

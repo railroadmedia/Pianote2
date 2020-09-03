@@ -4,6 +4,8 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+//import Intercom from 'react-native-intercom';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 
 export default class Support extends React.Component {
@@ -12,6 +14,30 @@ export default class Support extends React.Component {
         super(props);
         this.state = {};
     }
+
+    componentDidMount = async () => {
+        const userData = await getUserData();
+        //Intercom.registerUnidentifiedUser({userId: this.props.user});
+        //Intercom.addEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
+        //Intercom.addEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
+    };
+
+    componentWillUnmount() {
+        //Intercom.removeEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
+        //Intercom.removeEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
+    }
+
+    componentWillMount() {
+        //Intercom.handlePushMessage();
+    }
+
+    onUnreadChange(event) {
+        console.log(event);
+    }
+
+    onIntercomPress = () => {
+        //Intercom.displayMessenger();
+    };
 
     render() {
         return (
@@ -128,6 +154,7 @@ export default class Support extends React.Component {
                         >
                             <View style={{flex: 1}} />
                             <TouchableOpacity
+                                onPress={() => this.onIntercomPress()}
                                 style={[
                                     styles.centerContent,
                                     {
@@ -161,6 +188,9 @@ export default class Support extends React.Component {
                         >
                             <View style={{flex: 1}} />
                             <TouchableOpacity
+                                onPress={() =>
+                                    Linking.openURL('mailto:support@musora.com')
+                                }
                                 style={[
                                     styles.centerContent,
                                     {
@@ -194,6 +224,9 @@ export default class Support extends React.Component {
                         >
                             <View style={{flex: 1}} />
                             <TouchableOpacity
+                                onPress={() =>
+                                    Linking.openURL(`tel:${'18004398921'}`)
+                                }
                                 style={[
                                     styles.centerContent,
                                     {
