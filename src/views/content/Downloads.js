@@ -105,7 +105,9 @@ export default class Downloads extends React.Component {
                 return (
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.navigation.navigate('VIDEOPLAYER');
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                                id: data.id,
+                            });
                         }}
                         style={[
                             styles.centerContent,

@@ -111,7 +111,7 @@ export default class LoginCredentials extends React.Component {
             email: this.state.email,
             password: this.state.password,
         });
-
+        console.log('red', response);
         await configure({authToken: response.data.token});
 
         console.log('RESPONSE: ', response);

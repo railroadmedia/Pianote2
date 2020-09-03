@@ -211,7 +211,7 @@ export default class SinglePack extends React.Component {
 
     navigate = (row) => {
         if (row.type == 'pack-bundle-lesson') {
-            this.props.navigation.navigate('VIDEOPLAYER', {data: row});
+            this.props.navigation.navigate('VIDEOPLAYER', {id: row.id});
         } else {
             this.props.navigation.push('SINGLEPACK', {
                 data: row,
@@ -439,8 +439,8 @@ export default class SinglePack extends React.Component {
                                                     this.props.navigation.navigate(
                                                         'VIDEOPLAYER',
                                                         {
-                                                            data: this.state
-                                                                .videos[0],
+                                                            id: this.state
+                                                                .videos[0].id,
                                                         },
                                                     );
                                                 }}

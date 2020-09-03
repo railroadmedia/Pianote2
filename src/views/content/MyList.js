@@ -321,7 +321,7 @@ export default class MyList extends React.Component {
                             imageWidth={fullWidth * 0.26} // image width
                             navigator={(row) =>
                                 this.props.navigation.navigate('VIDEOPLAYER', {
-                                    data: row,
+                                    id: row.id,
                                 })
                             }
                         />

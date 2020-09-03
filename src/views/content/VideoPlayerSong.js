@@ -210,36 +210,38 @@ export default class VideoPlayerSong extends React.Component {
                 </ScrollView>
                 {!this.state.hideTitles && (
                     <View style={{backgroundColor: '#ffffff'}}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                console.log('asd');
-                                this.setState({showSoundSlice: true});
-                            }}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    borderWidth: 2.5 * factorRatio,
-                                    borderColor: '#fb1b2f',
-                                    width: '90%',
-                                    alignSelf: 'center',
-                                    borderRadius: 100 * factorRatio,
-                                    marginTop: 10 * factorRatio,
-                                    marginBottom: 5 * factorRatio,
-                                },
-                            ]}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: '800',
-                                    color: '#fb1b2f',
-                                    paddingVertical: 10,
+                        {this.props.navigation.state.params.slug && (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    console.log('asd');
+                                    this.setState({showSoundSlice: true});
                                 }}
+                                style={[
+                                    styles.centerContent,
+                                    {
+                                        borderWidth: 2.5 * factorRatio,
+                                        borderColor: '#fb1b2f',
+                                        width: '90%',
+                                        alignSelf: 'center',
+                                        borderRadius: 100 * factorRatio,
+                                        marginTop: 10 * factorRatio,
+                                        marginBottom: 5 * factorRatio,
+                                    },
+                                ]}
                             >
-                                PRACTICE
-                            </Text>
-                        </TouchableOpacity>
+                                <Text
+                                    style={{
+                                        fontSize: 16 * factorRatio,
+                                        fontFamily: 'OpenSans-Regular',
+                                        fontWeight: '800',
+                                        color: '#fb1b2f',
+                                        paddingVertical: 10,
+                                    }}
+                                >
+                                    PRACTICE
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                         <TouchableOpacity
                             onPress={() => {
                                 this.setState({showAssignmentComplete: true});

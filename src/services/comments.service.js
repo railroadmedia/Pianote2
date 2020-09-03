@@ -14,7 +14,6 @@ export default {
         } else if (sortBy === 'my_comments') {
             reqUrl += `&sort=-mine`;
         }
-        console.log(reqUrl);
         return commonService.tryCall(reqUrl);
     },
     addComment: async function (commentText, contentId) {

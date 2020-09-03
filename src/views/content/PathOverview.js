@@ -249,7 +249,7 @@ export default class PathOverview extends React.Component {
                                         this.props.navigation.navigate(
                                             'VIDEOPLAYER',
                                             {
-                                                data: this.state.data,
+                                                id: this.state.data.id,
                                             },
                                         )
                                     }
@@ -619,7 +619,7 @@ export default class PathOverview extends React.Component {
                                 navigator={(row) =>
                                     this.props.navigation.navigate(
                                         'VIDEOPLAYER',
-                                        {data: row},
+                                        {id: row.id},
                                     )
                                 }
                             />

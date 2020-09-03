@@ -7,12 +7,18 @@ export async function getToken() {
         const email = await AsyncStorage.getItem('email');
         const password = await AsyncStorage.getItem('password');
         let response = await fetch(
-            `https://staging.pianote.com/usora/api/login?email=${email}&password=${password}`,
+            `http://app-staging.pianote.com/usora/api/login?email=kentonp@drumeo.com&password=Katrinapalmer7!`,
             {method: 'PUT'},
         );
         let data = await response.json();
         console.log('TOKEN DATA: ', data);
         await configure({authToken: data.token});
+        await AsyncStorage.multiSet([
+            ['loggedInStatus', 'true'],
+
+            ['token', JSON.stringify(data.token)],
+        ]);
+
         return data;
     } catch (error) {
         console.log(error);

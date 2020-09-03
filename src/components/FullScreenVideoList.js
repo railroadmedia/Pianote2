@@ -64,6 +64,7 @@ class FullScreenVideoList extends React.Component {
                                     onPress={() => {
                                         this.props.navigation.navigate(
                                             'VIDEOPLAYER',
+                                            {id: item.id},
                                         );
                                     }}
                                     style={{

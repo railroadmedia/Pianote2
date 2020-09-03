@@ -619,7 +619,7 @@ export default class Search extends React.Component {
                                                     navigator={(row) =>
                                                         this.props.navigation.navigate(
                                                             'VIDEOPLAYER',
-                                                            {data: row},
+                                                            {id: row.id},
                                                         )
                                                     }
                                                 />

@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Modal from 'react-native-modal';
-import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Replies from '../../components/Replies.js';
@@ -34,53 +33,19 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import downloadService from '../../services/download.service.js';
 import commentsService from '../../services/comments.service.js';
+import contentService from '../../services/content.service.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
     Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-const mockComments = [
-    {
-        id: 1,
-        comment:
-            'I love the embedded Youtube Video added to the practice section, super cool and helpful!',
-        is_liked: true,
-        like_count: 1,
-        user_id: 234,
-        replies: [
-            {
-                id: 1,
-                comment:
-                    'I love the embedded Youtube Video added to the practice section, super cool and helpful!',
-                is_liked: true,
-                like_count: 1,
-                user_id: 234,
-                user: {
-                    'fields.profile_picture_image_url':
-                        'https://musora.imgix.net/https%3A%2F%2Fdzryyo1we6bm3.cloudfront.net%2Favatars%2F349787_1583823650413.jpg?fit=crop&crop=faces%2Cedges&auto=format&w=59&h=59&dpr=1.25&ixlib=js-2.3.1&s=eae6008986329b241f37677f33a97e51',
-                    xp: 10,
-                    display_name: 'John Doe',
-                    xp_level: 'master',
-                },
-                created_on: '2020-08-02',
-            },
-        ],
-        user: {
-            'fields.profile_picture_image_url':
-                'https://musora.imgix.net/https%3A%2F%2Fdzryyo1we6bm3.cloudfront.net%2Favatars%2F349787_1583823650413.jpg?fit=crop&crop=faces%2Cedges&auto=format&w=59&h=59&dpr=1.25&ixlib=js-2.3.1&s=eae6008986329b241f37677f33a97e51',
-            xp: 10,
-            display_name: 'John Doe',
-            xp_level: 'master',
-        },
-        created_on: '2020-08-02',
-    },
-];
+
 export default class VideoPlayer extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            data: this.props.navigation.state.params.data, // data about incoming video
+            id: this.props.navigation.state.params.id,
             commentSort: 'Popular', // Newest, Oldest, Mine, Popular
             profileImage: '',
             isLoadingAll: true,
@@ -93,7 +58,6 @@ export default class VideoPlayer extends React.Component {
             showVideoPlayerOptions: false,
             showAssignmentComplete: false,
             showQualitySettings: false,
-            showAssignmentComplete: false,
             showLessonComplete: false,
             isReply: false,
             selectedComment: null,
@@ -107,56 +71,12 @@ export default class VideoPlayer extends React.Component {
 
             videos: [],
 
-            likes: 34,
+            likes: 0,
             isLiked: false,
+            isAddedToMyList: false,
             comment: '',
 
-            assignmentList: [
-                [
-                    'Learn The Fill',
-                    1,
-                    1,
-                    170401,
-                    [
-                        {
-                            key: 'sheet_music_image_url',
-                            value:
-                                'https://d1923uyy6spedc.cloudfront.net/246345-sheet-image-1582300289.svg',
-                        },
-                    ],
-                ],
-                [
-                    'Learn The Beat',
-                    2,
-                    0,
-                    170401,
-                    [
-                        {
-                            key: 'sheet_music_image_url',
-                            value:
-                                'https://d1923uyy6spedc.cloudfront.net/246346-sheet-image-1582300437.svg',
-                        },
-                        {
-                            key: 'sheet_music_image_url',
-                            value:
-                                'https://d1923uyy6spedc.cloudfront.net/246345-sheet-image-1582300289.svg',
-                        },
-                    ],
-                ],
-                [
-                    'Put It Together',
-                    3,
-                    0,
-                    170401,
-                    [
-                        {
-                            key: 'sheet_music_image_url',
-                            value:
-                                'https://d1923uyy6spedc.cloudfront.net/263131-sheet-image-1595074207.svg',
-                        },
-                    ],
-                ],
-            ],
+            assignmentList: [],
 
             clickedAssignment: {name: '', num: ''},
         };
@@ -168,10 +88,6 @@ export default class VideoPlayer extends React.Component {
         if (profileImage !== null) {
             await this.setState({profileImage});
         }
-        if (this.state.assignmentList) {
-            await downloadService.getAssignWHRatio(this.state.assignmentList);
-        }
-        console.log(this.state.assignmentList);
         this.keyboardDidShowListener = Keyboard.addListener(
             showListener,
             this._keyboardDidShow,
@@ -182,7 +98,7 @@ export default class VideoPlayer extends React.Component {
         );
         this.limit = 10;
         this.userId = JSON.parse(await AsyncStorage.getItem('userId'));
-        this.getVideos();
+        this.getContent();
         this.fetchComments();
     };
 
@@ -214,76 +130,78 @@ export default class VideoPlayer extends React.Component {
         }).start();
     };
 
-    getVideos = async () => {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '15',
-            page: this.state.page,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['song'],
-        });
-
-        const newContent = response.data.data.map((data) => {
+    getContent = async () => {
+        console.log(this.state.id);
+        let content = await contentService.getContent(this.state.id);
+        content = new ContentModel(content.data[0]);
+        console.log('content', content);
+        let relatedLessons = content.post.related_lessons.map((data) => {
             return new ContentModel(data);
         });
-
-        items = [];
-        for (i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].isLiked,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
-            }
+        let assignments = content.post.assignments.map((data) => {
+            return new ContentModel(data);
+        });
+        console.log('rl', relatedLessons);
+        let rl = [];
+        let al = [];
+        console.log(assignments);
+        for (let a in assignments) {
+            al.push({
+                title: assignments[a].getField('title'),
+                isCompleted: assignments[a].isCompleted,
+                slug: assignments[a].post.fields.find(
+                    (f) => f.key === 'soundslice_slug',
+                )?.value,
+                sheets: assignments[a].post.data
+                    .filter((d) => d.key === 'sheet_music_image_url')
+                    .map((s) => ({
+                        value: s.value,
+                        id: s.id,
+                        whRatio: s.whRatio,
+                    })),
+            });
         }
+        for (i in relatedLessons) {
+            rl.push({
+                title: relatedLessons[i].getField('title'),
+                artist: relatedLessons[i].getFieldMulti('instructor'),
+                thumbnail: relatedLessons[i].getData('thumbnail_url'),
+                type: relatedLessons[i].post.type,
+                description: relatedLessons[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/gi, ''),
+                xp: relatedLessons[i].post.xp,
+                id: relatedLessons[i].id,
+                like_count: relatedLessons[i].post.like_count,
+                duration: relatedLessons[i].post.length_in_seconds,
+                isLiked: relatedLessons[i].isLiked,
+                isAddedToList: relatedLessons[i].isAddedToList,
+                isStarted: relatedLessons[i].isStarted,
+                isCompleted: relatedLessons[i].isCompleted,
+                bundle_count: relatedLessons[i].post.bundle_count,
+                progress_percent: relatedLessons[i].post.progress_percent,
+            });
+        }
+
+        if (content.assignments)
+            await downloadService.getAssignWHRatio(content.assignments);
 
         this.setState({
-            videos: [...this.state.videos, ...items],
+            data: content,
             isLoadingAll: false,
+            videos: [...this.state.videos, ...rl],
+            likes: parseInt(content.likeCount),
+            isLiked: content.isLiked,
+            isAddedToMyList: content.isAddedToList,
+            assignmentList: [...this.state.assignmentList, ...al],
         });
-    };
-
-    getDuration = (newContent) => {
-        var data = 0;
-        try {
-            for (i in newContent.post.current_lesson.fields) {
-                if (newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data =
-                        newContent.post.current_lesson.fields[i].value.fields;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].key == 'length_in_seconds') {
-                            return data[i].value;
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
     };
 
     fetchComments = async () => {
         this.setState({commentsLoading: true});
 
         let comments = await commentsService.getComments(
-            this.state.data.id,
+            this.state.id,
             this.state.commentSort,
             10,
         );
@@ -335,13 +253,10 @@ export default class VideoPlayer extends React.Component {
     makeComment = async () => {
         if (this.state.comment.length > 0) {
             let encodedCommentText = encodeURIComponent(this.state.comment);
-            await commentsService.addComment(
-                encodedCommentText,
-                this.state.data.id,
-            );
+            await commentsService.addComment(encodedCommentText, this.state.id);
 
             const comments = await commentsService.getComments(
-                this.state.data.id,
+                this.state.id,
                 this.state.commentSort,
                 this.allCommentsNum + 1,
             );
@@ -631,15 +546,16 @@ export default class VideoPlayer extends React.Component {
 
     renderAssignments() {
         return this.state.assignmentList.map((row, index) => {
+            console.log(row);
             return (
                 <TouchableOpacity
                     onPress={() => {
                         this.props.navigation.navigate('VIDEOPLAYERSONG', {
-                            assignmentName: row[0],
+                            assignmentName: row.title,
                             assignmentNum: index + 1,
                             showAssignment: true,
-                            sheets: row[4],
-                            slug: row[3],
+                            sheets: row.sheets,
+                            slug: row.slug,
                         });
                     }}
                     style={{
@@ -661,7 +577,7 @@ export default class VideoPlayer extends React.Component {
                                 fontFamily: 'RobotoCondensed-Bold',
                             }}
                         >
-                            {index + 1}. {row[0]}
+                            {index + 1}. {row.title}
                         </Text>
                         <View style={{flex: 1}} />
                     </View>
@@ -676,7 +592,7 @@ export default class VideoPlayer extends React.Component {
                             },
                         ]}
                     >
-                        {row[2] == 1 && (
+                        {row.isCompleted ? (
                             <View style={styles.centerContent}>
                                 <View
                                     style={[
@@ -696,8 +612,7 @@ export default class VideoPlayer extends React.Component {
                                     />
                                 </View>
                             </View>
-                        )}
-                        {row[2] == 0 && (
+                        ) : (
                             <View
                                 style={[
                                     styles.centerContent,
@@ -746,11 +661,13 @@ export default class VideoPlayer extends React.Component {
                             backgroundColor: colors.mainBackground,
                         }}
                     >
-                        <FastImage
+                        {/* <FastImage
                             style={{flex: 1}}
-                            source={{uri: this.state.data.thumbnail}}
+                            source={{
+                                uri: this.state.data?.getData('thumbnail_url'),
+                            }}
                             resizeMode={FastImage.resizeMode.stretch}
-                        />
+                        /> */}
                     </View>
                     <View key={'belowVideo'} style={{flex: 1}}>
                         <KeyboardAwareScrollView
@@ -776,7 +693,7 @@ export default class VideoPlayer extends React.Component {
                                         color: 'white',
                                     }}
                                 >
-                                    {this.state.data.title}
+                                    {this.state.data?.getField('title')}
                                 </Text>
                                 <View style={{height: fullHeight * 0.01}} />
                                 <Text
@@ -789,8 +706,8 @@ export default class VideoPlayer extends React.Component {
                                         color: colors.secondBackground,
                                     }}
                                 >
-                                    {this.state.data.artist} | LESSON 7 |{' '}
-                                    {this.state.data.xp} XP
+                                    {this.state.data?.artist} | LESSON 7 |{' '}
+                                    {this.state.data?.xp} XP
                                 </Text>
                                 <View style={{height: fullHeight * 0.015}} />
                             </View>
@@ -850,14 +767,23 @@ export default class VideoPlayer extends React.Component {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         key={'list'}
-                                        onPress={() => {}}
+                                        onPress={() =>
+                                            this.setState({
+                                                isAddedToMyList: !this.state
+                                                    .isAddedToMyList,
+                                            })
+                                        }
                                         style={{
                                             flex: 1,
                                             alignItems: 'center',
                                         }}
                                     >
                                         <AntIcon
-                                            name={'plus'}
+                                            name={
+                                                this.state.isAddedToMyList
+                                                    ? 'close'
+                                                    : 'plus'
+                                            }
                                             size={27.5 * factorRatio}
                                             color={colors.pianoteRed}
                                         />
@@ -871,7 +797,9 @@ export default class VideoPlayer extends React.Component {
                                                 color: 'white',
                                             }}
                                         >
-                                            My List
+                                            {this.state.isAddedToMyList
+                                                ? 'Added'
+                                                : 'My List'}
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -971,6 +899,7 @@ export default class VideoPlayer extends React.Component {
                                         <View
                                             style={{height: fullHeight * 0.03}}
                                         />
+                                        {console.log('desc', this.state.data)}
                                         <Text
                                             style={{
                                                 paddingLeft: '5%',
@@ -981,7 +910,9 @@ export default class VideoPlayer extends React.Component {
                                                 color: 'white',
                                             }}
                                         >
-                                            {this.state.data.description}
+                                            {this.state.data?.getData(
+                                                'description',
+                                            )}
                                         </Text>
                                     </View>
                                 )}
@@ -990,41 +921,46 @@ export default class VideoPlayer extends React.Component {
                                 key={'buffer'}
                                 style={{
                                     height:
-                                        this.state.data.type !== 'song'
+                                        this.state.data?.type !== 'song'
                                             ? 20 * factorVertical
                                             : 10 * factorVertical,
                                 }}
                             />
-                            {this.state.data.type !== 'song' && (
-                                <View
-                                    key={'assingmentsHeader'}
-                                    style={{paddingLeft: fullWidth * 0.035}}
-                                >
-                                    <Text
+                            {this.state.assignmentList?.length > 0 && (
+                                <>
+                                    <View
+                                        key={'assingmentsHeader'}
+                                        style={{paddingLeft: fullWidth * 0.035}}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontSize: 18 * factorRatio,
+                                                fontFamily:
+                                                    'RobotoCondensed-Bold',
+                                                color: colors.secondBackground,
+                                            }}
+                                        >
+                                            ASSIGNMENTS
+                                        </Text>
+                                        <View
+                                            style={{
+                                                height: 20 * factorVertical,
+                                            }}
+                                        />
+                                    </View>
+
+                                    <View
+                                        key={'assignments'}
                                         style={{
-                                            fontSize: 18 * factorRatio,
-                                            fontFamily: 'RobotoCondensed-Bold',
-                                            color: colors.secondBackground,
+                                            width: fullWidth,
+                                            borderTopColor:
+                                                colors.secondBackground,
+                                            borderTopWidth: 1,
                                         }}
                                     >
-                                        ASSIGNMENTS
-                                    </Text>
-                                    <View
-                                        style={{height: 20 * factorVertical}}
-                                    />
-                                </View>
-                            )}
-                            {this.state.data.type !== 'song' && (
-                                <View
-                                    key={'assignments'}
-                                    style={{
-                                        width: fullWidth,
-                                        borderTopColor: colors.secondBackground,
-                                        borderTopWidth: 1,
-                                    }}
-                                >
-                                    {this.renderAssignments()}
-                                </View>
+                                        {this.renderAssignments()}
+                                    </View>
+                                </>
                             )}
                             <View style={{height: 20 * factorVertical}} />
                             <View
@@ -1034,12 +970,8 @@ export default class VideoPlayer extends React.Component {
                                 }}
                             >
                                 <VerticalVideoList
-                                    title={
-                                        this.state.data.type !== 'song'
-                                            ? 'COURSE LESSONS'
-                                            : 'MORE SONGS'
-                                    }
-                                    items={this.state.videos}
+                                    title={'RELATED LESSONS'}
+                                    items={Object.values(this.state.videos)}
                                     type={'LESSONS'}
                                     isLoading={this.state.isLoadingAll}
                                     showTitleOnly={true}
@@ -1052,7 +984,7 @@ export default class VideoPlayer extends React.Component {
                                     containerBorderWidth={0}
                                     containerWidth={fullWidth}
                                     containerHeight={
-                                        this.state.data.type !== 'song'
+                                        this.state.data?.type !== 'song'
                                             ? onTablet
                                                 ? fullHeight * 0.15
                                                 : Platform.OS == 'android'
@@ -1061,7 +993,7 @@ export default class VideoPlayer extends React.Component {
                                             : fullWidth * 0.22
                                     }
                                     imageHeight={
-                                        this.state.data.type !== 'song'
+                                        this.state.data?.type !== 'song'
                                             ? onTablet
                                                 ? fullHeight * 0.12
                                                 : Platform.OS == 'android'
@@ -1070,14 +1002,14 @@ export default class VideoPlayer extends React.Component {
                                             : fullWidth * 0.175
                                     }
                                     imageWidth={
-                                        this.state.data.type !== 'song'
+                                        this.state.data?.type !== 'song'
                                             ? fullWidth * 0.26
                                             : fullWidth * 0.175
                                     }
                                     navigator={(row) =>
                                         this.props.navigation.navigate(
                                             'VIDEOPLAYER',
-                                            {data: row},
+                                            {id: row.id},
                                         )
                                     }
                                 />
@@ -1859,10 +1791,7 @@ export default class VideoPlayer extends React.Component {
                                             fontSize: 14 * factorRatio,
                                         }}
                                     >
-                                        COMPLETE{' '}
-                                        {this.state.data !== 'song'
-                                            ? 'COURSE'
-                                            : 'SONG'}
+                                        COMPLETE LESSON
                                     </Text>
                                 </TouchableOpacity>
                             </View>
