@@ -93,17 +93,10 @@ export default class CreateAccount extends React.Component {
 
     verifyEmail = async () => {
         if (this.state.email.length > 0) {
-            // check if email valid
-            await fetch('http://18.218.118.227:5000/checkEmailTaken', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    email: this.state.email,
-                }),
-            })
+            await fetch(`https://staging.pianote.com/usora/is-email-unique?email=${this.state.email}`)
                 .then((response) => response.json())
                 .then((response) => {
-                    if (response == 'success') {
+                    if (response.exists == false) {
                         this.props.navigation.navigate('CREATEACCOUNT2', {
                             email: this.state.email,
                         });

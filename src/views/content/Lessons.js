@@ -9,7 +9,7 @@ import {View, Text, ScrollView} from 'react-native';
 import {getContentChildById} from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import AsyncStorage from '@react-native-community/async-storage';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -41,7 +41,7 @@ export default class Lessons extends React.Component {
             showModalMenu: false, // show navigation menu
             lessonsStarted: true, // for showing continue lessons
             profileImage: '',
-            xp: '2500', // user's XP
+            xp: '', // user's XP
             rank: '', // user's level
             isLoadingNew: true, // new lessons
             isLoadingAll: true, // all lessons
@@ -54,16 +54,14 @@ export default class Lessons extends React.Component {
     }
 
     componentWillMount = async () => {
-        // get user data
-        const userData = await getUserData();
+        let data = await AsyncStorage.multiGet(['totalXP', 'rank', 'profileURI'])
 
-        // set user data
-        this.setState({
-            xp: '2500',
-            rank: 'Mastero',
-            profileImage: '',
+        await this.setState({
+            xp: data[0][1],
+            rank: data[1][1],
+            profileImage: data[2][1],
             lessonsStarted: false,
-        });
+        })
 
         // get foundations data
         this.getFoundations();
@@ -225,12 +223,12 @@ export default class Lessons extends React.Component {
                 brand: 'pianote',
                 limit: '20',
                 page: this.state.page,
-                sort: 'published_on', // -published_on
+                sort: 'published_on', // -published_on //  'newest', ‘oldest’, ‘popularity’, ‘trending’ and ‘relevance’.
                 statuses: ['published'],
                 included_types: ['course'],
                 required_user_states: [],
             });
-
+            
             const newContent = await response.data.data.map((data) => {
                 return new ContentModel(data);
             });

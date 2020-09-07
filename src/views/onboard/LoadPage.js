@@ -28,10 +28,8 @@ export default class LoadPage extends React.Component {
 
     componentDidMount = async () => {
         await SplashScreen.hide();
-
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-
-        let userData = await getUserData();
+        await getUserData();
 
         if (isLoggedIn !== 'true') {
             setTimeout(
@@ -41,18 +39,6 @@ export default class LoadPage extends React.Component {
         } else {
             // membership expired
             if ('membershipValid' == 'membershipValid') {
-                console.log(userData);
-                const userID = await userData.id.toString();
-                await AsyncStorage.setItem('userID', userID);
-                await AsyncStorage.setItem(
-                    'displayName',
-                    userData.display_name,
-                );
-                await AsyncStorage.setItem(
-                    'profileURI',
-                    userData.profile_picture_url,
-                );
-                await AsyncStorage.setItem('joined', userData.created_at);
                 setTimeout(
                     () => this.props.navigation.dispatch(resetAction),
                     1000,

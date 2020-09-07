@@ -129,14 +129,8 @@ export default class LoginCredentials extends React.Component {
             // configure token
             await configure({authToken: response.data.token});
 
-            let userData = await getUserData();
-
-            await AsyncStorage.multiSet([
-                ['profileURI', userData.profile_picture_url],
-                ['joined', userData.created_at],
-                ['displayName', userData.display_name],
-                ['userID', userData.id.toString()],
-            ]);
+            // set async storage with user data
+            await getUserData();
 
             // check membership status then navigate to lessons or other
             if ('membershipValid' == 'membershipValid') {
