@@ -14,6 +14,7 @@ import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ChangeEmail from '../../modals/ChangeEmail';
 import ImagePicker from 'react-native-image-picker';
+import {userForgotPassword} from '@musora/services';
 import DisplayName from '../../modals/DisplayName.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -38,6 +39,7 @@ export default class ProfileSettings extends React.Component {
             imageURI: '',
             imageType: '',
             imageName: '',
+            passwordKey: '',
         };
     }
 
@@ -59,13 +61,24 @@ export default class ProfileSettings extends React.Component {
     }
 
     changePassword = async () => {
-            return commonService.tryCall(`${authService.rootUrl}/api/change-password`,'PUT',null,null,
-              {
-                pass1: pass,
-                user_login: email,
-                rp_key: key
-              }
-            );
+        const email = await AsyncStorage.getItem('email');
+        
+        const {response, error} = await userForgotPassword({email});
+        
+        console.log('RESET PASSWORD LINK: ', response, error)
+        await this.setState({showChangePassword: true})
+
+    }
+
+    changePassword2 = async () => {
+        return
+        return commonService.tryCall(`http://app-staging.pianote.com/api/change-password`,'PUT',null,null,
+            {
+            pass1: this.state.newPassword,
+            user_login: email,
+            rp_key: this.state.passwordKey,
+            }
+        );
     }
 
     changeName = async () => {
@@ -92,18 +105,24 @@ export default class ProfileSettings extends React.Component {
     changeImage = async () => {
         const data = new FormData();
         const auth = await getToken();
-        data.append('file', {name: this.state.imageName, type: this.state.imageType,uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI});
+        
+        data.append('file', {
+            name: this.state.imageName, 
+            type: this.state.imageType, 
+            uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI
+        });
         data.append('target', this.state.imageName);
 
         try {
-            let response = await fetch(`https://staging.pianote.com/api/avatar/upload`, {
+            let response = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
               method: 'POST',
               headers: {Authorization: auth.token},
               body: data,
             });
+            console.log(response)
             return await response.json();
         } catch (error) {
-            console.log('ERROR UPLOADING IMAGE: ', error)
+            console.log('ERROR UPLOADING IMAGE: ', error.text())
         }        
     }
 

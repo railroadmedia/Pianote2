@@ -7,7 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import {getUserData, checkMembershipStatus} from 'Pianote2/src/services/UserDataAuth.js';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -28,26 +28,26 @@ export default class LoadPage extends React.Component {
 
     componentDidMount = async () => {
         await SplashScreen.hide();
+        
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-        await getUserData();
+        
+        let userData = await getUserData();
 
-        if (isLoggedIn !== 'true') {
-            setTimeout(
-                () => this.props.navigation.dispatch(resetAction2),
-                1000,
-            );
+        if (isLoggedIn !== 'true' || userData.isMember == false) {
+            // go to login
+            setTimeout(() => this.props.navigation.dispatch(resetAction2), 1000);
         } else {
-            // membership expired
-            if ('membershipValid' == 'membershipValid') {
-                setTimeout(
-                    () => this.props.navigation.dispatch(resetAction),
-                    1000,
-                );
+            console.log('ispackonly', userData.isPackOlyOwner)
+
+            let currentDate = new Date().getTime()/1000
+            let userExpDate = new Date(userData.expirationDate).getTime()/1000
+            
+            if (userData.isLifetime || currentDate < userExpDate) {
+                // go to lessons
+                setTimeout(() => this.props.navigation.dispatch(resetAction), 1000);
             } else {
-                setTimeout(
-                    () => this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
-                    1000,
-                );
+                // go to membership expired
+                setTimeout(() => this.props.navigation.navigate('MEMBERSHIPEXPIRED'), 1000);
             }
         }
     };

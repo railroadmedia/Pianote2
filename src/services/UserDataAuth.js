@@ -2,21 +2,19 @@ import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export async function getToken() {
-    // return userID, expiry, token, tokenType
     try {
         const email = await AsyncStorage.getItem('email');
         const password = await AsyncStorage.getItem('password');
 
-        let response = await fetch(
-            `https://staging.pianote.com/usora/api/login?email=${email}&password=${password}`,
-            {method: 'PUT'},
-        );
+        let response = await fetch(`http://app-staging.pianote.com/usora/api/login?email=${email}&password=${password}`,{method: 'PUT'});
+        
         let data = await response.json();
-        console.log('TOKEN DATA: ', data);
+        
         await configure({authToken: data.token});
+        
         return data;
     } catch (error) {
-        console.log(error);
+        console.log('getToken Error', error);
         return new Error(error);
     }
 }
@@ -25,6 +23,7 @@ export async function getUserData() {
     // return profile details
     try {
         const auth = await getToken();
+        
         let data = await fetch(
             'http://app-staging.pianote.com/api/profile',
             {method: 'GET', headers: {Authorization: `Bearer ${auth.token}`}},
@@ -43,7 +42,7 @@ export async function getUserData() {
         ])
         return await userData;
     } catch (error) {
-        console.log(error);
+        console.log('getUserData Error: ', error);
         return new Error(error);
     }
 }
