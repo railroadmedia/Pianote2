@@ -25,11 +25,13 @@ export async function getUserData() {
     // return profile details
     try {
         const auth = await getToken();
-        let userData = await fetch(
+        let data = await fetch(
             'http://app-staging.pianote.com/api/profile',
             {method: 'GET', headers: {Authorization: `Bearer ${auth.token}`}},
         );
 
+        let userData = await data.json()
+        
         // update data
         await AsyncStorage.multiSet([
             ['totalXP', userData.totalXp.toString()],
@@ -39,7 +41,7 @@ export async function getUserData() {
             ['profileURI', userData.profile_picture_url.toString()],
             ['joined', userData.created_at.toString()],
         ])
-        return await userData.json();
+        return await userData;
     } catch (error) {
         console.log(error);
         return new Error(error);

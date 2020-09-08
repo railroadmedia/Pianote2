@@ -8,6 +8,7 @@ import {
     ScrollView,
     TouchableOpacity,
     TextInput,
+    Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -18,6 +19,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from 'Pianote2/src/services/common.service';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 
@@ -34,6 +36,8 @@ export default class ProfileSettings extends React.Component {
             newPassword: '',
             retypeNewPassword: '',
             imageURI: '',
+            imageType: '',
+            imageName: '',
         };
     }
 
@@ -86,6 +90,24 @@ export default class ProfileSettings extends React.Component {
     }
 
     changeImage = async () => {
+        const data = new FormData();
+        const auth = await getToken();
+        data.append('file', {name: this.state.imageName, type: this.state.imageType,uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI});
+        data.append('target', this.state.imageName);
+
+        try {
+            let response = await fetch(`https://staging.pianote.com/api/avatar/upload`, {
+              method: 'POST',
+              headers: {Authorization: auth.token},
+              body: data,
+            });
+            return await response.json();
+        } catch (error) {
+            console.log('ERROR UPLOADING IMAGE: ', error)
+        }        
+    }
+
+    chooseImage = async () => {     
         await ImagePicker.showImagePicker(
             {
                 tintColor: '#147efb',
@@ -95,15 +117,21 @@ export default class ProfileSettings extends React.Component {
                 },
             },
             (response) => {
+                console.log(response)
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
-                    this.setState({imageURI: response.uri});
+                    this.setState({
+                        imageURI: response.uri,
+                        imageType: response.type,
+                        imageName: response.fileName || 'avatar',
+                    });
                     this.forceUpdate();
                 }
             },
-        );
+        );         
     }
+
 
     render() {
         return (
@@ -487,6 +515,8 @@ export default class ProfileSettings extends React.Component {
                                                     onPress={() =>
                                                         this.setState({
                                                             imageURI: '',
+                                                            imageType: '',
+                                                            imageName: '',
                                                         })
                                                     }
                                                     style={[
@@ -540,7 +570,7 @@ export default class ProfileSettings extends React.Component {
                                             {this.state.imageURI == '' && (
                                                 <TouchableOpacity
                                                     onPress={() =>
-                                                        this.changeImage()
+                                                        this.chooseImage()
                                                     }
                                                     style={[
                                                         styles.centerContent,
