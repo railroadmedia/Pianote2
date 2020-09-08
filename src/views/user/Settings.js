@@ -386,7 +386,7 @@ export default class Settings extends React.Component {
                                     key={'privacyPolicy'}
                                     onPress={() => {
                                         this.props.navigation.navigate(
-                                            'SUPPORT',
+                                            'PRIVACYPOLICY',
                                         );
                                     }}
                                     style={[

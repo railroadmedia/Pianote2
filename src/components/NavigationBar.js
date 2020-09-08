@@ -3,13 +3,17 @@
  */
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import {withNavigation} from 'react-navigation';
 import {View, TouchableOpacity} from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+    withNavigation,
+    NavigationActions,
+    StackActions,
+} from 'react-navigation';
 
 class NavigationBar extends React.Component {
     static navigationOptions = {header: null};
@@ -17,15 +21,22 @@ class NavigationBar extends React.Component {
         super(props);
         this.state = {
             profileImage: '',
-            hasNotch: 0,
+            onMain: false,
         };
     }
 
     componentDidMount = async () => {
         let profileImage = await AsyncStorage.getItem('profileURI');
-        if (profileImage !== null) {
-            await this.setState({profileImage});
-        }
+        await this.setState({
+            profileImage: profileImage !== null ? profileImage : '',
+            onMain:
+                this.props.currentPage == 'LESSONS' ||
+                this.props.currentPage == 'SEARCH' ||
+                this.props.currentPage == 'DOWNLOADS' ||
+                this.props.currentPage == 'PROFILE'
+                    ? true
+                    : false,
+        });
     };
 
     profile = () => {
@@ -41,6 +52,7 @@ class NavigationBar extends React.Component {
                     size={27.5 * factorRatio}
                 />
             );
+            f;
         } else {
             return (
                 <FastImage
@@ -84,9 +96,20 @@ class NavigationBar extends React.Component {
                 >
                     <TouchableOpacity
                         key={'lessons'}
-                        onPress={() =>
-                            this.props.navigation.navigate('LESSONS')
-                        }
+                        onPress={() => {
+                            this.state.onMain
+                                ? this.props.navigation.dispatch(
+                                      StackActions.reset({
+                                          index: 0,
+                                          actions: [
+                                              NavigationActions.navigate({
+                                                  routeName: 'LESSONS',
+                                              }),
+                                          ],
+                                      }),
+                                  )
+                                : this.props.navigation.navigate('LESSONS');
+                        }}
                     >
                         <SimpleLineIcon
                             name={'home'}
@@ -100,7 +123,20 @@ class NavigationBar extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         key={'search'}
-                        onPress={() => this.props.navigation.navigate('SEARCH')}
+                        onPress={() => {
+                            this.state.onMain
+                                ? this.props.navigation.dispatch(
+                                      StackActions.reset({
+                                          index: 0,
+                                          actions: [
+                                              NavigationActions.navigate({
+                                                  routeName: 'SEARCH',
+                                              }),
+                                          ],
+                                      }),
+                                  )
+                                : this.props.navigation.navigate('SEARCH');
+                        }}
                     >
                         <EvilIcons
                             name={'search'}
@@ -114,9 +150,20 @@ class NavigationBar extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         key={'download'}
-                        onPress={() =>
-                            this.props.navigation.navigate('DOWNLOADS')
-                        }
+                        onPress={() => {
+                            this.state.onMain
+                                ? this.props.navigation.dispatch(
+                                      StackActions.reset({
+                                          index: 0,
+                                          actions: [
+                                              NavigationActions.navigate({
+                                                  routeName: 'DOWNLOADS',
+                                              }),
+                                          ],
+                                      }),
+                                  )
+                                : this.props.navigation.navigate('DOWNLOADS');
+                        }}
                     >
                         <MaterialIcon
                             name={'arrow-collapse-down'}
@@ -130,9 +177,20 @@ class NavigationBar extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         key={'profile'}
-                        onPress={() =>
-                            this.props.navigation.navigate('PROFILE')
-                        }
+                        onPress={() => {
+                            this.state.onMain
+                                ? this.props.navigation.dispatch(
+                                      StackActions.reset({
+                                          index: 0,
+                                          actions: [
+                                              NavigationActions.navigate({
+                                                  routeName: 'PROFILE',
+                                              }),
+                                          ],
+                                      }),
+                                  )
+                                : this.props.navigation.navigate('PROFILE');
+                        }}
                     >
                         <View
                             style={[

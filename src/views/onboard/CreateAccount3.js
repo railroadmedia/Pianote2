@@ -117,33 +117,27 @@ export default class CreateAccount3 extends React.Component {
     setName = async () => {
         if (this.state.displayName.length > 0) {
             // check if valid
-            await fetch('http://18.218.118.227:5000/displayNameAvailable', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    displayName: this.state.displayName,
-                }),
+            await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.unique) {
+                    this.myScroll.scrollTo({
+                        x: fullWidth,
+                        y: 0,
+                        animated: true,
+                    });
+                    this.setState({
+                        page: 2,
+                        displayNameValid: true,
+                    });
+                    this.forceUpdate();
+                } else {
+                    this.setState({showDisplayName: true});
+                }
             })
-                .then((response) => response.json())
-                .then((response) => {
-                    if (response == 'success') {
-                        this.myScroll.scrollTo({
-                            x: fullWidth,
-                            y: 0,
-                            animated: true,
-                        });
-                        this.setState({
-                            page: 2,
-                            displayNameValid: true,
-                        });
-                        this.forceUpdate();
-                    } else {
-                        this.setState({showDisplayName: true});
-                    }
-                })
-                .catch((error) => {
-                    console.log('API Error: ', error);
-                });
+            .catch((error) => {
+                console.log('API Error: ', error);
+            });
         }
     };
 

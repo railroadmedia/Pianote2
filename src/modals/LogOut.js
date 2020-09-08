@@ -4,6 +4,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {withNavigation} from 'react-navigation';
+import {logOut} from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 
@@ -24,6 +25,7 @@ class LogOut extends React.Component {
     logOut = async () => {
         await AsyncStorage.clear();
         await AsyncStorage.setItem('loggedInStatus', 'false');
+        logOut();
         await this.props.navigation.dispatch(resetAction);
     };
 

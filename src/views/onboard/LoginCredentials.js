@@ -18,6 +18,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
@@ -111,16 +112,11 @@ export default class LoginCredentials extends React.Component {
             email: this.state.email,
             password: this.state.password,
         });
-        console.log('red', response);
-        await configure({authToken: response.data.token});
-
-        console.log('RESPONSE: ', response);
-        console.log('ERROR: ', error);
 
         if (typeof response == 'undefined') {
             this.setState({showPasswordEmailMatch: true});
         } else if (response.data.success) {
-            // store data
+            // store auth data
             await AsyncStorage.multiSet([
                 ['loggedInStatus', 'true'],
                 ['email', this.state.email],
@@ -130,7 +126,13 @@ export default class LoginCredentials extends React.Component {
                 ['userId', JSON.stringify(response.data.userId)],
             ]);
 
-            // check membership status then navigate
+            // configure token
+            await configure({authToken: response.data.token});
+
+            // set async storage with user data
+            await getUserData();
+
+            // check membership status then navigate to lessons or other
             if ('membershipValid' == 'membershipValid') {
                 await configure({authToken: response.data.token});
                 await this.props.navigation.dispatch(resetAction);
