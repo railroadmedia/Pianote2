@@ -42,7 +42,7 @@ class VerticalVideoList extends React.Component {
                 isLoading: props.isLoading,
                 items: [...this.state.items, ...props.items],
             });
-        } else if(props.items !== this.state.items) {
+        } else if (props.items !== this.state.items) {
             await this.setState({
                 items: props.items,
             });
@@ -75,7 +75,7 @@ class VerticalVideoList extends React.Component {
                 this.state.items[i].isAddedToList = true;
             }
         }
-        addToMyList(contentID)
+        addToMyList(contentID);
         this.setState({items: this.state.items});
     };
 
@@ -85,7 +85,7 @@ class VerticalVideoList extends React.Component {
                 this.state.items[i].isAddedToList = false;
             }
         }
-        removeFromMyList(contentID)
+        removeFromMyList(contentID);
         // if on my list page and user removes then delete item from listview
         if (this.props.type == 'MYLIST') {
             this.props.removeItem(contentID);
@@ -355,16 +355,20 @@ class VerticalVideoList extends React.Component {
                                             <View style={{flex: 0.2}} />
                                         </View>
                                     )}
-                                    <FastImage
-                                        style={{
-                                            flex: 1,
-                                            zIndex: 10,
-                                            borderRadius: this.props
-                                                .imageRadius,
-                                        }}
-                                        source={{uri: row.thumbnail}}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
+                                    {row.thumbnail !== 'TBD' && (
+                                        <FastImage
+                                            style={{
+                                                flex: 1,
+                                                zIndex: 10,
+                                                borderRadius: this.props
+                                                    .imageRadius,
+                                            }}
+                                            source={{uri: row.thumbnail || ''}}
+                                            resizeMode={
+                                                FastImage.resizeMode.cover
+                                            }
+                                        />
+                                    )}
                                 </View>
                             </TouchableOpacity>
                             <View style={{width: 10 * factorHorizontal}} />
@@ -451,7 +455,9 @@ class VerticalVideoList extends React.Component {
                                                 fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
-                                            {row.type.charAt(0).toUpperCase() + row.type.slice(1)} /
+                                            {row.type.charAt(0).toUpperCase() +
+                                                row.type.slice(1)}{' '}
+                                            /
                                         </Text>
                                     )}
                                     {this.props.showArtist && (
@@ -646,7 +652,7 @@ class VerticalVideoList extends React.Component {
                                             borderRadius: this.props
                                                 .imageRadius,
                                         }}
-                                        source={{uri: row.thumbnail}}
+                                        source={{uri: row.thumbnail || ''}}
                                         resizeMode={FastImage.resizeMode.cover}
                                     />
                                 </View>
@@ -891,7 +897,7 @@ class VerticalVideoList extends React.Component {
                 </View>
                 <View style={[styles.centerContent, {flex: 1}]}>
                     {this.renderMappedList()}
-                <View style={{flex: 1}} />
+                    <View style={{flex: 1}} />
                 </View>
                 <Modal
                     key={'modal'}

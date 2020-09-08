@@ -27,6 +27,15 @@ export default class VideoPlayerSong extends React.Component {
     }
 
     render() {
+        let {
+            assignmentNum,
+            assignmentName,
+            sheets,
+            slug,
+            timeCodes,
+            description,
+        } = this.props.navigation.state.params;
+        console.log(sheets);
         return (
             <View style={{flex: 1}}>
                 {!this.state.hideTitles && (
@@ -104,11 +113,7 @@ export default class VideoPlayerSong extends React.Component {
                                     color: '#b9b9b9',
                                 }}
                             >
-                                ASSIGNMENT #
-                                {
-                                    this.props.navigation.state.params
-                                        .assignmentNum
-                                }
+                                ASSIGNMENT #{assignmentNum}
                             </Text>
                             <View style={{height: 10 * factorVertical}} />
                             <Text
@@ -120,60 +125,60 @@ export default class VideoPlayerSong extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                {
-                                    this.props.navigation.state.params
-                                        .assignmentName
-                                }
+                                {assignmentName}
                             </Text>
                             <View style={{height: 10 * factorVertical}} />
-                            <View
-                                key={'skipTo'}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: fullHeight * 0.025,
-                                        width: '100%',
-                                    },
-                                ]}
-                            >
+                            {timeCodes?.map((tc) => (
                                 <View
+                                    key={'skipTo'}
                                     style={[
                                         styles.centerContent,
                                         {
-                                            width: '40%',
-                                            height: '100%',
-                                            borderRadius: 30 * factorRatio,
-                                            backgroundColor: '#ececec',
-                                            alignSelf: 'center',
+                                            height: fullHeight * 0.025,
+                                            width: '100%',
                                         },
                                     ]}
                                 >
-                                    <TouchableOpacity
-                                        onPress={() => {}}
+                                    <View
                                         style={[
                                             styles.centerContent,
                                             {
+                                                width: '40%',
                                                 height: '100%',
-                                                width: '100%',
-                                                alignItems: 'center',
+                                                borderRadius: 30 * factorRatio,
+                                                backgroundColor: '#ececec',
+                                                alignSelf: 'center',
                                             },
                                         ]}
                                     >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontWeight: '700',
-                                                color: 'grey',
-                                                fontSize: 12 * factorRatio,
-                                                alignSelf: 'center',
-                                            }}
+                                        <TouchableOpacity
+                                            onPress={() => {}}
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    alignItems: 'center',
+                                                },
+                                            ]}
                                         >
-                                            SKIP VIDEO TO 2:01
-                                        </Text>
-                                    </TouchableOpacity>
+                                            <Text
+                                                style={{
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
+                                                    fontWeight: '700',
+                                                    color: 'grey',
+                                                    fontSize: 12 * factorRatio,
+                                                    alignSelf: 'center',
+                                                }}
+                                            >
+                                                SKIP VIDEO TO {tc.value}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                                <View style={{flex: 1}} />
-                            </View>
+                            ))}
+
                             <View
                                 style={{
                                     height: 25 * factorVertical,
@@ -192,17 +197,14 @@ export default class VideoPlayerSong extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
-                                    Lorem ipsum dolor sit smart cosaf adlsafdd.
-                                    elit, Prascent quie eros magna. Etrian
-                                    tincidunt Lorem ipsum dolor sit smart cosaf
-                                    adlsafdd. elit.
+                                    {description}
                                 </Text>
                             </View>
                         </>
                     )}
                     <AssignmentResource
                         ref={(r) => (this.ptzhsvRef = r)}
-                        data={this.props.navigation.state.params.sheets}
+                        data={sheets}
                         onDoubleTap={() => {
                             this.setState({hideTitles: !this.state.hideTitles});
                         }}
@@ -210,7 +212,7 @@ export default class VideoPlayerSong extends React.Component {
                 </ScrollView>
                 {!this.state.hideTitles && (
                     <View style={{backgroundColor: '#ffffff'}}>
-                        {this.props.navigation.state.params.slug && (
+                        {slug && (
                             <TouchableOpacity
                                 onPress={() => {
                                     console.log('asd');
@@ -347,7 +349,7 @@ export default class VideoPlayerSong extends React.Component {
                                 showSoundSlice: false,
                             });
                         }}
-                        slug={this.props.navigation.state.params.slug}
+                        slug={slug}
                     />
                 </Modal>
                 <Modal

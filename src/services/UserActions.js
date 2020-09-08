@@ -1,18 +1,19 @@
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from './common.service';
 
-const rootUrl = 'https://staging.pianote.com';
+const rootUrl = 'http://app-staging.pianote.com/api';
 
 export async function likeContent(contentID) {
     try {
         const auth = await getToken();
         let response = await fetch(
-            `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
+            `${rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
             {
-                method: 'PUT', headers: {Authorization: `Bearer ${auth.token}`
-            }},
+                method: 'PUT',
+                headers: {Authorization: `Bearer ${auth.token}`},
+            },
         );
-        console.log('LIKE CONTENT: ', await response.json());
+
         return await response.json();
     } catch (error) {
         console.log('ERROR LIKING CONTENT: ', error);
@@ -25,13 +26,13 @@ export async function unlikeContent(contentID) {
         const auth = await getToken();
         console.log(auth.token, 'LIKE AUTH');
         let response = await fetch(
-            `https://staging.pianote.com/railcontent/content-like?content_id=${contentID}`,
+            `${rootUrl}/railcontent/content-like?content_id=${contentID}`,
             {
                 method: 'DELETE',
                 headers: {Authorization: `Bearer ${auth.token}`},
             },
         );
-        console.log('DISLIKE CONTENT: ', await response.json());
+
         return await response.json();
     } catch (error) {
         console.log('ERROR DISLIKING CONTENT: ', error);
@@ -40,15 +41,24 @@ export async function unlikeContent(contentID) {
 }
 
 export async function addToMyList(contentID) {
-    return commonService.tryCall(`${rootUrl}/add-to-my-list?content_id=${contentID}`,'PUT');
+    return commonService.tryCall(
+        `${rootUrl}/railcontent/add-to-my-list?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function removeFromMyList(contentID) {
-    return commonService.tryCall(`${rootUrl}/remove-from-my-list?content_id=${contentID}`,'PUT');
+    return commonService.tryCall(
+        `${rootUrl}/railcontent/add-to-my-list?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function resetProgress(contentID) {
-    return commonService.tryCall(`${rootUrl}/railcontent/reset?content_id=${contentID}`,'PUT');
+    return commonService.tryCall(
+        `${rootUrl}/railcontent/reset?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function updateUsersVideoProgress(contentID, progress) {
