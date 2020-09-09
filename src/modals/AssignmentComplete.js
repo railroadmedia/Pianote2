@@ -134,7 +134,7 @@ class AssignmentComplete extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    The assignment title
+                                    {this.props.title}
                                 </Text>
                                 <View style={{height: 15 * factorRatio}} />
                                 <Text
@@ -146,7 +146,7 @@ class AssignmentComplete extends React.Component {
                                         color: '#fb1b2f',
                                     }}
                                 >
-                                    YOU EARNED 275 XP!
+                                    YOU EARNED {this.props.xp} XP!
                                 </Text>
                                 <View style={{flex: 1}} />
                             </View>

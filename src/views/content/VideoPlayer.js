@@ -40,6 +40,7 @@ import {
     addToMyList,
     removeFromMyList,
     resetProgress,
+    markAsComplete,
 } from 'Pianote2/src/services/UserActions.js';
 import {DownloadResources} from '../../components/ConnectedDownloadResources';
 
@@ -616,6 +617,14 @@ export default class VideoPlayer extends React.Component {
         }
     };
 
+    async onLessonComplete() {
+        let res = await markAsComplete(this.state.id);
+        console.log(res);
+        this.setState({
+            showLessonComplete: true,
+        });
+    }
+
     likeOrDislikeLesson = () => {
         if (this.state.isLiked) {
             unlikeContent(this.state.id);
@@ -648,6 +657,7 @@ export default class VideoPlayer extends React.Component {
                     onPress={() => {
                         this.props.navigation.navigate('VIDEOPLAYERSONG', {
                             assignmentName: row.title,
+                            assignmentXp: row.xp,
                             assignmentNum: index + 1,
                             showAssignment: true,
                             sheets: row.sheets,
@@ -2010,7 +2020,7 @@ export default class VideoPlayer extends React.Component {
                                     ]}
                                 >
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => this.onLessonComplete()}
                                         style={[
                                             styles.centerContent,
                                             {
@@ -2294,6 +2304,11 @@ export default class VideoPlayer extends React.Component {
                     hasBackdrop={true}
                 >
                     <LessonComplete
+                        completedLessonImg={this.state.thumbnail}
+                        completedLessonTitle={this.state.title}
+                        completedLessonXp={this.state.data.post.xp}
+                        nextLessonImg={this.state.data.post.next_lesson}
+                        nextLessonTitle={'title'}
                         hideLessonComplete={() => {
                             this.setState({showLessonComplete: false});
                         }}

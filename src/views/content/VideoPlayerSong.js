@@ -30,12 +30,12 @@ export default class VideoPlayerSong extends React.Component {
         let {
             assignmentNum,
             assignmentName,
+            assignmentXp,
             sheets,
             slug,
             timeCodes,
             description,
         } = this.props.navigation.state.params;
-        console.log(sheets);
         return (
             <View style={{flex: 1}}>
                 {!this.state.hideTitles && (
@@ -370,6 +370,8 @@ export default class VideoPlayerSong extends React.Component {
                     hasBackdrop={false}
                 >
                     <AssignmentComplete
+                        title={assignmentName}
+                        xp={assignmentXp}
                         hideAssignmentComplete={() => {
                             this.setState({showAssignmentComplete: false});
                         }}

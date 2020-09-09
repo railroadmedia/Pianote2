@@ -351,7 +351,7 @@ export default class SongCatalog extends React.Component {
                             } // image height
                             navigator={(row) =>
                                 this.props.navigation.navigate('VIDEOPLAYER', {
-                                    id: row.id,
+                                    id: row.current_lesson.id,
                                 })
                             }
                         />

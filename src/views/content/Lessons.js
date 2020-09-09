@@ -54,14 +54,18 @@ export default class Lessons extends React.Component {
     }
 
     componentWillMount = async () => {
-        let data = await AsyncStorage.multiGet(['totalXP', 'rank', 'profileURI'])
+        let data = await AsyncStorage.multiGet([
+            'totalXP',
+            'rank',
+            'profileURI',
+        ]);
 
         await this.setState({
             xp: data[0][1],
             rank: data[1][1],
             profileImage: data[2][1],
             lessonsStarted: false,
-        })
+        });
 
         // get foundations data
         this.getFoundations();
@@ -228,7 +232,7 @@ export default class Lessons extends React.Component {
                 included_types: ['course'],
                 required_user_states: [],
             });
-            
+
             const newContent = await response.data.data.map((data) => {
                 return new ContentModel(data);
             });
@@ -658,7 +662,7 @@ export default class Lessons extends React.Component {
                                     style={{
                                         flex:
                                             this.state.profileImage !== null &&
-                                            this.state.profileImage.length > 0
+                                            this.state.profileImage?.length > 0
                                                 ? 0.5
                                                 : 0.5,
                                     }}
@@ -687,11 +691,11 @@ export default class Lessons extends React.Component {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            {this.state.xp.length > 4
+                                            {this.state.xp?.length > 4
                                                 ? (Number(this.state.xp) / 1000)
                                                       .toFixed(1)
                                                       .toString() + 'k'
-                                                : this.state.xp.toString()}
+                                                : this.state.xp?.toString()}
                                         </Text>
                                     </View>
                                     <View style={{flex: 1}} />

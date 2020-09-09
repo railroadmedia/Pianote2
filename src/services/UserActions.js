@@ -1,5 +1,6 @@
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from './common.service';
+import {Platform} from 'react-native';
 
 const rootUrl = 'http://app-staging.pianote.com/api';
 
@@ -57,6 +58,15 @@ export async function removeFromMyList(contentID) {
 export async function resetProgress(contentID) {
     return commonService.tryCall(
         `${rootUrl}/railcontent/reset?content_id=${contentID}`,
+        'PUT',
+    );
+}
+
+export async function markAsComplete(contentID) {
+    return commonService.tryCall(
+        `${rootUrl}/complete?content_id=${contentID}&device_type=${
+            Platform.OS === 'ios' ? 'ios' : 'android'
+        }`,
         'PUT',
     );
 }
