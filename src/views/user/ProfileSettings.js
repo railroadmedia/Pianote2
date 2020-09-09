@@ -105,24 +105,22 @@ export default class ProfileSettings extends React.Component {
     changeImage = async () => {
         const data = new FormData();
         const auth = await getToken();
-        
-        data.append('file', {
-            name: this.state.imageName, 
-            type: this.state.imageType, 
-            uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI
-        });
+
         data.append('target', this.state.imageName);
+        data.append('file', {name: this.state.imageName, type: this.state.imageType, uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI});
+
+        console.log(data, auth.token)
 
         try {
-            let response = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
+            let response = await fetch(`http://staging.pianote.com/api/avatar/upload`, {
               method: 'POST',
               headers: {Authorization: auth.token},
               body: data,
             });
-            console.log(response)
+            console.log(await response.json())
             return await response.json();
         } catch (error) {
-            console.log('ERROR UPLOADING IMAGE: ', error.text())
+            console.log('ERROR UPLOADING IMAGE: ', error)
         }        
     }
 
