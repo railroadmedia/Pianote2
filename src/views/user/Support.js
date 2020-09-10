@@ -4,7 +4,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-//import Intercom from 'react-native-intercom';
+import Intercom from 'react-native-intercom';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 
@@ -16,8 +16,20 @@ export default class Support extends React.Component {
     }
 
     componentDidMount = async () => {
-        const userData = await getUserData();
-        //Intercom.registerUnidentifiedUser({userId: this.props.user});
+        // const userData = await getUserData();
+        await Intercom.registerIdentifiedUser({
+            userId: 'musora_149628',
+        });
+        await Intercom.updateUser({
+            email: 'roxana.riza@artsoft-consult.ro',
+            phone: '',
+            user_id: 'musora_149628',
+            name: 'Roxana R',
+            custom_attributes: {
+                unique_id: authService.unique_id.toString(),
+                app_build_number: '0.0.' + DeviceInfo.getBuildNumber(),
+            },
+        });
         //Intercom.addEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
         //Intercom.addEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
     };
@@ -36,7 +48,7 @@ export default class Support extends React.Component {
     }
 
     onIntercomPress = () => {
-        //Intercom.displayMessenger();
+        Intercom.displayMessenger();
     };
 
     render() {
