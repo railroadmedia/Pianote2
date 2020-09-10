@@ -677,12 +677,12 @@ export default class NewMembership extends React.Component {
                             >
                                 <AntIcon
                                     name={'check'}
-                                    size={15 * factorRatio}
+                                    size={14 * factorVertical}
                                     color={'white'}
                                 />{' '}
                                 Pay nothing for 7 days.
                             </Text>
-                            <View style={{height: 7.5 * factorRatio}} />
+                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -693,12 +693,12 @@ export default class NewMembership extends React.Component {
                             >
                                 <AntIcon
                                     name={'check'}
-                                    size={15 * factorRatio}
+                                    size={14 * factorVertical}
                                     color={'white'}
                                 />
                                 {' Award-winning piano lessons & more.'}
                             </Text>
-                            <View style={{height: 7.5 * factorRatio}} />
+                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -709,12 +709,12 @@ export default class NewMembership extends React.Component {
                             >
                                 <AntIcon
                                     name={'check'}
-                                    size={15 * factorRatio}
+                                    size={14 * factorVertical}
                                     color={'white'}
                                 />{' '}
                                 Access to the Pianote Experience app.
                             </Text>
-                            <View style={{height: 7.5 * factorRatio}} />
+                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -725,12 +725,12 @@ export default class NewMembership extends React.Component {
                             >
                                 <AntIcon
                                     name={'check'}
-                                    size={15 * factorRatio}
+                                    size={14 * factorVertical}
                                     color={'white'}
                                 />{' '}
                                 Access to the Pianote Experience website.
                             </Text>
-                            <View style={{height: 7.5 * factorRatio}} />
+                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -741,7 +741,7 @@ export default class NewMembership extends React.Component {
                             >
                                 <AntIcon
                                     name={'check'}
-                                    size={15 * factorRatio}
+                                    size={14 * factorVertical}
                                     color={'white'}
                                 />{' '}
                                 Cancel anytime through the App Store.
@@ -768,7 +768,7 @@ export default class NewMembership extends React.Component {
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
                                     color: 'grey',
-                                    fontSize: 14 * factorRatio,
+                                    fontSize: 14 * factorVertical,
                                     textAlign: 'center',
                                     textDecorationLine: 'underline',
                                 }}
@@ -786,7 +786,7 @@ export default class NewMembership extends React.Component {
                                     style={{
                                         fontFamily: 'OpenSans-Regular',
                                         color: 'grey',
-                                        fontSize: 14 * factorRatio,
+                                        fontSize: 14 * factorVertical,
                                         textAlign: 'center',
                                         textDecorationLine: 'underline',
                                     }}

@@ -70,9 +70,7 @@ export default class LoginCredentials extends React.Component {
                 Animated.timing(this.state.forgotYdelta, {
                     toValue:
                         (Platform.OS === 'ios' && fullHeight > 811) ||
-                        onTablet == true
-                            ? fullHeight * 0.375
-                            : fullHeight * 0.35,
+                        onTablet ? fullHeight * 0.325 : fullHeight * 0.35,
                     duration: 250,
                 }),
                 Animated.timing(this.state.pianoteYdelta, {
