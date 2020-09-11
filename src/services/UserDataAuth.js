@@ -52,7 +52,7 @@ export async function logOut() {
     try {
         const auth = await getToken();
         let response = await fetch(
-            'https://staging.pianote.com/usora/api/logout',
+            'https://app-staging.pianote/usora/api/logout',
             {
                 headers: {Authorization: `Bearer ${auth.token}`},
             },

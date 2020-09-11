@@ -165,7 +165,7 @@ export default class Search extends React.Component {
             let auth = await getToken();
 
             await fetch(
-                `https://staging.pianote.com/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&page=${1}`,
+                `https://app-staging.pianote/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&page=${1}`,
                 {
                     method: 'GET',
                     headers: {Authorization: `Bearer ${auth.token}`},

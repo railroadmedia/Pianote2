@@ -7,7 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getUserData, checkMembershipStatus} from 'Pianote2/src/services/UserDataAuth.js';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -28,6 +28,7 @@ export default class LoadPage extends React.Component {
 
     async componentWillMount() {
         try {
+            return
             let data = await fetch(
                 'http://app-staging.pianote.com/api/profile/update', 
                 {
@@ -53,6 +54,8 @@ export default class LoadPage extends React.Component {
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
         
         let userData = await getUserData();
+
+        console.log(userData)
 
         if (isLoggedIn !== 'true' || userData.isMember == false) {
             // go to login

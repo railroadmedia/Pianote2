@@ -1,7 +1,7 @@
 import commonService from './common.service';
 import {Platform} from 'react-native';
 
-const rootUrl = 'https://staging.pianote.com';
+const rootUrl = 'https://app-staging.pianote';
 
 export async function likeContent(contentID) {
     try {
