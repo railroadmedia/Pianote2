@@ -12,19 +12,16 @@ import {
     ScrollView,
     Platform,
 } from 'react-native';
-import axios from 'axios';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import X from 'Pianote2/src/assets/img/svgs/X.svg';
 import ImagePicker from 'react-native-image-picker';
 import DisplayName from '../../modals/DisplayName.js';
-import {userLogin, configure} from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Courses from 'Pianote2/src/assets/img/svgs/courses.svg';
 import Support from 'Pianote2/src/assets/img/svgs/support.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
-import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 
@@ -36,7 +33,7 @@ var data = new FormData();
 
 const resetAction = StackActions.reset({
     index: 0,
-    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+    actions: [NavigationActions.navigate({routeName: 'LOADPAGE'})],
 });
 
 export default class CreateAccount3 extends React.Component {
@@ -95,7 +92,7 @@ export default class CreateAccount3 extends React.Component {
         }).start();
     };
 
-    async changeColor(number) {
+    changeColor = async (number) => {
         let index = number.nativeEvent.contentOffset.x / fullWidth;
         if (index == 0) {
             await this.setState({page: 1});
@@ -114,30 +111,67 @@ export default class CreateAccount3 extends React.Component {
         await this.forceUpdate();
     };
 
+    async chooseImage() {
+        await ImagePicker.showImagePicker(
+            {
+                tintColor: '#147efb',
+                storageOptions: {
+                    skipBackup: true,
+                    path: 'images',
+                },
+            },
+            (response) => {
+                if (response.didCancel) {
+                } else if (response.error) {
+                } else {
+                    data.append('target', response.fileName || 'avatar');
+                    data.append('file', {
+                        name: response.fileName || 'avatar',
+                        type: response.type, 
+                        uri: (Platform.OS == 'ios') ? response.uri.replace('file://', '') : response.uri
+                    });
+
+                    this.setState({
+                        response,
+                        imageURI: response.uri,
+                        showImage: true,
+                    });
+
+                    this.forceUpdate();
+                }
+            },
+        );
+    }
+
+    clearImage = async () => {
+        data = new FormData();
+        await this.setState({
+            imageURI: '',
+            showImage: false,
+            response: null,
+        });
+        await this.forceUpdate();
+    };    
+
     setName = async () => {
         if (this.state.displayName.length > 0) {
             // check if valid
-            await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.unique) {
-                    this.myScroll.scrollTo({
-                        x: fullWidth,
-                        y: 0,
-                        animated: true,
-                    });
-                    this.setState({
-                        page: 2,
-                        displayNameValid: true,
-                    });
-                    this.forceUpdate();
-                } else {
-                    this.setState({showDisplayName: true});
-                }
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
+            let response = await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
+            response = await response.json()
+            if (response.unique) {
+                this.myScroll.scrollTo({
+                    x: fullWidth,
+                    y: 0,
+                    animated: true,
+                });
+                this.setState({
+                    page: 2,
+                    displayNameValid: true,
+                });
+                this.forceUpdate();
+            } else {
+                this.setState({showDisplayName: true});
+            }
         }
     };
 
@@ -154,88 +188,35 @@ export default class CreateAccount3 extends React.Component {
     }
 
     createAccount = async () => {
-        data.append('plan', this.state.plan);
-        data.append('email', this.state.email);
-        data.append('password', this.state.password);
-        data.append('username', this.state.displayName);
+        const auth = await getToken();
 
-        console.log(data);
-
-        await axios({
-            method: 'POST',
-            url: 'http://18.218.118.227:5000/createAccount',
-            data,
-            config: {headers: {'Content-Type': 'multipart/form-data'}},
-        })
-            .then((response) => {
-                console.log('API response: ', response);
-                AsyncStorage.multiSet([
-                    ['plan', this.state.plan],
-                    ['email', this.state.email],
-                    ['password', this.state.password],
-                    ['username', this.state.displayName],
-                    ['loggedInStatus', 'true'],
-                    ['profileImage', this.state.response.data],
-                    ['profileURI', this.state.response.uri],
-                ]);
-            })
-            .catch((error) => {
-                console.log('API error', error);
+        // if there is profile image upload it
+        if (data !== null) {
+            let avatarResponse = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                body: data,
             });
+    
+            const url = await avatarResponse.json()    
+        }
 
-        const {response, error} = await userLogin({
-            email: 'kentonp@drumeo.com',
-            password: 'Katrinapalmer7!',
-        });
+        // take image url and update profile
+        let profileResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
+            method: 'POST',
+            headers: {Authorization: `Bearer ${auth.token}`},
+            data: {
+                file: (data !== null) ? url : '',
+                display_name: this.state.displayName,
+            },
+        }); 
 
-        // store data
-        await AsyncStorage.multiSet([
-            ['token', JSON.stringify(response.data.token)],
-            ['tokenTime', JSON.stringify(response.data.token)],
-        ]);
+        profileResponse = await profileResponse.json()
 
-        // check membership status then navigate
-        await configure({authToken: response.data.token});
+        console.log('PROFILE RESPONSE: ', profileResponse)
+
+        // send to loadpage to update asyncstorage with new data
         await this.props.navigation.dispatch(resetAction);
-    };
-
-    async chooseImage() {
-        await ImagePicker.showImagePicker(
-            {
-                tintColor: '#147efb',
-                storageOptions: {
-                    skipBackup: true,
-                    path: 'images',
-                },
-            },
-            (response) => {
-                if (response.didCancel) {
-                } else if (response.error) {
-                } else {
-                    data.append('profileImage', {
-                        uri: response.uri,
-                        name: 'profileImage',
-                        type: 'image/jpeg',
-                    });
-                    this.setState({
-                        response,
-                        imageURI: response.uri,
-                        showImage: true,
-                    });
-                    this.forceUpdate();
-                }
-            },
-        );
-    }
-
-    clearImage = async () => {
-        data = new FormData();
-        await this.setState({
-            imageURI: '',
-            showImage: false,
-            response: null,
-        });
-        await this.forceUpdate();
     };
 
     render() {
@@ -576,7 +557,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.goHome();
+                                                this.crea();
                                             }}
                                         >
                                             <Text
@@ -994,7 +975,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.goHome();
+                                                this.crea();
                                             }}
                                         >
                                             <Text
@@ -1578,7 +1559,7 @@ export default class CreateAccount3 extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.goHome();
+                                        this.crea();
                                     }}
                                 >
                                     <Text
@@ -1789,7 +1770,7 @@ export default class CreateAccount3 extends React.Component {
                                 <View style={{flex: 1}} />
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.goHome();
+                                        this.crea();
                                     }}
                                     style={[
                                         styles.centerContent,

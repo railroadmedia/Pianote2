@@ -39,6 +39,12 @@ export async function getUserData() {
             ['displayName', userData.display_name.toString()],
             ['profileURI', userData.profile_picture_url.toString()],
             ['joined', userData.created_at.toString()],
+            ['weeklyCommunityUpdatesClicked', userData.notify_weekly_update.toString()], 
+            ['commentRepliesClicked', userData.notify_on_lesson_comment_reply.toString()], 
+            ['commentLikesClicked', userData.notify_on_lesson_comment_like.toString()], 
+            ['forumPostRepliesClicked', userData.notify_on_forum_post_reply.toString()],
+            ['forumPostLikesClicked', userData.notify_on_forum_post_like.toString()],
+            ['notifications_summary_frequency_minutes', userData.notify_weekly_update.toString()],
         ])
         return await userData;
     } catch (error) {
