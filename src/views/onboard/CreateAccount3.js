@@ -55,7 +55,7 @@ export default class CreateAccount3 extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = async () => {
         this.keyboardDidShowListener = Keyboard.addListener(
             showListener,
             this._keyboardDidShow,
@@ -66,7 +66,7 @@ export default class CreateAccount3 extends React.Component {
         );
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = async () => {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
     }
@@ -111,7 +111,7 @@ export default class CreateAccount3 extends React.Component {
         await this.forceUpdate();
     };
 
-    async chooseImage() {
+    chooseImage = async () => {
         await ImagePicker.showImagePicker(
             {
                 tintColor: '#147efb',
@@ -175,7 +175,7 @@ export default class CreateAccount3 extends React.Component {
         }
     };
 
-    async goHome() {
+    goHome = async () => {
         // if display name already validated or no name enter
         if (this.state.displayNameValid || this.state.displayName == '') {
             await this.createAccount();
