@@ -1,6 +1,6 @@
 import commonService from './common.service';
 
-const rootUrl = 'https://staging.pianote.com';
+const rootUrl = 'https://app-staging.pianote';
 export default {
     getComments: async function (id, sortBy, limit) {
         // TODO change hardcoded id

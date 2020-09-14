@@ -83,46 +83,59 @@ export default class ProfileSettings extends React.Component {
 
     changeName = async () => {
         // check if display name available
-        await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.unique) {
-                    const auth = getToken();
-                    let response = fetch(
-                        `https://staging.pianote.com/usora/user/update/${auth.userId}?display_name=${this.state.displayName}`,
-                        {method: 'PATCH', headers: {Authorization: `Bearer ${auth.token}`}},
-                    );
-                    return response.json();     
-                } else {
-                    this.setState({showDisplayName: true});
-                }
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
+        let response = await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
+        response = await response.json()
+
+        if (response.unique) {
+            const auth = await getToken();
+            let nameResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                data: {display_name: this.state.displayName},
+            }); 
+            
+            nameResponse = await nameResponse.json()
+            
+            console.log(nameResponse)
+        } else {
+            this.setState({showDisplayName: true});
+        }
     }
 
     changeImage = async () => {
         const data = new FormData();
         const auth = await getToken();
-        
+
+        data.append('target', this.state.imageName);
         data.append('file', {
-            name: this.state.imageName, 
+            name: this.state.imageName,
             type: this.state.imageType, 
             uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI
         });
-        data.append('target', this.state.imageName);
+
+        console.log('TOKEN: ', auth.token)
 
         try {
-            let response = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
-              method: 'POST',
-              headers: {Authorization: auth.token},
-              body: data,
+            let avatarResponse = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                body: data,
             });
-            console.log(response)
-            return await response.json();
+            let url = await avatarResponse.json()
+            console.log(url.data[0].url)
+            
+            let profileResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                data: {
+                    file: url.data[0].url
+                },
+            });
+
+            console.log(await profileResponse.json())
+
         } catch (error) {
-            console.log('ERROR UPLOADING IMAGE: ', error.text())
+            console.log('ERROR UPLOADING IMAGE: ', error)
         }        
     }
 
