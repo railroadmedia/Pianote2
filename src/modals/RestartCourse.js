@@ -19,6 +19,7 @@ class RestartCourse extends React.Component {
     }
 
     render = () => {
+        const {type} = this.props;
         return (
             <View style={styles.container}>
                 <View
@@ -85,7 +86,7 @@ class RestartCourse extends React.Component {
                                         marginTop: 10 * factorRatio,
                                     }}
                                 >
-                                    Restart this course?
+                                    Restart this {type}?
                                 </Text>
                             </View>
                             <View
@@ -106,7 +107,7 @@ class RestartCourse extends React.Component {
                                         textAlign: 'justify',
                                     }}
                                 >
-                                    Take this course again as a refresher, or
+                                    Take this {type} again as a refresher, or
                                     just to make sure you've got the concepts
                                     nailed! This will remove the XP you've
                                     earned.
@@ -139,7 +140,7 @@ class RestartCourse extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.props.hideRestartCourse();
+                                            this.props.onRestart();
                                         }}
                                         style={[
                                             styles.centerContent,

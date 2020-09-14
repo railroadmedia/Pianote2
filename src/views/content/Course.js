@@ -477,6 +477,8 @@ export default class Course extends React.Component {
                                     showRestartCourse: false,
                                 });
                             }}
+                            type="course"
+                            onRestart={() => {}}
                         />
                     </Modal>
                 </View>

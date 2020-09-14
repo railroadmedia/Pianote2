@@ -1,5 +1,5 @@
 /**
- * AssignmentComplete
+ * OverviewComplete
  */
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
@@ -7,7 +7,7 @@ import {withNavigation} from 'react-navigation';
 import {BlurView} from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
-class AssignmentComplete extends React.Component {
+class OverviewComplete extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -15,18 +15,21 @@ class AssignmentComplete extends React.Component {
     }
 
     render = () => {
+        const {type, hideOverviewComplete, title, xp} = this.props;
         return (
             <View
                 key={'container'}
                 style={{
-                    flex: 1,
+                    height: fullHeight,
+                    width: fullWidth,
                 }}
             >
                 <BlurView
                     style={[
                         styles.centerContent,
                         {
-                            flex: 1,
+                            height: fullHeight,
+                            width: fullWidth,
                             backgroundColor: 'transparent',
                         },
                     ]}
@@ -35,7 +38,7 @@ class AssignmentComplete extends React.Component {
                 >
                     <View style={{height: '32.5%', alignSelf: 'stretch'}}>
                         <TouchableOpacity
-                            onPress={() => this.props.hideAssignmentComplete()}
+                            onPress={() => hideOverviewComplete()}
                             style={{
                                 alignSelf: 'stretch',
                                 height: '100%',
@@ -59,9 +62,7 @@ class AssignmentComplete extends React.Component {
                             }}
                         >
                             <TouchableOpacity
-                                onPress={() =>
-                                    this.props.hideAssignmentComplete()
-                                }
+                                onPress={() => hideOverviewComplete()}
                                 style={{
                                     alignSelf: 'stretch',
                                     height: '100%',
@@ -106,7 +107,8 @@ class AssignmentComplete extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    Assignment{'\n'}Complete
+                                    {type}
+                                    {'\n'}Complete
                                 </Text>
                             </View>
                             <View style={{flex: 0.075}} />
@@ -132,7 +134,7 @@ class AssignmentComplete extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    {this.props.title}
+                                    {title}
                                 </Text>
                                 <View style={{height: 15 * factorRatio}} />
                                 <Text
@@ -144,7 +146,7 @@ class AssignmentComplete extends React.Component {
                                         color: '#fb1b2f',
                                     }}
                                 >
-                                    YOU EARNED {this.props.xp} XP!
+                                    YOU EARNED {xp} XP!
                                 </Text>
                                 <View style={{flex: 1}} />
                             </View>
@@ -152,9 +154,7 @@ class AssignmentComplete extends React.Component {
                         </View>
                         <View key={'buffRight'} style={{width: '5%'}}>
                             <TouchableOpacity
-                                onPress={() =>
-                                    this.props.hideAssignmentComplete()
-                                }
+                                onPress={() => hideOverviewComplete()}
                                 style={{
                                     alignSelf: 'stretch',
                                     height: '100%',
@@ -165,7 +165,7 @@ class AssignmentComplete extends React.Component {
                     </View>
                     <View style={{height: '37.5%', alignSelf: 'stretch'}}>
                         <TouchableOpacity
-                            onPress={() => this.props.hideAssignmentComplete()}
+                            onPress={() => hideOverviewComplete()}
                             style={{
                                 alignSelf: 'stretch',
                                 height: '100%',
@@ -179,4 +179,4 @@ class AssignmentComplete extends React.Component {
     };
 }
 
-export default withNavigation(AssignmentComplete);
+export default withNavigation(OverviewComplete);

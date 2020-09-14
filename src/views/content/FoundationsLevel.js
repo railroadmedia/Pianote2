@@ -565,6 +565,8 @@ export default class FoundationsLevel extends React.Component {
                                     showRestartCourse: false,
                                 });
                             }}
+                            type="level"
+                            onRestart={() => {}}
                         />
                     </Modal>
                     {this.state.currentLessonIndex + 1 !==

@@ -18,80 +18,22 @@ export default class VideoPlayerSong extends React.Component {
         super(props);
         this.state = {
             showSoundSlice: false,
-            showVideoPlayerOptions: false,
-            showQualitySettings: false,
-            showAssignmentComplete: false,
-            showLessonComplete: false,
             hideTitles: false,
         };
     }
 
     render() {
         let {
-            assignmentNum,
-            assignmentName,
-            assignmentXp,
+            index,
+            title,
             sheets,
             slug,
             timeCodes,
             description,
-        } = this.props.navigation.state.params;
+            progress,
+        } = this.props.assignment;
         return (
-            <View style={{flex: 1}}>
-                {!this.state.hideTitles && (
-                    <>
-                        <View
-                            key={'video'}
-                            style={{
-                                height: onTablet
-                                    ? fullHeight * 0.4
-                                    : fullHeight * 0.3025,
-                                backgroundColor: 'black',
-                            }}
-                        >
-                            <FastImage
-                                style={{flex: 1}}
-                                source={{
-                                    uri:
-                                        'https://facebook.github.io/react-native/img/tiny_logo.png',
-                                }}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                        </View>
-                        <View
-                            key={'goBackIcon'}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    position: 'absolute',
-                                    left: 10 * factorHorizontal,
-                                    top: isNotch
-                                        ? 40 * factorVertical
-                                        : 30 * factorVertical,
-                                    height: 50 * factorRatio,
-                                    width: 50 * factorRatio,
-                                    zIndex: 10,
-                                },
-                            ]}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.goBack();
-                                }}
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-                                <EntypoIcon
-                                    name={'chevron-thin-left'}
-                                    size={25 * factorRatio}
-                                    color={'white'}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </>
-                )}
+            <>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
@@ -113,7 +55,7 @@ export default class VideoPlayerSong extends React.Component {
                                     color: '#b9b9b9',
                                 }}
                             >
-                                ASSIGNMENT #{assignmentNum}
+                                ASSIGNMENT #{index}
                             </Text>
                             <View style={{height: 10 * factorVertical}} />
                             <Text
@@ -125,7 +67,7 @@ export default class VideoPlayerSong extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                {assignmentName}
+                                {title}
                             </Text>
                             <View style={{height: 10 * factorVertical}} />
                             {timeCodes?.map((tc) => (
@@ -207,6 +149,7 @@ export default class VideoPlayerSong extends React.Component {
                         data={sheets}
                         onDoubleTap={() => {
                             this.setState({hideTitles: !this.state.hideTitles});
+                            this.props.onAssignmentFullscreen();
                         }}
                     />
                 </ScrollView>
@@ -214,10 +157,9 @@ export default class VideoPlayerSong extends React.Component {
                     <View style={{backgroundColor: '#ffffff'}}>
                         {slug && (
                             <TouchableOpacity
-                                onPress={() => {
-                                    console.log('asd');
-                                    this.setState({showSoundSlice: true});
-                                }}
+                                onPress={() =>
+                                    this.setState({showSoundSlice: true})
+                                }
                                 style={[
                                     styles.centerContent,
                                     {
@@ -245,9 +187,7 @@ export default class VideoPlayerSong extends React.Component {
                             </TouchableOpacity>
                         )}
                         <TouchableOpacity
-                            onPress={() => {
-                                this.setState({showAssignmentComplete: true});
-                            }}
+                            onPress={() => this.props.onCompleteAssignment()}
                             style={[
                                 styles.centerContent,
                                 {
@@ -271,61 +211,13 @@ export default class VideoPlayerSong extends React.Component {
                                     paddingVertical: 10,
                                 }}
                             >
-                                COMPLETE ASSIGNMENT
+                                {progress === 100
+                                    ? 'COMPLETED'
+                                    : 'COMPLETE ASSIGNMENT'}
                             </Text>
                         </TouchableOpacity>
                     </View>
                 )}
-                <Modal
-                    key={'VideoPlayerOptions'}
-                    isVisible={this.state.showVideoPlayerOptions}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={true}
-                    hasBackdrop={true}
-                >
-                    <VideoPlayerOptions
-                        hideVideoPlayerOptions={() => {
-                            this.setState({
-                                showVideoPlayerOptions: false,
-                            });
-                        }}
-                    />
-                </Modal>
-                <Modal
-                    key={'QualitySettings'}
-                    isVisible={this.state.showQualitySettings}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={true}
-                    hasBackdrop={true}
-                >
-                    <QualitySettings
-                        hideQualitySettings={() => {
-                            this.setState({
-                                showQualitySettings: false,
-                            });
-                        }}
-                    />
-                </Modal>
                 <Modal
                     key={'soundSlice'}
                     isVisible={this.state.showSoundSlice}
@@ -352,32 +244,7 @@ export default class VideoPlayerSong extends React.Component {
                         slug={slug}
                     />
                 </Modal>
-                <Modal
-                    key={'assignmentComplete'}
-                    isVisible={this.state.showAssignmentComplete}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <AssignmentComplete
-                        title={assignmentName}
-                        xp={assignmentXp}
-                        hideAssignmentComplete={() => {
-                            this.setState({showAssignmentComplete: false});
-                        }}
-                    />
-                </Modal>
-            </View>
+            </>
         );
     }
 }

@@ -1,7 +1,7 @@
 import commonService from './common.service';
 import {Platform} from 'react-native';
 
-const rootUrl = 'https://app-staging.pianote';
+const rootUrl = 'http://app-staging.pianote.com';
 
 export async function likeContent(contentID) {
     try {
@@ -42,10 +42,15 @@ export async function removeFromMyList(contentID) {
 }
 
 export async function markComplete(contentID) {
+    console.log(
+        `${rootUrl}/api/complete?content_id=${contentID}&device_type=${
+            Platform.OS === 'ios' ? 'ios' : 'android'
+        }`,
+    );
     try {
         return commonService.tryCall(
             `${rootUrl}/api/complete?content_id=${contentID}&device_type=${
-                Platform.OS ? 'ios' : 'android'
+                Platform.OS === 'ios' ? 'ios' : 'android'
             }`,
             'PUT',
         );

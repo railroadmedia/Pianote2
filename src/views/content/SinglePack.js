@@ -910,6 +910,8 @@ export default class SinglePack extends React.Component {
                                 showRestartCourse: false,
                             });
                         }}
+                        type="pack"
+                        onRestart={() => {}}
                     />
                 </Modal>
             </View>

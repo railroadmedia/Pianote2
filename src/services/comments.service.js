@@ -1,6 +1,6 @@
 import commonService from './common.service';
 
-const rootUrl = 'https://app-staging.pianote';
+const rootUrl = 'https://app-staging.pianote.com';
 export default {
     getComments: async function (id, sortBy, limit) {
         // TODO change hardcoded id
@@ -14,6 +14,7 @@ export default {
         } else if (sortBy === 'my_comments') {
             reqUrl += `&sort=-mine`;
         }
+        console.log(reqUrl);
         return commonService.tryCall(reqUrl);
     },
     addComment: async function (commentText, contentId) {

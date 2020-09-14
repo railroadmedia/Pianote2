@@ -780,6 +780,8 @@ export default class Foundations extends React.Component {
                                     showRestartCourse: false,
                                 });
                             }}
+                            type="foundation"
+                            onRestart={() => {}}
                         />
                     </Modal>
                     <NavigationBar currentPage={''} />

@@ -649,6 +649,8 @@ export default class PathOverview extends React.Component {
                                 showRestartCourse: false,
                             });
                         }}
+                        type=""
+                        onRestart={() => {}}
                     />
                 </Modal>
                 <NavigationBar currentPage={'LessonsPathOverview'} />
