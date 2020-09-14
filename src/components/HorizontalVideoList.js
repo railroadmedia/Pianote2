@@ -50,7 +50,7 @@ class HorizontalVideoList extends React.Component {
         this.setState({items: this.state.items});
 
         // add to list on backend
-        addToMyList(contentID)
+        addToMyList(contentID);
     };
 
     removeFromMyList = async (contentID) => {
@@ -300,7 +300,12 @@ class HorizontalVideoList extends React.Component {
                                                                 factorRatio,
                                                         }}
                                                     >
-                                                        {item.type.charAt(0).toUpperCase() + item.type.slice(1)}{' '}
+                                                        {item.type
+                                                            .charAt(0)
+                                                            .toUpperCase() +
+                                                            item.type.slice(
+                                                                1,
+                                                            )}{' '}
                                                         /
                                                     </Text>
                                                 )}

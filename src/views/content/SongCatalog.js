@@ -14,8 +14,10 @@ import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js'
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
+    return (
+        layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom
+    );
 };
 
 export default class SongCatalog extends React.Component {
@@ -30,7 +32,7 @@ export default class SongCatalog extends React.Component {
             showChooseInstructors: false,
             showChooseYourLevel: false,
             page: 0, // current page
-            isPaging: false, 
+            isPaging: false,
             isLoadingAll: true,
             filtering: false,
             filters: null,
@@ -67,7 +69,7 @@ export default class SongCatalog extends React.Component {
     getAllSongs = async () => {
         await this.setState({
             filtering: true,
-            page: this.state.page + 1
+            page: this.state.page + 1,
         });
 
         // see if importing filters
@@ -224,9 +226,12 @@ export default class SongCatalog extends React.Component {
                         contentInsetAdjustmentBehavior={'never'}
                         scrollEventThrottle={400}
                         onScroll={({nativeEvent}) => {
-                            if(isCloseToBottom(nativeEvent) && this.state.isPaging == false) {
+                            if (
+                                isCloseToBottom(nativeEvent) &&
+                                this.state.isPaging == false
+                            ) {
                                 this.setState({isPaging: true}),
-                                this.getAllSongs()
+                                    this.getAllSongs();
                             }
                         }}
                         style={{

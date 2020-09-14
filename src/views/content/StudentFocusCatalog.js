@@ -2,17 +2,11 @@
  * StudentFocusCatalog
  */
 import React from 'react';
-import {
-    View, 
-    ScrollView, 
-    Text, 
-    TouchableOpacity
-} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -32,8 +26,7 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     componentDidMount = async () => {
-        const userData = await getUserData();
-        await this.setState({lessonsStarted: false})
+        await this.setState({lessonsStarted: false});
         await this.getProgressStudentFocus();
     };
 

@@ -4,10 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-// import com.robinpowered.react.Intercom.IntercomPackage;
-// import io.intercom.android.sdk.Intercom;
 import io.invertase.firebase.RNFirebasePackage;
 
+import com.robinpowered.react.Intercom.IntercomPackage;
+import io.intercom.android.sdk.Intercom;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
@@ -38,6 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           packages.add(new RNFirebaseMessagingPackage());
           packages.add(new RNFirebaseNotificationsPackage());
+          // packages.add(new MyReactNativePackage());
           return packages;
         }
 
@@ -55,6 +56,8 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    Intercom.initialize(this, "android_sdk-25125f94ff992fe25f1a55f7f411018fd9bec46d", "x2x1waf3");
+        
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
   }

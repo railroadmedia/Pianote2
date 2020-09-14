@@ -200,6 +200,7 @@ android {
 
 dependencies {
     implementation project(':react-native-firebase')
+    implementation project(':react-native-intercom')
     implementation project(':react-native-svg')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-device-info')
@@ -212,6 +213,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.firebase:firebase-messaging:20.1.6'
 
+    implementation 'io.intercom.android:intercom-sdk-base:5.+'
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")

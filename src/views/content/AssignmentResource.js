@@ -105,7 +105,7 @@ export default class AssignmentResource extends React.Component {
     }
 
     _onOrientationDidChange = (orientation) =>
-        this.setState({width: Dimensions.get('window').width});
+        this.setState({width: fullWidth});
 
     renderDots(i) {
         return (

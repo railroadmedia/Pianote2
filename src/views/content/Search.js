@@ -14,6 +14,7 @@ import {
 import {ContentModel} from '@musora/models';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
+import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 
@@ -126,9 +127,6 @@ export default class Search extends React.Component {
         if (term.length > 0) {
             this.setState({
                 isLoading: true,
-            });
-
-            this.setState({
                 searchResults: [],
                 showCancel: true,
             });
@@ -163,13 +161,19 @@ export default class Search extends React.Component {
                 });
             }
 
-            var url = `https://staging.pianote.com/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&page=${1}`;
             var newContent = null;
+            let auth = await getToken();
 
-            await fetch(url)
+            await fetch(
+                `https://app-staging.pianote/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&page=${1}`,
+                {
+                    method: 'GET',
+                    headers: {Authorization: `Bearer ${auth.token}`},
+                },
+            )
                 .then((response) => response.json())
                 .then((response) => {
-                    console.log(response.data.length == 0);
+                    console.log(response.data.length == 0, response);
                     if (response.data.length == 0) {
                         this.setState({
                             searchEntered: false,
@@ -227,7 +231,7 @@ export default class Search extends React.Component {
                     }
                 })
                 .catch((error) => {
-                    console.log('API Error: ', error);
+                    console.log('API Search Error: ', error);
                 });
         }
     };

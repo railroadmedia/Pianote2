@@ -8,13 +8,19 @@ import {
     ScrollView,
     TouchableOpacity,
     TextInput,
+    Platform,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ChangeEmail from '../../modals/ChangeEmail';
 import ImagePicker from 'react-native-image-picker';
+import {userForgotPassword} from '@musora/services';
+import DisplayName from '../../modals/DisplayName.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from 'Pianote2/src/services/common.service';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 
@@ -23,13 +29,17 @@ export default class ProfileSettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            showChangeEmail: false,
+            showDisplayName: false,
             currentlyView: 'Profile Settings',
             displayName: '',
-            showChangeEmail: false,
             currentPassword: '',
             newPassword: '',
             retypeNewPassword: '',
             imageURI: '',
+            imageType: '',
+            imageName: '',
+            passwordKey: '',
         };
     }
 
@@ -38,7 +48,98 @@ export default class ProfileSettings extends React.Component {
         await this.setState({imageURI: imageURI == null ? '' : imageURI});
     };
 
-    async chooseImage() {
+    save() {
+        if(this.state.currentlyView == 'Display Name') {
+            this.changeName()
+        } else if(this.state.currentlyView == 'Profile Photo') {
+            this.changeImage()
+        } else if(this.state.currentlyView == 'Password') {
+            this.changePassword()
+        } else if(this.state.currentlyView == 'Email Address') {
+            this.changeEmailAddress()
+        }
+    }
+
+    changePassword = async () => {
+        const email = await AsyncStorage.getItem('email');
+        
+        const {response, error} = await userForgotPassword({email});
+        
+        console.log('RESET PASSWORD LINK: ', response, error)
+        await this.setState({showChangePassword: true})
+
+    }
+
+    changePassword2 = async () => {
+        return
+        return commonService.tryCall(`http://app-staging.pianote.com/api/change-password`,'PUT',null,null,
+            {
+            pass1: this.state.newPassword,
+            user_login: email,
+            rp_key: this.state.passwordKey,
+            }
+        );
+    }
+
+    changeName = async () => {
+        // check if display name available
+        let response = await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
+        response = await response.json()
+
+        if (response.unique) {
+            const auth = await getToken();
+            let nameResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                data: {display_name: this.state.displayName},
+            }); 
+            
+            nameResponse = await nameResponse.json()
+            
+            console.log(nameResponse)
+        } else {
+            this.setState({showDisplayName: true});
+        }
+    }
+
+    changeImage = async () => {
+        const data = new FormData();
+        const auth = await getToken();
+
+        data.append('target', this.state.imageName);
+        data.append('file', {
+            name: this.state.imageName,
+            type: this.state.imageType, 
+            uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI
+        });
+
+        console.log('TOKEN: ', auth.token)
+
+        try {
+            let avatarResponse = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                body: data,
+            });
+            let url = await avatarResponse.json()
+            console.log(url.data[0].url)
+            
+            let profileResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                data: {
+                    file: url.data[0].url
+                },
+            });
+
+            console.log(await profileResponse.json())
+
+        } catch (error) {
+            console.log('ERROR UPLOADING IMAGE: ', error)
+        }        
+    }
+
+    chooseImage = async () => {     
         await ImagePicker.showImagePicker(
             {
                 tintColor: '#147efb',
@@ -48,15 +149,21 @@ export default class ProfileSettings extends React.Component {
                 },
             },
             (response) => {
+                console.log(response)
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
-                    this.setState({imageURI: response.uri});
+                    this.setState({
+                        imageURI: response.uri,
+                        imageType: response.type,
+                        imageName: response.fileName || 'avatar',
+                    });
                     this.forceUpdate();
                 }
             },
-        );
+        );         
     }
+
 
     render() {
         return (
@@ -100,7 +207,9 @@ export default class ProfileSettings extends React.Component {
                                     ]}
                                 >
                                     <TouchableOpacity
-                                        onPress={() => {}}
+                                        onPress={() => {
+                                            this.save()
+                                        }}
                                         style={[
                                             styles.centerContent,
                                             {
@@ -438,6 +547,8 @@ export default class ProfileSettings extends React.Component {
                                                     onPress={() =>
                                                         this.setState({
                                                             imageURI: '',
+                                                            imageType: '',
+                                                            imageName: '',
                                                         })
                                                     }
                                                     style={[
@@ -535,7 +646,7 @@ export default class ProfileSettings extends React.Component {
                                     >
                                         <View style={{flex: 1}} />
                                         <TouchableOpacity
-                                            onPress={() => this.chooseImage()}
+                                            onPress={() => this.changeImage()}
                                             style={[
                                                 styles.centerContent,
                                                 {
@@ -713,6 +824,7 @@ export default class ProfileSettings extends React.Component {
                             }}
                         />
                     )}
+                    
 
                     {this.state.currentlyView == 'Profile Settings' && (
                         <NavigationBar currentPage={'PROFILE'} />
@@ -722,6 +834,30 @@ export default class ProfileSettings extends React.Component {
                         <View style={{height: fullHeight * 0.09375}} />
                     )}
                 </View>
+                <Modal
+                    isVisible={this.state.showDisplayName}
+                    style={[
+                        styles.centerContent,
+                        {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        },
+                    ]}
+                    animation={'slideInUp'}
+                    animationInTiming={350}
+                    animationOutTiming={350}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <DisplayName
+                        hideDisplayName={() => {
+                            this.setState({
+                                showDisplayName: false,
+                            });
+                        }}
+                    />
+                </Modal>
             </View>
         );
     }

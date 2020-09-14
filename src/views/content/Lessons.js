@@ -9,7 +9,7 @@ import {View, Text, ScrollView, Platform} from 'react-native';
 import {getContentChildById} from '@musora/services';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import AsyncStorage from '@react-native-community/async-storage';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -21,8 +21,10 @@ import firebase from 'react-native-firebase';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
+    return (
+        layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom
+    );
 };
 
 export default class Lessons extends React.Component {
@@ -40,7 +42,7 @@ export default class Lessons extends React.Component {
             showModalMenu: false, // show navigation menu
             lessonsStarted: true, // for showing continue lessons
             profileImage: '',
-            xp: '2500', // user's XP
+            xp: '', // user's XP
             rank: '', // user's level
             isLoadingNew: true, // new lessons
             isLoadingAll: true, // all lessons
@@ -53,16 +55,14 @@ export default class Lessons extends React.Component {
     }
 
     componentWillMount = async () => {
-        // get user data
-        const userData = await getUserData();
+        let data = await AsyncStorage.multiGet(['totalXP', 'rank', 'profileURI'])
 
-        // set user data
-        this.setState({
-            xp: '2500',
-            rank: 'Mastero',
-            profileImage: '',
+        await this.setState({
+            xp: data[0][1],
+            rank: data[1][1],
+            profileImage: data[2][1],
             lessonsStarted: false,
-        });
+        })
 
         // get foundations data
         this.getFoundations();
@@ -235,16 +235,16 @@ export default class Lessons extends React.Component {
         try {
             await this.setState({
                 //isLoadingAll: true,
-                page: this.state.page + 1
+                page: this.state.page + 1,
             });
 
             // see if importing filters
             try {
                 var filters = this.state.filters;
-                var filterLevel = false
-                var filterInstructor = false
-                var filterProgress = false
-                var filterTopic = false
+                var filterLevel = false;
+                var filterInstructor = false;
+                var filterProgress = false;
+                var filterTopic = false;
                 if (
                     filters.instructors.length !== 0 ||
                     filters.level.length !== 0 ||
@@ -252,10 +252,18 @@ export default class Lessons extends React.Component {
                     filters.topics.length !== 0
                 ) {
                     // if has a filter then send filters to vertical list
-                    if(filters.level.length !== 0) {filterLevel = true}
-                    if(filters.instructors.length !== 0) {filterInstructor = true}
-                    if(filters.progress.length !== 0) {filterProgress = true}
-                    if(filters.topics.length !== 0) {filterTopic = true}
+                    if (filters.level.length !== 0) {
+                        filterLevel = true;
+                    }
+                    if (filters.instructors.length !== 0) {
+                        filterInstructor = true;
+                    }
+                    if (filters.progress.length !== 0) {
+                        filterProgress = true;
+                    }
+                    if (filters.topics.length !== 0) {
+                        filterTopic = true;
+                    }
                     this.setState({filters});
                 }
             } catch (error) {
@@ -266,12 +274,12 @@ export default class Lessons extends React.Component {
                 brand: 'pianote',
                 limit: '20',
                 page: this.state.page,
-                sort: 'published_on', // -published_on
+                sort: 'published_on', // -published_on //  'newest', ‘oldest’, ‘popularity’, ‘trending’ and ‘relevance’.
                 statuses: ['published'],
                 included_types: ['course'],
                 required_user_states: [],
             });
-
+            
             const newContent = await response.data.data.map((data) => {
                 return new ContentModel(data);
             });
@@ -281,8 +289,8 @@ export default class Lessons extends React.Component {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor')
-                            .fields[0].value,
+                        artist: newContent[i].getField('instructor').fields[0]
+                            .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i]
@@ -297,13 +305,12 @@ export default class Lessons extends React.Component {
                         isStarted: newContent[i].isStarted,
                         isCompleted: newContent[i].isCompleted,
                         bundle_count: newContent[i].post.bundle_count,
-                        progress_percent:
-                            newContent[i].post.progress_percent,
+                        progress_percent: newContent[i].post.progress_percent,
                     });
                 }
             }
 
-            console.log(items)
+            console.log(items);
 
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
@@ -327,13 +334,13 @@ export default class Lessons extends React.Component {
                 required_user_states: ['started'],
                 included_types: ['course'],
             });
-    
+
             console.log(response, error);
-    
+
             const newContent = response.data.data.map((data) => {
                 return new ContentModel(data);
             });
-    
+
             items = [];
             for (i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -359,9 +366,9 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-    
+
             console.log('progress lessons: ', response, error);
-    
+
             await this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
                 lessonsStarted: items.length > 0 ? true : false,
@@ -370,14 +377,14 @@ export default class Lessons extends React.Component {
         } catch (error) {
             console.log('error progress: ', error);
         }
-    };    
+    };
 
     filterResults = async () => {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'LESSONS',
             onGoBack: (filters) => {
-                console.log('filters: ', filters)
+                console.log('filters: ', filters);
                 this.setState({
                     allLessons: [],
                     filters:
@@ -412,7 +419,7 @@ export default class Lessons extends React.Component {
             console.log(error);
         }
     };
-    
+
     getDuration = async (newContent) => {
         if (newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value;
@@ -422,7 +429,7 @@ export default class Lessons extends React.Component {
             return newContent.post.fields[2].value.fields[1].value;
         }
     };
-    
+
     render() {
         return (
             <View styles={styles.container}>
@@ -457,9 +464,12 @@ export default class Lessons extends React.Component {
                             backgroundColor: colors.mainBackground,
                         }}
                         onScroll={({nativeEvent}) => {
-                            if(isCloseToBottom(nativeEvent) && this.state.isPaging == false) {
+                            if (
+                                isCloseToBottom(nativeEvent) &&
+                                this.state.isPaging == false
+                            ) {
                                 this.setState({isPaging: true}),
-                                this.getAllLessons()
+                                    this.getAllLessons();
                             }
                         }}
                         scrollEventThrottle={400}
@@ -728,7 +738,11 @@ export default class Lessons extends React.Component {
                                                 textAlign: 'center',
                                             }}
                                         >
-                                            {(this.state.xp.length > 4) ? (Number(this.state.xp) / 1000).toFixed(1).toString()+ 'k': this.state.xp.toString()}
+                                            {this.state.xp.length > 4
+                                                ? (Number(this.state.xp) / 1000)
+                                                      .toFixed(1)
+                                                      .toString() + 'k'
+                                                : this.state.xp.toString()}
                                         </Text>
                                     </View>
                                     <View style={{flex: 1}} />

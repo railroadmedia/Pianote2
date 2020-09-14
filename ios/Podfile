@@ -1,4 +1,4 @@
-platform :ios, '9.0'
+platform :ios, '10.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'Pianote2' do
@@ -51,6 +51,7 @@ target 'Pianote2' do
 
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
 
+  pod 'react-native-intercom', :path => '../node_modules/react-native-intercom'
 
   target 'Pianote2Tests' do
     inherit! :search_paths

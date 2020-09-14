@@ -14,6 +14,11 @@ const resetAction = StackActions.reset({
     actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
 });
 
+const resetAction2 = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LOGIN'})],
+});
+
 export default class LoadPage extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -21,33 +26,58 @@ export default class LoadPage extends React.Component {
         this.state = {};
     }
 
+    async componentWillMount() {
+        try {
+            return;
+            let data = await fetch(
+                'http://app-staging.pianote.com/api/profile/update',
+                {
+                    method: 'POST',
+                    data: {
+                        display_name: 'KentonPALMER',
+                        email: 'kentonpalmer7@gmail.com',
+                    },
+                },
+            );
+
+            let userData = await data.json();
+            console.log('userdata: ', userData);
+        } catch (error) {
+            console.log(error, ' - ERROR');
+        }
+        return;
+    }
+
     componentDidMount = async () => {
         await SplashScreen.hide();
+
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
+
         let userData = await getUserData();
 
-        if (isLoggedIn !== 'true') {
-            setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
+        console.log(userData);
+
+        if (isLoggedIn !== 'true' || userData.isMember == false) {
+            // go to login
+            setTimeout(
+                () => this.props.navigation.dispatch(resetAction2),
+                1000,
+            );
         } else {
-            // membership expired
-            if ('membershipValid' == 'membershipValid') {
-                console.log(userData);
-                const userID = await userData.id.toString();
-                await AsyncStorage.setItem('userID', userID);
-                await AsyncStorage.setItem(
-                    'displayName',
-                    userData.display_name,
-                );
-                await AsyncStorage.setItem(
-                    'profileURI',
-                    userData.profile_picture_url,
-                );
-                await AsyncStorage.setItem('joined', userData.created_at);
+            console.log('ispackonly', userData.isPackOlyOwner);
+
+            let currentDate = new Date().getTime() / 1000;
+            let userExpDate =
+                new Date(userData.expirationDate).getTime() / 1000;
+
+            if (userData.isLifetime || currentDate < userExpDate) {
+                // go to lessons
                 setTimeout(
                     () => this.props.navigation.dispatch(resetAction),
                     1000,
                 );
             } else {
+                // go to membership expired
                 setTimeout(
                     () => this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
                     1000,

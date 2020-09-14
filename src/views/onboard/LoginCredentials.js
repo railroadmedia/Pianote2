@@ -18,6 +18,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
@@ -69,9 +70,7 @@ export default class LoginCredentials extends React.Component {
                 Animated.timing(this.state.forgotYdelta, {
                     toValue:
                         (Platform.OS === 'ios' && fullHeight > 811) ||
-                        onTablet == true
-                            ? fullHeight * 0.375
-                            : fullHeight * 0.35,
+                        onTablet ? fullHeight * 0.325 : fullHeight * 0.35,
                     duration: 250,
                 }),
                 Animated.timing(this.state.pianoteYdelta, {
@@ -112,15 +111,10 @@ export default class LoginCredentials extends React.Component {
             password: this.state.password,
         });
 
-        await configure({authToken: response.data.token});
-
-        console.log('RESPONSE: ', response);
-        console.log('ERROR: ', error);
-
         if (typeof response == 'undefined') {
             this.setState({showPasswordEmailMatch: true});
         } else if (response.data.success) {
-            // store data
+            // store auth data
             await AsyncStorage.multiSet([
                 ['loggedInStatus', 'true'],
                 ['email', this.state.email],
@@ -130,8 +124,15 @@ export default class LoginCredentials extends React.Component {
                 ['userId', JSON.stringify(response.data.userId)],
             ]);
 
-            // check membership status then navigate
-            if ('membershipValid' == 'membershipValid') {
+            // configure token
+            await configure({authToken: response.data.token});
+
+            // checkmembership status
+            let userData = await getUserData();
+            let currentDate = new Date().getTime()/1000
+            let userExpDate = new Date(userData.expirationDate).getTime()/1000
+            
+            if (userData.isLifetime || currentDate < userExpDate) {
                 await configure({authToken: response.data.token});
                 await this.props.navigation.dispatch(resetAction);
             } else {

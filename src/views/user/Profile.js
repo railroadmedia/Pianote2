@@ -2,15 +2,20 @@
  * Profile
  */
 import React from 'react';
+import {
+    View, 
+    Text, 
+    ScrollView, 
+    TouchableOpacity
+} from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import XpRank from 'Pianote2/src/modals/XpRank.js';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
 
 export default class Profile extends React.Component {
@@ -22,22 +27,22 @@ export default class Profile extends React.Component {
             notifications: [1, 2, 3, 4, 5],
             showXpRank: false,
             showReplyNotification: false,
+            memberSince: '',
         };
     }
 
     componentWillMount = async () => {
-        let userData = await getUserData()
-        console.log('USER DATA : ', userData)
+        let data = await AsyncStorage.multiGet(['totalXP', 'rank', 'profileURI', 'displayName', 'joined'])
 
-        this.setState({
-            xp: 2400,
-            rank: 'MASTERO',
-            profileImage: '',
-            username: 'Testuser98',
-            memberSince: 2017,
+        await this.setState({
+            xp: data[0][1],
+            rank: data[1][1],
+            profileImage: data[2][1],
+            username: data[3][1],
+            memberSince: data[4][1],
             lessonsStarted: false,
         });
-    }
+    };
 
     changeXP = (num) => {
         if (num !== '') {
@@ -345,7 +350,7 @@ export default class Profile extends React.Component {
                                             color: colors.secondBackground,
                                         }}
                                     >
-                                        MEMBER SINCE 2017
+                                        MEMBER SINCE {this.state.memberSince.slice(0,4)}
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}} />

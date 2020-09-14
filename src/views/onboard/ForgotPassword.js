@@ -93,7 +93,7 @@ export default class forgotPassword extends React.Component {
 
     forgotPassword = async () => {
         this.textInput.clear();
-        const {response, error} = userForgotPassword({
+        const {response, error} = await userForgotPassword({
             email: this.state.email,
         });
 
