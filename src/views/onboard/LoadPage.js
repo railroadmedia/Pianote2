@@ -26,30 +26,100 @@ export default class LoadPage extends React.Component {
         this.state = {};
     }
 
+    async componentWillMount() {
+        try {
+            return;
+            let data = await fetch(
+                'http://app-staging.pianote.com/api/profile/update',
+                {
+                    method: 'POST',
+                    data: {
+                        display_name: 'KentonPALMER',
+                        email: 'kentonpalmer7@gmail.com',
+                    },
+                },
+            );
+
+            let userData = await data.json();
+            console.log('userdata: ', userData);
+        } catch (error) {
+            console.log(error, ' - ERROR');
+        }
+        return;
+    }
+
     componentDidMount = async () => {
         await SplashScreen.hide();
-        isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-        await getUserData();
 
-        if (isLoggedIn !== 'true') {
+        isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
+
+        let userData = await getUserData();
+
+        console.log(userData);
+
+        if (isLoggedIn !== 'true' || userData.isMember == false) {
+            // go to login
             setTimeout(
                 () => this.props.navigation.dispatch(resetAction2),
                 1000,
             );
         } else {
-            // membership expired
-            if ('membershipValid' == 'membershipValid') {
+            console.log('ispackonly', userData.isPackOlyOwner);
+
+            let currentDate = new Date().getTime() / 1000;
+            let userExpDate =
+                new Date(userData.expirationDate).getTime() / 1000;
+
+            if (userData.isLifetime || currentDate < userExpDate) {
+                // go to lessons
                 setTimeout(
                     () => this.props.navigation.dispatch(resetAction),
                     1000,
                 );
             } else {
+                // go to membership expired
                 setTimeout(
                     () => this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
                     1000,
                 );
             }
         }
+        // if (isLoggedIn !== 'true') {
+        //     setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
+        // } else {
+        //     // membership expired
+        //     await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //         body: JSON.stringify({
+        //             email: email,
+        //         }),
+        //     })
+        //         .then((response) => response.json())
+        //         .then((response) => {
+        //             if (response == 'success') {
+        //                 setTimeout(
+        //                     () => this.props.navigation.dispatch(resetAction),
+        //                     1000,
+        //                 );
+        //             } else {
+        //                 setTimeout(
+        //                     () =>
+        //                         this.props.navigation.navigate(
+        //                             'MEMBERSHIPEXPIRED',
+        //                         ),
+        //                     1000,
+        //                 );
+        //             }
+        //         })
+        //         .catch((error) => {
+        //             console.log('API Error: ', error);
+        //             setTimeout(
+        //                 () => this.props.navigation.dispatch(resetAction),
+        //                 1000,
+        //             );
+        //         });
+        // }
     };
 
     render() {

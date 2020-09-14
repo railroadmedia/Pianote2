@@ -70,9 +70,7 @@ export default class LoginCredentials extends React.Component {
                 Animated.timing(this.state.forgotYdelta, {
                     toValue:
                         (Platform.OS === 'ios' && fullHeight > 811) ||
-                        onTablet == true
-                            ? fullHeight * 0.375
-                            : fullHeight * 0.35,
+                        onTablet ? fullHeight * 0.325 : fullHeight * 0.35,
                     duration: 250,
                 }),
                 Animated.timing(this.state.pianoteYdelta, {
@@ -129,11 +127,12 @@ export default class LoginCredentials extends React.Component {
             // configure token
             await configure({authToken: response.data.token});
 
-            // set async storage with user data
-            await getUserData();
-
-            // check membership status then navigate to lessons or other
-            if ('membershipValid' == 'membershipValid') {
+            // checkmembership status
+            let userData = await getUserData();
+            let currentDate = new Date().getTime()/1000
+            let userExpDate = new Date(userData.expirationDate).getTime()/1000
+            
+            if (userData.isLifetime || currentDate < userExpDate) {
                 await configure({authToken: response.data.token});
                 await this.props.navigation.dispatch(resetAction);
             } else {

@@ -49,6 +49,10 @@ target 'Pianote2' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
+  pod 'react-native-intercom', :path => '../node_modules/react-native-intercom'
+
   target 'Pianote2Tests' do
     inherit! :search_paths
     # Pods for testing

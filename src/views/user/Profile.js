@@ -27,6 +27,7 @@ export default class Profile extends React.Component {
             notifications: [1, 2, 3, 4, 5],
             showXpRank: false,
             showReplyNotification: false,
+            memberSince: '',
         };
     }
 
@@ -349,7 +350,7 @@ export default class Profile extends React.Component {
                                             color: colors.secondBackground,
                                         }}
                                     >
-                                        MEMBER SINCE 2017
+                                        MEMBER SINCE {this.state.memberSince.slice(0,4)}
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}} />

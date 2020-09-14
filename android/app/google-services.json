@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "356109427411",
+    "firebase_url": "https://pianote-app.firebaseio.com",
+    "project_id": "pianote-app",
+    "storage_bucket": "pianote-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356109427411:android:ddb2be79cbc53c6c222a26",
+        "android_client_info": {
+          "package_name": "com.pianote2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "356109427411-2ljl6ra33as6qg9iaua91d0sus3qtvo3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVT5wIdeErQ_NS1xf0Ei-G9Wo42V426TY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "356109427411-2ljl6ra33as6qg9iaua91d0sus3qtvo3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

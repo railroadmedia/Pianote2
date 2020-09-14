@@ -8,16 +8,19 @@ import {
     ScrollView,
     TouchableOpacity,
     TextInput,
+    Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ChangeEmail from '../../modals/ChangeEmail';
 import ImagePicker from 'react-native-image-picker';
+import {userForgotPassword} from '@musora/services';
 import DisplayName from '../../modals/DisplayName.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from 'Pianote2/src/services/common.service';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 
@@ -34,6 +37,9 @@ export default class ProfileSettings extends React.Component {
             newPassword: '',
             retypeNewPassword: '',
             imageURI: '',
+            imageType: '',
+            imageName: '',
+            passwordKey: '',
         };
     }
 
@@ -55,37 +61,85 @@ export default class ProfileSettings extends React.Component {
     }
 
     changePassword = async () => {
-            return commonService.tryCall(`${authService.rootUrl}/api/change-password`,'PUT',null,null,
-              {
-                pass1: pass,
-                user_login: email,
-                rp_key: key
-              }
-            );
+        const email = await AsyncStorage.getItem('email');
+        
+        const {response, error} = await userForgotPassword({email});
+        
+        console.log('RESET PASSWORD LINK: ', response, error)
+        await this.setState({showChangePassword: true})
+
+    }
+
+    changePassword2 = async () => {
+        return
+        return commonService.tryCall(`http://app-staging.pianote.com/api/change-password`,'PUT',null,null,
+            {
+            pass1: this.state.newPassword,
+            user_login: email,
+            rp_key: this.state.passwordKey,
+            }
+        );
     }
 
     changeName = async () => {
         // check if display name available
-        await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.unique) {
-                    const auth = getToken();
-                    let response = fetch(
-                        `https://staging.pianote.com/usora/user/update/${auth.userId}?display_name=${this.state.displayName}`,
-                        {method: 'PATCH', headers: {Authorization: `Bearer ${auth.token}`}},
-                    );
-                    return response.json();     
-                } else {
-                    this.setState({showDisplayName: true});
-                }
-            })
-            .catch((error) => {
-                console.log('API Error: ', error);
-            });
+        let response = await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
+        response = await response.json()
+
+        if (response.unique) {
+            const auth = await getToken();
+            let nameResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                data: {display_name: this.state.displayName},
+            }); 
+            
+            nameResponse = await nameResponse.json()
+            
+            console.log(nameResponse)
+        } else {
+            this.setState({showDisplayName: true});
+        }
     }
 
     changeImage = async () => {
+        const data = new FormData();
+        const auth = await getToken();
+
+        data.append('target', this.state.imageName);
+        data.append('file', {
+            name: this.state.imageName,
+            type: this.state.imageType, 
+            uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI
+        });
+
+        console.log('TOKEN: ', auth.token)
+
+        try {
+            let avatarResponse = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                body: data,
+            });
+            let url = await avatarResponse.json()
+            console.log(url.data[0].url)
+            
+            let profileResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                data: {
+                    file: url.data[0].url
+                },
+            });
+
+            console.log(await profileResponse.json())
+
+        } catch (error) {
+            console.log('ERROR UPLOADING IMAGE: ', error)
+        }        
+    }
+
+    chooseImage = async () => {     
         await ImagePicker.showImagePicker(
             {
                 tintColor: '#147efb',
@@ -95,15 +149,21 @@ export default class ProfileSettings extends React.Component {
                 },
             },
             (response) => {
+                console.log(response)
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
-                    this.setState({imageURI: response.uri});
+                    this.setState({
+                        imageURI: response.uri,
+                        imageType: response.type,
+                        imageName: response.fileName || 'avatar',
+                    });
                     this.forceUpdate();
                 }
             },
-        );
+        );         
     }
+
 
     render() {
         return (
@@ -487,6 +547,8 @@ export default class ProfileSettings extends React.Component {
                                                     onPress={() =>
                                                         this.setState({
                                                             imageURI: '',
+                                                            imageType: '',
+                                                            imageName: '',
                                                         })
                                                     }
                                                     style={[
@@ -540,7 +602,7 @@ export default class ProfileSettings extends React.Component {
                                             {this.state.imageURI == '' && (
                                                 <TouchableOpacity
                                                     onPress={() =>
-                                                        this.changeImage()
+                                                        this.chooseImage()
                                                     }
                                                     style={[
                                                         styles.centerContent,

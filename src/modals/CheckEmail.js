@@ -39,7 +39,7 @@ class CheckEmail extends React.Component {
                 <View
                     key={'content'}
                     style={{
-                        height: fullHeight * 0.36,
+                        height: (onTablet) ? fullHeight * 0.4 : fullHeight * 0.36,
                         width: '100%',
                         flexDirection: 'row',
                     }}
