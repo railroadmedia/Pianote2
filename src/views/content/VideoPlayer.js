@@ -2444,6 +2444,33 @@ export default class VideoPlayer extends React.Component {
                         color={colors.pianoteRed}
                     />
                 )}
+
+                {this.state.selectedAssignment && (
+                    <Modal
+                        key={'assignmentComplete'}
+                        isVisible={this.state.showAssignmentComplete}
+                        style={[
+                            {
+                                margin: 0,
+                                height: fullHeight,
+                                width: fullWidth,
+                            },
+                        ]}
+                        animation={'slideInUp'}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={false}
+                        hasBackdrop={false}
+                    >
+                        <AssignmentComplete
+                            title={this.state.selectedAssignment.title}
+                            xp={this.state.selectedAssignment.xp}
+                            hideAssignmentComplete={() => {
+                                this.setState({showAssignmentComplete: false});
+                            }}
+                        />
+                    </Modal>
+                )}
                 <Modal
                     key={'resourceDownload'}
                     isVisible={this.state.showResDownload}
@@ -2626,47 +2653,15 @@ export default class VideoPlayer extends React.Component {
                     </>
                 )}
 
-                {/* {this.state.selectedAssignment && ( */}
-                <Modal
-                    key={'assignmentComplete'}
-                    isVisible={this.state.showAssignment}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                            borderWidth: 5,
-                            borderColor: 'green',
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <AssignmentComplete
-                        title={'title'}
-                        xp={'500'}
-                        hideAssignmentComplete={() => {
-                            this.setState({showAssignmentComplete: false});
-                        }}
-                    />
-                </Modal>
-                {/* )} */}
                 {this.state.data && (
                     <Modal
                         key={'lessonComplete'}
                         isVisible={this.state.showOverviewComplete}
-                        style={[
-                            styles.centerContent,
-                            {
-                                margin: 0,
-                                height: fullHeight,
-                                width: fullWidth,
-                            },
-                        ]}
+                        style={{
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        }}
                         animation={'slideInUp'}
                         animationInTiming={250}
                         animationOutTiming={250}
