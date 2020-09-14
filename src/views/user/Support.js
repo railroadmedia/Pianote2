@@ -7,6 +7,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Intercom from 'react-native-intercom';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import DeviceInfo from 'react-native-device-info';
 
 export default class Support extends React.Component {
     static navigationOptions = {header: null};
@@ -16,31 +17,43 @@ export default class Support extends React.Component {
     }
 
     componentDidMount = async () => {
-        // const userData = await getUserData();
+        const userData = await getUserData();
+        console.log(userData);
         await Intercom.registerIdentifiedUser({
-            userId: 'musora_149628',
+            userId: 'musora_' + userData.id.toString(),
         });
         await Intercom.updateUser({
-            email: 'roxana.riza@artsoft-consult.ro',
-            phone: '',
-            user_id: 'musora_149628',
-            name: 'Roxana R',
+            email: userData.email,
+            phone: userData.phone_number
+                ? userData.phone_number.toString()
+                : '',
+            user_id: 'musora_' + userData.id.toString(),
+            name: userData.display_name,
             custom_attributes: {
-                unique_id: authService.unique_id.toString(),
+                // unique_id: auth.unique_id.toString(),
                 app_build_number: '0.0.' + DeviceInfo.getBuildNumber(),
             },
         });
-        //Intercom.addEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
-        //Intercom.addEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
+        Intercom.addEventListener(
+            Intercom.Notifications.UNREAD_COUNT,
+            this.onUnreadChange,
+        );
+        Intercom.addEventListener(
+            Intercom.Notifications.WINDOW_DID_HIDE,
+            this.onUnreadChange,
+        );
+        Intercom.handlePushMessage();
     };
 
     componentWillUnmount() {
-        //Intercom.removeEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
-        //Intercom.removeEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
-    }
-
-    componentWillMount() {
-        //Intercom.handlePushMessage();
+        Intercom.removeEventListener(
+            Intercom.Notifications.UNREAD_COUNT,
+            this.onUnreadChange,
+        );
+        Intercom.removeEventListener(
+            Intercom.Notifications.WINDOW_DID_HIDE,
+            this.onUnreadChange,
+        );
     }
 
     onUnreadChange(event) {
