@@ -157,7 +157,7 @@ class RestartCourse extends React.Component {
                                                 fontSize: 14 * factorRatio,
                                             }}
                                         >
-                                            RESTART LEVEL
+                                            RESTART {type.toUpperCase()}
                                         </Text>
                                     </TouchableOpacity>
                                 </View>

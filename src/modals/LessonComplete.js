@@ -30,7 +30,6 @@ class LessonComplete extends React.Component {
             nextLesson,
             onGoToNext,
         } = this.props;
-        console.log(completedLessonImg, completedLessonTitle);
         return (
             <View style={styles.container}>
                 <View

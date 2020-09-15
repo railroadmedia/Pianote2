@@ -62,8 +62,8 @@ class Replies extends React.Component {
     };
 
     componentWillUnmount() {
-        this.keyboardDidShowListener.remove();
-        this.keyboardDidHideListener.remove();
+        this.keyboardDidShowListener?.remove();
+        this.keyboardDidHideListener?.remove();
     }
 
     _keyboardDidShow = async (e) => {

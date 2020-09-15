@@ -41,6 +41,13 @@ export async function removeFromMyList(contentID) {
     );
 }
 
+export async function resetProgress(contentID) {
+    return commonService.tryCall(
+        `${rootUrl}/api/reset?content_id=${contentID}`,
+        'PUT',
+    );
+}
+
 export async function markComplete(contentID) {
     console.log(
         `${rootUrl}/api/complete?content_id=${contentID}&device_type=${

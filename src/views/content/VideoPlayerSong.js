@@ -4,12 +4,8 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Modal from 'react-native-modal';
-import FastImage from 'react-native-fast-image';
 import SoundSlice from '../../components/SoundSlice.js';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AssignmentComplete from '../../modals/AssignmentComplete.js';
-import QualitySettings from '../../modals/QualitySettings.js';
-import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import AssignmentResource from './AssignmentResource.js';
 
 export default class VideoPlayerSong extends React.Component {
@@ -45,6 +41,21 @@ export default class VideoPlayerSong extends React.Component {
                     <View style={{height: 25 * factorVertical}} />
                     {!this.state.hideTitles && (
                         <>
+                            <TouchableOpacity
+                                onPress={this.props.onX}
+                                style={{
+                                    position: 'absolute',
+                                    left: 20,
+                                    top: 20,
+                                    zIndex: 1,
+                                }}
+                            >
+                                <AntIcon
+                                    name={'close'}
+                                    size={30 * factorRatio}
+                                    color={'#000000'}
+                                />
+                            </TouchableOpacity>
                             <Text
                                 key={'assignmentNumber'}
                                 style={{
