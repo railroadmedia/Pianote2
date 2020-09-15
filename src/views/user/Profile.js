@@ -2,17 +2,14 @@
  * Profile
  */
 import React from 'react';
-import {
-    View, 
-    Text, 
-    ScrollView, 
-    TouchableOpacity
-} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import XpRank from 'Pianote2/src/modals/XpRank.js';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -30,9 +27,15 @@ export default class Profile extends React.Component {
             memberSince: '',
         };
     }
-
+    f;
     componentWillMount = async () => {
-        let data = await AsyncStorage.multiGet(['totalXP', 'rank', 'profileURI', 'displayName', 'joined'])
+        let data = await AsyncStorage.multiGet([
+            'totalXP',
+            'rank',
+            'profileURI',
+            'displayName',
+            'joined',
+        ]);
 
         await this.setState({
             xp: data[0][1],
@@ -302,18 +305,80 @@ export default class Profile extends React.Component {
                                             : 140 * factorRatio,
                                     }}
                                 >
-                                    <FastImage
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            borderRadius: 250,
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                        }}
-                                        source={require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                        //{uri: this.state.profileImage}
-                                    />
+                                    <View
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                position: 'absolute',
+                                                zIndex: 10,
+                                                elevation: 10,
+                                                top: -12.5 * factorRatio,
+                                                right: -12.5 * factorRatio,
+                                                height: 35 * factorRatio,
+                                                width: 35 * factorRatio,
+                                                borderRadius: 100,
+                                                borderColor: colors.pianoteRed,
+                                                borderWidth: 1.5 * factorRatio,
+                                            },
+                                        ]}
+                                    >
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.props.navigation.navigate(
+                                                    'PROFILESETTINGS',
+                                                    {data: 'Profile Photo'},
+                                                );
+                                            }}
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    height: '100%',
+                                                    width: '100%',
+                                                },
+                                            ]}
+                                        >
+                                            <IonIcon
+                                                size={25 * factorRatio}
+                                                name={'ios-camera'}
+                                                color={colors.pianoteRed}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                    {this.state.profileImage == '' && (
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    alignSelf: 'stretch',
+                                                },
+                                            ]}
+                                        >
+                                            <AntIcon
+                                                name={'user'}
+                                                color={colors.pianoteRed}
+                                                size={85 * factorRatio}
+                                            />
+                                        </View>
+                                    )}
+                                    {this.state.profileImage !== '' && (
+                                        <FastImage
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                borderRadius: 250,
+                                                backgroundColor:
+                                                    colors.secondBackground,
+                                            }}
+                                            source={{
+                                                uri: this.state.profileImage,
+                                            }}
+                                            resizeMode={
+                                                FastImage.resizeMode.cover
+                                            }
+                                        />
+                                    )}
                                 </View>
                                 <View style={{height: 10 * factorVertical}} />
                                 <View
@@ -350,7 +415,8 @@ export default class Profile extends React.Component {
                                             color: colors.secondBackground,
                                         }}
                                     >
-                                        MEMBER SINCE {this.state.memberSince.slice(0,4)}
+                                        MEMBER SINCE{' '}
+                                        {this.state.memberSince.slice(0, 4)}
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}} />

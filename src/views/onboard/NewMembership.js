@@ -682,7 +682,11 @@ export default class NewMembership extends React.Component {
                                 />{' '}
                                 Pay nothing for 7 days.
                             </Text>
-                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
+                            <View
+                                style={{
+                                    height: onTablet ? 5 : 7.5 * factorRatio,
+                                }}
+                            />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -698,7 +702,11 @@ export default class NewMembership extends React.Component {
                                 />
                                 {' Award-winning piano lessons & more.'}
                             </Text>
-                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
+                            <View
+                                style={{
+                                    height: onTablet ? 5 : 7.5 * factorRatio,
+                                }}
+                            />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -714,7 +722,11 @@ export default class NewMembership extends React.Component {
                                 />{' '}
                                 Access to the Pianote Experience app.
                             </Text>
-                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
+                            <View
+                                style={{
+                                    height: onTablet ? 5 : 7.5 * factorRatio,
+                                }}
+                            />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
@@ -730,7 +742,11 @@ export default class NewMembership extends React.Component {
                                 />{' '}
                                 Access to the Pianote Experience website.
                             </Text>
-                            <View style={{height: (onTablet) ? 5 : 7.5 * factorRatio}} />
+                            <View
+                                style={{
+                                    height: onTablet ? 5 : 7.5 * factorRatio,
+                                }}
+                            />
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',

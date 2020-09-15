@@ -3,6 +3,13 @@
  */
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+    resetProgress,
+    addToMyList,
+    removeFromMyList,
+    likeContent,
+    unlikeContent,
+} from 'Pianote2/src/services/UserActions.js';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -201,12 +208,25 @@ export default class SinglePack extends React.Component {
             ? this.state.pack.like_count - 1
             : this.state.pack.like_count + 1;
         this.state.pack.isLiked = !this.state.pack.isLiked;
+
+        if (this.state.pack.isLiked) {
+            likeContent(this.state.pack.id);
+        } else {
+            unlikeContent(this.state.pack.id);
+        }
+
         await this.setState({pack: this.state.pack});
     };
 
     addPackToMyList = async () => {
         this.state.pack.isAddedToList = !this.state.pack.isAddedToList;
         this.setState({pack: this.state.pack});
+
+        if (this.state.pack.isAddedToList) {
+            addToMyList(this.state.pack.id);
+        } else {
+            removeFromMyList(this.state.pack.id);
+        }
     };
 
     navigate = (row) => {
@@ -905,6 +925,9 @@ export default class SinglePack extends React.Component {
                     hasBackdrop={true}
                 >
                     <RestartCourse
+                        restartCourse={() => {
+                            resetProgress(this.state.pack.id);
+                        }}
                         hideRestartCourse={() => {
                             this.setState({
                                 showRestartCourse: false,

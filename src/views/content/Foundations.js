@@ -3,6 +3,11 @@
  */
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity, Platform} from 'react-native';
+import {
+    likeContent,
+    unlikeContent,
+    resetProgress,
+} from '../../services/UserActions';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -536,7 +541,12 @@ export default class Foundations extends React.Component {
                                                 this.setState({
                                                     isLiked: !this.state
                                                         .isLiked,
-                                                });
+                                                }),
+                                                    this.state.isLiked
+                                                        ? unlikeContent(
+                                                              '215952',
+                                                          )
+                                                        : likeContent('215952');
                                             }}
                                             style={[
                                                 styles.centerContent,
@@ -775,6 +785,9 @@ export default class Foundations extends React.Component {
                         hasBackdrop={true}
                     >
                         <RestartCourse
+                            restartCourse={() => {
+                                resetProgress('215952');
+                            }}
                             hideRestartCourse={() => {
                                 this.setState({
                                     showRestartCourse: false,

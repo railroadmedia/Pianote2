@@ -45,62 +45,81 @@ export default class ProfileSettings extends React.Component {
 
     componentDidMount = async () => {
         let imageURI = await AsyncStorage.getItem('profileURI');
-        await this.setState({imageURI: imageURI == null ? '' : imageURI});
+        await this.setState({
+            imageURI: imageURI == null ? '' : imageURI,
+            currentlyView:
+                this.props.navigation.state.params.data == 'Profile Photo'
+                    ? 'Profile Photo'
+                    : 'Profile Settings',
+        });
     };
 
     save() {
-        if(this.state.currentlyView == 'Display Name') {
-            this.changeName()
-        } else if(this.state.currentlyView == 'Profile Photo') {
-            this.changeImage()
-        } else if(this.state.currentlyView == 'Password') {
-            this.changePassword()
-        } else if(this.state.currentlyView == 'Email Address') {
-            this.changeEmailAddress()
+        if (this.state.currentlyView == 'Display Name') {
+            this.changeName();
+        } else if (this.state.currentlyView == 'Profile Photo') {
+            this.changeImage();
+        } else if (this.state.currentlyView == 'Password') {
+            this.changePassword();
+        } else if (this.state.currentlyView == 'Email Address') {
+            this.changeEmailAddress();
         }
     }
 
     changePassword = async () => {
         const email = await AsyncStorage.getItem('email');
-        
-        const {response, error} = await userForgotPassword({email});
-        
-        console.log('RESET PASSWORD LINK: ', response, error)
-        await this.setState({showChangePassword: true})
 
-    }
+        const {response, error} = await userForgotPassword({email});
+
+        console.log('RESET PASSWORD LINK: ', response, error);
+        await this.setState({showChangePassword: true});
+    };
 
     changePassword2 = async () => {
-        return
-        return commonService.tryCall(`http://app-staging.pianote.com/api/change-password`,'PUT',null,null,
+        return;
+        return commonService.tryCall(
+            `http://app-staging.pianote.com/api/change-password`,
+            'PUT',
+            null,
+            null,
             {
-            pass1: this.state.newPassword,
-            user_login: email,
-            rp_key: this.state.passwordKey,
-            }
+                pass1: this.state.newPassword,
+                user_login: email,
+                rp_key: this.state.passwordKey,
+            },
         );
-    }
+    };
 
     changeName = async () => {
         // check if display name available
-        let response = await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
-        response = await response.json()
+        let response = await fetch(
+            `http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`,
+        );
+        response = await response.json();
 
         if (response.unique) {
             const auth = await getToken();
-            let nameResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
-                method: 'POST',
-                headers: {Authorization: `Bearer ${auth.token}`},
-                data: {display_name: this.state.displayName},
-            }); 
-            
-            nameResponse = await nameResponse.json()
-            
-            console.log(nameResponse)
+            let nameResponse = await fetch(
+                `http://app-staging.pianote.com/api/profile/update`,
+                {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    data: JSON.stringify({
+                        display_name: this.state.displayName,
+                    }),
+                },
+            );
+
+            nameResponse = await nameResponse.json();
+
+            console.log(nameResponse);
         } else {
             this.setState({showDisplayName: true});
         }
-    }
+    };
 
     changeImage = async () => {
         const data = new FormData();
@@ -109,37 +128,44 @@ export default class ProfileSettings extends React.Component {
         data.append('target', this.state.imageName);
         data.append('file', {
             name: this.state.imageName,
-            type: this.state.imageType, 
-            uri: (Platform.OS == 'ios') ? this.state.imageURI.replace('file://', '') : this.state.imageURI
+            type: this.state.imageType,
+            uri:
+                Platform.OS == 'ios'
+                    ? this.state.imageURI.replace('file://', '')
+                    : this.state.imageURI,
         });
 
-        console.log('TOKEN: ', auth.token)
-
         try {
-            let avatarResponse = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
-                method: 'POST',
-                headers: {Authorization: `Bearer ${auth.token}`},
-                body: data,
-            });
-            let url = await avatarResponse.json()
-            console.log(url.data[0].url)
-            
-            let profileResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
-                method: 'POST',
-                headers: {Authorization: `Bearer ${auth.token}`},
-                data: {
-                    file: url.data[0].url
+            let avatarResponse = await fetch(
+                `http://app-staging.pianote.com/api/avatar/upload`,
+                {
+                    method: 'POST',
+                    headers: {Authorization: `Bearer ${auth.token}`},
+                    body: data,
                 },
-            });
+            );
+            let url = await avatarResponse.json();
+            console.log(url.data[0].url);
 
-            console.log(await profileResponse.json())
+            let profileResponse = await fetch(
+                `http://app-staging.pianote.com/api/profile/update`,
+                {
+                    method: 'POST',
+                    headers: {Authorization: `Bearer ${auth.token}`},
+                    data: JSON.stringify({
+                        file: url.data[0].url,
+                        profile_picture_url: url.data[0].url,
+                    }),
+                },
+            );
 
+            console.log(await profileResponse.json());
         } catch (error) {
-            console.log('ERROR UPLOADING IMAGE: ', error)
-        }        
-    }
+            console.log('ERROR UPLOADING IMAGE: ', error);
+        }
+    };
 
-    chooseImage = async () => {     
+    chooseImage = async () => {
         await ImagePicker.showImagePicker(
             {
                 tintColor: '#147efb',
@@ -149,7 +175,7 @@ export default class ProfileSettings extends React.Component {
                 },
             },
             (response) => {
-                console.log(response)
+                console.log(response);
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
@@ -161,9 +187,8 @@ export default class ProfileSettings extends React.Component {
                     this.forceUpdate();
                 }
             },
-        );         
-    }
-
+        );
+    };
 
     render() {
         return (
@@ -208,7 +233,7 @@ export default class ProfileSettings extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.save()
+                                            this.save();
                                         }}
                                         style={[
                                             styles.centerContent,
@@ -824,7 +849,6 @@ export default class ProfileSettings extends React.Component {
                             }}
                         />
                     )}
-                    
 
                     {this.state.currentlyView == 'Profile Settings' && (
                         <NavigationBar currentPage={'PROFILE'} />

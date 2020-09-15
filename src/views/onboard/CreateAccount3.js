@@ -64,12 +64,12 @@ export default class CreateAccount3 extends React.Component {
             hideListener,
             this._keyboardDidHide,
         );
-    }
+    };
 
     componentWillUnmount = async () => {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
-    }
+    };
 
     _keyboardDidShow = async () => {
         if (Platform.OS == 'ios') {
@@ -104,7 +104,7 @@ export default class CreateAccount3 extends React.Component {
             await this.setState({page: 4});
         }
         await this.forceUpdate();
-    }
+    };
 
     typingDisplayName = async (displayName) => {
         await this.setState({displayName});
@@ -127,8 +127,11 @@ export default class CreateAccount3 extends React.Component {
                     data.append('target', response.fileName || 'avatar');
                     data.append('file', {
                         name: response.fileName || 'avatar',
-                        type: response.type, 
-                        uri: (Platform.OS == 'ios') ? response.uri.replace('file://', '') : response.uri
+                        type: response.type,
+                        uri:
+                            Platform.OS == 'ios'
+                                ? response.uri.replace('file://', '')
+                                : response.uri,
                     });
 
                     this.setState({
@@ -141,7 +144,7 @@ export default class CreateAccount3 extends React.Component {
                 }
             },
         );
-    }
+    };
 
     clearImage = async () => {
         data = new FormData();
@@ -151,13 +154,15 @@ export default class CreateAccount3 extends React.Component {
             response: null,
         });
         await this.forceUpdate();
-    };    
+    };
 
     setName = async () => {
         if (this.state.displayName.length > 0) {
             // check if valid
-            let response = await fetch(`http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`)
-            response = await response.json()
+            let response = await fetch(
+                `http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`,
+            );
+            response = await response.json();
             if (response.unique) {
                 this.myScroll.scrollTo({
                     x: fullWidth,
@@ -185,35 +190,41 @@ export default class CreateAccount3 extends React.Component {
             // create account
             await this.createAccount();
         }
-    }
+    };
 
     createAccount = async () => {
         const auth = await getToken();
 
         // if there is profile image upload it
         if (data !== null) {
-            let avatarResponse = await fetch(`http://app-staging.pianote.com/api/avatar/upload`, {
-                method: 'POST',
-                headers: {Authorization: `Bearer ${auth.token}`},
-                body: data,
-            });
-    
-            const url = await avatarResponse.json()    
+            let avatarResponse = await fetch(
+                `http://app-staging.pianote.com/api/avatar/upload`,
+                {
+                    method: 'POST',
+                    headers: {Authorization: `Bearer ${auth.token}`},
+                    body: data,
+                },
+            );
+
+            const url = await avatarResponse.json();
         }
 
         // take image url and update profile
-        let profileResponse = await fetch(`http://app-staging.pianote.com/api/profile/update`, {
-            method: 'POST',
-            headers: {Authorization: `Bearer ${auth.token}`},
-            data: {
-                file: (data !== null) ? url : '',
-                display_name: this.state.displayName,
+        let profileResponse = await fetch(
+            `http://app-staging.pianote.com/api/profile/update`,
+            {
+                method: 'POST',
+                headers: {Authorization: `Bearer ${auth.token}`},
+                data: {
+                    file: data !== null ? url : '',
+                    display_name: this.state.displayName,
+                },
             },
-        }); 
+        );
 
-        profileResponse = await profileResponse.json()
+        profileResponse = await profileResponse.json();
 
-        console.log('PROFILE RESPONSE: ', profileResponse)
+        console.log('PROFILE RESPONSE: ', profileResponse);
 
         // send to loadpage to update asyncstorage with new data
         await this.props.navigation.dispatch(resetAction);

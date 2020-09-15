@@ -7,6 +7,7 @@ import {getContent} from '@musora/services';
 import FastImage from 'react-native-fast-image';
 import {View, Text, ScrollView} from 'react-native';
 import {getContentChildById} from '@musora/services';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -54,14 +55,18 @@ export default class Lessons extends React.Component {
     }
 
     componentWillMount = async () => {
-        let data = await AsyncStorage.multiGet(['totalXP', 'rank', 'profileURI'])
+        let data = await AsyncStorage.multiGet([
+            'totalXP',
+            'rank',
+            'profileURI',
+        ]);
 
         await this.setState({
             xp: data[0][1],
             rank: data[1][1],
             profileImage: data[2][1],
             lessonsStarted: false,
-        })
+        });
 
         // get foundations data
         this.getFoundations();
@@ -228,7 +233,7 @@ export default class Lessons extends React.Component {
                 included_types: ['course'],
                 required_user_states: [],
             });
-            
+
             const newContent = await response.data.data.map((data) => {
                 return new ContentModel(data);
             });
@@ -591,61 +596,64 @@ export default class Lessons extends React.Component {
                                 flexDirection: 'row',
                             }}
                         >
-                            <View
-                                key={'profile-picture'}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        alignSelf: 'stretch',
-                                    },
-                                ]}
-                            >
-                                <View style={{flex: 1}} />
-                                <View>
-                                    <View style={{flex: 1}} />
-                                    <View
-                                        style={{
-                                            height: fullHeight * 0.075,
-                                            width: fullHeight * 0.075,
-                                            borderRadius: 100,
-                                            backgroundColor:
-                                                colors.secondBackground,
+                            {this.state.profileImage !== '' && (
+                                <View
+                                    key={'profile-picture'}
+                                    style={[
+                                        styles.centerContent,
+                                        {
+                                            flex: 1,
+                                            flexDirection: 'row',
                                             alignSelf: 'stretch',
-                                            borderWidth: 3 * factorRatio,
-                                            borderColor:
-                                                colors.secondBackground,
-                                        }}
-                                    >
+                                        },
+                                    ]}
+                                >
+                                    <View style={{flex: 1}} />
+                                    <View>
+                                        <View style={{flex: 1}} />
                                         <View
                                             style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                alignSelf: 'center',
+                                                height: fullHeight * 0.075,
+                                                width: fullHeight * 0.075,
+                                                borderRadius: 100,
+                                                backgroundColor:
+                                                    colors.secondBackground,
+                                                alignSelf: 'stretch',
+                                                borderWidth: 3 * factorRatio,
+                                                borderColor:
+                                                    colors.secondBackground,
                                             }}
                                         >
-                                            <FastImage
+                                            <View
                                                 style={{
-                                                    flex: 1,
-                                                    borderRadius: 100,
-                                                    backgroundColor:
-                                                        colors.secondBackground,
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    alignSelf: 'center',
                                                 }}
-                                                source={
-                                                    require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
-                                                    //    {uri: this.state.profileImage}
-                                                }
-                                                resizeMode={
-                                                    FastImage.resizeMode.cover
-                                                }
-                                            />
+                                            >
+                                                <FastImage
+                                                    style={{
+                                                        flex: 1,
+                                                        borderRadius: 100,
+                                                        backgroundColor:
+                                                            colors.secondBackground,
+                                                    }}
+                                                    source={{
+                                                        uri: this.state
+                                                            .profileImage,
+                                                    }}
+                                                    resizeMode={
+                                                        FastImage.resizeMode
+                                                            .cover
+                                                    }
+                                                />
+                                            </View>
                                         </View>
+                                        <View style={{flex: 1}} />
                                     </View>
                                     <View style={{flex: 1}} />
                                 </View>
-                                <View style={{flex: 1}} />
-                            </View>
+                            )}
                             <View
                                 key={'XP-rank'}
                                 style={{
@@ -657,10 +665,9 @@ export default class Lessons extends React.Component {
                                 <View
                                     style={{
                                         flex:
-                                            this.state.profileImage !== null &&
-                                            this.state.profileImage.length > 0
+                                            this.state.profileImage !== ''
                                                 ? 0.5
-                                                : 0.5,
+                                                : 1,
                                     }}
                                 />
                                 <View>

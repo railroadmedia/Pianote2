@@ -3,6 +3,13 @@
  */
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+    addToMyList,
+    removeFromMyList,
+    likeContent,
+    unlikeContent,
+    resetProgress,
+} from '../../services/UserActions';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -29,9 +36,23 @@ export default class PathOverview extends React.Component {
         };
     }
 
-    like = () => {};
+    like = async () => {
+        this.setState({isLiked: !this.state.isLiked});
+        if (this.state.isLiked) {
+            unlikeContent(this.state.data.id);
+        } else {
+            likeContent(this.state.data.id);
+        }
+    };
 
-    addToMyList = () => {};
+    addToMyList = async () => {
+        this.setState({isAddedToList: !this.state.isAddedToList});
+        if (this.state.isAddedToList) {
+            removeFromMyList(this.state.data.id);
+        } else {
+            addToMyList(this.state.data.id);
+        }
+    };
 
     render() {
         return (
@@ -199,13 +220,7 @@ export default class PathOverview extends React.Component {
                                     ]}
                                 >
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            this.addToMyList(),
-                                                this.setState({
-                                                    isAddedToList: !this.state
-                                                        .isAddedToList,
-                                                });
-                                        }}
+                                        onPress={() => this.addToMyList()}
                                         style={{
                                             flex: 1,
                                             alignItems: 'center',
@@ -272,13 +287,11 @@ export default class PathOverview extends React.Component {
                                     ]}
                                 >
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            this.like(),
-                                                this.setState({
-                                                    showInfo: !this.state
-                                                        .showInfo,
-                                                });
-                                        }}
+                                        onPress={() =>
+                                            this.setState({
+                                                showInfo: !this.state.showInfo,
+                                            })
+                                        }
                                         style={{
                                             flex: 1,
                                             alignItems: 'center',
@@ -455,12 +468,7 @@ export default class PathOverview extends React.Component {
                                             }}
                                         />
                                         <TouchableOpacity
-                                            onPress={() => {
-                                                this.setState({
-                                                    isLiked: !this.state
-                                                        .isLiked,
-                                                });
-                                            }}
+                                            onPress={() => this.like()}
                                             style={[
                                                 styles.centerContent,
                                                 {
@@ -644,6 +652,9 @@ export default class PathOverview extends React.Component {
                     hasBackdrop={true}
                 >
                     <RestartCourse
+                        restartCourse={() => {
+                            resetProgress(this.state.data.id);
+                        }}
                         hideRestartCourse={() => {
                             this.setState({
                                 showRestartCourse: false,

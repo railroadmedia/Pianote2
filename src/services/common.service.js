@@ -25,6 +25,7 @@ export default {
                     email,
                     password: pass,
                 });
+
                 await configure({authToken: response.data.token});
                 await AsyncStorage.multiSet([
                     ['token', JSON.stringify(response.data.token)],
@@ -34,6 +35,7 @@ export default {
                     headers,
                     method: method || 'GET',
                 });
+
                 return await response.json();
             }
             return json;

@@ -93,7 +93,9 @@ export default class CreateAccount extends React.Component {
 
     verifyEmail = async () => {
         if (this.state.email.length > 0) {
-            await fetch(`https://app-staging.pianote/usora/is-email-unique?email=${this.state.email}`)
+            await fetch(
+                `https://app-staging.pianote/usora/is-email-unique?email=${this.state.email}`,
+            )
                 .then((response) => response.json())
                 .then((response) => {
                     if (response.exists == false) {

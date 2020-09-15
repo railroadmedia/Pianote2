@@ -69,8 +69,9 @@ export default class LoginCredentials extends React.Component {
             Animated.parallel([
                 Animated.timing(this.state.forgotYdelta, {
                     toValue:
-                        (Platform.OS === 'ios' && fullHeight > 811) ||
-                        onTablet ? fullHeight * 0.325 : fullHeight * 0.35,
+                        (Platform.OS === 'ios' && fullHeight > 811) || onTablet
+                            ? fullHeight * 0.325
+                            : fullHeight * 0.35,
                     duration: 250,
                 }),
                 Animated.timing(this.state.pianoteYdelta, {
@@ -129,9 +130,10 @@ export default class LoginCredentials extends React.Component {
 
             // checkmembership status
             let userData = await getUserData();
-            let currentDate = new Date().getTime()/1000
-            let userExpDate = new Date(userData.expirationDate).getTime()/1000
-            
+            let currentDate = new Date().getTime() / 1000;
+            let userExpDate =
+                new Date(userData.expirationDate).getTime() / 1000;
+
             if (userData.isLifetime || currentDate < userExpDate) {
                 await configure({authToken: response.data.token});
                 await this.props.navigation.dispatch(resetAction);

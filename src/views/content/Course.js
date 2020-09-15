@@ -3,10 +3,8 @@
  */
 import React from 'react';
 import {View, Text, ScrollView, Platform} from 'react-native';
-import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import {getContent} from '@musora/services';
-import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
@@ -453,32 +451,6 @@ export default class Course extends React.Component {
                             <View style={{height: fullHeight * 0.025}} />
                         </ScrollView>
                     </View>
-                    <Modal
-                        key={'restartCourse'}
-                        isVisible={this.state.showRestartCourse}
-                        style={[
-                            styles.centerContent,
-                            {
-                                height: fullHeight,
-                                width: fullWidth,
-                                elevation: 5,
-                                margin: 0,
-                            },
-                        ]}
-                        animation={'slideInUp'}
-                        animationInTiming={350}
-                        animationOutTiming={350}
-                        coverScreen={false}
-                        hasBackdrop={false}
-                    >
-                        <RestartCourse
-                            hideRestartCourse={() => {
-                                this.setState({
-                                    showRestartCourse: false,
-                                });
-                            }}
-                        />
-                    </Modal>
                 </View>
             </View>
         );

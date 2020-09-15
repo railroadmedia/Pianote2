@@ -28,50 +28,60 @@ export default class LoadPage extends React.Component {
 
     async componentWillMount() {
         try {
-            return
+            return;
             let data = await fetch(
-                'http://app-staging.pianote.com/api/profile/update', 
+                'http://app-staging.pianote.com/api/profile/update',
                 {
                     method: 'POST',
                     data: {
                         display_name: 'KentonPALMER',
-                        email: "kentonpalmer7@gmail.com",
-                    }
+                        email: 'kentonpalmer7@gmail.com',
+                    },
                 },
-            );       
-            
-            let userData = await data.json()     
-            console.log('userdata: ', userData)
+            );
+
+            let userData = await data.json();
+            console.log('userdata: ', userData);
         } catch (error) {
-            console.log(error, " - ERROR")
+            console.log(error, ' - ERROR');
         }
-        return 
+        return;
     }
 
     componentDidMount = async () => {
         await SplashScreen.hide();
-        
+
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-        
+
         let userData = await getUserData();
 
-        console.log(userData)
+        console.log(userData);
 
         if (isLoggedIn !== 'true' || userData.isMember == false) {
             // go to login
-            setTimeout(() => this.props.navigation.dispatch(resetAction2), 1000);
+            setTimeout(
+                () => this.props.navigation.dispatch(resetAction2),
+                1000,
+            );
         } else {
-            console.log('ispackonly', userData.isPackOlyOwner)
+            console.log('ispackonly', userData.isPackOlyOwner);
 
-            let currentDate = new Date().getTime()/1000
-            let userExpDate = new Date(userData.expirationDate).getTime()/1000
-            
+            let currentDate = new Date().getTime() / 1000;
+            let userExpDate =
+                new Date(userData.expirationDate).getTime() / 1000;
+
             if (userData.isLifetime || currentDate < userExpDate) {
                 // go to lessons
-                setTimeout(() => this.props.navigation.dispatch(resetAction), 1000);
+                setTimeout(
+                    () => this.props.navigation.dispatch(resetAction),
+                    1000,
+                );
             } else {
                 // go to membership expired
-                setTimeout(() => this.props.navigation.navigate('MEMBERSHIPEXPIRED'), 1000);
+                setTimeout(
+                    () => this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
+                    1000,
+                );
             }
         }
     };

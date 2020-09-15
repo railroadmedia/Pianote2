@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import Modal from 'react-native-modal';
+import {addToMyList, removeFromMyList} from '../../services/UserActions';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import {getContentChildById} from '@musora/services';
@@ -12,7 +12,6 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -31,7 +30,6 @@ export default class FoundationsLevel extends React.Component {
             currentLessonIndex: this.props.navigation.state.params.data
                 .current_lesson_index,
             nextLesson: null,
-            showRestartCourse: false,
             isLoadingAll: true,
             isStarted: true,
             outVideos: false,
@@ -116,26 +114,15 @@ export default class FoundationsLevel extends React.Component {
         }
     };
 
-    like = () => {
-        // api call like
-        this.state.data.like_count = this.state.isLiked
-            ? this.state.data.like_count - 1
-            : this.state.data.like_count + 1;
-
-        this.setState({
-            isLiked: !this.state.isLiked,
-            data: this.state.data,
-        });
-    };
-
     addToMyList = () => {
         // api call here
-
         this.state.data.isAddedToList = !this.state.data.isAddedToList;
-
-        this.setState({
-            data: this.state.data,
-        });
+        this.setState({data: this.state.data});
+        if (this.state.data.isAddedToList) {
+            addToMyList(this.state.data.id);
+        } else {
+            removeFromMyList(this.state.data.id);
+        }
     };
 
     render() {
@@ -542,31 +529,6 @@ export default class FoundationsLevel extends React.Component {
                             }}
                         />
                     </ScrollView>
-                    <Modal
-                        key={'restartCourse'}
-                        isVisible={this.state.showRestartCourse}
-                        style={[
-                            styles.centerContent,
-                            {
-                                margin: 0,
-                                height: fullHeight,
-                                width: fullWidth,
-                            },
-                        ]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={true}
-                    >
-                        <RestartCourse
-                            hideRestartCourse={() => {
-                                this.setState({
-                                    showRestartCourse: false,
-                                });
-                            }}
-                        />
-                    </Modal>
                     {this.state.currentLessonIndex + 1 !==
                         this.state.items.length && (
                         <View>

@@ -139,7 +139,8 @@ class RestartCourse extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.props.hideRestartCourse();
+                                            this.props.restartCourse(),
+                                                this.props.hideRestartCourse();
                                         }}
                                         style={[
                                             styles.centerContent,
