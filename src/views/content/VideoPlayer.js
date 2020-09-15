@@ -210,6 +210,7 @@ export default class VideoPlayer extends React.Component {
         this.setState(
             {
                 data: content,
+                id: content.id,
                 artist: content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),
                 isLoadingAll: false,
@@ -303,7 +304,6 @@ export default class VideoPlayer extends React.Component {
     };
 
     switchLesson(id) {
-        console.log(id);
         this.setState({id, isLoadingAll: true}, () => this.getContent());
     }
 

@@ -36,7 +36,7 @@ export async function addToMyList(contentID) {
 
 export async function removeFromMyList(contentID) {
     return commonService.tryCall(
-        `${rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
+        `${rootUrl}/api/railcontent/remove-from-my-list?content_id=${contentID}`,
         'PUT',
     );
 }
