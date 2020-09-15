@@ -22,7 +22,13 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from 'Pianote2/src/services/common.service';
 import AsyncStorage from '@react-native-community/async-storage';
+import {NavigationActions, StackActions} from 'react-navigation';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'PROFILE'})],
+});
 
 export default class ProfileSettings extends React.Component {
     static navigationOptions = {header: null};
@@ -36,6 +42,7 @@ export default class ProfileSettings extends React.Component {
             currentPassword: '',
             newPassword: '',
             retypeNewPassword: '',
+            email: '',
             imageURI: '',
             imageType: '',
             imageName: '',
@@ -107,7 +114,7 @@ export default class ProfileSettings extends React.Component {
                         Authorization: `Bearer ${auth.token}`,
                         'Content-Type': 'application/json',
                     },
-                    data: JSON.stringify({
+                    body: JSON.stringify({
                         display_name: this.state.displayName,
                     }),
                 },
@@ -116,6 +123,10 @@ export default class ProfileSettings extends React.Component {
             nameResponse = await nameResponse.json();
 
             console.log(nameResponse);
+
+            await AsyncStorage.setItem('displayName', this.state.displayName);
+
+            this.props.navigation.dispatch(resetAction);
         } else {
             this.setState({showDisplayName: true});
         }
@@ -136,30 +147,39 @@ export default class ProfileSettings extends React.Component {
         });
 
         try {
-            let avatarResponse = await fetch(
-                `http://app-staging.pianote.com/api/avatar/upload`,
-                {
-                    method: 'POST',
-                    headers: {Authorization: `Bearer ${auth.token}`},
-                    body: data,
-                },
-            );
-            let url = await avatarResponse.json();
-            console.log(url.data[0].url);
+            let url = '';
+            if (this.state.imageURI !== '') {
+                let avatarResponse = await fetch(
+                    `http://app-staging.pianote.com/api/avatar/upload`,
+                    {
+                        method: 'POST',
+                        headers: {Authorization: `Bearer ${auth.token}`},
+                        body: data,
+                    },
+                );
+
+                url = await avatarResponse.json();
+            }
 
             let profileResponse = await fetch(
                 `http://app-staging.pianote.com/api/profile/update`,
                 {
                     method: 'POST',
-                    headers: {Authorization: `Bearer ${auth.token}`},
-                    data: JSON.stringify({
-                        file: url.data[0].url,
-                        profile_picture_url: url.data[0].url,
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        file: url == '' ? url : url.data[0].url,
                     }),
                 },
             );
 
             console.log(await profileResponse.json());
+
+            await AsyncStorage.setItem('profileURI', url.toString());
+
+            this.props.navigation.dispatch(resetAction);
         } catch (error) {
             console.log('ERROR UPLOADING IMAGE: ', error);
         }
@@ -188,6 +208,33 @@ export default class ProfileSettings extends React.Component {
                 }
             },
         );
+    };
+
+    changeEmailAddress = async () => {
+        const auth = await getToken();
+
+        try {
+            let response = await fetch(
+                `https://app-staging.pianote.com/usora/api/profile/update`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'user',
+                        attributes: {
+                            email: this.state.email,
+                        },
+                    }),
+                },
+            );
+
+            console.log(await response.json());
+        } catch (error) {
+            console.log('ERROR: ', error);
+        }
     };
 
     render() {

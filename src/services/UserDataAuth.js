@@ -33,7 +33,7 @@ export async function getUserData() {
         });
 
         let userData = await data.json();
-
+        console.log('USER DATA: ', userData);
         // update data
         await AsyncStorage.multiSet([
             ['totalXP', userData.totalXp.toString()],

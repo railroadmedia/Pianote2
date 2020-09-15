@@ -5,7 +5,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
-import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -56,27 +56,27 @@ export default class NotificationSettings extends React.Component {
             let response = await fetch(
                 `https://app-staging.pianote.com/usora/api/profile/update`,
                 {
-                    method: 'POST',
-                    headers: {Authorization: `Bearer ${auth.token}`},
-                    data: JSON.stringify({
+                    method: 'PATCH',
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
                         type: 'user',
                         attributes: {
-                            notify_weekly_update: this.state
-                                .weeklyCommunityUpdatesClicked,
-                            notify_on_lesson_comment_reply: this.state
-                                .commentRepliesClicked,
-                            notify_on_lesson_comment_like: this.state
-                                .commentLikesClicked,
-                            notify_on_forum_post_reply: this.state
-                                .forumPostRepliesClicked,
-                            notify_on_forum_post_like: this.state
-                                .forumPostLikesClicked,
-                            notify_weekly_update: this.state.frequency,
+                            notifications_summary_frequency_minutes: false,
+                            notify_on_forum_followed_thread_reply: false,
+                            notify_on_forum_post_like: false,
+                            notify_on_forum_post_reply: false,
+                            notify_on_lesson_comment_like: false,
+                            notify_on_lesson_comment_reply: false,
+                            notify_weekly_update: false,
                         },
                     }),
                 },
             );
             console.log(await response.json());
+            getUserData();
         } catch (error) {
             console.log('ERROR: ', error);
         }

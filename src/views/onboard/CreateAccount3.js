@@ -206,7 +206,7 @@ export default class CreateAccount3 extends React.Component {
                 },
             );
 
-            const url = await avatarResponse.json();
+            url = await avatarResponse.json();
         }
 
         // take image url and update profile

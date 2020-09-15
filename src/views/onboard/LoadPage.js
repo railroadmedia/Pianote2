@@ -26,28 +26,6 @@ export default class LoadPage extends React.Component {
         this.state = {};
     }
 
-    async componentWillMount() {
-        try {
-            return;
-            let data = await fetch(
-                'http://app-staging.pianote.com/api/profile/update',
-                {
-                    method: 'POST',
-                    data: {
-                        display_name: 'KentonPALMER',
-                        email: 'kentonpalmer7@gmail.com',
-                    },
-                },
-            );
-
-            let userData = await data.json();
-            console.log('userdata: ', userData);
-        } catch (error) {
-            console.log(error, ' - ERROR');
-        }
-        return;
-    }
-
     componentDidMount = async () => {
         await SplashScreen.hide();
 

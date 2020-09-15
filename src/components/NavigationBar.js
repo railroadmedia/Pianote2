@@ -52,7 +52,6 @@ class NavigationBar extends React.Component {
                     size={27.5 * factorRatio}
                 />
             );
-            f;
         } else {
             return (
                 <FastImage
@@ -62,10 +61,7 @@ class NavigationBar extends React.Component {
                         backgroundColor: colors.secondBackground,
                         backgroundColor: 'red',
                     }}
-                    source={
-                        require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
-                        //    {uri: this.state.profileImage}
-                    }
+                    source={{uri: this.state.profileImage}}
                     resizeMode={FastImage.resizeMode.cover}
                 />
             );

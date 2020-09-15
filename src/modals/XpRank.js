@@ -6,16 +6,54 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {withNavigation} from 'react-navigation';
 import ProgressCircle from 'react-native-progress-circle';
 
+const ranks = [
+    0,
+    100,
+    250,
+    500,
+    1000,
+    2500,
+    10000,
+    25000,
+    100000,
+    250000,
+    500000,
+    1000000,
+    1500000,
+    2000000,
+    2500000,
+    3000000,
+    4000000,
+    5000000,
+    7500000,
+    100000000,
+];
+
 class XpRank extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            rankProgress: 62.5,
+            rankProgress: null,
             XP: this.props.xp,
             rank: this.props.rank,
+            nextRank: null,
         };
     }
+
+    componentWillMount = () => {
+        for (i in ranks) {
+            if (
+                this.state.XP >= ranks[i] &&
+                this.state.XP < ranks[Number(i) + 1]
+            ) {
+                this.setState({
+                    nextRank: ranks[Number(i) + 1],
+                    rankProgress: (this.state.XP / ranks[Number(i) + 1]) * 100,
+                });
+            }
+        }
+    };
 
     render = () => {
         return (
@@ -178,7 +216,7 @@ class XpRank extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    Next rank: 20,000
+                                    Next rank: {this.state.nextRank}
                                 </Text>
                             </View>
                         </View>
