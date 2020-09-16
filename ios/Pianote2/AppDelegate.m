@@ -8,9 +8,11 @@
 #import "AppDelegate.h"
 #import "Orientation.h"
 #import <React/RCTBridge.h>
+#import <RNHomeIndicator.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import "RNSplashScreen.h"
+#import <GoogleCast/GoogleCast.h>
 
 #import "Intercom/intercom.h"
 #import <Firebase.h>
@@ -25,6 +27,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  GCKCastOptions* options = [[GCKCastOptions alloc] initWithReceiverApplicationID:kGCKDefaultMediaReceiverApplicationID];
+  options.physicalVolumeButtonsWillControlDeviceVolume = YES;
+  [GCKCastContext setSharedInstanceWithOptions:options];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"Pianote2"
@@ -36,7 +41,7 @@
   [RNFirebaseNotifications configure];
   [Intercom setApiKey:@"ios_sdk-0e9598840ab9fbb085fe155be38c4161693e7ff9" forAppId:@"x2x1waf3"];
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
+  UIViewController *rootViewController = [HomeIndicatorViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];

@@ -277,6 +277,14 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-blur (0.8.0):
     - React
+  - react-native-google-cast/NoBluetooth (3.3.0):
+    - google-cast-sdk-no-bluetooth
+    - React
+    - react-native-google-cast/RNGoogleCast
+  - react-native-google-cast/RNGoogleCast (3.3.0):
+    - React
+  - react-native-home-indicator (0.2.5):
+    - React
   - react-native-image-picker (1.1.0):
     - React
   - react-native-intercom (13.2.0):
@@ -288,10 +296,10 @@ PODS:
     - React
   - react-native-splash-screen (3.2.0):
     - React
-  - react-native-video (5.0.2):
+  - react-native-video (5.1.0-alpha1):
     - React
-    - react-native-video/Video (= 5.0.2)
-  - react-native-video/Video (5.0.2):
+    - react-native-video/Video (= 5.1.0-alpha1)
+  - react-native-video/Video (5.1.0-alpha1):
     - React
   - react-native-viewpager (3.3.0):
     - React
@@ -391,6 +399,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
+  - react-native-google-cast/NoBluetooth (from `../node_modules/react-native-google-cast/ios/`)
+  - react-native-home-indicator (from `../node_modules/react-native-home-indicator`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-intercom (from `../node_modules/react-native-intercom`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -411,6 +421,8 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
+  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
+  - RNAirplay (from `../node_modules/react-native-airplay-ios`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
@@ -479,6 +491,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
+  react-native-google-cast:
+    :path: "../node_modules/react-native-google-cast/ios/"
+  react-native-home-indicator:
+    :path: "../node_modules/react-native-home-indicator"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-intercom:
@@ -517,6 +533,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeNavigation:
     :path: "../node_modules/react-native-navigation"
+  rn-fetch-blob:
+    :path: "../node_modules/rn-fetch-blob"
+  RNAirplay:
+    :path: "../node_modules/react-native-airplay-ios"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNDeviceInfo:
@@ -575,12 +595,14 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
+  react-native-google-cast: 410619ef162b8b91815ecf7271502224998dee8e
+  react-native-home-indicator: c886445b4bf6f97f7c96731e426b80ad638fd4f8
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
   react-native-intercom: 25ceddd224fdf63be29d4e25e95a893e5befe18f
   react-native-netinfo: d2c312fa4b151214e1d5c8456ddb5f28ff24a576
   react-native-orientation-locker: f0ca1a8e5031dab6b74bfb4ab33a17ed2c2fcb0d
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
+  react-native-video: 31f90922291b3a3378ee4fa0d74e606646c05231
   react-native-viewpager: 118e65d8c65c56fe48d12a35cdcf1fe7e027a366
   react-native-webview: d2ddd1c9a3c04b2c7a034df1d14b7cd80dbb0a05
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
