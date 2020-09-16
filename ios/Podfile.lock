@@ -68,6 +68,13 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - google-cast-sdk-no-bluetooth (4.5.0):
+    - google-cast-sdk-no-bluetooth/Core (= 4.5.0)
+    - GTMSessionFetcher/Core (~> 1.0)
+    - Protobuf (~> 3.12)
+  - google-cast-sdk-no-bluetooth/Core (4.5.0):
+    - GTMSessionFetcher/Core (~> 1.0)
+    - Protobuf (~> 3.12)
   - GoogleAppMeasurement (6.8.2):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
@@ -95,6 +102,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.7.2):
     - GoogleUtilities/Logger
+  - GTMSessionFetcher/Core (1.4.0)
   - Intercom (5.5.2)
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
@@ -296,10 +304,10 @@ PODS:
     - React
   - react-native-splash-screen (3.2.0):
     - React
-  - react-native-video (5.1.0-alpha1):
+  - react-native-video (5.0.2):
     - React
-    - react-native-video/Video (= 5.1.0-alpha1)
-  - react-native-video/Video (5.1.0-alpha1):
+    - react-native-video/Video (= 5.0.2)
+  - react-native-video/Video (5.0.2):
     - React
   - react-native-viewpager (3.3.0):
     - React
@@ -341,6 +349,10 @@ PODS:
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
   - ReactNativeNavigation (3.7.0):
+    - React
+  - rn-fetch-blob (0.12.0):
+    - React-Core
+  - RNAirplay (1.0.9):
     - React
   - RNCAsyncStorage (1.11.0):
     - React
@@ -447,9 +459,11 @@ SPEC REPOS:
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
+    - google-cast-sdk-no-bluetooth
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
+    - GTMSessionFetcher
     - Intercom
     - libwebp
     - nanopb
@@ -577,9 +591,11 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 82d75b3770a78bbce470769a6980429608b4c407
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  google-cast-sdk-no-bluetooth: a01e9da91e15059e2d4b40ce98bd85240e23db8c
   GoogleAppMeasurement: 1a66f478c68ecd6c16ee63ee60c7c3a648e6b337
   GoogleDataTransport: e85fb700c9b027079ce182c3d08e12e0f9618bb4
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
+  GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   Intercom: 1151a15e5e7931d8e401671a4357239d44325159
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
@@ -602,7 +618,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: d2c312fa4b151214e1d5c8456ddb5f28ff24a576
   react-native-orientation-locker: f0ca1a8e5031dab6b74bfb4ab33a17ed2c2fcb0d
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 31f90922291b3a3378ee4fa0d74e606646c05231
+  react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
   react-native-viewpager: 118e65d8c65c56fe48d12a35cdcf1fe7e027a366
   react-native-webview: d2ddd1c9a3c04b2c7a034df1d14b7cd80dbb0a05
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
@@ -616,6 +632,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   ReactNativeNavigation: bed6f504aa1a4dadd151503bf99d0ef96d06847f
+  rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
+  RNAirplay: d863b69586b2ac0270cbb349c44c37a525681329
   RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNDeviceInfo: c3ea4a4d4547740c548cdd1e5a78f9b04e524688
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
@@ -630,6 +648,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: ef46950985323a519f955da72c18e9c7f799077c
+PODFILE CHECKSUM: 85737b8ffcc61d2a5d825fd4f83f58423e38e901
 
 COCOAPODS: 1.9.1
