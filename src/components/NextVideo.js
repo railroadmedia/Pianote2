@@ -13,13 +13,13 @@ class NextVideo extends React.Component {
         super(props);
         this.state = {
             hasNotch: 0,
-            progress: this.props.currentCompletion,
         };
     }
 
     componentDidMount = async () => {};
 
     render = () => {
+        const {progress_percent} = this.props.item.post;
         return (
             <View
                 style={{
@@ -38,13 +38,13 @@ class NextVideo extends React.Component {
                     >
                         <View
                             style={{
-                                flex: this.state.progress,
+                                flex: progress_percent,
                                 backgroundColor: colors.pianoteRed,
                             }}
                         />
                         <View
                             style={{
-                                flex: 1 - this.state.progress,
+                                flex: 1 - progress_percent,
                                 backgroundColor: colors.secondBackground,
                             }}
                         />
@@ -83,7 +83,7 @@ class NextVideo extends React.Component {
                                     textAlign: 'right',
                                 }}
                             >
-                                LEVEL - {this.state.progress * 100}% COMPLETE
+                                LEVEL - {progress_percent * 100}% COMPLETE
                             </Text>
                             <View style={{flex: 1}} />
                         </View>
@@ -119,11 +119,9 @@ class NextVideo extends React.Component {
                                         borderRadius: 7 * factorRatio,
                                     }}
                                     source={{
-                                        uri:
-                                            typeof this.props.item ==
-                                            'undefined'
-                                                ? ''
-                                                : this.props.item.thumbnail,
+                                        uri: this.props.item.getData(
+                                            'thumbnail_url',
+                                        ),
                                     }}
                                     resizeMode={FastImage.resizeMode.cover}
                                 />
@@ -147,9 +145,7 @@ class NextVideo extends React.Component {
                                         color: 'white',
                                     }}
                                 >
-                                    {typeof this.props.item == 'undefined'
-                                        ? ''
-                                        : this.props.item.title}
+                                    {this.props.item.getField('title')}
                                 </Text>
                                 <View style={{height: 2 * factorVertical}} />
                                 <Text
@@ -162,7 +158,6 @@ class NextVideo extends React.Component {
                                     }}
                                 >
                                     2 mins
-                                    {/* {this.props.items[index].artist} */}
                                 </Text>
                             </View>
                             <View style={{flex: 1}} />

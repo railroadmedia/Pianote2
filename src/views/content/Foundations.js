@@ -6,11 +6,9 @@ import {View, Text, ScrollView, TouchableOpacity, Platform} from 'react-native';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import {getContentChildById} from '@musora/services';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -18,6 +16,14 @@ import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import NextVideo from 'Pianote2/src/components/NextVideo';
+import foundationsService from '../../services/foundations.service';
+import AsyncStorage from '@react-native-community/async-storage';
+import {
+    likeContent,
+    unlikeContent,
+    resetProgress,
+} from 'Pianote2/src/services/UserActions.js';
 
 export default class Foundations extends React.Component {
     static navigationOptions = {header: null};
@@ -26,99 +32,98 @@ export default class Foundations extends React.Component {
         this.state = {
             items: [],
             showRestartCourse: false,
-            profileImage: '',
+            id: null,
             isStarted: false,
+            isCompleted: false,
             isLiked: false,
+            likeCount: 0,
             showInfo: false,
             isLoadingAll: true,
             totalLength: 0,
             level: 1,
+            profileImage: '',
+            xp: 0,
+            description: '',
+            nextLesson: null,
         };
     }
 
-    componentDidMount = async () => {
+    async componentDidMount() {
         let profileImage = await AsyncStorage.getItem('profileURI');
         if (profileImage !== null) {
-            await this.setState({profileImage});
+            this.setState({profileImage});
         }
 
         this.getContent();
-    };
+    }
 
     getContent = async () => {
-        const {response, error} = await getContentChildById({
-            parentId: '215952',
-        });
-
-        const newContent = response.data.data.map((data) => {
+        const response = new ContentModel(
+            await foundationsService.getFoundation('foundations-2019'),
+        );
+        console.log('getcontent level', response);
+        const newContent = response.post.units.map((data) => {
             return new ContentModel(data);
         });
 
-        console.log('FOUNDATIONS', newContent);
-
         items = [];
         for (i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    current_lesson_index:
-                        newContent[i].post.current_lesson_index,
-                    current_lesson: newContent[i].post.current_lesson,
-                    next_lesson: newContent[i].post.next_lesson,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    lesson_count: newContent[i].post.lesson_count,
-                    like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].isLiked,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
-            }
-        }
+            items.push({
+                title: newContent[i].getField('title'),
+                artist: newContent[i].post.fields
+                    .filter((d) => d.key === 'instructor')
+                    .map((s) => ({
+                        value: s.value.fields.find((f) => f.key === 'name')
+                            .value,
+                    }))
+                    .reduce((r, obj) => r.concat(obj.value, '  '), []),
+                thumbnail: newContent[i].getData('thumbnail_url'),
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/gi, ''),
 
-        for (i in items) {
-            this.state.totalLength =
-                this.state.totalLength + Number(items[i].duration);
+                id: newContent[i].id,
+                progress_percent: newContent[i].post.progress_percent,
+                mobile_app_url: newContent[i].post.mobile_app_url,
+            });
         }
-        this.state.totalLength = Math.floor(
-            this.state.totalLength / 60,
-        ).toString();
 
         this.setState({
             items: [...this.state.items, ...items],
+            id: response.id,
+            isStarted: response.isStarted,
+            isCompleted: response.isCompleted,
+            isLiked: response.post.is_liked_by_current_user,
+            likeCount: response.likeCount,
             isLoadingAll: false,
-            totalLength: this.state.totalLength,
+            totalLength: response.post.length_in_seconds,
+            xp: response.post.total_xp,
+            description: response.getData('description'),
+            nextLesson: new ContentModel(response.post.current_lesson),
         });
     };
 
-    getDuration = (newContent) => {
-        var data = 0;
-        try {
-            for (i in newContent.post.current_lesson.fields) {
-                if (newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data =
-                        newContent.post.current_lesson.fields[i].value.fields;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].key == 'length_in_seconds') {
-                            return data[i].value;
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error);
+    toggleLike = () => {
+        if (this.state.isLiked) {
+            unlikeContent(this.state.id);
+        } else {
+            likeContent(this.state.id);
         }
+        this.setState({
+            isLiked: !this.state.isLiked,
+            likeCount: this.state.isLiked
+                ? this.state.likeCount - 1
+                : this.state.likeCount + 1,
+        });
+    };
+
+    onRestartFoundation = async () => {
+        resetProgress(this.state.id);
+        this.setState({
+            isStarted: false,
+            isCompleted: false,
+            showRestartCourse: false,
+        });
     };
 
     render() {
@@ -251,10 +256,10 @@ export default class Foundations extends React.Component {
                                         buttonWidth={fullWidth * 0.5}
                                         pressed={() => {
                                             this.props.navigation.navigate(
-                                                'FOUNDATIONSLEVEL',
+                                                'VIDEOPLAYER',
                                                 {
-                                                    level: 1,
-                                                    data: this.state.items[0],
+                                                    url: this.state.nextLesson
+                                                        .post.url,
                                                 },
                                             );
                                         }}
@@ -278,10 +283,10 @@ export default class Foundations extends React.Component {
                                         buttonWidth={fullWidth * 0.5}
                                         pressed={() => {
                                             this.props.navigation.navigate(
-                                                'FOUNDATIONSLEVEL',
+                                                'VIDEOPLAYER',
                                                 {
-                                                    level: 1,
-                                                    data: this.state.items[0],
+                                                    url: this.state.nextLesson
+                                                        .post.url,
                                                 },
                                             );
                                         }}
@@ -362,13 +367,7 @@ export default class Foundations extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    Hanon exercises have been around forever and
-                                    there is a great reason for their sticking
-                                    power. Therese exercises make the perfect
-                                    warm up for daily practice. They will help
-                                    you to develop speed, dexterity and finer
-                                    independence as well as give you a platform
-                                    to practice dynamics and articulations.
+                                    {this.state.description}
                                 </Text>
                                 <View key={'containStats'}>
                                     <View
@@ -423,7 +422,7 @@ export default class Foundations extends React.Component {
                                                         10 * factorVertical,
                                                 }}
                                             >
-                                                LESSONS
+                                                COURSES
                                             </Text>
                                         </View>
                                         <View
@@ -488,7 +487,7 @@ export default class Foundations extends React.Component {
                                                         10 * factorVertical,
                                                 }}
                                             >
-                                                2400
+                                                {this.state.xp}
                                             </Text>
                                             <Text
                                                 style={{
@@ -532,12 +531,7 @@ export default class Foundations extends React.Component {
                                             }}
                                         />
                                         <TouchableOpacity
-                                            onPress={() => {
-                                                this.setState({
-                                                    isLiked: !this.state
-                                                        .isLiked,
-                                                });
-                                            }}
+                                            onPress={() => this.toggleLike()}
                                             style={[
                                                 styles.centerContent,
                                                 {
@@ -566,10 +560,7 @@ export default class Foundations extends React.Component {
                                                         10 * factorVertical,
                                                 }}
                                             >
-                                                {34 +
-                                                    (this.state.isLiked
-                                                        ? 1
-                                                        : 0)}
+                                                {this.state.likeCount}
                                             </Text>
                                         </TouchableOpacity>
                                         <View
@@ -652,6 +643,8 @@ export default class Foundations extends React.Component {
                                 </View>
                             </View>
                         )}
+
+                        {/* TODO: check if we need this
                         {this.state.isStarted && (
                             <View
                                 style={{
@@ -661,7 +654,7 @@ export default class Foundations extends React.Component {
                                 }}
                             >
                                 <View
-                                    key={'profileImage'}
+                                    key={'image'}
                                     style={{
                                         flex: 0.4,
                                         flexDirection: 'row',
@@ -691,10 +684,10 @@ export default class Foundations extends React.Component {
                                                     backgroundColor:
                                                         colors.secondBackground,
                                                 }}
-                                                source={
-                                                    require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
-                                                    //    {uri: this.state.profileImage}
-                                                }
+                                                source={{
+                                                    uri: this.state
+                                                        .profileImage,
+                                                }}
                                                 resizeMode={
                                                     FastImage.resizeMode.cover
                                                 }
@@ -722,7 +715,7 @@ export default class Foundations extends React.Component {
                                     <View style={{flex: 1}} />
                                 </View>
                             </View>
-                        )}
+                        )} */}
                         <VerticalVideoList
                             items={this.state.items}
                             isLoading={this.state.isLoadingAll}
@@ -750,8 +743,8 @@ export default class Foundations extends React.Component {
                                 this.props.navigation.navigate(
                                     'FOUNDATIONSLEVEL',
                                     {
+                                        url: row.mobile_app_url,
                                         level: index + 1,
-                                        data: row,
                                     },
                                 );
                             }}
@@ -781,9 +774,12 @@ export default class Foundations extends React.Component {
                                 });
                             }}
                             type="foundation"
-                            onRestart={() => {}}
+                            onRestart={() => this.onRestartFoundation()}
                         />
                     </Modal>
+                    {!this.state.isLoadingAll && this.state.nextLesson && (
+                        <NextVideo item={this.state.nextLesson} />
+                    )}
                     <NavigationBar currentPage={''} />
                 </View>
             </View>
