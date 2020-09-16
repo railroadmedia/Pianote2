@@ -64,20 +64,5 @@ target 'Pianote2' do
 
   pod 'react-native-intercom', :path => '../node_modules/react-native-intercom'
 
-  target 'Pianote2Tests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
   use_native_modules!
-end
-
-target 'Pianote2-tvOS' do
-  # Pods for Pianote2-tvOS
-
-  target 'Pianote2-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end

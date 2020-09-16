@@ -424,7 +424,7 @@ export default class VideoPlayer extends React.Component {
               />
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans',
                   fontSize: 10 * factorRatio,
                   marginTop: 2 * factorRatio,
                   fontWeight: 'bold',
@@ -445,7 +445,7 @@ export default class VideoPlayer extends React.Component {
             <View style={{ height: 3 * factorVertical }} />
             <Text
               style={{
-                fontFamily: 'OpenSans-Regular',
+                fontFamily: 'OpenSans',
                 fontSize: 13 * factorRatio,
                 color: 'white'
               }}
@@ -455,7 +455,7 @@ export default class VideoPlayer extends React.Component {
             <View style={{ height: 7.5 * factorVertical }} />
             <Text
               style={{
-                fontFamily: 'OpenSans-Regular',
+                fontFamily: 'OpenSans',
                 fontSize: 12 * factorRatio,
                 color: colors.secondBackground
               }}
@@ -502,7 +502,7 @@ export default class VideoPlayer extends React.Component {
                       >
                         <Text
                           style={{
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'OpenSans',
                             fontSize: 10 * factorRatio,
                             color: colors.pianoteRed
                           }}
@@ -550,7 +550,7 @@ export default class VideoPlayer extends React.Component {
                       >
                         <Text
                           style={{
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'OpenSans',
                             fontSize: 10 * factorRatio,
                             color: colors.pianoteRed
                           }}
@@ -589,7 +589,7 @@ export default class VideoPlayer extends React.Component {
               >
                 <Text
                   style={{
-                    fontFamily: 'OpenSans-Regular',
+                    fontFamily: 'OpenSans',
                     fontSize: 12 * factorRatio,
                     color: colors.secondBackground
                   }}
@@ -942,7 +942,7 @@ export default class VideoPlayer extends React.Component {
                         style={{
                           fontSize: 20 * factorRatio,
                           fontWeight: 'bold',
-                          fontFamily: 'OpenSans-Regular',
+                          fontFamily: 'OpenSans',
                           textAlign: 'center',
                           color: 'white'
                         }}
@@ -959,7 +959,7 @@ export default class VideoPlayer extends React.Component {
                           fontSize: 12 * factorRatio,
                           fontWeight: '400',
                           color: 'grey',
-                          fontFamily: 'OpenSans-Regular',
+                          fontFamily: 'OpenSans',
                           textAlign: 'center',
                           color: colors.secondBackground
                         }}
@@ -1156,7 +1156,7 @@ export default class VideoPlayer extends React.Component {
                             style={{
                               paddingLeft: '5%',
                               paddingRight: '5%',
-                              fontFamily: 'OpenSans-Regular',
+                              fontFamily: 'OpenSans',
                               fontSize: 14 * factorRatio,
                               textAlign: 'center',
                               color: 'white'
@@ -1411,7 +1411,7 @@ export default class VideoPlayer extends React.Component {
                                       />
                                       <Text
                                         style={{
-                                          fontFamily: 'OpenSans-Regular',
+                                          fontFamily: 'OpenSans',
                                           fontSize: 10 * factorRatio,
                                           marginTop: 2 * factorRatio,
                                           fontWeight:
@@ -1443,7 +1443,7 @@ export default class VideoPlayer extends React.Component {
                                     />
                                     <Text
                                       style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 13 * factorRatio
                                       }}
                                     >
@@ -1458,7 +1458,7 @@ export default class VideoPlayer extends React.Component {
                                     />
                                     <Text
                                       style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 11 * factorRatio,
                                         color: 'grey'
                                       }}
@@ -1526,8 +1526,7 @@ export default class VideoPlayer extends React.Component {
                                             >
                                               <Text
                                                 style={{
-                                                  fontFamily:
-                                                    'OpenSans-Regular',
+                                                  fontFamily: 'OpenSans',
                                                   fontSize: 9.5 * factorRatio,
                                                   color: 'dimgrey'
                                                 }}
@@ -1589,8 +1588,7 @@ export default class VideoPlayer extends React.Component {
                                             >
                                               <Text
                                                 style={{
-                                                  fontFamily:
-                                                    'OpenSans-Regular',
+                                                  fontFamily: 'OpenSans',
                                                   fontSize: 9.5 * factorRatio,
                                                   color: 'dimgrey'
                                                 }}
@@ -1615,7 +1613,7 @@ export default class VideoPlayer extends React.Component {
                                     <TouchableOpacity onPress={() => {}}>
                                       <Text
                                         style={{
-                                          fontFamily: 'OpenSans-Regular',
+                                          fontFamily: 'OpenSans',
                                           fontSize: 11.5 * factorRatio,
                                           color: '#fb1b2f'
                                         }}
@@ -1692,7 +1690,7 @@ export default class VideoPlayer extends React.Component {
                                     <Text
                                       style={{
                                         textAlign: 'left',
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 13 * factorRatio,
                                         color: 'white',
                                         paddingLeft: 10 * factorHorizontal
@@ -1771,7 +1769,7 @@ export default class VideoPlayer extends React.Component {
                       this.textInputRef = ref;
                     }}
                     style={{
-                      fontFamily: 'OpenSans-Regular',
+                      fontFamily: 'OpenSans',
                       fontSize: 14 * factorRatio,
                       width: fullWidth * 0.6,
                       backgroundColor: colors.mainBackground,

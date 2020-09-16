@@ -27,6 +27,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  for (NSString* family in [UIFont familyNames])
+  {
+      NSLog(@"%@ ff", family);
+
+      for (NSString* name in [UIFont fontNamesForFamilyName: family])
+      {
+          NSLog(@"  %@ fffont", name);
+      }
+  }
   GCKCastOptions* options = [[GCKCastOptions alloc] initWithReceiverApplicationID:kGCKDefaultMediaReceiverApplicationID];
   options.physicalVolumeButtonsWillControlDeviceVolume = YES;
   [GCKCastContext setSharedInstanceWithOptions:options];
