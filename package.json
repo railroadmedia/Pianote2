@@ -55,7 +55,8 @@
         "react-native-webview": "^10.4.0",
         "react-navigation": "^4.0.10",
         "react-navigation-stack": "^1.10.3",
-        "rn-fetch-blob": "^0.12.0"
+        "rn-fetch-blob": "^0.12.0",
+        "RNDownload": "git+https://91725ea701731bceec328406c4c807438eb86d0b:x-oauth-basic@github.com/bogdan-vol/RNDownload.git"
     },
     "devDependencies": {
         "@babel/core": "^7.7.2",
