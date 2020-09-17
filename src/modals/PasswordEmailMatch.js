@@ -83,7 +83,7 @@ class PasswordEmailMatch extends React.Component {
                             <Text
                                 numberOfLines={2}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
                                     textAlign: 'center',
@@ -97,7 +97,7 @@ class PasswordEmailMatch extends React.Component {
                             <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     textAlign: 'center',
                                 }}
@@ -142,8 +142,7 @@ class PasswordEmailMatch extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     fontSize: 17 * factorRatio,
                                                     fontWeight: 'bold',
                                                     color: '#fb1b2f',

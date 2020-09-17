@@ -69,8 +69,9 @@ export default class LoginCredentials extends React.Component {
             Animated.parallel([
                 Animated.timing(this.state.forgotYdelta, {
                     toValue:
-                        (Platform.OS === 'ios' && fullHeight > 811) ||
-                        onTablet ? fullHeight * 0.325 : fullHeight * 0.35,
+                        (Platform.OS === 'ios' && fullHeight > 811) || onTablet
+                            ? fullHeight * 0.325
+                            : fullHeight * 0.35,
                     duration: 250,
                 }),
                 Animated.timing(this.state.pianoteYdelta, {
@@ -129,9 +130,10 @@ export default class LoginCredentials extends React.Component {
 
             // checkmembership status
             let userData = await getUserData();
-            let currentDate = new Date().getTime()/1000
-            let userExpDate = new Date(userData.expirationDate).getTime()/1000
-            
+            let currentDate = new Date().getTime() / 1000;
+            let userExpDate =
+                new Date(userData.expirationDate).getTime() / 1000;
+
             if (userData.isLifetime || currentDate < userExpDate) {
                 await configure({authToken: response.data.token});
                 await this.props.navigation.dispatch(resetAction);
@@ -176,7 +178,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -194,7 +196,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -272,7 +274,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 24 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 textAlign: 'center',
                                 color: 'white',
                             }}
@@ -299,9 +301,9 @@ export default class LoginCredentials extends React.Component {
                                 keyboardAppearance={'dark'}
                                 placeholderTextColor={'grey'}
                                 placeholder={'Email Address'}
-                                onChangeText={(email) => this.setState({email})}
+                                onChangeText={email => this.setState({email})}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                 }}
                             />
@@ -333,12 +335,12 @@ export default class LoginCredentials extends React.Component {
                                         : 'email-address'
                                 }
                                 secureTextEntry={this.state.secureTextEntry}
-                                onChangeText={(password) =>
+                                onChangeText={password =>
                                     this.setState({password})
                                 }
                                 style={{
                                     fontSize: 18 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     flex: 1,
                                 }}
                             />

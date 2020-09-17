@@ -36,7 +36,7 @@ class VerticalVideoList extends React.Component {
         };
     }
 
-    componentWillReceiveProps = async (props) => {
+    componentWillReceiveProps = async props => {
         if (props.isLoading !== this.state.isLoading) {
             await this.setState({
                 isLoading: props.isLoading,
@@ -69,7 +69,7 @@ class VerticalVideoList extends React.Component {
         );
     };
 
-    addToMyList = async (contentID) => {
+    addToMyList = async contentID => {
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = true;
@@ -79,7 +79,7 @@ class VerticalVideoList extends React.Component {
         this.setState({items: this.state.items});
     };
 
-    removeFromMyList = async (contentID) => {
+    removeFromMyList = async contentID => {
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
@@ -171,7 +171,7 @@ class VerticalVideoList extends React.Component {
         );
     };
 
-    like = (contentID) => {
+    like = contentID => {
         console.log(this.state.items);
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
@@ -380,7 +380,7 @@ class VerticalVideoList extends React.Component {
                                             marginBottom: 2 * factorRatio,
                                             textAlign: 'left',
                                             fontWeight: 'bold',
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             color: colors.pianoteRed,
                                         }}
                                     >
@@ -392,7 +392,7 @@ class VerticalVideoList extends React.Component {
                                         fontSize: 15 * factorRatio,
                                         textAlign: 'left',
                                         fontWeight: 'bold',
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color: 'white',
                                     }}
                                 >
@@ -406,7 +406,7 @@ class VerticalVideoList extends React.Component {
                                             fontSize: 12 * factorRatio,
                                             color: colors.secondBackground,
                                             textAlign: 'left',
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             paddingRight: 20 * factorHorizontal,
                                         }}
                                     >
@@ -422,7 +422,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                             }}
                                         >
                                             {Math.floor(row.duration / 60)}{' '}
@@ -438,7 +438,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                             }}
                                         >
                                             Level{' '}
@@ -452,7 +452,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                             }}
                                         >
                                             {row.type.charAt(0).toUpperCase() +
@@ -467,7 +467,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                             }}
                                         >
                                             {' '}
@@ -731,7 +731,7 @@ class VerticalVideoList extends React.Component {
                                         style={{
                                             fontSize: 30 * factorRatio,
                                             color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontWeight:
                                                 Platform.OS == 'ios'
                                                     ? '900'
@@ -783,8 +783,7 @@ class VerticalVideoList extends React.Component {
                                                 style={{
                                                     color: colors.pianoteRed,
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                 }}
                                             >
                                                 RELEVANCE
@@ -867,7 +866,7 @@ class VerticalVideoList extends React.Component {
                                             fontSize: 12 * factorRatio,
                                             marginBottom: 5 * factorVertical,
                                             textAlign: 'left',
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             color: colors.secondBackground,
                                         }}
                                     >
@@ -881,7 +880,7 @@ class VerticalVideoList extends React.Component {
                                                     Platform.OS == 'ios'
                                                         ? '900'
                                                         : 'bold',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 color: colors.secondBackground,
                                             }}
                                         >
@@ -921,9 +920,9 @@ class VerticalVideoList extends React.Component {
                         hideContentModal={() =>
                             this.setState({showModal: false})
                         }
-                        like={(contentID) => this.like(contentID)}
-                        addToMyList={(contentID) => this.addToMyList(contentID)}
-                        removeFromMyList={(contentID) =>
+                        like={contentID => this.like(contentID)}
+                        addToMyList={contentID => this.addToMyList(contentID)}
+                        removeFromMyList={contentID =>
                             this.removeFromMyList(contentID)
                         }
                     />
@@ -952,7 +951,7 @@ class VerticalVideoList extends React.Component {
                             this.setState({showRelevance: false});
                         }}
                         currentSort={this.props.currentSort}
-                        changeSort={(sort) => {
+                        changeSort={sort => {
                             this.props.changeSort(sort);
                         }}
                     />

@@ -85,7 +85,7 @@ class LessonComplete extends React.Component {
                             <Text
                                 key={'lessonComplete!'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 20 * factorRatio,
                                     fontWeight:
                                         Platform.OS == 'ios' ? '700' : 'bold',
@@ -175,7 +175,7 @@ class LessonComplete extends React.Component {
                                 <Text
                                     key={'congrats'}
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 15 * factorRatio,
                                         fontWeight: '300',
                                         textAlign: 'center',
@@ -186,7 +186,7 @@ class LessonComplete extends React.Component {
                                 <View style={{height: 2.5 * factorRatio}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 15 * factorRatio,
                                         fontWeight:
                                             Platform.OS == 'ios'
@@ -200,7 +200,7 @@ class LessonComplete extends React.Component {
                                 <View style={{height: 15 * factorRatio}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 15 * factorRatio,
                                         fontWeight:
                                             Platform.OS == 'ios'
@@ -226,7 +226,7 @@ class LessonComplete extends React.Component {
                             <Text
                                 key={'upNext'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     color: '#a8a8a8',
                                     textAlign: 'center',
@@ -270,7 +270,7 @@ class LessonComplete extends React.Component {
                             <View style={{height: '1%'}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 15 * factorRatio,
                                     fontWeight:
                                         Platform.OS == 'ios' ? '700' : 'bold',

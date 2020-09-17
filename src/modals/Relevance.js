@@ -75,7 +75,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort ==
                                             'Relevance'
@@ -121,7 +121,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Trending'
                                                 ? 'white'
@@ -166,7 +166,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Popular'
                                                 ? 'white'
@@ -211,7 +211,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Newest'
                                                 ? 'white'
@@ -256,7 +256,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Oldest'
                                                 ? 'white'
@@ -294,7 +294,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color: 'white',
                                     }}
                                 >

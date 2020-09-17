@@ -2,12 +2,7 @@
  * Profile
  */
 import React from 'react';
-import {
-    View, 
-    Text, 
-    ScrollView, 
-    TouchableOpacity
-} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import XpRank from 'Pianote2/src/modals/XpRank.js';
@@ -32,7 +27,13 @@ export default class Profile extends React.Component {
     }
 
     componentWillMount = async () => {
-        let data = await AsyncStorage.multiGet(['totalXP', 'rank', 'profileURI', 'displayName', 'joined'])
+        let data = await AsyncStorage.multiGet([
+            'totalXP',
+            'rank',
+            'profileURI',
+            'displayName',
+            'joined',
+        ]);
 
         await this.setState({
             xp: data[0][1],
@@ -44,7 +45,7 @@ export default class Profile extends React.Component {
         });
     };
 
-    changeXP = (num) => {
+    changeXP = num => {
         if (num !== '') {
             num = Number(num);
             if (num < 10000) {
@@ -128,7 +129,7 @@ export default class Profile extends React.Component {
                             <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 15 * factorRatio,
                                     fontWeight:
                                         Platform.OS == 'ios' ? '700' : 'bold',
@@ -137,7 +138,7 @@ export default class Profile extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 15 * factorRatio,
                                         fontWeight:
                                             Platform.OS == 'ios'
@@ -151,7 +152,7 @@ export default class Profile extends React.Component {
                                 Jordan Leibel
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 14 * factorRatio,
                                         fontWeight: '400',
                                     }}
@@ -163,7 +164,7 @@ export default class Profile extends React.Component {
                             <View style={{height: 5 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 13 * factorRatio,
                                     fontWeight: '400',
                                     color: colors.secondBackground,
@@ -242,7 +243,7 @@ export default class Profile extends React.Component {
                                         fontSize: 22 * factorRatio,
                                         fontWeight: 'bold',
                                         color: 'white',
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     My Profile
@@ -327,7 +328,7 @@ export default class Profile extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 30 * factorRatio,
                                             fontWeight:
                                                 Platform.OS == 'ios'
@@ -344,13 +345,14 @@ export default class Profile extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 14 * factorRatio,
                                             textAlign: 'center',
                                             color: colors.secondBackground,
                                         }}
                                     >
-                                        MEMBER SINCE {this.state.memberSince.slice(0,4)}
+                                        MEMBER SINCE{' '}
+                                        {this.state.memberSince.slice(0, 4)}
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}} />
@@ -461,7 +463,7 @@ export default class Profile extends React.Component {
                                     style={{
                                         paddingLeft: fullWidth * 0.05,
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontWeight:
                                             Platform.OS == 'ios'
                                                 ? '800'

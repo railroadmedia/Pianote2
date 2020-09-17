@@ -41,7 +41,7 @@ export default class MyList extends React.Component {
             included_types: ['course'],
         });
 
-        const newContent = response.data.data.map((data) => {
+        const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -82,7 +82,7 @@ export default class MyList extends React.Component {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'LESSONS',
-            onGoBack: (filters) => {
+            onGoBack: filters => {
                 this.setState({
                     items: [],
                     filters:
@@ -99,7 +99,7 @@ export default class MyList extends React.Component {
         });
     };
 
-    removeFromMyList = async (contentID) => {
+    removeFromMyList = async contentID => {
         for (i in this.state.myList) {
             // remove if ID matches
             if (this.state.myList[i].id == contentID) {
@@ -109,7 +109,7 @@ export default class MyList extends React.Component {
         await this.setState({myList: this.state.myList});
     };
 
-    getDuration = (newContent) => {
+    getDuration = newContent => {
         var data = 0;
         try {
             for (i in newContent.post.current_lesson.fields) {
@@ -184,7 +184,7 @@ export default class MyList extends React.Component {
                                 paddingLeft: 12 * factorHorizontal,
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontWeight:
                                     Platform.OS == 'ios' ? '900' : 'bold',
                             }}
@@ -298,7 +298,7 @@ export default class MyList extends React.Component {
                             filters={this.state.filters} // show filter list
                             filterResults={() => this.filterResults()} // apply from filters page
                             outVideos={this.state.outVideos}
-                            removeItem={(contentID) => {
+                            removeItem={contentID => {
                                 this.removeFromMyList(contentID);
                             }}
                             imageRadius={5 * factorRatio} // radius of image shown
@@ -319,7 +319,7 @@ export default class MyList extends React.Component {
                                     : fullHeight * 0.0825
                             } // image height
                             imageWidth={fullWidth * 0.26} // image width
-                            navigator={(row) =>
+                            navigator={row =>
                                 this.props.navigation.navigate('VIDEOPLAYER', {
                                     id: row.id,
                                 })
@@ -343,7 +343,7 @@ export default class MyList extends React.Component {
                     hasBackdrop={false}
                 >
                     <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
+                        onClose={e => this.setState({showModalMenu: e})}
                         menu={this.state.menu}
                         parentPage={this.state.parentPage}
                     />

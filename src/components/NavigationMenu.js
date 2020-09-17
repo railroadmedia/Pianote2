@@ -36,7 +36,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color:
                                     this.props.parentPage == 'LESSONS'
                                         ? 'white'
@@ -73,7 +73,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color:
                                     this.props.parentPage == 'FOUNDATIONS'
                                         ? 'white'
@@ -110,7 +110,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color:
                                     this.props.parentPage == 'COURSES'
                                         ? 'white'
@@ -147,7 +147,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color:
                                     this.props.parentPage == 'SONGS'
                                         ? 'white'
@@ -186,7 +186,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color:
                                     this.props.parentPage == 'STUDENT FOCUS'
                                         ? 'white'

@@ -77,7 +77,7 @@ export default class GetRestarted extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 18 * factorRatio,
                                 textAlign: 'center',
                             }}
@@ -87,7 +87,7 @@ export default class GetRestarted extends React.Component {
                         <View style={{height: 20 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 18 * factorRatio,
                                 textAlign: 'center',
                             }}

@@ -115,7 +115,7 @@ class ReplyNotification extends React.Component {
                         <Text
                             key={'replyUser'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 14 * factorRatio,
                                 textAlign: 'center',
                                 color: colors.secondBackground,
@@ -123,7 +123,7 @@ class ReplyNotification extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 15 * factorRatio,
                                     fontWeight: '600',
                                     textAlign: 'center',
@@ -164,7 +164,7 @@ class ReplyNotification extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 17 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -206,7 +206,7 @@ class ReplyNotification extends React.Component {
                                     <View style={{width: 5 * factorRatio}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 17 * factorRatio,
                                             color: colors.secondBackground,
                                         }}

@@ -59,7 +59,7 @@ export default class VideoPlayerSong extends React.Component {
                             <Text
                                 key={'assignmentNumber'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
@@ -72,7 +72,7 @@ export default class VideoPlayerSong extends React.Component {
                             <Text
                                 key={'assignmentName'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 28 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
@@ -81,7 +81,7 @@ export default class VideoPlayerSong extends React.Component {
                                 {title}
                             </Text>
                             <View style={{height: 10 * factorVertical}} />
-                            {timeCodes?.map((tc) => (
+                            {timeCodes?.map(tc => (
                                 <View
                                     key={'skipTo'}
                                     style={[
@@ -117,8 +117,7 @@ export default class VideoPlayerSong extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     fontWeight: '700',
                                                     color: 'grey',
                                                     fontSize: 12 * factorRatio,
@@ -147,7 +146,7 @@ export default class VideoPlayerSong extends React.Component {
                                         paddingLeft: '5%',
                                         paddingRight: '5%',
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     {description}
@@ -156,7 +155,7 @@ export default class VideoPlayerSong extends React.Component {
                         </>
                     )}
                     <AssignmentResource
-                        ref={(r) => (this.ptzhsvRef = r)}
+                        ref={r => (this.ptzhsvRef = r)}
                         data={sheets}
                         onDoubleTap={() => {
                             this.setState({hideTitles: !this.state.hideTitles});
@@ -187,7 +186,7 @@ export default class VideoPlayerSong extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontWeight: '800',
                                         color: '#fb1b2f',
                                         paddingVertical: 10,
@@ -216,7 +215,7 @@ export default class VideoPlayerSong extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontWeight: '800',
                                     color: 'white',
                                     paddingVertical: 10,

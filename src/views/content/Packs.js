@@ -40,7 +40,7 @@ export default class Packs extends React.Component {
             included_types: ['pack'],
         });
 
-        const newContent = response.data.data.map((data) => {
+        const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -120,7 +120,7 @@ export default class Packs extends React.Component {
                                 paddingLeft: 12 * factorHorizontal,
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontWeight:
                                     Platform.OS == 'ios' ? '900' : 'bold',
                             }}
@@ -1019,7 +1019,7 @@ export default class Packs extends React.Component {
                     hasBackdrop={false}
                 >
                     <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
+                        onClose={e => this.setState({showModalMenu: e})}
                         menu={this.state.menu}
                         parentPage={this.state.parentPage}
                     />

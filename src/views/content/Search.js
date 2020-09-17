@@ -81,7 +81,7 @@ export default class Search extends React.Component {
                                 color: 'white',
                                 fontSize: 18 * factorRatio,
                                 fontWeight: '700',
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                             }}
                         >
                             {row[0]}
@@ -110,7 +110,7 @@ export default class Search extends React.Component {
                         <Text
                             style={{
                                 fontSize: 18 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontWeight: 'bold',
                                 color: 'white',
                             }}
@@ -123,7 +123,7 @@ export default class Search extends React.Component {
         }
     }
 
-    search = async (term) => {
+    search = async term => {
         if (term.length > 0) {
             this.setState({
                 isLoading: true,
@@ -171,8 +171,8 @@ export default class Search extends React.Component {
                     headers: {Authorization: `Bearer ${auth.token}`},
                 },
             )
-                .then((response) => response.json())
-                .then((response) => {
+                .then(response => response.json())
+                .then(response => {
                     console.log(response.data.length == 0, response);
                     if (response.data.length == 0) {
                         this.setState({
@@ -183,7 +183,7 @@ export default class Search extends React.Component {
                         });
                     } else {
                         console.log('RESPONSE: ', response);
-                        newContent = response.data.map((data) => {
+                        newContent = response.data.map(data => {
                             return new ContentModel(data);
                         });
 
@@ -230,13 +230,13 @@ export default class Search extends React.Component {
                         });
                     }
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log('API Search Error: ', error);
                 });
         }
     };
 
-    getDuration = (newContent) => {
+    getDuration = newContent => {
         var data = 0;
         try {
             for (i in newContent.fields) {
@@ -266,7 +266,7 @@ export default class Search extends React.Component {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'LESSONS',
-            onGoBack: (filters) => {
+            onGoBack: filters => {
                 this.setState({
                     items: [],
                     filters:
@@ -325,7 +325,7 @@ export default class Search extends React.Component {
                                             fontSize: 22 * factorRatio,
                                             fontWeight: 'bold',
                                             color: 'white',
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                         }}
                                     >
                                         Search
@@ -388,12 +388,12 @@ export default class Search extends React.Component {
                                             />
                                         </View>
                                         <TextInput
-                                            ref={(searchTerm) => {
+                                            ref={searchTerm => {
                                                 this.searchTerm = searchTerm;
                                             }}
                                             placeholder={'Type your search...'}
                                             placeholderTextColor={'grey'}
-                                            onChangeText={(searchTerm) =>
+                                            onChangeText={searchTerm =>
                                                 this.setState({searchTerm})
                                             }
                                             onSubmitEditing={() =>
@@ -406,7 +406,7 @@ export default class Search extends React.Component {
                                                 flex: 0.9,
                                                 color: 'grey',
                                                 justifyContent: 'center',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 fontSize: 16 * factorRatio,
                                             }}
                                         />
@@ -454,8 +454,7 @@ export default class Search extends React.Component {
                                                             12 * factorRatio,
                                                         fontWeight: 'bold',
                                                         color: '#fb1b2f',
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         zIndex: 3,
                                                         elevation: 0,
                                                     }}
@@ -491,7 +490,7 @@ export default class Search extends React.Component {
                                                 flex: 0.65,
                                                 paddingLeft: fullWidth * 0.05,
                                                 fontWeight: 'bold',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 fontSize: 18 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
@@ -532,8 +531,7 @@ export default class Search extends React.Component {
                                                         color:
                                                             colors.pianoteRed,
                                                         textAlign: 'right',
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         marginTop:
                                                             3 * factorVertical,
                                                     }}
@@ -582,7 +580,7 @@ export default class Search extends React.Component {
                                                     currentSort={
                                                         this.state.currentSort
                                                     }
-                                                    changeSort={(sort) => {
+                                                    changeSort={sort => {
                                                         this.setState({
                                                             currentSort: sort,
                                                             searchResults: [],
@@ -620,10 +618,12 @@ export default class Search extends React.Component {
                                                         this.state.outVideos
                                                     } // if paging and out of videos
                                                     //getVideos={() => this.getContent()} // for paging
-                                                    navigator={(row) =>
+                                                    navigator={row =>
                                                         this.props.navigation.navigate(
                                                             'VIDEOPLAYER',
-                                                            {id: row.id},
+                                                            {
+                                                                id: row.id,
+                                                            },
                                                         )
                                                     }
                                                 />
@@ -658,8 +658,7 @@ export default class Search extends React.Component {
                                                     style={{
                                                         fontSize:
                                                             18 * factorRatio,
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         color: 'white',
                                                         fontWeight: 'bold',
                                                     }}

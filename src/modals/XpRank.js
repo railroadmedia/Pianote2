@@ -86,7 +86,7 @@ class XpRank extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 20 * factorRatio,
                                         fontWeight: 'bold',
                                         textAlign: 'center',
@@ -100,7 +100,7 @@ class XpRank extends React.Component {
                                 <View style={{flex: 1}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 16 * factorRatio,
                                         fontWeight: '300',
                                         textAlign: 'center',
@@ -138,8 +138,7 @@ class XpRank extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         textAlign: 'center',
                                                         fontWeight: '700',
                                                         fontSize:
@@ -152,8 +151,7 @@ class XpRank extends React.Component {
                                                 </Text>
                                                 <Text
                                                     style={{
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         textAlign: 'center',
                                                         fontWeight: '700',
                                                         fontSize:
@@ -172,7 +170,7 @@ class XpRank extends React.Component {
                             <View key={'nextRank'}>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 16 * factorRatio,
                                         color: 'grey',
                                         textAlign: 'center',

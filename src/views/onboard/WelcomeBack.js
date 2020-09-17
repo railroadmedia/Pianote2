@@ -40,12 +40,12 @@ export default class WelcomeBack extends React.Component {
             >
                 <ScrollView
                     horizontal={true}
-                    ref={(ref) => {
+                    ref={ref => {
                         this.myScroll = ref;
                     }}
                     pagingEnabled={true}
                     scrollEnabled={this.state.canScroll}
-                    onMomentumScrollEnd={(e) => this.changeColor(e)}
+                    onMomentumScrollEnd={e => this.changeColor(e)}
                     contentContainerStyle={{flexGrow: 1}}
                 >
                     <View
@@ -121,7 +121,7 @@ export default class WelcomeBack extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                 }}
@@ -131,7 +131,7 @@ export default class WelcomeBack extends React.Component {
                             <View style={{height: 25 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                 }}
@@ -143,7 +143,7 @@ export default class WelcomeBack extends React.Component {
                             <View style={{height: 25 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                 }}
@@ -252,7 +252,7 @@ export default class WelcomeBack extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 18 * factorRatio,
                                             fontWeight: '700',
                                             color: '#fb1b2f',
@@ -337,7 +337,7 @@ export default class WelcomeBack extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                     paddingLeft: fullWidth * 0.05,
@@ -349,7 +349,7 @@ export default class WelcomeBack extends React.Component {
                             <View style={{height: 25 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                     paddingLeft: fullWidth * 0.05,
@@ -364,7 +364,7 @@ export default class WelcomeBack extends React.Component {
                             <View style={{height: 25 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                     paddingLeft: fullWidth * 0.05,
@@ -463,7 +463,7 @@ export default class WelcomeBack extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             textAlign: 'center',
                                             fontSize: 18 * factorRatio,
                                             fontWeight: '700',
@@ -550,7 +550,7 @@ export default class WelcomeBack extends React.Component {
                             <View style={{height: 20 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                     paddingLeft: fullWidth * 0.05,

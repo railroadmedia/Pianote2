@@ -54,7 +54,7 @@ export default class SinglePack extends React.Component {
             parentId: this.state.pack.id,
         });
 
-        const newContent = response.data.data.map((data) => {
+        const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -105,7 +105,7 @@ export default class SinglePack extends React.Component {
         }
     };
 
-    getDuration = (newContent) => {
+    getDuration = newContent => {
         var data = 0;
         try {
             for (i in newContent.post.fields) {
@@ -123,7 +123,7 @@ export default class SinglePack extends React.Component {
         }
     };
 
-    getInstructor = (newContent) => {
+    getInstructor = newContent => {
         var data = '';
         try {
             for (i in newContent.post.current_lesson.fields) {
@@ -152,7 +152,7 @@ export default class SinglePack extends React.Component {
 
             console.log('response get videos: ', response);
 
-            const newContent = response.data.data.map((data) => {
+            const newContent = response.data.data.map(data => {
                 return new ContentModel(data);
             });
 
@@ -209,7 +209,7 @@ export default class SinglePack extends React.Component {
         this.setState({pack: this.state.pack});
     };
 
-    navigate = (row) => {
+    navigate = row => {
         if (row.type == 'pack-bundle-lesson') {
             this.props.navigation.navigate('VIDEOPLAYER', {id: row.id});
         } else {
@@ -411,7 +411,7 @@ export default class SinglePack extends React.Component {
                                         )}
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 color: 'white',
                                                 marginTop: 3 * factorRatio,
                                                 fontSize: 12 * factorRatio,
@@ -493,8 +493,7 @@ export default class SinglePack extends React.Component {
                                             />
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     color: 'white',
                                                     marginTop: 3 * factorRatio,
                                                     fontSize: 13 * factorRatio,
@@ -519,7 +518,7 @@ export default class SinglePack extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         marginTop: 5 * factorVertical,
                                         fontSize: 15 * factorRatio,
                                         color: 'white',
@@ -562,8 +561,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -575,8 +573,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -603,8 +600,7 @@ export default class SinglePack extends React.Component {
                                                             17 * factorRatio,
                                                         textAlign: 'left',
                                                         color: 'white',
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         marginTop:
                                                             10 * factorVertical,
                                                     }}
@@ -617,8 +613,7 @@ export default class SinglePack extends React.Component {
                                                             13 * factorRatio,
                                                         textAlign: 'left',
                                                         color: 'white',
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         marginTop:
                                                             10 * factorVertical,
                                                     }}
@@ -644,8 +639,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -657,8 +651,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -718,8 +711,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -749,8 +741,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -785,8 +776,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -857,7 +847,7 @@ export default class SinglePack extends React.Component {
                                 imageWidth={fullWidth * 0.26} // image width
                                 outVideos={this.state.outVideos} // if paging and out of videos
                                 //getVideos={() => this.getContent()} // for paging
-                                navigator={(row) => this.navigate(row)}
+                                navigator={row => this.navigate(row)}
                             />
                         </View>
                         <View style={{height: 15 * factorVertical}} />
@@ -879,7 +869,7 @@ export default class SinglePack extends React.Component {
                     hasBackdrop={false}
                 >
                     <NavigationMenu
-                        onClose={(e) => {
+                        onClose={e => {
                             this.setState({showModalMenu: e}),
                                 this.forceUpdate();
                         }}
@@ -910,7 +900,7 @@ export default class SinglePack extends React.Component {
                                 showRestartCourse: false,
                             });
                         }}
-                        type="pack"
+                        type='pack'
                         onRestart={() => {}}
                     />
                 </Modal>

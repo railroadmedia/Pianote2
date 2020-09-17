@@ -14,7 +14,7 @@ import FontIcon from 'react-native-vector-icons/FontAwesome';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 
-const getTypeByExtension = (path) => {
+const getTypeByExtension = path => {
     if (path === 'mp3' || path.indexOf('mp3') > 0) return 'audio/mp3';
     if (path === 'pdf' || path.indexOf('pdf') > 0) return 'application/pdf';
     if (path === 'zip' || path.indexOf('zip') > 0) return 'application/zip';
@@ -77,7 +77,7 @@ const downloadRes = (
                                     val: received / total,
                                 });
                         })
-                        .then((res) => {
+                        .then(res => {
                             resolve();
                             if (!notEmmitingProgress)
                                 DeviceEventEmitter.emit('dldProgress', {
@@ -102,7 +102,7 @@ const downloadRes = (
                             else if (!notOppeningAfterDld)
                                 RNFetchBlob.ios.openDocument(res.data);
                         })
-                        .catch((e) => {
+                        .catch(e => {
                             reject();
                             Alert.alert(
                                 `Error while downloading ${resource.resource_name}`,
@@ -129,7 +129,7 @@ const downloadRes = (
                         },
                     );
                     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        RNFS.getFSInfo().then((info) => {
+                        RNFS.getFSInfo().then(info => {
                             let freeSpaceInMb = info.freeSpace / 1024 / 1024;
                             let extension = resource.extension;
                             let hasSpace = false;
@@ -161,7 +161,7 @@ const downloadRes = (
                                                 ),
                                             ),
                                         )
-                                        .then((fetchResp) => {
+                                        .then(fetchResp => {
                                             resolve();
                                             if (!notOppeningAfterDld) {
                                                 const extension = getTypeByExtension(
@@ -181,7 +181,7 @@ const downloadRes = (
                                                                 extension,
                                                             );
                                                         })
-                                                        .catch((e) => {
+                                                        .catch(e => {
                                                             reject();
                                                         });
                                                 } else {
@@ -192,7 +192,7 @@ const downloadRes = (
                                                 }
                                             }
                                         })
-                                        .catch((e) => {
+                                        .catch(e => {
                                             reject();
                                         });
                                 } catch (e) {
@@ -217,7 +217,7 @@ const downloadRes = (
     });
 };
 
-const renderSvgs = (extension) => {
+const renderSvgs = extension => {
     switch (extension) {
         case 'zip':
             return (
@@ -287,7 +287,7 @@ export class DownloadResources extends React.Component {
                                     <Text
                                         style={{
                                             fontSize: 14,
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             color: '#ffffff',
                                         }}
                                     >
@@ -298,7 +298,7 @@ export class DownloadResources extends React.Component {
                                     <Text
                                         style={{
                                             fontSize: 12,
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             color: '#CCD3D3',
                                             marginRight: 10,
                                         }}
@@ -334,7 +334,7 @@ export class DownloadResources extends React.Component {
                         <Text
                             style={{
                                 fontSize: 14,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color: '#ffffff',
                             }}
                         >

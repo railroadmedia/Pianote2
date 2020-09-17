@@ -70,7 +70,7 @@ class ChangeEmail extends React.Component {
                         <Text
                             key={'emailTaken'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 21 * factorRatio,
                                 fontWeight: '600',
                                 textAlign: 'center',
@@ -83,7 +83,7 @@ class ChangeEmail extends React.Component {
                             <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 15 * factorRatio,
                                     fontWeight: '300',
                                     textAlign: 'center',
@@ -115,7 +115,7 @@ class ChangeEmail extends React.Component {
                                         }}
                                     >
                                         <TextInput
-                                            ref={(txt) => {
+                                            ref={txt => {
                                                 this.txt = txt;
                                             }}
                                             placeholder={
@@ -124,13 +124,13 @@ class ChangeEmail extends React.Component {
                                             value={this.state.password}
                                             secureTextEntry={true}
                                             placeholderTextColor={'#9b9b9b'}
-                                            onChangeText={(password) =>
+                                            onChangeText={password =>
                                                 this.setState({password})
                                             }
                                             onSubmitEditing={() => {}}
                                             returnKeyType={'go'}
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 height: fullHeight * 0.06,
                                                 paddingLeft: fullWidth * 0.075,
                                                 width: fullWidth,
@@ -170,8 +170,7 @@ class ChangeEmail extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     fontSize: 15 * factorRatio,
                                                     fontWeight: '700',
                                                     textAlign: 'center',
@@ -203,7 +202,7 @@ class ChangeEmail extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 fontSize: 15 * factorRatio,
                                                 fontWeight: '700',
                                                 color: 'grey',

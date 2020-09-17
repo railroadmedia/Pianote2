@@ -41,7 +41,7 @@ class FullScreenVideoList extends React.Component {
                 </View>
             );
         } else {
-            return this.props.items.map((item) => {
+            return this.props.items.map(item => {
                 return (
                     <View>
                         <TouchableHighlight
@@ -64,7 +64,9 @@ class FullScreenVideoList extends React.Component {
                                     onPress={() => {
                                         this.props.navigation.navigate(
                                             'VIDEOPLAYER',
-                                            {id: item.id},
+                                            {
+                                                id: item.id,
+                                            },
                                         );
                                     }}
                                     style={{
@@ -96,7 +98,7 @@ class FullScreenVideoList extends React.Component {
                                 <Text
                                     numberOfLines={2}
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         textAlign: 'left',
                                         fontWeight:
                                             Platform.OS == 'android'
@@ -112,7 +114,7 @@ class FullScreenVideoList extends React.Component {
                                     <Text
                                         numberOfLines={2}
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             textAlign: 'left',
                                             color: 'grey',
                                             fontSize: 13 * factorRatio,
@@ -186,7 +188,7 @@ class FullScreenVideoList extends React.Component {
                                         Platform.OS == 'android'
                                             ? 'bold'
                                             : '700',
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                 }}
                             >
                                 {this.props.Title}
@@ -198,7 +200,7 @@ class FullScreenVideoList extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         textAlign: 'right',
                                         fontSize: 14.5 * factorRatio,
                                         marginRight: 7.5 * factorRatio,

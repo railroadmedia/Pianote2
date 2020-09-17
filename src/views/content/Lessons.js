@@ -96,7 +96,7 @@ export default class Lessons extends React.Component {
         if (Platform.OS === 'ios') {
             this.removeNotificationListener = firebase
                 .notifications()
-                .onNotification((notification) => {
+                .onNotification(notification => {
                     firebase
                         .notifications()
                         .displayNotification(
@@ -110,7 +110,7 @@ export default class Lessons extends React.Component {
         } else {
             this.removeNotificationListener = firebase
                 .notifications()
-                .onNotification((notification) => {
+                .onNotification(notification => {
                     // Build a channel
                     const channel = new firebase.notifications.Android.Channel(
                         'pianote-channel',
@@ -154,7 +154,7 @@ export default class Lessons extends React.Component {
                 included_types: ['course'],
             });
 
-            const newContent = response.data.data.map((data) => {
+            const newContent = response.data.data.map(data => {
                 return new ContentModel(data);
             });
 
@@ -242,7 +242,7 @@ export default class Lessons extends React.Component {
                 required_user_states: [],
             });
 
-            const newContent = await response.data.data.map((data) => {
+            const newContent = await response.data.data.map(data => {
                 return new ContentModel(data);
             });
 
@@ -299,7 +299,7 @@ export default class Lessons extends React.Component {
 
             console.log(response, error);
 
-            const newContent = response.data.data.map((data) => {
+            const newContent = response.data.data.map(data => {
                 return new ContentModel(data);
             });
 
@@ -353,7 +353,7 @@ export default class Lessons extends React.Component {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'LESSONS',
-            onGoBack: (filters) => {
+            onGoBack: filters => {
                 console.log('filters: ', filters);
                 this.setState({
                     allLessons: [],
@@ -371,14 +371,13 @@ export default class Lessons extends React.Component {
         });
     };
 
-    getDuration = async (newContent) => {
-        if (newContent.post.fields[0].key == 'video') {
-            return newContent.post.fields[0].value.fields[1].value;
-        } else if (newContent.post.fields[1].key == 'video') {
-            return newContent.post.fields[1].value.fields[1].value;
-        } else if (newContent.post.fields[2].key == 'video') {
-            return newContent.post.fields[2].value.fields[1].value;
-        }
+    getDurationFoundations = newContent =>
+        newContent.post.current_lesson.fields
+            .find(f => f.key === 'video')
+            ?.value.fields.find(f => f.key === 'length_in_seconds')?.value;
+
+    getDuration = newContent => {
+        newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;
     };
 
     render() {
@@ -850,7 +849,7 @@ export default class Lessons extends React.Component {
                                     containerBorderWidth={0} // border of box
                                     containerWidth={fullWidth} // width of list
                                     currentSort={this.state.currentSort} // relevance sort
-                                    changeSort={(sort) => {
+                                    changeSort={sort => {
                                         this.setState({
                                             currentSort: sort,
                                             allLessons: [],
@@ -875,11 +874,20 @@ export default class Lessons extends React.Component {
                                     imageWidth={fullWidth * 0.26} // image width
                                     outVideos={this.state.outVideos} // if paging and out of videos
                                     getVideos={() => this.getAllLessons()} // for paging
-                                    navigator={(row) =>
-                                        this.props.navigation.navigate(
-                                            'VIDEOPLAYER',
-                                            {id: row.id},
-                                        )
+                                    navigator={row =>
+                                        row.duration === undefined
+                                            ? this.props.navigation.navigate(
+                                                  'PATHOVERVIEW',
+                                                  {
+                                                      data: row,
+                                                  },
+                                              )
+                                            : this.props.navigation.navigate(
+                                                  'VIDEOPLAYER',
+                                                  {
+                                                      id: row.id,
+                                                  },
+                                              )
                                     }
                                 />
                             )}
@@ -908,7 +916,7 @@ export default class Lessons extends React.Component {
                                     showRestartCourse: false,
                                 })
                             }
-                            type="foundation"
+                            type='foundation'
                             onRestart={() => this.onRestartFoundation()}
                         />
                     </Modal>

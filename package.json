@@ -9,11 +9,6 @@
         "test": "jest",
         "lint": "eslint ."
     },
-    "rnpm": {
-        "assets": [
-            "./assets/fonts"
-        ]
-    },
     "dependencies": {
         "@musora/icons": "^1.0.1",
         "@musora/models": "^0.1.3",
@@ -23,6 +18,8 @@
         "@react-native-community/blur": "^3.3.1",
         "@react-native-community/netinfo": "^5.9.6",
         "@react-native-community/viewpager": "^3.3.0",
+        "RNDownload": "git+https://91725ea701731bceec328406c4c807438eb86d0b:x-oauth-basic@github.com/bogdan-vol/RNDownload.git",
+        "RNVideoEnhanced": "git+https://32b77ba322c29f12b3fd39ca464458b329376c97:x-oauth-basic@github.com/bogdan-vol/RNVideoEnhanced.git",
         "link": "^0.1.5",
         "moment": "^2.27.0",
         "opentype.js": "^1.1.0",
@@ -36,7 +33,7 @@
         "react-native-fs": "^2.16.6",
         "react-native-gesture-handler": "^1.5.0",
         "react-native-image-picker": "^1.1.0",
-        "react-native-intercom": "^17.0.0",
+        "react-native-intercom": "^13.2.0",
         "react-native-keyboard-aware-scroll-view": "^0.9.1",
         "react-native-linear-gradient": "^2.5.6",
         "react-native-modal": "^11.5.3",
@@ -49,7 +46,7 @@
         "react-native-svg": "^9.13.6",
         "react-native-svg-transformer": "^0.13.0",
         "react-native-svg-uri": "^1.2.3",
-        "react-native-vector-icons": "^6.6.0",
+        "react-native-vector-icons": "^7.1.0",
         "react-native-video": "^5.0.2",
         "react-native-view-pdf": "^0.11.0",
         "react-native-webview": "^10.4.0",
@@ -71,5 +68,15 @@
     },
     "jest": {
         "preset": "react-native"
+    },
+    "prettier": {
+        "jsxBracketSameLine": false,
+        "semi": true,
+        "arrowParens": "avoid",
+        "jsxSingleQuote": true,
+        "bracketSpacing": false,
+        "singleQuote": true,
+        "trailingComma": "all",
+        "tabWidth": 4
     }
 }

@@ -117,7 +117,7 @@ class NavMenuHeaders extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 14 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontWeight:
                                             Platform.OS == 'android'
                                                 ? 'bold'
@@ -163,7 +163,7 @@ class NavMenuHeaders extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 14 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontWeight:
                                             Platform.OS == 'android'
                                                 ? 'bold'
@@ -200,7 +200,7 @@ class NavMenuHeaders extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 14 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontWeight:
                                             Platform.OS == 'android'
                                                 ? 'bold'
@@ -234,7 +234,7 @@ class NavMenuHeaders extends React.Component {
                     hasBackdrop={false}
                 >
                     <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
+                        onClose={e => this.setState({showModalMenu: e})}
                         menu={this.state.menu}
                         parentPage={this.props.parentPage}
                     />

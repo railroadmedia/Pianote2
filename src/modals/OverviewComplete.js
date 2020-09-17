@@ -57,7 +57,7 @@ class OverviewComplete extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 25 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
@@ -71,7 +71,7 @@ class OverviewComplete extends React.Component {
                         <View key={'lessonTitle'}>
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '300',
                                     textAlign: 'center',
@@ -82,7 +82,7 @@ class OverviewComplete extends React.Component {
                             <View style={{height: 5 * factorRatio}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
@@ -93,7 +93,7 @@ class OverviewComplete extends React.Component {
                             <View style={{height: 5 * factorRatio}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '800',
                                     textAlign: 'center',

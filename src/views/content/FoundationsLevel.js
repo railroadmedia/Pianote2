@@ -56,7 +56,7 @@ export default class FoundationsLevel extends React.Component {
                 this.props.navigation.state.params.url,
             ),
         );
-        const newContent = response.post.lessons.map((data) => {
+        const newContent = response.post.lessons.map(data => {
             return new ContentModel(data);
         });
 
@@ -322,8 +322,7 @@ export default class FoundationsLevel extends React.Component {
                                             )}
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     color: 'white',
                                                     fontSize: 12 * factorRatio,
                                                 }}
@@ -434,8 +433,7 @@ export default class FoundationsLevel extends React.Component {
                                             />
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     color: 'white',
                                                     marginTop: 3 * factorRatio,
                                                     fontSize: 13 * factorRatio,
@@ -461,7 +459,7 @@ export default class FoundationsLevel extends React.Component {
                                 <View style={{height: 20 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         marginTop: 5 * factorVertical,
                                         fontSize: 15 * factorRatio,
                                         color: 'white',
@@ -474,7 +472,7 @@ export default class FoundationsLevel extends React.Component {
                                 <TouchableOpacity onPress={() => {}} style={{}}>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 15 * factorRatio,
                                             color: colors.pianoteRed,
                                             fontWeight: 'bold',
@@ -519,7 +517,7 @@ export default class FoundationsLevel extends React.Component {
                                     : fullHeight * 0.0825
                             } // image height
                             imageWidth={fullWidth * 0.3} // image width
-                            navigator={(row) => {
+                            navigator={row => {
                                 this.props.navigation.navigate('VIDEOPLAYER', {
                                     url: row.mobile_app_url,
                                 });
@@ -549,7 +547,7 @@ export default class FoundationsLevel extends React.Component {
                                     showRestartCourse: false,
                                 });
                             }}
-                            type="unit"
+                            type='unit'
                             onRestart={() => this.onRestartFoundation()}
                         />
                     </Modal>

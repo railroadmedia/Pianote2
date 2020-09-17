@@ -74,7 +74,7 @@ export default class Course extends React.Component {
                 included_types: ['course'],
             });
 
-            const newContent = response.data.data.map((data) => {
+            const newContent = response.data.data.map(data => {
                 return new ContentModel(data);
             });
 
@@ -130,7 +130,7 @@ export default class Course extends React.Component {
             included_types: ['course'],
         });
 
-        const newContent = response.data.data.map((data) => {
+        const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -178,7 +178,7 @@ export default class Course extends React.Component {
             included_types: ['course'],
         });
 
-        const newContent = response.data.data.map((data) => {
+        const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -220,7 +220,7 @@ export default class Course extends React.Component {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'COURSES',
-            onGoBack: (filters) => {
+            onGoBack: filters => {
                 this.setState({
                     allCourses: [],
                     filters:
@@ -237,7 +237,7 @@ export default class Course extends React.Component {
         });
     };
 
-    getDuration = (newContent) => {
+    getDuration = newContent => {
         var data = 0;
         try {
             for (i in newContent.post.current_lesson.fields) {
@@ -323,7 +323,7 @@ export default class Course extends React.Component {
                                     paddingLeft: 12 * factorHorizontal,
                                     fontSize: 30 * factorRatio,
                                     color: 'white',
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontWeight:
                                         Platform.OS == 'ios' ? '900' : 'bold',
                                 }}
@@ -417,7 +417,7 @@ export default class Course extends React.Component {
                                 imageRadius={5 * factorRatio}
                                 containerBorderWidth={0}
                                 currentSort={this.state.currentSort} // relevance sort
-                                changeSort={(currentSort) => {
+                                changeSort={currentSort => {
                                     this.setState({
                                         currentSort,
                                         allCourses: [],
@@ -443,7 +443,7 @@ export default class Course extends React.Component {
                                 imageWidth={fullWidth * 0.26} // image width
                                 outVideos={this.state.outVideos}
                                 //getVideos={() => this.getContent()}
-                                navigator={(row) =>
+                                navigator={row =>
                                     this.props.navigation.navigate(
                                         'VIDEOPLAYER',
                                         {id: row.id},
@@ -477,7 +477,7 @@ export default class Course extends React.Component {
                                     showRestartCourse: false,
                                 });
                             }}
-                            type="course"
+                            type='course'
                             onRestart={() => {}}
                         />
                     </Modal>

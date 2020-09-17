@@ -66,7 +66,7 @@ class Replies extends React.Component {
         this.keyboardDidHideListener?.remove();
     }
 
-    _keyboardDidShow = async (e) => {
+    _keyboardDidShow = async e => {
         const {height, screenX, screenY, width} = e.endCoordinates;
 
         if (Platform.OS == 'ios') {
@@ -111,14 +111,12 @@ class Replies extends React.Component {
         this.textInputRef.blur();
     };
 
-    deleteReply = (id) => {
+    deleteReply = id => {
         let replies = [...this.state.replies];
         let parentComment = {...this.state.parentComment};
-        parentComment.replies = parentComment.replies.filter(
-            (c) => c.id !== id,
-        );
+        parentComment.replies = parentComment.replies.filter(c => c.id !== id);
         this.setState({
-            replies: replies.filter((c) => c.id !== id),
+            replies: replies.filter(c => c.id !== id),
             parentComment,
         });
         commentsService.deleteComment(id);
@@ -179,7 +177,7 @@ class Replies extends React.Component {
                             />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 10 * factorRatio,
                                     marginTop: 2 * factorRatio,
                                     fontWeight:
@@ -201,7 +199,7 @@ class Replies extends React.Component {
                         <View style={{height: 3 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 13 * factorRatio,
                                 color: 'white',
                             }}
@@ -211,7 +209,7 @@ class Replies extends React.Component {
                         <View style={{height: 7.5 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 11 * factorRatio,
                                 color: 'grey',
                             }}
@@ -270,8 +268,7 @@ class Replies extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans',
                                                         fontSize:
                                                             9.5 * factorRatio,
                                                         color:
@@ -311,7 +308,7 @@ class Replies extends React.Component {
         });
     }
 
-    changeXP = (num) => {
+    changeXP = num => {
         if (num !== '') {
             num = Number(num);
             if (num < 10000) {
@@ -340,9 +337,9 @@ class Replies extends React.Component {
         this.setState({parentComment});
     };
 
-    likeOrDislikeReply = (id) => {
+    likeOrDislikeReply = id => {
         let replies = [...this.state.replies];
-        let reply = replies.find((f) => f.id === id);
+        let reply = replies.find(f => f.id === id);
         if (reply) {
             if (reply.is_liked) {
                 reply.like_count--;
@@ -463,7 +460,7 @@ class Replies extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 fontSize: 10 * factorRatio,
                                                 marginTop: 2 * factorRatio,
                                                 fontWeight:
@@ -492,7 +489,7 @@ class Replies extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 13 * factorRatio,
                                             color: 'white',
                                         }}
@@ -504,7 +501,7 @@ class Replies extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 11 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -585,7 +582,7 @@ class Replies extends React.Component {
                                                             <Text
                                                                 style={{
                                                                     fontFamily:
-                                                                        'OpenSans-Regular',
+                                                                        'OpenSans',
                                                                     fontSize:
                                                                         9.5 *
                                                                         factorRatio,
@@ -666,7 +663,7 @@ class Replies extends React.Component {
                                                             <Text
                                                                 style={{
                                                                     fontFamily:
-                                                                        'OpenSans-Regular',
+                                                                        'OpenSans',
                                                                     fontSize:
                                                                         9.5 *
                                                                         factorRatio,
@@ -787,7 +784,7 @@ class Replies extends React.Component {
                                     <Text
                                         style={{
                                             textAlign: 'left',
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 13 * factorRatio,
                                             color: 'white',
                                             paddingLeft: 10 * factorHorizontal,
@@ -847,11 +844,11 @@ class Replies extends React.Component {
                             />
                             <TextInput
                                 multiline={true}
-                                ref={(ref) => {
+                                ref={ref => {
                                     this.textInputRef = ref;
                                 }}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 14 * factorRatio,
                                     width: fullWidth * 0.6,
                                     backgroundColor: colors.mainBackground,
@@ -861,7 +858,7 @@ class Replies extends React.Component {
                                     this.makeReply(), this.textInputRef.clear();
                                 }}
                                 returnKeyType={'go'}
-                                onChangeText={(comment) =>
+                                onChangeText={comment =>
                                     this.setState({comment})
                                 }
                                 onBlur={() => this.textInputRef.clear()}

@@ -31,7 +31,7 @@ class HorizontalVideoList extends React.Component {
         };
     }
 
-    componentWillReceiveProps = async (props) => {
+    componentWillReceiveProps = async props => {
         if (props.isLoading !== this.state.isLoading) {
             await this.setState({
                 isLoading: props.isLoading,
@@ -40,7 +40,7 @@ class HorizontalVideoList extends React.Component {
         }
     };
 
-    addToMyList = async (contentID) => {
+    addToMyList = async contentID => {
         // change data structure
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
@@ -53,7 +53,7 @@ class HorizontalVideoList extends React.Component {
         addToMyList(contentID);
     };
 
-    removeFromMyList = async (contentID) => {
+    removeFromMyList = async contentID => {
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
@@ -86,7 +86,7 @@ class HorizontalVideoList extends React.Component {
         }
     };
 
-    like = (contentID) => {
+    like = contentID => {
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isLiked = !this.state.items.isLiked;
@@ -222,7 +222,9 @@ class HorizontalVideoList extends React.Component {
                                                 onPress={() => {
                                                     this.props.navigation.navigate(
                                                         'VIDEOPLAYER',
-                                                        {id: item.id},
+                                                        {
+                                                            id: item.id,
+                                                        },
                                                     );
                                                 }}
                                                 style={{
@@ -267,8 +269,7 @@ class HorizontalVideoList extends React.Component {
                                                         Platform.OS == 'ios'
                                                             ? '800'
                                                             : 'bold',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     color: 'white',
                                                 }}
                                             >
@@ -290,7 +291,7 @@ class HorizontalVideoList extends React.Component {
                                                         style={{
                                                             textAlign: 'left',
                                                             fontFamily:
-                                                                'OpenSans-Regular',
+                                                                'OpenSans',
                                                             color:
                                                                 colors.secondBackground,
                                                             fontSize:
@@ -313,7 +314,7 @@ class HorizontalVideoList extends React.Component {
                                                         style={{
                                                             textAlign: 'left',
                                                             fontFamily:
-                                                                'OpenSans-Regular',
+                                                                'OpenSans',
                                                             color:
                                                                 colors.secondBackground,
                                                             fontSize:
@@ -416,11 +417,11 @@ class HorizontalVideoList extends React.Component {
                             hideContentModal={() =>
                                 this.setState({showModal: false})
                             }
-                            like={(contentID) => this.like(contentID)}
-                            addToMyList={(contentID) =>
+                            like={contentID => this.like(contentID)}
+                            addToMyList={contentID =>
                                 this.addToMyList(contentID)
                             }
-                            removeFromMyList={(contentID) =>
+                            removeFromMyList={contentID =>
                                 this.removeFromMyList(contentID)
                             }
                         />

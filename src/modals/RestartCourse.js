@@ -102,7 +102,7 @@ class RestartCourse extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 16 * factorRatio,
                                         textAlign: 'justify',
                                     }}

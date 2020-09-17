@@ -3,15 +3,21 @@
  */
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+
 import Modal from 'react-native-modal';
+import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+
+import StartIcon from '../../components/StartIcon';
+import NavigationBar from '../../components/NavigationBar';
+import VerticalVideoList from '../../components/VerticalVideoList';
+
+import RestartCourse from '../../modals/RestartCourse';
+
+import contentService from '../../services/content.service';
 
 export default class PathOverview extends React.Component {
     static navigationOptions = {header: null};
@@ -20,7 +26,7 @@ export default class PathOverview extends React.Component {
         this.state = {
             data: this.props.navigation.state.params.data,
             level: this.props.navigation.state.params.level,
-            items: this.props.navigation.state.params.items,
+            items: this.props.navigation.state.params.items || [],
             isLiked: this.props.navigation.state.params.data.isLiked,
             isAddedToList: this.props.navigation.state.params.data
                 .isAddedToList,
@@ -28,6 +34,22 @@ export default class PathOverview extends React.Component {
             totalLength: 0,
         };
     }
+
+    componentDidMount() {
+        if (!this.state.items.length) this.getItems();
+    }
+
+    getItems = () =>
+        contentService.getContent(this.state.data.id).then(r =>
+            this.setState({
+                items:
+                    r?.data[0]?.lessons?.map(l => ({
+                        ...l,
+                        thumbnail: l.data?.find(d => d.key === 'thumbnail_url')
+                            ?.value,
+                    })) || [],
+            }),
+        );
 
     like = () => {};
 
@@ -149,7 +171,7 @@ export default class PathOverview extends React.Component {
                                 <Text
                                     numberOfLines={2}
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontWeight: 'bold',
                                         color: 'white',
                                         textAlign: 'center',
@@ -162,7 +184,7 @@ export default class PathOverview extends React.Component {
                                 <Text
                                     numberOfLines={2}
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color: colors.secondBackground,
                                         textAlign: 'center',
                                         fontSize: 14 * factorRatio,
@@ -227,7 +249,7 @@ export default class PathOverview extends React.Component {
                                         )}
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 color: 'white',
                                                 fontSize: 12 * factorRatio,
                                             }}
@@ -295,7 +317,7 @@ export default class PathOverview extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 color: 'white',
                                                 marginTop: 3 * factorRatio,
                                                 fontSize: 13 * factorRatio,
@@ -319,7 +341,7 @@ export default class PathOverview extends React.Component {
                                 <View style={{height: 20 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         marginTop: 5 * factorVertical,
                                         fontSize: 15 * factorRatio,
                                         color: 'white',
@@ -362,8 +384,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -380,8 +401,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -406,8 +426,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -419,8 +438,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -483,8 +501,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -518,8 +535,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -554,8 +570,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -616,7 +631,7 @@ export default class PathOverview extends React.Component {
                                         : fullHeight * 0.0825
                                 } // image height
                                 imageWidth={fullWidth * 0.26} // image width
-                                navigator={(row) =>
+                                navigator={row =>
                                     this.props.navigation.navigate(
                                         'VIDEOPLAYER',
                                         {id: row.id},
@@ -649,7 +664,7 @@ export default class PathOverview extends React.Component {
                                 showRestartCourse: false,
                             });
                         }}
-                        type=""
+                        type=''
                         onRestart={() => {}}
                     />
                 </Modal>

@@ -49,7 +49,7 @@ export default class SongCatalog extends React.Component {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'SONGS',
-            onGoBack: (filters) => {
+            onGoBack: filters => {
                 this.setState({
                     allSongs: [],
                     filters:
@@ -100,7 +100,7 @@ export default class SongCatalog extends React.Component {
             included_types: ['song'],
         });
 
-        const newContent = await response.data.data.map((data) => {
+        const newContent = await response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -148,7 +148,7 @@ export default class SongCatalog extends React.Component {
             included_types: ['song'],
         });
 
-        const newContent = response.data.data.map((data) => {
+        const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -186,7 +186,7 @@ export default class SongCatalog extends React.Component {
         });
     };
 
-    getDuration = async (newContent) => {
+    getDuration = async newContent => {
         if (newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value;
         } else if (newContent.post.fields[1].key == 'video') {
@@ -265,7 +265,7 @@ export default class SongCatalog extends React.Component {
                                 paddingLeft: 12 * factorHorizontal,
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontWeight:
                                     Platform.OS == 'ios' ? '900' : 'bold',
                             }}
@@ -320,7 +320,7 @@ export default class SongCatalog extends React.Component {
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list
                             currentSort={this.state.currentSort} // relevance sort
-                            changeSort={(currentSort) => {
+                            changeSort={currentSort => {
                                 this.setState({
                                     currentSort,
                                     allSongs: [],
@@ -349,7 +349,7 @@ export default class SongCatalog extends React.Component {
                                     ? fullHeight * 0.125
                                     : fullHeight * 0.09
                             } // image height
-                            navigator={(row) => {
+                            navigator={row => {
                                 console.log('song', row);
 
                                 this.props.navigation.navigate('VIDEOPLAYER', {
@@ -375,7 +375,7 @@ export default class SongCatalog extends React.Component {
                     hasBackdrop={false}
                 >
                     <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
+                        onClose={e => this.setState({showModalMenu: e})}
                         menu={this.state.menu}
                         parentPage={this.state.parentPage}
                     />

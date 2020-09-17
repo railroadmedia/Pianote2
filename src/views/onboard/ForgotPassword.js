@@ -136,7 +136,7 @@ export default class forgotPassword extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 16 * factorRatio,
                                 color: 'grey',
                                 textAlign: 'center',
@@ -154,7 +154,7 @@ export default class forgotPassword extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 16 * factorRatio,
                                 color: 'grey',
                                 textAlign: 'center',
@@ -234,7 +234,7 @@ export default class forgotPassword extends React.Component {
                         />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 24 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -255,16 +255,16 @@ export default class forgotPassword extends React.Component {
                             }}
                         >
                             <TextInput
-                                ref={(ref) => {
+                                ref={ref => {
                                     this.textInput = ref;
                                 }}
                                 autoCorrect={false}
                                 keyboardAppearance={'dark'}
                                 placeholderTextColor={'grey'}
                                 placeholder={'Email Address'}
-                                onChangeText={(email) => this.setState({email})}
+                                onChangeText={email => this.setState({email})}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                 }}
                             />

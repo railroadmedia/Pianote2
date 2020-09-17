@@ -25,10 +25,10 @@ export default {
     },
     getAssignWHRatio: async function (assignments) {
         let assignPromises = [];
-        assignments.map((a) => {
+        assignments.map(a => {
             let svgs = [],
                 nsvgs = [];
-            a.data.map((d) => {
+            a.data.map(d => {
                 if (
                     d.key === 'sheet_music_image_url' &&
                     d.value.indexOf('.pdf') > -1
@@ -49,7 +49,7 @@ export default {
                 assignPromises.push(
                     new Promise(async (res, rej) => {
                         let vbPromises = [];
-                        svgs.map((s) => vbPromises.push(fetch(s.value)));
+                        svgs.map(s => vbPromises.push(fetch(s.value)));
 
                         (await Promise.all(vbPromises)).map(
                             async (vbResp, i) => {
@@ -82,7 +82,7 @@ export default {
                                     ns.whRatio = w / h;
                                     res();
                                 },
-                                (e) => {
+                                e => {
                                     ns.whRatio = 1;
                                     res();
                                 },

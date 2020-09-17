@@ -39,7 +39,7 @@ class CheckEmail extends React.Component {
                 <View
                     key={'content'}
                     style={{
-                        height: (onTablet) ? fullHeight * 0.4 : fullHeight * 0.36,
+                        height: onTablet ? fullHeight * 0.4 : fullHeight * 0.36,
                         width: '100%',
                         flexDirection: 'row',
                     }}
@@ -83,7 +83,7 @@ class CheckEmail extends React.Component {
                             <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     textAlign: 'center',
                                 }}
@@ -132,8 +132,7 @@ class CheckEmail extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     fontSize: 17 * factorRatio,
                                                     fontWeight: '700',
                                                     textAlign: 'center',
@@ -183,8 +182,7 @@ class CheckEmail extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     fontSize: 17 * factorRatio,
                                                     fontWeight: '700',
                                                     color: '#fb1b2f',

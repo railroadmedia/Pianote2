@@ -67,7 +67,7 @@ export default class StudentFocusShow extends React.Component {
             included_types: ['song'],
         });
 
-        const newContent = await response.data.data.map((data) => {
+        const newContent = await response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -108,7 +108,7 @@ export default class StudentFocusShow extends React.Component {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'STUDENTFOCUSSHOW',
-            onGoBack: (filters) => {
+            onGoBack: filters => {
                 this.setState({
                     items: [],
                     filters:
@@ -125,7 +125,7 @@ export default class StudentFocusShow extends React.Component {
         });
     };
 
-    getDuration = (newContent) => {
+    getDuration = newContent => {
         var data = 0;
         try {
             for (i in newContent.post.current_lesson.fields) {
@@ -237,7 +237,7 @@ export default class StudentFocusShow extends React.Component {
                                             fontSize: 22 * factorRatio,
                                             fontWeight: 'bold',
                                             color: colors.mainBackground,
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                         }}
                                     >
                                         Filter Courses
@@ -295,7 +295,7 @@ export default class StudentFocusShow extends React.Component {
                             imageRadius={5 * factorRatio}
                             containerBorderWidth={0} // border of box
                             currentSort={this.state.currentSort} // relevance sort
-                            changeSort={(sort) => {
+                            changeSort={sort => {
                                 this.setState({
                                     currentSort: sort,
                                     items: [],
@@ -320,7 +320,7 @@ export default class StudentFocusShow extends React.Component {
                             imageWidth={fullWidth * 0.26}
                             outVideos={this.state.outVideos}
                             //fetchVideos={() => this.getContent()}
-                            navigator={(row) =>
+                            navigator={row =>
                                 this.props.navigation.navigate('VIDEOPLAYER', {
                                     id: row.id,
                                 })

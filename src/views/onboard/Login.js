@@ -48,11 +48,11 @@ export default class Login extends React.Component {
             >
                 <ScrollView
                     horizontal={true}
-                    ref={(ref) => {
+                    ref={ref => {
                         this.myScroll = ref;
                     }}
                     pagingEnabled={true}
-                    onMomentumScrollEnd={(e) => this.changeColor(e)}
+                    onMomentumScrollEnd={e => this.changeColor(e)}
                     contentContainerStyle={{flexGrow: 1}}
                 >
                     <View
@@ -146,7 +146,7 @@ export default class Login extends React.Component {
                             <View style={{height: 7.5 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 28 * factorRatio,
                                     paddingLeft: fullWidth * 0.15,
                                     paddingRight: fullWidth * 0.15,
@@ -161,7 +161,7 @@ export default class Login extends React.Component {
                             <View style={{height: 10 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                     color: 'grey',
@@ -486,7 +486,7 @@ export default class Login extends React.Component {
                             </View>
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 28 * factorRatio,
                                     paddingLeft: fullWidth * 0.05,
                                     paddingRight: fullWidth * 0.05,
@@ -498,7 +498,7 @@ export default class Login extends React.Component {
                                 Always know
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 28 * factorRatio,
                                         paddingLeft: fullWidth * 0.05,
                                         paddingRight: fullWidth * 0.05,
@@ -517,7 +517,7 @@ export default class Login extends React.Component {
                             <View style={{height: 20 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     paddingLeft: fullWidth * 0.05,
                                     paddingRight: fullWidth * 0.05,
                                     fontSize: 18 * factorRatio,
@@ -847,7 +847,7 @@ export default class Login extends React.Component {
                             </View>
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 28 * factorRatio,
                                     paddingLeft: fullWidth * 0.05,
                                     paddingRight: fullWidth * 0.05,
@@ -859,7 +859,7 @@ export default class Login extends React.Component {
                                 Play Your {'\n'}
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 28 * factorRatio,
                                         paddingLeft: fullWidth * 0.05,
                                         paddingRight: fullWidth * 0.05,
@@ -877,7 +877,7 @@ export default class Login extends React.Component {
                             <View style={{height: 20 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     paddingLeft: fullWidth * 0.05,
                                     paddingRight: fullWidth * 0.05,
                                     fontSize: 18 * factorRatio,
@@ -1207,7 +1207,7 @@ export default class Login extends React.Component {
                             </View>
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 28 * factorRatio,
                                     paddingLeft: fullWidth * 0.05,
                                     paddingRight: fullWidth * 0.05,
@@ -1219,7 +1219,7 @@ export default class Login extends React.Component {
                                 Personalized {'\n'}
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 28 * factorRatio,
                                         paddingLeft: fullWidth * 0.05,
                                         paddingRight: fullWidth * 0.05,
@@ -1237,7 +1237,7 @@ export default class Login extends React.Component {
                             <View style={{height: 20 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     paddingLeft: fullWidth * 0.05,
                                     paddingRight: fullWidth * 0.05,
                                     fontSize: 18 * factorRatio,
@@ -1541,7 +1541,7 @@ export default class Login extends React.Component {
                                 <View style={{flex: 1}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 28 * factorRatio,
                                         paddingLeft: fullWidth * 0.05,
                                         paddingRight: fullWidth * 0.05,
@@ -1552,7 +1552,7 @@ export default class Login extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 28 * factorRatio,
                                             paddingLeft: fullWidth * 0.05,
                                             paddingRight: fullWidth * 0.05,
@@ -1570,7 +1570,7 @@ export default class Login extends React.Component {
                                 <View style={{height: 10 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         paddingLeft: fullWidth * 0.05,
                                         paddingRight: fullWidth * 0.05,
                                         fontSize: 18 * factorRatio,
