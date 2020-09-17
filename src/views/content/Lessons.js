@@ -395,32 +395,13 @@ export default class Lessons extends React.Component {
     });
   };
 
-  getDurationFoundations = async newContent => {
-    var data = 0;
-    try {
-      for (i in newContent.post.current_lesson.fields) {
-        if (newContent.post.current_lesson.fields[i].key == 'video') {
-          var data = newContent.post.current_lesson.fields[i].value.fields;
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].key == 'length_in_seconds') {
-              return data[i].value;
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  getDurationFoundations = newContent =>
+    newContent.post.current_lesson.fields
+      .find(f => f.key === 'video')
+      ?.value.fields.find(f => f.key === 'length_in_seconds')?.value;
 
-  getDuration = async newContent => {
-    if (newContent.post.fields[0].key == 'video') {
-      return newContent.post.fields[0].value.fields[1].value;
-    } else if (newContent.post.fields[1].key == 'video') {
-      return newContent.post.fields[1].value.fields[1].value;
-    } else if (newContent.post.fields[2].key == 'video') {
-      return newContent.post.fields[2].value.fields[1].value;
-    }
+  getDuration = newContent => {
+    newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;
   };
 
   render() {
@@ -857,9 +838,13 @@ export default class Lessons extends React.Component {
                   outVideos={this.state.outVideos} // if paging and out of videos
                   getVideos={() => this.getAllLessons()} // for paging
                   navigator={row =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      id: row.id
-                    })
+                    row.duration === undefined
+                      ? this.props.navigation.navigate('PATHOVERVIEW', {
+                          data: row
+                        })
+                      : this.props.navigation.navigate('VIDEOPLAYER', {
+                          id: row.id
+                        })
                   }
                 />
               )}

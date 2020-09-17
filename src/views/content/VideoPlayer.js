@@ -16,6 +16,8 @@ import moment from 'moment';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import Video from 'RNVideoEnhanced';
+
 import Replies from '../../components/Replies.js';
 import CommentSort from '../../modals/CommentSort.js';
 import SoundSlice from '../../components/SoundSlice.js';
@@ -23,11 +25,9 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import LessonComplete from '../../modals/LessonComplete.js';
-import QualitySettings from '../../modals/QualitySettings.js';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-community/async-storage';
 import Resources from 'Pianote2/src/assets/img/svgs/resources.svg';
-import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -68,7 +68,6 @@ export default class VideoPlayer extends React.Component {
       showSoundSlice: false,
       showMakeComment: false,
       showInfo: false,
-      showVideoPlayerOptions: false,
       showAssignmentComplete: false,
       showOverviewComplete: false,
       showQualitySettings: false,
@@ -238,6 +237,8 @@ export default class VideoPlayer extends React.Component {
         previousLesson: content.post.previous_lesson
           ? new ContentModel(content.post.previous_lesson)
           : null,
+        mp3s: content.post.mp3s || [],
+        video_playback_endpoints: content.post.video_playback_endpoints,
         resources:
           content.post.resources && content.post.resources.length > 0
             ? Object.keys(content.post.resources).map(key => {
@@ -868,26 +869,109 @@ export default class VideoPlayer extends React.Component {
           >
             {this.state.showVideo && (
               <>
-                <View
-                  style={{
-                    height: isNotch ? fullHeight * 0.05 : fullHeight * 0.03
-                  }}
-                />
-                <View
-                  key={'video'}
-                  style={{
-                    height: onTablet ? fullHeight * 0.375 : fullHeight * 0.275,
-                    backgroundColor: colors.mainBackground
-                  }}
-                >
-                  <FastImage
-                    style={{ flex: 1 }}
-                    source={{
-                      uri: this.state.lessonImage
-                    }}
-                    resizeMode={FastImage.resizeMode.stretch}
+                {this.state.video_playback_endpoints ? (
+                  <Video
+                    quality={''}
+                    offlinePath={''}
+                    aCasting={false}
+                    gCasting={false}
+                    connection={true}
+                    toSupport={() => {}}
+                    onRefresh={() => {}}
+                    maxFontMultiplier={1}
+                    onFullscreen={() => {}}
+                    goToNextLesson={() => {}}
+                    onQualityChange={() => {}}
+                    onACastingChange={() => {}}
+                    onGCastingChange={() => {}}
+                    ref={r => (this.video = r)}
+                    goToPreviousLesson={() => {}}
+                    onOrientationChange={() => {}}
+                    type={false ? 'audio' : 'video'}
+                    onUpdateVideoProgress={() => {}}
+                    content={this.state || mp3VideoMock}
+                    onBack={this.props.navigation.goBack}
+                    styles={
+                      {
+                        //   smallPlayerControls: {
+                        //     width: 20,
+                        //     height: 20,
+                        //     fill: 'green',
+                        //     color: 'green',
+                        //     tintColor: 'green',
+                        //   },
+                        //   largePlayerControls: {
+                        //     width: 40,
+                        //     height: 40,
+                        //     fill: 'green',
+                        //     color: 'green',
+                        //     tintColor: 'green',
+                        //   },
+                        //   mp3ListPopup: {
+                        //     background: 'red',
+                        //     borderBottomColor: 'green',
+                        //     selectedTextColor: 'green',
+                        //     unselectedTextColor: 'black',
+                        //     checkIcon: {
+                        //       width: 20,
+                        //       height: 20,
+                        //       fill: 'green',
+                        //     },
+                        //   },
+                        //   mp3TogglerTextColor: 'green',
+                        //   afterTimerCursorBackground: '#2F3334',
+                        //   timerCursorBackground: colors.pianoteRed,
+                        //   beforeTimerCursorBackground: colors.pianoteRed,
+                        //   timerText: {
+                        //     left: {padding: 10, color: 'green'},
+                        //     right: {padding: 10, color: 'red'},
+                        //   },
+                        //   settings: {
+                        //     background: 'purple',
+                        //     separatorColor: 'red',
+                        //     optionsBorderColor: 'red',
+                        //     selectedOptionTextColor: 'red',
+                        //     unselectedOptionTextColor: 'green',
+                        //     save: {background: 'green', color: 'yellow'},
+                        //     cancel: {background: 'yellow', color: 'green'},
+                        //     downloadIcon: {width: 20, height: 20, fill: 'pink'},
+                        //   },
+                        //   alert: {
+                        //     background: 'purple',
+                        //     titleTextColor: 'blue',
+                        //     subtitleTextColor: 'green',
+                        //     reloadLesson: {color: 'green', background: 'blue'},
+                        //     contactSupport: {color: 'green', background: 'blue'},
+                        //   },
+                      }
+                    }
                   />
-                </View>
+                ) : (
+                  <>
+                    <View
+                      style={{
+                        height: isNotch ? fullHeight * 0.05 : fullHeight * 0.03
+                      }}
+                    />
+                    <View
+                      key={'video'}
+                      style={{
+                        height: onTablet
+                          ? fullHeight * 0.375
+                          : fullHeight * 0.275,
+                        backgroundColor: colors.mainBackground
+                      }}
+                    >
+                      <FastImage
+                        style={{ flex: 1 }}
+                        source={{
+                          uri: this.state.lessonImage
+                        }}
+                        resizeMode={FastImage.resizeMode.stretch}
+                      />
+                    </View>
+                  </>
+                )}
               </>
             )}
             <View key={'belowVideo'} style={{ flex: 1 }}>
@@ -1991,67 +2075,6 @@ export default class VideoPlayer extends React.Component {
                 </View>
               </View>
             )}
-            {this.state.showVideo && (
-              <View
-                key={'goBackIcon'}
-                style={[
-                  styles.centerContent,
-                  {
-                    position: 'absolute',
-                    left: 10 * factorHorizontal,
-                    top: isNotch ? 55 * factorVertical : 45 * factorVertical,
-                    height: 35 * factorRatio,
-                    width: 35 * factorRatio,
-                    borderRadius: 100,
-                    zIndex: 5
-                  }
-                ]}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.goBack();
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: '100%',
-                      width: '100%',
-                      borderRadius: 100,
-                      backgroundColor: 'black',
-                      opacity: 0.4
-                    }
-                  ]}
-                >
-                  <EntypoIcon
-                    name={'chevron-thin-left'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.goBack();
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: '100%',
-                      width: '100%',
-                      borderRadius: 100,
-                      position: 'absolute',
-                      top: 0,
-                      left: 0
-                    }
-                  ]}
-                >
-                  <EntypoIcon
-                    name={'chevron-thin-left'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
           </View>
         ) : (
           <ActivityIndicator
@@ -2121,56 +2144,6 @@ export default class VideoPlayer extends React.Component {
                     Platform.OS === 'ios' ? (this.modalDismissed = res) : res()
                 )
               );
-            }}
-          />
-        </Modal>
-        <Modal
-          key={'VideoPlayerOptions'}
-          isVisible={this.state.showVideoPlayerOptions}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: fullHeight,
-              width: fullWidth
-            }
-          ]}
-          animation={'slideInUp'}
-          animationInTiming={350}
-          animationOutTiming={350}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <VideoPlayerOptions
-            hideVideoPlayerOptions={() => {
-              this.setState({
-                showVideoPlayerOptions: false
-              });
-            }}
-          />
-        </Modal>
-        <Modal
-          key={'QualitySettings'}
-          isVisible={this.state.showQualitySettings}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: fullHeight,
-              width: fullWidth
-            }
-          ]}
-          animation={'slideInUp'}
-          animationInTiming={350}
-          animationOutTiming={350}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <QualitySettings
-            hideQualitySettings={() => {
-              this.setState({
-                showQualitySettings: false
-              });
             }}
           />
         </Modal>
