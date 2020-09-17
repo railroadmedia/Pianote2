@@ -4,7 +4,7 @@ import {userLogin, configure} from '@musora/services';
 export default {
     tryCall: async function (url, method, body) {
         try {
-            // if (body) body = body ? JSON.stringify(body) : null;
+            if (body) body = body ? JSON.stringify(body) : null;
             let token = await AsyncStorage.getItem('token');
             token = `Bearer ${JSON.parse(token)}`;
 

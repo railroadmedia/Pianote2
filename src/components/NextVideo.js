@@ -21,7 +21,8 @@ class NextVideo extends React.Component {
     render = () => {
         const {progress_percent} = this.props.item.post;
         return (
-            <View
+            <TouchableOpacity
+                onPress={this.props.onNextLesson}
                 style={{
                     backgroundColor: colors.mainBackground,
                     borderBottomColor: colors.secondBackground,
@@ -97,9 +98,8 @@ class NextVideo extends React.Component {
                             paddingRight: fullWidth * 0.035,
                         }}
                     >
-                        <TouchableOpacity
+                        <View
                             key={'thumbnail'}
-                            onPress={() => {}}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}
                         >
@@ -127,7 +127,7 @@ class NextVideo extends React.Component {
                                 />
                             </View>
                             <View style={{flex: 1}} />
-                        </TouchableOpacity>
+                        </View>
                         <View
                             key={'titles'}
                             style={{
@@ -162,7 +162,7 @@ class NextVideo extends React.Component {
                             </View>
                             <View style={{flex: 1}} />
                         </View>
-                        <TouchableOpacity
+                        <View
                             key={'play'}
                             onPress={() => {}}
                             style={[
@@ -179,11 +179,11 @@ class NextVideo extends React.Component {
                                 size={30 * factorRatio}
                                 color={colors.pianoteRed}
                             />
-                        </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
                 <View style={{height: 15 * factorVertical}} />
-            </View>
+            </TouchableOpacity>
         );
     };
 }

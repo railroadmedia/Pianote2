@@ -24,6 +24,7 @@ import {
     unlikeContent,
     resetProgress,
 } from 'Pianote2/src/services/UserActions.js';
+import ResetIcon from '../../components/ResetIcon';
 
 export default class Foundations extends React.Component {
     static navigationOptions = {header: null};
@@ -61,7 +62,6 @@ export default class Foundations extends React.Component {
         const response = new ContentModel(
             await foundationsService.getFoundation('foundations-2019'),
         );
-        console.log('getcontent level', response);
         const newContent = response.post.units.map((data) => {
             return new ContentModel(data);
         });
@@ -238,7 +238,29 @@ export default class Foundations extends React.Component {
                                     FOUNDATIONS
                                 </Text>
                                 <View style={{flex: 0.6}} />
-                                {this.state.isStarted && (
+                                {this.state.isCompleted ? (
+                                    <ResetIcon
+                                        pxFromTop={
+                                            onTablet
+                                                ? fullHeight * 0.32 * 0.725
+                                                : fullHeight * 0.305 * 0.725
+                                        }
+                                        buttonHeight={
+                                            onTablet
+                                                ? fullHeight * 0.06
+                                                : Platform.OS == 'ios'
+                                                ? fullHeight * 0.05
+                                                : fullHeight * 0.055
+                                        }
+                                        pxFromLeft={(fullWidth * 0.5) / 2}
+                                        buttonWidth={fullWidth * 0.5}
+                                        pressed={() =>
+                                            this.setState({
+                                                showRestartCourse: true,
+                                            })
+                                        }
+                                    />
+                                ) : this.state.isStarted ? (
                                     <ContinueIcon
                                         pxFromTop={
                                             onTablet
@@ -254,43 +276,45 @@ export default class Foundations extends React.Component {
                                         }
                                         pxFromLeft={(fullWidth * 0.5) / 2}
                                         buttonWidth={fullWidth * 0.5}
-                                        pressed={() => {
+                                        pressed={() =>
                                             this.props.navigation.navigate(
                                                 'VIDEOPLAYER',
                                                 {
                                                     url: this.state.nextLesson
-                                                        .post.url,
+                                                        .post.mobile_app_url,
                                                 },
-                                            );
-                                        }}
-                                    />
-                                )}
-                                {!this.state.isStarted && (
-                                    <StartIcon
-                                        pxFromTop={
-                                            onTablet
-                                                ? fullHeight * 0.32 * 0.725
-                                                : fullHeight * 0.305 * 0.725
+                                            )
                                         }
-                                        buttonHeight={
-                                            onTablet
-                                                ? fullHeight * 0.06
-                                                : Platform.OS == 'ios'
-                                                ? fullHeight * 0.05
-                                                : fullHeight * 0.055
-                                        }
-                                        pxFromLeft={(fullWidth * 0.5) / 2}
-                                        buttonWidth={fullWidth * 0.5}
-                                        pressed={() => {
-                                            this.props.navigation.navigate(
-                                                'VIDEOPLAYER',
-                                                {
-                                                    url: this.state.nextLesson
-                                                        .post.url,
-                                                },
-                                            );
-                                        }}
                                     />
+                                ) : (
+                                    !this.state.isStarted && (
+                                        <StartIcon
+                                            pxFromTop={
+                                                onTablet
+                                                    ? fullHeight * 0.32 * 0.725
+                                                    : fullHeight * 0.305 * 0.725
+                                            }
+                                            buttonHeight={
+                                                onTablet
+                                                    ? fullHeight * 0.06
+                                                    : Platform.OS == 'ios'
+                                                    ? fullHeight * 0.05
+                                                    : fullHeight * 0.055
+                                            }
+                                            pxFromLeft={(fullWidth * 0.5) / 2}
+                                            buttonWidth={fullWidth * 0.5}
+                                            pressed={() =>
+                                                this.props.navigation.navigate(
+                                                    'VIDEOPLAYER',
+                                                    {
+                                                        url: this.state
+                                                            .nextLesson.post
+                                                            .mobile_app_url,
+                                                    },
+                                                )
+                                            }
+                                        />
+                                    )
                                 )}
                                 <View
                                     key={'info'}
@@ -778,7 +802,15 @@ export default class Foundations extends React.Component {
                         />
                     </Modal>
                     {!this.state.isLoadingAll && this.state.nextLesson && (
-                        <NextVideo item={this.state.nextLesson} />
+                        <NextVideo
+                            item={this.state.nextLesson}
+                            onNextLesson={() =>
+                                this.props.navigation.navigate('VIDEOPLAYER', {
+                                    url: this.state.nextLesson.post
+                                        .mobile_app_url,
+                                })
+                            }
+                        />
                     )}
                     <NavigationBar currentPage={''} />
                 </View>

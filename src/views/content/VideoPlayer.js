@@ -47,6 +47,7 @@ import OverviewComplete from '../../modals/OverviewComplete.js';
 import VideoPlayerSong from './VideoPlayerSong.js';
 import AssignmentComplete from '../../modals/AssignmentComplete.js';
 import RestartCourse from '../../modals/RestartCourse.js';
+import foundationsService from '../../services/foundations.service.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -59,6 +60,7 @@ export default class VideoPlayer extends React.Component {
         super(props);
         this.state = {
             id: this.props.navigation.state.params.id,
+            url: this.props.navigation.state.params.url,
             commentSort: 'Popular', // Newest, Oldest, Mine, Popular
             profileImage: '',
             isLoadingAll: true,
@@ -121,8 +123,7 @@ export default class VideoPlayer extends React.Component {
         );
         this.limit = 10;
         this.userId = JSON.parse(await AsyncStorage.getItem('userId'));
-        this.getContent(this.state.id);
-        this.fetchComments();
+        this.getContent();
     };
 
     componentWillUnmount() {
@@ -154,9 +155,16 @@ export default class VideoPlayer extends React.Component {
     };
 
     getContent = async () => {
-        let content = await contentService.getContent(this.state.id);
-        content = new ContentModel(content.data[0]);
-
+        let content;
+        if (this.props.navigation.state.params.url) {
+            content = await foundationsService.getUnitLesson(this.state.url);
+        } else {
+            content = await contentService.getContent(this.state.id);
+            content = content.data[0];
+        }
+        console.log(content);
+        content = new ContentModel(content);
+        this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map((rl) => {
             return new ContentModel(rl);
         });
@@ -176,8 +184,9 @@ export default class VideoPlayer extends React.Component {
                     xp: assignments[a].xp,
                     progress:
                         parseInt(
-                            Object.values(assignments[a].post.user_progress)[0]
-                                .progress_percent,
+                            Object.values(
+                                assignments[a].post.user_progress,
+                            )?.[0].progress_percent,
                         ) || 0,
                     slug: assignments[a].post.fields?.find(
                         (f) => f.key === 'soundslice_slug',
@@ -214,6 +223,7 @@ export default class VideoPlayer extends React.Component {
         this.setState(
             {
                 id: content.id,
+                url: content.post.mobile_app_url,
                 type: content.type,
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
@@ -228,7 +238,7 @@ export default class VideoPlayer extends React.Component {
                 isLiked: content.isLiked,
                 progress:
                     parseInt(
-                        Object.values(content.post.user_progress)[0]
+                        Object.values(content.post.user_progress)?.[0]
                             .progress_percent,
                     ) || 0,
                 isAddedToMyList: content.isAddedToList,
@@ -303,11 +313,11 @@ export default class VideoPlayer extends React.Component {
         if (path === 'application/zip') return 'zip';
     };
 
-    fetchComments = async () => {
+    fetchComments = async (id) => {
         this.setState({commentsLoading: true});
 
         let comments = await commentsService.getComments(
-            this.state.id,
+            id || this.state.id,
             this.state.commentSort,
             10,
         );
@@ -315,10 +325,11 @@ export default class VideoPlayer extends React.Component {
         await this.setState({commentsLoading: false, comments: comments.data});
     };
 
-    switchLesson(id) {
+    switchLesson(id, url) {
         this.setState(
             {
                 id,
+                url,
                 isLoadingAll: true,
                 assignmentList: [],
                 relatedLessons: [],
@@ -1434,6 +1445,7 @@ export default class VideoPlayer extends React.Component {
                                                     navigator={(row) =>
                                                         this.switchLesson(
                                                             row.id,
+                                                            row.mobile_app_url,
                                                         )
                                                     }
                                                 />
@@ -2265,6 +2277,9 @@ export default class VideoPlayer extends React.Component {
                                                     this.switchLesson(
                                                         this.state
                                                             .previousLesson.id,
+                                                        this.state
+                                                            .previousLesson.post
+                                                            .mobile_app_url,
                                                     )
                                                 }
                                                 style={[
@@ -2367,6 +2382,9 @@ export default class VideoPlayer extends React.Component {
                                                     this.switchLesson(
                                                         this.state.nextLesson
                                                             .id,
+                                                        this.state.nextLesson
+                                                            .post
+                                                            .mobile_app_url,
                                                     )
                                                 }
                                                 style={[
@@ -2636,7 +2654,11 @@ export default class VideoPlayer extends React.Component {
                                 }}
                                 onGoToNext={() => {
                                     this.setState({showLessonComplete: false});
-                                    this.switchLesson(this.state.nextLesson.id);
+                                    this.switchLesson(
+                                        this.state.nextLesson.id,
+                                        this.state.nextLesson.post
+                                            .mobile_app_url,
+                                    );
                                 }}
                             />
                         </Modal>

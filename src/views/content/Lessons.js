@@ -6,7 +6,7 @@ import {ContentModel} from '@musora/models';
 import {getContent} from '@musora/services';
 import FastImage from 'react-native-fast-image';
 import {View, Text, ScrollView, Platform} from 'react-native';
-import {getContentChildById} from '@musora/services';
+import Modal from 'react-native-modal';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -17,7 +17,11 @@ import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import firebase from 'react-native-firebase';
+import foundationsService from '../../services/foundations.service';
+import ResetIcon from '../../components/ResetIcon';
+import {resetProgress} from 'Pianote2/src/services/UserActions.js';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -35,9 +39,11 @@ export default class Lessons extends React.Component {
             progressLessons: [],
             newLessons: [],
             allLessons: [],
-            foundations: [],
             currentLesson: [],
-            startedFoundations: false, // for showing start icon or continue
+            foundationIsStarted: false, // for showing start icon or continue
+            foundationIsCompleted: false,
+            foundationNextLesson: null,
+            showRestartCourse: false,
             page: 0,
             showModalMenu: false, // show navigation menu
             lessonsStarted: true, // for showing continue lessons
@@ -68,7 +74,6 @@ export default class Lessons extends React.Component {
             lessonsStarted: false,
         });
 
-        // get foundations data
         this.getFoundations();
     };
 
@@ -107,13 +112,11 @@ export default class Lessons extends React.Component {
                 .notifications()
                 .onNotification((notification) => {
                     // Build a channel
-                    console.log('NOTIFICAION', notification);
                     const channel = new firebase.notifications.Android.Channel(
                         'pianote-channel',
                         'Pianote Channel',
                         firebase.notifications.Android.Importance.Max,
                     ).setDescription('Pianote notification channel');
-                    console.log('chanel', channel);
                     // Create the channel
                     firebase.notifications().android.createChannel(channel);
                     notification.android.setChannelId(channel.channelId);
@@ -129,59 +132,14 @@ export default class Lessons extends React.Component {
     };
 
     getFoundations = async () => {
-        // get highest level foundations content
-        const {response, error} = await getContentChildById({
-            parentId: '215952',
+        const response = new ContentModel(
+            await foundationsService.getFoundation('foundations-2019'),
+        );
+        this.setState({
+            foundationIsStarted: response.isStarted,
+            foundationIsCompleted: response.isCompleted,
+            foundationNextLesson: response.post.next_lesson,
         });
-
-        // return structured data
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data);
-        });
-
-        try {
-            // create simplified data structure
-            items = [];
-            for (i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDurationFoundations(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
-            }
-
-            // check if any items started
-            var startedFoundations = false;
-            for (i in items) {
-                if (items[i].isStarted == true) {
-                    startedFoundations == true;
-                }
-            }
-
-            this.setState({
-                startedFoundations,
-                foundations: [...this.state.foundations, ...items],
-            });
-        } catch (error) {
-            console.log(error);
-        }
     };
 
     getNewLessons = async () => {
@@ -383,6 +341,14 @@ export default class Lessons extends React.Component {
         }
     };
 
+    onRestartFoundation = async () => {
+        resetProgress(this.state.id);
+        this.setState({
+            foundationIsStarted: false,
+            foundationIsCompleted: false,
+        });
+    };
+
     filterResults = async () => {
         this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
@@ -403,25 +369,6 @@ export default class Lessons extends React.Component {
                     this.forceUpdate();
             },
         });
-    };
-
-    getDurationFoundations = async (newContent) => {
-        var data = 0;
-        try {
-            for (i in newContent.post.current_lesson.fields) {
-                if (newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data =
-                        newContent.post.current_lesson.fields[i].value.fields;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].key == 'length_in_seconds') {
-                            return data[i].value;
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
     };
 
     getDuration = async (newContent) => {
@@ -557,7 +504,29 @@ export default class Lessons extends React.Component {
                                 </Text>
                                 <View style={{flex: 0.6}} />
 
-                                {!this.state.startedFoundations && (
+                                {this.state.foundationIsCompleted ? (
+                                    <ResetIcon
+                                        pxFromTop={
+                                            onTablet
+                                                ? fullHeight * 0.32 * 0.725
+                                                : fullHeight * 0.305 * 0.725
+                                        }
+                                        buttonHeight={
+                                            onTablet
+                                                ? fullHeight * 0.06
+                                                : Platform.OS == 'ios'
+                                                ? fullHeight * 0.05
+                                                : fullHeight * 0.055
+                                        }
+                                        pxFromLeft={fullWidth * 0.065}
+                                        buttonWidth={fullWidth * 0.42}
+                                        pressed={() =>
+                                            this.setState({
+                                                showRestartCourse: true,
+                                            })
+                                        }
+                                    />
+                                ) : !this.state.foundationIsStarted ? (
                                     <StartIcon
                                         pxFromTop={
                                             onTablet
@@ -573,18 +542,18 @@ export default class Lessons extends React.Component {
                                         }
                                         pxFromLeft={fullWidth * 0.065}
                                         buttonWidth={fullWidth * 0.42}
-                                        pressed={() => {
+                                        pressed={() =>
                                             this.props.navigation.navigate(
                                                 'VIDEOPLAYER',
                                                 {
-                                                    id: this.state.allLessons[0]
-                                                        .id,
+                                                    url: this.state
+                                                        .foundationNextLesson
+                                                        .mobile_app_url,
                                                 },
-                                            );
-                                        }}
+                                            )
+                                        }
                                     />
-                                )}
-                                {this.state.startedFoundations && (
+                                ) : (
                                     <ContinueIcon
                                         pxFromTop={
                                             onTablet
@@ -600,9 +569,16 @@ export default class Lessons extends React.Component {
                                         }
                                         pxFromLeft={fullWidth * 0.065}
                                         buttonWidth={fullWidth * 0.42}
-                                        pressed={() => {
-                                            // this.props.navigation.navigate('VIDEOPLAYER')
-                                        }}
+                                        pressed={() =>
+                                            this.props.navigation.navigate(
+                                                'VIDEOPLAYER',
+                                                {
+                                                    url: this.state
+                                                        .foundationNextLesson
+                                                        .mobile_app_url,
+                                                },
+                                            )
+                                        }
                                     />
                                 )}
                                 <MoreInfoIcon
@@ -623,10 +599,6 @@ export default class Lessons extends React.Component {
                                     pressed={() => {
                                         this.props.navigation.navigate(
                                             'FOUNDATIONS',
-                                            {
-                                                foundations: this.state
-                                                    .foundations,
-                                            },
                                         );
                                     }}
                                 />
@@ -913,6 +885,33 @@ export default class Lessons extends React.Component {
                             )}
                         </View>
                     </ScrollView>
+                    <Modal
+                        key={'restartCourse'}
+                        isVisible={this.state.showRestartCourse}
+                        style={[
+                            styles.centerContent,
+                            {
+                                margin: 0,
+                                height: fullHeight,
+                                width: fullWidth,
+                            },
+                        ]}
+                        animation={'slideInUp'}
+                        animationInTiming={250}
+                        animationOutTiming={250}
+                        coverScreen={true}
+                        hasBackdrop={true}
+                    >
+                        <RestartCourse
+                            hideRestartCourse={() =>
+                                this.setState({
+                                    showRestartCourse: false,
+                                })
+                            }
+                            type="foundation"
+                            onRestart={() => this.onRestartFoundation()}
+                        />
+                    </Modal>
                     <NavigationBar currentPage={'LESSONS'} />
                 </View>
             </View>

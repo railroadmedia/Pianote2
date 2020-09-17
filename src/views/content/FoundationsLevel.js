@@ -6,7 +6,6 @@ import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import {getContentChildById} from '@musora/services';
 import NextVideo from 'Pianote2/src/components/NextVideo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -18,6 +17,12 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import foundationsService from '../../services/foundations.service';
+import {
+    addToMyList,
+    removeFromMyList,
+    resetProgress,
+} from 'Pianote2/src/services/UserActions.js';
+import ResetIcon from '../../components/ResetIcon';
 
 export default class FoundationsLevel extends React.Component {
     static navigationOptions = {header: null};
@@ -27,8 +32,6 @@ export default class FoundationsLevel extends React.Component {
             items: [],
             level: this.props.navigation.state.params.level,
             id: null,
-            isLiked: false,
-            likeCount: 0,
             isStarted: false,
             isCompleted: false,
             nextLesson: null,
@@ -53,7 +56,6 @@ export default class FoundationsLevel extends React.Component {
                 this.props.navigation.state.params.url,
             ),
         );
-        console.log(response.post);
         const newContent = response.post.lessons.map((data) => {
             return new ContentModel(data);
         });
@@ -69,6 +71,7 @@ export default class FoundationsLevel extends React.Component {
                     isStarted: newContent[i].isStarted,
                     isCompleted: newContent[i].isCompleted,
                     progress_percent: newContent[i].post.progress_percent,
+                    mobile_app_url: newContent[i].post.mobile_app_url,
                 });
             }
 
@@ -80,8 +83,6 @@ export default class FoundationsLevel extends React.Component {
                 isLoadingAll: false,
                 totalLength: this.state.totalLength,
                 id: response.id,
-                isLiked: response.isLiked,
-                likeCount: response.post.is_liked_by_current_user,
                 isStarted: response.isStarted,
                 isCompleted: response.isCompleted,
                 description: response.getData('description'),
@@ -92,25 +93,23 @@ export default class FoundationsLevel extends React.Component {
         }
     };
 
-    like = () => {
-        // api call like
-        this.state.data.like_count = this.state.isLiked
-            ? this.state.data.like_count - 1
-            : this.state.data.like_count + 1;
-
+    toggleMyList = () => {
+        if (this.state.isAddedToList) {
+            removeFromMyList(this.state.id);
+        } else {
+            addToMyList(this.state.id);
+        }
         this.setState({
-            isLiked: !this.state.isLiked,
-            data: this.state.data,
+            isAddedToList: !this.state.isAddedToList,
         });
     };
 
-    addToMyList = () => {
-        // api call here
-
-        this.state.data.isAddedToList = !this.state.data.isAddedToList;
-
+    onRestartFoundation = async () => {
+        resetProgress(this.state.id);
         this.setState({
-            data: this.state.data,
+            isStarted: false,
+            isCompleted: false,
+            showRestartCourse: false,
         });
     };
 
@@ -300,7 +299,7 @@ export default class FoundationsLevel extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.addToMyList();
+                                                this.toggleMyList();
                                             }}
                                             style={{
                                                 flex: 1,
@@ -329,11 +328,30 @@ export default class FoundationsLevel extends React.Component {
                                                     fontSize: 12 * factorRatio,
                                                 }}
                                             >
-                                                My List
+                                                {this.state.isAddedToList
+                                                    ? 'Added'
+                                                    : 'My List'}
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
-                                    {this.state.isStarted && (
+
+                                    {this.state.isCompleted ? (
+                                        <ResetIcon
+                                            pxFromTop={0}
+                                            buttonHeight={
+                                                onTablet
+                                                    ? fullHeight * 0.065
+                                                    : fullHeight * 0.05
+                                            }
+                                            pxFromLeft={(fullWidth * 0.5) / 2}
+                                            buttonWidth={fullWidth * 0.5}
+                                            pressed={() =>
+                                                this.setState({
+                                                    showRestartCourse: true,
+                                                })
+                                            }
+                                        />
+                                    ) : this.state.isStarted ? (
                                         <ContinueIcon
                                             pxFromTop={0}
                                             buttonHeight={
@@ -343,18 +361,18 @@ export default class FoundationsLevel extends React.Component {
                                             }
                                             pxFromLeft={(fullWidth * 0.5) / 2}
                                             buttonWidth={fullWidth * 0.5}
-                                            pressed={() => {
+                                            pressed={() =>
                                                 this.props.navigation.navigate(
                                                     'VIDEOPLAYER',
                                                     {
-                                                        id: this.state
-                                                            .nextLesson.id,
+                                                        url: this.state
+                                                            .nextLesson.post
+                                                            .mobile_app_url,
                                                     },
-                                                );
-                                            }}
+                                                )
+                                            }
                                         />
-                                    )}
-                                    {!this.state.isStarted && (
+                                    ) : !this.state.isStarted ? (
                                         <StartIcon
                                             pxFromTop={0}
                                             buttonHeight={
@@ -364,17 +382,18 @@ export default class FoundationsLevel extends React.Component {
                                             }
                                             pxFromLeft={(fullWidth * 0.5) / 2}
                                             buttonWidth={fullWidth * 0.5}
-                                            pressed={() => {
+                                            pressed={() =>
                                                 this.props.navigation.navigate(
                                                     'VIDEOPLAYER',
                                                     {
-                                                        id: this.state
-                                                            .nextLesson.id,
+                                                        url: this.state
+                                                            .nextLesson.post
+                                                            .mobile_app_url,
                                                     },
-                                                );
-                                            }}
+                                                )
+                                            }
                                         />
-                                    )}
+                                    ) : null}
                                     <View
                                         key={'info'}
                                         style={[
@@ -502,7 +521,7 @@ export default class FoundationsLevel extends React.Component {
                             imageWidth={fullWidth * 0.3} // image width
                             navigator={(row) => {
                                 this.props.navigation.navigate('VIDEOPLAYER', {
-                                    id: row.id,
+                                    url: row.mobile_app_url,
                                 });
                             }}
                         />
@@ -530,17 +549,29 @@ export default class FoundationsLevel extends React.Component {
                                     showRestartCourse: false,
                                 });
                             }}
-                            type="level"
-                            onRestart={() => {}}
+                            type="unit"
+                            onRestart={() => this.onRestartFoundation()}
                         />
                     </Modal>
                     {this.state.nextLesson && (
                         <View>
                             {!this.state.isLoadingAll && (
-                                <NextVideo item={this.state.nextLesson} />
+                                <NextVideo
+                                    item={this.state.nextLesson}
+                                    onNextLesson={() =>
+                                        this.props.navigation.navigate(
+                                            'VIDEOPLAYER',
+                                            {
+                                                url: this.state.nextLesson.post
+                                                    .mobile_app_url,
+                                            },
+                                        )
+                                    }
+                                />
                             )}
                         </View>
                     )}
+
                     <NavigationBar currentPage={''} />
                 </View>
             </View>

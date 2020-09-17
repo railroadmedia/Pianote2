@@ -10,4 +10,7 @@ export default {
     getUnit: function (url) {
         return commonService.tryCall(url);
     },
+    getUnitLesson: function (url) {
+        return commonService.tryCall(url);
+    },
 };

@@ -1,12 +1,12 @@
 /**
- * ContinueIcon
+ * ResetIcon
  */
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {withNavigation} from 'react-navigation';
-import Icon from 'react-native-vector-icons/Entypo';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-class ContinueIcon extends React.Component {
+class ResetIcon extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -32,7 +32,9 @@ class ContinueIcon extends React.Component {
                 ]}
             >
                 <TouchableOpacity
-                    onPress={() => this.props.pressed()}
+                    onPress={() => {
+                        this.props.pressed();
+                    }}
                     style={[
                         styles.centerContent,
                         {
@@ -42,8 +44,8 @@ class ContinueIcon extends React.Component {
                     ]}
                 >
                     <View style={{flex: 1}} />
-                    <Icon
-                        name={'controller-play'}
+                    <MaterialIcon
+                        name={'replay'}
                         size={25 * factorRatio}
                         color={'white'}
                     />
@@ -55,7 +57,7 @@ class ContinueIcon extends React.Component {
                             fontSize: 14 * factorRatio,
                         }}
                     >
-                        CONTINUE
+                        RESET
                     </Text>
                     <View style={{flex: 1}} />
                 </TouchableOpacity>
@@ -64,4 +66,4 @@ class ContinueIcon extends React.Component {
     };
 }
 
-export default withNavigation(ContinueIcon);
+export default withNavigation(ResetIcon);
