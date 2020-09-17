@@ -23,9 +23,9 @@ class LogOut extends React.Component {
     }
 
     logOut = async () => {
+        logOut();
         await AsyncStorage.clear();
         await AsyncStorage.setItem('loggedInStatus', 'false');
-        logOut();
         await this.props.navigation.dispatch(resetAction);
     };
 

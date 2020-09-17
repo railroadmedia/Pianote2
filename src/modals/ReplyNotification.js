@@ -142,8 +142,9 @@ class ReplyNotification extends React.Component {
                                 borderTopWidth: 0.5 * factorRatio,
                                 borderTopColor: colors.secondBackground,
                             }}
-                        >
+                        >                         
                             <TouchableOpacity
+                                onPress={() => this.props.removeNotification(this.props.data)}
                                 style={{
                                     height: '100%',
                                     width: '100%',

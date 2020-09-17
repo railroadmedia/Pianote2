@@ -94,11 +94,12 @@ export default class CreateAccount extends React.Component {
     verifyEmail = async () => {
         if (this.state.email.length > 0) {
             await fetch(
-                `https://app-staging.pianote/usora/is-email-unique?email=${this.state.email}`,
+                `http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`,
             )
                 .then((response) => response.json())
                 .then((response) => {
-                    if (response.exists == false) {
+                    console.log(response);
+                    if (response.unique == true) {
                         this.props.navigation.navigate('CREATEACCOUNT2', {
                             email: this.state.email,
                         });

@@ -177,7 +177,10 @@ export default class ProfileSettings extends React.Component {
 
             console.log(await profileResponse.json());
 
-            await AsyncStorage.setItem('profileURI', url.toString());
+            await AsyncStorage.setItem(
+                'profileURI',
+                url == '' ? url : url.data[0].url,
+            );
 
             this.props.navigation.dispatch(resetAction);
         } catch (error) {
@@ -223,9 +226,11 @@ export default class ProfileSettings extends React.Component {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        type: 'user',
-                        attributes: {
-                            email: this.state.email,
+                        data: {
+                            type: 'user',
+                            attributes: {
+                                email: this.state.email,
+                            },
                         },
                     }),
                 },

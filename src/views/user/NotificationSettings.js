@@ -6,7 +6,6 @@ import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
-import AsyncStorage from '@react-native-community/async-storage';
 import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 
@@ -15,37 +14,34 @@ export default class NotificationSettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            notifications_summary_frequency_minutes: 0,
+            notify_on_forum_followed_thread_reply: false,
+            notify_on_forum_post_like: false,
+            notify_on_forum_post_reply: false,
+            notify_on_lesson_comment_like: false,
+            notify_on_lesson_comment_reply: false,
+            notify_weekly_update: false,
             isLoading: true,
-            weeklyCommunityUpdatesClicked: null,
-            commentRepliesClicked: null,
-            commentLikesClicked: null,
-            forumPostRepliesClicked: null,
-            forumPostLikesClicked: null,
-            frequency: null,
         };
     }
 
     componentWillMount = async () => {
-        // get notification status
-        let notificationData = await AsyncStorage.multiGet([
-            'weeklyCommunityUpdatesClicked',
-            'commentRepliesClicked',
-            'commentLikesClicked',
-            'forumPostRepliesClicked',
-            'forumPostLikesClicked',
-            'notifications_summary_frequency_minutes',
-        ]);
+        let userData = await getUserData();
 
         await this.setState({
-            weeklyCommunityUpdatesClicked: Boolean(notificationData[0][1]),
-            commentRepliesClicked: Boolean(notificationData[1][1]),
-            commentLikesClicked: Boolean(notificationData[2][1]),
-            forumPostRepliesClicked: Boolean(notificationData[3][1]),
-            forumPostLikesClicked: Boolean(notificationData[4][1]),
-            frequency: notificationData[5][1],
+            notifications_summary_frequency_minutes:
+                userData.notifications_summary_frequency_minutes,
+            notify_on_forum_followed_thread_reply:
+                userData.notify_on_forum_followed_thread_reply,
+            notify_on_forum_post_like: userData.notify_on_forum_post_like,
+            notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
+            notify_on_lesson_comment_like:
+                userData.notify_on_lesson_comment_like,
+            notify_on_lesson_comment_reply:
+                userData.notify_on_lesson_comment_reply,
+            notify_weekly_update: userData.notify_weekly_update,
+            isLoading: false,
         });
-
-        await this.setState({isLoading: false});
         this.forceUpdate();
     };
 
@@ -62,21 +58,29 @@ export default class NotificationSettings extends React.Component {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        type: 'user',
-                        attributes: {
-                            notifications_summary_frequency_minutes: false,
-                            notify_on_forum_followed_thread_reply: false,
-                            notify_on_forum_post_like: false,
-                            notify_on_forum_post_reply: false,
-                            notify_on_lesson_comment_like: false,
-                            notify_on_lesson_comment_reply: false,
-                            notify_weekly_update: false,
+                        data: {
+                            type: 'user',
+                            attributes: {
+                                notifications_summary_frequency_minutes: this
+                                    .state
+                                    .notifications_summary_frequency_minutes,
+                                notify_on_forum_post_like: this.state
+                                    .notify_on_forum_post_like,
+                                notify_on_forum_post_reply: this.state
+                                    .notify_on_forum_post_reply,
+                                notify_on_lesson_comment_like: this.state
+                                    .notify_on_lesson_comment_like,
+                                notify_on_lesson_comment_reply: this.state
+                                    .notify_on_lesson_comment_reply,
+                                notify_weekly_update: this.state
+                                    .notify_weekly_update,
+                            },
                         },
                     }),
                 },
             );
+
             console.log(await response.json());
-            getUserData();
         } catch (error) {
             console.log('ERROR: ', error);
         }
@@ -231,8 +235,7 @@ export default class NotificationSettings extends React.Component {
                                         <View style={{flex: 1}} />
                                         <CustomSwitch
                                             isClicked={
-                                                this.state
-                                                    .weeklyCommunityUpdatesClicked
+                                                this.state.notify_weekly_update
                                             }
                                             clicked={(bool) => {
                                                 this.changeNotificationStatus(),
@@ -275,14 +278,13 @@ export default class NotificationSettings extends React.Component {
                                         <View style={{flex: 1}} />
                                         <CustomSwitch
                                             isClicked={
-                                                this.state.commentRepliesClicked
+                                                this.state
+                                                    .notify_on_lesson_comment_reply
                                             }
-                                            clicked={() => {
+                                            clicked={(bool) => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
-                                                        commentRepliesClicked: this
-                                                            .state
-                                                            .commentRepliesClicked,
+                                                        notify_on_lesson_comment_reply: bool,
                                                     });
                                             }}
                                         />
@@ -322,12 +324,10 @@ export default class NotificationSettings extends React.Component {
                                             isClicked={
                                                 this.state.commentLikesClicked
                                             }
-                                            clicked={() => {
+                                            clicked={(bool) => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
-                                                        commentLikesClicked: this
-                                                            .state
-                                                            .commentLikesClicked,
+                                                        notify_on_lesson_comment_like: bool,
                                                     });
                                             }}
                                         />
@@ -366,14 +366,12 @@ export default class NotificationSettings extends React.Component {
                                         <CustomSwitch
                                             isClicked={
                                                 this.state
-                                                    .forumPostRepliesClicked
+                                                    .notify_on_forum_post_reply
                                             }
                                             clicked={() => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
-                                                        forumPostRepliesClicked: this
-                                                            .state
-                                                            .forumPostRepliesClicked,
+                                                        notify_on_forum_post_reply: bool,
                                                     });
                                             }}
                                         />
@@ -411,14 +409,13 @@ export default class NotificationSettings extends React.Component {
                                         <View style={{flex: 1}} />
                                         <CustomSwitch
                                             isClicked={
-                                                this.state.forumPostLikesClicked
+                                                this.state
+                                                    .notify_on_forum_post_like
                                             }
-                                            clicked={() => {
+                                            clicked={(bool) => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
-                                                        forumPostLikesClicked: this
-                                                            .state
-                                                            .forumPostLikesClicked,
+                                                        notify_on_forum_post_like: bool,
                                                     });
                                             }}
                                         />
@@ -491,8 +488,9 @@ export default class NotificationSettings extends React.Component {
                                                     height: fullHeight * 0.0375,
                                                     width: fullHeight * 0.0375,
                                                     backgroundColor:
-                                                        this.state.frequency ==
-                                                        'Immediate'
+                                                        this.state
+                                                            .notifications_summary_frequency_minutes ==
+                                                        1
                                                             ? '#fb1b2f'
                                                             : colors.secondBackground,
                                                     borderRadius: 100,
@@ -503,8 +501,7 @@ export default class NotificationSettings extends React.Component {
                                                 onPress={() => {
                                                     this.changeNotificationStatus(),
                                                         this.setState({
-                                                            frequency:
-                                                                'Immediate',
+                                                            notifications_summary_frequency_minutes: 1,
                                                         });
                                                 }}
                                                 style={[
@@ -515,16 +512,18 @@ export default class NotificationSettings extends React.Component {
                                                     },
                                                 ]}
                                             >
-                                                {this.state.frequency ==
-                                                    'Immediate' && (
+                                                {this.state
+                                                    .notifications_summary_frequency_minutes ==
+                                                    1 && (
                                                     <FontIcon
                                                         name={'check'}
                                                         size={20 * factorRatio}
                                                         color={'white'}
                                                     />
                                                 )}
-                                                {this.state.frequency !==
-                                                    'Immediate' && (
+                                                {this.state
+                                                    .notifications_summary_frequency_minutes !==
+                                                    1 && (
                                                     <EntypoIcon
                                                         name={'cross'}
                                                         size={
@@ -574,8 +573,9 @@ export default class NotificationSettings extends React.Component {
                                                     height: fullHeight * 0.0375,
                                                     width: fullHeight * 0.0375,
                                                     backgroundColor:
-                                                        this.state.frequency ==
-                                                        'OncePerDay'
+                                                        this.state
+                                                            .notifications_summary_frequency_minutes ==
+                                                        1440
                                                             ? '#fb1b2f'
                                                             : colors.secondBackground,
                                                     borderRadius: 100,
@@ -586,8 +586,7 @@ export default class NotificationSettings extends React.Component {
                                                 onPress={() => {
                                                     this.changeNotificationStatus(),
                                                         this.setState({
-                                                            frequency:
-                                                                'OncePerDay',
+                                                            notifications_summary_frequency_minutes: 1440,
                                                         });
                                                 }}
                                                 style={[
@@ -598,16 +597,18 @@ export default class NotificationSettings extends React.Component {
                                                     },
                                                 ]}
                                             >
-                                                {this.state.frequency ==
-                                                    'OncePerDay' && (
+                                                {this.state
+                                                    .notifications_summary_frequency_minutes ==
+                                                    1440 && (
                                                     <FontIcon
                                                         name={'check'}
                                                         size={20 * factorRatio}
                                                         color={'white'}
                                                     />
                                                 )}
-                                                {this.state.frequency !==
-                                                    'OncePerDay' && (
+                                                {this.state
+                                                    .notifications_summary_frequency_minutes !==
+                                                    1440 && (
                                                     <EntypoIcon
                                                         name={'cross'}
                                                         size={
@@ -657,8 +658,12 @@ export default class NotificationSettings extends React.Component {
                                                     height: fullHeight * 0.0375,
                                                     width: fullHeight * 0.0375,
                                                     backgroundColor:
-                                                        this.state.frequency ==
-                                                        null
+                                                        this.state
+                                                            .notifications_summary_frequency_minutes ==
+                                                            0 ||
+                                                        this.state
+                                                            .notifications_summary_frequency_minutes ==
+                                                            null
                                                             ? '#fb1b2f'
                                                             : colors.secondBackground,
                                                     borderRadius: 100,
@@ -669,7 +674,7 @@ export default class NotificationSettings extends React.Component {
                                                 onPress={() => {
                                                     this.changeNotificationStatus(),
                                                         this.setState({
-                                                            frequency: null,
+                                                            notifications_summary_frequency_minutes: 0,
                                                         });
                                                 }}
                                                 style={[
@@ -680,24 +685,33 @@ export default class NotificationSettings extends React.Component {
                                                     },
                                                 ]}
                                             >
-                                                {this.state.frequency ==
-                                                    null && (
+                                                {(this.state
+                                                    .notifications_summary_frequency_minutes ==
+                                                    0 ||
+                                                    this.state
+                                                        .notifications_summary_frequency_minutes ==
+                                                        null) && (
                                                     <FontIcon
                                                         name={'check'}
                                                         size={20 * factorRatio}
                                                         color={'white'}
                                                     />
                                                 )}
-                                                {this.state.frequency !==
-                                                    null && (
-                                                    <EntypoIcon
-                                                        name={'cross'}
-                                                        size={
-                                                            22.5 * factorRatio
-                                                        }
-                                                        color={'white'}
-                                                    />
-                                                )}
+                                                {this.state
+                                                    .notifications_summary_frequency_minutes !==
+                                                    0 &&
+                                                    this.state
+                                                        .notifications_summary_frequency_minutes !==
+                                                        null && (
+                                                        <EntypoIcon
+                                                            name={'cross'}
+                                                            size={
+                                                                22.5 *
+                                                                factorRatio
+                                                            }
+                                                            color={'white'}
+                                                        />
+                                                    )}
                                             </TouchableOpacity>
                                         </View>
                                     </View>
