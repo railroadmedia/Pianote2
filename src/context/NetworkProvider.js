@@ -20,7 +20,7 @@ export default class NetworkProvider extends React.PureComponent {
         this.unsubscribe();
     }
 
-    handleConnectivityChange = (state) => {
+    handleConnectivityChange = state => {
         this.setState({isConnected: state.isConnected});
     };
 
