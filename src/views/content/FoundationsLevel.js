@@ -43,6 +43,7 @@ export default class FoundationsLevel extends React.Component {
             showInfo: false,
             totalLength: 0,
             isAddedToList: false,
+            progress: 0,
         };
     }
 
@@ -51,11 +52,13 @@ export default class FoundationsLevel extends React.Component {
     };
 
     getContent = async () => {
+        console.log('url', this.props.navigation.state.params.url);
         const response = new ContentModel(
             await foundationsService.getUnit(
                 this.props.navigation.state.params.url,
             ),
         );
+        console.log('level', response);
         const newContent = response.post.lessons.map(data => {
             return new ContentModel(data);
         });
@@ -87,6 +90,7 @@ export default class FoundationsLevel extends React.Component {
                 isCompleted: response.isCompleted,
                 description: response.getData('description'),
                 isAddedToList: response.isAddedToList,
+                progress: response.post.progress_percent,
             });
         } catch (error) {
             console.log(error);
@@ -556,6 +560,8 @@ export default class FoundationsLevel extends React.Component {
                             {!this.state.isLoadingAll && (
                                 <NextVideo
                                     item={this.state.nextLesson}
+                                    progress={this.state.progress}
+                                    type='UNIT'
                                     onNextLesson={() =>
                                         this.props.navigation.navigate(
                                             'VIDEOPLAYER',

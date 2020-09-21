@@ -17,6 +17,7 @@ import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Video from 'RNVideoEnhanced';
+import {NavigationActions, StackActions} from 'react-navigation';
 
 import Replies from '../../components/Replies.js';
 import CommentSort from '../../modals/CommentSort.js';
@@ -93,6 +94,7 @@ export default class VideoPlayer extends React.Component {
             artist: null,
             instructor: null,
             nextLesson: null,
+            nextUnit: null,
             previousLesson: null,
             lessonImage: '',
             lessonTitle: '',
@@ -242,6 +244,9 @@ export default class VideoPlayer extends React.Component {
                     ) || 0,
                 isAddedToMyList: content.isAddedToList,
                 assignmentList: [...this.state.assignmentList, ...al],
+                nextUnit: content.post.next_unit
+                    ? new ContentModel(content.post.next_unit)
+                    : null,
                 nextLesson: content.post.next_lesson
                     ? new ContentModel(content.post.next_lesson)
                     : null,
@@ -335,6 +340,7 @@ export default class VideoPlayer extends React.Component {
                 assignmentList: [],
                 relatedLessons: [],
                 resources: null,
+                selectedAssignment: null,
             },
             () => this.getContent(),
         );
@@ -704,7 +710,7 @@ export default class VideoPlayer extends React.Component {
 
     async onComplete(id) {
         let incompleteAssignments;
-        let {assignmentList, nextLesson} = this.state;
+        let {assignmentList, nextLesson, nextUnit} = this.state;
         if (id !== this.state.id) {
             incompleteAssignments = assignmentList.filter(
                 a => a.progress !== 100 && a.id !== id,
@@ -712,11 +718,13 @@ export default class VideoPlayer extends React.Component {
             this.setState(state => ({
                 showAssignmentComplete: incompleteAssignments ? true : false,
                 showLessonComplete:
-                    !incompleteAssignments && nextLesson && nextLesson.id
+                    !incompleteAssignments && (nextLesson || nextUnit)
                         ? true
                         : false,
                 showOverviewComplete:
-                    !incompleteAssignments && !nextLesson ? true : false,
+                    !incompleteAssignments && !nextLesson && !nextUnit
+                        ? true
+                        : false,
                 progress: incompleteAssignments ? state.progress : 100,
                 selectedAssignment: {
                     ...this.state.selectedAssignment,
@@ -733,8 +741,8 @@ export default class VideoPlayer extends React.Component {
             }));
         } else {
             this.setState(state => ({
-                showLessonComplete: nextLesson ? true : false,
-                showOverviewComplete: nextLesson ? false : true,
+                showLessonComplete: nextLesson || nextUnit ? true : false,
+                showOverviewComplete: nextLesson || nextUnit ? false : true,
                 progress: 100,
                 assignmentList: state.assignmentList.map(a => ({
                     ...a,
@@ -2614,17 +2622,43 @@ export default class VideoPlayer extends React.Component {
                                 completedLessonImg={this.state.lessonImage}
                                 completedLessonTitle={this.state.lessonTitle}
                                 completedLessonXp={this.state.xp}
-                                nextLesson={this.state.nextLesson}
+                                nextLesson={
+                                    this.state.nextLesson || this.state.nextUnit
+                                }
                                 hideLessonComplete={() => {
                                     this.setState({showLessonComplete: false});
                                 }}
                                 onGoToNext={() => {
                                     this.setState({showLessonComplete: false});
-                                    this.switchLesson(
-                                        this.state.nextLesson.id,
-                                        this.state.nextLesson.post
-                                            .mobile_app_url,
-                                    );
+                                    if (this.state.nextLesson) {
+                                        this.switchLesson(
+                                            this.state.nextLesson.id,
+                                            this.state.nextLesson.post
+                                                .mobile_app_url,
+                                        );
+                                    } else if (this.state.nextUnit) {
+                                        console.log(
+                                            this.state.nextUnit.post
+                                                .mobile_app_url,
+                                        );
+                                        this.props.navigation.dispatch(
+                                            StackActions.reset({
+                                                index: 0,
+                                                actions: [
+                                                    NavigationActions.navigate({
+                                                        routeName:
+                                                            'FOUNDATIONSLEVEL',
+
+                                                        params: {
+                                                            url: this.state
+                                                                .nextUnit.post
+                                                                .mobile_app_url,
+                                                        },
+                                                    }),
+                                                ],
+                                            }),
+                                        );
+                                    }
                                 }}
                             />
                         </Modal>
