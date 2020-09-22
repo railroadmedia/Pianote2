@@ -19,7 +19,6 @@ class NextVideo extends React.Component {
     componentDidMount = async () => {};
 
     render = () => {
-        const {progress_percent} = this.props.item.post;
         return (
             <TouchableOpacity
                 onPress={this.props.onNextLesson}
@@ -39,13 +38,13 @@ class NextVideo extends React.Component {
                     >
                         <View
                             style={{
-                                flex: progress_percent,
+                                flex: this.props.progress / 100,
                                 backgroundColor: colors.pianoteRed,
                             }}
                         />
                         <View
                             style={{
-                                flex: 1 - progress_percent,
+                                flex: 1 - this.props.progress / 100,
                                 backgroundColor: colors.secondBackground,
                             }}
                         />
@@ -84,7 +83,8 @@ class NextVideo extends React.Component {
                                     textAlign: 'right',
                                 }}
                             >
-                                LEVEL - {progress_percent * 100}% COMPLETE
+                                {this.props.type} - {this.props.progress}%
+                                COMPLETE
                             </Text>
                             <View style={{flex: 1}} />
                         </View>

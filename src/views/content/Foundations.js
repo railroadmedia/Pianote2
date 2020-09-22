@@ -46,6 +46,7 @@ export default class Foundations extends React.Component {
             xp: 0,
             description: '',
             nextLesson: null,
+            progress: 0,
         };
     }
 
@@ -98,6 +99,7 @@ export default class Foundations extends React.Component {
             totalLength: response.post.length_in_seconds,
             xp: response.post.total_xp,
             description: response.getData('description'),
+            progress: response.post.progress_percent,
             nextLesson: new ContentModel(response.post.current_lesson),
         });
     };
@@ -794,6 +796,8 @@ export default class Foundations extends React.Component {
                     {!this.state.isLoadingAll && this.state.nextLesson && (
                         <NextVideo
                             item={this.state.nextLesson}
+                            progress={this.state.progress}
+                            type='FOUNDATION'
                             onNextLesson={() =>
                                 this.props.navigation.navigate('VIDEOPLAYER', {
                                     url: this.state.nextLesson.post
