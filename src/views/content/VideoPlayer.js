@@ -5,12 +5,13 @@ import React from 'react';
 import {
     View,
     Text,
-    TouchableOpacity,
     Keyboard,
     Platform,
-    ActivityIndicator,
-    TextInput,
     Animated,
+    StatusBar,
+    TextInput,
+    TouchableOpacity,
+    ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
 import Modal from 'react-native-modal';
@@ -161,7 +162,6 @@ export default class VideoPlayer extends React.Component {
             content = await contentService.getContent(this.state.id);
             content = content.data[0];
         }
-        console.log(content);
         content = new ContentModel(content);
         this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map(rl => {
@@ -235,6 +235,9 @@ export default class VideoPlayer extends React.Component {
                 relatedLessons: [...this.state.relatedLessons, ...rl],
                 likes: parseInt(content.likeCount),
                 isLiked: content.isLiked,
+                lengthInSec: content.post.length_in_seconds,
+                lastWatchedPosInSec:
+                    content.post.last_watch_position_in_seconds,
                 progress:
                     parseInt(
                         Object.values(content.post.user_progress)?.[0]
@@ -250,6 +253,11 @@ export default class VideoPlayer extends React.Component {
                     : null,
                 mp3s: content.post.mp3s || [],
                 video_playback_endpoints: content.post.video_playback_endpoints,
+                nextLessonId: content?.post?.next_lesson?.id,
+                previousLessonId: content?.post?.previous_lesson?.id,
+                nextLessonUrl: content?.post?.next_lesson?.mobile_app_url,
+                previousLessonUrl:
+                    content?.post?.previous_lesson?.mobile_app_url,
                 resources:
                     content.post.resources && content.post.resources.length > 0
                         ? Object.keys(content.post.resources).map(key => {
@@ -915,6 +923,7 @@ export default class VideoPlayer extends React.Component {
     };
 
     render() {
+        // this.props.navigation.goBack();
         return (
             <View
                 style={[
@@ -922,6 +931,72 @@ export default class VideoPlayer extends React.Component {
                     {backgroundColor: colors.mainBackground},
                 ]}
             >
+                <StatusBar
+                    backgroundColor={'black'}
+                    barStyle={'light-content'}
+                />
+                {!this.state.isLoadingAll &&
+                    this.state.video_playback_endpoints && (
+                        <Video
+                            quality={''}
+                            aCasting={''}
+                            gCasting={''}
+                            offlinePath={''}
+                            orientation={''}
+                            connection={true}
+                            toSupport={() => {}}
+                            onRefresh={() => {}}
+                            content={this.state}
+                            maxFontMultiplier={1}
+                            settingsMode={'bottom'}
+                            onFullscreen={() => {}}
+                            onQualityChange={q => {}}
+                            onACastingChange={c => {}}
+                            onGCastingChange={c => {}}
+                            ref={r => (this.video = r)}
+                            onOrientationChange={o => {}}
+                            type={false ? 'audio' : 'video'}
+                            onUpdateVideoProgress={() => {}}
+                            onBack={this.props.navigation.goBack}
+                            goToNextLesson={() =>
+                                this.switchLesson(
+                                    this.state.nextLesson.id,
+                                    this.state.nextLesson.post.mobile_app_url,
+                                )
+                            }
+                            goToPreviousLesson={() =>
+                                this.switchLesson(
+                                    this.state.previousLesson.id,
+                                    this.state.previousLesson.post
+                                        .mobile_app_url,
+                                )
+                            }
+                            styles={{
+                                timerCursorBackground: colors.pianoteRed,
+                                beforeTimerCursorBackground: colors.pianoteRed,
+                                settings: {
+                                    cancel: {
+                                        color: 'black',
+                                    },
+                                    separatorColor: 'rgb(230, 230, 230)',
+                                    background: 'white',
+                                    optionsBorderColor: 'rgb(230, 230, 230)',
+                                    downloadIcon: {
+                                        width: 20,
+                                        height: 20,
+                                        fill: colors.pianoteRed,
+                                    },
+                                },
+                                //   alert: {
+                                //     background: 'purple',
+                                //     titleTextColor: 'blue',
+                                //     subtitleTextColor: 'green',
+                                //     reloadLesson: {color: 'green', background: 'blue'},
+                                //     contactSupport: {color: 'green', background: 'blue'},
+                                //   },
+                            }}
+                        />
+                    )}
                 {!this.state.isLoadingAll ? (
                     <View
                         key={'container2'}
@@ -931,118 +1006,6 @@ export default class VideoPlayer extends React.Component {
                             backgroundColor: colors.mainBackground,
                         }}
                     >
-                        {this.state.showVideo && (
-                            <>
-                                {this.state.video_playback_endpoints ? (
-                                    <Video
-                                        quality={''}
-                                        offlinePath={''}
-                                        aCasting={false}
-                                        gCasting={false}
-                                        connection={true}
-                                        toSupport={() => {}}
-                                        onRefresh={() => {}}
-                                        maxFontMultiplier={1}
-                                        onFullscreen={() => {}}
-                                        goToNextLesson={() => {}}
-                                        onQualityChange={() => {}}
-                                        onACastingChange={() => {}}
-                                        onGCastingChange={() => {}}
-                                        ref={r => (this.video = r)}
-                                        goToPreviousLesson={() => {}}
-                                        onOrientationChange={() => {}}
-                                        type={false ? 'audio' : 'video'}
-                                        onUpdateVideoProgress={() => {}}
-                                        content={this.state || mp3VideoMock}
-                                        onBack={this.props.navigation.goBack}
-                                        styles={
-                                            {
-                                                //   smallPlayerControls: {
-                                                //     width: 20,
-                                                //     height: 20,
-                                                //     fill: 'green',
-                                                //     color: 'green',
-                                                //     tintColor: 'green',
-                                                //   },
-                                                //   largePlayerControls: {
-                                                //     width: 40,
-                                                //     height: 40,
-                                                //     fill: 'green',
-                                                //     color: 'green',
-                                                //     tintColor: 'green',
-                                                //   },
-                                                //   mp3ListPopup: {
-                                                //     background: 'red',
-                                                //     borderBottomColor: 'green',
-                                                //     selectedTextColor: 'green',
-                                                //     unselectedTextColor: 'black',
-                                                //     checkIcon: {
-                                                //       width: 20,
-                                                //       height: 20,
-                                                //       fill: 'green',
-                                                //     },
-                                                //   },
-                                                //   mp3TogglerTextColor: 'green',
-                                                //   afterTimerCursorBackground: '#2F3334',
-                                                //   timerCursorBackground: colors.pianoteRed,
-                                                //   beforeTimerCursorBackground: colors.pianoteRed,
-                                                //   timerText: {
-                                                //     left: {padding: 10, color: 'green'},
-                                                //     right: {padding: 10, color: 'red'},
-                                                //   },
-                                                //   settings: {
-                                                //     background: 'purple',
-                                                //     separatorColor: 'red',
-                                                //     optionsBorderColor: 'red',
-                                                //     selectedOptionTextColor: 'red',
-                                                //     unselectedOptionTextColor: 'green',
-                                                //     save: {background: 'green', color: 'yellow'},
-                                                //     cancel: {background: 'yellow', color: 'green'},
-                                                //     downloadIcon: {width: 20, height: 20, fill: 'pink'},
-                                                //   },
-                                                //   alert: {
-                                                //     background: 'purple',
-                                                //     titleTextColor: 'blue',
-                                                //     subtitleTextColor: 'green',
-                                                //     reloadLesson: {color: 'green', background: 'blue'},
-                                                //     contactSupport: {color: 'green', background: 'blue'},
-                                                //   },
-                                            }
-                                        }
-                                    />
-                                ) : (
-                                    <>
-                                        <View
-                                            style={{
-                                                height: isNotch
-                                                    ? fullHeight * 0.05
-                                                    : fullHeight * 0.03,
-                                            }}
-                                        />
-                                        <View
-                                            key={'video'}
-                                            style={{
-                                                height: onTablet
-                                                    ? fullHeight * 0.375
-                                                    : fullHeight * 0.275,
-                                                backgroundColor:
-                                                    colors.mainBackground,
-                                            }}
-                                        >
-                                            <FastImage
-                                                style={{flex: 1}}
-                                                source={{
-                                                    uri: this.state.lessonImage,
-                                                }}
-                                                resizeMode={
-                                                    FastImage.resizeMode.stretch
-                                                }
-                                            />
-                                        </View>
-                                    </>
-                                )}
-                            </>
-                        )}
                         <View key={'belowVideo'} style={{flex: 1}}>
                             {this.state.selectedAssignment ? (
                                 <VideoPlayerSong
@@ -2175,13 +2138,6 @@ export default class VideoPlayer extends React.Component {
                                                 </View>
                                             )}
                                         </View>
-                                        <View
-                                            style={{
-                                                height: isNotch
-                                                    ? 90 * factorVertical
-                                                    : 60 * factorVertical,
-                                            }}
-                                        />
                                     </>
                                 </KeyboardAwareScrollView>
                             )}
@@ -2299,9 +2255,6 @@ export default class VideoPlayer extends React.Component {
                                         backgroundColor: colors.mainBackground,
                                         zIndex: 5,
                                         bottom: 0,
-                                        paddingBottom: isNotch
-                                            ? fullHeight * 0.035
-                                            : fullHeight * 0.015,
                                     },
                                 ]}
                             >
