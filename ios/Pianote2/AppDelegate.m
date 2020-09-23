@@ -19,6 +19,11 @@
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
 
+#import "Intercom/intercom.h"
+#import <Firebase.h>
+#import "RNFirebaseNotifications.h"
+#import "RNFirebaseMessaging.h"
+
 @implementation AppDelegate
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {

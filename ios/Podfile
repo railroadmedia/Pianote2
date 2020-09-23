@@ -48,6 +48,10 @@ target 'Pianote2' do
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
   pod 'react-native-home-indicator', :path => '../node_modules/react-native-home-indicator'
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
+  pod 'Firebase/Messaging'
 
   pod 'react-native-google-cast/NoBluetooth', path: '../node_modules/react-native-google-cast/ios/'
 
