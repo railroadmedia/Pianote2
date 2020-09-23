@@ -4,20 +4,24 @@
 import React from 'react';
 import {
     View,
-    Text,
     TouchableOpacity,
-    ScrollView,
     ActivityIndicator,
     Platform,
+    FlatList,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import StartIcon from 'Pianote2/src/components/StartIcon.js';
+import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
+import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
+import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import {resetProgress} from 'Pianote2/src/services/UserActions.js';
+import packsService from '../../services/packs.service';
 
 export default class Packs extends React.Component {
     static navigationOptions = {header: null};
@@ -26,59 +30,55 @@ export default class Packs extends React.Component {
         this.state = {
             showModalMenu: false,
             packs: [],
+            headerPackImg: '',
+            headerPackLogo: '',
+            headerPackId: '',
+            headerPackCompleted: false,
+            headerPackStarted: false,
             isLoading: true,
+            showRestartCourse: false,
         };
     }
 
-    componentDidMount = async () => {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '30',
-            page: 1,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['pack'],
-        });
+    componentDidMount = () => {
+        this.getData();
+    };
 
-        const newContent = response.data.data.map(data => {
+    async getData() {
+        const response = await packsService.allPacks();
+        const newContent = response.myPacks.map(data => {
             return new ContentModel(data);
         });
+        const topHeaderPack = new ContentModel(response.topHeaderPack);
 
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
-                    xp: newContent[i].getField('xp'),
-                    logo: newContent[i].getData('logo_image_url'),
-                    header: newContent[i].getData('header_image_url'),
                     id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
-                    isLiked: newContent[i].isLiked,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    logo: newContent[i].getData('logo_image_url'),
                     bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
+                    mobile_app_url: newContent[i].post.mobile_app_url,
                 });
             }
         }
 
-        items.reverse();
-
-        await this.setState({
+        this.setState({
             packs: [...this.state.packs, ...items],
             isLoading: false,
+            showRestartCourse: false,
+            headerPackImg: topHeaderPack.getData('thumbnail_url'),
+            headerPackLogo: topHeaderPack.getData('logo_image_url'),
+            headerPackId: topHeaderPack.id,
+            headerPackCompleted: topHeaderPack.isCompleted,
+            headerPackStarted: topHeaderPack.isStarted,
         });
+    }
 
-        console.log(this.state.packs);
+    onRestartPack = async () => {
+        await resetProgress(this.state.id);
+        this.setState({isLoading: true}, () => this.getData());
     };
 
     render() {
@@ -103,32 +103,18 @@ export default class Packs extends React.Component {
                     >
                         <NavMenuHeaders currentPage={'PACKS'} />
                     </View>
-                    <ScrollView key={'contentContainer'} style={{flex: 1}}>
-                        <View
-                            key={'header'}
-                            style={{
-                                height:
-                                    Platform.OS == 'ios'
-                                        ? fullHeight * 0.05
-                                        : fullHeight * 0.1,
-                                backgroundColor: colors.mainBackground,
-                            }}
-                        />
-                        <View style={{height: 20 * factorVertical}} />
-                        <Text
-                            style={{
-                                paddingLeft: 12 * factorHorizontal,
-                                fontSize: 30 * factorRatio,
-                                color: 'white',
-                                fontFamily: 'OpenSans',
-                                fontWeight:
-                                    Platform.OS == 'ios' ? '900' : 'bold',
-                            }}
-                        >
-                            Packs
-                        </Text>
-                        <View style={{height: 20 * factorVertical}} />
-                        {this.state.isLoading && (
+
+                    <FlatList
+                        windowSize={10}
+                        style={{flex: 1}}
+                        initialNumToRender={5}
+                        maxToRenderPerBatch={10}
+                        numColumns={3}
+                        removeClippedSubviews={true}
+                        keyExtractor={item => item.id}
+                        data={this.state.packs}
+                        keyboardShouldPersistTaps='handled'
+                        ListEmptyComponent={() => (
                             <View
                                 style={[
                                     styles.centerContent,
@@ -145,863 +131,247 @@ export default class Packs extends React.Component {
                                 />
                             </View>
                         )}
-                        {!this.state.isLoading && (
+                        ListHeaderComponent={() => (
                             <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignContent: 'space-around',
-                                    justifyContent: 'space-around',
-                                    paddingLeft: 5 * factorHorizontal,
-                                    paddingRight: 5 * factorHorizontal,
-                                }}
+                                key={'image'}
+                                style={[
+                                    styles.centerContent,
+                                    {
+                                        height: fullHeight * 0.5,
+                                    },
+                                ]}
                             >
-                                {this.state.packs.length > 0 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[0],
-                                                },
-                                            );
-                                        }}
+                                <GradientFeature
+                                    color={'blue'}
+                                    opacity={1}
+                                    height={'100%'}
+                                    borderRadius={0}
+                                />
+                                <FastImage
+                                    style={{
+                                        flex: 1,
+                                        alignSelf: 'stretch',
+                                        backgroundColor: colors.mainBackground,
+                                    }}
+                                    source={{
+                                        uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+                                            fullWidth,
+                                        )},ar_2,c_fill,g_face/${
+                                            this.state.headerPackImg
+                                        }`,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                />
+                                <View
+                                    key={'pianoteSVG'}
+                                    style={{
+                                        position: 'absolute',
+                                        height: '100%',
+                                        width: fullWidth,
+                                        zIndex: 2,
+                                        elevation: 2,
+                                    }}
+                                >
+                                    <FastImage
                                         style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
+                                            width: '80%',
+                                            height: '100%',
                                             borderRadius: 7.5 * factorRatio,
+                                            alignSelf: 'center',
                                         }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            key={'logo'}
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '80%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[0]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 5 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[0]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                                {this.state.packs.length > 1 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[1],
-                                                },
-                                            );
+                                        source={{
+                                            uri: this.state.headerPackLogo,
                                         }}
-                                        style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
-                                        }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '90%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                        elevation: 10,
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[1]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 5 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[1]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                                {this.state.packs.length > 2 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[2],
-                                                },
-                                            );
-                                        }}
-                                        style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
-                                        }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '80%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[2]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 10 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
+                                        resizeMode={
+                                            FastImage.resizeMode.contain
+                                        }
+                                    />
 
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[2]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
+                                    {this.state.headerPackCompleted ? (
+                                        <ResetIcon
+                                            pxFromTop={
+                                                onTablet
+                                                    ? fullHeight * 0.5 * 0.725
+                                                    : fullHeight * 0.5 * 0.725
+                                            }
+                                            buttonHeight={
+                                                onTablet
+                                                    ? fullHeight * 0.06
+                                                    : Platform.OS == 'ios'
+                                                    ? fullHeight * 0.05
+                                                    : fullHeight * 0.055
+                                            }
+                                            pxFromLeft={fullWidth * 0.065}
+                                            buttonWidth={fullWidth * 0.42}
+                                            pressed={() =>
+                                                this.setState({
+                                                    showRestartCourse: true,
+                                                })
                                             }
                                         />
-                                    </TouchableOpacity>
-                                )}
+                                    ) : !this.state.headerPackStarted ? (
+                                        <StartIcon
+                                            pxFromTop={
+                                                onTablet
+                                                    ? fullHeight * 0.5 * 0.725
+                                                    : fullHeight * 0.5 * 0.725
+                                            }
+                                            buttonHeight={
+                                                onTablet
+                                                    ? fullHeight * 0.06
+                                                    : Platform.OS == 'ios'
+                                                    ? fullHeight * 0.05
+                                                    : fullHeight * 0.055
+                                            }
+                                            pxFromLeft={fullWidth * 0.065}
+                                            buttonWidth={fullWidth * 0.42}
+                                            pressed={() =>
+                                                this.props.navigation.navigate(
+                                                    'VIDEOPLAYER',
+                                                    {
+                                                        id: this.state
+                                                            .headerPackId,
+                                                    },
+                                                )
+                                            }
+                                        />
+                                    ) : (
+                                        <ContinueIcon
+                                            pxFromTop={
+                                                onTablet
+                                                    ? fullHeight * 0.5 * 0.725
+                                                    : fullHeight * 0.5 * 0.725
+                                            }
+                                            buttonHeight={
+                                                onTablet
+                                                    ? fullHeight * 0.06
+                                                    : Platform.OS == 'ios'
+                                                    ? fullHeight * 0.05
+                                                    : fullHeight * 0.055
+                                            }
+                                            pxFromLeft={fullWidth * 0.065}
+                                            buttonWidth={fullWidth * 0.42}
+                                            pressed={() =>
+                                                this.props.navigation.navigate(
+                                                    'VIDEOPLAYER',
+                                                    {
+                                                        id: this.state
+                                                            .headerPackId,
+                                                    },
+                                                )
+                                            }
+                                        />
+                                    )}
+                                    <MoreInfoIcon
+                                        pxFromTop={
+                                            onTablet
+                                                ? fullHeight * 0.5 * 0.725
+                                                : fullHeight * 0.5 * 0.725
+                                        }
+                                        buttonHeight={
+                                            onTablet
+                                                ? fullHeight * 0.06
+                                                : Platform.OS == 'ios'
+                                                ? fullHeight * 0.05
+                                                : fullHeight * 0.055
+                                        }
+                                        pxFromRight={fullWidth * 0.065}
+                                        buttonWidth={fullWidth * 0.42}
+                                        pressed={() => {
+                                            this.props.navigation.push(
+                                                'SINGLEPACK',
+                                                {
+                                                    id: this.state.headerPackId,
+                                                },
+                                            );
+                                        }}
+                                    />
+                                </View>
                             </View>
                         )}
-                        <View style={{height: 20 * factorVertical}} />
-                        {!this.state.isLoading && (
-                            <View
+                        renderItem={({item}) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.push('SINGLEPACK', {
+                                        id: item.id,
+                                    });
+                                }}
                                 style={{
-                                    flexDirection: 'row',
-                                    alignContent: 'space-around',
-                                    justifyContent: 'space-around',
-                                    paddingLeft: 5 * factorHorizontal,
-                                    paddingRight: 5 * factorHorizontal,
+                                    marginLeft: 5 * factorHorizontal,
+                                    marginBottom: 5 * factorHorizontal,
+                                    width:
+                                        (fullWidth - 3 * 5 * factorHorizontal) /
+                                        3,
+                                    height: fullWidth * 0.285 * (95 / 65),
+                                    backgroundColor: colors.secondBackground,
+                                    borderRadius: 7.5 * factorRatio,
                                 }}
                             >
-                                {this.state.packs.length > 3 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[3],
-                                                },
-                                            );
-                                        }}
+                                <GradientFeature
+                                    color={'black'}
+                                    opacity={0.45}
+                                    height={'100%'}
+                                    borderRadius={0}
+                                />
+                                <View
+                                    key={'logo'}
+                                    style={{
+                                        position: 'absolute',
+                                        zIndex: 10,
+                                        elevation: 5000,
+                                        left: 0,
+                                        top: 0,
+                                        height: fullWidth * 0.285 * (95 / 65),
+                                        width: fullWidth * 0.285,
+                                        borderRadius: 7.5 * factorRatio,
+                                    }}
+                                >
+                                    <View style={{flex: 1}} />
+                                    <View
                                         style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
+                                            flexDirection: 'row',
+                                            width: '100%',
+                                            height: '25%',
                                         }}
                                     >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '90%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[3]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 5 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
+                                        <View style={{flex: 1}} />
                                         <FastImage
                                             style={{
-                                                flex: 1,
+                                                width: '80%',
+                                                height: '100%',
                                                 borderRadius: 7.5 * factorRatio,
                                                 alignSelf: 'stretch',
                                             }}
                                             source={{
-                                                uri: this.state.packs[3]
-                                                    .thumbnail,
+                                                uri: item.logo,
                                             }}
                                             resizeMode={
-                                                FastImage.resizeMode.cover
+                                                FastImage.resizeMode.contain
                                             }
                                         />
-                                    </TouchableOpacity>
-                                )}
-                                {this.state.packs.length > 4 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[4],
-                                                },
-                                            );
-                                        }}
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                    <View
                                         style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
+                                            height: 5 * factorVertical,
                                         }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '80%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[4]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 10 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[4]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                                {this.state.packs.length > 5 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[5],
-                                                },
-                                            );
-                                        }}
-                                        style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
-                                        }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '90%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[5]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 5 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
-
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[5]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
+                                    />
+                                </View>
+                                <FastImage
+                                    style={{
+                                        flex: 1,
+                                        borderRadius: 7.5 * factorRatio,
+                                        alignSelf: 'stretch',
+                                    }}
+                                    source={{
+                                        uri: item.thumbnail,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+                            </TouchableOpacity>
                         )}
-                        <View style={{height: 20 * factorVertical}} />
-                        {!this.state.isLoading && (
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignContent: 'space-around',
-                                    justifyContent: 'space-around',
-                                    paddingLeft: 5 * factorHorizontal,
-                                    paddingRight: 5 * factorHorizontal,
-                                }}
-                            >
-                                {this.state.packs.length > 6 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[6],
-                                                },
-                                            );
-                                        }}
-                                        style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
-                                        }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '80%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[6]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 5 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[6]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                                {this.state.packs.length > 7 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[7],
-                                                },
-                                            );
-                                        }}
-                                        style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
-                                        }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            key={'logo'}
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '80%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[7]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 5 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[7]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                                {this.state.packs.length > 8 && (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
-                                                {
-                                                    data: this.state.packs[8],
-                                                },
-                                            );
-                                        }}
-                                        style={{
-                                            width: fullWidth * 0.285,
-                                            height:
-                                                fullWidth * 0.285 * (95 / 65),
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            borderRadius: 7.5 * factorRatio,
-                                        }}
-                                    >
-                                        <GradientFeature
-                                            color={'black'}
-                                            opacity={0.45}
-                                            height={'100%'}
-                                            borderRadius={0}
-                                        />
-                                        <View
-                                            key={'logo'}
-                                            style={{
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 5000,
-                                                left: 0,
-                                                top: 0,
-                                                height:
-                                                    fullWidth *
-                                                    0.285 *
-                                                    (95 / 65),
-                                                width: fullWidth * 0.285,
-                                                borderRadius: 7.5 * factorRatio,
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    width: '100%',
-                                                    height: '25%',
-                                                }}
-                                            >
-                                                <View style={{flex: 1}} />
-                                                <FastImage
-                                                    style={{
-                                                        width: '80%',
-                                                        height: '100%',
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                        alignSelf: 'stretch',
-                                                    }}
-                                                    source={{
-                                                        uri: this.state.packs[8]
-                                                            .logo,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .contain
-                                                    }
-                                                />
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View
-                                                style={{
-                                                    height: 5 * factorVertical,
-                                                }}
-                                            />
-                                        </View>
+                    />
 
-                                        <FastImage
-                                            style={{
-                                                flex: 1,
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: this.state.packs[8]
-                                                    .thumbnail,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-                        )}
-                        <View style={{height: 20 * factorVertical}} />
-                    </ScrollView>
                     <NavigationBar currentPage={'PACKS'} />
                 </View>
                 <Modal
@@ -1022,6 +392,33 @@ export default class Packs extends React.Component {
                         onClose={e => this.setState({showModalMenu: e})}
                         menu={this.state.menu}
                         parentPage={this.state.parentPage}
+                    />
+                </Modal>
+                <Modal
+                    key={'restartCourse'}
+                    isVisible={this.state.showRestartCourse}
+                    style={[
+                        styles.centerContent,
+                        {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        },
+                    ]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <RestartCourse
+                        hideRestartCourse={() => {
+                            this.setState({
+                                showRestartCourse: false,
+                            });
+                        }}
+                        type='pack'
+                        onRestart={() => this.onRestartPack()}
                     />
                 </Modal>
             </View>

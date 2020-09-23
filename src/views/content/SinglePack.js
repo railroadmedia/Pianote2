@@ -26,9 +26,9 @@ export default class SinglePack extends React.Component {
             packData: null,
             isDisplayingLessons: true,
             videos: [],
-            pack: this.props.navigation.state.params.data,
-            isAddedToList: this.props.navigation.state.params.data
-                .isAddedToList,
+            id: this.props.navigation.state.params.id,
+            pack: {},
+            isAddedToList: false,
             bundleID: null,
             isLoadingAll: true,
             totalLength: 0,
@@ -51,7 +51,7 @@ export default class SinglePack extends React.Component {
     getBundle = async () => {
         // get bundles
         const {response, error} = await getContentChildById({
-            parentId: this.state.pack.id,
+            parentId: this.state.id,
         });
 
         const newContent = response.data.data.map(data => {

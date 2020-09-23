@@ -945,65 +945,66 @@ export default class VideoPlayer extends React.Component {
                 />
                 {!this.state.isLoadingAll &&
                     this.state.video_playback_endpoints && (
-                        <Video
-                            quality={''}
-                            aCasting={''}
-                            gCasting={''}
-                            offlinePath={''}
-                            orientation={''}
-                            connection={true}
-                            toSupport={() => {}}
-                            onRefresh={() => {}}
-                            content={this.state}
-                            maxFontMultiplier={1}
-                            settingsMode={'bottom'}
-                            onFullscreen={() => {}}
-                            onQualityChange={q => {}}
-                            onACastingChange={c => {}}
-                            onGCastingChange={c => {}}
-                            ref={r => (this.video = r)}
-                            onOrientationChange={o => {}}
-                            type={false ? 'audio' : 'video'}
-                            onUpdateVideoProgress={() => {}}
-                            onBack={this.props.navigation.goBack}
-                            goToNextLesson={() =>
-                                this.switchLesson(
-                                    this.state.nextLesson.id,
-                                    this.state.nextLesson.post.mobile_app_url,
-                                )
-                            }
-                            goToPreviousLesson={() =>
-                                this.switchLesson(
-                                    this.state.previousLesson.id,
-                                    this.state.previousLesson.post
-                                        .mobile_app_url,
-                                )
-                            }
-                            styles={{
-                                timerCursorBackground: colors.pianoteRed,
-                                beforeTimerCursorBackground: colors.pianoteRed,
-                                settings: {
-                                    cancel: {
-                                        color: 'black',
-                                    },
-                                    separatorColor: 'rgb(230, 230, 230)',
-                                    background: 'white',
-                                    optionsBorderColor: 'rgb(230, 230, 230)',
-                                    downloadIcon: {
-                                        width: 20,
-                                        height: 20,
-                                        fill: colors.pianoteRed,
-                                    },
-                                },
-                                //   alert: {
-                                //     background: 'purple',
-                                //     titleTextColor: 'blue',
-                                //     subtitleTextColor: 'green',
-                                //     reloadLesson: {color: 'green', background: 'blue'},
-                                //     contactSupport: {color: 'green', background: 'blue'},
-                                //   },
-                            }}
-                        />
+                        // <Video
+                        //     quality={''}
+                        //     aCasting={''}
+                        //     gCasting={''}
+                        //     offlinePath={''}
+                        //     orientation={''}
+                        //     connection={true}
+                        //     toSupport={() => {}}
+                        //     onRefresh={() => {}}
+                        //     content={this.state}
+                        //     maxFontMultiplier={1}
+                        //     settingsMode={'bottom'}
+                        //     onFullscreen={() => {}}
+                        //     onQualityChange={q => {}}
+                        //     onACastingChange={c => {}}
+                        //     onGCastingChange={c => {}}
+                        //     ref={r => (this.video = r)}
+                        //     onOrientationChange={o => {}}
+                        //     type={false ? 'audio' : 'video'}
+                        //     onUpdateVideoProgress={() => {}}
+                        //     onBack={this.props.navigation.goBack}
+                        //     goToNextLesson={() =>
+                        //         this.switchLesson(
+                        //             this.state.nextLesson.id,
+                        //             this.state.nextLesson.post.mobile_app_url,
+                        //         )
+                        //     }
+                        //     goToPreviousLesson={() =>
+                        //         this.switchLesson(
+                        //             this.state.previousLesson.id,
+                        //             this.state.previousLesson.post
+                        //                 .mobile_app_url,
+                        //         )
+                        //     }
+                        //     styles={{
+                        //         timerCursorBackground: colors.pianoteRed,
+                        //         beforeTimerCursorBackground: colors.pianoteRed,
+                        //         settings: {
+                        //             cancel: {
+                        //                 color: 'black',
+                        //             },
+                        //             separatorColor: 'rgb(230, 230, 230)',
+                        //             background: 'white',
+                        //             optionsBorderColor: 'rgb(230, 230, 230)',
+                        //             downloadIcon: {
+                        //                 width: 20,
+                        //                 height: 20,
+                        //                 fill: colors.pianoteRed,
+                        //             },
+                        //         },
+                        //         //   alert: {
+                        //         //     background: 'purple',
+                        //         //     titleTextColor: 'blue',
+                        //         //     subtitleTextColor: 'green',
+                        //         //     reloadLesson: {color: 'green', background: 'blue'},
+                        //         //     contactSupport: {color: 'green', background: 'blue'},
+                        //         //   },
+                        //     }}
+                        // />
+                        <View />
                     )}
                 {!this.state.isLoadingAll ? (
                     <View
