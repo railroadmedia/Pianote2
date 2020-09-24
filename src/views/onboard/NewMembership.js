@@ -15,7 +15,7 @@ import RNIap, {
 
 const skus = Platform.select({
     android: ['test'],
-    ios: [],
+    ios: ['test.pianote'],
 });
 
 export default class NewMembership extends React.Component {
@@ -36,6 +36,7 @@ export default class NewMembership extends React.Component {
         } catch (e) {}
         purchaseUpdateSubscription = purchaseUpdatedListener(this.pulCallback);
         purchaseErrorSubscription = purchaseErrorListener(e => {
+            console.log(e);
             Alert.alert('Something went wrong', e.message, [{text: 'OK'}], {
                 cancelable: false,
             });
@@ -73,6 +74,8 @@ export default class NewMembership extends React.Component {
 
     pulCallback = async purchase => {
         let {transactionReceipt} = purchase;
+        console.log(JSON.stringify(purchase));
+        console.log(purchase);
         if (transactionReceipt) {
             //   let formData = new FormData();
             //   if (this.props.cred) {
@@ -356,7 +359,9 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.startPlan('test')
+                                                    this.startPlan(
+                                                        'test.pianote',
+                                                    )
                                                 }
                                                 style={{
                                                     height: '80%',
