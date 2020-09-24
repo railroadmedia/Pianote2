@@ -28,7 +28,7 @@ const purchaseService = {
                 pUpdateListener = null;
             }
         },
-        buy: async (sku, errorCallback) => {
+        buy: async (skus, sku, errorCallback) => {
             if (!(await purchaseService.purchase.init()))
                 return errorCallback({
                     title: 'Something went wrong!',
@@ -37,32 +37,33 @@ const purchaseService = {
                     } refused.`,
                 });
             let availablePurchases = [];
+            // try {
+            //     availablePurchases = await RNIap.getAvailablePurchases();
+            //     console.log(availablePurchases);
+            // } catch (e) {
+            //     return errorCallback({
+            //         title: 'Something went wrong!',
+            //         message: e.message,
+            //     });
+            // }
+            // if (
+            //     Platform.OS === 'ios' &&
+            //     availablePurchases.some(ap => ap.productId === sku)
+            // ) {
+            //     return errorCallback({
+            //         title: 'Item already puchased',
+            //         message:
+            //             'This iCloud account already has access to this item.',
+            //     });
+            // }
             try {
-                availablePurchases = await RNIap.getAvailablePurchases();
-            } catch (e) {
-                return errorCallback({
-                    title: 'Something went wrong!',
-                    message: e.message,
-                });
-            }
-            if (
-                Platform.OS === 'ios' &&
-                availablePurchases.some((ap) => ap.productId === sku)
-            ) {
-                return errorCallback({
-                    title: 'Item already puchased',
-                    message:
-                        'This iCloud account already has access to this item.',
-                });
-            }
-            try {
-                await RNIap.getProducts([sku]);
+                console.log(skus, sku);
+                let res = await RNIap.getSubscriptions(skus);
+                console.log(res);
             } catch (e) {}
             try {
-                await RNIap.requestPurchase(
-                    sku,
-                    Platform.OS === 'android' ? undefined : false,
-                );
+                let res = await RNIap.requestSubscription(sku, false);
+                console.log(res);
             } catch (e) {}
         },
     },
@@ -71,7 +72,7 @@ const purchaseService = {
 export default purchaseService;
 
 const pul = (updateCallback, errorCallback) => {
-    return purchaseUpdatedListener(async (purchase) => {
+    return purchaseUpdatedListener(async purchase => {
         let {productId, purchaseToken, transactionReceipt} = purchase;
         if (transactionReceipt) {
             // let formData = new FormData();
@@ -94,6 +95,8 @@ const pul = (updateCallback, errorCallback) => {
     });
 };
 
-const pel = (errorCallback) => {
-    return purchaseErrorListener(({message}) => errorCallback(message));
+const pel = errorCallback => {
+    return purchaseErrorListener(({message}) =>
+        errorCallback({title: 'Something went wrong!', message: message}),
+    );
 };

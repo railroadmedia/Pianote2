@@ -2,12 +2,21 @@
  * NewMembership
  */
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import purchaseService from '../../services/purchase.service';
+import RNIap, {
+    purchaseErrorListener,
+    purchaseUpdatedListener,
+} from 'react-native-iap';
+
+const skus = Platform.select({
+    android: ['test'],
+    ios: [],
+});
 
 export default class NewMembership extends React.Component {
     static navigationOptions = {header: null};
@@ -19,6 +28,23 @@ export default class NewMembership extends React.Component {
             email: this.props.navigation.state.params.data.email,
             password: this.props.navigation.state.params.data.password,
         };
+    }
+
+    async componentDidMount() {
+        try {
+            await RNIap.initConnection();
+        } catch (e) {}
+        purchaseUpdateSubscription = purchaseUpdatedListener(this.pulCallback);
+        purchaseErrorSubscription = purchaseErrorListener(e => {
+            Alert.alert('Something went wrong', e.message, [{text: 'OK'}], {
+                cancelable: false,
+            });
+        });
+        try {
+            const subscriptions = await RNIap.getSubscriptions(skus);
+
+            console.log(subscriptions);
+        } catch (e) {}
     }
 
     paid = async plan => {
@@ -39,23 +65,73 @@ export default class NewMembership extends React.Component {
             }
         }
     };
-
-    initIap(slug) {
-        console.log(purchaseService);
-        purchaseService.purchase.addListeners(
-            this.purchaseUpdateCallback,
-            this.purchaseErrorCallback,
-        );
-        purchaseService.purchase.buy(slug, this.purchaseErrorCallback);
-    }
-
-    purchaseUpdateCallback = () => {};
-
-    purchaseErrorCallback = error => {
-        Alert.alert(error.title, error.message, [{text: 'OK'}], {
-            cancelable: false,
-        });
+    startPlan = async plan => {
+        try {
+            await RNIap.requestSubscription(plan, false);
+        } catch (e) {}
     };
+
+    pulCallback = async purchase => {
+        let {transactionReceipt} = purchase;
+        if (transactionReceipt) {
+            //   let formData = new FormData();
+            //   if (this.props.cred) {
+            //     formData.append('email', this.props.cred[0]);
+            //     formData.append('password', this.props.cred[1]);
+            //   }
+            //   if (commonService.isiOS) {
+            //     formData.append('receipt', transactionReceipt);
+            //   } else {
+            //     formData.append('package_name', `com.drumeo`);
+            //     formData.append('product_id', purchase.productId);
+            //     formData.append('purchase_token', purchase.purchaseToken);
+            //   }
+            //   let response = await authService.signUp(formData);
+            //   if (response.success) {
+            //     authService.token = `Bearer ${response.token}`;
+            //     try {
+            //       await RNFetchBlob.fs.writeFile(
+            //         `${commonService.offPath}/cred`,
+            //         JSON.stringify({
+            //           p: this.props.cred[1],
+            //           u: this.props.cred[0]
+            //         }),
+            //         'utf8'
+            //       );
+            //     } catch (e) {}
+            //     try {
+            //       await RNIap.finishTransaction(purchase, false);
+            //       authService.isEdgeUser = true;
+            //       if (this.props.packUpgrade) Actions.home();
+            //       else {
+            //         Actions.signUpOnboarding({
+            //           showEdgeExpiredOnboarding: this.props.userWithEdgeExpired
+            //         });
+            //       }
+            //     } catch (e) {}
+        } else {
+            let {title, message} = response;
+            Alert.alert(title, message, [{text: 'OK'}], {
+                cancelable: false,
+            });
+        }
+    };
+
+    // initIap(slug) {
+    //     purchaseService.purchase.addListeners(
+    //         this.purchaseUpdateCallback,
+    //         this.purchaseErrorCallback,
+    //     );
+    //     purchaseService.purchase.buy(skus, slug, this.purchaseErrorCallback);
+    // }
+
+    // purchaseUpdateCallback = () => {};
+
+    // purchaseErrorCallback = error => {
+    //     Alert.alert(error.title, error.message, [{text: 'OK'}], {
+    //         cancelable: false,
+    //     });
+    // };
 
     render() {
         return (
@@ -280,7 +356,7 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.initIap('plan1')
+                                                    this.startPlan('test')
                                                 }
                                                 style={{
                                                     height: '80%',
@@ -429,7 +505,7 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.initIap('plan2')
+                                                    this.startPlan('test')
                                                 }
                                                 style={{
                                                     height: '80%',

@@ -370,7 +370,14 @@ export default class Login extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.props.navigation.navigate(
-                                                    'CREATEACCOUNT',
+                                                    'NEWMEMBERSHIP',
+                                                    {
+                                                        data: {
+                                                            type: 'SIGNUP',
+                                                            email: 'a@a.a',
+                                                            password: 'pass',
+                                                        },
+                                                    },
                                                 );
                                             }}
                                             style={{
@@ -731,7 +738,14 @@ export default class Login extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.props.navigation.navigate(
-                                                    'CREATEACCOUNT',
+                                                    'NEWMEMBERSHIP',
+                                                    {
+                                                        data: {
+                                                            type: 'SIGNUP',
+                                                            email: 'a@a.a',
+                                                            password: 'pass',
+                                                        },
+                                                    },
                                                 );
                                             }}
                                             style={{
@@ -1091,7 +1105,14 @@ export default class Login extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.props.navigation.navigate(
-                                                    'CREATEACCOUNT',
+                                                    'NEWMEMBERSHIP',
+                                                    {
+                                                        data: {
+                                                            type: 'SIGNUP',
+                                                            email: 'a@a.a',
+                                                            password: 'pass',
+                                                        },
+                                                    },
                                                 );
                                             }}
                                             style={{
@@ -1451,7 +1472,14 @@ export default class Login extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.props.navigation.navigate(
-                                                    'CREATEACCOUNT',
+                                                    'NEWMEMBERSHIP',
+                                                    {
+                                                        data: {
+                                                            type: 'SIGNUP',
+                                                            email: 'a@a.a',
+                                                            password: 'pass',
+                                                        },
+                                                    },
                                                 );
                                             }}
                                             style={{
@@ -1784,7 +1812,14 @@ export default class Login extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.props.navigation.navigate(
-                                                    'CREATEACCOUNT',
+                                                    'NEWMEMBERSHIP',
+                                                    {
+                                                        data: {
+                                                            type: 'SIGNUP',
+                                                            email: 'a@a.a',
+                                                            password: 'pass',
+                                                        },
+                                                    },
                                                 );
                                             }}
                                             style={{

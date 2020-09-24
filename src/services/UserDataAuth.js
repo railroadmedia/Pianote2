@@ -1,5 +1,6 @@
 import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Platform} from 'react-native';
 
 export async function getToken() {
     try {
@@ -87,6 +88,77 @@ export async function logOut() {
         console.log(await response.json());
         return await response.json();
     } catch (error) {
+        console.log(error);
+        return new Error(error);
+    }
+}
+
+export async function signUp(formData) {
+    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    let token = await AsyncStorage.getItem('token');
+    token = `Bearer ${JSON.parse(token)}`;
+    try {
+        let response = await fetch(
+            `https://app-staging.pianote.com/mobile-app/${platform}/verify-receipt-and-process-payment`,
+            {
+                method: 'POST',
+                headers: {Authorization: token},
+                body: formData,
+            },
+        );
+        return await response.json();
+    } catch (e) {
+        console.log(error);
+        return new Error(error);
+    }
+}
+
+export async function restorePurchase(purchases) {
+    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    let token = await AsyncStorage.getItem('token');
+    token = `Bearer ${JSON.parse(token)}`;
+    try {
+        let response = await fetch(
+            `https://app-staging.pianote.com/mobile-app/${platform}/restore`,
+            {
+                method: 'POST',
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    Platform.OS === 'ios'
+                        ? {receipt: purchases[0].transactionReceipt}
+                        : {purchases},
+                ),
+            },
+        );
+        return await response.json();
+    } catch (e) {
+        console.log(error);
+        return new Error(error);
+    }
+}
+
+export async function validateSignUp(purchases) {
+    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    try {
+        let response = await fetch(
+            `https://app-staging.pianote.com/mobile-app/${platform}/signup`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    Platform.OS === 'ios'
+                        ? {receipt: purchases[0].transactionReceipt}
+                        : {purchases},
+                ),
+            },
+        );
+        return await response.json();
+    } catch (e) {
         console.log(error);
         return new Error(error);
     }
