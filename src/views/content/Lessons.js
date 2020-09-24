@@ -132,9 +132,10 @@ export default class Lessons extends React.Component {
     };
 
     getFoundations = async () => {
-        const response = new ContentModel(
-            await foundationsService.getFoundation('foundations-2019'),
+        let response = await foundationsService.getFoundation(
+            'foundations-2019',
         );
+        response = new ContentModel(response.data[0]);
         this.setState({
             foundationIsStarted: response.isStarted,
             foundationIsCompleted: response.isCompleted,

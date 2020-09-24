@@ -32,7 +32,8 @@ export default class Packs extends React.Component {
             packs: [],
             headerPackImg: '',
             headerPackLogo: '',
-            headerPackId: '',
+            headerPackUrl: '',
+            headerPackNextLessonUrl: '',
             headerPackCompleted: false,
             headerPackStarted: false,
             isLoading: true,
@@ -46,6 +47,7 @@ export default class Packs extends React.Component {
 
     async getData() {
         const response = await packsService.allPacks();
+        console.log(response);
         const newContent = response.myPacks.map(data => {
             return new ContentModel(data);
         });
@@ -70,9 +72,11 @@ export default class Packs extends React.Component {
             showRestartCourse: false,
             headerPackImg: topHeaderPack.getData('thumbnail_url'),
             headerPackLogo: topHeaderPack.getData('logo_image_url'),
-            headerPackId: topHeaderPack.id,
+            headerPackUrl: topHeaderPack.post.mobile_app_url,
             headerPackCompleted: topHeaderPack.isCompleted,
             headerPackStarted: topHeaderPack.isStarted,
+            headerPackNextLessonUrl:
+                topHeaderPack.post.next_lesson_mobile_app_url,
         });
     }
 
@@ -229,8 +233,8 @@ export default class Packs extends React.Component {
                                                 this.props.navigation.navigate(
                                                     'VIDEOPLAYER',
                                                     {
-                                                        id: this.state
-                                                            .headerPackId,
+                                                        url: this.state
+                                                            .headerPackNextLessonUrl,
                                                     },
                                                 )
                                             }
@@ -255,8 +259,8 @@ export default class Packs extends React.Component {
                                                 this.props.navigation.navigate(
                                                     'VIDEOPLAYER',
                                                     {
-                                                        id: this.state
-                                                            .headerPackId,
+                                                        url: this.state
+                                                            .headerPackNextLessonUrl,
                                                     },
                                                 )
                                             }
@@ -281,7 +285,8 @@ export default class Packs extends React.Component {
                                             this.props.navigation.push(
                                                 'SINGLEPACK',
                                                 {
-                                                    id: this.state.headerPackId,
+                                                    url: this.state
+                                                        .headerPackUrl,
                                                 },
                                             );
                                         }}
@@ -293,7 +298,7 @@ export default class Packs extends React.Component {
                             <TouchableOpacity
                                 onPress={() => {
                                     this.props.navigation.push('SINGLEPACK', {
-                                        id: item.id,
+                                        url: item.mobile_app_url,
                                     });
                                 }}
                                 style={{

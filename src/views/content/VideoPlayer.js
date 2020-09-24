@@ -162,8 +162,8 @@ export default class VideoPlayer extends React.Component {
             content = await foundationsService.getUnitLesson(this.state.url);
         } else {
             content = await contentService.getContent(this.state.id);
-            content = content.data[0];
         }
+        content = content.data[0];
         content = new ContentModel(content);
         this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map(rl => {

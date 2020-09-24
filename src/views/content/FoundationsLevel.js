@@ -52,17 +52,14 @@ export default class FoundationsLevel extends React.Component {
     };
 
     getContent = async () => {
-        console.log('url', this.props.navigation.state.params.url);
-        const response = new ContentModel(
-            await foundationsService.getUnit(
-                this.props.navigation.state.params.url,
-            ),
+        let response = await foundationsService.getUnit(
+            this.props.navigation.state.params.url,
         );
         console.log('level', response);
-        const newContent = response.post.lessons.map(data => {
+        const newContent = response.data.lessons.map(data => {
             return new ContentModel(data);
         });
-
+        response = new ContentModel(response.data);
         try {
             items = [];
             for (i in newContent) {
