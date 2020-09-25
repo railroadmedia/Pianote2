@@ -45,7 +45,6 @@ export default class SinglePack extends React.Component {
             isCompleted: false,
             nextLessonUrl: '',
             isLoadingAll: true,
-            totalLength: 0,
         };
     }
 
@@ -56,44 +55,37 @@ export default class SinglePack extends React.Component {
     getBundle = async () => {
         // get bundles
         const response = await packsService.getPack(this.state.url);
-        const newContent = response.data.map(data => {
-            return new ContentModel(data);
-        })[0];
-        console.log(newContent);
-        const relatedLessons = newContent.post.related_lessons.map(rl => {
+        const newContent = new ContentModel(response);
+        const lessons = newContent.post.lessons.map(rl => {
             return new ContentModel(rl);
         });
-        console.log(newContent.getData('thumbnail_url'));
         // if more than one bundle then display bundles otherwise show videos
-        if (newContent.post.bundle_count == 1) {
+        if (newContent.post.bundle_count > 1)
             this.setState({isDisplayingLessons: false});
-            items = [];
-            try {
-                for (i in relatedLessons) {
-                    items.push({
-                        title: relatedLessons[i].getField('title'),
-                        thumbnail: relatedLessons[i].getData('thumbnail_url'),
-                        id: relatedLessons[i].id,
-                        duration: relatedLessons[i].length_in_seconds,
-                        isAddedToList: relatedLessons[i].isAddedToList,
-                        isStarted: relatedLessons[i].isStarted,
-                        isCompleted: relatedLessons[i].isCompleted,
-                        bundle_count: relatedLessons[i].post.bundle_count,
-                        progress_percent:
-                            relatedLessons[i].post.progress_percent,
-                    });
-                }
-            } catch (error) {
-                console.log(error);
+        items = [];
+        try {
+            for (i in lessons) {
+                items.push({
+                    title: lessons[i].getField('title'),
+                    thumbnail: lessons[i].getData('thumbnail_url'),
+                    id: lessons[i].id,
+                    duration: lessons[i].length_in_seconds || 0,
+                    isAddedToList: lessons[i].isAddedToList,
+                    isStarted: lessons[i].isStarted,
+                    isCompleted: lessons[i].isCompleted,
+                    progress_percent: lessons[i].post.progress_percent,
+                    mobile_app_url: lessons[i].post.mobile_app_url,
+                });
             }
-        } else {
+        } catch (error) {
+            console.log(error);
         }
 
         this.setState({
             id: newContent.id,
             isAddedToList: newContent.isAddedToList,
-            thumbnail: newContent.getData('thumbnail_url'),
-            logo: newContent.getData('logo_image_url'),
+            thumbnail: newContent.post.thumbnail_url,
+            logo: newContent.post.pack_logo,
             description: newContent.getData('description'),
             isStarted: newContent.isStarted,
             isCompleted: newContent.isCompleted,
@@ -137,11 +129,13 @@ export default class SinglePack extends React.Component {
     };
 
     navigate = row => {
-        if (row.type == 'pack-bundle-lesson') {
-            this.props.navigation.navigate('VIDEOPLAYER', {id: row.id});
+        if (this.state.isDisplayingLessons) {
+            this.props.navigation.navigate('VIDEOPLAYER', {
+                url: row.mobile_app_url,
+            });
         } else {
             this.props.navigation.push('SINGLEPACK', {
-                data: row,
+                url: row.mobile_app_url,
             });
         }
     };
@@ -544,57 +538,6 @@ export default class SinglePack extends React.Component {
                                                     width: 15 * factorRatio,
                                                 }}
                                             />
-                                            {this.state.isDisplayingLessons && (
-                                                <View
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            width:
-                                                                70 *
-                                                                factorRatio,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            fontWeight: '700',
-                                                            fontSize:
-                                                                17 *
-                                                                factorRatio,
-                                                            textAlign: 'left',
-                                                            color: 'white',
-                                                            fontFamily:
-                                                                'OpenSans',
-                                                            marginTop:
-                                                                10 *
-                                                                factorVertical,
-                                                        }}
-                                                    >
-                                                        {this.state.totalLength}
-                                                    </Text>
-                                                    <Text
-                                                        style={{
-                                                            fontSize:
-                                                                13 *
-                                                                factorRatio,
-                                                            textAlign: 'left',
-                                                            color: 'white',
-                                                            fontFamily:
-                                                                'OpenSans',
-                                                            marginTop:
-                                                                10 *
-                                                                factorVertical,
-                                                        }}
-                                                    >
-                                                        MINS
-                                                    </Text>
-                                                </View>
-                                            )}
-                                            <View
-                                                style={{
-                                                    width: 15 * factorRatio,
-                                                }}
-                                            />
                                             <View
                                                 style={[
                                                     styles.centerContent,
@@ -810,6 +753,7 @@ export default class SinglePack extends React.Component {
                                             ? true
                                             : false
                                     }
+                                    showLines={!this.state.isDisplayingLessons}
                                     imageRadius={5 * factorRatio} // radius of image shown
                                     containerBorderWidth={0} // border of box
                                     containerWidth={fullWidth} // width of list
@@ -829,7 +773,6 @@ export default class SinglePack extends React.Component {
                                     } // image height
                                     imageWidth={fullWidth * 0.26} // image width
                                     outVideos={this.state.outVideos} // if paging and out of videos
-                                    //getVideos={() => this.getContent()} // for paging
                                     navigator={row => this.navigate(row)}
                                 />
                             </View>

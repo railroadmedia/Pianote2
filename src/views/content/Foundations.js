@@ -63,11 +63,10 @@ export default class Foundations extends React.Component {
         let response = await foundationsService.getFoundation(
             'foundations-2019',
         );
-        console.log(response);
-        const newContent = response.data[0].units.map(data => {
+        const newContent = response.units.map(data => {
             return new ContentModel(data);
         });
-        response = new ContentModel(response.data[0]);
+        response = new ContentModel(response);
 
         items = [];
         for (i in newContent) {
