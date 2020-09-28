@@ -33,6 +33,103 @@ export default class Login extends React.Component {
         await this.forceUpdate();
     }
 
+    onLogin = () => {
+        this.props.navigation.navigate('LOGINCREDENTIALS');
+    };
+
+    onSignUp = () => {
+        this.props.navigation.navigate('CREATEACCOUNT');
+    };
+
+    renderButtons = () => (
+        <View
+            key={'buttons'}
+            style={{
+                height: fullHeight * 0.075,
+                flexDirection: 'row',
+                paddingLeft: fullWidth * 0.02,
+                paddingRight: fullWidth * 0.02,
+            }}
+        >
+            <View
+                style={[
+                    styles.centerContent,
+                    {
+                        flex: 1,
+                    },
+                ]}
+            >
+                <View
+                    style={{
+                        height: '80%',
+                        width: '90%',
+                        borderRadius: 60,
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderColor: '#fb1b2f',
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={this.onLogin}
+                        style={{
+                            height: '100%',
+                            width: '100%',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'RobotoCondensed-Bold',
+                                fontSize: 18 * factorRatio,
+                                textAlign: 'center',
+                                color: '#fb1b2f',
+                            }}
+                        >
+                            LOG IN
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View
+                style={[
+                    styles.centerContent,
+                    {
+                        flex: 1,
+                    },
+                ]}
+            >
+                <View
+                    style={{
+                        height: '80%',
+                        width: '90%',
+                        borderRadius: 60,
+                        backgroundColor: '#fb1b2f',
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={this.onSignUp}
+                        style={{
+                            height: '100%',
+                            width: '100%',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontFamily: 'RobotoCondensed-Bold',
+                                fontSize: 18 * factorRatio,
+                                textAlign: 'center',
+                                color: 'white',
+                            }}
+                        >
+                            SIGN UP
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
+    );
+
     render() {
         return (
             <View
@@ -298,109 +395,7 @@ export default class Login extends React.Component {
                                 key={'buff'}
                                 style={{height: fullHeight * 0.02}}
                             ></View>
-                            <View
-                                key={'buttons'}
-                                style={{
-                                    height: fullHeight * 0.075,
-                                    flexDirection: 'row',
-                                    paddingLeft: fullWidth * 0.02,
-                                    paddingRight: fullWidth * 0.02,
-                                }}
-                            >
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: 'transparent',
-                                            borderWidth: 2,
-                                            borderColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'LOGINCREDENTIALS',
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
-                                                }}
-                                            >
-                                                LOG IN
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'NEWMEMBERSHIP',
-                                                    {
-                                                        data: {
-                                                            type: 'SIGNUP',
-                                                            email: 'a@a.a',
-                                                            password: 'pass',
-                                                        },
-                                                    },
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                SIGN UP
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
+                            {this.renderButtons()}
                         </View>
                     </View>
                     <View
@@ -666,109 +661,7 @@ export default class Login extends React.Component {
                                 key={'buff'}
                                 style={{height: fullHeight * 0.02}}
                             ></View>
-                            <View
-                                key={'buttons'}
-                                style={{
-                                    height: fullHeight * 0.075,
-                                    flexDirection: 'row',
-                                    paddingLeft: fullWidth * 0.02,
-                                    paddingRight: fullWidth * 0.02,
-                                }}
-                            >
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: 'transparent',
-                                            borderWidth: 2,
-                                            borderColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'LOGINCREDENTIALS',
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
-                                                }}
-                                            >
-                                                LOG IN
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'NEWMEMBERSHIP',
-                                                    {
-                                                        data: {
-                                                            type: 'SIGNUP',
-                                                            email: 'a@a.a',
-                                                            password: 'pass',
-                                                        },
-                                                    },
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                SIGN UP
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
+                            {this.renderButtons()}
                         </View>
                     </View>
                     <View
@@ -1033,109 +926,7 @@ export default class Login extends React.Component {
                                 key={'buff'}
                                 style={{height: fullHeight * 0.02}}
                             ></View>
-                            <View
-                                key={'buttons'}
-                                style={{
-                                    height: fullHeight * 0.075,
-                                    flexDirection: 'row',
-                                    paddingLeft: fullWidth * 0.02,
-                                    paddingRight: fullWidth * 0.02,
-                                }}
-                            >
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: 'transparent',
-                                            borderWidth: 2,
-                                            borderColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'LOGINCREDENTIALS',
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
-                                                }}
-                                            >
-                                                LOG IN
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'NEWMEMBERSHIP',
-                                                    {
-                                                        data: {
-                                                            type: 'SIGNUP',
-                                                            email: 'a@a.a',
-                                                            password: 'pass',
-                                                        },
-                                                    },
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                SIGN UP
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
+                            {this.renderButtons()}
                         </View>
                     </View>
                     <View
@@ -1400,109 +1191,7 @@ export default class Login extends React.Component {
                                 key={'buff'}
                                 style={{height: fullHeight * 0.02}}
                             ></View>
-                            <View
-                                key={'buttons'}
-                                style={{
-                                    height: fullHeight * 0.075,
-                                    flexDirection: 'row',
-                                    paddingLeft: fullWidth * 0.02,
-                                    paddingRight: fullWidth * 0.02,
-                                }}
-                            >
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: 'transparent',
-                                            borderWidth: 2,
-                                            borderColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'LOGINCREDENTIALS',
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
-                                                }}
-                                            >
-                                                LOG IN
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'NEWMEMBERSHIP',
-                                                    {
-                                                        data: {
-                                                            type: 'SIGNUP',
-                                                            email: 'a@a.a',
-                                                            password: 'pass',
-                                                        },
-                                                    },
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                SIGN UP
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
+                            {this.renderButtons()}
                         </View>
                     </View>
                     <View
@@ -1740,109 +1429,7 @@ export default class Login extends React.Component {
                                 key={'buff'}
                                 style={{height: fullHeight * 0.02}}
                             ></View>
-                            <View
-                                key={'buttons'}
-                                style={{
-                                    height: fullHeight * 0.075,
-                                    flexDirection: 'row',
-                                    paddingLeft: fullWidth * 0.02,
-                                    paddingRight: fullWidth * 0.02,
-                                }}
-                            >
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: 'transparent',
-                                            borderWidth: 2,
-                                            borderColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'LOGINCREDENTIALS',
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: '#fb1b2f',
-                                                }}
-                                            >
-                                                LOG IN
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flex: 1,
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '90%',
-                                            borderRadius: 60,
-                                            backgroundColor: '#fb1b2f',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'NEWMEMBERSHIP',
-                                                    {
-                                                        data: {
-                                                            type: 'SIGNUP',
-                                                            email: 'a@a.a',
-                                                            password: 'pass',
-                                                        },
-                                                    },
-                                                );
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontFamily:
-                                                        'RobotoCondensed-Bold',
-                                                    fontSize: 18 * factorRatio,
-                                                    textAlign: 'center',
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                SIGN UP
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
+                            {this.renderButtons()}
                         </View>
                     </View>
                 </ScrollView>

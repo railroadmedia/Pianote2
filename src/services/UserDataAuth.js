@@ -93,22 +93,48 @@ export async function logOut() {
     }
 }
 
-export async function signUp(formData) {
-    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+export async function signUp(email, password, purchase) {
+    let platform = '';
+    let receiptType = '';
+    if (Platform.OS === 'ios') {
+        platform = 'apple';
+        receiptType = 'appleReceipt';
+        attributes = {email, password, receipt: purchase.transactionReceipt};
+    } else {
+        platform = 'google';
+        receiptType = 'appleReceipt';
+        attributes = {
+            email,
+            password,
+            package_name: `com.pianote`,
+            product_id: purchase.productId,
+            purchase_token: purchase.purchaseToken,
+        };
+    }
     let token = await AsyncStorage.getItem('token');
     token = `Bearer ${JSON.parse(token)}`;
+    console.log(platform, receiptType, token);
+    console.log(attributes);
     try {
         let response = await fetch(
             `https://app-staging.pianote.com/mobile-app/${platform}/verify-receipt-and-process-payment`,
             {
                 method: 'POST',
-                headers: {Authorization: token},
-                body: formData,
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    data: {
+                        type: receiptType,
+                        attributes: attributes,
+                    },
+                }),
             },
         );
         return await response.json();
-    } catch (e) {
-        console.log(error);
+    } catch (error) {
+        console.log('err', error);
         return new Error(error);
     }
 }
@@ -134,7 +160,7 @@ export async function restorePurchase(purchases) {
             },
         );
         return await response.json();
-    } catch (e) {
+    } catch (error) {
         console.log(error);
         return new Error(error);
     }
@@ -158,7 +184,7 @@ export async function validateSignUp(purchases) {
             },
         );
         return await response.json();
-    } catch (e) {
+    } catch (error) {
         console.log(error);
         return new Error(error);
     }
