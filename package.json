@@ -18,7 +18,7 @@
         "@react-native-community/blur": "^3.3.1",
         "@react-native-community/netinfo": "^5.9.6",
         "@react-native-community/viewpager": "^3.3.0",
-        "RNDownload": "git+ssh://git@github.com:bogdan-vol/RNDownload.git",
+        "RNDownload": "git+ssh://git@github.com/bogdan-vol/RNDownload.git",
         "RNVideoEnhanced": "git+ssh://git@github.com/bogdan-vol/RNVideoEnhanced.git",
         "link": "^0.1.5",
         "moment": "^2.27.0",
