@@ -163,6 +163,7 @@ export default class VideoPlayer extends React.Component {
         } else {
             content = await contentService.getContent(this.state.id);
         }
+        console.log(content);
         content = new ContentModel(content);
         this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map(rl => {
@@ -212,6 +213,7 @@ export default class VideoPlayer extends React.Component {
                 thumbnail: relatedLessons[i].getData('thumbnail_url'),
                 type: relatedLessons[i].type,
                 id: relatedLessons[i].id,
+                mobile_app_url: relatedLessons[i].post.mobile_app_url,
                 duration: relatedLessons[i].post.length_in_seconds,
                 isAddedToList: relatedLessons[i].isAddedToList,
                 isStarted: relatedLessons[i].isStarted,
@@ -1009,8 +1011,7 @@ export default class VideoPlayer extends React.Component {
                     <View
                         key={'container2'}
                         style={{
-                            height: fullHeight - navHeight,
-                            alignSelf: 'stretch',
+                            flex: 1,
                             backgroundColor: colors.mainBackground,
                         }}
                     >

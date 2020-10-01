@@ -135,7 +135,7 @@ export default class Lessons extends React.Component {
         let response = await foundationsService.getFoundation(
             'foundations-2019',
         );
-        response = new ContentModel(response.data[0]);
+        response = new ContentModel(response);
         this.setState({
             foundationIsStarted: response.isStarted,
             foundationIsCompleted: response.isCompleted,
@@ -542,16 +542,17 @@ export default class Lessons extends React.Component {
                                         }
                                         pxFromLeft={fullWidth * 0.065}
                                         buttonWidth={fullWidth * 0.42}
-                                        pressed={() =>
-                                            this.props.navigation.navigate(
-                                                'VIDEOPLAYER',
-                                                {
-                                                    url: this.state
-                                                        .foundationNextLesson
-                                                        .mobile_app_url,
-                                                },
-                                            )
-                                        }
+                                        pressed={() => {
+                                            if (this.state.foundationNextLesson)
+                                                this.props.navigation.navigate(
+                                                    'VIDEOPLAYER',
+                                                    {
+                                                        url: this.state
+                                                            .foundationNextLesson
+                                                            .mobile_app_url,
+                                                    },
+                                                );
+                                        }}
                                     />
                                 ) : (
                                     <ContinueIcon
@@ -569,16 +570,17 @@ export default class Lessons extends React.Component {
                                         }
                                         pxFromLeft={fullWidth * 0.065}
                                         buttonWidth={fullWidth * 0.42}
-                                        pressed={() =>
-                                            this.props.navigation.navigate(
-                                                'VIDEOPLAYER',
-                                                {
-                                                    url: this.state
-                                                        .foundationNextLesson
-                                                        .mobile_app_url,
-                                                },
-                                            )
-                                        }
+                                        pressed={() => {
+                                            if (this.state.foundationNextLesson)
+                                                this.props.navigation.navigate(
+                                                    'VIDEOPLAYER',
+                                                    {
+                                                        url: this.state
+                                                            .foundationNextLesson
+                                                            .mobile_app_url,
+                                                    },
+                                                );
+                                        }}
                                     />
                                 )}
                                 <MoreInfoIcon
