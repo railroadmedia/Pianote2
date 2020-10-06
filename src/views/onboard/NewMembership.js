@@ -7,7 +7,6 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import purchaseService from '../../services/purchase.service';
 import RNIap, {
     purchaseErrorListener,
     purchaseUpdatedListener,
@@ -17,7 +16,7 @@ let purchaseErrorSubscription = null;
 let purchaseUpdateSubscription = null;
 
 const skus = Platform.select({
-    android: ['test'],
+    android: ['test', 'test.pianote'],
     ios: ['test.pianote'],
 });
 
@@ -30,6 +29,7 @@ export default class NewMembership extends React.Component {
             newUser: this.props.navigation.state.params.data.type,
             email: this.props.navigation.state.params.data.email,
             password: this.props.navigation.state.params.data.password,
+            token: this.props.navigation.state.params.data.token,
         };
     }
 
@@ -51,24 +51,6 @@ export default class NewMembership extends React.Component {
         } catch (e) {}
     }
 
-    paid = async plan => {
-        // if successful payment and new plan
-        if ('paymentSuccessful' == 'paymentSuccessful') {
-            if (this.state.newUser == 'SIGNUP') {
-                await this.props.navigation.navigate('CREATEACCOUNT3', {
-                    data: {
-                        email: this.state.email,
-                        password: this.state.password,
-                        plan,
-                    },
-                });
-            } else if (this.state.newUser == 'EXPIRED') {
-                // save plan details
-                await AsyncStorage.setItem('plan', plan);
-                await this.props.navigation.navigate('GETRESTARTED');
-            }
-        }
-    };
     startPlan = async plan => {
         try {
             await RNIap.requestSubscription(plan, false);
@@ -79,26 +61,16 @@ export default class NewMembership extends React.Component {
         let {transactionReceipt} = purchase;
         console.log(purchase);
         if (transactionReceipt) {
-            // let formData = new FormData();
-            // if (this.state.newUser == 'SIGNUP') {
-            //     formData.append('email', this.state.email);
-            //     formData.append('password', this.state.password);
-            // }
-            // if (Platform.OS === 'ios') {
-            //     formData.append('receipt', transactionReceipt);
-            // } else {
-            //     formData.append('package_name', `com.drumeo`);
-            //     formData.append('product_id', purchase.productId);
-            //     formData.append('purchase_token', purchase.purchaseToken);
-            // }
             let response = await signUp(
                 this.state.email,
                 this.state.password,
                 purchase,
+                this.state.token,
             );
+
             console.log(response);
-            if (response.success) {
-                const token = `Bearer ${response.token}`;
+            if (response.meta) {
+                const token = `Bearer ${response.meta.auth_code}`;
                 try {
                     await AsyncStorage.multiSet([
                         ['loggedInStatus', 'true'],
@@ -118,8 +90,8 @@ export default class NewMembership extends React.Component {
                     });
                 } catch (e) {}
             } else {
-                let {title, message} = response;
-                Alert.alert(title, message, [{text: 'OK'}], {
+                let {title, detail} = response.errors[0];
+                Alert.alert(title, detail, [{text: 'OK'}], {
                     cancelable: false,
                 });
             }
@@ -498,7 +470,9 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.startPlan('test')
+                                                    this.startPlan(
+                                                        'test.pianote',
+                                                    )
                                                 }
                                                 style={{
                                                     height: '80%',

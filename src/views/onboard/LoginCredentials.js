@@ -14,7 +14,6 @@ import {
 import Modal from 'react-native-modal';
 import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
-import {userLogin, configure} from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -26,6 +25,7 @@ import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
+import {getToken} from '../../services/UserDataAuth.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -48,6 +48,7 @@ export default class LoginCredentials extends React.Component {
             forgotYdelta: new Animated.Value(fullHeight * 0.075),
             secureTextEntry: true,
             showPasswordEmailMatch: false,
+            loginErrorMessage: '',
         };
     }
 
@@ -110,42 +111,44 @@ export default class LoginCredentials extends React.Component {
     };
 
     login = async () => {
-        const {response, error} = await userLogin({
-            email: this.state.email,
-            password: this.state.password,
-        });
-
-        if (typeof response == 'undefined') {
-            this.setState({showPasswordEmailMatch: true});
-        } else if (response.data.success) {
+        const response = await getToken(this.state.email, this.state.password);
+        console.log(response);
+        if (response.success) {
             // store auth data
             await AsyncStorage.multiSet([
                 ['loggedInStatus', 'true'],
                 ['email', this.state.email],
                 ['password', this.state.password],
-                ['token', JSON.stringify(response.data.token)],
-                ['tokenTime', JSON.stringify(response.data.token)],
-                ['userId', JSON.stringify(response.data.userId)],
+                ['token', JSON.stringify(response.token)],
+                ['tokenTime', JSON.stringify(response.token)],
+                ['userId', JSON.stringify(response.userId)],
             ]);
 
             // configure token
-            await configure({authToken: response.data.token});
+            await configure({authToken: response.token});
 
             // checkmembership status
             let userData = await getUserData();
+            console.log(userData);
             let currentDate = new Date().getTime() / 1000;
             let userExpDate =
                 new Date(userData.expirationDate).getTime() / 1000;
-
+            console.log(currentDate, userExpDate);
             if (userData.isLifetime || currentDate < userExpDate) {
-                await configure({authToken: response.data.token});
                 await this.props.navigation.dispatch(resetAction);
             } else {
-                this.props.navigation.navigate('MEMBERSHIPEXPIRED');
+                this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+                    email: this.state.email,
+                    password: this.state.password,
+                    token: response.token,
+                });
             }
+        } else {
+            this.setState({
+                showPasswordEmailMatch: true,
+                loginErrorMessage: response.message,
+            });
         }
-
-        //this.props.navigation.navigate('MEMBERSHIPEXPIRED')
     };
 
     restorePurchases = async () => {
@@ -168,18 +171,18 @@ export default class LoginCredentials extends React.Component {
                 );
             }
             let reducedPurchase;
-            if (isiOS) {
+            if (Platform.OS === 'ios') {
                 reducedPurchase = purchases;
             } else {
                 reducedPurchase = purchases.map(m => {
                     return {
                         purchase_token: m.purchaseToken,
-                        package_name: 'com.drumeo',
+                        package_name: 'com.pianote2',
                         product_id: m.productId,
                     };
                 });
             }
-            //   let resp = await authService.restorePurchase(reducedPurchase);
+            //  let resp = await restorePurchase(reducedPurchase);
             // if (this.loadingRef) this.loadingRef.toggleLoading();
             //   if (resp) {
             //     if (resp.shouldCreateAccount) {
@@ -505,6 +508,7 @@ export default class LoginCredentials extends React.Component {
                     hasBackdrop={false}
                 >
                     <PasswordEmailMatch
+                        errorMessage={this.state.loginErrorMessage}
                         hidePasswordEmailMatch={() => {
                             this.setState({showPasswordEmailMatch: false});
                         }}

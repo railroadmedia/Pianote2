@@ -2,13 +2,15 @@ import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Platform} from 'react-native';
 
-export async function getToken() {
+export async function getToken(userEmail, userPass) {
     try {
         const email = await AsyncStorage.getItem('email');
         const password = await AsyncStorage.getItem('password');
 
         let response = await fetch(
-            `http://app-staging.pianote.com/usora/api/login?email=${email}&password=${password}`,
+            `http://app-staging.pianote.com/usora/api/login?email=${
+                userEmail || email
+            }&password=${userPass || password}`,
             {method: 'PUT'},
         );
 
@@ -93,7 +95,7 @@ export async function logOut() {
     }
 }
 
-export async function signUp(email, password, purchase) {
+export async function signUp(email, password, purchase, oldToken) {
     let platform = '';
     let receiptType = '';
     if (Platform.OS === 'ios') {
