@@ -2493,6 +2493,31 @@ export default class VideoPlayer extends React.Component {
                                 </View>
                             </View>
                         )}
+                        {this.state.showReplies && (
+                            <Modal
+                                key={'replies'}
+                                isVisible={this.state.showReplies}
+                                style={{margin: 0}}
+                                animation={'slideInUp'}
+                                animationInTiming={350}
+                                animationOutTiming={350}
+                                coverScreen={false}
+                                hasBackdrop={false}
+                            >
+                                <Replies
+                                    hideReplies={() => {
+                                        this.setState({showReplies: false});
+                                    }}
+                                    parentComment={this.state.selectedComment}
+                                    onLikeOrDisikeParentComment={
+                                        this.likeComment
+                                    }
+                                    onAddReply={this.fetchComments}
+                                    onDeleteReply={this.fetchComments}
+                                    onDeleteComment={this.deleteComment}
+                                />
+                            </Modal>
+                        )}
                     </View>
                 ) : (
                     <ActivityIndicator
@@ -2567,34 +2592,7 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>
-                <Modal
-                    key={'replies'}
-                    isVisible={this.state.showReplies}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <Replies
-                        hideReplies={() => {
-                            this.setState({showReplies: false});
-                        }}
-                        parentComment={this.state.selectedComment}
-                        onLikeOrDisikeParentComment={this.likeComment}
-                        onAddReply={this.fetchComments}
-                        onDeleteReply={this.fetchComments}
-                        onDeleteComment={this.deleteComment}
-                    />
-                </Modal>
+
                 {!this.state.isLoadingAll && (
                     <>
                         <Modal
