@@ -1,13 +1,16 @@
 import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Platform} from 'react-native';
 
-export async function getToken() {
+export async function getToken(userEmail, userPass) {
     try {
         const email = await AsyncStorage.getItem('email');
         const password = await AsyncStorage.getItem('password');
 
         let response = await fetch(
-            `http://app-staging.pianote.com/usora/api/login?email=${email}&password=${password}`,
+            `http://app-staging.pianote.com/usora/api/login?email=${
+                userEmail || email
+            }&password=${userPass || password}`,
             {method: 'PUT'},
         );
 
@@ -85,6 +88,103 @@ export async function logOut() {
             },
         );
         console.log(await response.json());
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        return new Error(error);
+    }
+}
+
+export async function signUp(email, password, purchase, oldToken) {
+    let platform = '';
+    let receiptType = '';
+    if (Platform.OS === 'ios') {
+        platform = 'apple';
+        receiptType = 'appleReceipt';
+        attributes = {email, password, receipt: purchase.transactionReceipt};
+    } else {
+        platform = 'google';
+        receiptType = 'appleReceipt';
+        attributes = {
+            email,
+            password,
+            package_name: `com.pianote`,
+            product_id: purchase.productId,
+            purchase_token: purchase.purchaseToken,
+        };
+    }
+    let token = await AsyncStorage.getItem('token');
+    token = `Bearer ${JSON.parse(token)}`;
+    console.log(platform, receiptType, token);
+    console.log(attributes);
+    try {
+        let response = await fetch(
+            `https://app-staging.pianote.com/mobile-app/${platform}/verify-receipt-and-process-payment`,
+            {
+                method: 'POST',
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    data: {
+                        type: receiptType,
+                        attributes: attributes,
+                    },
+                }),
+            },
+        );
+        return await response.json();
+    } catch (error) {
+        console.log('err', error);
+        return new Error(error);
+    }
+}
+
+export async function restorePurchase(purchases) {
+    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    let token = await AsyncStorage.getItem('token');
+    token = `Bearer ${JSON.parse(token)}`;
+    try {
+        let response = await fetch(
+            `https://app-staging.pianote.com/mobile-app/${platform}/restore`,
+            {
+                method: 'POST',
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    Platform.OS === 'ios'
+                        ? {receipt: purchases[0].transactionReceipt}
+                        : {purchases},
+                ),
+            },
+        );
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        return new Error(error);
+    }
+}
+
+export async function validateSignUp(purchases) {
+    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    try {
+        let response = await fetch(
+            `https://app-staging.pianote.com/mobile-app/${platform}/signup`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    Platform.OS === 'ios'
+                        ? {receipt: purchases[0].transactionReceipt}
+                        : {purchases},
+                ),
+            },
+        );
         return await response.json();
     } catch (error) {
         console.log(error);

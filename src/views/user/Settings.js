@@ -2,7 +2,14 @@
  * Settings
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    Platform,
+    Alert,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import LogOut from '../../modals/LogOut.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -11,6 +18,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 
 export default class Settings extends React.Component {
     static navigationOptions = {header: null};
@@ -20,6 +28,52 @@ export default class Settings extends React.Component {
             showLogOut: false,
         };
     }
+
+    manageSubscriptions = async () => {
+        const userData = await getUserData();
+        let {isAppleAppSubscriber, isGoogleAppSubscriber} = userData;
+        if (Platform.OS === 'ios') {
+            if (isAppleAppSubscriber) {
+                Alert.alert(
+                    'Manage Subscription',
+                    'You have an Apple App Store subscription that can only be managed through the Apple I.D. used to purchase it.',
+                    [{text: 'View Subscriptions'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            } else {
+                Alert.alert(
+                    'Manage Subscription',
+                    'Sorry! You can only manage your Apple App Store based subscriptions here.',
+                    [{text: 'Got it!'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            }
+        } else {
+            if (isGoogleAppSubscriber) {
+                Alert.alert(
+                    'Manage Subscription',
+                    'You have a Google Play subscription that can only be managed through the Google Account used to purchase it.',
+                    [{text: 'View Subscriptions'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            } else {
+                Alert.alert(
+                    'Manage Subscription',
+                    'You can only manage Google Play subscriptions here. Please sign in to Drumeo on your original subscription platform to manage your settings.',
+                    [{text: 'Got it!'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            }
+        }
+    };
 
     render() {
         return (
@@ -247,6 +301,7 @@ export default class Settings extends React.Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     key={'manageSubscriptions'}
+                                    onPress={this.manageSubscriptions}
                                     style={[
                                         styles.centerContent,
                                         {

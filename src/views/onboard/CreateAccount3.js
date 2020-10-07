@@ -49,7 +49,6 @@ export default class CreateAccount3 extends React.Component {
             displayNameValid: false,
             displayName: '',
             imageURI: '',
-            plan: this.props.navigation.state.params.plan,
             email: this.props.navigation.state.params.email,
             password: this.props.navigation.state.params.password,
         };
