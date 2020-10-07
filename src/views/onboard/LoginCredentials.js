@@ -25,7 +25,8 @@ import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
-import {getToken} from '../../services/UserDataAuth.js';
+import {getToken, restorePurchase} from '../../services/UserDataAuth.js';
+import {configure} from '@musora/services';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -42,7 +43,9 @@ export default class LoginCredentials extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
+            email: this.props.navigation.state.params
+                ? this.props.navigation.state.params.email
+                : '',
             password: '',
             pianoteYdelta: new Animated.Value(0),
             forgotYdelta: new Animated.Value(fullHeight * 0.075),
@@ -152,6 +155,7 @@ export default class LoginCredentials extends React.Component {
     };
 
     restorePurchases = async () => {
+        console.log('restore');
         try {
             await RNIap.initConnection();
         } catch (e) {
@@ -163,6 +167,7 @@ export default class LoginCredentials extends React.Component {
         this.loadingRef?.toggleLoading();
         try {
             const purchases = await RNIap.getAvailablePurchases();
+            console.log(purchases);
             if (!purchases.length) {
                 this.loadingRef?.toggleLoading();
                 return this.customModal.toggle(
@@ -170,7 +175,7 @@ export default class LoginCredentials extends React.Component {
                     'There are no active purchases for this account.',
                 );
             }
-            let reducedPurchase;
+            let reducedPurchase = '';
             if (Platform.OS === 'ios') {
                 reducedPurchase = purchases;
             } else {
@@ -182,15 +187,17 @@ export default class LoginCredentials extends React.Component {
                     };
                 });
             }
-            //  let resp = await restorePurchase(reducedPurchase);
-            // if (this.loadingRef) this.loadingRef.toggleLoading();
-            //   if (resp) {
-            //     if (resp.shouldCreateAccount) {
-            //       // redirect to sign up
-            //     } else if (resp.shouldLogin) {
-            //       this.setState({email: resp.email});
-            //     }
-            //   }
+            console.log(reducedPurchase);
+            let resp = restorePurchase(reducedPurchase);
+            console.log(resp);
+            if (this.loadingRef) this.loadingRef.toggleLoading();
+            if (resp) {
+                if (resp.shouldCreateAccount) {
+                    this.props.navigation.navigate('CREATEACCOUNT');
+                } else if (resp.shouldLogin) {
+                    this.setState({email: resp.email});
+                }
+            }
         } catch (err) {
             this.loadingRef?.toggleLoading();
             this.customModal.toggle(

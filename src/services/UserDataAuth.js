@@ -87,7 +87,6 @@ export async function logOut() {
                 headers: {Authorization: `Bearer ${auth.token}`},
             },
         );
-        console.log(await response.json());
         return await response.json();
     } catch (error) {
         console.log(error);
