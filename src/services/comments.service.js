@@ -3,23 +3,24 @@ import commonService from './common.service';
 const rootUrl = 'https://app-staging.pianote.com';
 export default {
     getComments: async function (id, sortBy, limit) {
-        // TODO change hardcoded id
         let reqUrl = `${rootUrl}/api/railcontent/comments?content_id=${id}&limit=${limit}`;
-        if (sortBy === 'popular') {
+        if (sortBy === 'Popular') {
             reqUrl += `&sort=-like_count`;
-        } else if (sortBy === 'latest') {
+        } else if (sortBy === 'Newest') {
             reqUrl += `&sort=-created_on`;
-        } else if (sortBy === 'oldest') {
+        } else if (sortBy === 'Oldest') {
             reqUrl += `&sort=created_on`;
-        } else if (sortBy === 'my_comments') {
+        } else if (sortBy === 'Mine') {
             reqUrl += `&sort=-mine`;
         }
-        console.log(reqUrl);
         return commonService.tryCall(reqUrl);
     },
     addComment: async function (commentText, contentId) {
+        console.log(
+            `${rootUrl}/api/railcontent/comment?comment=${commentText}&content_id=${contentId}`,
+        );
         return commonService.tryCall(
-            `${rootUrl}/api/railcontent/comment?comment=${commentText}&content_id=${264204}`,
+            `${rootUrl}/api/railcontent/comment?comment=${commentText}&content_id=${contentId}`,
             'PUT',
         );
     },
