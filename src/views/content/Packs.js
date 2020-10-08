@@ -19,6 +19,7 @@ import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 
+
 export default class Packs extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -77,8 +78,6 @@ export default class Packs extends React.Component {
             packs: [...this.state.packs, ...items],
             isLoading: false,
         });
-
-        console.log(this.state.packs);
     };
 
     render() {

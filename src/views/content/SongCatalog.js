@@ -4,13 +4,13 @@
 import React from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import Modal from 'react-native-modal';
-import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import {getStartedContent, getAllContent} from '../../services/GetContent';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -25,18 +25,24 @@ export default class SongCatalog extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            allSongs: [], // videos loaded
             progressSongs: [],
-            isLoadingProgress: true,
-            outVideos: false, // if no more videos to load
-            showChooseInstructors: false,
-            showChooseYourLevel: false,
-            page: 0, // current page
-            isPaging: false,
+            
+            allSongs: [],
+            currentSort: 'relevance',
+            page: 1,
+            outVideos: false,
             isLoadingAll: true,
+            isPaging: false,
             filtering: false,
-            filters: null,
-            currentSort: 'Relevance',
+            filters: {
+                displayTopics: [],
+                topics: [],
+                level: [],
+                progress: [],
+                instructors: [],
+            },
+
+            isLoadingProgress: true,
         };
     }
 
@@ -45,77 +51,19 @@ export default class SongCatalog extends React.Component {
         this.getAllSongs();
     };
 
-    filterResults = async () => {
-        this.props.navigation.navigate('FILTERS', {
-            filters: this.state.filters,
-            type: 'SONGS',
-            onGoBack: (filters) => {
-                this.setState({
-                    allSongs: [],
-                    filters:
-                        filters.instructors.length == 0 &&
-                        filters.level.length == 0 &&
-                        filters.progress.length == 0 &&
-                        filters.topics.length == 0
-                            ? null
-                            : filters,
-                }),
-                    this.getAllSongs(),
-                    this.forceUpdate();
-            },
-        });
-    };
-
     getAllSongs = async () => {
-        await this.setState({
-            filtering: true,
-            page: this.state.page + 1,
-        });
-
-        // see if importing filters
-        try {
-            var filters = this.state.filters;
-            if (
-                filters.instructors.length !== 0 ||
-                filters.level.length !== 0 ||
-                filters.progress.length !== 0 ||
-                filters.topics.length !== 0
-            ) {
-                // if has a filter then send filters to vertical list
-                this.setState({filters});
-            } else {
-                // if no filters selected then null
-                var filters = null;
-            }
-        } catch (error) {
-            var filters = null;
-        }
-
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '20',
-            page: this.state.page,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['song'],
-        });
-
-        const newContent = await response.data.data.map((data) => {
-            return new ContentModel(data);
-        });
-
+        let response = await getAllContent('song', this.state.currentSort, this.state.page, this.state.filters)
+        const newContent = await response.data.map((data) => {return new ContentModel(data)});
+        
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
+                    artist: newContent[i].post.artist,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
@@ -132,6 +80,7 @@ export default class SongCatalog extends React.Component {
 
         await this.setState({
             allSongs: [...this.state.allSongs, ...items],
+            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
             filtering: false,
             isPaging: false,
             isLoadingAll: false,
@@ -139,28 +88,17 @@ export default class SongCatalog extends React.Component {
     };
 
     getProgressSongs = async () => {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '15',
-            page: this.state.page,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['song'],
-        });
-
-        const newContent = response.data.data.map((data) => {
+        let response = await getStartedContent('song')
+        const newContent = response.data.map((data) => {
             return new ContentModel(data);
         });
-
-        console.log(response);
 
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
+                    artist: newContent[i].post.artist,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
                     description: newContent[i]
@@ -196,6 +134,69 @@ export default class SongCatalog extends React.Component {
         }
     };
 
+    changeSort = async (currentSort) => {
+        await this.setState({
+            allSongs: [],
+            currentSort,
+            outVideos: false,
+            isPaging: true,
+            page: 1,
+        })
+
+        await this.getAllSongs();
+    };  
+
+    getVideos = async () => {
+        if(!this.state.outVideos) {
+            await this.setState({page: this.state.page + 1});
+            this.getAllSongs();
+        }
+    };
+
+    handleScroll = async (event) => {
+        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+            await this.setState({
+                page: this.state.page + 1,
+                isPaging: true
+            })
+
+            await this.getAllSongs();
+        }
+    };    
+    
+    filterResults = async () => {
+        await this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'SONGS',
+            onGoBack: (filters) => this.changeFilters(filters)
+        });
+    };
+
+    changeFilters = async (filters) => {
+        // after leaving filter page. set filters here
+        await this.setState({
+            allSongs: [],
+            outVideos: false,
+            page: 1,
+            filters:
+                filters.instructors.length == 0 &&
+                filters.level.length == 0 &&
+                filters.progress.length == 0 &&
+                filters.topics.length == 0
+                    ? {
+                        displayTopics: [],
+                        level: [],
+                        topics: [],
+                        progress: [],
+                        instructors: [],
+                    }
+                    : filters,
+        })
+
+        this.getAllSongs();
+        this.forceUpdate();
+    }        
+
     render() {
         return (
             <View styles={styles.container}>
@@ -225,15 +226,7 @@ export default class SongCatalog extends React.Component {
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
                         scrollEventThrottle={400}
-                        onScroll={({nativeEvent}) => {
-                            if (
-                                isCloseToBottom(nativeEvent) &&
-                                this.state.isPaging == false
-                            ) {
-                                this.setState({isPaging: true}),
-                                    this.getAllSongs();
-                            }
-                        }}
+                        onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
                         style={{
                             flex: 1,
                             backgroundColor: colors.mainBackground,
@@ -304,7 +297,7 @@ export default class SongCatalog extends React.Component {
                                 }
                             />
                         </View>
-                        <View style={{height: 15 * factorVertical}} />
+                        <View style={{height: 10 * factorVertical}} />
                         <VerticalVideoList
                             items={this.state.allSongs}
                             isLoading={this.state.isLoadingAll}
@@ -315,18 +308,14 @@ export default class SongCatalog extends React.Component {
                             showArtist={true} // show artist name
                             showLength={false}
                             showSort={true}
+                            isPaging={this.state.isPaging}
                             filters={this.state.filters} // show filter list
                             imageRadius={5 * factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list
                             currentSort={this.state.currentSort} // relevance sort
-                            changeSort={(currentSort) => {
-                                this.setState({
-                                    currentSort,
-                                    allSongs: [],
-                                }),
-                                    this.getAllSongs();
-                            }} // change sort and reload videos
+                            changeSort={(sort) => this.changeSort(sort)} // change sort and reload videos
+                            outVideos={this.state.outVideos} // if paging and out of videos
                             filterResults={() => this.filterResults()} // apply from filters page
                             containerHeight={
                                 onTablet

@@ -18,10 +18,20 @@ import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
+
+const messageDict = {
+    'lesson comment reply': ['replied to your comment.', true, 'orange', 'comment reply notifications'], // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
+    'lesson comment liked': ['liked your comment.', true, 'blue', 'comment like notifications'], // notify_on_forum_post_like: this.state.notify_on_forum_post_like,
+    'forum post reply': ['replied to your forum post.', true, 'orange', 'forum post reply notifications'], // notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
+    'forum post liked': ['liked your forum post.', true, 'blue', 'forum post like notifications'], // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
+    'forum post in followed thread': ['post in followed thread.', false, 'orange', 'forum post reply notifications'],
+    'new content releases': ['', false, 'red', 'new content release notifications'], // notify_weekly_update: this.state.notify_weekly_update,
+}
 
 export default class Profile extends React.Component {
     static navigationOptions = {header: null};
@@ -29,15 +39,23 @@ export default class Profile extends React.Component {
         super(props);
         this.state = {
             profileImage: '',
+            xp: '',
             notifications: [],
             showXpRank: false,
             showReplyNotification: false,
             memberSince: '',
             isLoading: true,
+            clickedNotificationStatus: false, 
+            notify_on_forum_followed_thread_reply: false,
+            notify_on_forum_post_like: false,
+            notify_on_forum_post_reply: false,
+            notify_on_lesson_comment_like: false,
+            notify_on_lesson_comment_reply: false,
+            notify_weekly_update: false,
         };
     }
 
-    componentWillMount = async () => {
+    UNSAFE_componentWillMount = async () => {
         let data = await AsyncStorage.multiGet([
             'totalXP',
             'rank',
@@ -46,8 +64,10 @@ export default class Profile extends React.Component {
             'joined',
         ]);
 
+        let xp = await this.changeXP(data[0][1])
+
         await this.setState({
-            xp: data[0][1],
+            xp,
             rank: data[1][1],
             profileImage: data[2][1],
             username: data[3][1],
@@ -58,6 +78,7 @@ export default class Profile extends React.Component {
 
     componentDidMount = async () => {
         const auth = await getToken();
+        let userData = await getUserData();
 
         try {
             let response = await fetch(
@@ -71,7 +92,7 @@ export default class Profile extends React.Component {
                 },
             );
             var notifications = await response.json()
-
+            console.log('HELLO: ', notifications)
             for(i in notifications.data) {
                 let timeCreated = notifications.data[i].created_at.slice(0,10)+'T'+notifications.data[i].created_at.slice(11)+'.000Z'                
                 let dateNote = new Date(timeCreated).getTime()/1000
@@ -88,37 +109,16 @@ export default class Profile extends React.Component {
                     notifications.data[i].created_at = `${(timeDelta/604800).toFixed(0)} week${(timeDelta < 604800*2) ? '':'s'} ago`
                 } 
             }
-
+            
             await this.setState({
-                notifications: [
-                    {
-                        'created_at': "4 hours ago",
-                        'data': {commentId: 1082},
-                        'id': 1,
-                        'read_on': null,
-                        'recipient': {id: 155577, email: "kentonp@drumeo.com"},
-                        'type': "lesson comment reply",
-                        'updated_at': "2020-09-17 18:39:24",
-                    },
-                    {
-                        'created_at': "4 hours ago",
-                        'data': {commentId: 1092},
-                        'id': 1,
-                        'read_on': null,
-                        'recipient': {id: 155577, email: "kentonp@drumeo.com"},
-                        'type': "lesson comment reply",
-                        'updated_at': "2020-09-17 18:39:24",
-                    },
-                    {
-                        'created_at': "4 hours ago",
-                        'data': {commentId: 10982},
-                        'id': 1,
-                        'read_on': null,
-                        'recipient': {id: 155577, email: "kentonp@drumeo.com"},
-                        'type': "lesson comment reply",
-                        'updated_at': "2020-09-17 18:39:24",
-                    },
-                ] //notifications.data
+                notifications_summary_frequency_minutes: userData.notifications_summary_frequency_minutes,
+                notify_on_forum_followed_thread_reply: userData.notify_on_forum_followed_thread_reply,
+                notify_on_forum_post_like: userData.notify_on_forum_post_like,
+                notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
+                notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
+                notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
+                notify_weekly_update: userData.notify_weekly_update,
+                notifications: notifications.data,
             })
             
         } catch (error) {
@@ -128,7 +128,7 @@ export default class Profile extends React.Component {
         this.setState({isLoading: false})
     };
 
-    changeXP = (num) => {
+    changeXP = async (num) => {
         if (num !== '') {
             num = Number(num);
             if (num < 10000) {
@@ -142,43 +142,8 @@ export default class Profile extends React.Component {
         }
     };
 
-    changeNotificationStatus = async () => {
-        const auth = await getToken();
-
-        var attributes = {}
-            
-        //notify_on_forum_post_like: this.state.notify_on_forum_post_like,
-          //  notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-           // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
-           // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
-           // notify_weekly_update: this.state.notify_weekly_update,
-
-        return
-        try {
-            let response = await fetch(
-                `https://app-staging.pianote.com/usora/api/profile/update`,
-                {
-                    method: 'PATCH',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        data: {
-                            type: 'user',
-                            attributes,
-                        },
-                    }),
-                },
-            );
-
-            console.log(await response.json());
-        } catch (error) {
-            console.log('ERROR: ', error);
-        }
-    };
-
     removeNotification = async (data) => {
+        let auth = await getToken()
         let commentID = data.data.commentId
 
         for(i in this.state.notifications) {
@@ -191,9 +156,7 @@ export default class Profile extends React.Component {
         }
 
         await this.forceUpdate()
-        
-        let auth = await getToken()
-        
+                
         try {
             let response = await fetch(
                 `https://app-staging.pianote.com/api/railnotifications/notification/${commentID}`,
@@ -205,12 +168,57 @@ export default class Profile extends React.Component {
                     },
                 },
             );
-            console.log(commentID)
-            console.log(await response.json());
+            console.log(await response);
         } catch (error) {
             console.log('ERROR: ', error);
         }
     };
+
+    checkNotificationTypeStatus = async (item) => {
+        let type = messageDict[item.type][0]
+        if(type == 'replied to your comment.') {
+            await this.setState({clickedNotificationStatus: this.state.notify_on_lesson_comment_reply})
+        } else if(type == 'liked your comment.') {
+            await this.setState({clickedNotificationStatus: this.state.notify_on_lesson_comment_like})
+        } else if(type == 'replied to your forum post.') {
+            await this.setState({clickedNotificationStatus: this.state.notify_on_forum_post_reply})
+        } else if(type == 'liked your forum post.') {
+            await this.setState({clickedNotificationStatus: this.state.notify_on_forum_post_like})
+        } else if(type == 'post in followed thread.') {
+            await this.setState({clickedNotificationStatus: this.state.notify_on_forum_followed_thread_reply})
+        } else if(type == '') {
+            await this.setState({clickedNotificationStatus: this.state.notify_weekly_update})
+        }
+    };
+
+    turnOfffNotifications = async (data) => {
+        const auth = await getToken();
+        
+        this.setState(data)
+        
+        try {
+            let response = await fetch(
+                `https://app-staging.pianote.com/usora/api/profile/update`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        Authorization: `Bearer ${auth.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            type: 'user',
+                            attributes: data,
+                        },
+                    }),
+                },
+            );
+
+            console.log(await response.json());
+        } catch (error) {
+            console.log('ERROR: ', error);
+        }
+    }
 
     render() {
         return (
@@ -379,9 +387,7 @@ export default class Profile extends React.Component {
                                             source={{
                                                 uri: this.state.profileImage,
                                             }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
+                                            resizeMode={FastImage.resizeMode.cover}
                                         />
                                     )}
                                 </View>
@@ -477,7 +483,7 @@ export default class Profile extends React.Component {
                                                     textAlign: 'center',
                                                 }}
                                             >
-                                                {this.changeXP(this.state.xp)}
+                                                {this.state.xp}
                                             </Text>
                                         </View>
                                         <View style={{flex: 1}} />
@@ -576,6 +582,7 @@ export default class Profile extends React.Component {
                                                             backgroundColor: '#ececec',
                                                         }}
                                                     >
+                                                        {(messageDict[item.type][2] == 'red') && (
                                                         <View
                                                             style={[
                                                                 styles.centerContent,
@@ -585,8 +592,30 @@ export default class Profile extends React.Component {
                                                                     right: 0,
                                                                     height: fullWidth * 0.075,
                                                                     width: fullWidth * 0.075,
-                                                                    backgroundColor:
-                                                                        index % 2 ? 'orange' : 'blue',
+                                                                    backgroundColor: 'red',
+                                                                    borderRadius: 100 * factorRatio,
+                                                                    zIndex: 5,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <FontAwesome
+                                                                size={fullWidth * 0.045}
+                                                                color={'white'}
+                                                                name={'video-camera'}
+                                                            />
+                                                        </View>                                                        
+                                                        )}
+                                                        {(messageDict[item.type][2] == 'orange') && (
+                                                        <View
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    position: 'absolute',
+                                                                    bottom: 0,
+                                                                    right: 0,
+                                                                    height: fullWidth * 0.075,
+                                                                    width: fullWidth * 0.075,
+                                                                    backgroundColor: 'orange',
                                                                     borderRadius: 100 * factorRatio,
                                                                     zIndex: 5,
                                                                 },
@@ -597,12 +626,41 @@ export default class Profile extends React.Component {
                                                                 width={fullWidth * 0.05}
                                                                 fill={'white'}
                                                             />
+                                                        </View>                                                        
+                                                        )}
+                                                        {(messageDict[item.type][2] == 'blue') && (
+                                                        <View
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    position: 'absolute',
+                                                                    bottom: 0,
+                                                                    right: 0,
+                                                                    height: fullWidth * 0.075,
+                                                                    width: fullWidth * 0.075,
+                                                                    backgroundColor: 'blue',
+                                                                    borderRadius: 100 * factorRatio,
+                                                                    zIndex: 5,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <AntIcon
+                                                                size={fullWidth * 0.045}
+                                                                color={'white'}
+                                                                name={'like1'}
+                                                            />
                                                         </View>
+                                                        )}
                                                         <FastImage
-                                                            style={{flex: 1, borderRadius: 100}}
+                                                            style={{
+                                                                flex: 1, 
+                                                                borderRadius: 100,
+                                                            }}
                                                             source={{
-                                                                uri:
-                                                                    'https://facebook.github.io/react-native/img/tiny_logo.png',
+                                                                uri: (item.type == 'new content releases') ? 
+                                                                item.content.thumbnail_url
+                                                                :
+                                                                item.sender.profile_image_url
                                                             }}
                                                             resizeMode={FastImage.resizeMode.stretch}
                                                         />
@@ -634,9 +692,13 @@ export default class Profile extends React.Component {
                                                                 color: 'white',
                                                             }}
                                                         >
-                                                            {'NEW - '}
+                                                            {(messageDict[item.type][1]) ? '' : 'NEW - '}
                                                         </Text>
-                                                        {item.data.commentId}
+                                                        {(item.type == 'new content releases') ? 
+                                                            item.content.display_name 
+                                                            : 
+                                                            item.sender.display_name
+                                                        }
                                                         <Text
                                                             style={{
                                                                 fontFamily: 'OpenSans-Regular',
@@ -645,7 +707,7 @@ export default class Profile extends React.Component {
                                                             }}
                                                         >
                                                             {' '}
-                                                            replied to your comment.
+                                                            {messageDict[item.type][0]}
                                                         </Text>
                                                     </Text>
                                                     <View style={{height: 5 * factorVertical}} />
@@ -668,10 +730,11 @@ export default class Profile extends React.Component {
                                                     <View style={{flex: 1}} />
                                                     <TouchableOpacity
                                                         onPress={() => {
+                                                            this.checkNotificationTypeStatus(item),
                                                             this.setState({
                                                                 showReplyNotification: true,
                                                                 clickedNotification: item,
-                                                            });
+                                                            })
                                                         }}
                                                         style={{
                                                             height: 35 * factorRatio,
@@ -777,10 +840,15 @@ export default class Profile extends React.Component {
                                 this.setState({showReplyNotification: false}),
                                 this.removeNotification(data)
                             }}
+                            turnOfffNotifications={(data) => {
+                                this.setState({showReplyNotification: false}),
+                                this.turnOfffNotifications(data)
+                            }}
                             hideReplyNotification={() => {
                                 this.setState({showReplyNotification: false});
                             }}
                             data={this.state.clickedNotification}
+                            notificationStatus={this.state.clickedNotificationStatus}
                         />
                     </Modal>
                     <NavigationBar currentPage={'PROFILE'} />

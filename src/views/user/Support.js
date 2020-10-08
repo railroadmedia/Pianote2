@@ -124,9 +124,7 @@ export default class Support extends React.Component {
                                     color: colors.secondBackground,
                                 }}
                             >
-                                Lorem ipsum dolor sit amet, consecteur aclipsing
-                                elit. In facilisis orci felis, ac mollis,
-                                tellius dignissim ut.
+                                
                             </Text>
                             <View style={{height: 15 * factorVertical}} />
                             <Text
@@ -136,11 +134,7 @@ export default class Support extends React.Component {
                                     color: colors.secondBackground,
                                 }}
                             >
-                                Lorem ipsum dolor sit amet, consecteur aclipsing
-                                elit. In facilisis orci felis, ac mollis,
-                                tellius dignissim ut. Lorem ipsum dolor sit
-                                amet, consecteur aclipsing elit. In facilisis
-                                orci felis, ac mollis, tellius dignissim ut.
+                                
                             </Text>
                         </View>
                         <View style={{height: 20 * factorVertical}} />

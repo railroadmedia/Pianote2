@@ -33,8 +33,6 @@ export default class LoadPage extends React.Component {
 
         let userData = await getUserData();
 
-        console.log(userData);
-
         if (isLoggedIn !== 'true' || userData.isMember == false) {
             // go to login
             setTimeout(
@@ -42,8 +40,6 @@ export default class LoadPage extends React.Component {
                 1000,
             );
         } else {
-            console.log('ispackonly', userData.isPackOlyOwner);
-
             let currentDate = new Date().getTime() / 1000;
             let userExpDate =
                 new Date(userData.expirationDate).getTime() / 1000;

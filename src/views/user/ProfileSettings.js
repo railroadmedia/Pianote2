@@ -12,15 +12,12 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import ChangeEmail from '../../modals/ChangeEmail';
 import ImagePicker from 'react-native-image-picker';
-import {userForgotPassword} from '@musora/services';
 import DisplayName from '../../modals/DisplayName.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
-import commonService from 'Pianote2/src/services/common.service';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -35,7 +32,6 @@ export default class ProfileSettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showChangeEmail: false,
             showDisplayName: false,
             currentlyView: 'Profile Settings',
             displayName: '',
@@ -68,34 +64,8 @@ export default class ProfileSettings extends React.Component {
             this.changeImage();
         } else if (this.state.currentlyView == 'Password') {
             this.changePassword();
-        } else if (this.state.currentlyView == 'Email Address') {
-            this.changeEmailAddress();
         }
     }
-
-    changePassword = async () => {
-        const email = await AsyncStorage.getItem('email');
-
-        const {response, error} = await userForgotPassword({email});
-
-        console.log('RESET PASSWORD LINK: ', response, error);
-        await this.setState({showChangePassword: true});
-    };
-
-    changePassword2 = async () => {
-        return;
-        return commonService.tryCall(
-            `http://app-staging.pianote.com/api/change-password`,
-            'PUT',
-            null,
-            null,
-            {
-                pass1: this.state.newPassword,
-                user_login: email,
-                rp_key: this.state.passwordKey,
-            },
-        );
-    };
 
     changeName = async () => {
         // check if display name available
@@ -211,35 +181,6 @@ export default class ProfileSettings extends React.Component {
                 }
             },
         );
-    };
-
-    changeEmailAddress = async () => {
-        const auth = await getToken();
-
-        try {
-            let response = await fetch(
-                `https://app-staging.pianote.com/usora/api/profile/update`,
-                {
-                    method: 'PATCH',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        data: {
-                            type: 'user',
-                            attributes: {
-                                email: this.state.email,
-                            },
-                        },
-                    }),
-                },
-            );
-
-            console.log(await response.json());
-        } catch (error) {
-            console.log('ERROR: ', error);
-        }
     };
 
     render() {
@@ -452,90 +393,6 @@ export default class ProfileSettings extends React.Component {
                                             }}
                                         >
                                             Profile Photo
-                                        </Text>
-                                        <View style={{flex: 1}} />
-                                        <AntIcon
-                                            name={'right'}
-                                            size={22.5 * factorRatio}
-                                            color={colors.secondBackground}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        key={'paymentHistory'}
-                                        onPress={() =>
-                                            this.setState({
-                                                currentlyView: 'Password',
-                                            })
-                                        }
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                height: 50 * factorRatio,
-                                                width: fullWidth,
-                                                borderBottomColor:
-                                                    colors.secondBackground,
-                                                borderBottomWidth:
-                                                    1 * factorRatio,
-                                                flexDirection: 'row',
-                                                paddingRight: fullWidth * 0.025,
-                                            },
-                                        ]}
-                                    >
-                                        <View
-                                            style={{
-                                                width: 20 * factorHorizontal,
-                                            }}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 18 * factorRatio,
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            Password
-                                        </Text>
-                                        <View style={{flex: 1}} />
-                                        <AntIcon
-                                            name={'right'}
-                                            size={22.5 * factorRatio}
-                                            color={colors.secondBackground}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        key={'manageSubscriptions'}
-                                        onPress={() => {
-                                            this.setState({
-                                                currentlyView: 'Email Address',
-                                            });
-                                        }}
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                height: 50 * factorRatio,
-                                                width: fullWidth,
-                                                borderBottomColor:
-                                                    colors.secondBackground,
-                                                borderBottomWidth:
-                                                    1 * factorRatio,
-                                                flexDirection: 'row',
-                                                paddingRight: fullWidth * 0.025,
-                                            },
-                                        ]}
-                                    >
-                                        <View
-                                            style={{
-                                                width: 20 * factorHorizontal,
-                                            }}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 18 * factorRatio,
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            Email Address
                                         </Text>
                                         <View style={{flex: 1}} />
                                         <AntIcon
@@ -842,65 +699,8 @@ export default class ProfileSettings extends React.Component {
                                     />
                                 </View>
                             )}
-                            {this.state.currentlyView == 'Email Address' && (
-                                <View style={{width: fullWidth}}>
-                                    <TextInput
-                                        ref={(txt) => {
-                                            this.txt = txt;
-                                        }}
-                                        placeholder={'Email Address'}
-                                        value={this.state.email}
-                                        placeholderTextColor={
-                                            colors.secondBackground
-                                        }
-                                        onChangeText={(email) =>
-                                            this.setState({email})
-                                        }
-                                        onSubmitEditing={() => {}}
-                                        returnKeyType={'go'}
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            height:
-                                                Platform.OS == 'android'
-                                                    ? fullHeight * 0.07
-                                                    : fullHeight * 0.06,
-                                            paddingLeft: fullWidth * 0.045,
-                                            width: fullWidth,
-                                            color: colors.secondBackground,
-                                            justifyContent: 'center',
-                                            fontSize: 18 * factorRatio,
-                                            borderBottomColor:
-                                                colors.secondBackground,
-                                            borderBottomWidth: 1 * factorRatio,
-                                        }}
-                                    />
-                                    <View style={{height: 30 * factorRatio}} />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 16 * factorRatio,
-                                            paddingLeft: fullWidth * 0.045,
-                                            paddingRight: fullWidth * 0.045,
-                                            color: colors.secondBackground,
-                                        }}
-                                    >
-                                        This email address is what you will use
-                                        to login to your account. You will be
-                                        asked to confirm with your account
-                                        password following this change.
-                                    </Text>
-                                </View>
-                            )}
                         </View>
                     </View>
-
-                    {this.state.showChangeEmail && (
-                        <ChangeEmail
-                            hideChangeEmail={() => {
-                                this.setState({showChangeEmail: false});
-                            }}
-                        />
-                    )}
 
                     {this.state.currentlyView == 'Profile Settings' && (
                         <NavigationBar currentPage={'PROFILE'} />

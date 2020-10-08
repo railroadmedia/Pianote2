@@ -24,19 +24,52 @@ import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
+const sortDict = {
+    newest: 'NEWEST', 
+    oldest: 'OLDEST', 
+    popularity: 'POPULAR', 
+    trending: 'TRENDING',
+    relevance: 'RELEVANCE'
+}
+
+const instructorDict = {
+    196999: 'LISA',
+    197077: 'BRETT',
+    197087: 'CASSI',
+    202588: 'JAY',
+    196994: 'JORDAN',
+    203416: 'KENNY',
+    243082: 'SAM',
+    221245: 'JOSH',
+    'Colin Swatzsky': ['COLIN', 197106],
+    'Dave Attkinson': [266932],
+    'DR Sean Kiligaon': [247373],
+    'Gabriel Patelchi': [218895],
+}
+
 class VerticalVideoList extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
             showModal: false,
+            outVideos: this.props.outVideos,
             showRelevance: false,
             items: this.props.items,
             isLoading: this.props.isLoading,
+            isPaging: false,
         };
     }
 
-    componentWillReceiveProps = async (props) => {
+    UNSAFE_componentWillReceiveProps = async (props) => {
+        if(props.isPaging !== this.state.isPaging) {
+            if(!this.state.isLoading) {
+                await this.setState({isPaging: props.isPaging})
+            }
+        }
+        if(props.outVideos !== this.state.outVideos) {
+            await this.setState({outVideos: props.outVideos})
+        }
         if (props.isLoading !== this.state.isLoading) {
             await this.setState({
                 isLoading: props.isLoading,
@@ -46,7 +79,7 @@ class VerticalVideoList extends React.Component {
             await this.setState({
                 items: props.items,
             });
-        }
+        } 
     };
 
     showSpinner = () => {
@@ -94,43 +127,46 @@ class VerticalVideoList extends React.Component {
     };
 
     topics = () => {
-        if (this.props.filters.topics.length > 0) {
+        let topics = this.props.filters.displayTopics
+        if (topics.length > 0) {
             var topicString = '/ ';
 
-            for (i in this.props.filters.topics) {
-                if (i == this.props.filters.topics.length - 1) {
-                    topicString = topicString + this.props.filters.topics[i];
+            for (i in topics) {
+                if (i == topics.length - 1) {
+                    topicString = topicString + topics[i];
                 } else {
                     topicString =
-                        topicString + this.props.filters.topics[i] + ', ';
+                        topicString + topics[i] + ', ';
                 }
             }
 
             return topicString;
         } else {
-            return;
+            return '';
         }
     };
 
     instructors = () => {
-        if (this.props.filters.instructors.length > 0) {
+        let instructors = []
+
+        for(i in this.props.filters.instructors) {
+            instructors.push(instructorDict[this.props.filters.instructors[i]])
+        }
+        
+        if (instructors.length > 0) {
             var instructorString = '/ ';
 
-            for (i in this.props.filters.instructors) {
-                if (i == this.props.filters.instructors.length - 1) {
-                    instructorString =
-                        instructorString + this.props.filters.instructors[i];
+            for (i in instructors) {
+                if (i == instructors.length - 1) {
+                    instructorString = instructorString + instructors[i];
                 } else {
-                    instructorString =
-                        instructorString +
-                        this.props.filters.instructors[i] +
-                        ', ';
+                    instructorString = instructorString + instructors[i] + ', ';
                 }
             }
 
             return instructorString;
         } else {
-            return;
+            return '';
         }
     };
 
@@ -150,7 +186,7 @@ class VerticalVideoList extends React.Component {
 
             return progressString;
         } else {
-            return;
+            return '';
         }
     };
 
@@ -172,7 +208,6 @@ class VerticalVideoList extends React.Component {
     };
 
     like = (contentID) => {
-        console.log(this.state.items);
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isLiked = !this.state.items.isLiked;
@@ -185,7 +220,9 @@ class VerticalVideoList extends React.Component {
     };
 
     renderMappedList = () => {
-        if (this.state.items.length == 0 || this.state.isLoading) {
+        if(this.state.items.length == 0 && this.state.outVideos) {
+            return 
+        } else if(this.state.items.length == 0 || this.state.isLoading) {
             return this.showSpinner();
         }
 
@@ -384,6 +421,7 @@ class VerticalVideoList extends React.Component {
                                     </Text>
                                 )}
                                 <Text
+                                    numberOfLines={2}
                                     style={{
                                         fontSize: 15 * factorRatio,
                                         textAlign: 'left',
@@ -452,8 +490,7 @@ class VerticalVideoList extends React.Component {
                                             }}
                                         >
                                             {row.type.charAt(0).toUpperCase() +
-                                                row.type.slice(1)}{' '}
-                                            /
+                                                row.type.slice(1)}{' / '}
                                         </Text>
                                     )}
                                     {this.props.showArtist && (
@@ -462,12 +499,11 @@ class VerticalVideoList extends React.Component {
                                             style={{
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
-                                                textAlign: 'left',
                                                 fontFamily: 'OpenSans-Regular',
+                                                textAlign: 'left',
                                             }}
                                         >
-                                            {' '}
-                                            {row.artist}
+                                           {row.artist}
                                         </Text>
                                     )}
                                 </View>
@@ -528,7 +564,7 @@ class VerticalVideoList extends React.Component {
                                     this.props.showNextVideo && index == 0
                                         ? this.props.containerHeight
                                         : this.props.containerHeight +
-                                          50 * factorVertical,
+                                        50 * factorVertical,
                                 width: this.props.containerWidth,
                                 flexDirection: 'row',
                                 paddingLeft: 10 * factorHorizontal,
@@ -783,7 +819,7 @@ class VerticalVideoList extends React.Component {
                                                         'OpenSans-Regular',
                                                 }}
                                             >
-                                                RELEVANCE
+                                                {sortDict[this.props.currentSort]}
                                             </Text>
                                             <View
                                                 style={{
@@ -850,7 +886,12 @@ class VerticalVideoList extends React.Component {
                     )}
                     {!this.props.showTitleOnly && this.props.showFilter && (
                         <View>
-                            {this.props.filters !== null && (
+                            {(this.props.filters !== null && (
+                                this.props.filters.topics.length > 0 ||
+                                this.props.filters.level.length > 0 ||
+                                this.props.filters.progress.length > 0 ||
+                                this.props.filters.instructors.length > 0
+                            )) && (
                                 <View
                                     style={{
                                         paddingLeft: 10 * factorHorizontal,
@@ -889,10 +930,58 @@ class VerticalVideoList extends React.Component {
                             )}
                         </View>
                     )}
+                    {(this.state.items.length == 0 && this.state.outVideos && !this.state.isLoading) && (
+                    <View
+                        style={{
+                                marginTop: 7.5 * factorRatio,
+                                paddingLeft: 10 * factorHorizontal,
+                                paddingRight: 10 * factorHorizontal,
+                            }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 12 * factorRatio,
+                                color: colors.secondBackground,
+                                textAlign: 'left',
+                            }}
+                        >
+                            There are no results that match those filters.
+                        </Text>
+                        <View
+                            style={{
+                                height: fullHeight*0.3
+                            }}
+                        />
+                    </View>
+                    )}
                     <View style={{height: 5 * factorVertical}} />
                 </View>
-                <View style={[styles.centerContent, {flex: 1}]}>
+                <View 
+                    style={[
+                        styles.centerContent, {
+                        minHeight: this.props.containerHeight*4,
+                        flex: 1,
+                        }
+                    ]}
+                >
                     {this.renderMappedList()}
+                    {(this.state.isPaging && !this.state.isLoading) && (
+                    <View 
+                        style={[
+                            styles.centerContent,
+                            {
+                                height: fullHeight * 0.115,
+                                marginTop: 15 * factorRatio,
+                            },
+                        ]}
+                    >
+                        <ActivityIndicator
+                            size={onTablet ? 'large' : 'small'}
+                            animating={true}
+                            color={colors.secondBackground}
+                        />
+                    </View>
+                    )}
                     <View style={{flex: 1}} />
                 </View>
                 <Modal

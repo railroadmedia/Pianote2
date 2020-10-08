@@ -17,6 +17,7 @@ import {getContentChildById} from '@musora/services';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
+import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -60,10 +61,12 @@ export default class SinglePack extends React.Component {
         const {response, error} = await getContentChildById({
             parentId: this.state.pack.id,
         });
+        console.log('RESPONSE: ', response, error)
 
         const newContent = response.data.data.map((data) => {
             return new ContentModel(data);
         });
+        
 
         // if more than one bundle then display bundles otherwise show videos
         if (this.state.pack.bundle_count > 1) {
@@ -152,54 +155,50 @@ export default class SinglePack extends React.Component {
     };
 
     getVideos = async () => {
+        const {response, error} = await getContentChildById({
+            parentId: this.state.bundleID,
+        });
+
+        console.log('response get videos: ', response, error);
+
+        const newContent = response.data.data.map((data) => {
+            return new ContentModel(data);
+        });
+
         try {
-            const {response, error} = await getContentChildById({
-                parentId: this.state.bundleID,
-            });
-
-            console.log('response get videos: ', response);
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data);
-            });
-
-            try {
-                items = [];
-                for (i in newContent) {
-                    if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                        items.push({
-                            title: newContent[i].getField('title'),
-                            artist: newContent[i].getField('instructor')
-                                .fields[0].value,
-                            thumbnail: newContent[i].getData('thumbnail_url'),
-                            description: newContent[i]
-                                .getData('description')
-                                .replace(/(<([^>]+)>)/gi, ''),
-                            type: newContent[i].post.type,
-                            xp: newContent[i].post.xp,
-                            id: newContent[i].id,
-                            duration: this.getDuration(newContent[i]),
-                            like_count: newContent[i].post.like_count,
-                            isLiked: newContent[i].isLiked,
-                            isAddedToList: newContent[i].isAddedToList,
-                            isStarted: newContent[i].isStarted,
-                            isCompleted: newContent[i].isCompleted,
-                            bundle_count: newContent[i].post.bundle_count,
-                            progress_percent:
-                                newContent[i].post.progress_percent,
-                        });
-                    }
+            items = [];
+            for (i in newContent) {
+                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: newContent[i].getField('instructor')
+                            .fields[0].value,
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/gi, ''),
+                        type: newContent[i].post.type,
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        duration: this.getDuration(newContent[i]),
+                        like_count: newContent[i].post.like_count,
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent:
+                            newContent[i].post.progress_percent,
+                    });
                 }
-
-                this.setState({
-                    videos: [...this.state.videos, ...items],
-                    isLoadingAll: false,
-                });
-            } catch (error) {
-                console.log('error: ', error);
             }
+
+            this.setState({
+                videos: [...this.state.videos, ...items],
+                isLoadingAll: false,
+            });
         } catch (error) {
-            console.log(error);
+            console.log('error: ', error);
         }
     };
 

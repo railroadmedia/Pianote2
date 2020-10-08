@@ -4,9 +4,9 @@
 import React from 'react';
 import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
-import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import {getStartedContent} from '../../services/GetContent';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
@@ -19,31 +19,13 @@ export default class StudentFocusCatalog extends React.Component {
         this.state = {
             progressStudentFocus: [], // videos
             isLoadingProgress: true,
-            outVideos: false, // if no more videos to load
-            page: 0, // current page
             lessonsStarted: false,
         };
     }
 
     componentDidMount = async () => {
-        await this.setState({lessonsStarted: false});
-        await this.getProgressStudentFocus();
-    };
-
-    async getProgressStudentFocus() {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '15',
-            page: 1,
-            sort: '-created_on',
-            statuses: ['published'],
-            required_user_states: ['started'],
-            included_types: ['course'],
-        });
-
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data);
-        });
+        let response = await getStartedContent('quick-tips')
+        const newContent = await response.data.map((data) => {return new ContentModel(data)});
 
         items = [];
         for (i in newContent) {
@@ -72,16 +54,13 @@ export default class StudentFocusCatalog extends React.Component {
         }
 
         this.setState({
-            progressStudentFocus: [
-                ...this.state.progressStudentFocus,
-                ...items,
-            ],
+            progressStudentFocus: [...this.state.progressStudentFocus,...items,],
             isLoadingProgress: false,
-            isStarted: response.data.data.length > 0 ? true : false,
+            isStarted: response.data.length > 0 ? true : false,
         });
-    }
+    };
 
-    getDuration = (newContent) => {
+    getDuration = async (newContent) => {
         if (newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value;
         } else if (newContent.post.fields[1].key == 'video') {

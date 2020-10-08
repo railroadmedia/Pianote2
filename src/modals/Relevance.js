@@ -11,7 +11,7 @@ class Relevance extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentSort: this.props.currentSort, // Relevance | Trending | Popular | Newest | Oldest
+            currentSort: this.props.currentSort, // 'newest', ‘oldest’, ‘popularity’, ‘trending’ and ‘relevance’
         };
     }
 
@@ -46,7 +46,7 @@ class Relevance extends React.Component {
                             key={'relevance'}
                             onPress={() => {
                                 this.props.hideRelevance(),
-                                    this.props.changeSort('Relevance');
+                                    this.props.changeSort('relevance');
                             }}
                             style={{
                                 flex: 0.4,
@@ -62,7 +62,7 @@ class Relevance extends React.Component {
                                     name={'check'}
                                     size={20 * factorRatio}
                                     color={
-                                        this.state.currentSort == 'Relevance'
+                                        this.state.currentSort == 'relevance'
                                             ? 'white'
                                             : colors.mainBackground
                                     }
@@ -78,7 +78,7 @@ class Relevance extends React.Component {
                                         fontFamily: 'OpenSans-Regular',
                                         color:
                                             this.state.currentSort ==
-                                            'Relevance'
+                                            'relevance'
                                                 ? 'white'
                                                 : colors.secondBackground,
                                     }}
@@ -92,7 +92,7 @@ class Relevance extends React.Component {
                             key={'trending'}
                             onPress={() => {
                                 this.props.hideRelevance(),
-                                    this.props.changeSort('Trending');
+                                    this.props.changeSort('trending');
                             }}
                             style={{
                                 flex: 0.4,
@@ -108,7 +108,7 @@ class Relevance extends React.Component {
                                     name={'check'}
                                     size={20 * factorRatio}
                                     color={
-                                        this.state.currentSort == 'Trending'
+                                        this.state.currentSort == 'trending'
                                             ? 'white'
                                             : colors.mainBackground
                                     }
@@ -123,7 +123,7 @@ class Relevance extends React.Component {
                                         fontSize: 16 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
                                         color:
-                                            this.state.currentSort == 'Trending'
+                                            this.state.currentSort == 'trending'
                                                 ? 'white'
                                                 : colors.secondBackground,
                                     }}
@@ -137,7 +137,7 @@ class Relevance extends React.Component {
                             key={'popular'}
                             onPress={() => {
                                 this.props.hideRelevance(),
-                                    this.props.changeSort('Popular');
+                                    this.props.changeSort('popularity');
                             }}
                             style={{
                                 flex: 0.4,
@@ -153,7 +153,7 @@ class Relevance extends React.Component {
                                     name={'check'}
                                     size={20 * factorRatio}
                                     color={
-                                        this.state.currentSort == 'Popular'
+                                        this.state.currentSort == 'popularity'
                                             ? 'white'
                                             : colors.mainBackground
                                     }
@@ -168,7 +168,7 @@ class Relevance extends React.Component {
                                         fontSize: 16 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
                                         color:
-                                            this.state.currentSort == 'Popular'
+                                            this.state.currentSort == 'popularity'
                                                 ? 'white'
                                                 : colors.secondBackground,
                                     }}
@@ -182,7 +182,7 @@ class Relevance extends React.Component {
                             key={'newest'}
                             onPress={() => {
                                 this.props.hideRelevance(),
-                                    this.props.changeSort('Newest');
+                                    this.props.changeSort('newest');
                             }}
                             style={{
                                 flex: 0.4,
@@ -198,7 +198,7 @@ class Relevance extends React.Component {
                                     name={'check'}
                                     size={20 * factorRatio}
                                     color={
-                                        this.state.currentSort == 'Newest'
+                                        this.state.currentSort == 'newest'
                                             ? 'white'
                                             : colors.mainBackground
                                     }
@@ -213,7 +213,7 @@ class Relevance extends React.Component {
                                         fontSize: 16 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
                                         color:
-                                            this.state.currentSort == 'Newest'
+                                            this.state.currentSort == 'newest'
                                                 ? 'white'
                                                 : colors.secondBackground,
                                     }}
@@ -227,7 +227,7 @@ class Relevance extends React.Component {
                             key={'oldest'}
                             onPress={() => {
                                 this.props.hideRelevance(),
-                                    this.props.changeSort('Oldest');
+                                    this.props.changeSort('oldest');
                             }}
                             style={{
                                 flex: 0.4,
@@ -243,7 +243,7 @@ class Relevance extends React.Component {
                                     name={'check'}
                                     size={20 * factorRatio}
                                     color={
-                                        this.state.currentSort == 'Oldest'
+                                        this.state.currentSort == 'oldest'
                                             ? 'white'
                                             : colors.mainBackground
                                     }
@@ -258,7 +258,7 @@ class Relevance extends React.Component {
                                         fontSize: 16 * factorRatio,
                                         fontFamily: 'OpenSans-Regular',
                                         color:
-                                            this.state.currentSort == 'Oldest'
+                                            this.state.currentSort == 'oldest'
                                                 ? 'white'
                                                 : colors.secondBackground,
                                     }}

@@ -8,6 +8,7 @@ import {ContentModel} from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import {seeAllContent} from '../../services/GetContent';
 
 // correlates to filters
 const typeDict = {
@@ -18,6 +19,14 @@ const typeDict = {
     Songs: 'SONGS',
 };
 
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return (
+        layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom
+    );
+};
+
 export default class SeeAll extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -25,14 +34,21 @@ export default class SeeAll extends React.Component {
         this.state = {
             title: this.props.navigation.state.params.title, // In Progress, Completed, Continue
             parent: this.props.navigation.state.params.parent, // My List, Packs, Student Focus, Foundations, Courses
-            outVideos: false, // if no more videos to load
-            allLessons: [], // videos loaded
-            currentSort: 'Relevance',
-            filtering: false,
-            filters: null,
-            page: 0, // current page
-            filterClicked: false,
-            isLoadingAll: true,
+            allLessons: [],
+            currentSort: 'relevance',
+            page: 1,
+            outVideos: false,
+            isLoadingAll: true, // all lessons
+            isPaging: false, // scrolling more
+            filtering: false, // filtering
+            filters: {
+                displayTopics: [],
+                topics: [],
+                level: [],
+                progress: [],
+                instructors: [],
+            },
+            
         };
     }
 
@@ -41,35 +57,22 @@ export default class SeeAll extends React.Component {
     }
 
     async getAllLessons() {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '15',
-            page: this.state.page,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['course'],
-        });
-
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data);
-        });
-
+        let response = await seeAllContent(this.state.page, this.state.filters)
+        const newContent = await response.data.map((data) => {return new ContentModel(data)});
+        
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
+                    artist: (newContent[i].post.type == 'song') ? newContent[i].post.artist : (newContent[i].getField('instructor') !== 'TBD') ? newContent[i].getField('instructor').fields[0].value : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
-                    duration: this.getDuration(newContent[i]),
+                    like_count: newContent[i].post.like_count,
+                    duration: i,
                     isLiked: newContent[i].isLiked,
                     isAddedToList: newContent[i].isAddedToList,
                     isStarted: newContent[i].isStarted,
@@ -82,8 +85,11 @@ export default class SeeAll extends React.Component {
 
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
+            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
+            filtering: false,
+            isPaging: false,
         });
     }
 
@@ -126,6 +132,60 @@ export default class SeeAll extends React.Component {
             console.log(error);
         }
     };
+
+    getVideos = async () => {
+        // change page before getting more lessons if paging 
+        if(!this.state.outVideos) {
+            await this.setState({page: this.state.page + 1});
+            this.getAllLessons();
+        }
+    };
+
+    handleScroll = async (event) => {
+        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+            await this.setState({
+                page: this.state.page + 1,
+                isPaging: true
+            }),
+            
+            await this.getAllLessons();
+        }
+    };
+
+    filterResults = async () => {
+        // function to be sent to filters page
+        console.log(this.state.filters)
+        await this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'SEEALL',
+            onGoBack: (filters) => this.changeFilters(filters)
+        });
+    };
+
+    changeFilters = async (filters) => {
+        // after leaving filter page. set filters here
+        await this.setState({
+            allLessons: [],
+            outVideos: false,
+            page: 1,
+            filters:
+                filters.instructors.length == 0 &&
+                filters.level.length == 0 &&
+                filters.progress.length == 0 &&
+                filters.topics.length == 0
+                    ? {
+                        displayTopics: [],
+                        level: [],
+                        topics: [],
+                        progress: [],
+                        instructors: [],
+                    }
+                    : filters,
+        })
+
+        this.getAllLessons();
+        this.forceUpdate()
+    }        
 
     render() {
         return (
@@ -201,18 +261,20 @@ export default class SeeAll extends React.Component {
                                 flex: 0.9,
                                 backgroundColor: colors.mainBackground,
                             }}
+                            onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
                         >
                             <View style={{height: 15 * factorVertical}} />
                             <VerticalVideoList
                                 items={this.state.allLessons}
                                 isLoading={this.state.isLoadingAll}
+                                isPaging={this.state.isPaging}
                                 title={this.state.title} // title for see all page
                                 type={typeDict[this.state.parent]} // the type of content on page
                                 showFilter={true}
                                 showType={false}
-                                showArtist={false}
+                                showArtist={true}
                                 showSort={false}
-                                showLength={true}
+                                showLength={false}
                                 showLargeTitle={true}
                                 filters={this.state.filters} // show filter list
                                 imageRadius={5 * factorRatio} // radius of image shown

@@ -55,11 +55,11 @@ export default class Foundations extends React.Component {
             parentId: '215952',
         });
 
-        const newContent = response.data.data.map((data) => {
+        console.log('FOUNDATIONS', response, error);
+
+        const newContent = await response.data.data.map((data) => {
             return new ContentModel(data);
         });
-
-        console.log('FOUNDATIONS', newContent);
 
         items = [];
         for (i in newContent) {

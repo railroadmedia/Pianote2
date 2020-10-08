@@ -31,7 +31,7 @@ class HorizontalVideoList extends React.Component {
         };
     }
 
-    componentWillReceiveProps = async (props) => {
+    UNSAFE_componentWillReceiveProps = async (props) => {
         if (props.isLoading !== this.state.isLoading) {
             await this.setState({
                 isLoading: props.isLoading,
@@ -41,7 +41,6 @@ class HorizontalVideoList extends React.Component {
     };
 
     addToMyList = async (contentID) => {
-        // change data structure
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = true;
@@ -49,7 +48,6 @@ class HorizontalVideoList extends React.Component {
         }
         this.setState({items: this.state.items});
 
-        // add to list on backend
         addToMyList(contentID);
     };
 
@@ -187,6 +185,9 @@ class HorizontalVideoList extends React.Component {
                             data={this.state.items}
                             extraData={this.state}
                             horizontal={true}
+                            style={{
+                                width: '100%',
+                            }}
                             showsHorizontalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({item, index}) => (

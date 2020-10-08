@@ -33,9 +33,6 @@ export async function getUserData() {
         });
 
         let userData = await data.json();
-
-        console.log('USER DATA: ', userData);
-
         // update data
         await AsyncStorage.multiSet([
             ['totalXP', userData.totalXp.toString()],
@@ -80,8 +77,7 @@ export async function logOut() {
     // return profile details
     try {
         const auth = await getToken();
-        let response = await fetch(
-            'https://app-staging.pianote/usora/api/logout',
+        let response = await fetch('https://app-staging.pianote/usora/api/logout',
             {
                 method: 'PUT',
                 headers: {
@@ -91,7 +87,7 @@ export async function logOut() {
             },
         );
 
-        console.log(response);
+        console.log(response)
 
         console.log(await response.json());
         return await response.json();

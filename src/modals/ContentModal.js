@@ -29,10 +29,6 @@ class ContentModal extends React.Component {
         };
     }
 
-    componentWillMount() {
-        console.log(this.state.data);
-    }
-
     addToMyList = async (contentID) => {
         // change status of content on parent data structure
         this.props.addToMyList(contentID);
@@ -56,7 +52,7 @@ class ContentModal extends React.Component {
     like = async (contentID) => {
         // change data on modal
         this.state.data.isLiked = !this.state.data.isLiked;
-        this.state.data.like_count = this.state.data.like_count + 1;
+        this.state.data.like_count = Number(this.state.data.like_count) + 1;
         this.setState({data: this.state.data});
         // change data on parent data
         // ADD IN
@@ -67,7 +63,7 @@ class ContentModal extends React.Component {
     unlike = async (contentID) => {
         // change data on modal
         this.state.data.isLiked = !this.state.data.isLiked;
-        this.state.data.like_count = this.state.data.like_count - 1;
+        this.state.data.like_count = Number(this.state.data.like_count) - 1;
         this.setState({data: this.state.data});
         // change data on parent data
         // ADD IN
@@ -321,11 +317,7 @@ class ContentModal extends React.Component {
                                         }}
                                     >
                                         <AntIcon
-                                            name={
-                                                this.state.data.isLiked
-                                                    ? 'like1'
-                                                    : 'like2'
-                                            }
+                                            name={this.state.data.isLiked? 'like1': 'like2'}
                                             size={25 * factorRatio}
                                         />
                                     </TouchableOpacity>

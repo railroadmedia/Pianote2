@@ -4,26 +4,42 @@
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
-import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import {getMyListContent} from '../../services/GetContent';
+
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return (
+        layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom
+    );
+};
 
 export default class MyList extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            myList: [], // videos on my list
+            allLessons: [],
+            currentSort: 'relevance',
+            page: 1,
+            outVideos: false,
             isLoadingAll: true,
+            isPaging: false,
+            filtering: false,
+            filters: {
+                displayTopics: [],
+                topics: [],
+                level: [],
+                progress: [],
+                instructors: [],
+            },
             showModalMenu: false,
-            outVideos: false, // if no more videos to load
-            page: 0, // current page
-            filters: null,
-            filtering: true,
         };
     }
 
@@ -32,35 +48,22 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '15',
-            page: this.state.page,
-            sort: 'published_on',
-            statuses: ['published'],
-            included_types: ['course'],
-        });
-
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data);
-        });
-
+        let response = await getMyListContent(this.state.page, this.state.filters)
+        const newContent = await response.data.map((data) => {return new ContentModel(data)});
+        console.log(newContent)
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
+                    artist: (newContent[i].post.type == 'song') ? newContent[i].post.artist : (newContent[i].getField('instructor') !== 'TBD') ? newContent[i].getField('instructor').fields[0].value : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
+                    duration: i,
                     isLiked: newContent[i].isLiked,
                     isAddedToList: newContent[i].isAddedToList,
                     isStarted: newContent[i].isStarted,
@@ -72,30 +75,12 @@ export default class MyList extends React.Component {
         }
 
         this.setState({
-            myList: [...this.state.myList, ...items],
+            allLessons: [...this.state.allLessons, ...items],
+            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
-        });
-    };
-
-    filterResults = async () => {
-        this.props.navigation.navigate('FILTERS', {
-            filters: this.state.filters,
-            type: 'LESSONS',
-            onGoBack: (filters) => {
-                this.setState({
-                    items: [],
-                    filters:
-                        filters.instructors.length == 0 &&
-                        filters.level.length == 0 &&
-                        filters.progress.length == 0 &&
-                        filters.topics.length == 0
-                            ? null
-                            : filters,
-                }),
-                    this.getMyList(),
-                    this.forceUpdate();
-            },
+            filtering: false,
+            isPaging: false,
         });
     };
 
@@ -128,6 +113,60 @@ export default class MyList extends React.Component {
         }
     };
 
+    getVideos = async () => {
+        // change page before getting more lessons if paging 
+        if(!this.state.outVideos) {
+            await this.setState({page: this.state.page + 1});
+            this.getMyList();
+        }
+    };
+
+    handleScroll = async (event) => {
+        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+            await this.setState({
+                page: this.state.page + 1,
+                isPaging: true
+            }),
+            
+            await this.getMyList();
+        }
+    };
+
+    filterResults = async () => {
+        // function to be sent to filters page
+        console.log(this.state.filters)
+        await this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'MYLIST',
+            onGoBack: (filters) => this.changeFilters(filters)
+        });
+    };
+
+    changeFilters = async (filters) => {
+        // after leaving filter page. set filters here
+        await this.setState({
+            allLessons: [],
+            outVideos: false,
+            page: 1,
+            filters:
+                filters.instructors.length == 0 &&
+                filters.level.length == 0 &&
+                filters.progress.length == 0 &&
+                filters.topics.length == 0
+                    ? {
+                        displayTopics: [],
+                        level: [],
+                        topics: [],
+                        progress: [],
+                        instructors: [],
+                    }
+                    : filters,
+        })
+
+        this.getMyList()
+        this.forceUpdate()
+    }        
+
     render() {
         return (
             <View styles={styles.container}>
@@ -153,6 +192,7 @@ export default class MyList extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
+                        onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
                         style={{
                             flex: 1,
                             backgroundColor: colors.mainBackground,
@@ -286,21 +326,21 @@ export default class MyList extends React.Component {
                         </TouchableOpacity>
                         <View style={{height: 15 * factorVertical}} />
                         <VerticalVideoList
-                            items={this.state.myList}
+                            items={this.state.allLessons}
                             isLoading={this.state.isLoadingAll}
                             title={'ADDED TO MY LIST'}
+                            isPaging={this.state.isPaging}
                             type={'MYLIST'} // the type of content on page
                             showFilter={true} // shows filters button
                             showType={false} // show course / song by artist name
-                            showArtist={false} // show artist name
-                            showLength={true} // duration of song
+                            showArtist={true} // show artist name
+                            showLength={false} // duration of song
                             showSort={false}
                             filters={this.state.filters} // show filter list
                             filterResults={() => this.filterResults()} // apply from filters page
                             outVideos={this.state.outVideos}
-                            removeItem={(contentID) => {
-                                this.removeFromMyList(contentID);
-                            }}
+                            removeItem={(contentID) => {this.removeFromMyList(contentID);}}
+                            outVideos={this.state.outVideos} // if paging and out of videos
                             imageRadius={5 * factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list

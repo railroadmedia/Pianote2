@@ -4,10 +4,18 @@
 import React from 'react';
 import {View, Text, ScrollView, Platform} from 'react-native';
 import {ContentModel} from '@musora/models';
-import {getContent} from '@musora/services';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import {getNewContent, getStartedContent, getAllContent} from '../../services/GetContent';
+
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return (
+        layoutMeasurement.height + contentOffset.y >=
+        contentSize.height - paddingToBottom
+    );
+};
 
 export default class Course extends React.Component {
     static navigationOptions = {header: null};
@@ -16,19 +24,25 @@ export default class Course extends React.Component {
         this.state = {
             progressCourses: [],
             newCourses: [],
+
             allCourses: [],
+            currentSort: 'relevance',
+            page: 1,
+            outVideos: false,
+            isLoadingAll: true, // all lessons
+            isPaging: false, // scrolling more
+            filtering: false, // filtering
+            filters: {
+                displayTopics: [],
+                topics: [],
+                level: [],
+                progress: [],
+                instructors: [],
+            },
+
             isLoadingNew: true, // new course
-            isLoadingAll: true, // all course
             isLoadingProgress: true, // progress course
-            showModalMenu: false, // show navigation menu
-            showInfo: false,
             started: false, // if started lesson
-            outVideos: false, // if no more videos
-            page: 1, // page of content
-            progress: 0.52,
-            currentSort: 'Relevance',
-            filters: null,
-            filtering: false,
         };
     }
 
@@ -39,172 +53,110 @@ export default class Course extends React.Component {
     };
 
     getAllCourses = async () => {
-        await this.setState({
-            isLoadingAll: true,
-        });
+        let response = await getAllContent('course', this.state.currentSort, this.state.page, this.state.filters)
+        const newContent = await response.data.map((data) => {return new ContentModel(data)});
 
-        // see if importing filters
-        try {
-            var filters = this.state.filters;
-            if (
-                filters.instructors.length !== 0 ||
-                filters.level.length !== 0 ||
-                filters.progress.length !== 0 ||
-                filters.topics.length !== 0
-            ) {
-                // if has a filter then send filters to vertical list
-                this.setState({filters});
-            } else {
-                // if no filters selected then null
-                var filters = null;
+        items = [];
+        for (i in newContent) {
+            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor')
+                        .fields[0].value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent:
+                        newContent[i].post.progress_percent,
+                });
             }
-        } catch (error) {
-            var filters = null;
-        }
+        };
 
-        if (this.state.outVideos == false) {
-            const {response, error} = await getContent({
-                brand: 'pianote',
-                limit: '15',
-                page: this.state.page,
-                sort: '-created_on',
-                statuses: ['published'],
-                included_types: ['course'],
-            });
-
-            const newContent = response.data.data.map((data) => {
-                return new ContentModel(data);
-            });
-
-            items = [];
-            for (i in newContent) {
-                if (i > 0) {
-                    if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                        items.push({
-                            title: newContent[i].getField('title'),
-                            artist: newContent[i].getField('instructor')
-                                .fields[0].value,
-                            thumbnail: newContent[i].getData('thumbnail_url'),
-                            type: newContent[i].post.type,
-                            description: newContent[i]
-                                .getData('description')
-                                .replace(/(<([^>]+)>)/gi, ''),
-                            xp: newContent[i].post.xp,
-                            id: newContent[i].id,
-                            like_count: newContent[i].likeCount,
-                            duration: this.getDuration(newContent[i]),
-                            isLiked: newContent[i].isLiked,
-                            isAddedToList: newContent[i].isAddedToList,
-                            isStarted: newContent[i].isStarted,
-                            isCompleted: newContent[i].isCompleted,
-                            bundle_count: newContent[i].post.bundle_count,
-                            progress_percent:
-                                newContent[i].post.progress_percent,
-                        });
-                    }
-                }
-            }
-
-            this.setState({
-                allCourses: [...this.state.allCourses, ...items],
-                page: this.state.page + 1,
-                outVideos: items.length == 0 ? true : false,
-            });
-        }
-
-        await this.setState({
-            filtering: false,
+        this.setState({
+            allCourses: [...this.state.allCourses, ...items],
+            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
             isLoadingAll: false,
+            filtering: false,
+            isPaging: false,
+            page: this.state.page + 1,
         });
     };
 
     getProgressCourses = async () => {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '15',
-            page: 1,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['course'],
-        });
-
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data);
-        });
+        let response = await getStartedContent('course')
+        const newContent = response.data.map((data) => {return new ContentModel(data)});
 
         items = [];
         for (i in newContent) {
-            if (i > 0) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].likeCount,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
+            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0]
+                        .value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                });
             }
         }
 
         await this.setState({
             progressCourses: [...this.state.progressCourses, ...items],
             isLoadingProgress: false,
+            started: false,
         });
     };
 
     getNewCourses = async () => {
-        const {response, error} = await getContent({
-            brand: 'pianote',
-            limit: '15',
-            page: 1,
-            sort: '-created_on',
-            statuses: ['published'],
-            included_types: ['course'],
-        });
-
-        const newContent = response.data.data.map((data) => {
-            return new ContentModel(data);
-        });
+        let response = await getNewContent('course')
+        const newContent = response.data.map((data) => {return new ContentModel(data)});
 
         items = [];
         for (i in newContent) {
-            if (i > 0) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].likeCount,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
+            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist: newContent[i].getField('instructor').fields[0]
+                        .value,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].likeCount,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                });
             }
         }
 
@@ -214,28 +166,7 @@ export default class Course extends React.Component {
         });
     };
 
-    filterResults = async () => {
-        this.props.navigation.navigate('FILTERS', {
-            filters: this.state.filters,
-            type: 'COURSES',
-            onGoBack: (filters) => {
-                this.setState({
-                    allCourses: [],
-                    filters:
-                        filters.instructors.length == 0 &&
-                        filters.level.length == 0 &&
-                        filters.progress.length == 0 &&
-                        filters.topics.length == 0
-                            ? null
-                            : filters,
-                }),
-                    this.getAllCourses(),
-                    this.forceUpdate();
-            },
-        });
-    };
-
-    getDuration = (newContent) => {
+    getDuration = async (newContent) => {
         var data = 0;
         try {
             for (i in newContent.post.current_lesson.fields) {
@@ -253,6 +184,72 @@ export default class Course extends React.Component {
             console.log(error);
         }
     };
+
+    changeSort = async (currentSort) => {
+        await this.setState({
+            currentSort,
+            outVideos: false,
+            isPaging: true,
+            allCourses: [],
+            page: 1,
+        })
+
+        await this.getAllCourses();
+    };
+
+    getVideos = async () => {
+        // change page before getting more lessons if paging 
+        if(!this.state.outVideos) {
+            await this.setState({page: this.state.page + 1});
+            this.getAllCourses();
+        }
+    };
+
+    handleScroll = async (event) => {
+        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+            await this.setState({
+                page: this.state.page + 1,
+                isPaging: true
+            }),
+            
+            await this.getAllCourses();
+        }
+    };
+
+    filterResults = async () => {
+        // function to be sent to filters page
+        await this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'COURSES',
+            onGoBack: (filters) => this.changeFilters(filters)
+        });
+    };
+
+    changeFilters = async (filters) => {
+        // after leaving filter page. set filters here
+        await this.setState({
+            allCourses: [],
+            outVideos: false,
+            page: 1,
+            filters:
+                filters.instructors.length == 0 &&
+                filters.level.length == 0 &&
+                filters.progress.length == 0 &&
+                filters.topics.length == 0
+                    ? {
+                        displayTopics: [],
+                        level: [],
+                        topics: [],
+                        progress: [],
+                        instructors: [],
+                    }
+                    : filters,
+        })
+
+        this.getAllCourses()
+        this.forceUpdate()
+    }    
+    
 
     render() {
         return (
@@ -329,6 +326,7 @@ export default class Course extends React.Component {
                                 Courses
                             </Text>
                             <View style={{height: 15 * factorVertical}} />
+                            {this.state.started && (
                             <View
                                 key={'continueCourses'}
                                 style={{
@@ -365,6 +363,7 @@ export default class Course extends React.Component {
                                     }
                                 />
                             </View>
+                            )}
                             <View
                                 key={'newCourses'}
                                 style={{
@@ -405,24 +404,19 @@ export default class Course extends React.Component {
                                 items={this.state.allCourses}
                                 isLoading={this.state.isLoadingAll}
                                 title={'COURSES'}
-                                type={'COURSES'} // the type of content on page
+                                type={'COURSES'}
+                                isPaging={this.state.isPaging}
                                 showFilter={true}
-                                showType={true} // show course / song by artist name
-                                showArtist={true} // show artist name
+                                showType={true} 
+                                showArtist={true} 
                                 showLength={false}
                                 showSort={true}
-                                filters={this.state.filters} // show filter list
+                                filters={this.state.filters} 
                                 imageRadius={5 * factorRatio}
                                 containerBorderWidth={0}
-                                currentSort={this.state.currentSort} // relevance sort
-                                changeSort={(currentSort) => {
-                                    this.setState({
-                                        currentSort,
-                                        allCourses: [],
-                                    }),
-                                        this.getAllCourses();
-                                }} // change sort and reload videos
-                                filterResults={() => this.filterResults()} // apply from filters page
+                                currentSort={this.state.currentSort} 
+                                changeSort={(sort) => this.changeSort(sort)}
+                                filterResults={() => this.filterResults()}
                                 containerWidth={fullWidth}
                                 containerHeight={
                                     onTablet
@@ -440,7 +434,7 @@ export default class Course extends React.Component {
                                 } // image height
                                 imageWidth={fullWidth * 0.26} // image width
                                 outVideos={this.state.outVideos}
-                                //getVideos={() => this.getContent()}
+                                getVideos={() => this.getVideos()}
                                 navigator={(row) =>
                                     this.props.navigation.navigate(
                                         'VIDEOPLAYER',
