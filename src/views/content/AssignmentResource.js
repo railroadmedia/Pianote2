@@ -104,8 +104,7 @@ export default class AssignmentResource extends React.Component {
         Orientation.removeOrientationListener(this._onOrientationDidChange);
     }
 
-    _onOrientationDidChange = (orientation) =>
-        this.setState({width: fullWidth});
+    _onOrientationDidChange = orientation => this.setState({width: fullWidth});
 
     renderDots(i) {
         return (
@@ -188,7 +187,7 @@ export default class AssignmentResource extends React.Component {
                                         }}
                                     >
                                         <ImageSvg
-                                            resizeMode="contain"
+                                            resizeMode='contain'
                                             source={{uri: sourceUri}}
                                             style={{
                                                 width: '100%',
@@ -230,8 +229,8 @@ export default class AssignmentResource extends React.Component {
                                                 }}
                                             />
                                             <PDFView
-                                                onLoad={(e) => {}}
-                                                onError={(e) => {}}
+                                                onLoad={e => {}}
+                                                onError={e => {}}
                                                 resourceType={'file'}
                                                 resource={sourceUri}
                                                 fadeInDuration={250.0}
@@ -275,8 +274,8 @@ export default class AssignmentResource extends React.Component {
                                                 }}
                                             />
                                             <PDFView
-                                                onLoad={(e) => {}}
-                                                onError={(e) => {}}
+                                                onLoad={e => {}}
+                                                onError={e => {}}
                                                 resourceType={'url'}
                                                 resource={sourceUri}
                                                 fadeInDuration={250.0}

@@ -12,7 +12,6 @@ import {
 import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
 class LessonComplete extends React.Component {
@@ -23,6 +22,14 @@ class LessonComplete extends React.Component {
     }
 
     render = () => {
+        const {
+            completedLessonImg,
+            completedLessonTitle,
+            completedLessonXp,
+            nextLesson,
+            onGoToNext,
+            type,
+        } = this.props;
         return (
             <View style={styles.container}>
                 <View
@@ -78,14 +85,15 @@ class LessonComplete extends React.Component {
                             <Text
                                 key={'lessonComplete!'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 20 * factorRatio,
                                     fontWeight:
                                         Platform.OS == 'ios' ? '700' : 'bold',
                                     textAlign: 'center',
                                 }}
                             >
-                                Lesson{'\n'}Complete
+                                {type}
+                                {'\n'}Complete
                             </Text>
                             <View style={{height: '1%'}} />
                             <View
@@ -155,8 +163,7 @@ class LessonComplete extends React.Component {
                                             borderRadius: 10 * factorRatio,
                                         }}
                                         source={{
-                                            uri:
-                                                'https://facebook.github.io/react-native/img/tiny_logo.png',
+                                            uri: completedLessonImg,
                                         }}
                                         resizeMode={FastImage.resizeMode.cover}
                                     />
@@ -169,7 +176,7 @@ class LessonComplete extends React.Component {
                                 <Text
                                     key={'congrats'}
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 15 * factorRatio,
                                         fontWeight: '300',
                                         textAlign: 'center',
@@ -180,7 +187,7 @@ class LessonComplete extends React.Component {
                                 <View style={{height: 2.5 * factorRatio}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 15 * factorRatio,
                                         fontWeight:
                                             Platform.OS == 'ios'
@@ -189,70 +196,12 @@ class LessonComplete extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    The assignment title
+                                    {completedLessonTitle}
                                 </Text>
-                                <View style={{height: 15 * factorRatio}} />
-                                <View
-                                    key={'thumbs'}
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flexDirection: 'row',
-                                        },
-                                    ]}
-                                >
-                                    <View style={{flex: 1}} />
-                                    <TouchableOpacity
-                                        key={'like'}
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                flex: 0.5,
-                                            },
-                                        ]}
-                                    >
-                                        <AntIcon
-                                            name={'like2'}
-                                            size={22.5 * factorRatio}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                textAlign: 'center',
-                                            }}
-                                        >
-                                            34
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 0.25}} />
-                                    <TouchableOpacity
-                                        key={'dislike'}
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                flex: 0.5,
-                                            },
-                                        ]}
-                                    >
-                                        <AntIcon
-                                            name={'dislike2'}
-                                            size={22.5 * factorRatio}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                textAlign: 'center',
-                                            }}
-                                        >
-                                            2
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}} />
-                                </View>
                                 <View style={{height: 15 * factorRatio}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 15 * factorRatio,
                                         fontWeight:
                                             Platform.OS == 'ios'
@@ -262,7 +211,7 @@ class LessonComplete extends React.Component {
                                         color: '#fb1b2f',
                                     }}
                                 >
-                                    YOU EARNED 275 XP!
+                                    YOU EARNED {completedLessonXp} XP!
                                 </Text>
                                 <View style={{flex: 1}} />
                             </View>
@@ -278,7 +227,7 @@ class LessonComplete extends React.Component {
                             <Text
                                 key={'upNext'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     color: '#a8a8a8',
                                     textAlign: 'center',
@@ -287,8 +236,9 @@ class LessonComplete extends React.Component {
                                 Up next:
                             </Text>
                             <View style={{height: '1%'}} />
-                            <View
+                            <TouchableOpacity
                                 key={'image2'}
+                                onPress={onGoToNext}
                                 style={[
                                     styles.centerContent,
                                     {
@@ -300,79 +250,35 @@ class LessonComplete extends React.Component {
                                 ]}
                             >
                                 <View style={{flex: 1}} />
-                                <View>
-                                    <View
-                                        style={{
-                                            position: 'absolute',
-                                            left: 0,
-                                            top: 0,
-                                            width: fullWidth * 0.55,
-                                            height: '100%',
-                                            zIndex: 2,
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <View style={{flex: 1}} />
-                                        <View
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    position: 'absolute',
-                                                    width: fullWidth * 0.55,
-                                                    height: '100%',
-                                                    opacity: 1,
-                                                    zIndex: 3,
-                                                },
-                                            ]}
-                                        >
-                                            <ApprovedTeacher
-                                                height={57.5 * factorRatio}
-                                                width={57.5 * factorRatio}
-                                                fill={'white'}
-                                            />
-                                        </View>
-                                        <View
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    opacity: 0.2,
-                                                    backgroundColor: 'red',
-                                                    width: fullWidth * 0.55,
-                                                    alignSelf: 'stretch',
-                                                    borderRadius:
-                                                        10 * factorRatio,
-                                                },
-                                            ]}
-                                        ></View>
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <FastImage
-                                        style={{
-                                            width: fullWidth * 0.55,
-                                            height: '100%',
-                                            alignSelf: 'stretch',
-                                            borderRadius: 10 * factorRatio,
-                                        }}
-                                        source={{
-                                            uri:
-                                                'https://facebook.github.io/react-native/img/tiny_logo.png',
-                                        }}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </View>
+
+                                <FastImage
+                                    style={{
+                                        width: fullWidth * 0.55,
+                                        height: '100%',
+                                        alignSelf: 'stretch',
+                                        borderRadius: 10 * factorRatio,
+                                    }}
+                                    source={{
+                                        uri: nextLesson.getData(
+                                            'thumbnail_url',
+                                        ),
+                                    }}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+
                                 <View style={{flex: 1}} />
-                            </View>
+                            </TouchableOpacity>
                             <View style={{height: '1%'}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 15 * factorRatio,
                                     fontWeight:
                                         Platform.OS == 'ios' ? '700' : 'bold',
                                     textAlign: 'center',
                                 }}
                             >
-                                This is the lesson title
+                                {nextLesson.getField('title')}
                             </Text>
                         </View>
                         <TouchableWithoutFeedback

@@ -4,9 +4,10 @@
 import React from 'react';
 import {View, Text, Linking, TouchableOpacity, ScrollView} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-//import Intercom from 'react-native-intercom';
+import Intercom from 'react-native-intercom';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import DeviceInfo from 'react-native-device-info';
 
 export default class Support extends React.Component {
     static navigationOptions = {header: null};
@@ -17,18 +18,42 @@ export default class Support extends React.Component {
 
     componentDidMount = async () => {
         const userData = await getUserData();
-        //Intercom.registerUnidentifiedUser({userId: this.props.user});
-        //Intercom.addEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
-        //Intercom.addEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
+        console.log(userData);
+        await Intercom.registerIdentifiedUser({
+            userId: 'musora_' + userData.id.toString(),
+        });
+        await Intercom.updateUser({
+            email: userData.email,
+            phone: userData.phone_number
+                ? userData.phone_number.toString()
+                : '',
+            user_id: 'musora_' + userData.id.toString(),
+            name: userData.display_name,
+            custom_attributes: {
+                // unique_id: auth.unique_id.toString(),
+                app_build_number: '0.0.' + DeviceInfo.getBuildNumber(),
+            },
+        });
+        Intercom.addEventListener(
+            Intercom.Notifications.UNREAD_COUNT,
+            this.onUnreadChange,
+        );
+        Intercom.addEventListener(
+            Intercom.Notifications.WINDOW_DID_HIDE,
+            this.onUnreadChange,
+        );
+        Intercom.handlePushMessage();
     };
 
     componentWillUnmount() {
-        //Intercom.removeEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
-        //Intercom.removeEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
-    }
-
-    componentWillMount() {
-        //Intercom.handlePushMessage();
+        Intercom.removeEventListener(
+            Intercom.Notifications.UNREAD_COUNT,
+            this.onUnreadChange,
+        );
+        Intercom.removeEventListener(
+            Intercom.Notifications.WINDOW_DID_HIDE,
+            this.onUnreadChange,
+        );
     }
 
     onUnreadChange(event) {
@@ -36,7 +61,7 @@ export default class Support extends React.Component {
     }
 
     onIntercomPress = () => {
-        //Intercom.displayMessenger();
+        Intercom.displayMessenger();
     };
 
     render() {
@@ -100,7 +125,7 @@ export default class Support extends React.Component {
                             style={{
                                 fontSize: 22 * factorRatio,
                                 fontWeight: 'bold',
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color: colors.secondBackground,
                             }}
                         >
@@ -120,7 +145,7 @@ export default class Support extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 15.5 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     color: colors.secondBackground,
                                 }}
                             >
@@ -129,7 +154,7 @@ export default class Support extends React.Component {
                             <View style={{height: 15 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 15.5 * factorRatio,
                                     color: colors.secondBackground,
                                 }}
@@ -247,7 +272,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'email'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 14 * factorRatio,
                                 opacity: 0.8,
                                 color: colors.secondBackground,
@@ -260,7 +285,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'emailaddress'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -272,7 +297,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'phone'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 14 * factorRatio,
                                 opacity: 0.8,
                                 color: colors.secondBackground,
@@ -285,7 +310,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'phoneNumber'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -297,7 +322,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'phoneNumber2'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',

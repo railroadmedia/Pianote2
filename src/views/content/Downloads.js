@@ -105,7 +105,9 @@ export default class Downloads extends React.Component {
                 return (
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.navigation.navigate('VIDEOPLAYER');
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                                id: data.id,
+                            });
                         }}
                         style={[
                             styles.centerContent,
@@ -152,7 +154,7 @@ export default class Downloads extends React.Component {
                                     fontWeight: 'bold',
                                     color: 'white',
                                     marginBottom: 5 * factorVertical,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                 }}
                             >
                                 {this.state.items[index][0]}
@@ -162,7 +164,7 @@ export default class Downloads extends React.Component {
                                     fontSize: 12 * factorRatio,
                                     color: colors.secondBackground,
                                     marginBottom: 5 * factorVertical,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                 }}
                             >
                                 {this.state.items[index][1]} |{' '}
@@ -206,7 +208,7 @@ export default class Downloads extends React.Component {
                     <Text
                         style={{
                             fontSize: 18 * factorRatio,
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'OpenSans',
                             color: 'white',
                         }}
                     >
@@ -217,7 +219,7 @@ export default class Downloads extends React.Component {
         }
     }
 
-    removeItem = async (contentID) => {
+    removeItem = async contentID => {
         for (i in this.state.items) {
             if (this.state.items[i][6] == contentID) {
                 await this.state.items.splice(i, 1);
@@ -263,7 +265,7 @@ export default class Downloads extends React.Component {
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
                                     color: 'white',
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                 }}
                             >
                                 Downloads

@@ -5,11 +5,10 @@ const rootUrl = 'http://app-staging.pianote.com';
 
 export async function likeContent(contentID) {
     try {
-        let response = await commonService.tryCall(
+        return commonService.tryCall(
             `${rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
             'PUT',
         );
-        console.log('LIKE CONTENT: ', response);
     } catch (error) {
         console.log('ERROR LIKING CONTENT: ', error);
         return new Error(error);
@@ -18,11 +17,10 @@ export async function likeContent(contentID) {
 
 export async function unlikeContent(contentID) {
     try {
-        let response = await commonService.tryCall(
+        return commonService.tryCall(
             `${rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
             'DELETE',
         );
-        console.log('UNLIKE CONTENT: ', response);
     } catch (error) {
         console.log('ERROR DISLIKING CONTENT: ', error);
         return new Error(error);
@@ -30,55 +28,41 @@ export async function unlikeContent(contentID) {
 }
 
 export async function addToMyList(contentID) {
-    try {
-        let response = await commonService.tryCall(
-            `${rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
-            'PUT',
-        );
-        console.log('ADD TO MY LIST: ', await response);
-    } catch (error) {
-        console.log('ERROR ADDING TO MY LIST: ', error);
-        return new Error(error);
-    }
+    return commonService.tryCall(
+        `${rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function removeFromMyList(contentID) {
-    try {
-        let response = await commonService.tryCall(
-            `${rootUrl}/api/railcontent/remove-from-my-list?content_id=${contentID}`,
-            'PUT',
-        );
-        console.log('REMOVE FROM MY LIST: ', await response);
-    } catch (error) {
-        console.log('ERROR REMOVING FROM MY LIST: ', error);
-        return new Error(error);
-    }
-}
-
-export async function markComplete(contentID) {
-    try {
-        let response = await commonService.tryCall(
-            `${rootUrl}/api/complete?content_id=${contentID}&device_type=${
-                Platform.OS ? 'ios' : 'android'
-            }`,
-            'PUT',
-        );
-        console.log('MARKED AS COMPLETE: ', await response);
-    } catch (error) {
-        console.log('ERROR MARKING AS COMPLETE: ', error);
-        return new Error(error);
-    }
+    return commonService.tryCall(
+        `${rootUrl}/api/railcontent/remove-from-my-list?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function resetProgress(contentID) {
+    return commonService.tryCall(
+        `${rootUrl}/api/reset?content_id=${contentID}`,
+        'PUT',
+    );
+}
+
+export async function markComplete(contentID) {
+    console.log(
+        `${rootUrl}/api/complete?content_id=${contentID}&device_type=${
+            Platform.OS === 'ios' ? 'ios' : 'android'
+        }`,
+    );
     try {
-        let response = await commonService.tryCall(
-            `${rootUrl}/api/reset?content_id=${contentID}`,
+        return commonService.tryCall(
+            `${rootUrl}/api/complete?content_id=${contentID}&device_type=${
+                Platform.OS === 'ios' ? 'ios' : 'android'
+            }`,
             'PUT',
         );
-        console.log('RESET PROGRESS: ', await response);
     } catch (error) {
-        console.log('ERROR RESETTING PROGRESS: ', error);
+        console.log('ERROR MARKING AS COMPLETE: ', error);
         return new Error(error);
     }
 }

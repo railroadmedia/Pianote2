@@ -71,7 +71,7 @@ class Sort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     Auto (360p)
@@ -106,7 +106,7 @@ class Sort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     1080p
@@ -141,7 +141,7 @@ class Sort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     720p
@@ -176,7 +176,7 @@ class Sort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     480p
@@ -211,7 +211,7 @@ class Sort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     360p
@@ -246,7 +246,7 @@ class Sort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     Cancel

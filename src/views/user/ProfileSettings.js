@@ -241,7 +241,7 @@ export default class ProfileSettings extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 fontSize: 12 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'android'
@@ -298,7 +298,7 @@ export default class ProfileSettings extends React.Component {
                                 style={{
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     color: colors.secondBackground,
                                 }}
                             >
@@ -345,7 +345,7 @@ export default class ProfileSettings extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 fontSize: 18 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
@@ -387,7 +387,7 @@ export default class ProfileSettings extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans',
                                                 fontSize: 18 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
@@ -406,7 +406,7 @@ export default class ProfileSettings extends React.Component {
                             {this.state.currentlyView == 'Display Name' && (
                                 <View style={{width: fullWidth}}>
                                     <TextInput
-                                        ref={(txt) => {
+                                        ref={txt => {
                                             this.txt = txt;
                                         }}
                                         placeholder={'Display Name'}
@@ -414,13 +414,13 @@ export default class ProfileSettings extends React.Component {
                                         placeholderTextColor={
                                             colors.secondBackground
                                         }
-                                        onChangeText={(displayName) =>
+                                        onChangeText={displayName =>
                                             this.setState({displayName})
                                         }
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07
@@ -438,7 +438,7 @@ export default class ProfileSettings extends React.Component {
                                     <View style={{height: 10 * factorRatio}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 16 * factorRatio,
                                             paddingLeft: fullWidth * 0.045,
                                             paddingRight: fullWidth * 0.045,
@@ -559,7 +559,7 @@ export default class ProfileSettings extends React.Component {
                                     <View style={{height: 35 * factorRatio}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             fontSize: 15 * factorRatio,
                                             paddingLeft: fullWidth * 0.045,
                                             paddingRight: fullWidth * 0.045,
@@ -608,7 +608,7 @@ export default class ProfileSettings extends React.Component {
                             {this.state.currentlyView == 'Password' && (
                                 <View style={{width: fullWidth}}>
                                     <TextInput
-                                        ref={(txt) => {
+                                        ref={txt => {
                                             this.password = txt;
                                         }}
                                         placeholder={'Current Password'}
@@ -616,13 +616,13 @@ export default class ProfileSettings extends React.Component {
                                         placeholderTextColor={
                                             colors.secondBackground
                                         }
-                                        onChangeText={(password) =>
+                                        onChangeText={password =>
                                             this.setState({password})
                                         }
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07
@@ -638,7 +638,7 @@ export default class ProfileSettings extends React.Component {
                                         }}
                                     />
                                     <TextInput
-                                        ref={(txt) => {
+                                        ref={txt => {
                                             this.newPassword = txt;
                                         }}
                                         placeholder={'New Password'}
@@ -646,13 +646,13 @@ export default class ProfileSettings extends React.Component {
                                         placeholderTextColor={
                                             colors.secondBackground
                                         }
-                                        onChangeText={(newPassword) =>
+                                        onChangeText={newPassword =>
                                             this.setState({newPassword})
                                         }
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07
@@ -668,7 +668,7 @@ export default class ProfileSettings extends React.Component {
                                         }}
                                     />
                                     <TextInput
-                                        ref={(txt) => {
+                                        ref={txt => {
                                             this.retypeNewPassword = txt;
                                         }}
                                         placeholder={'Re-Type New Password'}
@@ -676,13 +676,13 @@ export default class ProfileSettings extends React.Component {
                                         placeholderTextColor={
                                             colors.secondBackground
                                         }
-                                        onChangeText={(retypeNewPassword) => {
+                                        onChangeText={retypeNewPassword => {
                                             this.setState({retypeNewPassword});
                                         }}
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07

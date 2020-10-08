@@ -65,7 +65,7 @@ export default class SongCatalog extends React.Component {
                     type: newContent[i].post.type,
                     description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
-                    id: newContent[i].id,
+                    id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].isLiked,
@@ -105,7 +105,7 @@ export default class SongCatalog extends React.Component {
                         .getData('description')
                         .replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
-                    id: newContent[i].id,
+                    id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].isLiked,
@@ -124,7 +124,7 @@ export default class SongCatalog extends React.Component {
         });
     };
 
-    getDuration = async (newContent) => {
+    getDuration = async newContent => {
         if (newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value;
         } else if (newContent.post.fields[1].key == 'video') {
@@ -258,7 +258,7 @@ export default class SongCatalog extends React.Component {
                                 paddingLeft: 12 * factorHorizontal,
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontWeight:
                                     Platform.OS == 'ios' ? '900' : 'bold',
                             }}
@@ -338,11 +338,13 @@ export default class SongCatalog extends React.Component {
                                     ? fullHeight * 0.125
                                     : fullHeight * 0.09
                             } // image height
-                            navigator={(row) =>
+                            navigator={row => {
+                                console.log('song', row);
+
                                 this.props.navigation.navigate('VIDEOPLAYER', {
-                                    data: row,
-                                })
-                            }
+                                    id: row.id,
+                                });
+                            }}
                         />
                     </ScrollView>
                 </View>
@@ -362,7 +364,7 @@ export default class SongCatalog extends React.Component {
                     hasBackdrop={false}
                 >
                     <NavigationMenu
-                        onClose={(e) => this.setState({showModalMenu: e})}
+                        onClose={e => this.setState({showModalMenu: e})}
                         menu={this.state.menu}
                         parentPage={this.state.parentPage}
                     />

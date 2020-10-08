@@ -107,7 +107,7 @@ export default class CreateAccount extends React.Component {
                         this.setState({showCheckEmail: true});
                     }
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log('API Error: ', error);
                 });
         }
@@ -187,7 +187,7 @@ export default class CreateAccount extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 12 * factorRatio,
                                         fontWeight: '400',
                                         textAlign: 'center',
@@ -198,7 +198,7 @@ export default class CreateAccount extends React.Component {
                                 </Text>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 12 * factorRatio,
                                         fontWeight: '600',
                                         textAlign: 'center',
@@ -241,7 +241,7 @@ export default class CreateAccount extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 12 * factorRatio,
                                         fontWeight: '400',
                                         textAlign: 'center',
@@ -252,7 +252,7 @@ export default class CreateAccount extends React.Component {
                                 </Text>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 12 * factorRatio,
                                         fontWeight: '600',
                                         textAlign: 'center',
@@ -295,7 +295,7 @@ export default class CreateAccount extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 12 * factorRatio,
                                         fontWeight: '400',
                                         textAlign: 'center',
@@ -306,7 +306,7 @@ export default class CreateAccount extends React.Component {
                                 </Text>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         fontSize: 12 * factorRatio,
                                         fontWeight: '600',
                                         textAlign: 'center',
@@ -377,7 +377,7 @@ export default class CreateAccount extends React.Component {
                 >
                     <Text
                         style={{
-                            fontFamily: 'OpenSans-Regular',
+                            fontFamily: 'OpenSans',
                             fontSize: 24 * factorRatio,
                             fontWeight: Platform.OS == 'ios' ? '600' : 'bold',
                             color: 'white',
@@ -415,7 +415,7 @@ export default class CreateAccount extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 20 * factorRatio,
                                     fontWeight: '600',
                                     textAlign: 'left',
@@ -452,10 +452,10 @@ export default class CreateAccount extends React.Component {
                                         ? 'visible-password'
                                         : 'email-address'
                                 }
-                                onChangeText={(email) => this.setState({email})}
+                                onChangeText={email => this.setState({email})}
                                 style={{
                                     fontSize: 18 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     flex: 1,
                                 }}
                             />

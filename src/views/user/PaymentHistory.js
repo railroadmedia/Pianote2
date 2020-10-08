@@ -50,7 +50,7 @@ export default class PaymentHistory extends React.Component {
                         <View key={'date'}>
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 12 * factorRatio,
                                     color: colors.secondBackground,
                                 }}
@@ -62,7 +62,7 @@ export default class PaymentHistory extends React.Component {
                         <View key={'payment'} style={{flexDirection: 'row'}}>
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 14 * factorRatio,
                                     color: colors.secondBackground,
                                 }}
@@ -72,7 +72,7 @@ export default class PaymentHistory extends React.Component {
                             <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 14 * factorRatio,
                                     color: 'white',
                                 }}
@@ -150,7 +150,7 @@ export default class PaymentHistory extends React.Component {
                                 style={{
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     color: colors.secondBackground,
                                 }}
                             >

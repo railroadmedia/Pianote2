@@ -32,7 +32,7 @@ class ContinueIcon extends React.Component {
                 ]}
             >
                 <TouchableOpacity
-                    onPress={() => this.props.pressed}
+                    onPress={() => this.props.pressed()}
                     style={[
                         styles.centerContent,
                         {

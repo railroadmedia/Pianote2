@@ -30,7 +30,7 @@ class VidPlayer extends React.Component {
             >
                 <Video
                     source={this.props.videoURI}
-                    ref={(ref) => {
+                    ref={ref => {
                         this.player = ref;
                     }}
                     controls={true}
@@ -39,9 +39,9 @@ class VidPlayer extends React.Component {
                     resizeMode={'contain'}
                     playWhenInactive={false}
                     progressUpdateInterval={500}
-                    onError={(e) => console.log(e)}
+                    onError={e => console.log(e)}
                     paused={this.state.paused}
-                    onLoad={(e) => this.setState({videoLength: e.duration})}
+                    onLoad={e => this.setState({videoLength: e.duration})}
                     onEnd={() => this.setState({paused: true})}
                     style={{
                         height: this.props.height,

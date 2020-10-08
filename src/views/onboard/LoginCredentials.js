@@ -178,7 +178,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -196,7 +196,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -274,7 +274,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 24 * factorRatio,
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 textAlign: 'center',
                                 color: 'white',
                             }}
@@ -301,9 +301,9 @@ export default class LoginCredentials extends React.Component {
                                 keyboardAppearance={'dark'}
                                 placeholderTextColor={'grey'}
                                 placeholder={'Email Address'}
-                                onChangeText={(email) => this.setState({email})}
+                                onChangeText={email => this.setState({email})}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 18 * factorRatio,
                                 }}
                             />
@@ -335,12 +335,12 @@ export default class LoginCredentials extends React.Component {
                                         : 'email-address'
                                 }
                                 secureTextEntry={this.state.secureTextEntry}
-                                onChangeText={(password) =>
+                                onChangeText={password =>
                                     this.setState({password})
                                 }
                                 style={{
                                     fontSize: 18 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     flex: 1,
                                 }}
                             />

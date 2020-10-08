@@ -75,7 +75,7 @@ class CommentSort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Popular'
                                                 ? 'white'
@@ -120,7 +120,7 @@ class CommentSort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Mine'
                                                 ? 'white'
@@ -165,7 +165,7 @@ class CommentSort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Newest'
                                                 ? 'white'
@@ -210,7 +210,7 @@ class CommentSort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color:
                                             this.state.currentSort == 'Oldest'
                                                 ? 'white'
@@ -248,7 +248,7 @@ class CommentSort extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color: 'white',
                                     }}
                                 >

@@ -166,7 +166,28 @@ export default class Course extends React.Component {
         });
     };
 
-    getDuration = async (newContent) => {
+    filterResults = async () => {
+        this.props.navigation.navigate('FILTERS', {
+            filters: this.state.filters,
+            type: 'COURSES',
+            onGoBack: filters => {
+                this.setState({
+                    allCourses: [],
+                    filters:
+                        filters.instructors.length == 0 &&
+                        filters.level.length == 0 &&
+                        filters.progress.length == 0 &&
+                        filters.topics.length == 0
+                            ? null
+                            : filters,
+                }),
+                    this.getAllCourses(),
+                    this.forceUpdate();
+            },
+        });
+    };
+
+    getDuration = newContent => {
         var data = 0;
         try {
             for (i in newContent.post.current_lesson.fields) {
@@ -318,7 +339,7 @@ export default class Course extends React.Component {
                                     paddingLeft: 12 * factorHorizontal,
                                     fontSize: 30 * factorRatio,
                                     color: 'white',
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontWeight:
                                         Platform.OS == 'ios' ? '900' : 'bold',
                                 }}
@@ -438,7 +459,7 @@ export default class Course extends React.Component {
                                 navigator={(row) =>
                                     this.props.navigation.navigate(
                                         'VIDEOPLAYER',
-                                        {data: row},
+                                        {id: row.id},
                                     )
                                 }
                             />

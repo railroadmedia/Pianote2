@@ -266,7 +266,7 @@ export default class StudentFocusShow extends React.Component {
                                             fontSize: 22 * factorRatio,
                                             fontWeight: 'bold',
                                             color: colors.mainBackground,
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans',
                                         }}
                                     >
                                         Filter Courses

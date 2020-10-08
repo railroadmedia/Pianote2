@@ -7,6 +7,7 @@ import {withNavigation} from 'react-navigation';
 import {logOut} from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
+import Intercom from 'react-native-intercom';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -23,7 +24,7 @@ class LogOut extends React.Component {
     }
 
     logOut = async () => {
-        logOut();
+        Intercom.logout();
         await AsyncStorage.clear();
         await AsyncStorage.setItem('loggedInStatus', 'false');
         await this.props.navigation.dispatch(resetAction);
@@ -74,7 +75,7 @@ class LogOut extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontWeight: 'bold',
                                     fontSize: 19 * factorRatio,
                                     marginTop: 10 * factorRatio,
@@ -94,7 +95,7 @@ class LogOut extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     textAlign: 'justify',
                                 }}
@@ -192,8 +193,7 @@ class LogOut extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
+                                                    fontFamily: 'OpenSans',
                                                     fontSize: 14 * factorRatio,
                                                     color: 'grey',
                                                     fontWeight: '700',

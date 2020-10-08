@@ -73,7 +73,7 @@ class ConnectDevice extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     Auto (360p)
@@ -108,7 +108,7 @@ class ConnectDevice extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     1080p
@@ -143,7 +143,7 @@ class ConnectDevice extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     720p
@@ -178,7 +178,7 @@ class ConnectDevice extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     480p
@@ -213,7 +213,7 @@ class ConnectDevice extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     360p
@@ -244,7 +244,7 @@ class ConnectDevice extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
                                     Cancel

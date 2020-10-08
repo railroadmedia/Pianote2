@@ -13,7 +13,6 @@ class NextVideo extends React.Component {
         super(props);
         this.state = {
             hasNotch: 0,
-            progress: this.props.currentCompletion,
         };
     }
 
@@ -21,7 +20,8 @@ class NextVideo extends React.Component {
 
     render = () => {
         return (
-            <View
+            <TouchableOpacity
+                onPress={this.props.onNextLesson}
                 style={{
                     backgroundColor: colors.mainBackground,
                     borderBottomColor: colors.secondBackground,
@@ -38,13 +38,13 @@ class NextVideo extends React.Component {
                     >
                         <View
                             style={{
-                                flex: this.state.progress,
+                                flex: this.props.progress / 100,
                                 backgroundColor: colors.pianoteRed,
                             }}
                         />
                         <View
                             style={{
-                                flex: 1 - this.state.progress,
+                                flex: 1 - this.props.progress / 100,
                                 backgroundColor: colors.secondBackground,
                             }}
                         />
@@ -78,12 +78,13 @@ class NextVideo extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 12 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     color: colors.secondBackground,
                                     textAlign: 'right',
                                 }}
                             >
-                                LEVEL - {this.state.progress * 100}% COMPLETE
+                                {this.props.type} - {this.props.progress}%
+                                COMPLETE
                             </Text>
                             <View style={{flex: 1}} />
                         </View>
@@ -97,9 +98,8 @@ class NextVideo extends React.Component {
                             paddingRight: fullWidth * 0.035,
                         }}
                     >
-                        <TouchableOpacity
+                        <View
                             key={'thumbnail'}
-                            onPress={() => {}}
                             style={{justifyContent: 'center'}}
                             underlayColor={'transparent'}
                         >
@@ -119,17 +119,15 @@ class NextVideo extends React.Component {
                                         borderRadius: 7 * factorRatio,
                                     }}
                                     source={{
-                                        uri:
-                                            typeof this.props.item ==
-                                            'undefined'
-                                                ? ''
-                                                : this.props.item.thumbnail,
+                                        uri: this.props.item.getData(
+                                            'thumbnail_url',
+                                        ),
                                     }}
                                     resizeMode={FastImage.resizeMode.cover}
                                 />
                             </View>
                             <View style={{flex: 1}} />
-                        </TouchableOpacity>
+                        </View>
                         <View
                             key={'titles'}
                             style={{
@@ -143,31 +141,28 @@ class NextVideo extends React.Component {
                                         fontSize: 15 * factorRatio,
                                         textAlign: 'left',
                                         fontWeight: 'bold',
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         color: 'white',
                                     }}
                                 >
-                                    {typeof this.props.item == 'undefined'
-                                        ? ''
-                                        : this.props.item.title}
+                                    {this.props.item.getField('title')}
                                 </Text>
                                 <View style={{height: 2 * factorVertical}} />
                                 <Text
                                     numberOfLines={2}
                                     style={{
                                         fontSize: 12 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                         textAlign: 'left',
                                         color: colors.secondBackground,
                                     }}
                                 >
                                     2 mins
-                                    {/* {this.props.items[index].artist} */}
                                 </Text>
                             </View>
                             <View style={{flex: 1}} />
                         </View>
-                        <TouchableOpacity
+                        <View
                             key={'play'}
                             onPress={() => {}}
                             style={[
@@ -184,11 +179,11 @@ class NextVideo extends React.Component {
                                 size={30 * factorRatio}
                                 color={colors.pianoteRed}
                             />
-                        </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
                 <View style={{height: 15 * factorVertical}} />
-            </View>
+            </TouchableOpacity>
         );
     };
 }

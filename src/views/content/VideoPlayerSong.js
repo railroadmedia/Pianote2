@@ -4,12 +4,8 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import Modal from 'react-native-modal';
-import FastImage from 'react-native-fast-image';
 import SoundSlice from '../../components/SoundSlice.js';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AssignmentComplete from '../../modals/AssignmentComplete.js';
-import QualitySettings from '../../modals/QualitySettings.js';
-import VideoPlayerOptions from '../../modals/VideoPlayerOptions.js';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import AssignmentResource from './AssignmentResource.js';
 
 export default class VideoPlayerSong extends React.Component {
@@ -18,71 +14,22 @@ export default class VideoPlayerSong extends React.Component {
         super(props);
         this.state = {
             showSoundSlice: false,
-            showVideoPlayerOptions: false,
-            showQualitySettings: false,
-            showAssignmentComplete: false,
-            showLessonComplete: false,
             hideTitles: false,
         };
     }
 
     render() {
+        let {
+            index,
+            title,
+            sheets,
+            slug,
+            timeCodes,
+            description,
+            progress,
+        } = this.props.assignment;
         return (
-            <View style={{flex: 1}}>
-                {!this.state.hideTitles && (
-                    <>
-                        <View
-                            key={'video'}
-                            style={{
-                                height: onTablet
-                                    ? fullHeight * 0.4
-                                    : fullHeight * 0.3025,
-                                backgroundColor: 'black',
-                            }}
-                        >
-                            <FastImage
-                                style={{flex: 1}}
-                                source={{
-                                    uri:
-                                        'https://facebook.github.io/react-native/img/tiny_logo.png',
-                                }}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                        </View>
-                        <View
-                            key={'goBackIcon'}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    position: 'absolute',
-                                    left: 10 * factorHorizontal,
-                                    top: isNotch
-                                        ? 40 * factorVertical
-                                        : 30 * factorVertical,
-                                    height: 50 * factorRatio,
-                                    width: 50 * factorRatio,
-                                    zIndex: 10,
-                                },
-                            ]}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.goBack();
-                                }}
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-                                <EntypoIcon
-                                    name={'chevron-thin-left'}
-                                    size={25 * factorRatio}
-                                    color={'white'}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </>
-                )}
+            <>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
@@ -94,86 +41,96 @@ export default class VideoPlayerSong extends React.Component {
                     <View style={{height: 25 * factorVertical}} />
                     {!this.state.hideTitles && (
                         <>
+                            <TouchableOpacity
+                                onPress={this.props.onX}
+                                style={{
+                                    position: 'absolute',
+                                    left: 20,
+                                    top: 20,
+                                    zIndex: 1,
+                                }}
+                            >
+                                <AntIcon
+                                    name={'close'}
+                                    size={30 * factorRatio}
+                                    color={'#000000'}
+                                />
+                            </TouchableOpacity>
                             <Text
                                 key={'assignmentNumber'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
                                     color: '#b9b9b9',
                                 }}
                             >
-                                ASSIGNMENT #
-                                {
-                                    this.props.navigation.state.params
-                                        .assignmentNum
-                                }
+                                ASSIGNMENT #{index}
                             </Text>
                             <View style={{height: 10 * factorVertical}} />
                             <Text
                                 key={'assignmentName'}
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 28 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
                                 }}
                             >
-                                {
-                                    this.props.navigation.state.params
-                                        .assignmentName
-                                }
+                                {title}
                             </Text>
                             <View style={{height: 10 * factorVertical}} />
-                            <View
-                                key={'skipTo'}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: fullHeight * 0.025,
-                                        width: '100%',
-                                    },
-                                ]}
-                            >
+                            {timeCodes?.map(tc => (
                                 <View
+                                    key={'skipTo'}
                                     style={[
                                         styles.centerContent,
                                         {
-                                            width: '40%',
-                                            height: '100%',
-                                            borderRadius: 30 * factorRatio,
-                                            backgroundColor: '#ececec',
-                                            alignSelf: 'center',
+                                            height: fullHeight * 0.025,
+                                            width: '100%',
                                         },
                                     ]}
                                 >
-                                    <TouchableOpacity
-                                        onPress={() => {}}
+                                    <View
                                         style={[
                                             styles.centerContent,
                                             {
+                                                width: '40%',
                                                 height: '100%',
-                                                width: '100%',
-                                                alignItems: 'center',
+                                                borderRadius: 30 * factorRatio,
+                                                backgroundColor: '#ececec',
+                                                alignSelf: 'center',
                                             },
                                         ]}
                                     >
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontWeight: '700',
-                                                color: 'grey',
-                                                fontSize: 12 * factorRatio,
-                                                alignSelf: 'center',
-                                            }}
+                                        <TouchableOpacity
+                                            onPress={() => {}}
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    alignItems: 'center',
+                                                },
+                                            ]}
                                         >
-                                            SKIP VIDEO TO 2:01
-                                        </Text>
-                                    </TouchableOpacity>
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'OpenSans',
+                                                    fontWeight: '700',
+                                                    color: 'grey',
+                                                    fontSize: 12 * factorRatio,
+                                                    alignSelf: 'center',
+                                                }}
+                                            >
+                                                SKIP VIDEO TO {tc.value}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                                <View style={{flex: 1}} />
-                            </View>
+                            ))}
+
                             <View
                                 style={{
                                     height: 25 * factorVertical,
@@ -189,61 +146,58 @@ export default class VideoPlayerSong extends React.Component {
                                         paddingLeft: '5%',
                                         paddingRight: '5%',
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans',
                                     }}
                                 >
-                                    Lorem ipsum dolor sit smart cosaf adlsafdd.
-                                    elit, Prascent quie eros magna. Etrian
-                                    tincidunt Lorem ipsum dolor sit smart cosaf
-                                    adlsafdd. elit.
+                                    {description}
                                 </Text>
                             </View>
                         </>
                     )}
                     <AssignmentResource
-                        ref={(r) => (this.ptzhsvRef = r)}
-                        data={this.props.navigation.state.params.sheets}
+                        ref={r => (this.ptzhsvRef = r)}
+                        data={sheets}
                         onDoubleTap={() => {
                             this.setState({hideTitles: !this.state.hideTitles});
+                            this.props.onAssignmentFullscreen();
                         }}
                     />
                 </ScrollView>
                 {!this.state.hideTitles && (
                     <View style={{backgroundColor: '#ffffff'}}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                console.log('asd');
-                                this.setState({showSoundSlice: true});
-                            }}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    borderWidth: 2.5 * factorRatio,
-                                    borderColor: '#fb1b2f',
-                                    width: '90%',
-                                    alignSelf: 'center',
-                                    borderRadius: 100 * factorRatio,
-                                    marginTop: 10 * factorRatio,
-                                    marginBottom: 5 * factorRatio,
-                                },
-                            ]}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 16 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontWeight: '800',
-                                    color: '#fb1b2f',
-                                    paddingVertical: 10,
-                                }}
+                        {slug && (
+                            <TouchableOpacity
+                                onPress={() =>
+                                    this.setState({showSoundSlice: true})
+                                }
+                                style={[
+                                    styles.centerContent,
+                                    {
+                                        borderWidth: 2.5 * factorRatio,
+                                        borderColor: '#fb1b2f',
+                                        width: '90%',
+                                        alignSelf: 'center',
+                                        borderRadius: 100 * factorRatio,
+                                        marginTop: 10 * factorRatio,
+                                        marginBottom: 5 * factorRatio,
+                                    },
+                                ]}
                             >
-                                PRACTICE
-                            </Text>
-                        </TouchableOpacity>
+                                <Text
+                                    style={{
+                                        fontSize: 16 * factorRatio,
+                                        fontFamily: 'OpenSans',
+                                        fontWeight: '800',
+                                        color: '#fb1b2f',
+                                        paddingVertical: 10,
+                                    }}
+                                >
+                                    PRACTICE
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                         <TouchableOpacity
-                            onPress={() => {
-                                this.setState({showAssignmentComplete: true});
-                            }}
+                            onPress={() => this.props.onCompleteAssignment()}
                             style={[
                                 styles.centerContent,
                                 {
@@ -261,67 +215,19 @@ export default class VideoPlayerSong extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontWeight: '800',
                                     color: 'white',
                                     paddingVertical: 10,
                                 }}
                             >
-                                COMPLETE ASSIGNMENT
+                                {progress === 100
+                                    ? 'COMPLETED'
+                                    : 'COMPLETE ASSIGNMENT'}
                             </Text>
                         </TouchableOpacity>
                     </View>
                 )}
-                <Modal
-                    key={'VideoPlayerOptions'}
-                    isVisible={this.state.showVideoPlayerOptions}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={true}
-                    hasBackdrop={true}
-                >
-                    <VideoPlayerOptions
-                        hideVideoPlayerOptions={() => {
-                            this.setState({
-                                showVideoPlayerOptions: false,
-                            });
-                        }}
-                    />
-                </Modal>
-                <Modal
-                    key={'QualitySettings'}
-                    isVisible={this.state.showQualitySettings}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={true}
-                    hasBackdrop={true}
-                >
-                    <QualitySettings
-                        hideQualitySettings={() => {
-                            this.setState({
-                                showQualitySettings: false,
-                            });
-                        }}
-                    />
-                </Modal>
                 <Modal
                     key={'soundSlice'}
                     isVisible={this.state.showSoundSlice}
@@ -345,33 +251,10 @@ export default class VideoPlayerSong extends React.Component {
                                 showSoundSlice: false,
                             });
                         }}
-                        slug={this.props.navigation.state.params.slug}
+                        slug={slug}
                     />
                 </Modal>
-                <Modal
-                    key={'assignmentComplete'}
-                    isVisible={this.state.showAssignmentComplete}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={250}
-                    animationOutTiming={250}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <AssignmentComplete
-                        hideAssignmentComplete={() => {
-                            this.setState({showAssignmentComplete: false});
-                        }}
-                    />
-                </Modal>
-            </View>
+            </>
         );
     }
 }

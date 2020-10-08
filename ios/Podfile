@@ -47,22 +47,26 @@ target 'Pianote2' do
 
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
+  pod 'react-native-home-indicator', :path => '../node_modules/react-native-home-indicator'
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
-  target 'Pianote2Tests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
+  pod 'Firebase/Messaging'
+
+  pod 'react-native-google-cast/NoBluetooth', path: '../node_modules/react-native-google-cast/ios/'
+
+  pod 'RNAirplay', :path => '../node_modules/react-native-airplay-ios'
+
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+  
+  pod 'react-native-video', :path => '../node_modules/react-native-video'
+  
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
+  pod 'Firebase/Messaging'
+
+  pod 'react-native-intercom', :path => '../node_modules/react-native-intercom'
 
   use_native_modules!
-end
-
-target 'Pianote2-tvOS' do
-  # Pods for Pianote2-tvOS
-
-  target 'Pianote2-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end

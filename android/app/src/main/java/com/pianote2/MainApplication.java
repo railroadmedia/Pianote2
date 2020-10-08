@@ -3,16 +3,26 @@ package com.pianote2;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
-import com.facebook.react.ReactApplication;
-import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
+import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
+import io.invertase.firebase.RNFirebasePackage;
+
+import com.robinpowered.react.Intercom.IntercomPackage;
+import io.intercom.android.sdk.Intercom;
+import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
+
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import com.reactnative.googlecast.GoogleCastPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -28,6 +38,9 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
+          packages.add(new RNFirebaseMessagingPackage());
+          packages.add(new RNFirebaseNotificationsPackage());
+          packages.add(new GoogleCastPackage());
           // packages.add(new MyReactNativePackage());
           return packages;
         }
@@ -46,6 +59,8 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    Intercom.initialize(this, "android_sdk-25125f94ff992fe25f1a55f7f411018fd9bec46d", "x2x1waf3");
+        
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
   }

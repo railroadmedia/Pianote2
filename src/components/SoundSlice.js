@@ -89,7 +89,7 @@ class SoundSlice extends React.Component {
                         <View style={{flex: 1}}>
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
@@ -101,7 +101,7 @@ class SoundSlice extends React.Component {
                             <View style={{height: 10 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 30 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',

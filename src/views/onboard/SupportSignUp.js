@@ -99,7 +99,7 @@ export default class SupportSignUp extends React.Component {
                             style={{
                                 fontSize: 22 * factorRatio,
                                 fontWeight: 'bold',
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 color: colors.secondBackground,
                             }}
                         >
@@ -119,7 +119,7 @@ export default class SupportSignUp extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 15.5 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     color: colors.secondBackground,
                                 }}
                             >
@@ -127,7 +127,7 @@ export default class SupportSignUp extends React.Component {
                             <View style={{height: 15 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     fontSize: 15.5 * factorRatio,
                                     color: colors.secondBackground,
                                 }}
@@ -244,7 +244,7 @@ export default class SupportSignUp extends React.Component {
                         <Text
                             key={'email'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 14 * factorRatio,
                                 opacity: 0.8,
                                 color: colors.secondBackground,
@@ -257,7 +257,7 @@ export default class SupportSignUp extends React.Component {
                         <Text
                             key={'emailaddress'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -269,7 +269,7 @@ export default class SupportSignUp extends React.Component {
                         <Text
                             key={'phone'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 14 * factorRatio,
                                 opacity: 0.8,
                                 color: colors.secondBackground,
@@ -282,7 +282,7 @@ export default class SupportSignUp extends React.Component {
                         <Text
                             key={'phoneNumber'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -294,7 +294,7 @@ export default class SupportSignUp extends React.Component {
                         <Text
                             key={'phoneNumber2'}
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',

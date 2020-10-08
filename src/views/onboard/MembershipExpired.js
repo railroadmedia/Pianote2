@@ -87,7 +87,7 @@ export default class MembershipExpired extends React.Component {
                         <View style={{flex: 1}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 28 * factorRatio,
                                 paddingLeft: fullWidth * 0.15,
                                 paddingRight: fullWidth * 0.15,
@@ -101,7 +101,7 @@ export default class MembershipExpired extends React.Component {
                         <View style={{height: 25 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans-Regular',
+                                fontFamily: 'OpenSans',
                                 fontSize: 18 * factorRatio,
                                 paddingLeft: fullWidth * 0.05,
                                 paddingRight: fullWidth * 0.05,

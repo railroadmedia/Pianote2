@@ -155,7 +155,7 @@ export default class NotificationSettings extends React.Component {
                                 style={{
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
-                                    fontFamily: 'OpenSans-Regular',
+                                    fontFamily: 'OpenSans',
                                     color: colors.secondBackground,
                                 }}
                             >
@@ -196,7 +196,11 @@ export default class NotificationSettings extends React.Component {
                                 >
                                     <Text
                                         style={{
+<<<<<<< HEAD
                                             fontFamily: 'OpenSans-Regular',
+=======
+                                            fontFamily: 'OpenSans',
+>>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
                                             fontSize: 16 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
