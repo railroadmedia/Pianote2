@@ -196,11 +196,7 @@ export default class NotificationSettings extends React.Component {
                                 >
                                     <Text
                                         style={{
-<<<<<<< HEAD
-                                            fontFamily: 'OpenSans-Regular',
-=======
                                             fontFamily: 'OpenSans',
->>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
                                             fontSize: 16 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -241,7 +237,7 @@ export default class NotificationSettings extends React.Component {
                                             isClicked={
                                                 this.state.notify_weekly_update
                                             }
-                                            clicked={(bool) => {
+                                            clicked={bool => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
                                                         weeklyCommunityUpdatesClicked: bool,
@@ -285,7 +281,7 @@ export default class NotificationSettings extends React.Component {
                                                 this.state
                                                     .notify_on_lesson_comment_reply
                                             }
-                                            clicked={(bool) => {
+                                            clicked={bool => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
                                                         notify_on_lesson_comment_reply: bool,
@@ -328,7 +324,7 @@ export default class NotificationSettings extends React.Component {
                                             isClicked={
                                                 this.state.commentLikesClicked
                                             }
-                                            clicked={(bool) => {
+                                            clicked={bool => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
                                                         notify_on_lesson_comment_like: bool,
@@ -416,7 +412,7 @@ export default class NotificationSettings extends React.Component {
                                                 this.state
                                                     .notify_on_forum_post_like
                                             }
-                                            clicked={(bool) => {
+                                            clicked={bool => {
                                                 this.changeNotificationStatus(),
                                                     this.setState({
                                                         notify_on_forum_post_like: bool,

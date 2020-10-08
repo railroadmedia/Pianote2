@@ -147,7 +147,6 @@ var filterDict = {
         ['Tom Petty', false, 'artist,Tom+Petty'],
         ['Vance Joy', false, 'artist,Vance+Joy'],
         ['Yiruma', false, 'artist,Yiruma'],
-
     ],
     STUDENTFOCUSSHOW: [
         ['Chord', false, 'topic,Chord'],
@@ -249,8 +248,14 @@ export default class Filters extends React.Component {
         );
         this.state = {
             type: this.props.navigation.state.params.type,
-            level: (this.props.navigation.state.params.filters.level.length > 1) ? this.props.navigation.state.params.filters.level[0] : null,
-            allLevels: (this.props.navigation.state.params.filters.level.length > 1) ? false : true,
+            level:
+                this.props.navigation.state.params.filters.level.length > 1
+                    ? this.props.navigation.state.params.filters.level[0]
+                    : null,
+            allLevels:
+                this.props.navigation.state.params.filters.level.length > 1
+                    ? false
+                    : true,
             displayTopics: [],
             topics: [],
             progressProgress: false,
@@ -265,18 +270,19 @@ export default class Filters extends React.Component {
             jonny: false,
             brett: false,
             nate: false,
-            onlyType: (
-                this.props.navigation.state.params.type == 'MYLIST' || 
-                this.props.navigation.state.params.type == 'SEARCH' || 
+            onlyType:
+                this.props.navigation.state.params.type == 'MYLIST' ||
+                this.props.navigation.state.params.type == 'SEARCH' ||
                 this.props.navigation.state.params.type == 'SEEALL'
-            ) ? false : true
+                    ? false
+                    : true,
         };
     }
 
     updateFilters = async () => {
         var filters = this.props.navigation.state.params.filters;
-        var topics = filters.topics
-        var displayTopics = filters.displayTopics
+        var topics = filters.topics;
+        var displayTopics = filters.displayTopics;
         var level = null; // current level
         var allLevels = true; // if all level selected
         var progressAll = false;
@@ -293,17 +299,23 @@ export default class Filters extends React.Component {
         var brett = false;
         var nate = false;
 
-        for(i in filterDict[this.props.navigation.state.params.type]) {
-            if(await topics.indexOf(filterDict[this.props.navigation.state.params.type][i][0]) !== -1) { 
-                filterDict[this.props.navigation.state.params.type][i][1] = true;
+        for (i in filterDict[this.props.navigation.state.params.type]) {
+            if (
+                (await topics.indexOf(
+                    filterDict[this.props.navigation.state.params.type][i][0],
+                )) !== -1
+            ) {
+                filterDict[this.props.navigation.state.params.type][
+                    i
+                ][1] = true;
             }
-        };
+        }
 
         // currently selected level
         if (filters.level.length > 1) {
             level = filters.level[0];
             allLevels = false;
-        };
+        }
 
         // currently selected progress
         if (filters.progress.length > 0) {
@@ -321,7 +333,7 @@ export default class Filters extends React.Component {
                 progressComplete = true;
                 openProgress = true;
             }
-        };
+        }
 
         // currently selected instructors
         if (filters.instructors.length > 0) {
@@ -357,7 +369,7 @@ export default class Filters extends React.Component {
                 kenny = true;
                 openInstructors = true;
             }
-        };
+        }
 
         await this.setState({
             topics,
@@ -385,39 +397,61 @@ export default class Filters extends React.Component {
         this.setState({loading: true});
     };
 
-    clickFilter = async (num) => {
-        if(filterDict[this.props.navigation.state.params.type][num][1] == false) {
-            filterDict[this.props.navigation.state.params.type][num][1] = true
-            let topics = this.state.topics
-            let displayTopics = this.state.displayTopics
-            await topics.push(filterDict[this.props.navigation.state.params.type][num][2])
-            await displayTopics.push(filterDict[this.props.navigation.state.params.type][num][0])
-            await this.setState({topics, displayTopics})
+    clickFilter = async num => {
+        if (
+            filterDict[this.props.navigation.state.params.type][num][1] == false
+        ) {
+            filterDict[this.props.navigation.state.params.type][num][1] = true;
+            let topics = this.state.topics;
+            let displayTopics = this.state.displayTopics;
+            await topics.push(
+                filterDict[this.props.navigation.state.params.type][num][2],
+            );
+            await displayTopics.push(
+                filterDict[this.props.navigation.state.params.type][num][0],
+            );
+            await this.setState({topics, displayTopics});
         } else {
-            filterDict[this.props.navigation.state.params.type][num][1] = false
-            let topics = this.state.topics   
-            let displayTopics = this.state.displayTopics
-            await topics.splice(topics.indexOf(filterDict[this.props.navigation.state.params.type][num][2]), 1)
-            await displayTopics.splice(topics.indexOf(filterDict[this.props.navigation.state.params.type][num][0]), 1)
-            await this.setState({topics, displayTopics})
+            filterDict[this.props.navigation.state.params.type][num][1] = false;
+            let topics = this.state.topics;
+            let displayTopics = this.state.displayTopics;
+            await topics.splice(
+                topics.indexOf(
+                    filterDict[this.props.navigation.state.params.type][num][2],
+                ),
+                1,
+            );
+            await displayTopics.splice(
+                topics.indexOf(
+                    filterDict[this.props.navigation.state.params.type][num][0],
+                ),
+                1,
+            );
+            await this.setState({topics, displayTopics});
         }
     };
 
-    clickFilterArtist = async (num) => {
-        if(filterDict['ARTISTS'][num][1] == false) {
-            filterDict['ARTISTS'][num][1] = true
-            let topics = this.state.topics
-            let displayTopics = this.state.displayTopics
-            await topics.push(filterDict['ARTISTS'][num][2])
-            await displayTopics.push(filterDict['ARTISTS'][num][0])
-            await this.setState({topics, displayTopics})
+    clickFilterArtist = async num => {
+        if (filterDict['ARTISTS'][num][1] == false) {
+            filterDict['ARTISTS'][num][1] = true;
+            let topics = this.state.topics;
+            let displayTopics = this.state.displayTopics;
+            await topics.push(filterDict['ARTISTS'][num][2]);
+            await displayTopics.push(filterDict['ARTISTS'][num][0]);
+            await this.setState({topics, displayTopics});
         } else {
-            filterDict['ARTISTS'][num][1] = false
-            let topics = this.state.topics   
-            let displayTopics = this.state.displayTopics
-            await topics.splice(topics.indexOf(filterDict['ARTISTS'][num][2]), 1)
-            await displayTopics.splice(topics.indexOf(filterDict['ARTISTS'][num][0]), 1)
-            await this.setState({topics, displayTopics})
+            filterDict['ARTISTS'][num][1] = false;
+            let topics = this.state.topics;
+            let displayTopics = this.state.displayTopics;
+            await topics.splice(
+                topics.indexOf(filterDict['ARTISTS'][num][2]),
+                1,
+            );
+            await displayTopics.splice(
+                topics.indexOf(filterDict['ARTISTS'][num][0]),
+                1,
+            );
+            await this.setState({topics, displayTopics});
         }
     };
 
@@ -488,7 +522,11 @@ export default class Filters extends React.Component {
             ],
             ARTISTS: [
                 ['Adele', false, 'artist,Adele'],
-                ['Adolphe Adam', false, 'artist,Adolphe+Adam+%26+Placide+Cappeau'],
+                [
+                    'Adolphe Adam',
+                    false,
+                    'artist,Adolphe+Adam+%26+Placide+Cappeau',
+                ],
                 ['Aerosmith', false, 'artist,Aerosmith'],
                 ['Alan Walker', false, 'artist,Alan+Walker'],
                 ['Alicia Keys', false, 'artist,Alicia+Keys'],
@@ -514,7 +552,11 @@ export default class Filters extends React.Component {
                 ['Evanescence', false, 'artist,Evanescence'],
                 ['Feist', false, 'artist,Feist'],
                 ['Frank Sinatra', false, 'artist,Frank+Sinatra'],
-                ['Franz Gruber', false, 'artist,Franz+Xaver+Gruber,+Joseph+Mohr'],
+                [
+                    'Franz Gruber',
+                    false,
+                    'artist,Franz+Xaver+Gruber,+Joseph+Mohr',
+                ],
                 ['Gary Jules', false, 'artist,Gary+Jules'],
                 ['George Gershwin', false, 'artist,George+Gershwin'],
                 ['HBO', false, 'artist,HBO'],
@@ -554,8 +596,7 @@ export default class Filters extends React.Component {
                 ['Tom Petty', false, 'artist,Tom+Petty'],
                 ['Vance Joy', false, 'artist,Vance+Joy'],
                 ['Yiruma', false, 'artist,Yiruma'],
-        
-            ],            
+            ],
             STUDENTFOCUSSHOW: [
                 ['Chord', false, 'topic,Chord'],
                 ['Chording', false, 'topic,Chording'],
@@ -686,7 +727,7 @@ export default class Filters extends React.Component {
         }
 
         var level = [];
-        if(!this.state.allLevels) {
+        if (!this.state.allLevels) {
             await level.push(this.state.level);
             if (this.state.level < 4) {
                 await level.push('BEGINNER');
@@ -696,16 +737,14 @@ export default class Filters extends React.Component {
                 await level.push('ADVANCED');
             }
         }
-       
-        await this.props.navigation.state.params.onGoBack(
-            {
-                displayTopics: this.state.displayTopics,
-                topics: this.state.topics,
-                instructors: instructors,
-                progress: progress,
-                level: level,
-            }
-        );
+
+        await this.props.navigation.state.params.onGoBack({
+            displayTopics: this.state.displayTopics,
+            topics: this.state.topics,
+            instructors: instructors,
+            progress: progress,
+            level: level,
+        });
         await this.props.navigation.goBack();
     };
 
@@ -795,182 +834,190 @@ export default class Filters extends React.Component {
                         >
                             <View style={{height: 30 * factorVertical}} />
                             {this.state.onlyType && (
-                            <View>
-                                <Text
-                                    key={'setYourSkill'}
-                                    style={{
-                                        fontSize: 18 * factorRatio,
-                                        marginBottom: 5 * factorVertical,
-                                        textAlign: 'left',
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        color: colors.secondBackground,
-                                        paddingLeft: fullWidth * 0.035,
-<<<<<<< HEAD
-=======
-                                        paddingRight: fullWidth * 0.035,
-                                    },
-                                ]}
-                            >
-                                <MultiSlider
-                                    min={1}
-                                    max={10}
-                                    step={1}
-                                    snapped={true}
-                                    values={[
-                                        this.state.allLevels
-                                            ? 10
-                                            : this.state.level,
-                                    ]}
-                                    onValuesChangeFinish={e => {
-                                        this.setState({
-                                            level: e[0],
-                                            allLevels: false,
-                                        });
->>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
-                                    }}
-                                >
-                                    SET YOUR SKILL LEVEL
-                                </Text>
-                                <View
-                                    key={'slider'}
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            paddingLeft: fullWidth * 0.035,
-                                            paddingRight: fullWidth * 0.035,
-                                        },
-                                    ]}
-                                >
-                                    <MultiSlider
-                                        min={1}
-                                        max={levelDict[this.props.navigation.state.params.type]}
-                                        step={1}
-                                        snapped={true}
-                                        values={[
-                                            this.state.allLevels
-                                                ? levelDict[this.props.navigation.state.params.type]
-                                                : this.state.level,
-                                        ]}
-                                        onValuesChangeFinish={(e) => {
-                                            this.setState({
-                                                level: e[0],
-                                                allLevels: false,
-                                            });
-                                        }}
-                                        sliderLength={fullWidth * 0.9}
-                                        trackStyle={{
-                                            height: 5 * factorHorizontal,
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                        }}
-                                        selectedStyle={{
-                                            backgroundColor: colors.pianoteRed,
-                                            height: 5 * factorHorizontal,
-                                        }}
-                                        markerStyle={{
-                                            height: 17.5 * factorRatio,
-                                            width: 17.5 * factorRatio,
-                                            borderRadius: 40,
-                                            backgroundColor: colors.pianoteRed,
-                                            borderColor: colors.pianoteRed,
-                                        }}
-                                    />
-                                </View>
-                                <View style={{height: 10 * factorRatio}} />
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        fontWeight: 'bold',
-                                        fontSize: 24 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
-                                        color: 'white',
-                                    }}
-                                >
-                                    {this.state.allLevels
-                                        ? 'ALL LEVELS'
-                                        : 'LEVEL ' + this.state.level}
-                                </Text>
-                                <View style={{height: 10 * factorRatio}} />
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        fontSize: 14 * factorRatio,
-                                        fontFamily: 'OpenSans-Regular',
-                                        color: 'white',
-                                        paddingLeft: fullWidth * 0.1,
-                                        paddingRight: fullWidth * 0.1,
-                                    }}
-                                >
-                                    Choose a level ... 
-                                </Text>
-                                <View style={{height: 10 * factorRatio}} />
-                                <View
-                                    key={'allLevels'}
-                                    style={{
-                                        minHeight: 70 * factorVertical,
-                                        borderBottomWidth: 0.5 * factorRatio,
-                                        borderBottomColor: colors.secondBackground,
-                                    }}
-                                >
-                                    <View style={{height: 10 * factorRatio}} />
-                                    <View
+                                <View>
+                                    <Text
+                                        key={'setYourSkill'}
                                         style={{
-                                            height: 30 * factorVertical,
-                                            justifyContent: 'space-around',
-                                            alignContent: 'space-around',
-                                            flexDirection: 'row',
+                                            fontSize: 18 * factorRatio,
+                                            marginBottom: 5 * factorVertical,
+                                            textAlign: 'left',
+                                            fontFamily: 'RobotoCondensed-Bold',
+                                            color: colors.secondBackground,
+                                            paddingLeft: fullWidth * 0.035,
                                         }}
                                     >
-                                        <View style={{flex: 1}} />
-                                        <TouchableOpacity
-                                            onPress={() => {
+                                        SET YOUR SKILL LEVEL
+                                    </Text>
+                                    <View
+                                        key={'slider'}
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                paddingLeft: fullWidth * 0.035,
+                                                paddingRight: fullWidth * 0.035,
+                                            },
+                                        ]}
+                                    >
+                                        <MultiSlider
+                                            min={1}
+                                            max={
+                                                levelDict[
+                                                    this.props.navigation.state
+                                                        .params.type
+                                                ]
+                                            }
+                                            step={1}
+                                            snapped={true}
+                                            values={[
+                                                this.state.allLevels
+                                                    ? levelDict[
+                                                          this.props.navigation
+                                                              .state.params.type
+                                                      ]
+                                                    : this.state.level,
+                                            ]}
+                                            onValuesChangeFinish={e => {
                                                 this.setState({
-                                                    allLevels: !this.state
-                                                        .allLevels,
-                                                    level: levelDict[this.props.navigation.state.params.type],
+                                                    level: e[0],
+                                                    allLevels: false,
                                                 });
                                             }}
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    height: 30 * factorVertical,
-                                                    width: fullWidth * 0.3,
-                                                    marginRight: fullWidth * 0.01,
-                                                    marginLeft: fullWidth * 0.01,
-                                                    borderWidth: 0.5 * factorRatio,
-                                                    borderColor: this.state
-                                                        .allLevels
-                                                        ? 'transparent'
-                                                        : colors.secondBackground,
-                                                    backgroundColor: this.state
-                                                        .allLevels
-                                                        ? 'red'
-                                                        : 'transparent',
-                                                    borderRadius: 200,
-                                                },
-                                            ]}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    color: this.state.allLevels
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                ALL
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View style={{flex: 1}} />
+                                            sliderLength={fullWidth * 0.9}
+                                            trackStyle={{
+                                                height: 5 * factorHorizontal,
+                                                backgroundColor:
+                                                    colors.secondBackground,
+                                            }}
+                                            selectedStyle={{
+                                                backgroundColor:
+                                                    colors.pianoteRed,
+                                                height: 5 * factorHorizontal,
+                                            }}
+                                            markerStyle={{
+                                                height: 17.5 * factorRatio,
+                                                width: 17.5 * factorRatio,
+                                                borderRadius: 40,
+                                                backgroundColor:
+                                                    colors.pianoteRed,
+                                                borderColor: colors.pianoteRed,
+                                            }}
+                                        />
                                     </View>
-                                    <View style={{height: 40 * factorRatio}} />
+                                    <View style={{height: 10 * factorRatio}} />
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontWeight: 'bold',
+                                            fontSize: 24 * factorRatio,
+                                            fontFamily: 'OpenSans-Regular',
+                                            color: 'white',
+                                        }}
+                                    >
+                                        {this.state.allLevels
+                                            ? 'ALL LEVELS'
+                                            : 'LEVEL ' + this.state.level}
+                                    </Text>
+                                    <View style={{height: 10 * factorRatio}} />
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            fontSize: 14 * factorRatio,
+                                            fontFamily: 'OpenSans-Regular',
+                                            color: 'white',
+                                            paddingLeft: fullWidth * 0.1,
+                                            paddingRight: fullWidth * 0.1,
+                                        }}
+                                    >
+                                        Choose a level ...
+                                    </Text>
+                                    <View style={{height: 10 * factorRatio}} />
+                                    <View
+                                        key={'allLevels'}
+                                        style={{
+                                            minHeight: 70 * factorVertical,
+                                            borderBottomWidth:
+                                                0.5 * factorRatio,
+                                            borderBottomColor:
+                                                colors.secondBackground,
+                                        }}
+                                    >
+                                        <View
+                                            style={{height: 10 * factorRatio}}
+                                        />
+                                        <View
+                                            style={{
+                                                height: 30 * factorVertical,
+                                                justifyContent: 'space-around',
+                                                alignContent: 'space-around',
+                                                flexDirection: 'row',
+                                            }}
+                                        >
+                                            <View style={{flex: 1}} />
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    this.setState({
+                                                        allLevels: !this.state
+                                                            .allLevels,
+                                                        level:
+                                                            levelDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ],
+                                                    });
+                                                }}
+                                                style={[
+                                                    styles.centerContent,
+                                                    {
+                                                        height:
+                                                            30 * factorVertical,
+                                                        width: fullWidth * 0.3,
+                                                        marginRight:
+                                                            fullWidth * 0.01,
+                                                        marginLeft:
+                                                            fullWidth * 0.01,
+                                                        borderWidth:
+                                                            0.5 * factorRatio,
+                                                        borderColor: this.state
+                                                            .allLevels
+                                                            ? 'transparent'
+                                                            : colors.secondBackground,
+                                                        backgroundColor: this
+                                                            .state.allLevels
+                                                            ? 'red'
+                                                            : 'transparent',
+                                                        borderRadius: 200,
+                                                    },
+                                                ]}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        fontSize:
+                                                            12 * factorRatio,
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
+                                                        color: this.state
+                                                            .allLevels
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    ALL
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <View style={{flex: 1}} />
+                                        </View>
+                                        <View
+                                            style={{height: 40 * factorRatio}}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{height: 30 * factorVertical}}
+                                    />
                                 </View>
-                                <View style={{height: 30 * factorVertical}} />
-                            </View>
-<<<<<<< HEAD
                             )}
                             <View key={'topics'}>
                                 <Text
@@ -983,52 +1030,10 @@ export default class Filters extends React.Component {
                                         paddingLeft: fullWidth * 0.035,
                                     }}
                                 >
-                                    {(this.state.onlyType) ? 
-                                        'WHAT DO YOU WANT TO WORK ON?'
-                                        :
-                                        'CHOOSE A CONTENT TYPE'
-                                    }
+                                    {this.state.onlyType
+                                        ? 'WHAT DO YOU WANT TO WORK ON?'
+                                        : 'CHOOSE A CONTENT TYPE'}
                                 </Text>
-=======
-                            <View style={{height: 10 * factorRatio}} />
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    fontWeight: 'bold',
-                                    fontSize: 24 * factorRatio,
-                                    fontFamily: 'OpenSans',
-                                    color: 'white',
-                                }}
-                            >
-                                {this.state.allLevels
-                                    ? 'ALL LEVELS'
-                                    : 'LEVEL ' + this.state.level}
-                            </Text>
-                            <View style={{height: 10 * factorRatio}} />
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    fontSize: 12 * factorRatio,
-                                    fontFamily: 'OpenSans',
-                                    color: 'white',
-                                    paddingLeft: fullWidth * 0.1,
-                                    paddingRight: fullWidth * 0.1,
-                                }}
-                            >
-                                Occasion endeavor of soon rank be most head time
-                                tore. Colonel or passage to ability.
-                            </Text>
-                            <View style={{height: 10 * factorRatio}} />
-                            <View
-                                key={'allLevels'}
-                                style={{
-                                    minHeight: 70 * factorVertical,
-                                    borderBottomWidth: 0.5 * factorRatio,
-                                    borderBottomColor: colors.secondBackground,
-                                }}
-                            >
-                                <View style={{height: 10 * factorRatio}} />
->>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
                                 <View
                                     style={{
                                         minHeight: 70 * factorVertical,
@@ -1036,10 +1041,15 @@ export default class Filters extends React.Component {
                                 >
                                     <ScrollView
                                         style={{
-                                            height: (this.state.onlyType) ? 40*factorRatio + 90 * factorVertical : 350 * factorVertical
+                                            height: this.state.onlyType
+                                                ? 40 * factorRatio +
+                                                  90 * factorVertical
+                                                : 350 * factorVertical,
                                         }}
                                     >
-                                        <View style={{height: 20 * factorRatio}} />
+                                        <View
+                                            style={{height: 20 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -1050,72 +1060,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][0] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(0)}
+                                                    onPress={() =>
+                                                        this.clickFilter(0)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][0][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][0][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][0][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize: this.props.navigation.state.params.type == 'SONGS' ? 9.5 * factorRatio : 12 * factorRatio,
-                                                            fontFamily: 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][0][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict[this.props.navigation.state.params.type][0][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
-                                            ][1] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilter(1)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][1][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][1][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][0][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1127,57 +1109,24 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params
+                                                                    .type ==
+                                                                'SONGS'
+                                                                    ? 9.5 *
+                                                                      factorRatio
+                                                                    : 12 *
+                                                                      factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][1][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict[this.props.navigation.state.params.type][1][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
-                                            ][2] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilter(2)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][2][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][2][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][2][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][0][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1186,8 +1135,158 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
+                                                            ][0][0]
+                                                        }
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            )}
+                                            {typeof filterDict[
+                                                this.props.navigation.state
+                                                    .params.type
+                                            ][1] !== 'undefined' && (
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.clickFilter(1)
+                                                    }
+                                                    style={[
+                                                        styles.centerContent,
+                                                        {
+                                                            height:
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
+                                                            marginRight:
+                                                                fullWidth *
+                                                                0.01,
+                                                            marginLeft:
+                                                                fullWidth *
+                                                                0.01,
+                                                            borderWidth:
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][1][1]
+                                                                ? 'transparent'
+                                                                : colors.secondBackground,
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][1][1]
+                                                                ? 'red'
+                                                                : 'transparent',
+                                                            borderRadius: 200,
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontWeight: 'bold',
+                                                            fontSize:
+                                                                12 *
+                                                                factorRatio,
+                                                            fontFamily:
+                                                                'OpenSans-Regular',
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][1][1]
+                                                                ? 'white'
+                                                                : colors.secondBackground,
+                                                        }}
+                                                    >
+                                                        {
+                                                            filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][1][0]
+                                                        }
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            )}
+                                            {typeof filterDict[
+                                                this.props.navigation.state
+                                                    .params.type
+                                            ][2] !== 'undefined' && (
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.clickFilter(2)
+                                                    }
+                                                    style={[
+                                                        styles.centerContent,
+                                                        {
+                                                            height:
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
+                                                            marginRight:
+                                                                fullWidth *
+                                                                0.01,
+                                                            marginLeft:
+                                                                fullWidth *
+                                                                0.01,
+                                                            borderWidth:
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][2][1]
+                                                                ? 'transparent'
+                                                                : colors.secondBackground,
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][2][1]
+                                                                ? 'red'
+                                                                : 'transparent',
+                                                            borderRadius: 200,
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            fontWeight: 'bold',
+                                                            fontSize:
+                                                                12 *
+                                                                factorRatio,
+                                                            fontFamily:
+                                                                'OpenSans-Regular',
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][2][1]
+                                                                ? 'white'
+                                                                : colors.secondBackground,
+                                                        }}
+                                                    >
+                                                        {
+                                                            filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
                                                             ][2][0]
                                                         }
                                                     </Text>
@@ -1195,7 +1294,9 @@ export default class Filters extends React.Component {
                                             )}
                                             <View style={{flex: 1}} />
                                         </View>
-                                        <View style={{height: 10 * factorRatio}} />
+                                        <View
+                                            style={{height: 10 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -1206,27 +1307,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][3] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(3)}
+                                                    onPress={() =>
+                                                        this.clickFilter(3)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][3][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][3][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][3][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][3][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1238,10 +1356,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][3][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][3][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1250,35 +1374,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][3][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][4] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(4)}
+                                                    onPress={() =>
+                                                        this.clickFilter(4)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][4][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][4][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][4][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][4][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1290,10 +1431,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][4][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][4][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1302,35 +1449,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][4][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][5] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(5)}
+                                                    onPress={() =>
+                                                        this.clickFilter(5)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][5][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][5][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][5][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][5][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1342,10 +1506,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][5][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][5][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1354,8 +1524,8 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][5][0]
                                                         }
                                                     </Text>
@@ -1363,7 +1533,9 @@ export default class Filters extends React.Component {
                                             )}
                                             <View style={{flex: 1}} />
                                         </View>
-                                        <View style={{height: 10 * factorRatio}} />
+                                        <View
+                                            style={{height: 10 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -1374,27 +1546,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][6] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(6)}
+                                                    onPress={() =>
+                                                        this.clickFilter(6)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][6][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][6][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][6][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][6][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1406,10 +1595,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][6][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][6][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1418,35 +1613,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][6][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][7] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(7)}
+                                                    onPress={() =>
+                                                        this.clickFilter(7)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][7][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][7][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][7][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][7][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1458,10 +1670,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][7][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][7][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1470,35 +1688,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][7][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][8] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(8)}
+                                                    onPress={() =>
+                                                        this.clickFilter(8)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][8][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][8][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][8][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][8][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1510,10 +1745,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][8][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][8][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1522,8 +1763,8 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][8][0]
                                                         }
                                                     </Text>
@@ -1531,7 +1772,9 @@ export default class Filters extends React.Component {
                                             )}
                                             <View style={{flex: 1}} />
                                         </View>
-                                        <View style={{height: 10 * factorRatio}} />
+                                        <View
+                                            style={{height: 10 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -1542,27 +1785,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][9] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(9)}
+                                                    onPress={() =>
+                                                        this.clickFilter(9)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][9][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][9][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][9][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][9][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1574,10 +1834,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][9][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][9][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1586,35 +1852,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][9][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][10] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(10)}
+                                                    onPress={() =>
+                                                        this.clickFilter(10)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][10][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][10][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][10][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][10][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1625,11 +1908,20 @@ export default class Filters extends React.Component {
                                                         style={{
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
-                                                            fontSize:
-                                                                (this.state.onlyType) ? 10 * factorRatio : 12 * factorRatio,
+                                                            fontSize: this.state
+                                                                .onlyType
+                                                                ? 10 *
+                                                                  factorRatio
+                                                                : 12 *
+                                                                  factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][10][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][10][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1638,35 +1930,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][10][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][11] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(11)}
+                                                    onPress={() =>
+                                                        this.clickFilter(11)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][11][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][11][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][11][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][11][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1677,11 +1986,20 @@ export default class Filters extends React.Component {
                                                         style={{
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
-                                                            fontSize:
-                                                                (this.state.onlyType) ? 12 * factorRatio : 10 * factorRatio,
+                                                            fontSize: this.state
+                                                                .onlyType
+                                                                ? 12 *
+                                                                  factorRatio
+                                                                : 10 *
+                                                                  factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][11][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][11][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1690,8 +2008,8 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][11][0]
                                                         }
                                                     </Text>
@@ -1699,7 +2017,9 @@ export default class Filters extends React.Component {
                                             )}
                                             <View style={{flex: 1}} />
                                         </View>
-                                        <View style={{height: 20 * factorRatio}} />
+                                        <View
+                                            style={{height: 20 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -1710,27 +2030,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][12] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(12)}
+                                                    onPress={() =>
+                                                        this.clickFilter(12)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][12][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][12][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][12][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][12][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1742,10 +2079,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][12][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][12][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1754,35 +2097,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][12][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][13] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(13)}
+                                                    onPress={() =>
+                                                        this.clickFilter(13)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][13][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][13][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][13][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][13][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1794,10 +2154,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][13][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][13][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1806,35 +2172,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][13][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][14] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(14)}
+                                                    onPress={() =>
+                                                        this.clickFilter(14)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][14][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][14][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][14][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][14][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1846,10 +2229,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][14][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][14][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1858,8 +2247,8 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][14][0]
                                                         }
                                                     </Text>
@@ -1867,7 +2256,9 @@ export default class Filters extends React.Component {
                                             )}
                                             <View style={{flex: 1}} />
                                         </View>
-                                        <View style={{height: 10 * factorRatio}} />
+                                        <View
+                                            style={{height: 10 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -1878,27 +2269,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][15] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(15)}
+                                                    onPress={() =>
+                                                        this.clickFilter(15)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][15][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][15][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][15][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][15][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1910,10 +2318,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][15][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][15][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1922,35 +2336,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][15][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][16] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(16)}
+                                                    onPress={() =>
+                                                        this.clickFilter(16)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][16][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][16][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][16][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][16][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -1962,10 +2393,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][16][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][16][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -1974,35 +2411,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][16][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][17] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(17)}
+                                                    onPress={() =>
+                                                        this.clickFilter(17)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][17][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][17][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][17][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][17][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -2014,10 +2468,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][17][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][17][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -2026,8 +2486,8 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][17][0]
                                                         }
                                                     </Text>
@@ -2035,7 +2495,9 @@ export default class Filters extends React.Component {
                                             )}
                                             <View style={{flex: 1}} />
                                         </View>
-                                        <View style={{height: 10 * factorRatio}} />
+                                        <View
+                                            style={{height: 10 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -2046,27 +2508,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][18] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(18)}
+                                                    onPress={() =>
+                                                        this.clickFilter(18)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][18][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][18][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][18][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][18][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -2078,10 +2557,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][18][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][18][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -2090,35 +2575,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][18][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][19] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(19)}
+                                                    onPress={() =>
+                                                        this.clickFilter(19)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][19][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][19][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][19][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][19][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -2130,10 +2632,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][19][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][19][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -2142,35 +2650,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][19][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][20] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(20)}
+                                                    onPress={() =>
+                                                        this.clickFilter(20)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][20][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][20][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][20][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][20][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -2182,10 +2707,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][20][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][20][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -2194,8 +2725,8 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][20][0]
                                                         }
                                                     </Text>
@@ -2203,7 +2734,9 @@ export default class Filters extends React.Component {
                                             )}
                                             <View style={{flex: 1}} />
                                         </View>
-                                        <View style={{height: 10 * factorRatio}} />
+                                        <View
+                                            style={{height: 10 * factorRatio}}
+                                        />
                                         <View
                                             style={{
                                                 height: 30 * factorVertical,
@@ -2214,27 +2747,44 @@ export default class Filters extends React.Component {
                                         >
                                             <View style={{flex: 1}} />
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][21] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(21)}
+                                                    onPress={() =>
+                                                        this.clickFilter(21)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][21][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][21][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][21][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][21][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -2246,10 +2796,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][21][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][21][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -2258,35 +2814,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][21][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][22] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(22)}
+                                                    onPress={() =>
+                                                        this.clickFilter(22)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][22][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][22][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][22][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][22][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -2298,10 +2871,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][22][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][22][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -2310,35 +2889,52 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][22][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
+                                                this.props.navigation.state
+                                                    .params.type
                                             ][23] !== 'undefined' && (
                                                 <TouchableOpacity
-                                                    onPress={() => this.clickFilter(23)}
+                                                    onPress={() =>
+                                                        this.clickFilter(23)
+                                                    }
                                                     style={[
                                                         styles.centerContent,
                                                         {
                                                             height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
+                                                                30 *
+                                                                factorVertical,
+                                                            width:
+                                                                fullWidth * 0.3,
                                                             marginRight:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             marginLeft:
-                                                                fullWidth * 0.01,
+                                                                fullWidth *
+                                                                0.01,
                                                             borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict[this.props.navigation.state.params.type][23][1]
+                                                                0.5 *
+                                                                factorRatio,
+                                                            borderColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][23][1]
                                                                 ? 'transparent'
                                                                 : colors.secondBackground,
-                                                            backgroundColor: filterDict[this.props.navigation.state.params.type][23][1]
+                                                            backgroundColor: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][23][1]
                                                                 ? 'red'
                                                                 : 'transparent',
                                                             borderRadius: 200,
@@ -2350,10 +2946,16 @@ export default class Filters extends React.Component {
                                                             textAlign: 'center',
                                                             fontWeight: 'bold',
                                                             fontSize:
-                                                                12 * factorRatio,
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            color: filterDict[this.props.navigation.state.params.type][23][1]
+                                                            color: filterDict[
+                                                                this.props
+                                                                    .navigation
+                                                                    .state
+                                                                    .params.type
+                                                            ][23][1]
                                                                 ? 'white'
                                                                 : colors.secondBackground,
                                                         }}
@@ -2362,4012 +2964,5206 @@ export default class Filters extends React.Component {
                                                             filterDict[
                                                                 this.props
                                                                     .navigation
-                                                                    .state.params
-                                                                    .type
+                                                                    .state
+                                                                    .params.type
                                                             ][23][0]
                                                         }
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
                                             <View style={{flex: 1}} />
-                                        </View>                                
+                                        </View>
                                     </ScrollView>
                                 </View>
                             </View>
-                            {(this.state.type == 'SONGS') && (
-                            <View>
-                                <View style={{height: 30 * factorVertical}} />
-                                <View key={'artists'}>
-                                <Text
-                                    style={{
-                                        fontSize: 18 * factorRatio,
-                                        marginBottom: 5 * factorVertical,
-                                        textAlign: 'left',
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        color: colors.secondBackground,
-                                        paddingLeft: fullWidth * 0.035,
-                                    }}
-                                >
-                                    CHOOSE YOUR ARTISTS
-                                </Text>
-                                <View style={{minHeight: 70 * factorVertical}}>
-                                    <ScrollView
-                                        style={{
-                                            height: (this.state.onlyType) ? 40*factorRatio + 90 * factorVertical : 350 * factorVertical
-                                        }}
-                                    >
-                                        <View style={{height: 20 * factorRatio}} />
-                                        <View
+                            {this.state.type == 'SONGS' && (
+                                <View>
+                                    <View
+                                        style={{height: 30 * factorVertical}}
+                                    />
+                                    <View key={'artists'}>
+                                        <Text
                                             style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
+                                                fontSize: 18 * factorRatio,
+                                                marginBottom:
+                                                    5 * factorVertical,
+                                                textAlign: 'left',
+                                                fontFamily:
+                                                    'RobotoCondensed-Bold',
+                                                color: colors.secondBackground,
+                                                paddingLeft: fullWidth * 0.035,
                                             }}
                                         >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][0] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(0)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][0][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][0][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize: 12 * factorRatio,
-                                                            fontFamily: 'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][0][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][0][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][1] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(1)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][1][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][1][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][1][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][1][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][2] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(2)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][2][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][2][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][2][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][2][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][3] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(3)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][3][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][3][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][3][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][3][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][4] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(4)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][4][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][4][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][4][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][4][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict[
-                                                this.props.navigation.state.params
-                                                    .type
-                                            ][5] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(5)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][5][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][5][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][5][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][5][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][6] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(6)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][6][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][6][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][6][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][6][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][7] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(7)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][7][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][7][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][7][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][7][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][8] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(8)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][8][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][8][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][8][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][8][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][9] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(9)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][9][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][9][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][9][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][9][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][10] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(10)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][10][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][10][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][10][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][10][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][11] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(11)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][11][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][11][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][11][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][11][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][12] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(12)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][12][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][12][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][12][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][12][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][13] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(13)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][13][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][13][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][13][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][13][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][14] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(14)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][14][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][14][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][14][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][14][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][15] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(15)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][15][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][15][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][15][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][15][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][16] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(16)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][16][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][16][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][16][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][16][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][17] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(17)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][17][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][17][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][17][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][17][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][18] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(18)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][18][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][18][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][18][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][18][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][19] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(19)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][19][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][19][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][19][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][19][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][20] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(20)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][20][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][20][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][20][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][20][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][21] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(21)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][21][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][21][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][21][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][21][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][22] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(22)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][22][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][22][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][22][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][22][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][23] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(23)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][23][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][23][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][23][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][23][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][24] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(24)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][24][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][24][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][24][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][24][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][25] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(25)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][25][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][25][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][25][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][25][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][26] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(26)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][26][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][26][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][26][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][26][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][27] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(27)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][27][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][27][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][27][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][27][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][28] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(28)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][28][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][28][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][28][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][28][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][29] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(29)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][29][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][29][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][29][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][29][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-<<<<<<< HEAD
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][30] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(30)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][30][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][30][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][30][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][30][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][31] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(31)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][31][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][31][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][31][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][31][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][32] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(32)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][32][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][32][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][32][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][32][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][33] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(33)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][33][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][33][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][33][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][33][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][34] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(34)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][34][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][34][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][34][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][34][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][35] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(35)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][35][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][35][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][35][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][35][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][36] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(36)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][36][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][36][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][36][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][36][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][37] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(37)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][37][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][37][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][37][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][37][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][38] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(38)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][38][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][38][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-=======
-                                                textAlign: 'center',
-                                                fontWeight: 'bold',
-                                                fontSize: 12 * factorRatio,
-                                                fontFamily: 'OpenSans',
-                                                color: this.state.allLevels
-                                                    ? 'white'
-                                                    : colors.secondBackground,
-                                            }}
-                                        >
-                                            ALL
+                                            CHOOSE YOUR ARTISTS
                                         </Text>
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}} />
-                                </View>
-                                <View style={{height: 40 * factorRatio}} />
-                            </View>
-                            <View style={{height: 30 * factorVertical}} />
-                            <View key={'topics'}>
-                                <Text
-                                    style={{
-                                        fontSize: 18 * factorRatio,
-                                        marginBottom: 5 * factorVertical,
-                                        textAlign: 'left',
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        color: colors.secondBackground,
-                                        paddingLeft: fullWidth * 0.035,
-                                    }}
-                                >
-                                    WHAT DO YOU WANT TO WORK ON?
-                                </Text>
-                                <View
-                                    key={'levelsWanted'}
-                                    style={{
-                                        minHeight: 70 * factorVertical,
-                                    }}
-                                >
-                                    <View style={{height: 20 * factorRatio}} />
-                                    <View
-                                        style={{
-                                            height: 30 * factorVertical,
-                                            justifyContent: 'space-around',
-                                            alignContent: 'space-around',
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <View style={{flex: 1}} />
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][0] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter1: !this.state
-                                                            .filter1,
-                                                    });
+                                        <View
+                                            style={{
+                                                minHeight: 70 * factorVertical,
+                                            }}
+                                        >
+                                            <ScrollView
+                                                style={{
+                                                    height: this.state.onlyType
+                                                        ? 40 * factorRatio +
+                                                          90 * factorVertical
+                                                        : 350 * factorVertical,
                                                 }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
+                                            >
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            20 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
                                                         height:
                                                             30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter1
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter1
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter1
-                                                            ? 'white'
-                                                            : colors.secondBackground,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][0]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][1] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter2: !this.state
-                                                            .filter2,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][0] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    0,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][0][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][0][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][0][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][0][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][1] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    1,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][1][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][1][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][1][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][1][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][2] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    2,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][2][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][2][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][2][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][2][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
                                                         height:
                                                             30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter2
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter2
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter2
-                                                            ? 'white'
-                                                            : colors.secondBackground,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][1]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][2] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter3: !this.state
-                                                            .filter3,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][3] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    3,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][3][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][3][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][3][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][3][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][4] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    4,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][4][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][4][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][4][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][4][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        this.props.navigation
+                                                            .state.params.type
+                                                    ][5] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    5,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][5][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][5][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][5][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][5][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
                                                         height:
                                                             30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter3
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter3
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter3
-                                                            ? 'white'
-                                                            : colors.secondBackground,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
                                                     }}
                                                 >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][2]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        <View style={{flex: 1}} />
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][6] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    6,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][6][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][6][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][6][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][6][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][7] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    7,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][7][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][7][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][7][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][7][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][8] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    8,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][8][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][8][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][8][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][8][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][9] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    9,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][9][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][9][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][9][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][9][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][10] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    10,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][10][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][10][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][10][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][10][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][11] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    11,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][11][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][11][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][11][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][11][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][12] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    12,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][12][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][12][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][12][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][12][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][13] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    13,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][13][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][13][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][13][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][13][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][14] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    14,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][14][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][14][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][14][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][14][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][15] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    15,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][15][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][15][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][15][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][15][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][16] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    16,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][16][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][16][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][16][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][16][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][17] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    17,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][17][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][17][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][17][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][17][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][18] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    18,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][18][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][18][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][18][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][18][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][19] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    19,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][19][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][19][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][19][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][19][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][20] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    20,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][20][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][20][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][20][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][20][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][21] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    21,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][21][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][21][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][21][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][21][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][22] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    22,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][22][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][22][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][22][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][22][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][23] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    23,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][23][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][23][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][23][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][23][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][24] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    24,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][24][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][24][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][24][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][24][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][25] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    25,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][25][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][25][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][25][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][25][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][26] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    26,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][26][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][26][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][26][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][26][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][27] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    27,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][27][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][27][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][27][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][27][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][28] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    28,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][28][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][28][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][28][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][28][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][29] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    29,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][29][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][29][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][29][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][29][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][30] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    30,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][30][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][30][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][30][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][30][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][31] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    31,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][31][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][31][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][31][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][31][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][32] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    32,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][32][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][32][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][32][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][32][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][33] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    33,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][33][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][33][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][33][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][33][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][34] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    34,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][34][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][34][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][34][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][34][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][35] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    35,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][35][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][35][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][35][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][35][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][36] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    36,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][36][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][36][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][36][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][36][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][37] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    37,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][37][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][37][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][37][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][37][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][38] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    38,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][38][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][38][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][38][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][38][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][39] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    39,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][39][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][39][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][39][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][39][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][40] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    40,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][40][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][40][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][40][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][40][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][41] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    41,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][41][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][41][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][41][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][41][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][42] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    42,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][42][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][42][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][42][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][42][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][43] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    43,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][43][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][43][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][43][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][43][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][44] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    44,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][44][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][44][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][44][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][44][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][45] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    45,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][45][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][45][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][45][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][45][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][46] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    46,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][46][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][46][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][46][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][46][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][47] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    47,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][47][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][47][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][47][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][47][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][48] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    48,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][48][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][48][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][48][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][48][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][49] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    49,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][49][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][49][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][49][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][49][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][50] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    50,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][50][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][50][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][50][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][50][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][51] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    51,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][51][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][51][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][51][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][51][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][52] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    52,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][52][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][52][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][52][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][52][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][53] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    53,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][53][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][53][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][53][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][53][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][54] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    54,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][54][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][54][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][54][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][54][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][55] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    55,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][55][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][55][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][55][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][55][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][56] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    56,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][56][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][56][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        10 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][56][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][56][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][57] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    57,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][57][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][57][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][57][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][57][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][58] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    58,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][58][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][58][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][58][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][58][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][59] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    59,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][59][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][59][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][59][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][59][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][60] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    60,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][60][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][60][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][60][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][60][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][61] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    61,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][61][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][61][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][61][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][61][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][62] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    62,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][62][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][62][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        10 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][62][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][62][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][63] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    63,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][63][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][63][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        10 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][63][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][63][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][64] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    64,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][64][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][64][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][64][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][64][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][65] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    65,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][65][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][65][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][65][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][65][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            10 * factorRatio,
+                                                    }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            30 * factorVertical,
+                                                        justifyContent:
+                                                            'space-around',
+                                                        alignContent:
+                                                            'space-around',
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <View style={{flex: 1}} />
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][66] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    66,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][66][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][66][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][66][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][66][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][67] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    67,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][67][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][67][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][67][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][67][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    {typeof filterDict[
+                                                        'ARTISTS'
+                                                    ][68] !== 'undefined' && (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                this.clickFilterArtist(
+                                                                    68,
+                                                                )
+                                                            }
+                                                            style={[
+                                                                styles.centerContent,
+                                                                {
+                                                                    height:
+                                                                        30 *
+                                                                        factorVertical,
+                                                                    width:
+                                                                        fullWidth *
+                                                                        0.3,
+                                                                    marginRight:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    marginLeft:
+                                                                        fullWidth *
+                                                                        0.01,
+                                                                    borderWidth:
+                                                                        0.5 *
+                                                                        factorRatio,
+                                                                    borderColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][68][1]
+                                                                        ? 'transparent'
+                                                                        : colors.secondBackground,
+                                                                    backgroundColor: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][68][1]
+                                                                        ? 'red'
+                                                                        : 'transparent',
+                                                                    borderRadius: 200,
+                                                                },
+                                                            ]}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                    fontWeight:
+                                                                        'bold',
+                                                                    fontSize:
+                                                                        12 *
+                                                                        factorRatio,
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    color: filterDict[
+                                                                        'ARTISTS'
+                                                                    ][68][1]
+                                                                        ? 'white'
+                                                                        : colors.secondBackground,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    filterDict[
+                                                                        'ARTISTS'
+                                                                    ][68][0]
+                                                                }
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    <View style={{flex: 1}} />
+                                                </View>
+                                            </ScrollView>
+                                        </View>
                                     </View>
-                                    <View style={{height: 10 * factorRatio}} />
-                                    <View
-                                        style={{
-                                            height: 30 * factorVertical,
-                                            justifyContent: 'space-around',
-                                            alignContent: 'space-around',
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <View style={{flex: 1}} />
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][3] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter4: !this.state
-                                                            .filter4,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        height:
-                                                            30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter4
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter4
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter4
-                                                            ? 'white'
-                                                            : colors.secondBackground,
-                                                    }}
-                                                >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][3]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][4] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter5: !this.state
-                                                            .filter5,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        height:
-                                                            30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter5
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter5
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter5
-                                                            ? 'white'
-                                                            : colors.secondBackground,
-                                                    }}
-                                                >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][4]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][5] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter6: !this.state
-                                                            .filter6,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        height:
-                                                            30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter6
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter6
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter6
-                                                            ? 'white'
-                                                            : colors.secondBackground,
-                                                    }}
-                                                >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][5]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <View style={{height: 10 * factorRatio}} />
-                                    <View
-                                        style={{
-                                            height: 30 * factorVertical,
-                                            justifyContent: 'space-around',
-                                            alignContent: 'space-around',
-                                            flexDirection: 'row',
-                                        }}
-                                    >
-                                        <View style={{flex: 1}} />
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][6] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter7: !this.state
-                                                            .filter7,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        height:
-                                                            30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter7
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter7
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter7
-                                                            ? 'white'
-                                                            : colors.secondBackground,
-                                                    }}
-                                                >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][6]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][7] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter8: !this.state
-                                                            .filter8,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        height:
-                                                            30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter8
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter8
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter8
-                                                            ? 'white'
-                                                            : colors.secondBackground,
-                                                    }}
-                                                >
-                                                    {
-                                                        filterDict[
-                                                            this.props
-                                                                .navigation
-                                                                .state.params
-                                                                .type
-                                                        ][7]
-                                                    }
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                        {typeof filterDict[
-                                            this.props.navigation.state.params
-                                                .type
-                                        ][8] !== 'undefined' && (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        filter9: !this.state
-                                                            .filter9,
-                                                    });
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        height:
-                                                            30 * factorVertical,
-                                                        width: fullWidth * 0.3,
-                                                        marginRight:
-                                                            fullWidth * 0.01,
-                                                        marginLeft:
-                                                            fullWidth * 0.01,
-                                                        borderWidth:
-                                                            0.5 * factorRatio,
-                                                        borderColor: this.state
-                                                            .filter9
-                                                            ? 'transparent'
-                                                            : colors.secondBackground,
-                                                        backgroundColor: this
-                                                            .state.filter9
-                                                            ? 'red'
-                                                            : 'transparent',
-                                                        borderRadius: 200,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        fontWeight: 'bold',
-                                                        fontSize:
-                                                            12 * factorRatio,
-                                                        fontFamily: 'OpenSans',
-                                                        color: this.state
-                                                            .filter9
-                                                            ? 'white'
-                                                            : colors.secondBackground,
-                                                    }}
->>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][38][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][38][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][39] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(39)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][39][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][39][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][39][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][39][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][40] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(40)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][40][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][40][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][40][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][40][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][41] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(41)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][41][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][41][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][41][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][41][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][42] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(42)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][42][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][42][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][42][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][42][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][43] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(43)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][43][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][43][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][43][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][43][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][44] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(44)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][44][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][44][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][44][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][44][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][45] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(45)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][45][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][45][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][45][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][45][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][46] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(46)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][46][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][46][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][46][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][46][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][47] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(47)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][47][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][47][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][47][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][47][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][48] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(48)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][48][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][48][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][48][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][48][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][49] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(49)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][49][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][49][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][49][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][49][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][50] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(50)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][50][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][50][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][50][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][50][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][51] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(51)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][51][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][51][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][51][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][51][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][52] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(52)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][52][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][52][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][52][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][52][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][53] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(53)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][53][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][53][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][53][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][53][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][54] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(54)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][54][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][54][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][54][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][54][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][55] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(55)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][55][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][55][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][55][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][55][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][56] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(56)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][56][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][56][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                10 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][56][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][56][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][57] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(57)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][57][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][57][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][57][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][57][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][58] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(58)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][58][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][58][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][58][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][58][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][59] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(59)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][59][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][59][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][59][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][59][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][60] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(60)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][60][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][60][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][60][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][60][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][61] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(61)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][61][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][61][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][61][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][61][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][62] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(62)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][62][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][62][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                10 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][62][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][62][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][63] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(63)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][63][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][63][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                10 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][63][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][63][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][64] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(64)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][64][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][64][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][64][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][64][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][65] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(65)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][65][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][65][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][65][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][65][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                        <View style={{height: 10 * factorRatio}} />
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                                justifyContent: 'space-around',
-                                                alignContent: 'space-around',
-                                                flexDirection: 'row',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            {typeof filterDict['ARTISTS'][66] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(66)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][66][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][66][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][66][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][66][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][67] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(67)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][67][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][67][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][67][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][67][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            {typeof filterDict['ARTISTS'][68] !== 'undefined' && (
-                                                <TouchableOpacity
-                                                    onPress={() => this.clickFilterArtist(68)}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height:
-                                                                30 * factorVertical,
-                                                            width: fullWidth * 0.3,
-                                                            marginRight:
-                                                                fullWidth * 0.01,
-                                                            marginLeft:
-                                                                fullWidth * 0.01,
-                                                            borderWidth:
-                                                                0.5 * factorRatio,
-                                                            borderColor: filterDict['ARTISTS'][68][1]
-                                                                ? 'transparent'
-                                                                : colors.secondBackground,
-                                                            backgroundColor: filterDict['ARTISTS'][68][1]
-                                                                ? 'red'
-                                                                : 'transparent',
-                                                            borderRadius: 200,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontWeight: 'bold',
-                                                            fontSize:
-                                                                12 * factorRatio,
-                                                            fontFamily:
-                                                                'OpenSans-Regular',
-                                                            color: filterDict['ARTISTS'][68][1]
-                                                                ? 'white'
-                                                                : colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {
-                                                            filterDict['ARTISTS'][68][0]
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                                    </ScrollView>
                                 </View>
-                            </View>
-                            </View>
                             )}
                             <View style={{height: 30 * factorVertical}} />
                             {this.state.onlyType && (
-                            <TouchableOpacity
-                                key={'chooseProgress'}
-                                onPress={() => {
-                                    this.setState({
-                                        openProgress: !this.state.openProgress,
-                                    });
-                                }}
-                                style={{
-                                    height: fullHeight * 0.1,
-                                    flexDirection: 'row',
-                                    paddingLeft: fullWidth * 0.035,
-                                    paddingRight: fullWidth * 0.035,
-                                    borderTopColor: colors.secondBackground,
-                                    borderTopWidth: 0.5 * factorRatio,
-                                    borderBottomColor: colors.secondBackground,
-                                    borderBottomWidth: this.state.openProgress
-                                        ? 0
-                                        : 0.25 * factorRatio,
-                                }}
-                            >
-                                <View>
-                                    <View style={{flex: 1}} />
-                                    <Text
-                                        style={{
-                                            fontSize: 18 * factorRatio,
-                                            marginBottom: 5 * factorVertical,
-                                            textAlign: 'left',
-                                            fontFamily: 'RobotoCondensed-Bold',
-                                            color: colors.secondBackground,
-                                        }}
-                                    >
-                                        CHOOSE YOUR PROGRESS
-                                    </Text>
-                                    <View style={{flex: 1}} />
-                                </View>
-                                <View style={{flex: 1}} />
-                                <View>
-                                    <View style={{flex: 1}} />
-                                    <View
-                                        style={{
-                                            paddingLeft: 10 * factorRatio,
-                                            paddingRight: 10 * factorRatio,
-                                        }}
-                                    >
-                                        <EntypoIcon
-                                            name={
-                                                this.state.openProgress
-                                                    ? 'chevron-thin-up'
-                                                    : 'chevron-thin-down'
-                                            }
-                                            size={25 * factorRatio}
-                                            color={colors.secondBackground}
-                                        />
+                                <TouchableOpacity
+                                    key={'chooseProgress'}
+                                    onPress={() => {
+                                        this.setState({
+                                            openProgress: !this.state
+                                                .openProgress,
+                                        });
+                                    }}
+                                    style={{
+                                        height: fullHeight * 0.1,
+                                        flexDirection: 'row',
+                                        paddingLeft: fullWidth * 0.035,
+                                        paddingRight: fullWidth * 0.035,
+                                        borderTopColor: colors.secondBackground,
+                                        borderTopWidth: 0.5 * factorRatio,
+                                        borderBottomColor:
+                                            colors.secondBackground,
+                                        borderBottomWidth: this.state
+                                            .openProgress
+                                            ? 0
+                                            : 0.25 * factorRatio,
+                                    }}
+                                >
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <Text
+                                            style={{
+                                                fontSize: 18 * factorRatio,
+                                                marginBottom:
+                                                    5 * factorVertical,
+                                                textAlign: 'left',
+                                                fontFamily:
+                                                    'RobotoCondensed-Bold',
+                                                color: colors.secondBackground,
+                                            }}
+                                        >
+                                            CHOOSE YOUR PROGRESS
+                                        </Text>
+                                        <View style={{flex: 1}} />
                                     </View>
                                     <View style={{flex: 1}} />
-                                </View>
-                            </TouchableOpacity>
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <View
+                                            style={{
+                                                paddingLeft: 10 * factorRatio,
+                                                paddingRight: 10 * factorRatio,
+                                            }}
+                                        >
+                                            <EntypoIcon
+                                                name={
+                                                    this.state.openProgress
+                                                        ? 'chevron-thin-up'
+                                                        : 'chevron-thin-down'
+                                                }
+                                                size={25 * factorRatio}
+                                                color={colors.secondBackground}
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                </TouchableOpacity>
                             )}
-                            {(this.state.openProgress && this.state.onlyType) && (
+                            {this.state.openProgress && this.state.onlyType && (
                                 <View
                                     key={'progressLevels'}
                                     style={{
@@ -6388,7 +8184,8 @@ export default class Filters extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
-                                                    progressAll: !this.state.progressAll,
+                                                    progressAll: !this.state
+                                                        .progressAll,
                                                     progressProgress: false,
                                                     progressComplete: false,
                                                 });
@@ -6434,7 +8231,8 @@ export default class Filters extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
-                                                    progressProgress: !this.state.progressProgress,
+                                                    progressProgress: !this
+                                                        .state.progressProgress,
                                                     progressAll: false,
                                                     progressComplete: false,
                                                 });
@@ -6480,7 +8278,8 @@ export default class Filters extends React.Component {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.setState({
-                                                    progressComplete: !this.state.progressComplete,
+                                                    progressComplete: !this
+                                                        .state.progressComplete,
                                                     progressAll: false,
                                                     progressProgress: false,
                                                 });
@@ -6530,579 +8329,655 @@ export default class Filters extends React.Component {
                                     />
                                 </View>
                             )}
-                            {(this.state.onlyType && this.state.type !== 'SONGS') && (
-                            <TouchableOpacity
-                                key={'pianoInstructor'}
-                                onPress={() => {
-                                    this.setState({
-                                        openInstructors: !this.state
-                                            .openInstructors,
-                                    });
-                                }}
-                                style={{
-                                    height: fullHeight * 0.1,
-                                    flexDirection: 'row',
-                                    paddingLeft: fullWidth * 0.035,
-                                    paddingRight: fullWidth * 0.035,
-                                    borderTopColor: colors.secondBackground,
-                                    borderBottomColor: colors.secondBackground,
-                                    borderBottomWidth: this.state
-                                        .openInstructors
-                                        ? 0
-                                        : 0.5 * factorRatio,
-                                }}
-                            >
-                                <View>
-                                    <View style={{flex: 1}} />
-                                    <Text
+                            {this.state.onlyType &&
+                                this.state.type !== 'SONGS' && (
+                                    <TouchableOpacity
+                                        key={'pianoInstructor'}
+                                        onPress={() => {
+                                            this.setState({
+                                                openInstructors: !this.state
+                                                    .openInstructors,
+                                            });
+                                        }}
                                         style={{
-                                            fontSize: 18 * factorRatio,
-                                            marginBottom: 5 * factorVertical,
-                                            textAlign: 'left',
-                                            fontFamily: 'RobotoCondensed-Bold',
-                                            color: colors.secondBackground,
+                                            height: fullHeight * 0.1,
+                                            flexDirection: 'row',
+                                            paddingLeft: fullWidth * 0.035,
+                                            paddingRight: fullWidth * 0.035,
+                                            borderTopColor:
+                                                colors.secondBackground,
+                                            borderBottomColor:
+                                                colors.secondBackground,
+                                            borderBottomWidth: this.state
+                                                .openInstructors
+                                                ? 0
+                                                : 0.5 * factorRatio,
                                         }}
                                     >
-                                        CHOOSE YOUR INSTRUCTOR
-                                    </Text>
-                                    <View style={{flex: 1}} />
-                                </View>
-                                <View style={{flex: 1}} />
-                                <View>
-                                    <View style={{flex: 1}} />
+                                        <View>
+                                            <View style={{flex: 1}} />
+                                            <Text
+                                                style={{
+                                                    fontSize: 18 * factorRatio,
+                                                    marginBottom:
+                                                        5 * factorVertical,
+                                                    textAlign: 'left',
+                                                    fontFamily:
+                                                        'RobotoCondensed-Bold',
+                                                    color:
+                                                        colors.secondBackground,
+                                                }}
+                                            >
+                                                CHOOSE YOUR INSTRUCTOR
+                                            </Text>
+                                            <View style={{flex: 1}} />
+                                        </View>
+                                        <View style={{flex: 1}} />
+                                        <View>
+                                            <View style={{flex: 1}} />
+                                            <View
+                                                style={{
+                                                    paddingLeft:
+                                                        10 * factorRatio,
+                                                    paddingRight:
+                                                        10 * factorRatio,
+                                                }}
+                                            >
+                                                <EntypoIcon
+                                                    name={
+                                                        this.state
+                                                            .openInstructors
+                                                            ? 'chevron-thin-up'
+                                                            : 'chevron-thin-down'
+                                                    }
+                                                    size={25 * factorRatio}
+                                                    color={
+                                                        colors.secondBackground
+                                                    }
+                                                />
+                                            </View>
+                                            <View style={{flex: 1}} />
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
+                            {this.state.openInstructors &&
+                                this.state.onlyType &&
+                                this.state.type !== 'SONGS' && (
                                     <View
+                                        key={'instructors'}
                                         style={{
-                                            paddingLeft: 10 * factorRatio,
-                                            paddingRight: 10 * factorRatio,
+                                            borderBottomColor:
+                                                colors.secondBackground,
+                                            borderBottomWidth:
+                                                0.5 * factorRatio,
                                         }}
                                     >
-                                        <EntypoIcon
-                                            name={
-                                                this.state.openInstructors
-                                                    ? 'chevron-thin-up'
-                                                    : 'chevron-thin-down'
-                                            }
-                                            size={25 * factorRatio}
-                                            color={colors.secondBackground}
+                                        <View
+                                            style={{
+                                                height: 20 * factorVertical,
+                                            }}
+                                        />
+                                        <View
+                                            key={'topRow'}
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-around',
+                                                alignContent: 'space-around',
+                                                alignSelf: 'stretch',
+                                            }}
+                                        >
+                                            <View
+                                                key={'circle7'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            kenny: !this.state
+                                                                .kenny,
+                                                            lisa: false,
+                                                            cassi: false,
+                                                            jay: false,
+                                                            jordan: false,
+                                                            jonny: false,
+                                                            brett: false,
+                                                            nate: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .kenny
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .kenny
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/kenny-werner.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            11 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.kenny
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    KENNY WERNER
+                                                </Text>
+                                            </View>
+                                            <View
+                                                key={'circle1'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            lisa: !this.state
+                                                                .lisa,
+                                                            kenny: false,
+                                                            cassi: false,
+                                                            jay: false,
+                                                            jordan: false,
+                                                            jonny: false,
+                                                            brett: false,
+                                                            nate: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .lisa
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .lisa
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                        zIndex: 10,
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            10 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.lisa
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    LISA WITT
+                                                </Text>
+                                            </View>
+                                            <View
+                                                key={'circle2'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            cassi: !this.state
+                                                                .cassi,
+                                                            kenny: false,
+                                                            lisa: false,
+                                                            jay: false,
+                                                            jordan: false,
+                                                            jonny: false,
+                                                            brett: false,
+                                                            nate: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .cassi
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .cassi
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/cassi-falk.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            10 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.cassi
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    CASSI FALK
+                                                </Text>
+                                            </View>
+                                            <View
+                                                key={'circle3'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            jordan: !this.state
+                                                                .jordan,
+                                                            kenny: false,
+                                                            lisa: false,
+                                                            cassi: false,
+                                                            jay: false,
+                                                            jonny: false,
+                                                            brett: false,
+                                                            nate: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .jordan
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .jordan
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/jordan-leibel.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            10 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.jordan
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    JORDAN LEIBEL
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        <View
+                                            style={{
+                                                height: 20 * factorVertical,
+                                            }}
+                                        />
+                                        <View
+                                            key={'middleRow'}
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-around',
+                                                alignContent: 'space-around',
+                                                alignSelf: 'stretch',
+                                            }}
+                                        >
+                                            <View
+                                                key={'circle4'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            nate: !this.state
+                                                                .nate,
+                                                            kenny: false,
+                                                            lisa: false,
+                                                            cassi: false,
+                                                            jay: false,
+                                                            jordan: false,
+                                                            jonny: false,
+                                                            brett: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .nate
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .nate
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/nate-bosch.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            11 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.nate
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    NATE BOSCH
+                                                </Text>
+                                            </View>
+                                            <View
+                                                key={'circle5'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            brett: !this.state
+                                                                .brett,
+                                                            kenny: false,
+                                                            lisa: false,
+                                                            cassi: false,
+                                                            jay: false,
+                                                            jordan: false,
+                                                            jonny: false,
+                                                            nate: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .brett
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .brett
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/brett-ziegler.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            10 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.brett
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    BRETT ZIEGLER
+                                                </Text>
+                                            </View>
+                                            <View
+                                                key={'circle6'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            jonny: !this.state
+                                                                .jonny,
+                                                            kenny: false,
+                                                            lisa: false,
+                                                            cassi: false,
+                                                            jay: false,
+                                                            jordan: false,
+                                                            brett: false,
+                                                            nate: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .jonny
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .jonny
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/jonny-tobin.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            11 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.jonny
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    JONNY TOBIN
+                                                </Text>
+                                            </View>
+                                            <View
+                                                key={'circle8'}
+                                                style={{
+                                                    width: 70 * factorRatio,
+                                                }}
+                                            >
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        this.setState({
+                                                            jay: !this.state
+                                                                .jay,
+                                                            kenny: false,
+                                                            lisa: false,
+                                                            cassi: false,
+                                                            jordan: false,
+                                                            jonny: false,
+                                                            brett: false,
+                                                            nate: false,
+                                                        })
+                                                    }
+                                                    style={{
+                                                        borderWidth: this.state
+                                                            .jay
+                                                            ? 2 * factorRatio
+                                                            : 0 * factorRatio,
+                                                        borderColor: this.state
+                                                            .jay
+                                                            ? '#fb1b2f'
+                                                            : 'black',
+                                                        height:
+                                                            70 * factorRatio,
+                                                        width: 70 * factorRatio,
+                                                        borderRadius: 300,
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                >
+                                                    <FastImage
+                                                        style={{
+                                                            flex: 1,
+                                                            borderRadius: 100,
+                                                        }}
+                                                        source={require('Pianote2/src/assets/img/imgs/jay-oliver.jpg')}
+                                                        resizeMode={
+                                                            FastImage.resizeMode
+                                                                .stretch
+                                                        }
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontFamily: 'OpenSans',
+                                                        marginTop:
+                                                            5 * factorRatio,
+                                                        fontSize:
+                                                            10 * factorRatio,
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                        color: this.state.jay
+                                                            ? 'white'
+                                                            : colors.secondBackground,
+                                                    }}
+                                                >
+                                                    JAY OLIVER
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        <View
+                                            style={{
+                                                height: 20 * factorVertical,
+                                            }}
                                         />
                                     </View>
-                                    <View style={{flex: 1}} />
-                                </View>
-                            </TouchableOpacity>
-                            )}
-                            {(this.state.openInstructors && this.state.onlyType && this.state.type !== 'SONGS') && (
-                                <View
-                                    key={'instructors'}
-                                    style={{
-                                        borderBottomColor:
-                                            colors.secondBackground,
-                                        borderBottomWidth: 0.5 * factorRatio,
-                                    }}
-                                >
-                                    <View
-                                        style={{height: 20 * factorVertical}}
-                                    />
-                                    <View
-                                        key={'topRow'}
-                                        style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-around',
-                                            alignContent: 'space-around',
-                                            alignSelf: 'stretch',
-                                        }}
-                                    >
-                                        <View
-                                            key={'circle7'}
-                                            style={{width: 70 * factorRatio}}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        kenny: !this.state.kenny,
-                                                        lisa: false,
-                                                        cassi: false,
-                                                        jay: false,
-                                                        jordan: false,
-                                                        jonny: false,
-                                                        brett: false,
-                                                        nate: false,
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state
-                                                        .kenny
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state
-                                                        .kenny
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/kenny-werner.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 11 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.kenny
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                KENNY WERNER
-                                            </Text>
-                                        </View>
-                                        <View
-                                            key={'circle1'}
-                                            style={{width: 70 * factorRatio}}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        lisa: !this.state.lisa,
-                                                        kenny: false,
-                                                        cassi: false,
-                                                        jay: false,
-                                                        jordan: false,
-                                                        jonny: false,
-                                                        brett: false,
-                                                        nate: false,
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state.lisa
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state.lisa
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                    zIndex: 10,
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 10 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.lisa
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                LISA WITT
-                                            </Text>
-                                        </View>
-                                        <View
-                                            key={'circle2'}
-                                            style={{
-                                                width: 70 * factorRatio,
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        cassi: !this.state.cassi,
-                                                        kenny: false,
-                                                        lisa: false,
-                                                        jay: false,
-                                                        jordan: false,
-                                                        jonny: false,
-                                                        brett: false,
-                                                        nate: false,
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state
-                                                        .cassi
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state
-                                                        .cassi
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/cassi-falk.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 10 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.cassi
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                CASSI FALK
-                                            </Text>
-                                        </View>
-                                        <View
-                                            key={'circle3'}
-                                            style={{width: 70 * factorRatio}}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        jordan: !this.state.jordan,
-                                                        kenny: false,
-                                                        lisa: false,
-                                                        cassi: false,
-                                                        jay: false,
-                                                        jonny: false,
-                                                        brett: false,
-                                                        nate: false,
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state
-                                                        .jordan
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state
-                                                        .jordan
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/jordan-leibel.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 10 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.jordan
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                JORDAN LEIBEL
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View
-                                        style={{height: 20 * factorVertical}}
-                                    />
-                                    <View
-                                        key={'middleRow'}
-                                        style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-around',
-                                            alignContent: 'space-around',
-                                            alignSelf: 'stretch',
-                                        }}
-                                    >
-                                        <View
-                                            key={'circle4'}
-                                            style={{width: 70 * factorRatio}}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        nate: !this.state.nate,
-                                                        kenny: false,
-                                                        lisa: false,
-                                                        cassi: false,
-                                                        jay: false,
-                                                        jordan: false,
-                                                        jonny: false,
-                                                        brett: false,
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state.nate
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state.nate
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/nate-bosch.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 11 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.nate
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                NATE BOSCH
-                                            </Text>
-                                        </View>
-                                        <View
-                                            key={'circle5'}
-                                            style={{width: 70 * factorRatio}}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        brett: !this.state.brett,
-                                                        kenny: false,
-                                                        lisa: false,
-                                                        cassi: false,
-                                                        jay: false,
-                                                        jordan: false,
-                                                        jonny: false,
-                                                        nate: false,                                                        
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state
-                                                        .brett
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state
-                                                        .brett
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/brett-ziegler.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 10 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.brett
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                BRETT ZIEGLER
-                                            </Text>
-                                        </View>
-                                        <View
-                                            key={'circle6'}
-                                            style={{
-                                                width: 70 * factorRatio,
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        jonny: !this.state.jonny,
-                                                        kenny: false,
-                                                        lisa: false,
-                                                        cassi: false,
-                                                        jay: false,
-                                                        jordan: false,
-                                                        brett: false,
-                                                        nate: false,                                                        
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state
-                                                        .jonny
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state
-                                                        .jonny
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/jonny-tobin.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 11 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.jonny
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                JONNY TOBIN
-                                            </Text>
-                                        </View>
-                                        <View
-                                            key={'circle8'}
-                                            style={{
-                                                width: 70 * factorRatio,
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.setState({
-                                                        jay: !this.state.jay,
-                                                        kenny: false,
-                                                        lisa: false,
-                                                        cassi: false,
-                                                        jordan: false,
-                                                        jonny: false,
-                                                        brett: false,
-                                                        nate: false,                                                        
-                                                    })
-                                                }
-                                                style={{
-                                                    borderWidth: this.state.jay
-                                                        ? 2 * factorRatio
-                                                        : 0 * factorRatio,
-                                                    borderColor: this.state.jay
-                                                        ? '#fb1b2f'
-                                                        : 'black',
-                                                    height: 70 * factorRatio,
-                                                    width: 70 * factorRatio,
-                                                    borderRadius: 300,
-                                                    backgroundColor: 'white',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                    }}
-                                                    source={require('Pianote2/src/assets/img/imgs/jay-oliver.jpg')}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .stretch
-                                                    }
-                                                />
-                                            </TouchableOpacity>
-                                            <Text
-                                                style={{
-                                                    fontFamily: 'OpenSans',
-                                                    marginTop: 5 * factorRatio,
-                                                    fontSize: 10 * factorRatio,
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                    color: this.state.jay
-                                                        ? 'white'
-                                                        : colors.secondBackground,
-                                                }}
-                                            >
-                                                JAY OLIVER
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View
-                                        style={{height: 20 * factorVertical}}
-                                    />
-                                </View>
-                            )}
+                                )}
                             <View style={{height: 50 * factorVertical}} />
                         </ScrollView>
                     )}

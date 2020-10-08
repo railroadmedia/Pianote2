@@ -3,30 +3,20 @@
  */
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
-<<<<<<< HEAD
 import {
     addToMyList,
     removeFromMyList,
-    likeContent,
-    unlikeContent,
     resetProgress,
 } from '../../services/UserActions';
-=======
-
->>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
 import Modal from 'react-native-modal';
-import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import StartIcon from '../../components/StartIcon';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
-
 import RestartCourse from '../../modals/RestartCourse';
-
 import contentService from '../../services/content.service';
 
 export default class PathOverview extends React.Component {

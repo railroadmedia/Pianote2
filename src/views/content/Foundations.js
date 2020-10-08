@@ -555,21 +555,7 @@ export default class Foundations extends React.Component {
                                             }}
                                         />
                                         <TouchableOpacity
-<<<<<<< HEAD
-                                            onPress={() => {
-                                                this.setState({
-                                                    isLiked: !this.state
-                                                        .isLiked,
-                                                }),
-                                                    this.state.isLiked
-                                                        ? unlikeContent(
-                                                              '215952',
-                                                          )
-                                                        : likeContent('215952');
-                                            }}
-=======
                                             onPress={() => this.toggleLike()}
->>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
                                             style={[
                                                 styles.centerContent,
                                                 {

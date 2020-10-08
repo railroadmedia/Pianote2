@@ -16,7 +16,11 @@ import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
-import { getNewContent, getStartedContent, getAllContent } from '../../services/GetContent';
+import {
+    getNewContent,
+    getStartedContent,
+    getAllContent,
+} from '../../services/GetContent';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -51,7 +55,7 @@ export default class Lessons extends React.Component {
             },
 
             profileImage: '',
-            xp: '', 
+            xp: '',
             rank: '',
             startedFoundations: false, // for showing start icon or continue
             currentLesson: [],
@@ -150,17 +154,11 @@ export default class Lessons extends React.Component {
     };
 
     getNewLessons = async () => {
-        let response = await getNewContent('')
+        let response = await getNewContent('');
 
-<<<<<<< HEAD
-        const newContent = response.data.map((data) => {
+        const newContent = response.data.map(data => {
             return new ContentModel(data);
         });
-=======
-            const newContent = response.data.data.map(data => {
-                return new ContentModel(data);
-            });
->>>>>>> 7d30143e053d1617f7155a167d1162a8f0872062
 
         try {
             items = [];
@@ -199,9 +197,14 @@ export default class Lessons extends React.Component {
     };
 
     getAllLessons = async () => {
-        try {            
-            let response = await getAllContent('', this.state.currentSort, this.state.page, this.state.filters)
-            const newContent = await response.data.map((data) => {
+        try {
+            let response = await getAllContent(
+                '',
+                this.state.currentSort,
+                this.state.page,
+                this.state.filters,
+            );
+            const newContent = await response.data.map(data => {
                 return new ContentModel(data);
             });
 
@@ -210,7 +213,13 @@ export default class Lessons extends React.Component {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: (newContent[i].post.type == 'song') ? newContent[i].post.artist : (newContent[i].getField('instructor') !== 'TBD') ? newContent[i].getField('instructor').fields[0].value : newContent[i].getField('instructor').name,
+                        artist:
+                            newContent[i].post.type == 'song'
+                                ? newContent[i].post.artist
+                                : newContent[i].getField('instructor') !== 'TBD'
+                                ? newContent[i].getField('instructor').fields[0]
+                                      .value
+                                : newContent[i].getField('instructor').name,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i]
@@ -232,7 +241,10 @@ export default class Lessons extends React.Component {
 
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
-                outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
+                outVideos:
+                    items.length == 0 || response.data.length < 20
+                        ? true
+                        : false,
                 isLoadingAll: false,
                 filtering: false,
                 isPaging: false,
@@ -244,8 +256,10 @@ export default class Lessons extends React.Component {
 
     getProgressLessons = async () => {
         try {
-            let response = await getStartedContent('course')
-            const newContent = response.data.map((data) => {return new ContentModel(data);});
+            let response = await getStartedContent('course');
+            const newContent = response.data.map(data => {
+                return new ContentModel(data);
+            });
 
             items = [];
             for (i in newContent) {
@@ -313,46 +327,49 @@ export default class Lessons extends React.Component {
         });
     };
 
-    getDurationFoundations = (newContent) => {
+    getDurationFoundations = newContent => {
         newContent.post.current_lesson.fields
             .find(f => f.key === 'video')
             ?.value.fields.find(f => f.key === 'length_in_seconds')?.value;
-    }
+    };
 
-    getDuration = (newContent) => {
+    getDuration = newContent => {
         newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;
     };
 
-    changeSort = async (currentSort) => {
-        // change sort 
+    changeSort = async currentSort => {
+        // change sort
         await this.setState({
             currentSort,
             outVideos: false,
             isPaging: true,
             allLessons: [],
             page: 1,
-        })
+        });
 
         await this.getAllLessons();
     };
 
     getVideos = async () => {
-        // change page before getting more lessons if paging 
-        console.log('GET VIDEOS: ')
-        if(!this.state.outVideos) {
+        // change page before getting more lessons if paging
+        console.log('GET VIDEOS: ');
+        if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.getAllLessons();
         }
     };
 
-    handleScroll = async (event) => {
-        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+    handleScroll = async event => {
+        if (
+            isCloseToBottom(event) &&
+            !this.state.isPaging &&
+            !this.state.outVideos
+        ) {
             await this.setState({
                 page: this.state.page + 1,
-                isPaging: true
+                isPaging: true,
             }),
-            
-            await this.getAllLessons();
+                await this.getAllLessons();
         }
     };
 
@@ -361,11 +378,11 @@ export default class Lessons extends React.Component {
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'LESSONS',
-            onGoBack: (filters) => this.changeFilters(filters)
+            onGoBack: filters => this.changeFilters(filters),
         });
     };
 
-    changeFilters = async (filters) => {
+    changeFilters = async filters => {
         // after leaving filter page. set filters here
         await this.setState({
             allLessons: [],
@@ -377,18 +394,18 @@ export default class Lessons extends React.Component {
                 filters.progress.length == 0 &&
                 filters.topics.length == 0
                     ? {
-                        displayTopics: [],
-                        level: [],
-                        topics: [],
-                        progress: [],
-                        instructors: [],
-                    }
+                          displayTopics: [],
+                          level: [],
+                          topics: [],
+                          progress: [],
+                          instructors: [],
+                      }
                     : filters,
-        })
+        });
 
-        this.getAllLessons()
-        this.forceUpdate()
-    }    
+        this.getAllLessons();
+        this.forceUpdate();
+    };
 
     render() {
         return (
@@ -423,7 +440,9 @@ export default class Lessons extends React.Component {
                             flex: 1,
                             backgroundColor: colors.mainBackground,
                         }}
-                        onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                        onScroll={({nativeEvent}) =>
+                            this.handleScroll(nativeEvent)
+                        }
                         scrollEventThrottle={400}
                     >
                         <View
@@ -854,7 +873,7 @@ export default class Lessons extends React.Component {
                                     containerBorderWidth={0} // border of box
                                     containerWidth={fullWidth} // width of list
                                     currentSort={this.state.currentSort} // relevance sort
-                                    changeSort={(sort) => this.changeSort(sort)} // change sort and reload videos
+                                    changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                                     filterResults={() => this.filterResults()} // apply from filters page
                                     containerHeight={
                                         onTablet
@@ -872,7 +891,7 @@ export default class Lessons extends React.Component {
                                     } // image height
                                     imageWidth={fullWidth * 0.26} // image width
                                     outVideos={this.state.outVideos} // if paging and out of videos
-                                    getVideos={() => this.getVideos()} 
+                                    getVideos={() => this.getVideos()}
                                     navigator={row =>
                                         row.duration === undefined
                                             ? this.props.navigation.navigate(
