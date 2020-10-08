@@ -34,7 +34,7 @@ export default class Search extends React.Component {
         this.state = {
             filterSize: new Animated.Value(fullHeight * 0.225),
             recentSearchResults: [],
-            
+
             searchResults: [],
             currentSort: 'relevance',
             page: 1,
@@ -66,7 +66,7 @@ export default class Search extends React.Component {
             recentSearchResults = await JSON.parse(recentSearchResults);
             await this.setState({recentSearchResults});
         }
-    };
+    }
 
     mapRecentResults() {
         if (
@@ -138,15 +138,15 @@ export default class Search extends React.Component {
                 </View>
             );
         }
-    };
+    }
 
     search = async () => {
-        let term = this.state.searchTerm
+        let term = this.state.searchTerm;
         if (term.length > 0) {
             var isNewTerm = true;
 
-            if(this.state.searchResults == 0) {
-                await this.setState({isLoadingAll: true})
+            if (this.state.searchResults == 0) {
+                await this.setState({isLoadingAll: true});
             }
 
             for (i in this.state.recentSearchResults) {
@@ -157,15 +157,29 @@ export default class Search extends React.Component {
 
             if (isNewTerm) {
                 if (this.state.recentSearchResults.length > 7) {
-                    this.state.recentSearchResults.pop(this.state.recentSearchResults.length);
+                    this.state.recentSearchResults.pop(
+                        this.state.recentSearchResults.length,
+                    );
                 }
-                await this.state.recentSearchResults.unshift([term, Date.now()]);
-                await AsyncStorage.setItem('recentSearches', JSON.stringify(this.state.recentSearchResults));
-                await this.setState({recentSearchResults: this.state.recentSearchResults});
+                await this.state.recentSearchResults.unshift([
+                    term,
+                    Date.now(),
+                ]);
+                await AsyncStorage.setItem(
+                    'recentSearches',
+                    JSON.stringify(this.state.recentSearchResults),
+                );
+                await this.setState({
+                    recentSearchResults: this.state.recentSearchResults,
+                });
             }
 
-            let response = await searchContent(term, this.state.page, this.state.filters)
-            console.log(response)
+            let response = await searchContent(
+                term,
+                this.state.page,
+                this.state.filters,
+            );
+            console.log(response);
             if (response.data.length == 0) {
                 this.setState({
                     searchEntered: false,
@@ -175,18 +189,29 @@ export default class Search extends React.Component {
                 });
             } else {
                 console.log('RESPONSE: ', response);
-                let newContent = await response.data.map((data) => {return new ContentModel(data)});
-                
+                let newContent = await response.data.map(data => {
+                    return new ContentModel(data);
+                });
+
                 items = [];
                 for (i in newContent) {
-                    console.log(newContent[i].getField('instructor'))
+                    console.log(newContent[i].getField('instructor'));
                     if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                         items.push({
                             title: newContent[i].getField('title'),
-                            artist: (newContent[i].post.type == 'song') ? newContent[i].post.artist : (newContent[i].getField('instructor') !== 'TBD') ? newContent[i].getField('instructor').fields[0].value : newContent[i].getField('instructor').name,
+                            artist:
+                                newContent[i].post.type == 'song'
+                                    ? newContent[i].post.artist
+                                    : newContent[i].getField('instructor') !==
+                                      'TBD'
+                                    ? newContent[i].getField('instructor')
+                                          .fields[0].value
+                                    : newContent[i].getField('instructor').name,
                             thumbnail: newContent[i].getData('thumbnail_url'),
                             type: newContent[i].post.type,
-                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
+                            description: newContent[i]
+                                .getData('description')
+                                .replace(/(<([^>]+)>)/gi, ''),
                             xp: newContent[i].post.xp,
                             id: newContent[i].id,
                             like_count: newContent[i].post.like_count,
@@ -195,16 +220,20 @@ export default class Search extends React.Component {
                             isAddedToList: newContent[i].isAddedToList,
                             isStarted: newContent[i].isStarted,
                             isCompleted: newContent[i].isCompleted,
-                            bundle_count:newContent[i].post.bundle_count,
-                            progress_percent:newContent[i].post.progress_percent,
+                            bundle_count: newContent[i].post.bundle_count,
+                            progress_percent:
+                                newContent[i].post.progress_percent,
                         });
                     }
                 }
-                console.log(items)
+                console.log(items);
 
                 this.setState({
-                    searchResults: [...this.state.searchResults,...items],
-                    outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
+                    searchResults: [...this.state.searchResults, ...items],
+                    outVideos:
+                        items.length == 0 || response.data.length < 20
+                            ? true
+                            : false,
                     isLoadingAll: false,
                     filtering: false,
                     isPaging: false,
@@ -235,34 +264,40 @@ export default class Search extends React.Component {
 
     async clearRecent() {
         await this.setState({recentSearchResults: []});
-        await AsyncStorage.setItem('recentSearches',JSON.stringify(this.state.recentSearchResults));
-    };
+        await AsyncStorage.setItem(
+            'recentSearches',
+            JSON.stringify(this.state.recentSearchResults),
+        );
+    }
 
-    clickSearchRecent = async (searchTerm) => {
+    clickSearchRecent = async searchTerm => {
         await this.setState({
             searchTerm,
             showCancel: true,
             searchResults: [],
-        })
-        await this.search()
+        });
+        await this.search();
     };
 
     getVideos = async () => {
-        // change page before getting more lessons if paging 
-        if(!this.state.outVideos) {
+        // change page before getting more lessons if paging
+        if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.search();
         }
     };
 
-    handleScroll = async (event) => {
-        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+    handleScroll = async event => {
+        if (
+            isCloseToBottom(event) &&
+            !this.state.isPaging &&
+            !this.state.outVideos
+        ) {
             await this.setState({
                 page: this.state.page + 1,
-                isPaging: true
+                isPaging: true,
             }),
-            
-            await this.search();
+                await this.search();
         }
     };
 
@@ -271,11 +306,11 @@ export default class Search extends React.Component {
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'SEARCH',
-            onGoBack: (filters) => this.changeFilters(filters)
+            onGoBack: filters => this.changeFilters(filters),
         });
     };
 
-    changeFilters = async (filters) => {
+    changeFilters = async filters => {
         // after leaving filter page. set filters here
         await this.setState({
             searchResults: [],
@@ -288,18 +323,18 @@ export default class Search extends React.Component {
                 filters.progress.length == 0 &&
                 filters.topics.length == 0
                     ? {
-                        displayTopics: [],
-                        level: [],
-                        topics: [],
-                        progress: [],
-                        instructors: [],
-                    }
+                          displayTopics: [],
+                          level: [],
+                          topics: [],
+                          progress: [],
+                          instructors: [],
+                      }
                     : filters,
-        })
+        });
 
-        this.search()
-        this.forceUpdate()
-    };    
+        this.search();
+        this.forceUpdate();
+    };
 
     render() {
         return (
@@ -355,7 +390,9 @@ export default class Search extends React.Component {
                                 showsVerticalScrollIndicator={false}
                                 contentContainerStyle={{flexGrow: 1}}
                                 contentInsetAdjustmentBehavior={'never'}
-                                onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                                onScroll={({nativeEvent}) =>
+                                    this.handleScroll(nativeEvent)
+                                }
                                 style={{
                                     backgroundColor: colors.mainBackground,
                                     flex: 1,
@@ -420,7 +457,9 @@ export default class Search extends React.Component {
                                                     showCancel: true,
                                                     searchResults: [],
                                                 }),
-                                                this.search(this.state.searchTerm)
+                                                    this.search(
+                                                        this.state.searchTerm,
+                                                    );
                                             }}
                                             returnKeyType={'search'}
                                             style={{
@@ -567,30 +606,45 @@ export default class Search extends React.Component {
                                     {!this.state.searchEntered &&
                                         !this.state.isLoadingAll &&
                                         !this.state.noResults && (
-                                        <View>
-                                            {this.mapRecentResults()}
-                                        </View>
+                                            <View>
+                                                {this.mapRecentResults()}
+                                            </View>
                                         )}
                                     {this.state.searchEntered &&
                                         !this.state.noResults &&
                                         !this.state.isLoadingAll && (
                                             <View>
                                                 <VerticalVideoList
-                                                    items={this.state.searchResults}
-                                                    isLoading={this.state.isLoadingAll}
-                                                    title={`${this.state.searchResults.length + ' '}SEARCH RESULTS`}
+                                                    items={
+                                                        this.state.searchResults
+                                                    }
+                                                    isLoading={
+                                                        this.state.isLoadingAll
+                                                    }
+                                                    title={`${
+                                                        this.state.searchResults
+                                                            .length + ' '
+                                                    }SEARCH RESULTS`}
                                                     showFilter={true}
-                                                    isPaging={this.state.isPaging}
+                                                    isPaging={
+                                                        this.state.isPaging
+                                                    }
                                                     showType={true}
                                                     showArtist={true}
                                                     showSort={false}
                                                     showLength={false}
                                                     filters={this.state.filters}
-                                                    imageRadius={5 * factorRatio}
+                                                    imageRadius={
+                                                        5 * factorRatio
+                                                    }
                                                     containerBorderWidth={0}
                                                     containerWidth={fullWidth}
-                                                    currentSort={this.state.currentSort}
-                                                    changeSort={(sort) => this.changeSort(sort)}
+                                                    currentSort={
+                                                        this.state.currentSort
+                                                    }
+                                                    changeSort={sort =>
+                                                        this.changeSort(sort)
+                                                    }
                                                     filterResults={() =>
                                                         this.filterResults()
                                                     }
@@ -647,7 +701,9 @@ export default class Search extends React.Component {
                                             ]}
                                         >
                                             <ActivityIndicator
-                                                size={onTablet ? 'large' : 'small'}
+                                                size={
+                                                    onTablet ? 'large' : 'small'
+                                                }
                                                 animating={true}
                                                 color={colors.secondBackground}
                                             />

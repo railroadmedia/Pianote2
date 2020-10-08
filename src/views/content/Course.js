@@ -7,7 +7,11 @@ import {ContentModel} from '@musora/models';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
-import {getNewContent, getStartedContent, getAllContent} from '../../services/GetContent';
+import {
+    getNewContent,
+    getStartedContent,
+    getAllContent,
+} from '../../services/GetContent';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -53,16 +57,23 @@ export default class Course extends React.Component {
     };
 
     getAllCourses = async () => {
-        let response = await getAllContent('course', this.state.currentSort, this.state.page, this.state.filters)
-        const newContent = await response.data.map((data) => {return new ContentModel(data)});
+        let response = await getAllContent(
+            'course',
+            this.state.currentSort,
+            this.state.page,
+            this.state.filters,
+        );
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor')
-                        .fields[0].value,
+                    artist: newContent[i].getField('instructor').fields[0]
+                        .value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
                     description: newContent[i]
@@ -77,15 +88,15 @@ export default class Course extends React.Component {
                     isStarted: newContent[i].isStarted,
                     isCompleted: newContent[i].isCompleted,
                     bundle_count: newContent[i].post.bundle_count,
-                    progress_percent:
-                        newContent[i].post.progress_percent,
+                    progress_percent: newContent[i].post.progress_percent,
                 });
             }
-        };
+        }
 
         this.setState({
             allCourses: [...this.state.allCourses, ...items],
-            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             isLoadingAll: false,
             filtering: false,
             isPaging: false,
@@ -94,8 +105,10 @@ export default class Course extends React.Component {
     };
 
     getProgressCourses = async () => {
-        let response = await getStartedContent('course')
-        const newContent = response.data.map((data) => {return new ContentModel(data)});
+        let response = await getStartedContent('course');
+        const newContent = response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         items = [];
         for (i in newContent) {
@@ -131,8 +144,10 @@ export default class Course extends React.Component {
     };
 
     getNewCourses = async () => {
-        let response = await getNewContent('course')
-        const newContent = response.data.map((data) => {return new ContentModel(data)});
+        let response = await getNewContent('course');
+        const newContent = response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         items = [];
         for (i in newContent) {
@@ -206,34 +221,37 @@ export default class Course extends React.Component {
         }
     };
 
-    changeSort = async (currentSort) => {
+    changeSort = async currentSort => {
         await this.setState({
             currentSort,
             outVideos: false,
             isPaging: true,
             allCourses: [],
             page: 1,
-        })
+        });
 
         await this.getAllCourses();
     };
 
     getVideos = async () => {
-        // change page before getting more lessons if paging 
-        if(!this.state.outVideos) {
+        // change page before getting more lessons if paging
+        if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.getAllCourses();
         }
     };
 
-    handleScroll = async (event) => {
-        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+    handleScroll = async event => {
+        if (
+            isCloseToBottom(event) &&
+            !this.state.isPaging &&
+            !this.state.outVideos
+        ) {
             await this.setState({
                 page: this.state.page + 1,
-                isPaging: true
+                isPaging: true,
             }),
-            
-            await this.getAllCourses();
+                await this.getAllCourses();
         }
     };
 
@@ -242,11 +260,11 @@ export default class Course extends React.Component {
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'COURSES',
-            onGoBack: (filters) => this.changeFilters(filters)
+            onGoBack: filters => this.changeFilters(filters),
         });
     };
 
-    changeFilters = async (filters) => {
+    changeFilters = async filters => {
         // after leaving filter page. set filters here
         await this.setState({
             allCourses: [],
@@ -258,19 +276,18 @@ export default class Course extends React.Component {
                 filters.progress.length == 0 &&
                 filters.topics.length == 0
                     ? {
-                        displayTopics: [],
-                        level: [],
-                        topics: [],
-                        progress: [],
-                        instructors: [],
-                    }
+                          displayTopics: [],
+                          level: [],
+                          topics: [],
+                          progress: [],
+                          instructors: [],
+                      }
                     : filters,
-        })
+        });
 
-        this.getAllCourses()
-        this.forceUpdate()
-    }    
-    
+        this.getAllCourses();
+        this.forceUpdate();
+    };
 
     render() {
         return (
@@ -348,42 +365,42 @@ export default class Course extends React.Component {
                             </Text>
                             <View style={{height: 15 * factorVertical}} />
                             {this.state.started && (
-                            <View
-                                key={'continueCourses'}
-                                style={{
-                                    minHeight: fullHeight * 0.225,
-                                    paddingLeft: fullWidth * 0.035,
-                                    backgroundColor: colors.mainBackground,
-                                }}
-                            >
-                                <HorizontalVideoList
-                                    Title={'CONTINUE'}
-                                    seeAll={() =>
-                                        this.props.navigation.navigate(
-                                            'SEEALL',
-                                            {
-                                                title: 'Continue',
-                                                parent: 'Courses',
-                                            },
-                                        )
-                                    }
-                                    showArtist={true}
-                                    items={this.state.progressCourses}
-                                    isLoading={this.state.isLoadingProgress}
-                                    itemWidth={
-                                        isNotch
-                                            ? fullWidth * 0.6
-                                            : onTablet
-                                            ? fullWidth * 0.425
-                                            : fullWidth * 0.55
-                                    }
-                                    itemHeight={
-                                        isNotch
-                                            ? fullHeight * 0.155
-                                            : fullHeight * 0.175
-                                    }
-                                />
-                            </View>
+                                <View
+                                    key={'continueCourses'}
+                                    style={{
+                                        minHeight: fullHeight * 0.225,
+                                        paddingLeft: fullWidth * 0.035,
+                                        backgroundColor: colors.mainBackground,
+                                    }}
+                                >
+                                    <HorizontalVideoList
+                                        Title={'CONTINUE'}
+                                        seeAll={() =>
+                                            this.props.navigation.navigate(
+                                                'SEEALL',
+                                                {
+                                                    title: 'Continue',
+                                                    parent: 'Courses',
+                                                },
+                                            )
+                                        }
+                                        showArtist={true}
+                                        items={this.state.progressCourses}
+                                        isLoading={this.state.isLoadingProgress}
+                                        itemWidth={
+                                            isNotch
+                                                ? fullWidth * 0.6
+                                                : onTablet
+                                                ? fullWidth * 0.425
+                                                : fullWidth * 0.55
+                                        }
+                                        itemHeight={
+                                            isNotch
+                                                ? fullHeight * 0.155
+                                                : fullHeight * 0.175
+                                        }
+                                    />
+                                </View>
                             )}
                             <View
                                 key={'newCourses'}
@@ -428,15 +445,15 @@ export default class Course extends React.Component {
                                 type={'COURSES'}
                                 isPaging={this.state.isPaging}
                                 showFilter={true}
-                                showType={true} 
-                                showArtist={true} 
+                                showType={true}
+                                showArtist={true}
                                 showLength={false}
                                 showSort={true}
-                                filters={this.state.filters} 
+                                filters={this.state.filters}
                                 imageRadius={5 * factorRatio}
                                 containerBorderWidth={0}
-                                currentSort={this.state.currentSort} 
-                                changeSort={(sort) => this.changeSort(sort)}
+                                currentSort={this.state.currentSort}
+                                changeSort={sort => this.changeSort(sort)}
                                 filterResults={() => this.filterResults()}
                                 containerWidth={fullWidth}
                                 containerHeight={
@@ -456,7 +473,7 @@ export default class Course extends React.Component {
                                 imageWidth={fullWidth * 0.26} // image width
                                 outVideos={this.state.outVideos}
                                 getVideos={() => this.getVideos()}
-                                navigator={(row) =>
+                                navigator={row =>
                                     this.props.navigation.navigate(
                                         'VIDEOPLAYER',
                                         {id: row.id},

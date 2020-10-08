@@ -26,7 +26,7 @@ export default class SongCatalog extends React.Component {
         super(props);
         this.state = {
             progressSongs: [],
-            
+
             allSongs: [],
             currentSort: 'relevance',
             page: 1,
@@ -52,9 +52,16 @@ export default class SongCatalog extends React.Component {
     };
 
     getAllSongs = async () => {
-        let response = await getAllContent('song', this.state.currentSort, this.state.page, this.state.filters)
-        const newContent = await response.data.map((data) => {return new ContentModel(data)});
-        
+        let response = await getAllContent(
+            'song',
+            this.state.currentSort,
+            this.state.page,
+            this.state.filters,
+        );
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
+
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -63,7 +70,9 @@ export default class SongCatalog extends React.Component {
                     artist: newContent[i].post.artist,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,
@@ -80,7 +89,8 @@ export default class SongCatalog extends React.Component {
 
         await this.setState({
             allSongs: [...this.state.allSongs, ...items],
-            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             filtering: false,
             isPaging: false,
             isLoadingAll: false,
@@ -88,8 +98,8 @@ export default class SongCatalog extends React.Component {
     };
 
     getProgressSongs = async () => {
-        let response = await getStartedContent('song')
-        const newContent = response.data.map((data) => {
+        let response = await getStartedContent('song');
+        const newContent = response.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -134,45 +144,49 @@ export default class SongCatalog extends React.Component {
         }
     };
 
-    changeSort = async (currentSort) => {
+    changeSort = async currentSort => {
         await this.setState({
             allSongs: [],
             currentSort,
             outVideos: false,
             isPaging: true,
             page: 1,
-        })
+        });
 
         await this.getAllSongs();
-    };  
+    };
 
     getVideos = async () => {
-        if(!this.state.outVideos) {
+        if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.getAllSongs();
         }
     };
 
-    handleScroll = async (event) => {
-        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+    handleScroll = async event => {
+        if (
+            isCloseToBottom(event) &&
+            !this.state.isPaging &&
+            !this.state.outVideos
+        ) {
             await this.setState({
                 page: this.state.page + 1,
-                isPaging: true
-            })
+                isPaging: true,
+            });
 
             await this.getAllSongs();
         }
-    };    
-    
+    };
+
     filterResults = async () => {
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'SONGS',
-            onGoBack: (filters) => this.changeFilters(filters)
+            onGoBack: filters => this.changeFilters(filters),
         });
     };
 
-    changeFilters = async (filters) => {
+    changeFilters = async filters => {
         // after leaving filter page. set filters here
         await this.setState({
             allSongs: [],
@@ -184,18 +198,18 @@ export default class SongCatalog extends React.Component {
                 filters.progress.length == 0 &&
                 filters.topics.length == 0
                     ? {
-                        displayTopics: [],
-                        level: [],
-                        topics: [],
-                        progress: [],
-                        instructors: [],
-                    }
+                          displayTopics: [],
+                          level: [],
+                          topics: [],
+                          progress: [],
+                          instructors: [],
+                      }
                     : filters,
-        })
+        });
 
         this.getAllSongs();
         this.forceUpdate();
-    }        
+    };
 
     render() {
         return (
@@ -226,7 +240,9 @@ export default class SongCatalog extends React.Component {
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
                         scrollEventThrottle={400}
-                        onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                        onScroll={({nativeEvent}) =>
+                            this.handleScroll(nativeEvent)
+                        }
                         style={{
                             flex: 1,
                             backgroundColor: colors.mainBackground,
@@ -314,7 +330,7 @@ export default class SongCatalog extends React.Component {
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list
                             currentSort={this.state.currentSort} // relevance sort
-                            changeSort={(sort) => this.changeSort(sort)} // change sort and reload videos
+                            changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                             outVideos={this.state.outVideos} // if paging and out of videos
                             filterResults={() => this.filterResults()} // apply from filters page
                             containerHeight={

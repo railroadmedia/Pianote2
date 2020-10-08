@@ -48,7 +48,6 @@ export default class SeeAll extends React.Component {
                 progress: [],
                 instructors: [],
             },
-            
         };
     }
 
@@ -57,18 +56,28 @@ export default class SeeAll extends React.Component {
     }
 
     async getAllLessons() {
-        let response = await seeAllContent(this.state.page, this.state.filters)
-        const newContent = await response.data.map((data) => {return new ContentModel(data)});
-        
+        let response = await seeAllContent(this.state.page, this.state.filters);
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
+
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: (newContent[i].post.type == 'song') ? newContent[i].post.artist : (newContent[i].getField('instructor') !== 'TBD') ? newContent[i].getField('instructor').fields[0].value : newContent[i].getField('instructor').name,
+                    artist:
+                        newContent[i].post.type == 'song'
+                            ? newContent[i].post.artist
+                            : newContent[i].getField('instructor') !== 'TBD'
+                            ? newContent[i].getField('instructor').fields[0]
+                                  .value
+                            : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
@@ -85,7 +94,8 @@ export default class SeeAll extends React.Component {
 
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
@@ -134,35 +144,38 @@ export default class SeeAll extends React.Component {
     };
 
     getVideos = async () => {
-        // change page before getting more lessons if paging 
-        if(!this.state.outVideos) {
+        // change page before getting more lessons if paging
+        if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.getAllLessons();
         }
     };
 
-    handleScroll = async (event) => {
-        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+    handleScroll = async event => {
+        if (
+            isCloseToBottom(event) &&
+            !this.state.isPaging &&
+            !this.state.outVideos
+        ) {
             await this.setState({
                 page: this.state.page + 1,
-                isPaging: true
+                isPaging: true,
             }),
-            
-            await this.getAllLessons();
+                await this.getAllLessons();
         }
     };
 
     filterResults = async () => {
         // function to be sent to filters page
-        console.log(this.state.filters)
+        console.log(this.state.filters);
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'SEEALL',
-            onGoBack: (filters) => this.changeFilters(filters)
+            onGoBack: filters => this.changeFilters(filters),
         });
     };
 
-    changeFilters = async (filters) => {
+    changeFilters = async filters => {
         // after leaving filter page. set filters here
         await this.setState({
             allLessons: [],
@@ -174,18 +187,18 @@ export default class SeeAll extends React.Component {
                 filters.progress.length == 0 &&
                 filters.topics.length == 0
                     ? {
-                        displayTopics: [],
-                        level: [],
-                        topics: [],
-                        progress: [],
-                        instructors: [],
-                    }
+                          displayTopics: [],
+                          level: [],
+                          topics: [],
+                          progress: [],
+                          instructors: [],
+                      }
                     : filters,
-        })
+        });
 
         this.getAllLessons();
-        this.forceUpdate()
-    }        
+        this.forceUpdate();
+    };
 
     render() {
         return (
@@ -261,7 +274,9 @@ export default class SeeAll extends React.Component {
                                 flex: 0.9,
                                 backgroundColor: colors.mainBackground,
                             }}
-                            onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                            onScroll={({nativeEvent}) =>
+                                this.handleScroll(nativeEvent)
+                            }
                         >
                             <View style={{height: 15 * factorVertical}} />
                             <VerticalVideoList

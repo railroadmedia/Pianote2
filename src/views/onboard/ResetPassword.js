@@ -20,8 +20,10 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 
-var showListener = Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-var hideListener = Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+var showListener =
+    Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+var hideListener =
+    Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
 export default class ResetPassword extends React.Component {
     static navigationOptions = {header: null};
@@ -42,11 +44,11 @@ export default class ResetPassword extends React.Component {
     }
 
     componentWillMount = async () => {
-        let email = await AsyncStorage.getItem('email')
-        let token = await AsyncStorage.getItem('rp_key')
+        let email = await AsyncStorage.getItem('email');
+        let token = await AsyncStorage.getItem('rp_key');
 
-        this.setState({email, token})
-    }
+        this.setState({email, token});
+    };
 
     componentDidMount = async () => {
         this.keyboardDidShowListener = Keyboard.addListener(
@@ -57,12 +59,12 @@ export default class ResetPassword extends React.Component {
             hideListener,
             this._keyboardDidHide,
         );
-    }
+    };
 
     componentWillUnmount = async () => {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
-    }
+    };
 
     _keyboardDidShow = async () => {
         if (Platform.OS == 'ios') {
@@ -113,16 +115,23 @@ export default class ResetPassword extends React.Component {
                         body: JSON.stringify({
                             pass1: this.state.password,
                             user_login: this.state.email,
-                            rp_key: this.state.token
+                            rp_key: this.state.token,
                         }),
                     },
                 );
 
-                console.log('RESPONSE: ', response)
+                console.log('RESPONSE: ', response);
 
-                if(response.ok) {
+                if (response.ok) {
                     this.props.navigation.dispatch(
-                        StackActions.reset({index: 0, actions: [NavigationActions.navigate({routeName: 'LOGINCREDENTIALS'})]})
+                        StackActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({
+                                    routeName: 'LOGINCREDENTIALS',
+                                }),
+                            ],
+                        }),
                     );
                 }
             }
@@ -191,7 +200,9 @@ export default class ResetPassword extends React.Component {
                     ]}
                 >
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
+                        onPress={() =>
+                            this.props.navigation.navigate('LOGINCREDENTIALS')
+                        }
                         style={{
                             height: '100%',
                             width: '100%',
@@ -299,7 +310,7 @@ export default class ResetPassword extends React.Component {
                                         : 'email-address'
                                 }
                                 secureTextEntry={!this.state.showPassword}
-                                onChangeText={(password) =>
+                                onChangeText={password =>
                                     this.setState({password})
                                 }
                                 style={{
@@ -388,7 +399,7 @@ export default class ResetPassword extends React.Component {
                                 secureTextEntry={
                                     !this.state.showConfirmPassword
                                 }
-                                onChangeText={(confirmPassword) =>
+                                onChangeText={confirmPassword =>
                                     this.setState({confirmPassword})
                                 }
                                 style={{

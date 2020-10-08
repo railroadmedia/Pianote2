@@ -31,7 +31,7 @@ class HorizontalVideoList extends React.Component {
         };
     }
 
-    UNSAFE_componentWillReceiveProps = async (props) => {
+    UNSAFE_componentWillReceiveProps = async props => {
         if (props.isLoading !== this.state.isLoading) {
             await this.setState({
                 isLoading: props.isLoading,
@@ -40,7 +40,7 @@ class HorizontalVideoList extends React.Component {
         }
     };
 
-    addToMyList = async (contentID) => {
+    addToMyList = async contentID => {
         // change data structure
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
@@ -52,7 +52,7 @@ class HorizontalVideoList extends React.Component {
         addToMyList(contentID);
     };
 
-    removeFromMyList = async (contentID) => {
+    removeFromMyList = async contentID => {
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
@@ -85,7 +85,7 @@ class HorizontalVideoList extends React.Component {
         }
     };
 
-    like = (contentID) => {
+    like = contentID => {
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isLiked = !this.state.items.isLiked;

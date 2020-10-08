@@ -61,12 +61,11 @@ export default class SinglePack extends React.Component {
         const {response, error} = await getContentChildById({
             parentId: this.state.pack.id,
         });
-        console.log('RESPONSE: ', response, error)
+        console.log('RESPONSE: ', response, error);
 
         const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
-        
 
         // if more than one bundle then display bundles otherwise show videos
         if (this.state.pack.bundle_count > 1) {
@@ -161,7 +160,7 @@ export default class SinglePack extends React.Component {
 
         console.log('response get videos: ', response, error);
 
-        const newContent = response.data.data.map((data) => {
+        const newContent = response.data.data.map(data => {
             return new ContentModel(data);
         });
 
@@ -171,8 +170,8 @@ export default class SinglePack extends React.Component {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor')
-                            .fields[0].value,
+                        artist: newContent[i].getField('instructor').fields[0]
+                            .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         description: newContent[i]
                             .getData('description')
@@ -187,8 +186,7 @@ export default class SinglePack extends React.Component {
                         isStarted: newContent[i].isStarted,
                         isCompleted: newContent[i].isCompleted,
                         bundle_count: newContent[i].post.bundle_count,
-                        progress_percent:
-                            newContent[i].post.progress_percent,
+                        progress_percent: newContent[i].post.progress_percent,
                     });
                 }
             }

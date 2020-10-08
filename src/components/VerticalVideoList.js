@@ -25,12 +25,12 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
 const sortDict = {
-    newest: 'NEWEST', 
-    oldest: 'OLDEST', 
-    popularity: 'POPULAR', 
+    newest: 'NEWEST',
+    oldest: 'OLDEST',
+    popularity: 'POPULAR',
     trending: 'TRENDING',
-    relevance: 'RELEVANCE'
-}
+    relevance: 'RELEVANCE',
+};
 
 const instructorDict = {
     196999: 'LISA',
@@ -45,7 +45,7 @@ const instructorDict = {
     'Dave Attkinson': [266932],
     'DR Sean Kiligaon': [247373],
     'Gabriel Patelchi': [218895],
-}
+};
 
 class VerticalVideoList extends React.Component {
     static navigationOptions = {header: null};
@@ -61,14 +61,14 @@ class VerticalVideoList extends React.Component {
         };
     }
 
-    UNSAFE_componentWillReceiveProps = async (props) => {
-        if(props.isPaging !== this.state.isPaging) {
-            if(!this.state.isLoading) {
-                await this.setState({isPaging: props.isPaging})
+    UNSAFE_componentWillReceiveProps = async props => {
+        if (props.isPaging !== this.state.isPaging) {
+            if (!this.state.isLoading) {
+                await this.setState({isPaging: props.isPaging});
             }
         }
-        if(props.outVideos !== this.state.outVideos) {
-            await this.setState({outVideos: props.outVideos})
+        if (props.outVideos !== this.state.outVideos) {
+            await this.setState({outVideos: props.outVideos});
         }
         if (props.isLoading !== this.state.isLoading) {
             await this.setState({
@@ -79,7 +79,7 @@ class VerticalVideoList extends React.Component {
             await this.setState({
                 items: props.items,
             });
-        } 
+        }
     };
 
     showSpinner = () => {
@@ -127,7 +127,7 @@ class VerticalVideoList extends React.Component {
     };
 
     topics = () => {
-        let topics = this.props.filters.displayTopics
+        let topics = this.props.filters.displayTopics;
         if (topics.length > 0) {
             var topicString = '/ ';
 
@@ -135,8 +135,7 @@ class VerticalVideoList extends React.Component {
                 if (i == topics.length - 1) {
                     topicString = topicString + topics[i];
                 } else {
-                    topicString =
-                        topicString + topics[i] + ', ';
+                    topicString = topicString + topics[i] + ', ';
                 }
             }
 
@@ -147,12 +146,12 @@ class VerticalVideoList extends React.Component {
     };
 
     instructors = () => {
-        let instructors = []
+        let instructors = [];
 
-        for(i in this.props.filters.instructors) {
-            instructors.push(instructorDict[this.props.filters.instructors[i]])
+        for (i in this.props.filters.instructors) {
+            instructors.push(instructorDict[this.props.filters.instructors[i]]);
         }
-        
+
         if (instructors.length > 0) {
             var instructorString = '/ ';
 
@@ -207,7 +206,7 @@ class VerticalVideoList extends React.Component {
         );
     };
 
-    like = (contentID) => {
+    like = contentID => {
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isLiked = !this.state.items.isLiked;
@@ -220,9 +219,9 @@ class VerticalVideoList extends React.Component {
     };
 
     renderMappedList = () => {
-        if(this.state.items.length == 0 && this.state.outVideos) {
-            return 
-        } else if(this.state.items.length == 0 || this.state.isLoading) {
+        if (this.state.items.length == 0 && this.state.outVideos) {
+            return;
+        } else if (this.state.items.length == 0 || this.state.isLoading) {
             return this.showSpinner();
         }
 
@@ -494,7 +493,8 @@ class VerticalVideoList extends React.Component {
                                             }}
                                         >
                                             {row.type.charAt(0).toUpperCase() +
-                                                row.type.slice(1)}{' / '}
+                                                row.type.slice(1)}
+                                            {' / '}
                                         </Text>
                                     )}
                                     {this.props.showArtist && (
@@ -507,7 +507,7 @@ class VerticalVideoList extends React.Component {
                                                 fontFamily: 'OpenSans',
                                             }}
                                         >
-                                           {row.artist}
+                                            {row.artist}
                                         </Text>
                                     )}
                                 </View>
@@ -568,7 +568,7 @@ class VerticalVideoList extends React.Component {
                                     this.props.showNextVideo && index == 0
                                         ? this.props.containerHeight
                                         : this.props.containerHeight +
-                                        50 * factorVertical,
+                                          50 * factorVertical,
                                 width: this.props.containerWidth,
                                 flexDirection: 'row',
                                 paddingLeft: 10 * factorHorizontal,
@@ -822,7 +822,11 @@ class VerticalVideoList extends React.Component {
                                                     fontFamily: 'OpenSans',
                                                 }}
                                             >
-                                                {sortDict[this.props.currentSort]}
+                                                {
+                                                    sortDict[
+                                                        this.props.currentSort
+                                                    ]
+                                                }
                                             </Text>
                                             <View
                                                 style={{
@@ -889,26 +893,17 @@ class VerticalVideoList extends React.Component {
                     )}
                     {!this.props.showTitleOnly && this.props.showFilter && (
                         <View>
-                            {(this.props.filters !== null && (
-                                this.props.filters.topics.length > 0 ||
-                                this.props.filters.level.length > 0 ||
-                                this.props.filters.progress.length > 0 ||
-                                this.props.filters.instructors.length > 0
-                            )) && (
-                                <View
-                                    style={{
-                                        paddingLeft: 10 * factorHorizontal,
-                                        paddingRight: 10 * factorHorizontal,
-                                        paddingTop: 5 * factorVertical,
-                                    }}
-                                >
-                                    <Text
+                            {this.props.filters !== null &&
+                                (this.props.filters.topics.length > 0 ||
+                                    this.props.filters.level.length > 0 ||
+                                    this.props.filters.progress.length > 0 ||
+                                    this.props.filters.instructors.length >
+                                        0) && (
+                                    <View
                                         style={{
-                                            fontSize: 12 * factorRatio,
-                                            marginBottom: 5 * factorVertical,
-                                            textAlign: 'left',
-                                            fontFamily: 'OpenSans',
-                                            color: colors.secondBackground,
+                                            paddingLeft: 10 * factorHorizontal,
+                                            paddingRight: 10 * factorHorizontal,
+                                            paddingTop: 5 * factorVertical,
                                         }}
                                     >
                                         <Text
@@ -917,73 +912,88 @@ class VerticalVideoList extends React.Component {
                                                 marginBottom:
                                                     5 * factorVertical,
                                                 textAlign: 'left',
-                                                fontWeight:
-                                                    Platform.OS == 'ios'
-                                                        ? '900'
-                                                        : 'bold',
                                                 fontFamily: 'OpenSans',
                                                 color: colors.secondBackground,
                                             }}
                                         >
-                                            FILTERS APPLIED{' '}
+                                            <Text
+                                                style={{
+                                                    fontSize: 12 * factorRatio,
+                                                    marginBottom:
+                                                        5 * factorVertical,
+                                                    textAlign: 'left',
+                                                    fontWeight:
+                                                        Platform.OS == 'ios'
+                                                            ? '900'
+                                                            : 'bold',
+                                                    fontFamily: 'OpenSans',
+                                                    color:
+                                                        colors.secondBackground,
+                                                }}
+                                            >
+                                                FILTERS APPLIED{' '}
+                                            </Text>
+                                            {this.stringifyFilters()}
                                         </Text>
-                                        {this.stringifyFilters()}
-                                    </Text>
-                                </View>
-                            )}
+                                    </View>
+                                )}
                         </View>
                     )}
-                    {(this.state.items.length == 0 && this.state.outVideos && !this.state.isLoading) && (
-                    <View
-                        style={{
-                                marginTop: 7.5 * factorRatio,
-                                paddingLeft: 10 * factorHorizontal,
-                                paddingRight: 10 * factorHorizontal,
-                            }}
-                    >
-                        <Text
-                            style={{
-                                fontSize: 12 * factorRatio,
-                                color: colors.secondBackground,
-                                textAlign: 'left',
-                            }}
-                        >
-                            There are no results that match those filters.
-                        </Text>
-                        <View
-                            style={{
-                                height: fullHeight*0.3
-                            }}
-                        />
-                    </View>
-                    )}
+                    {this.state.items.length == 0 &&
+                        this.state.outVideos &&
+                        !this.state.isLoading && (
+                            <View
+                                style={{
+                                    marginTop: 7.5 * factorRatio,
+                                    paddingLeft: 10 * factorHorizontal,
+                                    paddingRight: 10 * factorHorizontal,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 12 * factorRatio,
+                                        color: colors.secondBackground,
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    There are no results that match those
+                                    filters.
+                                </Text>
+                                <View
+                                    style={{
+                                        height: fullHeight * 0.3,
+                                    }}
+                                />
+                            </View>
+                        )}
                     <View style={{height: 5 * factorVertical}} />
                 </View>
-                <View 
+                <View
                     style={[
-                        styles.centerContent, {
-                        minHeight: this.props.containerHeight*4,
-                        flex: 1,
-                        }
+                        styles.centerContent,
+                        {
+                            minHeight: this.props.containerHeight * 4,
+                            flex: 1,
+                        },
                     ]}
                 >
                     {this.renderMappedList()}
-                    {(this.state.isPaging && !this.state.isLoading) && (
-                    <View 
-                        style={[
-                            styles.centerContent,
-                            {
-                                height: fullHeight * 0.115,
-                                marginTop: 15 * factorRatio,
-                            },
-                        ]}
-                    >
-                        <ActivityIndicator
-                            size={onTablet ? 'large' : 'small'}
-                            animating={true}
-                            color={colors.secondBackground}
-                        />
-                    </View>
+                    {this.state.isPaging && !this.state.isLoading && (
+                        <View
+                            style={[
+                                styles.centerContent,
+                                {
+                                    height: fullHeight * 0.115,
+                                    marginTop: 15 * factorRatio,
+                                },
+                            ]}
+                        >
+                            <ActivityIndicator
+                                size={onTablet ? 'large' : 'small'}
+                                animating={true}
+                                color={colors.secondBackground}
+                            />
+                        </View>
                     )}
                     <View style={{flex: 1}} />
                 </View>

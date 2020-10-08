@@ -321,7 +321,11 @@ class ContentModal extends React.Component {
                                         }}
                                     >
                                         <AntIcon
-                                            name={this.state.data.isLiked? 'like1': 'like2'}
+                                            name={
+                                                this.state.data.isLiked
+                                                    ? 'like1'
+                                                    : 'like2'
+                                            }
                                             size={25 * factorRatio}
                                         />
                                     </TouchableOpacity>

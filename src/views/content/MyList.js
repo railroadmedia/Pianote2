@@ -48,18 +48,31 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
-        let response = await getMyListContent(this.state.page, this.state.filters)
-        const newContent = await response.data.map((data) => {return new ContentModel(data)});
-        console.log(newContent)
+        let response = await getMyListContent(
+            this.state.page,
+            this.state.filters,
+        );
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
+        console.log(newContent);
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: (newContent[i].post.type == 'song') ? newContent[i].post.artist : (newContent[i].getField('instructor') !== 'TBD') ? newContent[i].getField('instructor').fields[0].value : newContent[i].getField('instructor').name,
+                    artist:
+                        newContent[i].post.type == 'song'
+                            ? newContent[i].post.artist
+                            : newContent[i].getField('instructor') !== 'TBD'
+                            ? newContent[i].getField('instructor').fields[0]
+                                  .value
+                            : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
@@ -76,7 +89,8 @@ export default class MyList extends React.Component {
 
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
@@ -114,35 +128,38 @@ export default class MyList extends React.Component {
     };
 
     getVideos = async () => {
-        // change page before getting more lessons if paging 
-        if(!this.state.outVideos) {
+        // change page before getting more lessons if paging
+        if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.getMyList();
         }
     };
 
-    handleScroll = async (event) => {
-        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+    handleScroll = async event => {
+        if (
+            isCloseToBottom(event) &&
+            !this.state.isPaging &&
+            !this.state.outVideos
+        ) {
             await this.setState({
                 page: this.state.page + 1,
-                isPaging: true
+                isPaging: true,
             }),
-            
-            await this.getMyList();
+                await this.getMyList();
         }
     };
 
     filterResults = async () => {
         // function to be sent to filters page
-        console.log(this.state.filters)
+        console.log(this.state.filters);
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'MYLIST',
-            onGoBack: (filters) => this.changeFilters(filters)
+            onGoBack: filters => this.changeFilters(filters),
         });
     };
 
-    changeFilters = async (filters) => {
+    changeFilters = async filters => {
         // after leaving filter page. set filters here
         await this.setState({
             allLessons: [],
@@ -154,18 +171,18 @@ export default class MyList extends React.Component {
                 filters.progress.length == 0 &&
                 filters.topics.length == 0
                     ? {
-                        displayTopics: [],
-                        level: [],
-                        topics: [],
-                        progress: [],
-                        instructors: [],
-                    }
+                          displayTopics: [],
+                          level: [],
+                          topics: [],
+                          progress: [],
+                          instructors: [],
+                      }
                     : filters,
-        })
+        });
 
-        this.getMyList()
-        this.forceUpdate()
-    }        
+        this.getMyList();
+        this.forceUpdate();
+    };
 
     render() {
         return (
@@ -192,7 +209,9 @@ export default class MyList extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                        onScroll={({nativeEvent}) =>
+                            this.handleScroll(nativeEvent)
+                        }
                         style={{
                             flex: 1,
                             backgroundColor: colors.mainBackground,
@@ -339,7 +358,9 @@ export default class MyList extends React.Component {
                             filters={this.state.filters} // show filter list
                             filterResults={() => this.filterResults()} // apply from filters page
                             outVideos={this.state.outVideos}
-                            removeItem={(contentID) => {this.removeFromMyList(contentID);}}
+                            removeItem={contentID => {
+                                this.removeFromMyList(contentID);
+                            }}
                             outVideos={this.state.outVideos} // if paging and out of videos
                             imageRadius={5 * factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box

@@ -168,7 +168,8 @@ class Relevance extends React.Component {
                                         fontSize: 16 * factorRatio,
                                         fontFamily: 'OpenSans',
                                         color:
-                                            this.state.currentSort == 'popularity'
+                                            this.state.currentSort ==
+                                            'popularity'
                                                 ? 'white'
                                                 : colors.secondBackground,
                                     }}

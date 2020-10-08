@@ -7,13 +7,13 @@ export default class App extends React.Component {
     componentDidMount() {
         this.removeNotificationOpenedListener = firebase
             .notifications()
-            .onNotificationOpened((notificationOpen) => {
+            .onNotificationOpened(notificationOpen => {
                 // TODO: deep linking
             });
         firebase
             .notifications()
             .getInitialNotification()
-            .then((notificationOpen) => {
+            .then(notificationOpen => {
                 if (notificationOpen) {
                     // TODO: deep linking
                 }

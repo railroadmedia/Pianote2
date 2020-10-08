@@ -113,7 +113,7 @@ const AppNavigator = createStackNavigator(
                 timing: Animated.timing,
                 useNativeDriver: true,
             },
-            screenInterpolator: (sceneProps) => {
+            screenInterpolator: sceneProps => {
                 const {layout, position, scene} = sceneProps;
                 const {index} = scene;
 

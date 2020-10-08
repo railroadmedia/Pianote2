@@ -24,8 +24,10 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     componentDidMount = async () => {
-        let response = await getStartedContent('quick-tips')
-        const newContent = await response.data.map((data) => {return new ContentModel(data)});
+        let response = await getStartedContent('quick-tips');
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         items = [];
         for (i in newContent) {
@@ -54,13 +56,16 @@ export default class StudentFocusCatalog extends React.Component {
         }
 
         this.setState({
-            progressStudentFocus: [...this.state.progressStudentFocus,...items,],
+            progressStudentFocus: [
+                ...this.state.progressStudentFocus,
+                ...items,
+            ],
             isLoadingProgress: false,
             isStarted: response.data.length > 0 ? true : false,
         });
     };
 
-    getDuration = async (newContent) => {
+    getDuration = async newContent => {
         if (newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value;
         } else if (newContent.post.fields[1].key == 'video') {

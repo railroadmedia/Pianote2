@@ -96,8 +96,8 @@ export default class CreateAccount extends React.Component {
             await fetch(
                 `http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`,
             )
-                .then((response) => response.json())
-                .then((response) => {
+                .then(response => response.json())
+                .then(response => {
                     console.log(response);
                     if (response.unique == true) {
                         this.props.navigation.navigate('CREATEACCOUNT2', {

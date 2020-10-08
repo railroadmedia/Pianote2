@@ -167,7 +167,7 @@ export default class ProfileSettings extends React.Component {
                     path: 'images',
                 },
             },
-            (response) => {
+            response => {
                 console.log(response);
                 if (response.didCancel) {
                 } else if (response.error) {

@@ -122,8 +122,7 @@ export default class SupportSignUp extends React.Component {
                                     fontFamily: 'OpenSans',
                                     color: colors.secondBackground,
                                 }}
-                            >
-                            </Text>
+                            ></Text>
                             <View style={{height: 15 * factorVertical}} />
                             <Text
                                 style={{
@@ -131,8 +130,7 @@ export default class SupportSignUp extends React.Component {
                                     fontSize: 15.5 * factorRatio,
                                     color: colors.secondBackground,
                                 }}
-                            >
-                            </Text>
+                            ></Text>
                         </View>
                         <View style={{height: 30 * factorVertical}} />
                         <View

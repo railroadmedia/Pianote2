@@ -13,28 +13,53 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 
 const messageDict = {
-    'lesson comment reply': ['replied to your comment.', true, 'orange', 'comment reply notifications'], // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
-    'lesson comment liked': ['liked your comment.', true, 'blue', 'comment like notifications'], // notify_on_forum_post_like: this.state.notify_on_forum_post_like,
-    'forum post reply': ['replied to your forum post.', true, 'orange', 'forum post reply notifications'], // notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-    'forum post liked': ['liked your forum post.', true, 'blue', 'forum post like notifications'], // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
-    'forum post in followed thread': ['post in followed thread.', false, 'orange', 'forum post reply notifications'],
+    'lesson comment reply': [
+        'replied to your comment.',
+        true,
+        'orange',
+        'comment reply notifications',
+    ], // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
+    'lesson comment liked': [
+        'liked your comment.',
+        true,
+        'blue',
+        'comment like notifications',
+    ], // notify_on_forum_post_like: this.state.notify_on_forum_post_like,
+    'forum post reply': [
+        'replied to your forum post.',
+        true,
+        'orange',
+        'forum post reply notifications',
+    ], // notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
+    'forum post liked': [
+        'liked your forum post.',
+        true,
+        'blue',
+        'forum post like notifications',
+    ], // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
+    'forum post in followed thread': [
+        'post in followed thread.',
+        false,
+        'orange',
+        'forum post reply notifications',
+    ],
     'new content releases': ['', false, 'red', 'new release notifications'], // notify_weekly_update: this.state.notify_weekly_update,
-}
+};
 
 class ReplyNotification extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            user: (this.props.data.type == 'new content releases') ? 
-                this.props.data.content.display_name
-                :
-                this.props.data.sender.display_name,
-            profileImage: (this.props.data.type == 'new content releases') ? 
-                this.props.data.content.thumbnail_url
-                : 
-                this.props.data.sender.profile_image_url,
-            type: messageDict[this.props.data.type][0], 
+            user:
+                this.props.data.type == 'new content releases'
+                    ? this.props.data.content.display_name
+                    : this.props.data.sender.display_name,
+            profileImage:
+                this.props.data.type == 'new content releases'
+                    ? this.props.data.content.thumbnail_url
+                    : this.props.data.sender.profile_image_url,
+            type: messageDict[this.props.data.type][0],
             notificationStatus: this.props.notificationStatus,
             notify_on_forum_followed_thread_reply: false,
             notify_on_forum_post_like: false,
@@ -47,36 +72,57 @@ class ReplyNotification extends React.Component {
     }
 
     componentDidMount = async () => {
-        console.log(this.state.profileImage)
+        console.log(this.state.profileImage);
         let userData = await getUserData();
-        let statusChange = null
+        let statusChange = null;
 
         await this.setState({
-            notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-            notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
+            notify_on_lesson_comment_reply:
+                userData.notify_on_lesson_comment_reply,
+            notify_on_lesson_comment_like:
+                userData.notify_on_lesson_comment_like,
             notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
             notify_on_forum_post_like: userData.notify_on_forum_post_like,
-            notifications_summary_frequency_minutes: userData.notifications_summary_frequency_minutes,
-            notify_on_forum_followed_thread_reply: userData.notify_on_forum_followed_thread_reply,
+            notifications_summary_frequency_minutes:
+                userData.notifications_summary_frequency_minutes,
+            notify_on_forum_followed_thread_reply:
+                userData.notify_on_forum_followed_thread_reply,
             notify_weekly_update: userData.notify_weekly_update,
-        })
+        });
 
-        if(this.state.type == 'replied to your comment.') {
-            statusChange = {notify_on_lesson_comment_reply: !this.state.notify_on_lesson_comment_reply}
-        } else if(this.state.type == 'liked your comment.') {
-            statusChange = {notify_on_lesson_comment_like: !this.state.notify_on_lesson_comment_like}
-        } else if(this.state.type == 'replied to your forum post.') {
-            statusChange = {notify_on_forum_post_reply: !this.state.notify_on_forum_post_reply}
-        } else if(this.state.type == 'liked your forum post.') {
-            statusChange = {notify_on_forum_post_like: !this.state.notify_on_forum_post_like}
-        } else if(this.state.type == 'post in followed thread.') {
-            statusChange = {notify_on_forum_followed_thread_reply: !this.state.notify_on_forum_followed_thread_reply}
-        } else if(this.state.type == '') {
-            statusChange = {notify_weekly_update: !this.state.notify_weekly_update}
+        if (this.state.type == 'replied to your comment.') {
+            statusChange = {
+                notify_on_lesson_comment_reply: !this.state
+                    .notify_on_lesson_comment_reply,
+            };
+        } else if (this.state.type == 'liked your comment.') {
+            statusChange = {
+                notify_on_lesson_comment_like: !this.state
+                    .notify_on_lesson_comment_like,
+            };
+        } else if (this.state.type == 'replied to your forum post.') {
+            statusChange = {
+                notify_on_forum_post_reply: !this.state
+                    .notify_on_forum_post_reply,
+            };
+        } else if (this.state.type == 'liked your forum post.') {
+            statusChange = {
+                notify_on_forum_post_like: !this.state
+                    .notify_on_forum_post_like,
+            };
+        } else if (this.state.type == 'post in followed thread.') {
+            statusChange = {
+                notify_on_forum_followed_thread_reply: !this.state
+                    .notify_on_forum_followed_thread_reply,
+            };
+        } else if (this.state.type == '') {
+            statusChange = {
+                notify_weekly_update: !this.state.notify_weekly_update,
+            };
         }
 
-        await this.setState({statusChange})
-    }
+        await this.setState({statusChange});
+    };
 
     render = () => {
         return (
@@ -131,85 +177,92 @@ class ReplyNotification extends React.Component {
                                         height: fullWidth * 0.165,
                                         width: fullWidth * 0.165,
                                         borderRadius: 100 * factorRatio,
-                                        backgroundColor: colors.secondBackground,
+                                        backgroundColor:
+                                            colors.secondBackground,
                                     }}
                                 >
-                                    {(messageDict[this.props.data.type][2] == 'red') && (
-                                    <View
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                position: 'absolute',
-                                                bottom: 0,
-                                                right: 0,
-                                                height: fullWidth * 0.075,
-                                                width: fullWidth * 0.075,
-                                                backgroundColor: 'red',
-                                                borderRadius: 100 * factorRatio,
-                                                zIndex: 5,
-                                            },
-                                        ]}
-                                    >
-                                        <FontAwesome
-                                            size={fullWidth * 0.045}
-                                            color={'white'}
-                                            name={'video-camera'}
-                                        />
-                                    </View>                                                        
+                                    {messageDict[this.props.data.type][2] ==
+                                        'red' && (
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    height: fullWidth * 0.075,
+                                                    width: fullWidth * 0.075,
+                                                    backgroundColor: 'red',
+                                                    borderRadius:
+                                                        100 * factorRatio,
+                                                    zIndex: 5,
+                                                },
+                                            ]}
+                                        >
+                                            <FontAwesome
+                                                size={fullWidth * 0.045}
+                                                color={'white'}
+                                                name={'video-camera'}
+                                            />
+                                        </View>
                                     )}
-                                    {(messageDict[this.props.data.type][2] == 'orange') && (
-                                    <View
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                position: 'absolute',
-                                                bottom: 0,
-                                                right: 0,
-                                                height: fullWidth * 0.075,
-                                                width: fullWidth * 0.075,
-                                                backgroundColor: 'orange',
-                                                borderRadius: 100 * factorRatio,
-                                                zIndex: 5,
-                                            },
-                                        ]}
-                                    >
-                                        <Chat
-                                            height={fullWidth * 0.05}
-                                            width={fullWidth * 0.05}
-                                            fill={'white'}
-                                        />
-                                    </View>                                                        
+                                    {messageDict[this.props.data.type][2] ==
+                                        'orange' && (
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    height: fullWidth * 0.075,
+                                                    width: fullWidth * 0.075,
+                                                    backgroundColor: 'orange',
+                                                    borderRadius:
+                                                        100 * factorRatio,
+                                                    zIndex: 5,
+                                                },
+                                            ]}
+                                        >
+                                            <Chat
+                                                height={fullWidth * 0.05}
+                                                width={fullWidth * 0.05}
+                                                fill={'white'}
+                                            />
+                                        </View>
                                     )}
-                                    {(messageDict[this.props.data.type][2] == 'blue') && (
-                                    <View
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                position: 'absolute',
-                                                bottom: 0,
-                                                right: 0,
-                                                height: fullWidth * 0.075,
-                                                width: fullWidth * 0.075,
-                                                backgroundColor: 'blue',
-                                                borderRadius: 100 * factorRatio,
-                                                zIndex: 5,
-                                            },
-                                        ]}
-                                    >
-                                        <AntIcon
-                                            size={fullWidth * 0.045}
-                                            color={'white'}
-                                            name={'like1'}
-                                        />
-                                    </View>
-                                    )}                                    
+                                    {messageDict[this.props.data.type][2] ==
+                                        'blue' && (
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    height: fullWidth * 0.075,
+                                                    width: fullWidth * 0.075,
+                                                    backgroundColor: 'blue',
+                                                    borderRadius:
+                                                        100 * factorRatio,
+                                                    zIndex: 5,
+                                                },
+                                            ]}
+                                        >
+                                            <AntIcon
+                                                size={fullWidth * 0.045}
+                                                color={'white'}
+                                                name={'like1'}
+                                            />
+                                        </View>
+                                    )}
                                     <FastImage
                                         style={{
                                             flex: 1,
                                             borderRadius: 100 * factorRatio,
                                         }}
                                         source={{
-                                            uri: this.state.profileImage
+                                            uri: this.state.profileImage,
                                         }}
                                         resizeMode={FastImage.resizeMode.cover}
                                     />
@@ -249,9 +302,13 @@ class ReplyNotification extends React.Component {
                                 borderTopWidth: 0.5 * factorRatio,
                                 borderTopColor: colors.secondBackground,
                             }}
-                        >                         
+                        >
                             <TouchableOpacity
-                                onPress={() => this.props.removeNotification(this.props.data)}
+                                onPress={() =>
+                                    this.props.removeNotification(
+                                        this.props.data,
+                                    )
+                                }
                                 style={{
                                     height: '100%',
                                     width: '100%',
@@ -294,7 +351,9 @@ class ReplyNotification extends React.Component {
                         >
                             <TouchableOpacity
                                 onPress={() => {
-                                    this.props.turnOfffNotifications(this.state.statusChange)
+                                    this.props.turnOfffNotifications(
+                                        this.state.statusChange,
+                                    );
                                 }}
                                 style={{
                                     height: '100%',
@@ -322,7 +381,11 @@ class ReplyNotification extends React.Component {
                                             color: colors.secondBackground,
                                         }}
                                     >
-                                        Turn {this.state.notificationStatus ? 'off' : 'on'} {messageDict[this.props.data.type][3]}
+                                        Turn{' '}
+                                        {this.state.notificationStatus
+                                            ? 'off'
+                                            : 'on'}{' '}
+                                        {messageDict[this.props.data.type][3]}
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}} />

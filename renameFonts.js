@@ -6,7 +6,7 @@ const fontFormats = ['.ttf', '.otf'];
 const fontsPath = path.join(__dirname, 'assets', 'fonts');
 const filenames = fs.readdirSync(fontsPath);
 
-filenames.forEach((filename) => {
+filenames.forEach(filename => {
     const extension = path.extname(filename);
 
     if (!fontFormats.includes(extension)) {

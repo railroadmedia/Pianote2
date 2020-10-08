@@ -11,14 +11,14 @@ import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import {getAllContent} from '../../services/GetContent';
 
 const packDict = {
-    'Bootcamps': require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
+    Bootcamps: require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
     'Q&A': require('Pianote2/src/assets/img/imgs/questionAnswer.jpg'),
     'Quick Tips': require('Pianote2/src/assets/img/imgs/quickTips.jpg'),
     'Student Review': require('Pianote2/src/assets/img/imgs/studentReview.jpg'),
 };
 
 const typeDict = {
-    'Bootcamps': 'boot-camps',
+    Bootcamps: 'boot-camps',
     'Q&A': 'question-and-answer',
     'Quick Tips': 'quick-tips',
     'Student Review': 'student-review',
@@ -60,19 +60,31 @@ export default class StudentFocusShow extends React.Component {
     };
 
     getAllLessons = async () => {
-        let response = await getAllContent(typeDict[this.state.pack], this.state.currentSort, this.state.page, this.state.filters)
-        const newContent = await response.data.map((data) => {return new ContentModel(data)}); 
+        let response = await getAllContent(
+            typeDict[this.state.pack],
+            this.state.currentSort,
+            this.state.page,
+            this.state.filters,
+        );
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
 
-        items = []
-        for (i in newContent) {            
+        items = [];
+        for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                console.log('INSTRUCTORL ', newContent[i].getField('instructor'))
+                console.log(
+                    'INSTRUCTORL ',
+                    newContent[i].getField('instructor'),
+                );
                 items.push({
                     title: newContent[i].getField('title'),
                     artist: newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/gi, ''),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].likeCount,
@@ -89,7 +101,8 @@ export default class StudentFocusShow extends React.Component {
 
         await this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos: (items.length == 0 || response.data.length < 20) ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
@@ -97,34 +110,37 @@ export default class StudentFocusShow extends React.Component {
         });
     };
 
-    changeSort = async (currentSort) => {
+    changeSort = async currentSort => {
         await this.setState({
             currentSort,
             outVideos: false,
             isPaging: true,
             allLessons: [],
             page: 1,
-        })
+        });
 
         await this.getAllLessons();
     };
 
     getVideos = async () => {
-        // change page before getting more lessons if paging 
-        if(!this.state.outVideos) {
+        // change page before getting more lessons if paging
+        if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.getAllLessons();
         }
     };
 
-    handleScroll = async (event) => {
-        if (isCloseToBottom(event) && !this.state.isPaging && !this.state.outVideos) {
+    handleScroll = async event => {
+        if (
+            isCloseToBottom(event) &&
+            !this.state.isPaging &&
+            !this.state.outVideos
+        ) {
             await this.setState({
                 page: this.state.page + 1,
-                isPaging: true
+                isPaging: true,
             }),
-            
-            await this.getAllLessons();
+                await this.getAllLessons();
         }
     };
 
@@ -132,11 +148,11 @@ export default class StudentFocusShow extends React.Component {
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'STUDENTFOCUSSHOW',
-            onGoBack: (filters) => this.changeFilters(filters)
+            onGoBack: filters => this.changeFilters(filters),
         });
     };
 
-    changeFilters = async (filters) => {
+    changeFilters = async filters => {
         // after leaving filter page. set filters here
         await this.setState({
             allLessons: [],
@@ -148,20 +164,20 @@ export default class StudentFocusShow extends React.Component {
                 filters.progress.length == 0 &&
                 filters.topics.length == 0
                     ? {
-                        displayTopics: [],
-                        level: [],
-                        topics: [],
-                        progress: [],
-                        instructors: [],
-                    }
+                          displayTopics: [],
+                          level: [],
+                          topics: [],
+                          progress: [],
+                          instructors: [],
+                      }
                     : filters,
-        })
+        });
 
-        this.getAllLessons()
-        this.forceUpdate()
+        this.getAllLessons();
+        this.forceUpdate();
     };
 
-    getDuration = async (newContent) => {
+    getDuration = async newContent => {
         // iterator for get content call
         if (newContent.post.fields[0].key == 'video') {
             return newContent.post.fields[0].value.fields[1].value;
@@ -184,7 +200,9 @@ export default class StudentFocusShow extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
-                        onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                        onScroll={({nativeEvent}) =>
+                            this.handleScroll(nativeEvent)
+                        }
                         style={{
                             flex: 1,
                             backgroundColor: colors.mainBackground,
@@ -318,14 +336,18 @@ export default class StudentFocusShow extends React.Component {
                             showType={true}
                             showArtist={true}
                             showLength={false}
-                            showFilter={(this.state.pack == 'Quick Tips') ? true : false}
-                            showSort={(this.state.pack == 'Quick Tips') ? true : false}
+                            showFilter={
+                                this.state.pack == 'Quick Tips' ? true : false
+                            }
+                            showSort={
+                                this.state.pack == 'Quick Tips' ? true : false
+                            }
                             filters={this.state.filters}
                             containerWidth={fullWidth}
                             imageRadius={5 * factorRatio}
                             containerBorderWidth={0}
                             currentSort={this.state.currentSort}
-                            changeSort={(sort) => this.changeSort(sort)}
+                            changeSort={sort => this.changeSort(sort)}
                             filterResults={() => this.filterResults()}
                             containerHeight={
                                 onTablet
@@ -344,7 +366,11 @@ export default class StudentFocusShow extends React.Component {
                             imageWidth={fullWidth * 0.26}
                             outVideos={this.state.outVideos}
                             getVideos={() => this.getVideos()}
-                            navigator={(row) =>this.props.navigation.navigate('VIDEOPLAYER', {data: row})}
+                            navigator={row =>
+                                this.props.navigation.navigate('VIDEOPLAYER', {
+                                    data: row,
+                                })
+                            }
                         />
                     </ScrollView>
                     <NavigationBar currentPage={'NONE'} />
