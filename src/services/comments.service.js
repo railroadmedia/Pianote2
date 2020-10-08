@@ -3,7 +3,6 @@ import commonService from './common.service';
 const rootUrl = 'https://app-staging.pianote.com';
 export default {
     getComments: async function (id, sortBy, limit) {
-        // TODO change hardcoded id
         let reqUrl = `${rootUrl}/api/railcontent/comments?content_id=${id}&limit=${limit}`;
         if (sortBy === 'popular') {
             reqUrl += `&sort=-like_count`;

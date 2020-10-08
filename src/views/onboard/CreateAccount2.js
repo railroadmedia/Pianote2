@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     Keyboard,
     Animated,
+    Alert,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -105,8 +106,9 @@ export default class CreateAccount extends React.Component {
                     let response = await signUp(
                         this.state.email,
                         this.state.password,
-                        purchase,
+                        this.props.navigation.state.params?.purchase,
                     );
+                    console.log(response);
                     if (response.meta) {
                         const token = `Bearer ${response.meta.auth_code}`;
                         try {

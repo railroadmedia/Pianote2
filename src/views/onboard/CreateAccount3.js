@@ -567,7 +567,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.crea();
+                                                this.createAccount();
                                             }}
                                         >
                                             <Text
@@ -984,7 +984,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.crea();
+                                                this.createAccount();
                                             }}
                                         >
                                             <Text
@@ -1567,7 +1567,7 @@ export default class CreateAccount3 extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.crea();
+                                        this.createAccount();
                                     }}
                                 >
                                     <Text
@@ -1778,7 +1778,7 @@ export default class CreateAccount3 extends React.Component {
                                 <View style={{flex: 1}} />
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.crea();
+                                        this.createAccount();
                                     }}
                                     style={[
                                         styles.centerContent,

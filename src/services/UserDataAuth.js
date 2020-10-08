@@ -95,6 +95,7 @@ export async function logOut() {
 }
 
 export async function signUp(email, password, purchase, oldToken) {
+    console.log('signup', email, password, purchase);
     let platform = '';
     let receiptType = '';
     if (Platform.OS === 'ios') {
@@ -103,18 +104,17 @@ export async function signUp(email, password, purchase, oldToken) {
         attributes = {email, password, receipt: purchase.transactionReceipt};
     } else {
         platform = 'google';
-        receiptType = 'appleReceipt';
+        receiptType = 'googleReceipt';
         attributes = {
             email,
             password,
-            package_name: `com.pianote`,
-            product_id: purchase.productId,
-            purchase_token: purchase.purchaseToken,
+            package_name: `com.pianote2`,
+            product_id: purchase.productId || purchase.product_id,
+            purchase_token: purchase.purchaseToken || purchase.purchase_token,
         };
     }
     let token = await AsyncStorage.getItem('token');
     token = `Bearer ${JSON.parse(token)}`;
-    console.log(platform, receiptType, token);
     console.log(attributes);
     try {
         let response = await fetch(
@@ -169,6 +169,7 @@ export async function restorePurchase(purchases) {
 
 export async function validateSignUp(purchases) {
     let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    console.log(purchases);
     try {
         let response = await fetch(
             `https://app-staging.pianote.com/mobile-app/${platform}/signup`,
