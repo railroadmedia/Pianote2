@@ -36,7 +36,7 @@ export default class Search extends React.Component {
             recentSearchResults: [],
 
             searchResults: [],
-            currentSort: 'relevance',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: false, // all lessons

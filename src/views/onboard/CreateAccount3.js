@@ -227,8 +227,6 @@ export default class CreateAccount3 extends React.Component {
 
         profileResponse = await profileResponse.json();
 
-        console.log('PROFILE RESPONSE: ', profileResponse);
-
         // send to loadpage to update asyncstorage with new data
         await this.props.navigation.dispatch(resetAction);
     };

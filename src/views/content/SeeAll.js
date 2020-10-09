@@ -35,7 +35,7 @@ export default class SeeAll extends React.Component {
             title: this.props.navigation.state.params.title, // In Progress, Completed, Continue
             parent: this.props.navigation.state.params.parent, // My List, Packs, Student Focus, Foundations, Courses
             allLessons: [],
-            currentSort: 'relevance',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: true, // all lessons
@@ -295,7 +295,7 @@ export default class SeeAll extends React.Component {
                                 imageRadius={5 * factorRatio} // radius of image shown
                                 containerBorderWidth={0} // border of box
                                 containerWidth={fullWidth} // width of list
-                                currentSort={this.state.currentSort} // relevance sort
+                                currentSort={this.state.currentSort}
                                 changeSort={sort => {
                                     this.setState({
                                         currentSort: sort,

@@ -40,7 +40,7 @@ export default class Lessons extends React.Component {
             newLessons: [],
 
             allLessons: [],
-            currentSort: 'relevance',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: true, // all lessons
@@ -872,7 +872,7 @@ export default class Lessons extends React.Component {
                                     imageRadius={5 * factorRatio} // radius of image shown
                                     containerBorderWidth={0} // border of box
                                     containerWidth={fullWidth} // width of list
-                                    currentSort={this.state.currentSort} // relevance sort
+                                    currentSort={this.state.currentSort}
                                     changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                                     filterResults={() => this.filterResults()} // apply from filters page
                                     containerHeight={

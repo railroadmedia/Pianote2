@@ -39,7 +39,7 @@ export default class StudentFocusShow extends React.Component {
         this.state = {
             pack: this.props.navigation.state.params.pack,
             allLessons: [],
-            currentSort: 'relevance',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: true, // all lessons

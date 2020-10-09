@@ -28,7 +28,7 @@ export default class SongCatalog extends React.Component {
             progressSongs: [],
 
             allSongs: [],
-            currentSort: 'relevance',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: true,
@@ -329,7 +329,7 @@ export default class SongCatalog extends React.Component {
                             imageRadius={5 * factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box
                             containerWidth={fullWidth} // width of list
-                            currentSort={this.state.currentSort} // relevance sort
+                            currentSort={this.state.currentSort}
                             changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                             outVideos={this.state.outVideos} // if paging and out of videos
                             filterResults={() => this.filterResults()} // apply from filters page

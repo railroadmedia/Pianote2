@@ -26,7 +26,7 @@ export default class MyList extends React.Component {
         super(props);
         this.state = {
             allLessons: [],
-            currentSort: 'relevance',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: true,
@@ -358,9 +358,7 @@ export default class MyList extends React.Component {
                             filters={this.state.filters} // show filter list
                             filterResults={() => this.filterResults()} // apply from filters page
                             outVideos={this.state.outVideos}
-                            removeItem={contentID => {
-                                this.removeFromMyList(contentID);
-                            }}
+                            removeItem={contentID => {this.removeFromMyList(contentID)}}
                             outVideos={this.state.outVideos} // if paging and out of videos
                             imageRadius={5 * factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box

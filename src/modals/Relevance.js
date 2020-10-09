@@ -11,7 +11,7 @@ class Relevance extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentSort: this.props.currentSort, // 'newest', ‘oldest’, ‘popularity’, ‘trending’ and ‘relevance’
+            currentSort: this.props.currentSort, // 'newest', ‘oldest’, NOT YET: ‘popularity’, ‘trending’ and ‘relevance’
         };
     }
 
@@ -42,143 +42,6 @@ class Relevance extends React.Component {
                             backgroundColor: colors.mainBackground,
                         }}
                     >
-                        <TouchableOpacity
-                            key={'relevance'}
-                            onPress={() => {
-                                this.props.hideRelevance(),
-                                    this.props.changeSort('relevance');
-                            }}
-                            style={{
-                                flex: 0.4,
-                                paddingLeft: fullWidth * 0.05,
-                                flexDirection: 'row',
-                                borderBottomColor: colors.secondBackground,
-                                borderBottomWidth: 0.25 * factorRatio,
-                            }}
-                        >
-                            <View>
-                                <View style={{flex: 1}} />
-                                <EntypoIcon
-                                    name={'check'}
-                                    size={20 * factorRatio}
-                                    color={
-                                        this.state.currentSort == 'relevance'
-                                            ? 'white'
-                                            : colors.mainBackground
-                                    }
-                                />
-                                <View style={{flex: 1}} />
-                            </View>
-                            <View style={{width: 15 * factorHorizontal}} />
-                            <View>
-                                <View style={{flex: 1}} />
-                                <Text
-                                    style={{
-                                        fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                        color:
-                                            this.state.currentSort ==
-                                            'relevance'
-                                                ? 'white'
-                                                : colors.secondBackground,
-                                    }}
-                                >
-                                    Relevance
-                                </Text>
-                                <View style={{flex: 1}} />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            key={'trending'}
-                            onPress={() => {
-                                this.props.hideRelevance(),
-                                    this.props.changeSort('trending');
-                            }}
-                            style={{
-                                flex: 0.4,
-                                paddingLeft: fullWidth * 0.05,
-                                flexDirection: 'row',
-                                borderBottomColor: colors.secondBackground,
-                                borderBottomWidth: 0.25 * factorRatio,
-                            }}
-                        >
-                            <View>
-                                <View style={{flex: 1}} />
-                                <EntypoIcon
-                                    name={'check'}
-                                    size={20 * factorRatio}
-                                    color={
-                                        this.state.currentSort == 'trending'
-                                            ? 'white'
-                                            : colors.mainBackground
-                                    }
-                                />
-                                <View style={{flex: 1}} />
-                            </View>
-                            <View style={{width: 15 * factorHorizontal}} />
-                            <View>
-                                <View style={{flex: 1}} />
-                                <Text
-                                    style={{
-                                        fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                        color:
-                                            this.state.currentSort == 'trending'
-                                                ? 'white'
-                                                : colors.secondBackground,
-                                    }}
-                                >
-                                    Trending
-                                </Text>
-                                <View style={{flex: 1}} />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            key={'popular'}
-                            onPress={() => {
-                                this.props.hideRelevance(),
-                                    this.props.changeSort('popularity');
-                            }}
-                            style={{
-                                flex: 0.4,
-                                paddingLeft: fullWidth * 0.05,
-                                flexDirection: 'row',
-                                borderBottomColor: colors.secondBackground,
-                                borderBottomWidth: 0.25 * factorRatio,
-                            }}
-                        >
-                            <View>
-                                <View style={{flex: 1}} />
-                                <EntypoIcon
-                                    name={'check'}
-                                    size={20 * factorRatio}
-                                    color={
-                                        this.state.currentSort == 'popularity'
-                                            ? 'white'
-                                            : colors.mainBackground
-                                    }
-                                />
-                                <View style={{flex: 1}} />
-                            </View>
-                            <View style={{width: 15 * factorHorizontal}} />
-                            <View>
-                                <View style={{flex: 1}} />
-                                <Text
-                                    style={{
-                                        fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                        color:
-                                            this.state.currentSort ==
-                                            'popularity'
-                                                ? 'white'
-                                                : colors.secondBackground,
-                                    }}
-                                >
-                                    Most Popular
-                                </Text>
-                                <View style={{flex: 1}} />
-                            </View>
-                        </TouchableOpacity>
                         <TouchableOpacity
                             key={'newest'}
                             onPress={() => {
@@ -313,3 +176,146 @@ class Relevance extends React.Component {
 }
 
 export default withNavigation(Relevance);
+
+/**
+ * 
+<TouchableOpacity
+    key={'relevance'}
+    onPress={() => {
+        this.props.hideRelevance(),
+            this.props.changeSort('relevance');
+    }}
+    style={{
+        flex: 0.4,
+        paddingLeft: fullWidth * 0.05,
+        flexDirection: 'row',
+        borderBottomColor: colors.secondBackground,
+        borderBottomWidth: 0.25 * factorRatio,
+    }}
+>
+    <View>
+        <View style={{flex: 1}} />
+        <EntypoIcon
+            name={'check'}
+            size={20 * factorRatio}
+            color={
+                this.state.currentSort == 'relevance'
+                    ? 'white'
+                    : colors.mainBackground
+            }
+        />
+        <View style={{flex: 1}} />
+    </View>
+    <View style={{width: 15 * factorHorizontal}} />
+    <View>
+        <View style={{flex: 1}} />
+        <Text
+            style={{
+                fontSize: 16 * factorRatio,
+                fontFamily: 'OpenSans',
+                color:
+                    this.state.currentSort ==
+                    'relevance'
+                        ? 'white'
+                        : colors.secondBackground,
+            }}
+        >
+            Relevance
+        </Text>
+        <View style={{flex: 1}} />
+    </View>
+</TouchableOpacity>
+<TouchableOpacity
+    key={'trending'}
+    onPress={() => {
+        this.props.hideRelevance(),
+            this.props.changeSort('trending');
+    }}
+    style={{
+        flex: 0.4,
+        paddingLeft: fullWidth * 0.05,
+        flexDirection: 'row',
+        borderBottomColor: colors.secondBackground,
+        borderBottomWidth: 0.25 * factorRatio,
+    }}
+>
+    <View>
+        <View style={{flex: 1}} />
+        <EntypoIcon
+            name={'check'}
+            size={20 * factorRatio}
+            color={
+                this.state.currentSort == 'trending'
+                    ? 'white'
+                    : colors.mainBackground
+            }
+        />
+        <View style={{flex: 1}} />
+    </View>
+    <View style={{width: 15 * factorHorizontal}} />
+    <View>
+        <View style={{flex: 1}} />
+        <Text
+            style={{
+                fontSize: 16 * factorRatio,
+                fontFamily: 'OpenSans',
+                color:
+                    this.state.currentSort == 'trending'
+                        ? 'white'
+                        : colors.secondBackground,
+            }}
+        >
+            Trending
+        </Text>
+        <View style={{flex: 1}} />
+    </View>
+</TouchableOpacity>
+<TouchableOpacity
+    key={'popular'}
+    onPress={() => {
+        this.props.hideRelevance(),
+            this.props.changeSort('popularity');
+    }}
+    style={{
+        flex: 0.4,
+        paddingLeft: fullWidth * 0.05,
+        flexDirection: 'row',
+        borderBottomColor: colors.secondBackground,
+        borderBottomWidth: 0.25 * factorRatio,
+    }}
+>
+    <View>
+        <View style={{flex: 1}} />
+        <EntypoIcon
+            name={'check'}
+            size={20 * factorRatio}
+            color={
+                this.state.currentSort == 'popularity'
+                    ? 'white'
+                    : colors.mainBackground
+            }
+        />
+        <View style={{flex: 1}} />
+    </View>
+    <View style={{width: 15 * factorHorizontal}} />
+    <View>
+        <View style={{flex: 1}} />
+        <Text
+            style={{
+                fontSize: 16 * factorRatio,
+                fontFamily: 'OpenSans',
+                color:
+                    this.state.currentSort ==
+                    'popularity'
+                        ? 'white'
+                        : colors.secondBackground,
+            }}
+        >
+            Most Popular
+        </Text>
+        <View style={{flex: 1}} />
+    </View>
+</TouchableOpacity>
+ * 
+ * 
+ */
