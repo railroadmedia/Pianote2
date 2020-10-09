@@ -6,6 +6,7 @@ import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import {View, Text, ScrollView, Platform} from 'react-native';
 import Modal from 'react-native-modal';
+import RestartCourse from '../../modals/RestartCourse.js';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';

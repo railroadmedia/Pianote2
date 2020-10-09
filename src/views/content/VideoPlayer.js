@@ -17,7 +17,7 @@ import moment from 'moment';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import Video from 'RNVideoEnhanced';
+//import Video from 'RNVideoEnhanced';
 import {NavigationActions, StackActions} from 'react-navigation';
 
 import Replies from '../../components/Replies.js';

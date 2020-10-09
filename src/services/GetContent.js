@@ -120,11 +120,11 @@ export async function searchContent(term, page, filtersDict) {
     }
 }
 
-export async function getMyListContent(page, filtersDict, state) {
+export async function getMyListContent(page, filtersDict, progressState) {
     let included_types = ''; 
-    let state = ''; // completed || started
+    let progress_types = ''; // completed || started
 
-    if(state !== '') {state = '&state=' + state}
+    if(progressState !== '') {progress_types = '&state=' + progressState}
 
     if (filtersDict.topics.length > 0) {
         for (i in filtersDict.topics) {
@@ -139,9 +139,7 @@ export async function getMyListContent(page, filtersDict, state) {
 
     try {
         let auth = await getToken();
-        var url =
-            `https://app-staging.pianote.com/api/railcontent/api/railcontent/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}` +
-            included_types + state;
+        var url = `https://app-staging.pianote.com/api/railcontent/api/railcontent/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}` + included_types + progress_types;
         let response = await fetch(url, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},

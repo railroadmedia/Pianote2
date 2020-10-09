@@ -3,33 +3,24 @@
  */
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity, Platform} from 'react-native';
-import {
-    likeContent,
-    unlikeContent,
-    resetProgress,
-} from '../../services/UserActions';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import ResetIcon from '../../components/ResetIcon';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import NextVideo from 'Pianote2/src/components/NextVideo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import AsyncStorage from '@react-native-community/async-storage';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
+import foundationsService from '../../services/foundations.service';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import NextVideo from 'Pianote2/src/components/NextVideo';
-import foundationsService from '../../services/foundations.service';
-import AsyncStorage from '@react-native-community/async-storage';
-import {
-    likeContent,
-    unlikeContent,
-    resetProgress,
-} from 'Pianote2/src/services/UserActions.js';
-import ResetIcon from '../../components/ResetIcon';
+import {likeContent, unlikeContent, resetProgress} from 'Pianote2/src/services/UserActions.js';
 
 export default class Foundations extends React.Component {
     static navigationOptions = {header: null};
