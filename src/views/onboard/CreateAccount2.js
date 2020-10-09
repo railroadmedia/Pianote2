@@ -119,13 +119,29 @@ export default class CreateAccount extends React.Component {
                                 ['token', token],
                             ]);
                         } catch (e) {}
-                        // TODO: check if edge is expired
-                        this.props.navigation.navigate('CREATEACCOUNT3', {
-                            data: {
-                                email: this.state.email,
-                                password: this.state.password,
-                            },
-                        });
+
+                        let userData = await getUserData();
+                        console.log(userData);
+                        let currentDate = new Date().getTime() / 1000;
+                        let userExpDate =
+                            new Date(userData.expirationDate).getTime() / 1000;
+                        console.log(currentDate, userExpDate);
+                        if (userData.isLifetime || currentDate < userExpDate) {
+                            this.props.navigation.navigate('CREATEACCOUNT3', {
+                                data: {
+                                    email: this.state.email,
+                                    password: this.state.password,
+                                },
+                            });
+                        } else {
+                            this.props.navigation.navigate(
+                                'MEMBERSHIPEXPIRED',
+                                {
+                                    email: this.state.email,
+                                    password: this.state.password,
+                                },
+                            );
+                        }
                     } else {
                         let {title, detail} = response.errors[0];
                         Alert.alert(title, detail, [{text: 'OK'}], {

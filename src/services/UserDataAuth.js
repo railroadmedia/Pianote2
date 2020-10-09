@@ -115,6 +115,7 @@ export async function signUp(email, password, purchase, oldToken) {
     }
     let token = await AsyncStorage.getItem('token');
     token = `Bearer ${JSON.parse(token)}`;
+    console.log('signup token', token);
     console.log(attributes);
     try {
         let response = await fetch(

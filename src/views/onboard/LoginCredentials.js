@@ -113,8 +113,45 @@ export default class LoginCredentials extends React.Component {
         ]).start();
     };
 
+    getPurchases = async () => {
+        try {
+            await RNIap.initConnection();
+        } catch (e) {
+            return;
+        }
+        try {
+            const purchases = await RNIap[
+                Platform.OS === 'ios'
+                    ? 'getAvailablePurchases'
+                    : 'getPurchaseHistory'
+            ]();
+            console.log('login sync', purchases);
+            if (purchases.length) {
+                if (Platform.OS === 'ios') {
+                    return {
+                        receipt: purchases[0].transactionReceipt,
+                    };
+                } else {
+                    return {
+                        purchases: purchases.map(m => {
+                            return {
+                                purchase_token: m.purchaseToken,
+                                package_name: 'com.pianote2',
+                                product_id: m.productId,
+                            };
+                        }),
+                    };
+                }
+            }
+        } catch (err) {}
+    };
+
     login = async () => {
-        const response = await getToken(this.state.email, this.state.password);
+        const response = await getToken(
+            this.state.email,
+            this.state.password,
+            await this.getPurchases(),
+        );
         console.log(response);
         if (response.success) {
             // store auth data
