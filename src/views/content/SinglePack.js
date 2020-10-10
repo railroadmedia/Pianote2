@@ -78,9 +78,7 @@ export default class SinglePack extends React.Component {
                             title: newContent[i].getField('title'),
                             artist: this.getInstructor(newContent[i]),
                             thumbnail: newContent[i].getData('thumbnail_url'),
-                            description: newContent[i]
-                                .getData('description')
-                                .replace(/(<([^>]+)>)/gi, ''),
+                            description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                             type: newContent[i].post.type,
                             xp: newContent[i].post.xp,
                             id: newContent[i].id,
@@ -173,9 +171,7 @@ export default class SinglePack extends React.Component {
                         artist: newContent[i].getField('instructor').fields[0]
                             .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/gi, ''),
+                        description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                         type: newContent[i].post.type,
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,

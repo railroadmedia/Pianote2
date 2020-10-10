@@ -70,9 +70,7 @@ export default class SongCatalog extends React.Component {
                     artist: newContent[i].post.artist,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                     xp: newContent[i].post.xp,
                     id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,
@@ -111,9 +109,7 @@ export default class SongCatalog extends React.Component {
                     artist: newContent[i].post.artist,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                     xp: newContent[i].post.xp,
                     id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,

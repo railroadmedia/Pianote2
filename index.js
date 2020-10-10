@@ -41,6 +41,14 @@ global.colors = {
     notificationColor: '#002038',
     pianoteRed: '#fb1b2f',
 };
+global.mapRegex = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+};
+
 
 configure({
     baseURL: 'https://app-staging.pianote.com',

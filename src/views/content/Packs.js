@@ -53,9 +53,7 @@ export default class Packs extends React.Component {
                         .value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/gi, ''),
+                    description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                     xp: newContent[i].getField('xp'),
                     logo: newContent[i].getData('logo_image_url'),
                     header: newContent[i].getData('header_image_url'),

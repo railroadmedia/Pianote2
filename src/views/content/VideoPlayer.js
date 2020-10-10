@@ -181,7 +181,7 @@ export default class VideoPlayer extends React.Component {
                     id: assignments[a].id,
                     title: assignments[a].getField('title'),
                     isCompleted: assignments[a].isCompleted,
-                    description: assignments[a].getData('description'),
+                    description: assignments[a].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                     xp: assignments[a].xp,
                     progress:
                         parseInt(
@@ -228,7 +228,7 @@ export default class VideoPlayer extends React.Component {
                 type: content.type,
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
-                description: content.getData('description'),
+                description: content.getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                 xp: content.xp,
                 artist: content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),

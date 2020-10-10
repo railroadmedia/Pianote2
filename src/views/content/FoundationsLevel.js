@@ -81,7 +81,7 @@ export default class FoundationsLevel extends React.Component {
                 id: response.id,
                 isStarted: response.isStarted,
                 isCompleted: response.isCompleted,
-                description: response.getData('description'),
+                description: response.getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
                 isAddedToList: response.isAddedToList,
                 progress: response.post.progress_percent,
             });
