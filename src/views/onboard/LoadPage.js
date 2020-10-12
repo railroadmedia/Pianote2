@@ -19,6 +19,11 @@ const resetAction2 = StackActions.reset({
     actions: [NavigationActions.navigate({routeName: 'LOGIN'})],
 });
 
+const resetPassAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'RESETPASSWORD'})],
+});
+
 export default class LoadPage extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -52,12 +57,16 @@ export default class LoadPage extends React.Component {
         await SplashScreen.hide();
 
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-
+        let resetKey = await AsyncStorage.getItem('resetKey');
         let userData = await getUserData();
 
         console.log(userData);
-
-        if (isLoggedIn !== 'true' || userData.isMember == false) {
+        if (resetKey) {
+            setTimeout(
+                () => this.props.navigation.dispatch(resetPassAction),
+                1000,
+            );
+        } else if (isLoggedIn !== 'true' || userData.isMember == false) {
             // go to login
             setTimeout(
                 () => this.props.navigation.dispatch(resetAction2),

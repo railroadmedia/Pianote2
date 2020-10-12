@@ -8,9 +8,17 @@ export default {
             let token = await AsyncStorage.getItem('token');
             token = `Bearer ${JSON.parse(token)}`;
 
-            let headers = {Authorization: token};
-
+            let headers = body
+                ? {
+                      Authorization: token,
+                      'Content-Type': 'application/json',
+                  }
+                : {
+                      Authorization: token,
+                  };
+            console.log(body);
             let response = await fetch(url, {
+                body,
                 headers,
                 method: method || 'GET',
             });

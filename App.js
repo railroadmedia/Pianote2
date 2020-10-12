@@ -3,6 +3,7 @@ import AppNavigator from './AppNavigator';
 import NetworkProvider from './src/context/NetworkProvider';
 import firebase from 'react-native-firebase';
 import {Linking} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class App extends React.Component {
     componentDidMount() {
@@ -38,7 +39,7 @@ export default class App extends React.Component {
             this.removeNotificationOpenedListener();
     }
 
-    handleOpenURL = event => {
+    handleOpenURL = async event => {
         let {url} = event;
 
         if (url) {
@@ -51,7 +52,10 @@ export default class App extends React.Component {
                     url.indexOf('email=') + 6,
                     url.length,
                 );
-                return Actions.resetPassword({resetKey, email});
+                await AsyncStorage.multiSet([
+                    ['resetKey', resetKey],
+                    ['email', email],
+                ]);
             }
         }
     };

@@ -32,6 +32,15 @@ export async function forgotPass(emailAddress) {
         'PUT',
     );
 }
+
+export async function changePassword(email, pass, token) {
+    console.log(email, pass, token);
+    return commonService.tryCall(`${rootUrl}/api/change-password`, 'PUT', {
+        pass1: pass,
+        user_login: email,
+        rp_key: token,
+    });
+}
 export async function getUserData() {
     // return profile details
     try {
