@@ -10,7 +10,7 @@ export default class Loading extends React.Component {
     }
 
     toggleLoading(isLoading) {
-        this.setState((state) => {
+        this.setState(state => {
             isLoading = isLoading === undefined ? !state.isLoading : isLoading;
             return {isLoading};
         });
@@ -18,14 +18,14 @@ export default class Loading extends React.Component {
 
     render() {
         let {backgroundColor, activityColor} = this.props;
-        console.log(this.state);
         return (
             <View
                 style={[
                     styles.loadingContainer,
                     {backgroundColor: backgroundColor || 'rgba(0,0,0,.5)'},
                     this.state.isLoading ? {width: '100%'} : {width: 0},
-                ]}>
+                ]}
+            >
                 <ActivityIndicator
                     size={'large'}
                     color={activityColor || 'white'}

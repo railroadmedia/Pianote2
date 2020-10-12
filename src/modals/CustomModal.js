@@ -61,6 +61,7 @@ export default class CustomModal extends React.PureComponent {
                         >
                             {this.message}
                         </Text>
+                        {this.props.additionalBtn}
                     </Animated.View>
                 </TouchableOpacity>
             </Modal>

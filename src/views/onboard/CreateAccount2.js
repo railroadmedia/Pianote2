@@ -17,6 +17,8 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import {signUp} from '../../services/UserDataAuth';
+import AsyncStorage from '@react-native-community/async-storage';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -99,13 +101,44 @@ export default class CreateAccount extends React.Component {
     savePassword = async () => {
         if (this.state.password == this.state.confirmPassword) {
             if (this.state.password.length > 7) {
-                this.props.navigation.navigate('NEWMEMBERSHIP', {
-                    data: {
-                        type: 'SIGNUP',
-                        email: this.state.email,
-                        password: this.state.password,
-                    },
-                });
+                if (this.props.navigation.state.params?.purchase) {
+                    let response = await signUp(
+                        this.state.email,
+                        this.state.password,
+                        purchase,
+                    );
+                    if (response.meta) {
+                        const token = `Bearer ${response.meta.auth_code}`;
+                        try {
+                            await AsyncStorage.multiSet([
+                                ['loggedInStatus', 'true'],
+                                ['email', this.state.email],
+                                ['password', this.state.password],
+                                ['token', token],
+                            ]);
+                        } catch (e) {}
+                        // TODO: check if edge is expired
+                        this.props.navigation.navigate('CREATEACCOUNT3', {
+                            data: {
+                                email: this.state.email,
+                                password: this.state.password,
+                            },
+                        });
+                    } else {
+                        let {title, detail} = response.errors[0];
+                        Alert.alert(title, detail, [{text: 'OK'}], {
+                            cancelable: false,
+                        });
+                    }
+                } else {
+                    this.props.navigation.navigate('NEWMEMBERSHIP', {
+                        data: {
+                            type: 'SIGNUP',
+                            email: this.state.email,
+                            password: this.state.password,
+                        },
+                    });
+                }
             }
         } else {
             this.setState({showPasswordMatch: true});

@@ -2,10 +2,32 @@
  * Login
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Platform} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    Platform,
+    Alert,
+} from 'react-native';
+
+import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import {
+    logOut,
+    validateSignUp,
+    restorePurchase,
+} from '../../services/UserDataAuth';
+import CustomModal from '../../modals/CustomModal';
+import Loading from '../../components/Loading';
+
+const skus = Platform.select({
+    android: ['test', 'test.pianote'],
+    ios: ['test.pianote'],
+});
+let purchases = [];
 
 export default class Login extends React.Component {
     static navigationOptions = {header: null};
@@ -13,6 +35,7 @@ export default class Login extends React.Component {
         super(props);
         this.state = {
             page: 1,
+            signupAlertText: '',
         };
     }
 
@@ -37,8 +60,108 @@ export default class Login extends React.Component {
         this.props.navigation.navigate('LOGINCREDENTIALS');
     };
 
-    onSignUp = () => {
-        this.props.navigation.navigate('CREATEACCOUNT');
+    iapInitialized = async () => {
+        try {
+            return await RNIap.initConnection();
+        } catch (e) {
+            console.log(e);
+            this.iapConnectionError();
+        }
+    };
+
+    iapConnectionError = () => {
+        Alert.alert(
+            `Connection to ${
+                Platform.OS === 'ios' ? 'app store' : 'play store'
+            } refused`,
+            'Please try again later.',
+            [{text: 'OK'}],
+            {
+                cancelable: false,
+            },
+        );
+    };
+
+    userCanSignUp = async () => {
+        if (await this.iapInitialized())
+            try {
+                return !(await this.userHasSubscription());
+            } catch (e) {
+                this.iapConnectionError();
+            }
+    };
+
+    userHasSubscription = async () => {
+        purchases = await RNIap.getPurchaseHistory();
+        console.log('purchases', purchases);
+        if (purchases.some(p => skus.includes(p.productId))) {
+            if (Platform.OS === 'android') {
+                purchases = purchases.map(p => ({
+                    purchase_token: p.purchaseToken,
+                    package_name: 'com.pianote2',
+                    product_id: p.productId,
+                }));
+            }
+            let resp = await validateSignUp(purchases);
+            console.log(resp);
+            if (resp.message) {
+                this.subscriptionExists.toggle(`Signup Blocked`, resp.message);
+                this.setState({
+                    signupAlertText: resp.shouldRenew
+                        ? 'Renew'
+                        : resp.shouldLogin
+                        ? 'Login'
+                        : 'Restore',
+                });
+            } else {
+                this.subscriptionExists.toggle(
+                    `Signup Blocked`,
+                    `You cannot create multiple pianote accounts under the same ${
+                        Platform.OS === 'ios' ? 'apple' : 'google'
+                    } account.`,
+                );
+                this.setState({signupAlertText: 'Restore'});
+            }
+            return true;
+        }
+    };
+
+    restorePurchases = async () => {
+        this.subscriptionExists.toggle();
+        if (this.loadingRef) this.loadingRef.toggleLoading();
+        try {
+            await logOut();
+            let restoreResponse = await restorePurchase(purchases);
+            console.log(restoreResponse);
+            if (this.loadingRef) this.loadingRef.toggleLoading();
+            if (restoreResponse.title && restoreResponse.message)
+                return this.alert.toggle(
+                    restoreResponse.title,
+                    restoreResponse.message,
+                );
+            if (restoreResponse.email)
+                return this.props.navigation.navigate('LOGINCREDENTIALS', {
+                    email: restoreResponse.email,
+                });
+            if (
+                !restoreResponse.email &&
+                ((Platform.OS === 'android' && restoreResponse.purchase) ||
+                    (Platform.OS === 'ios' && purchases[0]))
+            )
+                return Actions.signUp({
+                    purchase: restoreResponse.purchase || purchases[0],
+                });
+        } catch (err) {
+            if (this.loadingRef) this.loadingRef.toggleLoading();
+            Alert.alert(
+                'Something went wrong',
+                'Please try Again later.',
+                [{text: 'OK'}],
+                {
+                    cancelable: false,
+                },
+            );
+        }
     };
 
     renderButtons = () => (
@@ -107,7 +230,12 @@ export default class Login extends React.Component {
                     }}
                 >
                     <TouchableOpacity
-                        onPress={this.onSignUp}
+                        onPress={async () => {
+                            if (await this.userCanSignUp())
+                                return this.props.navigation.navigate(
+                                    'CREATEACCOUNT',
+                                );
+                        }}
                         style={{
                             height: '100%',
                             width: '100%',
@@ -1433,6 +1561,40 @@ export default class Login extends React.Component {
                         </View>
                     </View>
                 </ScrollView>
+                <Loading
+                    ref={ref => {
+                        this.loadingRef = ref;
+                    }}
+                />
+                <CustomModal
+                    ref={r => (this.subscriptionExists = r)}
+                    additionalBtn={
+                        <TouchableOpacity
+                            onPress={this.restorePurchases}
+                            style={{
+                                marginTop: 10,
+                                borderRadius: 50,
+                                backgroundColor: colors.pianoteRed,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    padding: 15,
+                                    fontSize: 15,
+                                    color: '#ffffff',
+                                    textAlign: 'center',
+                                    fontFamily: 'OpenSans-Bold',
+                                }}
+                            >
+                                {this.state.signupAlertText}
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                    onClose={() => {
+                        if (this.loadingRef)
+                            this.loadingRef.toggleLoading(false);
+                    }}
+                />
             </View>
         );
     }
