@@ -1,6 +1,8 @@
 import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Platform} from 'react-native';
+import commonService from './common.service';
+const rootUrl = 'http://app-staging.pianote.com';
 
 export async function getToken(userEmail, userPass) {
     try {
@@ -24,7 +26,12 @@ export async function getToken(userEmail, userPass) {
         return new Error(error);
     }
 }
-
+export async function forgotPass(emailAddress) {
+    return commonService.tryCall(
+        `${rootUrl}/api/forgot?email=${emailAddress}`,
+        'PUT',
+    );
+}
 export async function getUserData() {
     // return profile details
     try {
