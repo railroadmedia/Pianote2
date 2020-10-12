@@ -23,6 +23,7 @@
 		38A1CD8860664674A0B8D3CD /* RobotoCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6642575C11844C038CE15211 /* RobotoCondensed-Regular.ttf */; };
 		3F1C9608559742AC877B6A00 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACCDD68A1F2F49D387BC6CFC /* MaterialIcons.ttf */; };
 		3F27200F02174512805FCA92 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4EE2DE0FEA684247886A44AD /* FontAwesome.ttf */; };
+		4350D4AE253475E30076F8C6 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 4350D4AD253475E30076F8C6 /* main.jsbundle */; };
 		436173E3961C4A5B8A42938C /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19D7EBD21C524444B103B64A /* MaterialCommunityIcons.ttf */; };
 		43A49CF72511F2F400AB8390 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43A49CF62511F2F400AB8390 /* GoogleService-Info.plist */; };
 		43A49CFA25120A3F00AB8390 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A49CF825120A3F00AB8390 /* dummy.swift */; };
@@ -65,7 +66,6 @@
 
 /* Begin PBXFileReference section */
 		00095D5D0B2707A7A4790318 /* Pods-Pianote2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pianote2.debug.xcconfig"; path = "Target Support Files/Pods-Pianote2/Pods-Pianote2.debug.xcconfig"; sourceTree = "<group>"; };
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		0608C03BB12A4883A5DAD833 /* RobotoCondensed-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoCondensed-Light.ttf"; path = "../assets/fonts/RobotoCondensed-Light.ttf"; sourceTree = "<group>"; };
 		0723447D40C06FCD525FDC6E /* Pods-Pianote2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pianote2.release.xcconfig"; path = "Target Support Files/Pods-Pianote2/Pods-Pianote2.release.xcconfig"; sourceTree = "<group>"; };
 		13B0543C6F124F2FAEBBFF89 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../assets/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -87,6 +87,7 @@
 		32983DBE2D1E41369CD92FBC /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = ../assets/fonts/Foundation.ttf; sourceTree = "<group>"; };
 		3708C29A8394403D8711BAC5 /* RobotoCondensed-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoCondensed-BoldItalic.ttf"; path = "../assets/fonts/RobotoCondensed-BoldItalic.ttf"; sourceTree = "<group>"; };
 		3DF99D40D3DB40D8854D552C /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
+		4350D4AD253475E30076F8C6 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		43A49CF62511F2F400AB8390 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		43A49CF825120A3F00AB8390 /* dummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		43A49CF925120A3F00AB8390 /* Pianote2-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pianote2-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -154,9 +155,9 @@
 		13B07FAE1A68108700A75B9A /* Pianote2 */ = {
 			isa = PBXGroup;
 			children = (
+				4350D4AD253475E30076F8C6 /* main.jsbundle */,
 				43A49CF825120A3F00AB8390 /* dummy.swift */,
 				43A49CF925120A3F00AB8390 /* Pianote2-Bridging-Header.h */,
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -362,6 +363,7 @@
 				585F20BEFC37415DBD63F24B /* Roboto-Light.ttf in Resources */,
 				71894B37E8444EDD9E59D6BC /* Roboto-LightItalic.ttf in Resources */,
 				C32CE4745838473C9EC88A96 /* Roboto-Medium.ttf in Resources */,
+				4350D4AE253475E30076F8C6 /* main.jsbundle in Resources */,
 				B82C237717C44C29AA894DF7 /* Roboto-MediumItalic.ttf in Resources */,
 				0EFC9263F3724E8F87DB3A38 /* Roboto-Regular.ttf in Resources */,
 				1F11138CBAE14FCC9777D510 /* Roboto-Thin.ttf in Resources */,
