@@ -98,6 +98,7 @@ export async function signUp(email, password, purchase, oldToken) {
     console.log('signup', email, password, purchase);
     let platform = '';
     let receiptType = '';
+    let attributes;
     if (Platform.OS === 'ios') {
         platform = 'apple';
         receiptType = 'appleReceipt';
@@ -114,18 +115,25 @@ export async function signUp(email, password, purchase, oldToken) {
         };
     }
     let token = await AsyncStorage.getItem('token');
-    token = `Bearer ${JSON.parse(token)}`;
-    console.log('signup token', token);
+    let headers;
+    if (token) {
+        token = `Bearer ${JSON.parse(token)}`;
+        headers = {
+            Authorization: token,
+            'Content-Type': 'application/json',
+        };
+    } else {
+        headers = {'Content-Type': 'application/json'};
+    }
+
+    console.log('signup token', token, headers);
     console.log(attributes);
     try {
         let response = await fetch(
             `https://app-staging.pianote.com/mobile-app/${platform}/verify-receipt-and-process-payment`,
             {
                 method: 'POST',
-                headers: {
-                    Authorization: token,
-                    'Content-Type': 'application/json',
-                },
+                headers: headers,
                 body: JSON.stringify({
                     data: {
                         type: receiptType,
@@ -144,7 +152,8 @@ export async function signUp(email, password, purchase, oldToken) {
 export async function restorePurchase(purchases) {
     let platform = Platform.OS === 'ios' ? 'apple' : 'google';
     let token = await AsyncStorage.getItem('token');
-    token = `Bearer ${JSON.parse(token)}`;
+    console.log(token);
+    if (token) token = `Bearer ${JSON.parse(token)}`;
     try {
         let response = await fetch(
             `https://app-staging.pianote.com/mobile-app/${platform}/restore`,
