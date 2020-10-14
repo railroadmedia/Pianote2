@@ -25,6 +25,7 @@ import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import {NavigationActions, StackActions} from 'react-navigation';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 import {getToken} from '../../services/UserDataAuth.js';
+import commonService from '../../services/common.service.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -160,7 +161,7 @@ export default class CreateAccount3 extends React.Component {
         if (this.state.displayName.length > 0) {
             // check if valid
             let response = await fetch(
-                `http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`,
+                `${commonService.rootUrl}/usora/is-display-name-unique?display_name=${this.state.displayName}`,
             );
             response = await response.json();
             if (response.unique) {
@@ -198,7 +199,7 @@ export default class CreateAccount3 extends React.Component {
         // if there is profile image upload it
         if (data !== null) {
             let avatarResponse = await fetch(
-                `http://app-staging.pianote.com/api/avatar/upload`,
+                `${commonService.rootUrl}/api/avatar/upload`,
                 {
                     method: 'POST',
                     headers: {Authorization: `Bearer ${auth.token}`},
@@ -211,7 +212,7 @@ export default class CreateAccount3 extends React.Component {
 
         // take image url and update profile
         let profileResponse = await fetch(
-            `http://app-staging.pianote.com/api/profile/update`,
+            `${commonService.rootUrl}/api/profile/update`,
             {
                 method: 'POST',
                 headers: {Authorization: `Bearer ${auth.token}`},

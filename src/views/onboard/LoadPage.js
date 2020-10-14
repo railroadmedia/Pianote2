@@ -8,6 +8,7 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from '../../services/common.service';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -35,7 +36,7 @@ export default class LoadPage extends React.Component {
         try {
             return;
             let data = await fetch(
-                'http://app-staging.pianote.com/api/profile/update',
+                `${commonService.rootUrl}/api/profile/update`,
                 {
                     method: 'POST',
                     data: {

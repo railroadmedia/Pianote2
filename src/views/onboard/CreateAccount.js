@@ -16,6 +16,7 @@ import FastImage from 'react-native-fast-image';
 import CheckEmail from '../../modals/CheckEmail.js';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import commonService from '../../services/common.service.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -94,7 +95,7 @@ export default class CreateAccount extends React.Component {
     verifyEmail = async () => {
         if (this.state.email.length > 0) {
             await fetch(
-                `http://app-staging.pianote.com/usora/is-email-unique?email=${this.state.email}`,
+                `${commonService.rootUrl}/usora/is-email-unique?email=${this.state.email}`,
             )
                 .then(response => response.json())
                 .then(response => {

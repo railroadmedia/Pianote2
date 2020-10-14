@@ -2,7 +2,6 @@ import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Platform} from 'react-native';
 import commonService from './common.service';
-const rootUrl = 'http://app-staging.pianote.com';
 
 export async function getToken(userEmail, userPass) {
     try {
@@ -10,7 +9,7 @@ export async function getToken(userEmail, userPass) {
         const password = await AsyncStorage.getItem('password');
 
         let response = await fetch(
-            `http://app-staging.pianote.com/usora/api/login?email=${
+            `${commonService.rootUrl}/usora/api/login?email=${
                 userEmail || email
             }&password=${userPass || password}`,
             {method: 'PUT'},
@@ -28,25 +27,29 @@ export async function getToken(userEmail, userPass) {
 }
 export async function forgotPass(emailAddress) {
     return commonService.tryCall(
-        `${rootUrl}/api/forgot?email=${emailAddress}`,
+        `${commonService.rootUrl}/api/forgot?email=${emailAddress}`,
         'PUT',
     );
 }
 
 export async function changePassword(email, pass, token) {
     console.log(email, pass, token);
-    return commonService.tryCall(`${rootUrl}/api/change-password`, 'PUT', {
-        pass1: pass,
-        user_login: email,
-        rp_key: token,
-    });
+    return commonService.tryCall(
+        `${commonService.rootUrl}/api/change-password`,
+        'PUT',
+        {
+            pass1: pass,
+            user_login: email,
+            rp_key: token,
+        },
+    );
 }
 export async function getUserData() {
     // return profile details
     try {
         const auth = await getToken();
 
-        let data = await fetch('http://app-staging.pianote.com/api/profile', {
+        let data = await fetch(`${commonService.rootUrl}/api/profile`, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
         });
@@ -98,7 +101,7 @@ export async function logOut() {
     try {
         const auth = await getToken();
         let response = await fetch(
-            'https://app-staging.pianote/usora/api/logout',
+            `${commonService.rootUrl}/usora/api/logout`,
             {
                 headers: {Authorization: `Bearer ${auth.token}`},
             },
@@ -146,7 +149,7 @@ export async function signUp(email, password, purchase, oldToken) {
     console.log(attributes);
     try {
         let response = await fetch(
-            `https://app-staging.pianote.com/mobile-app/${platform}/verify-receipt-and-process-payment`,
+            `${commonService.rootUrl}/mobile-app/${platform}/verify-receipt-and-process-payment`,
             {
                 method: 'POST',
                 headers: headers,
@@ -172,7 +175,7 @@ export async function restorePurchase(purchases) {
     if (token) token = `Bearer ${JSON.parse(token)}`;
     try {
         let response = await fetch(
-            `https://app-staging.pianote.com/mobile-app/${platform}/restore`,
+            `${commonService.rootUrl}/mobile-app/${platform}/restore`,
             {
                 method: 'POST',
                 headers: {
@@ -198,7 +201,7 @@ export async function validateSignUp(purchases) {
     console.log(purchases);
     try {
         let response = await fetch(
-            `https://app-staging.pianote.com/mobile-app/${platform}/signup`,
+            `${commonService.rootUrl}/mobile-app/${platform}/signup`,
             {
                 method: 'POST',
                 headers: {

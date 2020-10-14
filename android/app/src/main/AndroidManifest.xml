@@ -28,7 +28,7 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="https" android:host="www.pianote.com" android:pathPrefix="/reset-password"/>
-            <data android:scheme="https" android:host="app-staging.pianote.com" android:pathPrefix="/reset-password"/>
+            <data android:scheme="https" android:host="staging.pianote.com" android:pathPrefix="/reset-password"/>
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
