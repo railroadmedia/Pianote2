@@ -101,6 +101,8 @@ export default class CreateAccount extends React.Component {
                     if (response.exists == false) {
                         this.props.navigation.navigate('CREATEACCOUNT2', {
                             email: this.state.email,
+                            purchase: this.props.navigation.state.params
+                                ?.purchase,
                         });
                     } else {
                         this.setState({showCheckEmail: true});

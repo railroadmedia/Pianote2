@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     Keyboard,
     Animated,
+    Alert,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -105,8 +106,9 @@ export default class CreateAccount extends React.Component {
                     let response = await signUp(
                         this.state.email,
                         this.state.password,
-                        purchase,
+                        this.props.navigation.state.params?.purchase,
                     );
+                    console.log(response);
                     if (response.meta) {
                         const token = `Bearer ${response.meta.auth_code}`;
                         try {
@@ -117,13 +119,29 @@ export default class CreateAccount extends React.Component {
                                 ['token', token],
                             ]);
                         } catch (e) {}
-                        // TODO: check if edge is expired
-                        this.props.navigation.navigate('CREATEACCOUNT3', {
-                            data: {
-                                email: this.state.email,
-                                password: this.state.password,
-                            },
-                        });
+
+                        let userData = await getUserData();
+                        console.log(userData);
+                        let currentDate = new Date().getTime() / 1000;
+                        let userExpDate =
+                            new Date(userData.expirationDate).getTime() / 1000;
+                        console.log(currentDate, userExpDate);
+                        if (userData.isLifetime || currentDate < userExpDate) {
+                            this.props.navigation.navigate('CREATEACCOUNT3', {
+                                data: {
+                                    email: this.state.email,
+                                    password: this.state.password,
+                                },
+                            });
+                        } else {
+                            this.props.navigation.navigate(
+                                'MEMBERSHIPEXPIRED',
+                                {
+                                    email: this.state.email,
+                                    password: this.state.password,
+                                },
+                            );
+                        }
                     } else {
                         let {title, detail} = response.errors[0];
                         Alert.alert(title, detail, [{text: 'OK'}], {

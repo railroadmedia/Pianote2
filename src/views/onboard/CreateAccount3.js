@@ -24,6 +24,7 @@ import Support from 'Pianote2/src/assets/img/svgs/support.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import {NavigationActions, StackActions} from 'react-navigation';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
+import {getToken} from '../../services/UserDataAuth.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -567,7 +568,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.crea();
+                                                this.createAccount();
                                             }}
                                         >
                                             <Text
@@ -984,7 +985,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.crea();
+                                                this.createAccount();
                                             }}
                                         >
                                             <Text
@@ -1567,7 +1568,7 @@ export default class CreateAccount3 extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.crea();
+                                        this.createAccount();
                                     }}
                                 >
                                     <Text
@@ -1778,7 +1779,7 @@ export default class CreateAccount3 extends React.Component {
                                 <View style={{flex: 1}} />
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.crea();
+                                        this.createAccount();
                                     }}
                                     style={[
                                         styles.centerContent,

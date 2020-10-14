@@ -81,13 +81,16 @@ export default class NewMembership extends React.Component {
                 } catch (e) {}
                 try {
                     await RNIap.finishTransaction(purchase, false);
-
-                    await this.props.navigation.navigate('CREATEACCOUNT3', {
-                        data: {
-                            email: this.state.email,
-                            password: this.state.password,
-                        },
-                    });
+                    if (this.state.newUser === 'SIGNUP') {
+                        this.props.navigation.navigate('CREATEACCOUNT3', {
+                            data: {
+                                email: this.state.email,
+                                password: this.state.password,
+                            },
+                        });
+                    } else {
+                        this.props.navigation.navigate('LESSONS');
+                    }
                 } catch (e) {}
             } else {
                 let {title, detail} = response.errors[0];

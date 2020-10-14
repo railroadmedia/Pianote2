@@ -156,10 +156,15 @@ export default class MembershipExpired extends React.Component {
                                                 {
                                                     data: {
                                                         type: 'EXPIRED',
-                                                        email: this.props.email,
+                                                        email: this.props
+                                                            .navigation.state
+                                                            .params?.email,
                                                         password: this.props
-                                                            .password,
-                                                        token: this.props.token,
+                                                            .navigation.state
+                                                            .params?.password,
+                                                        token: this.props
+                                                            .navigation.state
+                                                            .params?.token,
                                                     },
                                                 },
                                             );

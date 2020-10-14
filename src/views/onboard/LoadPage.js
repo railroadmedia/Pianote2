@@ -58,6 +58,7 @@ export default class LoadPage extends React.Component {
 
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
         let resetKey = await AsyncStorage.getItem('resetKey');
+        let pass = await AsyncStorage.getItem('password');
         let userData = await getUserData();
 
         console.log(userData);
@@ -88,7 +89,11 @@ export default class LoadPage extends React.Component {
             } else {
                 // go to membership expired
                 setTimeout(
-                    () => this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
+                    () =>
+                        this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+                            email: userData.email,
+                            password: pass,
+                        }),
                     1000,
                 );
             }
