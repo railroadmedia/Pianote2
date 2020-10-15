@@ -6,7 +6,7 @@ import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.rnfs.RNFSPackage;
 import io.invertase.firebase.RNFirebasePackage;
-
+import com.brentvatne.react.ReactVideoPackage;
 import com.robinpowered.react.Intercom.IntercomPackage;
 import io.intercom.android.sdk.Intercom;
 import com.dooboolab.RNIap.RNIapPackage;
@@ -43,6 +43,7 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNFirebaseMessagingPackage());
           packages.add(new RNFirebaseNotificationsPackage());
           packages.add(new GoogleCastPackage());
+          packages.add(new ReactVideoPackage());
           // packages.add(new MyReactNativePackage());
           return packages;
         }

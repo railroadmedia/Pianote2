@@ -199,6 +199,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-video')
     implementation project(':react-native-google-cast')
     implementation project(':react-native-fs')
     implementation project(':react-native-firebase')
@@ -217,6 +218,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.1.6'
 
     implementation 'io.intercom.android:intercom-sdk-base:5.+'
+    
+    implementation "androidx.appcompat:appcompat:1.0.0"
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")

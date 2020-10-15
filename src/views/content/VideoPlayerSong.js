@@ -138,20 +138,22 @@ export default class VideoPlayerSong extends React.Component {
                                     borderBottomWidth: 1 * factorRatio,
                                 }}
                             />
-                            <View key={'blurb'} style={{width: '100%'}}>
-                                <Text
-                                    style={{
-                                        paddingTop: '5%',
-                                        paddingBottom: '5%',
-                                        paddingLeft: '5%',
-                                        paddingRight: '5%',
-                                        fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                    }}
-                                >
-                                    {description}
-                                </Text>
-                            </View>
+                            {description !== 'TBD' && (
+                                <View key={'blurb'} style={{width: '100%'}}>
+                                    <Text
+                                        style={{
+                                            paddingTop: '5%',
+                                            paddingBottom: '5%',
+                                            paddingLeft: '5%',
+                                            paddingRight: '5%',
+                                            fontSize: 16 * factorRatio,
+                                            fontFamily: 'OpenSans',
+                                        }}
+                                    >
+                                        {description}
+                                    </Text>
+                                </View>
+                            )}
                         </>
                     )}
                     <AssignmentResource
