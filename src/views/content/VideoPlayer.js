@@ -213,14 +213,15 @@ export default class VideoPlayer extends React.Component {
                 type: relatedLessons[i].type,
                 id: relatedLessons[i].id,
                 mobile_app_url: relatedLessons[i].post.mobile_app_url,
-                duration: relatedLessons[i].post.length_in_seconds,
+                duration: new ContentModel(
+                    relatedLessons[i].getFieldMulti('video')[0],
+                ).getField('length_in_seconds'),
                 isAddedToList: relatedLessons[i].isAddedToList,
                 isStarted: relatedLessons[i].isStarted,
                 isCompleted: relatedLessons[i].isCompleted,
                 progress_percent: relatedLessons[i].post.progress_percent,
             });
         }
-
         this.setState(
             {
                 id: content.id,
@@ -237,7 +238,9 @@ export default class VideoPlayer extends React.Component {
                 relatedLessons: [...this.state.relatedLessons, ...rl],
                 likes: parseInt(content.likeCount),
                 isLiked: content.isLiked,
-                lengthInSec: content.post.length_in_seconds,
+                lengthInSec: new ContentModel(
+                    content.getFieldMulti('video')[0],
+                ).getField('length_in_seconds'),
                 lastWatchedPosInSec:
                     content.post.last_watch_position_in_seconds,
                 progress:

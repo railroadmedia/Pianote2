@@ -64,7 +64,6 @@ export default class Login extends React.Component {
         try {
             return await RNIap.initConnection();
         } catch (e) {
-            console.log(e);
             this.iapConnectionError();
         }
     };
@@ -103,7 +102,7 @@ export default class Login extends React.Component {
                 }));
             }
             let resp = await validateSignUp(purchases);
-            console.log(resp);
+            console.log('validateSignUp resp', resp);
             if (resp.message) {
                 this.subscriptionExists.toggle(`Signup Blocked`, resp.message);
                 this.setState({
@@ -130,9 +129,8 @@ export default class Login extends React.Component {
         this.subscriptionExists.toggle();
         if (this.loadingRef) this.loadingRef.toggleLoading();
         try {
-            await logOut();
             let restoreResponse = await restorePurchase(purchases);
-            console.log(restoreResponse);
+            console.log('restoreResponse', restoreResponse);
             if (this.loadingRef) this.loadingRef.toggleLoading();
             if (restoreResponse.title && restoreResponse.message)
                 return this.alert.toggle(
@@ -148,10 +146,11 @@ export default class Login extends React.Component {
                 ((Platform.OS === 'android' && restoreResponse.purchase) ||
                     (Platform.OS === 'ios' && purchases[0]))
             )
-                return Actions.signUp({
+                return this.props.navigation.navigate('CREATEACCOUNT', {
                     purchase: restoreResponse.purchase || purchases[0],
                 });
         } catch (err) {
+            console.log('restore err', err);
             if (this.loadingRef) this.loadingRef.toggleLoading();
             Alert.alert(
                 'Something went wrong',

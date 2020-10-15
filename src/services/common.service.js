@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {userLogin, configure} from '@musora/services';
 
 export default {
+    rootUrl: 'https://staging.pianote.com',
     tryCall: async function (url, method, body) {
         try {
             if (body) body = body ? JSON.stringify(body) : null;

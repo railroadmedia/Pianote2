@@ -72,7 +72,7 @@ export default class ProfileSettings extends React.Component {
     changePassword2 = async () => {
         return;
         return commonService.tryCall(
-            `http://app-staging.pianote.com/api/change-password`,
+            `${commonService.rootUrl}/api/change-password`,
             'PUT',
             null,
             null,
@@ -87,14 +87,14 @@ export default class ProfileSettings extends React.Component {
     changeName = async () => {
         // check if display name available
         let response = await fetch(
-            `http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`,
+            `${commonService.rootUrl}/usora/is-display-name-unique?display_name=${this.state.displayName}`,
         );
         response = await response.json();
 
         if (response.unique) {
             const auth = await getToken();
             let nameResponse = await fetch(
-                `http://app-staging.pianote.com/api/profile/update`,
+                `${commonService.rootUrl}/api/profile/update`,
                 {
                     method: 'POST',
                     headers: {Authorization: `Bearer ${auth.token}`},
@@ -128,7 +128,7 @@ export default class ProfileSettings extends React.Component {
 
         try {
             let avatarResponse = await fetch(
-                `http://app-staging.pianote.com/api/avatar/upload`,
+                `${commonService.rootUrl}/api/avatar/upload`,
                 {
                     method: 'POST',
                     headers: {Authorization: `Bearer ${auth.token}`},
@@ -139,7 +139,7 @@ export default class ProfileSettings extends React.Component {
             console.log(url.data[0].url);
 
             let profileResponse = await fetch(
-                `http://app-staging.pianote.com/api/profile/update`,
+                `${commonService.rootUrl}/api/profile/update`,
                 {
                     method: 'POST',
                     headers: {Authorization: `Bearer ${auth.token}`},

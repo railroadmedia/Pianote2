@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import commonService from '../../services/common.service';
 
 export default class Search extends React.Component {
     static navigationOptions = {header: null};
@@ -165,7 +166,9 @@ export default class Search extends React.Component {
             let auth = await getToken();
 
             await fetch(
-                `https://app-staging.pianote/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&page=${1}`,
+                `${
+                    commonService.rootUrl
+                }/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&page=${1}`,
                 {
                     method: 'GET',
                     headers: {Authorization: `Bearer ${auth.token}`},

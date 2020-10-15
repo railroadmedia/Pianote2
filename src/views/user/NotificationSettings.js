@@ -9,6 +9,7 @@ import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import commonService from '../../services/common.service';
 
 export default class NotificationSettings extends React.Component {
     static navigationOptions = {header: null};
@@ -67,7 +68,7 @@ export default class NotificationSettings extends React.Component {
 
         try {
             let response = await fetch(
-                `http://app-staging.pianote.com/api/profile/update`,
+                `${commonService.rootUrl}/api/profile/update`,
                 {
                     method: 'POST',
                     headers: {Authorization: `Bearer ${auth.token}`},
