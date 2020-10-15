@@ -241,9 +241,10 @@ export default class MyList extends React.Component {
                                 paddingLeft: 12 * factorHorizontal,
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Bold',
                                 fontWeight:
-                                    Platform.OS == 'ios' ? '900' : 'bold',
+                                    Platform.OS == 'ios' ? '700' : 'bold',
+                                fontStyle: 'normal'
                             }}
                         >
                             My List

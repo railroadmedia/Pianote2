@@ -31,6 +31,7 @@
 		1D9C8ACE253109DB00B6F36D /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D9C8ABC253109DB00B6F36D /* Roboto-MediumItalic.ttf */; };
 		1D9C8AD1253109ED00B6F36D /* OpenSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D9C8AD0253109ED00B6F36D /* OpenSans.ttf */; };
 		1D9C8AD825310A3600B6F36D /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D9C8AD725310A3600B6F36D /* OpenSans-Bold.ttf */; };
+		1DB96FBA25314BE00002607D /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1DB96FB925314BE00002607D /* OpenSans-Regular.ttf */; };
 		43A49CF72511F2F400AB8390 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43A49CF62511F2F400AB8390 /* GoogleService-Info.plist */; };
 		43A49CFA25120A3F00AB8390 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A49CF825120A3F00AB8390 /* dummy.swift */; };
 		4FEE23B3237C7E3900907E72 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FEE23B2237C7E3900907E72 /* libRNGestureHandler.a */; };
@@ -166,6 +167,8 @@
 		1D9C8AD0253109ED00B6F36D /* OpenSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = OpenSans.ttf; path = ../assets/fonts/OpenSans.ttf; sourceTree = "<group>"; };
 		1D9C8AD3253109F300B6F36D /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = ../assets/fonts/Zocial.ttf; sourceTree = "<group>"; };
 		1D9C8AD725310A3600B6F36D /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		1DB96FB925314BE00002607D /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		1DB96FBC25314C140002607D /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		21B46AEF176F43F89E22A0B6 /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBold.ttf"; path = "../assets/fonts/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		2241E7ED44FC4E39AD21B2F5 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		2337BCBA20B0496F8B706AEA /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
@@ -323,6 +326,7 @@
 				1D9C8ABB253109DB00B6F36D /* Roboto-Light.ttf */,
 				1D9C8AAC253109DB00B6F36D /* Roboto-LightItalic.ttf */,
 				1D9C8AB8253109DB00B6F36D /* Roboto-Medium.ttf */,
+				1DB96FBC25314C140002607D /* OpenSans-Regular.ttf */,
 				1D9C8ABC253109DB00B6F36D /* Roboto-MediumItalic.ttf */,
 				1D9C8AB1253109DB00B6F36D /* Roboto-Regular.ttf */,
 				1D9C8AB2253109DB00B6F36D /* Roboto-Thin.ttf */,
@@ -337,6 +341,7 @@
 				1D9C8A7A253109A800B6F36D /* Entypo.ttf */,
 				1D9C8A79253109A800B6F36D /* EvilIcons.ttf */,
 				1D9C8A7D253109A800B6F36D /* Feather.ttf */,
+				1DB96FB925314BE00002607D /* OpenSans-Regular.ttf */,
 				1D9C8A74253109A800B6F36D /* FontAwesome.ttf */,
 				1D9C8A86253109A800B6F36D /* FontAwesome5_Brands.ttf */,
 				1D9C8A7E253109A800B6F36D /* FontAwesome5_Regular.ttf */,
@@ -585,6 +590,7 @@
 				1D9C8ACE253109DB00B6F36D /* Roboto-MediumItalic.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				1DB96FBA25314BE00002607D /* OpenSans-Regular.ttf in Resources */,
 				43A49CF72511F2F400AB8390 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
