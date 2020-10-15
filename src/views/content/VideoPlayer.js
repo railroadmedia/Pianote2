@@ -19,6 +19,7 @@ import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Video from 'RNVideoEnhanced';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {Download_V2} from 'RNDownload';
 
 import Replies from '../../components/Replies.js';
 import CommentSort from '../../modals/CommentSort.js';
@@ -162,7 +163,6 @@ export default class VideoPlayer extends React.Component {
         } else {
             content = await contentService.getContent(this.state.id);
         }
-        console.log(content);
         content = new ContentModel(content);
         this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map(rl => {
@@ -944,6 +944,7 @@ export default class VideoPlayer extends React.Component {
     };
 
     render() {
+        let {id, comments} = this.state;
         return (
             <View
                 style={[
@@ -1284,44 +1285,60 @@ export default class VideoPlayer extends React.Component {
                                                         </Text>
                                                     </TouchableOpacity>
                                                 )}
-                                                <TouchableOpacity
-                                                    key={'download'}
-                                                    onPress={() => {}}
-                                                    style={{
-                                                        flex: 1,
-                                                        alignItems: 'center',
+                                                <Download_V2
+                                                    entity={{
+                                                        id,
+                                                        comments,
+                                                        lesson: this.props
+                                                            .navigation.state
+                                                            .params.url
+                                                            ? foundationsService.getUnitLesson(
+                                                                  this.state
+                                                                      .url,
+                                                              )
+                                                            : contentService.getContent(
+                                                                  this.state.id,
+                                                              ),
                                                     }}
-                                                >
-                                                    <MaterialIcon
-                                                        name={
-                                                            'arrow-collapse-down'
-                                                        }
-                                                        size={
-                                                            27.5 * factorRatio
-                                                        }
-                                                        color={
-                                                            colors.pianoteRed
-                                                        }
-                                                    />
-                                                    <View
-                                                        style={{
-                                                            height:
-                                                                5 *
-                                                                factorVertical,
-                                                        }}
-                                                    />
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontSize:
-                                                                12 *
-                                                                factorRatio,
-                                                            color: 'white',
-                                                        }}
-                                                    >
-                                                        Download
-                                                    </Text>
-                                                </TouchableOpacity>
+                                                    styles={{
+                                                        touchable: {flex: 1},
+                                                        iconDownloadColor:
+                                                            colors.pianoteRed,
+                                                        activityIndicatorColor:
+                                                            colors.pianoteRed,
+                                                        animatedProgressBackground:
+                                                            colors.pianoteRed,
+                                                        textStatus: {
+                                                            color: '#ffffff',
+                                                            fontSize: 10,
+                                                            fontFamily:
+                                                                'OpenSans',
+                                                            marginTop: 5,
+                                                        },
+                                                        alert: {
+                                                            alertTextMessageFontFamily:
+                                                                'OpenSans',
+                                                            alertTouchableTextDeleteColor:
+                                                                'white',
+                                                            alertTextTitleColor:
+                                                                'black',
+                                                            alertTextMessageColor:
+                                                                'black',
+                                                            alertTextTitleFontFamily:
+                                                                'OpenSans-Bold',
+                                                            alertTouchableTextCancelColor:
+                                                                colors.pianoteRed,
+                                                            alertTouchableDeleteBackground:
+                                                                colors.pianoteRed,
+                                                            alertBackground:
+                                                                'white',
+                                                            alertTouchableTextDeleteFontFamily:
+                                                                'OpenSans-Bold',
+                                                            alertTouchableTextCancelFontFamily:
+                                                                'OpenSans-Bold',
+                                                        },
+                                                    }}
+                                                />
                                                 <TouchableOpacity
                                                     key={'info'}
                                                     onPress={() => {

@@ -2,290 +2,223 @@
  * Downloads
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import IconFeather from 'react-native-vector-icons/Feather';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import {Download_V2, offlineContent} from 'RNDownload';
+import IconFeather from 'react-native-vector-icons/Feather';
+import {SafeAreaView} from 'react-navigation';
 
 export default class Downloads extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            editDone: true, // true EDIT | false DONE
-            items: [
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    0,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    1,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    2,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    3,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    4,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    5,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    6,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    7,
-                ],
-                [
-                    'Lesson title here',
-                    'Show',
-                    '156MB',
-                    'Februrary 21, 2019',
-                    true,
-                    0.5,
-                    8,
-                ],
-            ],
+            edit: false,
+            items: Object.values(offlineContent),
         };
     }
 
-    renderItems() {
-        if (this.state.items.length > 0) {
-            return this.state.items.map((data, index) => {
-                return (
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.props.navigation.navigate('VIDEOPLAYER', {
-                                id: data.id,
-                            });
-                        }}
-                        style={[
-                            styles.centerContent,
-                            {
-                                height: onTablet
-                                    ? fullHeight * 0.15
-                                    : Platform.OS == 'android'
-                                    ? fullHeight * 0.115
-                                    : fullHeight * 0.095,
-                                width: fullWidth,
-                                flexDirection: 'row',
-                                backgroundColor: colors.mainBackground,
-                            },
-                        ]}
-                    >
-                        <View style={{flex: 0.035}} />
-                        <View>
-                            <FastImage
-                                style={{
-                                    height: onTablet
-                                        ? fullHeight * 0.12
-                                        : Platform.OS == 'android'
-                                        ? fullHeight * 0.095
-                                        : fullHeight * 0.075,
-                                    width: fullWidth * 0.275,
-                                }}
-                                source={{
-                                    uri:
-                                        'https://facebook.github.io/react-native/img/tiny_logo.png',
-                                }}
-                                resizeMode={FastImage.resizeMode.stretch}
-                            />
-                        </View>
-                        <View
-                            style={{
-                                flex: 1.175,
-                                marginRight: fullWidth * 0.03,
-                                marginLeft: fullWidth * 0.03,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 15 * factorRatio,
-                                    fontWeight: 'bold',
-                                    color: 'white',
-                                    marginBottom: 5 * factorVertical,
-                                    fontFamily: 'OpenSans',
-                                }}
-                            >
-                                {this.state.items[index][0]}
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 12 * factorRatio,
-                                    color: colors.secondBackground,
-                                    marginBottom: 5 * factorVertical,
-                                    fontFamily: 'OpenSans',
-                                }}
-                            >
-                                {this.state.items[index][1]} |{' '}
-                                {this.state.items[index][2]}
-                            </Text>
-                        </View>
-                        <View style={{flex: 0.3}}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.removeItem(data[6]);
-                                }}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: '100%',
-                                        width: '100%',
-                                    },
-                                ]}
-                            >
-                                <IconFeather
-                                    name={'trash-2'}
-                                    size={25 * factorRatio}
-                                    color={'#fb1b2f'}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                );
-            });
-        } else {
-            return (
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        paddingLeft: fullWidth * 0.05,
-                        height: '100%',
-                        width: '100%',
-                    }}
-                >
-                    <View style={{height: 20 * factorVertical}} />
-                    <Text
-                        style={{
-                            fontSize: 18 * factorRatio,
-                            fontFamily: 'OpenSans',
-                            color: 'white',
-                        }}
-                    >
-                        No Videos Downloaded
-                    </Text>
-                </View>
-            );
-        }
+    componentDidMount() {
+        this.dldEventListener =
+            this.dldEventListener ||
+            Download_V2.addEventListener(this.percentageListener);
     }
 
-    removeItem = async contentID => {
-        for (i in this.state.items) {
-            if (this.state.items[i][6] == contentID) {
-                await this.state.items.splice(i, 1);
-                await this.setState({items: this.state.items});
-            }
-        }
+    componentWillUnmount() {
+        this.dldEventListener?.remove();
+    }
+
+    percentageListener = p => {
+        if (this.state.items.length !== Object.values(offlineContent).length)
+            this.setState({
+                items: Object.values(offlineContent),
+            });
+    };
+
+    onDone = () => {
+        this.setState({items: Object.values(offlineContent)});
     };
 
     render() {
+        let {edit, items} = this.state;
         return (
-            <View
+            <SafeAreaView
                 style={{
-                    height: fullHeight - navHeight,
-                    alignSelf: 'stretch',
+                    flex: 1,
+                    backgroundColor: colors.thirdBackground,
                 }}
             >
-                <View key={'contentContainer'} style={{flex: 1}}>
-                    <View
-                        style={[
-                            styles.centerContent,
-                            {
-                                height:
-                                    Platform.OS == 'android'
-                                        ? fullHeight * 0.1
-                                        : isNotch
-                                        ? fullHeight * 0.12
-                                        : fullHeight * 0.1,
-                                backgroundColor: colors.thirdBackground,
-                            },
-                        ]}
-                    >
-                        <View style={{flex: 1}} />
-                        <View
-                            style={[
-                                styles.centerContent,
-                                {
-                                    backgroundColor: colors.thirdBackground,
-                                },
-                            ]}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 22 * factorRatio,
-                                    fontWeight: 'bold',
-                                    color: 'white',
-                                    fontFamily: 'OpenSans',
-                                }}
-                            >
-                                Downloads
-                            </Text>
-                        </View>
-                        <View style={{height: 20 * factorVertical}} />
-                    </View>
-                    <ScrollView
-                        key={'downloads'}
-                        showsVerticalScrollIndicator={false}
+                <View>
+                    <Text
                         style={{
-                            flex: 0.9,
-                            backgroundColor: colors.mainBackground,
+                            padding: 15,
+                            fontSize: 20,
+                            color: 'white',
+                            textAlign: 'center',
+                            fontFamily: 'OpenSans-SemiBold',
                         }}
                     >
-                        {this.renderItems()}
-                    </ScrollView>
+                        Downloads
+                    </Text>
+                    <TouchableOpacity
+                        onPress={() =>
+                            this.setState(({edit}) => ({edit: !edit}))
+                        }
+                        style={{
+                            right: 0,
+                            bottom: 15,
+                            padding: 15,
+                            paddingBottom: 0,
+                            position: 'absolute',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: colors.pianoteRed,
+                                fontFamily: 'OpenSans-SemiBold',
+                            }}
+                        >
+                            EDIT
+                        </Text>
+                    </TouchableOpacity>
                 </View>
+                <FlatList
+                    data={items}
+                    keyboardShouldPersistTaps='handled'
+                    keyExtractor={item => item.id.toString()}
+                    style={{
+                        flex: 1,
+                        backgroundColor: colors.mainBackground,
+                    }}
+                    ListEmptyComponent={() => (
+                        <Text
+                            style={{
+                                padding: 20,
+                                color: 'white',
+                                textAlign: 'center',
+                            }}
+                        >
+                            Any lessons you download will be available here.
+                        </Text>
+                    )}
+                    renderItem={({item, index}) => {
+                        let type = item.lesson ? 'lesson' : 'overview';
+                        return (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate(
+                                        'VIDEOPLAYER',
+                                        {
+                                            id: item.id,
+                                        },
+                                    );
+                                }}
+                                style={{
+                                    padding: 5,
+                                    borderTopWidth: 0.5,
+                                    flexDirection: 'row',
+                                    borderBottomWidth: 0.5,
+                                    borderColor: 'lightgrey',
+                                }}
+                            >
+                                <FastImage
+                                    style={{
+                                        width: '30%',
+                                        borderRadius: 5,
+                                        aspectRatio: 16 / 9,
+                                    }}
+                                    source={{
+                                        uri: item[type]?.data?.find(
+                                            d => d.key === 'thumbnail_url',
+                                        )?.value,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.stretch}
+                                />
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        padding: 10,
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            color: 'white',
+                                            fontFamily: 'OpenSans-Bold',
+                                        }}
+                                    >
+                                        {
+                                            item[type]?.fields?.find(
+                                                f => f.key === 'title',
+                                            )?.value
+                                        }
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                        }}
+                                    >
+                                        {item[type]?.type?.replace('-', ' ')} |{' '}
+                                        {parseInt(
+                                            item.sizeInBytes / 1024 / 1024,
+                                        )}
+                                        MB
+                                    </Text>
+                                </View>
+                                {!item.dlding.length && !edit ? (
+                                    <View style={{justifyContent: 'center'}}>
+                                        <IconFeather
+                                            name={'chevron-right'}
+                                            size={25 * factorRatio}
+                                            color={'white'}
+                                        />
+                                    </View>
+                                ) : (
+                                    <Download_V2
+                                        onDone={this.onDone}
+                                        entity={item}
+                                        styles={{
+                                            touchable: {
+                                                padding: 10,
+                                                paddingRight: 0,
+                                                alignSelf: 'center',
+                                            },
+                                            iconDownloadColor:
+                                                colors.pianoteRed,
+                                            activityIndicatorColor:
+                                                colors.pianoteRed,
+                                            animatedProgressBackground:
+                                                colors.pianoteRed,
+                                            alert: {
+                                                alertTextMessageFontFamily:
+                                                    'OpenSans',
+                                                alertTouchableTextDeleteColor:
+                                                    'white',
+                                                alertTextTitleColor: 'black',
+                                                alertTextMessageColor: 'black',
+                                                alertTextTitleFontFamily:
+                                                    'OpenSans-Bold',
+                                                alertTouchableTextCancelColor:
+                                                    colors.pianoteRed,
+                                                alertTouchableDeleteBackground:
+                                                    colors.pianoteRed,
+                                                alertBackground: 'white',
+                                                alertTouchableTextDeleteFontFamily:
+                                                    'OpenSans-Bold',
+                                                alertTouchableTextCancelFontFamily:
+                                                    'OpenSans-Bold',
+                                            },
+                                        }}
+                                    />
+                                )}
+                            </TouchableOpacity>
+                        );
+                    }}
+                />
                 <NavigationBar currentPage={'DOWNLOAD'} />
-            </View>
+            </SafeAreaView>
         );
     }
 }

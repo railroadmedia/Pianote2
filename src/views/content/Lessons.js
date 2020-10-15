@@ -154,13 +154,12 @@ export default class Lessons extends React.Component {
                 //required_user_states: ['started'],
                 included_types: ['course'],
             });
-
             const newContent = response.data.data.map(data => {
                 return new ContentModel(data);
             });
 
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
@@ -247,8 +246,8 @@ export default class Lessons extends React.Component {
                 return new ContentModel(data);
             });
 
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
@@ -272,9 +271,6 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-
-            console.log(items);
-
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
                 filtering: false,
@@ -297,15 +293,12 @@ export default class Lessons extends React.Component {
                 required_user_states: ['started'],
                 included_types: ['course'],
             });
-
-            console.log(response, error);
-
             const newContent = response.data.data.map(data => {
                 return new ContentModel(data);
             });
 
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
@@ -329,9 +322,6 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-
-            console.log('progress lessons: ', response, error);
-
             await this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
                 lessonsStarted: items.length > 0 ? true : false,
@@ -355,7 +345,6 @@ export default class Lessons extends React.Component {
             filters: this.state.filters,
             type: 'LESSONS',
             onGoBack: filters => {
-                console.log('filters: ', filters);
                 this.setState({
                     allLessons: [],
                     filters:

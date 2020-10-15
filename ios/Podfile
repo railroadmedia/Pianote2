@@ -35,38 +35,27 @@ target 'Pianote2' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
 
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
-  pod 'react-native-blur', :path => '../node_modules/@react-native-community/blur'
 
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  pod 'react-native-background-downloader', :path => '../node_modules/react-native-background-downloader'
 
-  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
-  pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
+
+
 
   pod 'react-native-home-indicator', :path => '../node_modules/react-native-home-indicator'
-  pod 'RNSVG', :path => '../node_modules/react-native-svg'
-
-  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
-  pod 'Firebase/Messaging'
 
   pod 'react-native-google-cast/NoBluetooth', path: '../node_modules/react-native-google-cast/ios/'
   
   pod 'RNAirplay', :path => '../node_modules/react-native-airplay-ios'
 
-  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
   
   pod 'react-native-video', :path => '../node_modules/react-native-video'
   
-  pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
-  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
   pod 'Firebase/Messaging'
 
-  pod 'react-native-intercom', :path => '../node_modules/react-native-intercom'
 
   use_native_modules!
 end
