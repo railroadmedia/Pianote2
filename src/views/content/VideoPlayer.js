@@ -17,7 +17,7 @@ import moment from 'moment';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-//import Video from 'RNVideoEnhanced';
+import Video from 'RNVideoEnhanced';
 import {NavigationActions, StackActions} from 'react-navigation';
 
 import Replies from '../../components/Replies.js';
@@ -181,7 +181,15 @@ export default class VideoPlayer extends React.Component {
                     id: assignments[a].id,
                     title: assignments[a].getField('title'),
                     isCompleted: assignments[a].isCompleted,
-                    description: assignments[a].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: assignments[a]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: assignments[a].xp,
                     progress:
                         parseInt(
@@ -228,7 +236,15 @@ export default class VideoPlayer extends React.Component {
                 type: content.type,
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
-                description: content.getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                description: content
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
                 xp: content.xp,
                 artist: content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),
@@ -547,7 +563,8 @@ export default class VideoPlayer extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         fontSize:
                                                             10 * factorRatio,
                                                         color:
@@ -608,7 +625,8 @@ export default class VideoPlayer extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         fontSize:
                                                             10 * factorRatio,
                                                         color:
@@ -1072,7 +1090,8 @@ export default class VideoPlayer extends React.Component {
                                                 style={{
                                                     fontSize: 20 * factorRatio,
                                                     fontWeight: 'bold',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     textAlign: 'center',
                                                     color: 'white',
                                                 }}
@@ -1089,7 +1108,8 @@ export default class VideoPlayer extends React.Component {
                                                     fontSize: 12 * factorRatio,
                                                     fontWeight: '400',
                                                     color: 'grey',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     textAlign: 'center',
                                                     color:
                                                         colors.secondBackground,

@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import NextVideo from 'Pianote2/src/components/NextVideo';
@@ -16,7 +17,12 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import foundationsService from '../../services/foundations.service';
 import ResetIcon from '../../components/ResetIcon';
-import {addToMyList, removeFromMyList, resetProgress} from 'Pianote2/src/services/UserActions.js';
+import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
+import {
+    addToMyList,
+    removeFromMyList,
+    resetProgress,
+} from 'Pianote2/src/services/UserActions.js';
 
 export default class FoundationsLevel extends React.Component {
     static navigationOptions = {header: null};
@@ -81,7 +87,15 @@ export default class FoundationsLevel extends React.Component {
                 id: response.id,
                 isStarted: response.isStarted,
                 isCompleted: response.isCompleted,
-                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
                 isAddedToList: response.isAddedToList,
                 progress: response.post.progress_percent,
             });
@@ -318,7 +332,8 @@ export default class FoundationsLevel extends React.Component {
                                             )}
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: 'white',
                                                     fontSize: 12 * factorRatio,
                                                 }}
@@ -429,7 +444,8 @@ export default class FoundationsLevel extends React.Component {
                                             />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: 'white',
                                                     marginTop: 3 * factorRatio,
                                                     fontSize: 13 * factorRatio,
