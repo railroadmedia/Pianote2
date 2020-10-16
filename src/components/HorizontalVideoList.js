@@ -140,6 +140,7 @@ class HorizontalVideoList extends React.Component {
                                 {this.props.Title}
                             </Text>
                             <View style={{flex: 1}} />
+                            {!this.props.hideSeeAll && (
                             <TouchableOpacity
                                 key={'seeAll'}
                                 style={{flex: 1}}
@@ -158,6 +159,7 @@ class HorizontalVideoList extends React.Component {
                                     See All
                                 </Text>
                             </TouchableOpacity>
+                            )}
                             <View style={{flex: 0.1}} />
                         </View>
                     </View>

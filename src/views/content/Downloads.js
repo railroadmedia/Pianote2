@@ -97,7 +97,7 @@ export default class Downloads extends React.Component {
                 ],
             ],
         };
-    }
+    };
 
     renderItems() {
         if (this.state.items.length > 0) {
@@ -217,7 +217,7 @@ export default class Downloads extends React.Component {
                 </View>
             );
         }
-    }
+    };
 
     removeItem = async contentID => {
         for (i in this.state.items) {

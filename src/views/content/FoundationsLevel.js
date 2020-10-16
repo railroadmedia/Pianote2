@@ -81,7 +81,7 @@ export default class FoundationsLevel extends React.Component {
                 id: response.id,
                 isStarted: response.isStarted,
                 isCompleted: response.isCompleted,
-                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                 isAddedToList: response.isAddedToList,
                 progress: response.post.progress_percent,
             });

@@ -58,7 +58,7 @@ export async function getAllContent(type, sort, page, filtersDict) {
                     included_types + `&included_types[]=${filtersDict.topics[i]}`;
             }
         } else {
-            included_types = included_types + '&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
+            included_types = included_types + '&included_types[]=' + type;
         }
     } else {
         for (i in filtersDict.topics) {
@@ -86,7 +86,7 @@ export async function getAllContent(type, sort, page, filtersDict) {
     try {
         let auth = await getToken();
         let url = `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` + filters + required_user_states;
-        console.log('URL: ', url)
+
         let response = await fetch(url, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},

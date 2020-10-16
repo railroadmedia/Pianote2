@@ -181,7 +181,7 @@ export default class VideoPlayer extends React.Component {
                     id: assignments[a].id,
                     title: assignments[a].getField('title'),
                     isCompleted: assignments[a].isCompleted,
-                    description: assignments[a].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: assignments[a].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                     xp: assignments[a].xp,
                     progress:
                         parseInt(
@@ -228,7 +228,7 @@ export default class VideoPlayer extends React.Component {
                 type: content.type,
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
-                description: content.getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                description: content.getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                 xp: content.xp,
                 artist: content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),

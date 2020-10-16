@@ -78,7 +78,7 @@ export default class SinglePack extends React.Component {
                             title: newContent[i].getField('title'),
                             artist: this.getInstructor(newContent[i]),
                             thumbnail: newContent[i].getData('thumbnail_url'),
-                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                             type: newContent[i].post.type,
                             xp: newContent[i].post.xp,
                             id: newContent[i].id,
@@ -171,7 +171,7 @@ export default class SinglePack extends React.Component {
                         artist: newContent[i].getField('instructor').fields[0]
                             .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                         type: newContent[i].post.type,
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,

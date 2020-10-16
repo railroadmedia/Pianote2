@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import {getContent} from '@musora/services';
 import {ContentModel} from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -52,6 +51,7 @@ export default class SeeAll extends React.Component {
     }
 
     async componentDidMount() {
+        console.log(this.state.title, this.state.parent)
         this.getAllLessons();
     }
 
@@ -76,7 +76,7 @@ export default class SeeAll extends React.Component {
                             : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,

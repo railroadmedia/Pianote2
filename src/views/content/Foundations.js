@@ -74,7 +74,7 @@ export default class Foundations extends React.Component {
                     }))
                     .reduce((r, obj) => r.concat(obj.value, '  '), []),
                 thumbnail: newContent[i].getData('thumbnail_url'),
-                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                 id: newContent[i].id,
                 progress_percent: newContent[i].post.progress_percent,
                 mobile_app_url: newContent[i].post.mobile_app_url,
@@ -91,7 +91,7 @@ export default class Foundations extends React.Component {
             isLoadingAll: false,
             totalLength: response.post.length_in_seconds,
             xp: response.post.total_xp,
-            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
             progress: response.post.progress_percent,
             nextLesson: new ContentModel(response.post.current_lesson),
         });
