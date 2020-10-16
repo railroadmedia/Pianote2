@@ -74,7 +74,7 @@ export default class Foundations extends React.Component {
                     }))
                     .reduce((r, obj) => r.concat(obj.value, '  '), []),
                 thumbnail: newContent[i].getData('thumbnail_url'),
-                description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                 id: newContent[i].id,
                 progress_percent: newContent[i].post.progress_percent,
                 mobile_app_url: newContent[i].post.mobile_app_url,
@@ -91,7 +91,7 @@ export default class Foundations extends React.Component {
             isLoadingAll: false,
             totalLength: response.post.length_in_seconds,
             xp: response.post.total_xp,
-            description: response.getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
             progress: response.post.progress_percent,
             nextLesson: new ContentModel(response.post.current_lesson),
         });
@@ -353,7 +353,7 @@ export default class Foundations extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 color: 'white',
                                                 marginTop: 3 * factorRatio,
                                                 fontSize: 13 * factorRatio,
@@ -378,7 +378,7 @@ export default class Foundations extends React.Component {
                                 <View style={{height: 20 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         marginTop: 5 * factorVertical,
                                         fontSize: 15 * factorRatio,
                                         color: 'white',
@@ -421,7 +421,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -433,7 +433,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -458,7 +458,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -470,7 +470,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -495,7 +495,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -507,7 +507,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -566,7 +566,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -596,7 +596,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -631,7 +631,7 @@ export default class Foundations extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -709,7 +709,7 @@ export default class Foundations extends React.Component {
                                     <View style={{flex: 1}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontWeight:
                                                 Platform.OS == 'ios'
                                                     ? '800'

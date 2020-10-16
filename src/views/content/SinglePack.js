@@ -78,7 +78,7 @@ export default class SinglePack extends React.Component {
                             title: newContent[i].getField('title'),
                             artist: this.getInstructor(newContent[i]),
                             thumbnail: newContent[i].getData('thumbnail_url'),
-                            description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                             type: newContent[i].post.type,
                             xp: newContent[i].post.xp,
                             id: newContent[i].id,
@@ -171,7 +171,7 @@ export default class SinglePack extends React.Component {
                         artist: newContent[i].getField('instructor').fields[0]
                             .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
-                        description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                         type: newContent[i].post.type,
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
@@ -424,7 +424,7 @@ export default class SinglePack extends React.Component {
                                         )}
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 color: 'white',
                                                 marginTop: 3 * factorRatio,
                                                 fontSize: 12 * factorRatio,
@@ -506,7 +506,7 @@ export default class SinglePack extends React.Component {
                                             />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     color: 'white',
                                                     marginTop: 3 * factorRatio,
                                                     fontSize: 13 * factorRatio,
@@ -531,7 +531,7 @@ export default class SinglePack extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         marginTop: 5 * factorVertical,
                                         fontSize: 15 * factorRatio,
                                         color: 'white',
@@ -574,7 +574,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -586,7 +586,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -613,7 +613,7 @@ export default class SinglePack extends React.Component {
                                                             17 * factorRatio,
                                                         textAlign: 'left',
                                                         color: 'white',
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             10 * factorVertical,
                                                     }}
@@ -626,7 +626,7 @@ export default class SinglePack extends React.Component {
                                                             13 * factorRatio,
                                                         textAlign: 'left',
                                                         color: 'white',
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             10 * factorVertical,
                                                     }}
@@ -652,7 +652,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -664,7 +664,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -724,7 +724,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -754,7 +754,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -789,7 +789,7 @@ export default class SinglePack extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}

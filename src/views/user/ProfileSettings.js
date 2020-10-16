@@ -241,7 +241,7 @@ export default class ProfileSettings extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 12 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'android'
@@ -298,7 +298,7 @@ export default class ProfileSettings extends React.Component {
                                 style={{
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     color: colors.secondBackground,
                                 }}
                             >
@@ -345,7 +345,7 @@ export default class ProfileSettings extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
@@ -387,7 +387,7 @@ export default class ProfileSettings extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
@@ -420,7 +420,7 @@ export default class ProfileSettings extends React.Component {
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07
@@ -438,7 +438,7 @@ export default class ProfileSettings extends React.Component {
                                     <View style={{height: 10 * factorRatio}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 16 * factorRatio,
                                             paddingLeft: fullWidth * 0.045,
                                             paddingRight: fullWidth * 0.045,
@@ -559,7 +559,7 @@ export default class ProfileSettings extends React.Component {
                                     <View style={{height: 35 * factorRatio}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 15 * factorRatio,
                                             paddingLeft: fullWidth * 0.045,
                                             paddingRight: fullWidth * 0.045,
@@ -622,7 +622,7 @@ export default class ProfileSettings extends React.Component {
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07
@@ -652,7 +652,7 @@ export default class ProfileSettings extends React.Component {
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07
@@ -682,7 +682,7 @@ export default class ProfileSettings extends React.Component {
                                         onSubmitEditing={() => {}}
                                         returnKeyType={'go'}
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             height:
                                                 Platform.OS == 'android'
                                                     ? fullHeight * 0.07

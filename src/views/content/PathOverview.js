@@ -178,7 +178,7 @@ export default class PathOverview extends React.Component {
                                 <Text
                                     numberOfLines={2}
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontWeight: 'bold',
                                         color: 'white',
                                         textAlign: 'center',
@@ -191,7 +191,7 @@ export default class PathOverview extends React.Component {
                                 <Text
                                     numberOfLines={2}
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         color: colors.secondBackground,
                                         textAlign: 'center',
                                         fontSize: 14 * factorRatio,
@@ -250,7 +250,7 @@ export default class PathOverview extends React.Component {
                                         )}
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 color: 'white',
                                                 fontSize: 12 * factorRatio,
                                             }}
@@ -316,7 +316,7 @@ export default class PathOverview extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 color: 'white',
                                                 marginTop: 3 * factorRatio,
                                                 fontSize: 13 * factorRatio,
@@ -340,7 +340,7 @@ export default class PathOverview extends React.Component {
                                 <View style={{height: 20 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         marginTop: 5 * factorVertical,
                                         fontSize: 15 * factorRatio,
                                         color: 'white',
@@ -383,7 +383,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -400,7 +400,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -425,7 +425,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -437,7 +437,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -495,7 +495,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -529,7 +529,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -564,7 +564,7 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}

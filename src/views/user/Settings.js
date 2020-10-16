@@ -83,7 +83,7 @@ export default class Settings extends React.Component {
                                 style={{
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     color: colors.secondBackground,
                                 }}
                             >
@@ -135,7 +135,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -183,7 +183,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -231,7 +231,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -274,7 +274,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -322,7 +322,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -368,7 +368,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -416,7 +416,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -462,7 +462,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -478,7 +478,7 @@ export default class Settings extends React.Component {
                                 </TouchableOpacity>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         textAlign: 'center',
                                         color: colors.secondBackground,
                                         marginTop: 15 * factorRatio,

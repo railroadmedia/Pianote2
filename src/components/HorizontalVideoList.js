@@ -133,8 +133,6 @@ class HorizontalVideoList extends React.Component {
                                     fontSize: 18 * factorRatio,
                                     marginBottom: 5 * factorVertical,
                                     textAlign: 'left',
-                                    fontWeight:
-                                        Platform.OS == 'ios' ? '900' : 'bold',
                                     fontFamily: 'RobotoCondensed-Bold',
                                     color: colors.secondBackground,
                                 }}
@@ -271,7 +269,7 @@ class HorizontalVideoList extends React.Component {
                                                         Platform.OS == 'ios'
                                                             ? '800'
                                                             : 'bold',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     color: 'white',
                                                 }}
                                             >
@@ -293,7 +291,7 @@ class HorizontalVideoList extends React.Component {
                                                         style={{
                                                             textAlign: 'left',
                                                             fontFamily:
-                                                                'OpenSans',
+                                                                'OpenSans-Regular',
                                                             color:
                                                                 colors.secondBackground,
                                                             fontSize:
@@ -316,7 +314,7 @@ class HorizontalVideoList extends React.Component {
                                                         style={{
                                                             textAlign: 'left',
                                                             fontFamily:
-                                                                'OpenSans',
+                                                                'OpenSans-Regular',
                                                             color:
                                                                 colors.secondBackground,
                                                             fontSize:

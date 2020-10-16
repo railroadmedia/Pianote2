@@ -75,7 +75,7 @@ class LogOut extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontWeight: 'bold',
                                     fontSize: 19 * factorRatio,
                                     marginTop: 10 * factorRatio,
@@ -95,7 +95,7 @@ class LogOut extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 16 * factorRatio,
                                     textAlign: 'justify',
                                 }}
@@ -193,7 +193,7 @@ class LogOut extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     fontSize: 14 * factorRatio,
                                                     color: 'grey',
                                                     fontWeight: '700',

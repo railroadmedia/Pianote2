@@ -48,38 +48,45 @@ export async function getStartedContent(type) {
 export async function getAllContent(type, sort, page, filtersDict) {
     let filters = ''; // instructor, topic, level
     let required_user_states = ''; // progress
+    let included_types = ''; 
 
     if (type !== '') {
-        type = `included_types[]=${type}&`;
-    }
-
-    for (i in filtersDict.topics) {
-        filters = filters + `required_fields[]=${filtersDict.topics[i]}&`;
-    }
-    for (i in filtersDict.instructors) {
-        filters =
-            filters +
-            `required_fields[]=instructor,${filtersDict.instructors[i]}&`;
-    }
-    for (i in filtersDict.level) {
-        if (typeof filtersDict.level[i] == 'number') {
+        // if has type then it is see all or 
+        if (filtersDict.topics.length > 0) {
+            for (i in filtersDict.topics) {
+                included_types =
+                    included_types + `&included_types[]=${filtersDict.topics[i]}`;
+            }
+        } else {
+            included_types = included_types + '&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
+        }
+    } else {
+        for (i in filtersDict.topics) {
+            filters = filters + `required_fields[]=${filtersDict.topics[i]}&`;
+        }
+        for (i in filtersDict.instructors) {
             filters =
                 filters +
-                `required_fields[]=difficulty,${filtersDict.level[i]}&`;
+                `required_fields[]=instructor,${filtersDict.instructors[i]}&`;
         }
-    }
-    for (i in filtersDict.progress) {
-        required_user_states =
-            required_user_states +
-            `required_user_states[]=${filtersDict.progress[i]}`;
+        for (i in filtersDict.level) {
+            if (typeof filtersDict.level[i] == 'number') {
+                filters =
+                    filters +
+                    `required_fields[]=difficulty,${filtersDict.level[i]}&`;
+            }
+        }
+        for (i in filtersDict.progress) {
+            required_user_states =
+                required_user_states +
+                `required_user_states[]=${filtersDict.progress[i]}`;
+        }
     }
 
     try {
         let auth = await getToken();
-        let url =
-            `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${type}` +
-            filters +
-            required_user_states;
+        let url = `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` + filters + required_user_states;
+        console.log('URL: ', url)
         let response = await fetch(url, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
@@ -139,12 +146,13 @@ export async function getMyListContent(page, filtersDict, progressState) {
 
     try {
         let auth = await getToken();
-        var url = `https://app-staging.pianote.com/api/railcontent/api/railcontent/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}` + included_types + progress_types;
+        var url = `https://${serverLocation}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}` + included_types + progress_types;
         let response = await fetch(url, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
         });
-        return await response.json();
+
+        return await response.json()
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);

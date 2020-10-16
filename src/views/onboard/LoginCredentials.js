@@ -178,7 +178,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -196,7 +196,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -274,7 +274,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 24 * factorRatio,
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 textAlign: 'center',
                                 color: 'white',
                             }}
@@ -303,7 +303,7 @@ export default class LoginCredentials extends React.Component {
                                 placeholder={'Email Address'}
                                 onChangeText={email => this.setState({email})}
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 18 * factorRatio,
                                 }}
                             />
@@ -340,7 +340,7 @@ export default class LoginCredentials extends React.Component {
                                 }
                                 style={{
                                     fontSize: 18 * factorRatio,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     flex: 1,
                                 }}
                             />

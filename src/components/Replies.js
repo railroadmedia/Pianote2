@@ -177,7 +177,7 @@ class Replies extends React.Component {
                             />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 10 * factorRatio,
                                     marginTop: 2 * factorRatio,
                                     fontWeight:
@@ -199,7 +199,7 @@ class Replies extends React.Component {
                         <View style={{height: 3 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 13 * factorRatio,
                                 color: 'white',
                             }}
@@ -209,7 +209,7 @@ class Replies extends React.Component {
                         <View style={{height: 7.5 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 11 * factorRatio,
                                 color: 'grey',
                             }}
@@ -268,7 +268,7 @@ class Replies extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         fontSize:
                                                             9.5 * factorRatio,
                                                         color:
@@ -460,7 +460,7 @@ class Replies extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 10 * factorRatio,
                                                 marginTop: 2 * factorRatio,
                                                 fontWeight:
@@ -489,7 +489,7 @@ class Replies extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 13 * factorRatio,
                                             color: 'white',
                                         }}
@@ -501,7 +501,7 @@ class Replies extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 11 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
@@ -582,7 +582,7 @@ class Replies extends React.Component {
                                                             <Text
                                                                 style={{
                                                                     fontFamily:
-                                                                        'OpenSans',
+                                                                        'OpenSans-Regular',
                                                                     fontSize:
                                                                         9.5 *
                                                                         factorRatio,
@@ -663,7 +663,7 @@ class Replies extends React.Component {
                                                             <Text
                                                                 style={{
                                                                     fontFamily:
-                                                                        'OpenSans',
+                                                                        'OpenSans-Regular',
                                                                     fontSize:
                                                                         9.5 *
                                                                         factorRatio,
@@ -784,7 +784,7 @@ class Replies extends React.Component {
                                     <Text
                                         style={{
                                             textAlign: 'left',
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 13 * factorRatio,
                                             color: 'white',
                                             paddingLeft: 10 * factorHorizontal,
@@ -848,7 +848,7 @@ class Replies extends React.Component {
                                     this.textInputRef = ref;
                                 }}
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 14 * factorRatio,
                                     width: fullWidth * 0.6,
                                     backgroundColor: colors.mainBackground,

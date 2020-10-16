@@ -416,7 +416,7 @@ class VerticalVideoList extends React.Component {
                                             marginBottom: 2 * factorRatio,
                                             textAlign: 'left',
                                             fontWeight: 'bold',
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             color: colors.pianoteRed,
                                         }}
                                     >
@@ -429,7 +429,7 @@ class VerticalVideoList extends React.Component {
                                         fontSize: 15 * factorRatio,
                                         textAlign: 'left',
                                         fontWeight: 'bold',
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         color: 'white',
                                     }}
                                 >
@@ -443,7 +443,7 @@ class VerticalVideoList extends React.Component {
                                             fontSize: 12 * factorRatio,
                                             color: colors.secondBackground,
                                             textAlign: 'left',
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             paddingRight: 20 * factorHorizontal,
                                         }}
                                     >
@@ -459,7 +459,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
                                             {Math.floor(row.duration / 60)}{' '}
@@ -475,7 +475,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
                                             Level{' '}
@@ -489,7 +489,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
                                             {row.type.charAt(0).toUpperCase() +
@@ -504,7 +504,7 @@ class VerticalVideoList extends React.Component {
                                                 fontSize: 12 * factorRatio,
                                                 color: colors.secondBackground,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
                                             {row.artist}
@@ -586,7 +586,7 @@ class VerticalVideoList extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 12 * factorRatio,
-                                        fontWeight: '700',
+                                        fontFamily: 'OpenSans-Bold',
                                     }}
                                     numberOfLines={1}
                                 >
@@ -604,7 +604,7 @@ class VerticalVideoList extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 12 * factorRatio,
-                                        fontWeight: '300',
+                                        fontFamily: 'OpenSans-Regular',
                                         color: 'red',
                                         textAlign: 'right',
                                     }}
@@ -702,7 +702,7 @@ class VerticalVideoList extends React.Component {
                                         style={{
                                             fontSize: 15 * factorRatio,
                                             textAlign: 'left',
-                                            fontWeight: 'bold',
+                                            fontFamily: 'OpenSans-Bold',
                                         }}
                                     >
                                         {row.title}
@@ -767,11 +767,7 @@ class VerticalVideoList extends React.Component {
                                         style={{
                                             fontSize: 30 * factorRatio,
                                             color: 'white',
-                                            fontFamily: 'OpenSans',
-                                            fontWeight:
-                                                Platform.OS == 'ios'
-                                                    ? '900'
-                                                    : 'bold',
+                                            fontFamily: 'OpenSans-ExtraBold',
                                         }}
                                     >
                                         {this.props.title}
@@ -819,7 +815,7 @@ class VerticalVideoList extends React.Component {
                                                 style={{
                                                     color: colors.pianoteRed,
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                 }}
                                             >
                                                 {
@@ -912,7 +908,7 @@ class VerticalVideoList extends React.Component {
                                                 marginBottom:
                                                     5 * factorVertical,
                                                 textAlign: 'left',
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 color: colors.secondBackground,
                                             }}
                                         >
@@ -922,11 +918,7 @@ class VerticalVideoList extends React.Component {
                                                     marginBottom:
                                                         5 * factorVertical,
                                                     textAlign: 'left',
-                                                    fontWeight:
-                                                        Platform.OS == 'ios'
-                                                            ? '900'
-                                                            : 'bold',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Bold',
                                                     color:
                                                         colors.secondBackground,
                                                 }}
@@ -953,6 +945,7 @@ class VerticalVideoList extends React.Component {
                                     style={{
                                         fontSize: 12 * factorRatio,
                                         color: colors.secondBackground,
+                                        fontFamily: 'OpenSans-Regular',
                                         textAlign: 'left',
                                     }}
                                 >

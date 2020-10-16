@@ -61,47 +61,19 @@
 		<string>MaterialIcons.ttf</string>
 		<string>NanumPen.ttf</string>
 		<string>Octicons.ttf</string>
-		<string>OpenSans-Bold.ttf</string>
-		<string>OpenSans-BoldItalic.ttf</string>
-		<string>OpenSans-ExtraBold.ttf</string>
-		<string>OpenSans-ExtraBoldItalic.ttf</string>
-		<string>OpenSans-Italic.ttf</string>
-		<string>OpenSans-Light.ttf</string>
-		<string>OpenSans-LightItalic.ttf</string>
-		<string>OpenSans-Regular.ttf</string>
-		<string>OpenSans-Semibold.ttf</string>
-		<string>OpenSans-SemiboldItalic.ttf</string>
-		<string>OpenSans.ttf</string>
-		<string>Roboto-Black.ttf</string>
-		<string>Roboto-BlackItalic.ttf</string>
-		<string>Roboto-Bold.ttf</string>
-		<string>Roboto-BoldItalic.ttf</string>
-		<string>Roboto-Italic.ttf</string>
-		<string>Roboto-Light.ttf</string>
-		<string>Roboto-LightItalic.ttf</string>
-		<string>Roboto-Medium.ttf</string>
-		<string>Roboto-MediumItalic.ttf</string>
-		<string>Roboto-Regular.ttf</string>
-		<string>Roboto-Thin.ttf</string>
-		<string>Roboto-ThinItalic.ttf</string>
-		<string>RobotoCondensed-Bold.ttf</string>
-		<string>RobotoCondensed-BoldItalic.ttf</string>
-		<string>RobotoCondensed-Italic.ttf</string>
-		<string>RobotoCondensed-Light.ttf</string>
-		<string>RobotoCondensed-LightItalic.ttf</string>
-		<string>RobotoCondensed-Regular.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>OpenSans-SemiBold.ttf</string>
-		<string>OpenSans-SemiBoldItalic.ttf</string>
+		<string>OpenSans-Bold.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+		<string>OpenSans-ExtraBold.ttf</string>
+		<string>RobotoCondensed-Bold.ttf</string>
+		<string>RobotoCondensed-Regular.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 	</dict>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

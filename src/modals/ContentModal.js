@@ -158,7 +158,7 @@ class ContentModal extends React.Component {
                             <View key={'title'} style={styles.centerContent}>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontWeight: 'bold',
                                         fontSize: 22 * factorRatio,
                                         textAlign: 'center',
@@ -178,7 +178,7 @@ class ContentModal extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         textAlign: 'center',
                                         fontSize: 12 * factorRatio,
                                         color: 'grey',
@@ -204,7 +204,7 @@ class ContentModal extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontSize: 14 * factorRatio,
                                         textAlign: 'left',
                                     }}
@@ -234,7 +234,7 @@ class ContentModal extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontWeight: 'bold',
                                                 fontSize: 18 * factorRatio,
                                                 textAlign: 'left',
@@ -247,7 +247,7 @@ class ContentModal extends React.Component {
                                         </Text>
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 12 * factorRatio,
                                                 textAlign: 'left',
                                                 marginTop: 5 * factorVertical,
@@ -270,7 +270,7 @@ class ContentModal extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontWeight: 'bold',
                                             fontSize: 18 * factorRatio,
                                             textAlign: 'left',
@@ -281,7 +281,7 @@ class ContentModal extends React.Component {
                                     </Text>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 12 * factorRatio,
                                             textAlign: 'left',
                                             marginTop: 5 * factorVertical,
@@ -331,7 +331,7 @@ class ContentModal extends React.Component {
                                     </TouchableOpacity>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 12 * factorRatio,
                                             textAlign: 'left',
                                             marginTop: 15 * factorVertical,
@@ -392,7 +392,7 @@ class ContentModal extends React.Component {
 
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 12 * factorRatio,
                                             textAlign: 'left',
                                             marginTop: 10 * factorVertical,
@@ -425,7 +425,7 @@ class ContentModal extends React.Component {
                                     </TouchableOpacity>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 12 * factorRatio,
                                             textAlign: 'left',
                                             marginTop: 10 * factorVertical,

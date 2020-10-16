@@ -181,7 +181,7 @@ export default class VideoPlayer extends React.Component {
                     id: assignments[a].id,
                     title: assignments[a].getField('title'),
                     isCompleted: assignments[a].isCompleted,
-                    description: assignments[a].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                    description: assignments[a].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                     xp: assignments[a].xp,
                     progress:
                         parseInt(
@@ -228,7 +228,7 @@ export default class VideoPlayer extends React.Component {
                 type: content.type,
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
-                description: content.getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                description: content.getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                 xp: content.xp,
                 artist: content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),
@@ -456,7 +456,7 @@ export default class VideoPlayer extends React.Component {
                             />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 10 * factorRatio,
                                     marginTop: 2 * factorRatio,
                                     fontWeight: 'bold',
@@ -477,7 +477,7 @@ export default class VideoPlayer extends React.Component {
                         <View style={{height: 3 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 13 * factorRatio,
                                 color: 'white',
                             }}
@@ -487,7 +487,7 @@ export default class VideoPlayer extends React.Component {
                         <View style={{height: 7.5 * factorVertical}} />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 12 * factorRatio,
                                 color: colors.secondBackground,
                             }}
@@ -547,7 +547,7 @@ export default class VideoPlayer extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         fontSize:
                                                             10 * factorRatio,
                                                         color:
@@ -608,7 +608,7 @@ export default class VideoPlayer extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         fontSize:
                                                             10 * factorRatio,
                                                         color:
@@ -654,7 +654,7 @@ export default class VideoPlayer extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontSize: 12 * factorRatio,
                                         color: colors.secondBackground,
                                     }}
@@ -1072,7 +1072,7 @@ export default class VideoPlayer extends React.Component {
                                                 style={{
                                                     fontSize: 20 * factorRatio,
                                                     fontWeight: 'bold',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     textAlign: 'center',
                                                     color: 'white',
                                                 }}
@@ -1089,7 +1089,7 @@ export default class VideoPlayer extends React.Component {
                                                     fontSize: 12 * factorRatio,
                                                     fontWeight: '400',
                                                     color: 'grey',
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     textAlign: 'center',
                                                     color:
                                                         colors.secondBackground,
@@ -1357,7 +1357,7 @@ export default class VideoPlayer extends React.Component {
                                                             paddingLeft: '5%',
                                                             paddingRight: '5%',
                                                             fontFamily:
-                                                                'OpenSans',
+                                                                'OpenSans-Regular',
                                                             fontSize:
                                                                 14 *
                                                                 factorRatio,
@@ -1712,7 +1712,7 @@ export default class VideoPlayer extends React.Component {
                                                                             <Text
                                                                                 style={{
                                                                                     fontFamily:
-                                                                                        'OpenSans',
+                                                                                        'OpenSans-Regular',
                                                                                     fontSize:
                                                                                         10 *
                                                                                         factorRatio,
@@ -1755,7 +1755,7 @@ export default class VideoPlayer extends React.Component {
                                                                         <Text
                                                                             style={{
                                                                                 fontFamily:
-                                                                                    'OpenSans',
+                                                                                    'OpenSans-Regular',
                                                                                 fontSize:
                                                                                     13 *
                                                                                     factorRatio,
@@ -1786,7 +1786,7 @@ export default class VideoPlayer extends React.Component {
                                                                         <Text
                                                                             style={{
                                                                                 fontFamily:
-                                                                                    'OpenSans',
+                                                                                    'OpenSans-Regular',
                                                                                 fontSize:
                                                                                     11 *
                                                                                     factorRatio,
@@ -1880,7 +1880,7 @@ export default class VideoPlayer extends React.Component {
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontFamily:
-                                                                                                        'OpenSans',
+                                                                                                        'OpenSans-Regular',
                                                                                                     fontSize:
                                                                                                         9.5 *
                                                                                                         factorRatio,
@@ -1966,7 +1966,7 @@ export default class VideoPlayer extends React.Component {
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontFamily:
-                                                                                                        'OpenSans',
+                                                                                                        'OpenSans-Regular',
                                                                                                     fontSize:
                                                                                                         9.5 *
                                                                                                         factorRatio,
@@ -1997,7 +1997,7 @@ export default class VideoPlayer extends React.Component {
                                                                             <Text
                                                                                 style={{
                                                                                     fontFamily:
-                                                                                        'OpenSans',
+                                                                                        'OpenSans-Regular',
                                                                                     fontSize:
                                                                                         11.5 *
                                                                                         factorRatio,
@@ -2110,7 +2110,7 @@ export default class VideoPlayer extends React.Component {
                                                                                 textAlign:
                                                                                     'left',
                                                                                 fontFamily:
-                                                                                    'OpenSans',
+                                                                                    'OpenSans-Regular',
                                                                                 fontSize:
                                                                                     13 *
                                                                                     factorRatio,
@@ -2192,7 +2192,7 @@ export default class VideoPlayer extends React.Component {
                                             this.textInputRef = ref;
                                         }}
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 14 * factorRatio,
                                             width: fullWidth * 0.6,
                                             backgroundColor:

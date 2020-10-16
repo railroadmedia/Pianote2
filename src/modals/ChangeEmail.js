@@ -70,7 +70,7 @@ class ChangeEmail extends React.Component {
                         <Text
                             key={'emailTaken'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 21 * factorRatio,
                                 fontWeight: '600',
                                 textAlign: 'center',
@@ -83,7 +83,7 @@ class ChangeEmail extends React.Component {
                             <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 15 * factorRatio,
                                     fontWeight: '300',
                                     textAlign: 'center',
@@ -130,7 +130,7 @@ class ChangeEmail extends React.Component {
                                             onSubmitEditing={() => {}}
                                             returnKeyType={'go'}
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 height: fullHeight * 0.06,
                                                 paddingLeft: fullWidth * 0.075,
                                                 width: fullWidth,
@@ -170,7 +170,7 @@ class ChangeEmail extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     fontSize: 15 * factorRatio,
                                                     fontWeight: '700',
                                                     textAlign: 'center',
@@ -202,7 +202,7 @@ class ChangeEmail extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 15 * factorRatio,
                                                 fontWeight: '700',
                                                 color: 'grey',

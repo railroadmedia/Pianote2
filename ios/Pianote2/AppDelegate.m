@@ -41,6 +41,7 @@
           NSLog(@"  %@ fffont", name);
       }
   }
+
   GCKCastOptions* options = [[GCKCastOptions alloc] initWithReceiverApplicationID:kGCKDefaultMediaReceiverApplicationID];
   options.physicalVolumeButtonsWillControlDeviceVolume = YES;
   [GCKCastContext setSharedInstanceWithOptions:options];

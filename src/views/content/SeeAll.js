@@ -8,15 +8,15 @@ import {ContentModel} from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import {seeAllContent} from '../../services/GetContent';
+import {seeAllContent, getMyListContent} from '../../services/GetContent';
 
 // correlates to filters
 const typeDict = {
     'My List': 'MYLIST',
-    Packs: 'PACKS',
-    Lessons: 'LESSONS',
+    'Packs': 'PACKS',
+    'Lessons': 'LESSONS',
     'Student Focus': 'STUDENTFOCUS',
-    Songs: 'SONGS',
+    'Songs': 'SONGS',
 };
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -56,10 +56,11 @@ export default class SeeAll extends React.Component {
     }
 
     async getAllLessons() {
-        let response = await seeAllContent(this.state.page, this.state.filters);
-        const newContent = await response.data.map(data => {
-            return new ContentModel(data);
-        });
+        let response = (this.state.title == 'In Progress' || this.state.title == 'Completed') ?                            
+            await getMyListContent(this.state.page, this.state.filters, (this.state.title == 'In Progress') ? 'started' : 'completed')
+            : 
+            await seeAllContent(this.state.page, this.state.filters);
+        const newContent = await response.data.map(data => {return new ContentModel(data)});
 
         items = [];
         for (i in newContent) {
@@ -75,7 +76,7 @@ export default class SeeAll extends React.Component {
                             : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
@@ -254,9 +255,8 @@ export default class SeeAll extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 22 * factorRatio,
-                                        fontWeight: 'bold',
                                         color: 'white',
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Bold',
                                     }}
                                 >
                                     {this.state.parent}

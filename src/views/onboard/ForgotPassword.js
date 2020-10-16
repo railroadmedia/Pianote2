@@ -136,7 +136,7 @@ export default class forgotPassword extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 16 * factorRatio,
                                 color: 'grey',
                                 textAlign: 'center',
@@ -154,7 +154,7 @@ export default class forgotPassword extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 16 * factorRatio,
                                 color: 'grey',
                                 textAlign: 'center',
@@ -234,7 +234,7 @@ export default class forgotPassword extends React.Component {
                         />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 24 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -264,7 +264,7 @@ export default class forgotPassword extends React.Component {
                                 placeholder={'Email Address'}
                                 onChangeText={email => this.setState({email})}
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 18 * factorRatio,
                                 }}
                             />

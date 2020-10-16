@@ -137,7 +137,7 @@ export default class NewMembership extends React.Component {
                         <Text
                             key={'7day'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 26 * factorRatio,
                                 fontWeight:
                                     Platform.OS == 'ios' ? '700' : 'bold',
@@ -151,7 +151,7 @@ export default class NewMembership extends React.Component {
                         <Text
                             key={'onUs'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 16 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -202,7 +202,7 @@ export default class NewMembership extends React.Component {
                                         <View style={{flex: 0.05}} />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'ios'
@@ -216,7 +216,7 @@ export default class NewMembership extends React.Component {
                                         <View style={{flex: 0.015}} />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 8 * factorRatio,
                                                 fontWeight: '400',
                                                 textAlign: 'center',
@@ -238,7 +238,7 @@ export default class NewMembership extends React.Component {
                                         />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 28 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'ios'
@@ -250,7 +250,7 @@ export default class NewMembership extends React.Component {
                                             $29.99
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     fontSize: 9 * factorRatio,
                                                     color: 'grey',
                                                 }}
@@ -283,7 +283,7 @@ export default class NewMembership extends React.Component {
                                                 <View style={{flex: 1}} />
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         textAlign: 'center',
                                                         color: 'white',
                                                         fontSize:
@@ -327,7 +327,7 @@ export default class NewMembership extends React.Component {
                                         <View style={{flex: 1}} />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 10 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'ios'
@@ -355,7 +355,7 @@ export default class NewMembership extends React.Component {
                                         <View style={{flex: 0.05}} />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'ios'
@@ -369,7 +369,7 @@ export default class NewMembership extends React.Component {
                                         <View style={{flex: 0.015}} />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 8 * factorRatio,
                                                 fontWeight: '400',
                                                 textAlign: 'center',
@@ -387,7 +387,7 @@ export default class NewMembership extends React.Component {
                                         <View style={{flex: 0.125}} />
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 28 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'ios'
@@ -399,7 +399,7 @@ export default class NewMembership extends React.Component {
                                             $199.99
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     fontSize: 9 * factorRatio,
                                                     color: 'grey',
                                                 }}
@@ -432,7 +432,7 @@ export default class NewMembership extends React.Component {
                                                 <View style={{flex: 1}} />
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         textAlign: 'center',
                                                         color: 'white',
                                                         fontSize:
@@ -685,7 +685,7 @@ export default class NewMembership extends React.Component {
                             />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     textAlign: 'center',
                                     fontSize: 14 * factorRatio,
                                     color: 'white',
@@ -705,7 +705,7 @@ export default class NewMembership extends React.Component {
                             />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     textAlign: 'center',
                                     fontSize: 14 * factorRatio,
                                     color: 'white',
@@ -725,7 +725,7 @@ export default class NewMembership extends React.Component {
                             />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     textAlign: 'center',
                                     fontSize: 14 * factorRatio,
                                     color: 'white',
@@ -745,7 +745,7 @@ export default class NewMembership extends React.Component {
                             />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     textAlign: 'center',
                                     fontSize: 14 * factorRatio,
                                     color: 'white',
@@ -778,7 +778,7 @@ export default class NewMembership extends React.Component {
                                         : Alert.alert('Simulated appstore');
                                 }}
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     color: 'grey',
                                     fontSize: 14 * factorVertical,
                                     textAlign: 'center',
@@ -796,7 +796,7 @@ export default class NewMembership extends React.Component {
                                         this.props.navigation.navigate('TERMS');
                                     }}
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         color: 'grey',
                                         fontSize: 14 * factorVertical,
                                         textAlign: 'center',

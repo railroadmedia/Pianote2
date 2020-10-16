@@ -59,7 +59,7 @@ export default class VideoPlayerSong extends React.Component {
                             <Text
                                 key={'assignmentNumber'}
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
@@ -72,7 +72,7 @@ export default class VideoPlayerSong extends React.Component {
                             <Text
                                 key={'assignmentName'}
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 28 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
@@ -117,7 +117,7 @@ export default class VideoPlayerSong extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     fontWeight: '700',
                                                     color: 'grey',
                                                     fontSize: 12 * factorRatio,
@@ -146,7 +146,7 @@ export default class VideoPlayerSong extends React.Component {
                                         paddingLeft: '5%',
                                         paddingRight: '5%',
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
                                     {description}
@@ -186,7 +186,7 @@ export default class VideoPlayerSong extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontWeight: '800',
                                         color: '#fb1b2f',
                                         paddingVertical: 10,
@@ -215,7 +215,7 @@ export default class VideoPlayerSong extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 16 * factorRatio,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontWeight: '800',
                                     color: 'white',
                                     paddingVertical: 10,

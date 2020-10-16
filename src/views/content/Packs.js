@@ -53,7 +53,7 @@ export default class Packs extends React.Component {
                         .value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                     xp: newContent[i].getField('xp'),
                     logo: newContent[i].getData('logo_image_url'),
                     header: newContent[i].getData('header_image_url'),
@@ -116,9 +116,7 @@ export default class Packs extends React.Component {
                                 paddingLeft: 12 * factorHorizontal,
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
-                                fontFamily: 'OpenSans',
-                                fontWeight:
-                                    Platform.OS == 'ios' ? '900' : 'bold',
+                                fontFamily: 'OpenSans-ExtraBold',
                             }}
                         >
                             Packs

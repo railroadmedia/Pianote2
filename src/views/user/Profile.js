@@ -93,7 +93,7 @@ export default class Profile extends React.Component {
                 },
             );
             var notifications = await response.json()
-            console.log('HELLO: ', notifications)
+
             for(i in notifications.data) {
                 let timeCreated = notifications.data[i].created_at.slice(0,10)+'T'+notifications.data[i].created_at.slice(11)+'.000Z'                
                 let dateNote = new Date(timeCreated).getTime()/1000
@@ -257,9 +257,8 @@ export default class Profile extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 22 * factorRatio,
-                                        fontWeight: 'bold',
                                         color: 'white',
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Bold',
                                     }}
                                 >
                                     My Profile
@@ -404,12 +403,8 @@ export default class Profile extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-ExtraBold',
                                             fontSize: 30 * factorRatio,
-                                            fontWeight:
-                                                Platform.OS == 'ios'
-                                                    ? '900'
-                                                    : 'bold',
                                             textAlign: 'center',
                                             color: 'white',
                                         }}
@@ -421,7 +416,7 @@ export default class Profile extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 14 * factorRatio,
                                             textAlign: 'center',
                                             color: colors.secondBackground,
@@ -477,10 +472,7 @@ export default class Profile extends React.Component {
                                                 style={{
                                                     color: 'white',
                                                     fontSize: 24 * factorRatio,
-                                                    fontWeight:
-                                                        Platform.OS == 'ios'
-                                                            ? '800'
-                                                            : 'bold',
+                                                    fontFamily: 'OpenSans-ExtraBold',
                                                     textAlign: 'center',
                                                 }}
                                             >
@@ -511,10 +503,7 @@ export default class Profile extends React.Component {
                                                 style={{
                                                     color: 'white',
                                                     fontSize: 24 * factorRatio,
-                                                    fontWeight:
-                                                        Platform.OS == 'ios'
-                                                            ? '800'
-                                                            : 'bold',
+                                                    fontFamily: 'OpenSans-ExtraBold',
                                                     textAlign: 'center',
                                                 }}
                                             >
@@ -539,11 +528,7 @@ export default class Profile extends React.Component {
                                     style={{
                                         paddingLeft: fullWidth * 0.05,
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                        fontWeight:
-                                            Platform.OS == 'ios'
-                                                ? '800'
-                                                : 'bold',
+                                        fontFamily: 'OpenSans-ExtraBold',
                                         color: colors.secondBackground,
                                     }}
                                 >
@@ -675,21 +660,15 @@ export default class Profile extends React.Component {
                                                     <View style={{flex: 1}} />
                                                     <Text
                                                         style={{
-                                                            fontFamily: 'OpenSans-Regular',
+                                                            fontFamily: 'OpenSans-Bold',
                                                             fontSize: 15 * factorRatio,
-                                                            fontWeight:
-                                                                Platform.OS == 'ios' ? '700' : 'bold',
                                                             color: 'white',
                                                         }}
                                                     >
                                                         <Text
                                                             style={{
-                                                                fontFamily: 'OpenSans-Regular',
+                                                                fontFamily: 'OpenSans-ExtraBold',
                                                                 fontSize: 15 * factorRatio,
-                                                                fontWeight:
-                                                                    Platform.OS == 'ios'
-                                                                        ? '700'
-                                                                        : 'bold',
                                                                 color: 'white',
                                                             }}
                                                         >
@@ -704,7 +683,6 @@ export default class Profile extends React.Component {
                                                             style={{
                                                                 fontFamily: 'OpenSans-Regular',
                                                                 fontSize: 14 * factorRatio,
-                                                                fontWeight: '400',
                                                             }}
                                                         >
                                                             {' '}
@@ -716,7 +694,6 @@ export default class Profile extends React.Component {
                                                         style={{
                                                             fontFamily: 'OpenSans-Regular',
                                                             fontSize: 13 * factorRatio,
-                                                            fontWeight: '400',
                                                             color: colors.secondBackground,
                                                         }}
                                                     >
@@ -760,12 +737,8 @@ export default class Profile extends React.Component {
                             <View>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans-ExtraBold',
                                         fontSize: 15 * factorRatio,
-                                        fontWeight:
-                                            Platform.OS == 'ios'
-                                                ? '900'
-                                                : 'bold',
                                         textAlign: 'left',
                                         paddingLeft: fullWidth * 0.05,
                                         color: 'white',

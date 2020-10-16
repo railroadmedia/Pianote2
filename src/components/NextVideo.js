@@ -78,7 +78,7 @@ class NextVideo extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 12 * factorRatio,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     color: colors.secondBackground,
                                     textAlign: 'right',
                                 }}
@@ -141,7 +141,7 @@ class NextVideo extends React.Component {
                                         fontSize: 15 * factorRatio,
                                         textAlign: 'left',
                                         fontWeight: 'bold',
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         color: 'white',
                                     }}
                                 >
@@ -152,7 +152,7 @@ class NextVideo extends React.Component {
                                     numberOfLines={2}
                                     style={{
                                         fontSize: 12 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         textAlign: 'left',
                                         color: colors.secondBackground,
                                     }}

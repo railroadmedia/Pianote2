@@ -6,6 +6,7 @@ import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import {View, Text, ScrollView, Platform} from 'react-native';
 import Modal from 'react-native-modal';
+import firebase from 'react-native-firebase';
 import RestartCourse from '../../modals/RestartCourse.js';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
@@ -16,6 +17,7 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import foundationsService from 'Pianote2/src/services/foundations.service.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 import {
     getNewContent,
@@ -64,8 +66,7 @@ export default class Lessons extends React.Component {
             foundationIsCompleted: false,
             foundationNextLesson: null,
             showRestartCourse: false,
-            page: 0,
-            showModalMenu: false, // show navigation menu
+
             lessonsStarted: true, // for showing continue lessons
             isLoadingNew: true, // new lessons
             isLoadingProgress: true,
@@ -171,7 +172,7 @@ export default class Lessons extends React.Component {
                             .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         like_count: newContent[i].post.like_count,
@@ -221,7 +222,7 @@ export default class Lessons extends React.Component {
                                 : newContent[i].getField('instructor').name,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         like_count: newContent[i].post.like_count,
@@ -267,7 +268,7 @@ export default class Lessons extends React.Component {
                             .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         like_count: newContent[0].post.like_count,
@@ -724,10 +725,7 @@ export default class Lessons extends React.Component {
                                             style={{
                                                 color: 'white',
                                                 fontSize: 24 * factorRatio,
-                                                fontWeight:
-                                                    Platform.OS == 'ios'
-                                                        ? '800'
-                                                        : 'bold',
+                                                fontFamily: 'OpenSans-ExtraBold',
                                                 textAlign: 'center',
                                             }}
                                         >
@@ -758,10 +756,7 @@ export default class Lessons extends React.Component {
                                             style={{
                                                 color: 'white',
                                                 fontSize: 24 * factorRatio,
-                                                fontWeight:
-                                                    Platform.OS == 'ios'
-                                                        ? '800'
-                                                        : 'bold',
+                                                fontFamily: 'OpenSans-ExtraBold',
                                                 textAlign: 'center',
                                             }}
                                         >

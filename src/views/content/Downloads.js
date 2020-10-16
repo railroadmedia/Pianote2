@@ -154,7 +154,7 @@ export default class Downloads extends React.Component {
                                     fontWeight: 'bold',
                                     color: 'white',
                                     marginBottom: 5 * factorVertical,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                 }}
                             >
                                 {this.state.items[index][0]}
@@ -164,7 +164,7 @@ export default class Downloads extends React.Component {
                                     fontSize: 12 * factorRatio,
                                     color: colors.secondBackground,
                                     marginBottom: 5 * factorVertical,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                 }}
                             >
                                 {this.state.items[index][1]} |{' '}
@@ -208,7 +208,7 @@ export default class Downloads extends React.Component {
                     <Text
                         style={{
                             fontSize: 18 * factorRatio,
-                            fontFamily: 'OpenSans',
+                            fontFamily: 'OpenSans-Regular',
                             color: 'white',
                         }}
                     >
@@ -265,7 +265,7 @@ export default class Downloads extends React.Component {
                                     fontSize: 22 * factorRatio,
                                     fontWeight: 'bold',
                                     color: 'white',
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                 }}
                             >
                                 Downloads

@@ -81,7 +81,7 @@ export default class FoundationsLevel extends React.Component {
                 id: response.id,
                 isStarted: response.isStarted,
                 isCompleted: response.isCompleted,
-                description: response.getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                 isAddedToList: response.isAddedToList,
                 progress: response.post.progress_percent,
             });
@@ -318,7 +318,7 @@ export default class FoundationsLevel extends React.Component {
                                             )}
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     color: 'white',
                                                     fontSize: 12 * factorRatio,
                                                 }}
@@ -429,7 +429,7 @@ export default class FoundationsLevel extends React.Component {
                                             />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     color: 'white',
                                                     marginTop: 3 * factorRatio,
                                                     fontSize: 13 * factorRatio,
@@ -455,7 +455,7 @@ export default class FoundationsLevel extends React.Component {
                                 <View style={{height: 20 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         marginTop: 5 * factorVertical,
                                         fontSize: 15 * factorRatio,
                                         color: 'white',
@@ -468,7 +468,7 @@ export default class FoundationsLevel extends React.Component {
                                 <TouchableOpacity onPress={() => {}} style={{}}>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 15 * factorRatio,
                                             color: colors.pianoteRed,
                                             fontWeight: 'bold',

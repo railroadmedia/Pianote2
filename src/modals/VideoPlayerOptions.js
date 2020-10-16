@@ -66,7 +66,7 @@ class VideoPlayerOptions extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
                                     Video Quality
@@ -79,7 +79,7 @@ class VideoPlayerOptions extends React.Component {
                                     style={{
                                         fontSize: 18 * factorRatio,
                                         color: 'grey',
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
                                     {' '}
@@ -111,7 +111,7 @@ class VideoPlayerOptions extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
                                     Playback Speed
@@ -124,7 +124,7 @@ class VideoPlayerOptions extends React.Component {
                                     style={{
                                         fontSize: 18 * factorRatio,
                                         color: 'grey',
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
                                     {' '}
@@ -160,7 +160,7 @@ class VideoPlayerOptions extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                     }}
                                 >
                                     Cancel

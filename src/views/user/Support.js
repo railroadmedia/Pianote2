@@ -125,7 +125,7 @@ export default class Support extends React.Component {
                             style={{
                                 fontSize: 22 * factorRatio,
                                 fontWeight: 'bold',
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 color: colors.secondBackground,
                             }}
                         >
@@ -145,14 +145,14 @@ export default class Support extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 15.5 * factorRatio,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     color: colors.secondBackground,
                                 }}
                             ></Text>
                             <View style={{height: 15 * factorVertical}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 15.5 * factorRatio,
                                     color: colors.secondBackground,
                                 }}
@@ -268,7 +268,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'email'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 14 * factorRatio,
                                 opacity: 0.8,
                                 color: colors.secondBackground,
@@ -281,7 +281,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'emailaddress'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -293,7 +293,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'phone'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 14 * factorRatio,
                                 opacity: 0.8,
                                 color: colors.secondBackground,
@@ -306,7 +306,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'phoneNumber'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',
@@ -318,7 +318,7 @@ export default class Support extends React.Component {
                         <Text
                             key={'phoneNumber2'}
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 13.5 * factorRatio,
                                 textAlign: 'center',
                                 color: 'white',

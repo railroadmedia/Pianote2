@@ -822,9 +822,8 @@ export default class Filters extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 22 * factorRatio,
-                                    fontWeight: 'bold',
                                     color: 'white',
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Bold',
                                 }}
                             >
                                 Filter{' '}
@@ -922,9 +921,8 @@ export default class Filters extends React.Component {
                                     <Text
                                         style={{
                                             textAlign: 'center',
-                                            fontWeight: 'bold',
                                             fontSize: 24 * factorRatio,
-                                            fontFamily: 'OpenSans-Regular',
+                                            fontFamily: 'OpenSans-Bold',
                                             color: 'white',
                                         }}
                                     >
@@ -943,7 +941,7 @@ export default class Filters extends React.Component {
                                             paddingRight: fullWidth * 0.1,
                                         }}
                                     >
-                                        {(this.state.level ==  null) ? messageDict['All'] : messageDict[this.state.level]}
+                                        {(this.state.level ==  null || this.state.allLevels) ? messageDict['All'] : messageDict[this.state.level]}
                                     </Text>
                                     <View style={{height: 10 * factorRatio}} />
                                     <View
@@ -1009,11 +1007,9 @@ export default class Filters extends React.Component {
                                                 <Text
                                                     style={{
                                                         textAlign: 'center',
-                                                        fontWeight: 'bold',
                                                         fontSize:
                                                             12 * factorRatio,
-                                                        fontFamily:
-                                                            'OpenSans-Regular',
+                                                        fontFamily: 'OpenSans-ExtraBold',
                                                         color: this.state
                                                             .allLevels
                                                             ? 'white'
@@ -8233,7 +8229,7 @@ export default class Filters extends React.Component {
                                                     textAlign: 'center',
                                                     fontWeight: 'bold',
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     color: this.state
                                                         .progressAll
                                                         ? 'white'
@@ -8280,7 +8276,7 @@ export default class Filters extends React.Component {
                                                     textAlign: 'center',
                                                     fontWeight: 'bold',
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     color: this.state
                                                         .progressProgress
                                                         ? 'white'
@@ -8327,7 +8323,7 @@ export default class Filters extends React.Component {
                                                     textAlign: 'center',
                                                     fontWeight: 'bold',
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     color: this.state
                                                         .progressComplete
                                                         ? 'white'
@@ -8492,7 +8488,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8559,7 +8555,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8625,7 +8621,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8691,7 +8687,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8772,7 +8768,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8838,7 +8834,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8904,7 +8900,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8970,7 +8966,7 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:

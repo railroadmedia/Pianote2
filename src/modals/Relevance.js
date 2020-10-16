@@ -75,7 +75,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         color:
                                             this.state.currentSort == 'newest'
                                                 ? 'white'
@@ -120,7 +120,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         color:
                                             this.state.currentSort == 'oldest'
                                                 ? 'white'
@@ -158,7 +158,7 @@ class Relevance extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 16 * factorRatio,
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         color: 'white',
                                     }}
                                 >
@@ -212,7 +212,7 @@ export default withNavigation(Relevance);
         <Text
             style={{
                 fontSize: 16 * factorRatio,
-                fontFamily: 'OpenSans',
+                fontFamily: 'OpenSans-Regular',
                 color:
                     this.state.currentSort ==
                     'relevance'
@@ -258,7 +258,7 @@ export default withNavigation(Relevance);
         <Text
             style={{
                 fontSize: 16 * factorRatio,
-                fontFamily: 'OpenSans',
+                fontFamily: 'OpenSans-Regular',
                 color:
                     this.state.currentSort == 'trending'
                         ? 'white'
@@ -303,7 +303,7 @@ export default withNavigation(Relevance);
         <Text
             style={{
                 fontSize: 16 * factorRatio,
-                fontFamily: 'OpenSans',
+                fontFamily: 'OpenSans-Regular',
                 color:
                     this.state.currentSort ==
                     'popularity'

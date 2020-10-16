@@ -98,7 +98,7 @@ export default class Search extends React.Component {
                                 color: 'white',
                                 fontSize: 18 * factorRatio,
                                 fontWeight: '700',
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                             }}
                         >
                             {row[0]}
@@ -127,7 +127,7 @@ export default class Search extends React.Component {
                         <Text
                             style={{
                                 fontSize: 18 * factorRatio,
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontWeight: 'bold',
                                 color: 'white',
                             }}
@@ -209,7 +209,7 @@ export default class Search extends React.Component {
                                     : newContent[i].getField('instructor').name,
                             thumbnail: newContent[i].getData('thumbnail_url'),
                             type: newContent[i].post.type,
-                            description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                             xp: newContent[i].post.xp,
                             id: newContent[i].id,
                             like_count: newContent[i].post.like_count,
@@ -376,7 +376,7 @@ export default class Search extends React.Component {
                                             fontSize: 22 * factorRatio,
                                             fontWeight: 'bold',
                                             color: 'white',
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                         }}
                                     >
                                         Search
@@ -464,7 +464,7 @@ export default class Search extends React.Component {
                                                 flex: 0.9,
                                                 color: 'grey',
                                                 justifyContent: 'center',
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 16 * factorRatio,
                                             }}
                                         />
@@ -511,7 +511,7 @@ export default class Search extends React.Component {
                                                             12 * factorRatio,
                                                         fontWeight: 'bold',
                                                         color: '#fb1b2f',
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         zIndex: 3,
                                                         elevation: 0,
                                                     }}
@@ -547,7 +547,7 @@ export default class Search extends React.Component {
                                                 flex: 0.65,
                                                 paddingLeft: fullWidth * 0.05,
                                                 fontWeight: 'bold',
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18 * factorRatio,
                                                 color: colors.secondBackground,
                                             }}
@@ -588,7 +588,7 @@ export default class Search extends React.Component {
                                                         color:
                                                             colors.pianoteRed,
                                                         textAlign: 'right',
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         marginTop:
                                                             3 * factorVertical,
                                                     }}
@@ -730,7 +730,7 @@ export default class Search extends React.Component {
                                                     style={{
                                                         fontSize:
                                                             18 * factorRatio,
-                                                        fontFamily: 'OpenSans',
+                                                        fontFamily: 'OpenSans-Regular',
                                                         color: 'white',
                                                         fontWeight: 'bold',
                                                     }}

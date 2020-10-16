@@ -92,7 +92,6 @@ export default class LoadPage extends React.Component {
                         width={190 * factorRatio}
                         fill={'#fb1b2f'}
                     />
-                    <View style={{height: 60 * factorVertical}} />
                 </View>
             </View>
         );

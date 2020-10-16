@@ -98,7 +98,7 @@ class FullScreenVideoList extends React.Component {
                                 <Text
                                     numberOfLines={2}
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         textAlign: 'left',
                                         fontWeight:
                                             Platform.OS == 'android'
@@ -114,7 +114,7 @@ class FullScreenVideoList extends React.Component {
                                     <Text
                                         numberOfLines={2}
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             textAlign: 'left',
                                             color: 'grey',
                                             fontSize: 13 * factorRatio,
@@ -188,7 +188,7 @@ class FullScreenVideoList extends React.Component {
                                         Platform.OS == 'android'
                                             ? 'bold'
                                             : '700',
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                 }}
                             >
                                 {this.props.Title}
@@ -200,7 +200,7 @@ class FullScreenVideoList extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         textAlign: 'right',
                                         fontSize: 14.5 * factorRatio,
                                         marginRight: 7.5 * factorRatio,

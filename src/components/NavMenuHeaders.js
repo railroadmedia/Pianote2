@@ -117,11 +117,7 @@ class NavMenuHeaders extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 14 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                        fontWeight:
-                                            Platform.OS == 'android'
-                                                ? 'bold'
-                                                : '900',
+                                        fontFamily: 'OpenSans-ExtraBold',
                                         color:
                                             this.props.currentPage == 'LESSONS'
                                                 ? 'white'
@@ -163,11 +159,7 @@ class NavMenuHeaders extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 14 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                        fontWeight:
-                                            Platform.OS == 'android'
-                                                ? 'bold'
-                                                : '900',
+                                        fontFamily: 'OpenSans-ExtraBold',
                                         color:
                                             this.props.currentPage == 'PACKS'
                                                 ? 'white'
@@ -200,11 +192,8 @@ class NavMenuHeaders extends React.Component {
                                 <Text
                                     style={{
                                         fontSize: 14 * factorRatio,
-                                        fontFamily: 'OpenSans',
-                                        fontWeight:
-                                            Platform.OS == 'android'
-                                                ? 'bold'
-                                                : '900',
+                                        fontFamily: 'OpenSans-Regular',
+                                        fontFamily: 'OpenSans-ExtraBold',
                                         color:
                                             this.props.currentPage == 'MYLIST'
                                                 ? 'white'

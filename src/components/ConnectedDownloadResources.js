@@ -287,7 +287,7 @@ export class DownloadResources extends React.Component {
                                     <Text
                                         style={{
                                             fontSize: 14,
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             color: '#ffffff',
                                         }}
                                     >
@@ -298,7 +298,7 @@ export class DownloadResources extends React.Component {
                                     <Text
                                         style={{
                                             fontSize: 12,
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             color: '#CCD3D3',
                                             marginRight: 10,
                                         }}
@@ -334,7 +334,7 @@ export class DownloadResources extends React.Component {
                         <Text
                             style={{
                                 fontSize: 14,
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 color: '#ffffff',
                             }}
                         >

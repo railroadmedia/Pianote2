@@ -74,7 +74,7 @@ class DisplayName extends React.Component {
                             <View style={{flex: 1}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 16 * factorRatio,
                                     textAlign: 'center',
                                 }}

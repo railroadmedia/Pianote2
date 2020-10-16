@@ -48,14 +48,11 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
-        let response = await getMyListContent(
-            this.state.page,
-            this.state.filters,
-        );
-        const newContent = await response.data.map(data => {
-            return new ContentModel(data);
-        });
+        let response = await getMyListContent(this.state.page, this.state.filters, '');
+        const newContent = await response.data.map(data => {return new ContentModel(data)});
+        
         console.log(newContent);
+        
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -70,7 +67,7 @@ export default class MyList extends React.Component {
                             : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/[&<>"']/g, function(m) { return mapRegex[m]; }),
+                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/'/g, '&#039;').replace(/"/g, '&quot;').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
@@ -97,13 +94,13 @@ export default class MyList extends React.Component {
     };
 
     removeFromMyList = async contentID => {
-        for (i in this.state.myList) {
+        for (i in this.state.allLessons) {
             // remove if ID matches
-            if (this.state.myList[i].id == contentID) {
-                this.state.myList.splice(i, 1);
+            if (this.state.allLessons[i].id == contentID) {
+                this.state.allLessons.splice(i, 1);
             }
         }
-        await this.setState({myList: this.state.myList});
+        await this.setState({allLessons: this.state.allLessons});
     };
 
     getDuration = newContent => {
@@ -235,15 +232,13 @@ export default class MyList extends React.Component {
                                 elevation: 10,
                             }}
                         ></View>
-                        <View style={{height: 20 * factorVertical}} />
+                        <View style={{height: 30 * factorVertical}} />
                         <Text
                             style={{
                                 paddingLeft: 12 * factorHorizontal,
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
-                                fontFamily: 'OpenSans-Bold',
-                                fontWeight:
-                                    Platform.OS == 'ios' ? '700' : 'bold',
+                                fontFamily: 'OpenSans-ExtraBold',
                                 fontStyle: 'normal'
                             }}
                         >

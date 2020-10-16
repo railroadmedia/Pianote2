@@ -305,7 +305,7 @@ export default class CreateAccount3 extends React.Component {
 
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontSize: 24 * factorRatio,
                                         fontWeight:
                                             Platform.OS == 'ios'
@@ -347,7 +347,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 20 * factorRatio,
                                                 fontWeight:
                                                     Platform.OS == 'ios'
@@ -387,7 +387,7 @@ export default class CreateAccount3 extends React.Component {
                                                 );
                                             }}
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18 * factorRatio,
                                                 flex: 1,
                                             }}
@@ -405,7 +405,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 13 * factorRatio,
                                                 textAlign: 'left',
                                             }}
@@ -574,7 +574,7 @@ export default class CreateAccount3 extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     fontSize: 20 * factorRatio,
                                                     fontWeight: '700',
                                                     color: '#fb1b2f',
@@ -667,7 +667,7 @@ export default class CreateAccount3 extends React.Component {
                                 </TouchableOpacity>
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontSize: 24 * factorRatio,
                                         fontWeight:
                                             Platform.OS == 'ios'
@@ -707,7 +707,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 17.5 * factorRatio,
                                                 fontWeight: '700',
                                                 textAlign: 'center',
@@ -813,7 +813,7 @@ export default class CreateAccount3 extends React.Component {
                                     >
                                         <Text
                                             style={{
-                                                fontFamily: 'OpenSans',
+                                                fontFamily: 'OpenSans-Regular',
                                                 fontSize: 13 * factorRatio,
                                                 textAlign: 'center',
                                             }}
@@ -991,7 +991,7 @@ export default class CreateAccount3 extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily: 'OpenSans-Regular',
                                                     fontSize: 20 * factorRatio,
                                                     fontWeight: '700',
                                                     color: '#fb1b2f',
@@ -1041,7 +1041,7 @@ export default class CreateAccount3 extends React.Component {
                             <View style={{height: isNotch ? '7%' : '5%'}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     textAlign: 'center',
                                     fontSize: 24 * factorRatio,
                                     fontWeight:
@@ -1137,7 +1137,7 @@ export default class CreateAccount3 extends React.Component {
                                     <View style={{flex: 1}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 22 * factorRatio,
                                             fontWeight:
                                                 Platform.OS == 'ios'
@@ -1152,7 +1152,7 @@ export default class CreateAccount3 extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                         }}
                                     >
@@ -1242,7 +1242,7 @@ export default class CreateAccount3 extends React.Component {
                                     <View style={{flex: 1}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 22 * factorRatio,
                                             fontWeight:
                                                 Platform.OS == 'ios'
@@ -1257,7 +1257,7 @@ export default class CreateAccount3 extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                         }}
                                     >
@@ -1347,7 +1347,7 @@ export default class CreateAccount3 extends React.Component {
                                     <View style={{flex: 1}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 22 * factorRatio,
                                             fontWeight:
                                                 Platform.OS == 'ios'
@@ -1362,7 +1362,7 @@ export default class CreateAccount3 extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                         }}
                                     >
@@ -1452,7 +1452,7 @@ export default class CreateAccount3 extends React.Component {
                                     <View style={{flex: 1}} />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 20 * factorRatio,
                                             fontWeight:
                                                 Platform.OS == 'ios'
@@ -1467,7 +1467,7 @@ export default class CreateAccount3 extends React.Component {
                                     />
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                         }}
                                     >
@@ -1574,7 +1574,7 @@ export default class CreateAccount3 extends React.Component {
                                 >
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 20 * factorRatio,
                                             fontWeight: '700',
                                             color: '#fb1b2f',
@@ -1598,7 +1598,7 @@ export default class CreateAccount3 extends React.Component {
                             <View style={{height: isNotch ? '7%' : '5%'}} />
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     textAlign: 'center',
                                     fontSize: 25 * factorRatio,
                                     fontWeight: '700',
@@ -1664,7 +1664,7 @@ export default class CreateAccount3 extends React.Component {
                                 <View style={{height: 15 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontWeight: '700',
                                         fontSize: 18 * factorRatio,
                                         textAlign: 'center',
@@ -1675,7 +1675,7 @@ export default class CreateAccount3 extends React.Component {
                                 <View style={{height: 10 * factorVertical}} />
                                 <Text
                                     style={{
-                                        fontFamily: 'OpenSans',
+                                        fontFamily: 'OpenSans-Regular',
                                         fontSize: 14 * factorRatio,
                                         color: 'grey',
                                         textAlign: 'center',
