@@ -45,8 +45,8 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNFirebaseMessagingPackage());
           packages.add(new RNFirebaseNotificationsPackage());
           packages.add(new GoogleCastPackage());
-            packages.add(new RNBackgroundDownloaderPackage());
-            packages.add(new ReactVideoPackage());
+          packages.add(new RNBackgroundDownloaderPackage());
+          packages.add(new ReactVideoPackage());
           // packages.add(new MyReactNativePackage());
           return packages;
         }
