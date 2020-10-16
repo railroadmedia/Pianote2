@@ -1,4 +1,5 @@
 import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from './common.service';
 
 export async function getNewContent(type) {
     try {
@@ -8,7 +9,7 @@ export async function getNewContent(type) {
         }
         let auth = await getToken();
         let response = await fetch(
-            `http://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=newest&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
+            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
             {
                 method: 'GET',
                 headers: {Authorization: `Bearer ${auth.token}`},
@@ -30,7 +31,7 @@ export async function getStartedContent(type) {
 
         let auth = await getToken();
         let response = await fetch(
-            `http://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=newest&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
+            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
             {
                 method: 'GET',
                 headers: {
@@ -48,14 +49,15 @@ export async function getStartedContent(type) {
 export async function getAllContent(type, sort, page, filtersDict) {
     let filters = ''; // instructor, topic, level
     let required_user_states = ''; // progress
-    let included_types = ''; 
+    let included_types = '';
 
     if (type !== '') {
-        // if has type then it is see all or 
+        // if has type then it is see all or
         if (filtersDict.topics.length > 0) {
             for (i in filtersDict.topics) {
                 included_types =
-                    included_types + `&included_types[]=${filtersDict.topics[i]}`;
+                    included_types +
+                    `&included_types[]=${filtersDict.topics[i]}`;
             }
         } else {
             included_types = included_types + '&included_types[]=' + type;
@@ -85,8 +87,10 @@ export async function getAllContent(type, sort, page, filtersDict) {
 
     try {
         let auth = await getToken();
-        let url = `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` + filters + required_user_states;
-
+        let url =
+            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
+            filters +
+            required_user_states;
         let response = await fetch(url, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
@@ -114,7 +118,7 @@ export async function searchContent(term, page, filtersDict) {
     try {
         let auth = await getToken();
         let url =
-            `https://app-staging.pianote.com/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` +
+            `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` +
             included_types;
         let response = await fetch(url, {
             method: 'GET',
@@ -128,10 +132,12 @@ export async function searchContent(term, page, filtersDict) {
 }
 
 export async function getMyListContent(page, filtersDict, progressState) {
-    let included_types = ''; 
+    let included_types = '';
     let progress_types = ''; // completed || started
 
-    if(progressState !== '') {progress_types = '&state=' + progressState}
+    if (progressState !== '') {
+        progress_types = '&state=' + progressState;
+    }
 
     if (filtersDict.topics.length > 0) {
         for (i in filtersDict.topics) {
@@ -146,13 +152,16 @@ export async function getMyListContent(page, filtersDict, progressState) {
 
     try {
         let auth = await getToken();
-        var url = `https://${serverLocation}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}` + included_types + progress_types;
+        var url =
+            `https://${serverLocation}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}` +
+            included_types +
+            progress_types;
         let response = await fetch(url, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
         });
 
-        return await response.json()
+        return await response.json();
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);
@@ -175,7 +184,7 @@ export async function seeAllContent(page, filtersDict) {
     try {
         let auth = await getToken();
         let url =
-            `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}` +
+            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}` +
             included_types;
         let response = await fetch(url, {
             method: 'GET',
@@ -192,7 +201,7 @@ export async function getContentById(contentID) {
     try {
         let auth = await getToken();
         let response = await fetch(
-            `http://app-staging.pianote.com/railcontent/content/${contentID}`,
+            `${commonService.rootUrl}/railcontent/content/${contentID}`,
             {
                 method: 'GET',
                 headers: {

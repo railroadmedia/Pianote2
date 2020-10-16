@@ -48,12 +48,12 @@ export default class MembershipExpired extends React.Component {
                             fill={'#fb1b2f'}
                         />
                     </View>
-                    <GradientFeature
+                    {/* <GradientFeature
                         color={'grey'}
-                        opacity={1}
+                        opacity={0.7}
                         height={'70%'}
                         borderRadius={0}
-                    />
+                    /> */}
                     <View
                         key={'image1'}
                         style={{
@@ -156,8 +156,15 @@ export default class MembershipExpired extends React.Component {
                                                 {
                                                     data: {
                                                         type: 'EXPIRED',
-                                                        email: '',
-                                                        password: '',
+                                                        email: this.props
+                                                            .navigation.state
+                                                            .params?.email,
+                                                        password: this.props
+                                                            .navigation.state
+                                                            .params?.password,
+                                                        token: this.props
+                                                            .navigation.state
+                                                            .params?.token,
                                                     },
                                                 },
                                             );

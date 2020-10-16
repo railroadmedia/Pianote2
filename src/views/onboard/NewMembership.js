@@ -2,11 +2,23 @@
  * NewMembership
  */
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, Platform} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
+import RNIap, {
+    purchaseErrorListener,
+    purchaseUpdatedListener,
+} from 'react-native-iap';
+import {signUp} from '../../services/UserDataAuth';
+let purchaseErrorSubscription = null;
+let purchaseUpdateSubscription = null;
+
+const skus = Platform.select({
+    android: ['test', 'test.pianote'],
+    ios: ['test.pianote'],
+});
 
 export default class NewMembership extends React.Component {
     static navigationOptions = {header: null};
@@ -17,32 +29,74 @@ export default class NewMembership extends React.Component {
             newUser: this.props.navigation.state.params.data.type,
             email: this.props.navigation.state.params.data.email,
             password: this.props.navigation.state.params.data.password,
-            plan: '',
+            token: this.props.navigation.state.params.data.token,
         };
     }
 
-    paid = async plan => {
-        if ('paymentSuccessful' == 'paymentSuccessful') {
-            if (this.state.newUser == 'SIGNUP') {
-                await this.props.navigation.dispatch(
-                    StackActions.reset({
-                        index: 0,
-                        actions: [
-                            NavigationActions.navigate({
-                                routeName: 'CREATEACCOUNT3',
-                                params: {
-                                    email: this.state.email,
-                                    password: this.state.password,
-                                    plan: 'beginner',
-                                },
-                            }),
-                        ],
-                    }),
-                );
-            } else if (this.state.newUser == 'EXPIRED') {
-                // save plan details
-                await AsyncStorage.setItem('plan', plan);
-                await this.props.navigation.navigate('GETRESTARTED');
+    async componentDidMount() {
+        try {
+            await RNIap.initConnection();
+        } catch (e) {}
+        purchaseUpdateSubscription = purchaseUpdatedListener(this.pulCallback);
+        purchaseErrorSubscription = purchaseErrorListener(e => {
+            console.log(e);
+            Alert.alert('Something went wrong', e.message, [{text: 'OK'}], {
+                cancelable: false,
+            });
+        });
+        try {
+            const subscriptions = await RNIap.getSubscriptions(skus);
+
+            console.log(subscriptions);
+        } catch (e) {}
+    }
+
+    startPlan = async plan => {
+        try {
+            await RNIap.requestSubscription(plan, false);
+        } catch (e) {}
+    };
+
+    pulCallback = async purchase => {
+        let {transactionReceipt} = purchase;
+        console.log(purchase);
+        if (transactionReceipt) {
+            let response = await signUp(
+                this.state.email,
+                this.state.password,
+                purchase,
+                this.state.token,
+            );
+
+            console.log(response);
+            if (response.meta) {
+                const token = `Bearer ${response.meta.auth_code}`;
+                try {
+                    await AsyncStorage.multiSet([
+                        ['loggedInStatus', 'true'],
+                        ['email', this.state.email],
+                        ['password', this.state.password],
+                        ['token', token],
+                    ]);
+                } catch (e) {}
+                try {
+                    await RNIap.finishTransaction(purchase, false);
+                    if (this.state.newUser === 'SIGNUP') {
+                        this.props.navigation.navigate('CREATEACCOUNT3', {
+                            data: {
+                                email: this.state.email,
+                                password: this.state.password,
+                            },
+                        });
+                    } else {
+                        this.props.navigation.navigate('LESSONS');
+                    }
+                } catch (e) {}
+            } else {
+                let {title, detail} = response.errors[0];
+                Alert.alert(title, detail, [{text: 'OK'}], {
+                    cancelable: false,
+                });
             }
         }
     };
@@ -270,7 +324,7 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.paid('plan1')
+                                                    this.startPlan('test')
                                                 }
                                                 style={{
                                                     height: '80%',
@@ -419,7 +473,9 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.paid('plan2')
+                                                    this.startPlan(
+                                                        'test.pianote',
+                                                    )
                                                 }
                                                 style={{
                                                     height: '80%',

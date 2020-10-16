@@ -19,6 +19,8 @@ import {NavigationActions, StackActions} from 'react-navigation';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import CustomModal from '../../modals/CustomModal';
+import {changePassword} from '../../services/UserDataAuth';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -36,19 +38,10 @@ export default class ResetPassword extends React.Component {
             showDisplayName: false,
             showConfirmPassword: false,
             showPassword: false,
-            token: '',
-            email: '',
             password: '',
             confirmPassword: '',
         };
     }
-
-    componentWillMount = async () => {
-        let email = await AsyncStorage.getItem('email');
-        let token = await AsyncStorage.getItem('rp_key');
-
-        this.setState({email, token});
-    };
 
     componentDidMount = async () => {
         this.keyboardDidShowListener = Keyboard.addListener(
@@ -108,35 +101,35 @@ export default class ResetPassword extends React.Component {
     savePassword = async () => {
         if (this.state.password == this.state.confirmPassword) {
             if (this.state.password.length > 7) {
-                let response = await fetch(
-                    `http://app-staging.pianote.com/api/change-password`,
-                    {
-                        method: 'PUT',
-                        body: JSON.stringify({
-                            pass1: this.state.password,
-                            user_login: this.state.email,
-                            rp_key: this.state.token,
-                        }),
-                    },
+                let email = await AsyncStorage.getItem('email');
+                let resetKey = await AsyncStorage.getItem('resetKey');
+                console.log(
+                    email.replace('%40', '@'),
+                    this.state.password,
+                    resetKey,
                 );
-
-                console.log('RESPONSE: ', response);
-
-                if (response.ok) {
-                    this.props.navigation.dispatch(
-                        StackActions.reset({
-                            index: 0,
-                            actions: [
-                                NavigationActions.navigate({
-                                    routeName: 'LOGINCREDENTIALS',
-                                }),
-                            ],
-                        }),
-                    );
+                let res = await changePassword(
+                    email.replace('%40', '@'),
+                    this.state.password,
+                    resetKey,
+                );
+                await AsyncStorage.removeItem('resetKey');
+                console.log(res);
+                if (res.success) {
+                    if (res.token) {
+                        await AsyncStorage.multiSet([
+                            ['loggedInStatus', 'true'],
+                            ['email', email],
+                            ['password', this.state.password],
+                            ['token', JSON.stringify(res.token)],
+                            ['tokenTime', JSON.stringify(res.token)],
+                        ]);
+                    }
+                    this.alert.toggle(res.title, res.message);
+                } else {
+                    this.alert.toggle('Something went wrong.', res.message);
                 }
             }
-        } else {
-            this.setState({showPasswordMatch: true});
         }
     };
 
@@ -529,6 +522,39 @@ export default class ResetPassword extends React.Component {
                         }}
                     />
                 </Modal>
+                <CustomModal
+                    ref={ref => {
+                        this.alert = ref;
+                    }}
+                    additionalBtn={
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: colors.pianoteRed,
+                                borderRadius: 25,
+                                height: 50,
+                                marginTop: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            onPress={() => {
+                                this.alert.toggle();
+                                this.props.navigation.navigate({
+                                    routeName: 'LOGINCREDENTIALS',
+                                });
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    padding: 15,
+                                    fontSize: 15,
+                                    color: '#ffffff',
+                                }}
+                            >
+                                LOG IN
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                />
             </View>
         );
     }

@@ -67,17 +67,41 @@ export default class ProfileSettings extends React.Component {
         }
     }
 
+    changePassword = async () => {
+        const email = await AsyncStorage.getItem('email');
+
+        const {response, error} = await userForgotPassword({email});
+
+        console.log('RESET PASSWORD LINK: ', response, error);
+        await this.setState({showChangePassword: true});
+    };
+
+    changePassword2 = async () => {
+        return;
+        return commonService.tryCall(
+            `${commonService.rootUrl}/api/change-password`,
+            'PUT',
+            null,
+            null,
+            {
+                pass1: this.state.newPassword,
+                user_login: email,
+                rp_key: this.state.passwordKey,
+            },
+        );
+    };
+
     changeName = async () => {
         // check if display name available
         let response = await fetch(
-            `http://app-staging.pianote.com/usora/is-display-name-unique?display_name=${this.state.displayName}`,
+            `${commonService.rootUrl}/usora/is-display-name-unique?display_name=${this.state.displayName}`,
         );
         response = await response.json();
 
         if (response.unique) {
             const auth = await getToken();
             let nameResponse = await fetch(
-                `http://app-staging.pianote.com/api/profile/update`,
+                `${commonService.rootUrl}/api/profile/update`,
                 {
                     method: 'POST',
                     headers: {
@@ -117,10 +141,9 @@ export default class ProfileSettings extends React.Component {
         });
 
         try {
-            let url = '';
             if (this.state.imageURI !== '') {
                 let avatarResponse = await fetch(
-                    `http://app-staging.pianote.com/api/avatar/upload`,
+                    `${commonService.rootUrl}/api/avatar/upload`,
                     {
                         method: 'POST',
                         headers: {Authorization: `Bearer ${auth.token}`},
@@ -128,11 +151,12 @@ export default class ProfileSettings extends React.Component {
                     },
                 );
 
-                url = await avatarResponse.json();
+                let url = await avatarResponse.json();
+                console.log(url.data[0].url);
             }
 
             let profileResponse = await fetch(
-                `http://app-staging.pianote.com/api/profile/update`,
+                `${commonService.rootUrl}/api/profile/update`,
                 {
                     method: 'POST',
                     headers: {

@@ -37,7 +37,7 @@ import WelcomeBack from './src/views/onboard/WelcomeBack.js';
 import GetRestarted from './src/views/onboard/GetRestarted';
 import LoadPage from './src/views/onboard/LoadPage.js';
 import Login from './src/views/onboard/Login.js';
-
+import ResetPassword from './src/views/onboard/ResetPassword';
 // user
 import NotificationSettings from './src/views/user/NotificationSettings.js';
 import PaymentHistory from './src/views/user/PaymentHistory.js';
@@ -94,6 +94,7 @@ const AppNavigator = createStackNavigator(
         WELCOMEBACK: {screen: WelcomeBack},
         LOADPAGE: {screen: LoadPage},
         LOGIN: {screen: Login},
+        RESETPASSWORD: {screen: ResetPassword},
     },
     {
         headerMode: 'screen',

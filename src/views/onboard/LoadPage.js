@@ -3,11 +3,13 @@
  */
 import React from 'react';
 import {View} from 'react-native';
+import {Download_V2} from 'RNDownload';
 import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from '../../services/common.service';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -19,6 +21,11 @@ const resetAction2 = StackActions.reset({
     actions: [NavigationActions.navigate({routeName: 'LOGIN'})],
 });
 
+const resetPassAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'RESETPASSWORD'})],
+});
+
 export default class LoadPage extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -26,39 +33,111 @@ export default class LoadPage extends React.Component {
         this.state = {};
     }
 
-    componentDidMount = async () => {
-        await SplashScreen.hide();
+    componentDidMount() {
+        Download_V2.resumeAll().then(async () => {
+            await SplashScreen.hide();
 
-        isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-
-        let userData = await getUserData();
-
-        if (isLoggedIn !== 'true' || userData.isMember == false) {
-            // go to login
-            setTimeout(
-                () => this.props.navigation.dispatch(resetAction2),
-                1000,
-            );
-        } else {
-            let currentDate = new Date().getTime() / 1000;
-            let userExpDate =
-                new Date(userData.expirationDate).getTime() / 1000;
-
-            if (userData.isLifetime || currentDate < userExpDate) {
-                // go to lessons
+            isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
+            let resetKey = await AsyncStorage.getItem('resetKey');
+            let pass = await AsyncStorage.getItem('password');
+            let userData = await getUserData();
+            if (resetKey) {
                 setTimeout(
-                    () => this.props.navigation.dispatch(resetAction),
+                    () => this.props.navigation.dispatch(resetPassAction),
+                    1000,
+                );
+            } else if (isLoggedIn !== 'true' || userData.isMember == false) {
+                // go to login
+                setTimeout(
+                    () => this.props.navigation.dispatch(resetAction2),
                     1000,
                 );
             } else {
-                // go to membership expired
-                setTimeout(
-                    () => this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
-                    1000,
-                );
+                isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
+                let resetKey = await AsyncStorage.getItem('resetKey');
+                let userData = await getUserData();
+                if (resetKey) {
+                    setTimeout(
+                        () => this.props.navigation.dispatch(resetPassAction),
+                        1000,
+                    );
+                } else if (
+                    isLoggedIn !== 'true' ||
+                    userData.isMember == false
+                ) {
+                    // go to login
+                    setTimeout(
+                        () =>
+                            this.props.navigation.navigate(
+                                'MEMBERSHIPEXPIRED',
+                                {
+                                    email: userData.email,
+                                    password: pass,
+                                },
+                            ),
+                        1000,
+                    );
+                } else {
+                    let currentDate = new Date().getTime() / 1000;
+                    let userExpDate =
+                        new Date(userData.expirationDate).getTime() / 1000;
+
+                    if (userData.isLifetime || currentDate < userExpDate) {
+                        // go to lessons
+                        setTimeout(
+                            () => this.props.navigation.dispatch(resetAction),
+                            1000,
+                        );
+                    } else {
+                        // go to membership expired
+                        setTimeout(
+                            () =>
+                                this.props.navigation.navigate(
+                                    'MEMBERSHIPEXPIRED',
+                                ),
+                            1000,
+                        );
+                    }
+                }
+                // if (isLoggedIn !== 'true') {
+                //     setTimeout(() => this.props.navigation.navigate('LOGIN'), 1000);
+                // } else {
+                //     // membership expired
+                //     await fetch('http://18.218.118.227:5000/checkMembershipStatus', {
+                //         method: 'POST',
+                //         headers: {'Content-Type': 'application/json'},
+                //         body: JSON.stringify({
+                //             email: email,
+                //         }),
+                //     })
+                //         .then((response) => response.json())
+                //         .then((response) => {
+                //             if (response == 'success') {
+                //                 setTimeout(
+                //                     () => this.props.navigation.dispatch(resetAction),
+                //                     1000,
+                //                 );
+                //             } else {
+                //                 setTimeout(
+                //                     () =>
+                //                         this.props.navigation.navigate(
+                //                             'MEMBERSHIPEXPIRED',
+                //                         ),
+                //                     1000,
+                //                 );
+                //             }
+                //         })
+                //         .catch((error) => {
+                //             console.log('API Error: ', error);
+                //             setTimeout(
+                //                 () => this.props.navigation.dispatch(resetAction),
+                //                 1000,
+                //             );
+                //         });
+                // }
             }
-        }
-    };
+        });
+    }
 
     render() {
         return (
