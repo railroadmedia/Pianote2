@@ -3,6 +3,8 @@
  */
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import Modal from 'react-native-modal';
+import RestartCourse from '../../modals/RestartCourse';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import NextVideo from 'Pianote2/src/components/NextVideo';
@@ -16,7 +18,7 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import foundationsService from '../../services/foundations.service';
 import ResetIcon from '../../components/ResetIcon';
-import {addToMyList, removeFromMyList, resetProgress} from 'Pianote2/src/services/UserActions.js';
+import {addToMyList, removeFromMyList} from 'Pianote2/src/services/UserActions.js';
 
 export default class FoundationsLevel extends React.Component {
     static navigationOptions = {header: null};

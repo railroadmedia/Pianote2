@@ -86,7 +86,7 @@ class RestartCourse extends React.Component {
                                         marginTop: 10 * factorRatio,
                                     }}
                                 >
-                                    Restart this {type}?
+                                    Restart {(type == 'foundations') ? 'foundations' : 'this '+ type}?
                                 </Text>
                             </View>
                             <View
@@ -107,7 +107,7 @@ class RestartCourse extends React.Component {
                                         textAlign: 'justify',
                                     }}
                                 >
-                                    Take this {type} again as a refresher, or
+                                    Take {(type == 'foundations') ? 'foundations' : 'this '+ type} again as a refresher, or
                                     just to make sure you've got the concepts
                                     nailed! This will remove the XP you've
                                     earned.

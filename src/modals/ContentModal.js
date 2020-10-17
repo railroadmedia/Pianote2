@@ -30,7 +30,7 @@ class ContentModal extends React.Component {
     }
 
     componentWillMount() {
-        console.log(this.state.data);
+        console.log('DATA: ', this.state.data);
     }
 
     addToMyList = async contentID => {

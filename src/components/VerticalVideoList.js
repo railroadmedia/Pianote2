@@ -7,7 +7,6 @@ import {
     Text,
     ActivityIndicator,
     TouchableOpacity,
-    Platform,
 } from 'react-native';
 import {
     addToMyList,
@@ -21,6 +20,7 @@ import ContentModal from '../modals/ContentModal';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
@@ -241,6 +241,7 @@ class VerticalVideoList extends React.Component {
                         >
                             <TouchableOpacity
                                 onLongPress={() => {
+                                    (row.type == 'unit') ? null :
                                     this.setState({
                                         showModal: true,
                                         item: row,
@@ -374,7 +375,25 @@ class VerticalVideoList extends React.Component {
                                                     this.props.imageRadius
                                                 }
                                             />
-                                            <View style={{flex: 1}} />
+                                            <View style={{flex: 1.5}} />
+                                            <View
+                                                style={{
+                                                    zIndex: 20,
+                                                    elevation: 20,
+                                                    flexDirection: 'row',
+                                                }}
+                                            >
+                                                <FastImage
+                                                    style={{
+                                                        height: 8*factorRatio,
+                                                        flex: 1,
+                                                        alignSelf: 'stretch',
+                                                    }}
+                                                    source={require('Pianote2/src/assets/img/imgs/Pianote.png')}
+                                                    resizeMode={FastImage.resizeMode.contain}
+                                                />
+                                            </View>
+                                            <View style={{height: 2.5*factorVertical}}/>
                                             <Text
                                                 style={{
                                                     zIndex: 20,
@@ -388,7 +407,7 @@ class VerticalVideoList extends React.Component {
                                             >
                                                 LEVEL {index + 1}
                                             </Text>
-                                            <View style={{flex: 0.2}} />
+                                            <View style={{flex: 1}} />
                                         </View>
                                     )}
                                     {row.thumbnail !== 'TBD' && (
@@ -615,6 +634,7 @@ class VerticalVideoList extends React.Component {
                             </View>
                             <TouchableOpacity
                                 onLongPress={() => {
+                                    (row.type == 'unit') ? null :
                                     this.setState({
                                         showModal: true,
                                         item: row,
@@ -844,6 +864,7 @@ class VerticalVideoList extends React.Component {
                                     />
                                     <View>
                                         <View style={{flex: 1}} />
+                                        {!this.props.hideFilterButton && (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 this.props.filterResults();
@@ -878,6 +899,7 @@ class VerticalVideoList extends React.Component {
                                             </View>
                                             <View style={{flex: 1}} />
                                         </TouchableOpacity>
+                                        )}
                                         <View style={{flex: 1}} />
                                     </View>
                                     <View

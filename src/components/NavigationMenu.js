@@ -36,7 +36,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'LESSONS') ? 'OpenSans-ExtraBold' : 'OpenSans-Regular',
+                                fontFamily: (this.props.parentPage == 'LESSONS') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'LESSONS'
                                         ? 'white'
@@ -109,7 +109,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'COURSES') ? 'OpenSans-ExtraBold' : 'OpenSans-Regular',
+                                fontFamily: (this.props.parentPage == 'COURSES') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'COURSES'
                                         ? 'white'
@@ -119,7 +119,6 @@ class NavigationMenu extends React.Component {
                                         ? 32.5 * factorRatio
                                         : 27.5 * factorRatio) +
                                     (onTablet ? 27.5 : 0),
-                                fontWeight: 'bold',
                             }}
                         >
                             Courses
@@ -146,7 +145,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'SONGS') ? 'OpenSans-ExtraBold' : 'OpenSans-Regular',
+                                fontFamily: (this.props.parentPage == 'SONGS') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'SONGS'
                                         ? 'white'
@@ -156,7 +155,6 @@ class NavigationMenu extends React.Component {
                                         ? 32.5 * factorRatio
                                         : 27.5 * factorRatio) +
                                     (onTablet ? 27.5 : 0),
-                                fontWeight: 'bold',
                             }}
                         >
                             Songs
@@ -185,7 +183,7 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'STUDENT FOCUS') ? 'OpenSans-ExtraBold' : 'OpenSans-Regular',
+                                fontFamily: (this.props.parentPage == 'STUDENT FOCUS') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'STUDENT FOCUS'
                                         ? 'white'
@@ -195,7 +193,6 @@ class NavigationMenu extends React.Component {
                                         ? 32.5 * factorRatio
                                         : 27.5 * factorRatio) +
                                     (onTablet ? 27.5 : 0),
-                                fontWeight: 'bold',
                             }}
                         >
                             Student Focus

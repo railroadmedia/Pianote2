@@ -16,6 +16,7 @@ const typeDict = {
     'Lessons': 'LESSONS',
     'Student Focus': 'STUDENTFOCUS',
     'Songs': 'SONGS',
+    'Courses': 'COURSES'
 };
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -51,15 +52,28 @@ export default class SeeAll extends React.Component {
     }
 
     async componentDidMount() {
-        console.log(this.state.title, this.state.parent)
         this.getAllLessons();
     }
 
     async getAllLessons() {
-        let response = (this.state.title == 'In Progress' || this.state.title == 'Completed') ?                            
-            await getMyListContent(this.state.page, this.state.filters, (this.state.title == 'In Progress') ? 'started' : 'completed')
-            : 
-            await seeAllContent(this.state.page, this.state.filters);
+        let response = null
+
+        if(this.state.parent == 'My List') {
+            // use my list API call when navigating to see all from my list
+            response = await getMyListContent(this.state.page, this.state.filters, (this.state.title == 'In Progress') ? 'started' : 'completed')
+        } else if(this.state.parent =='Lessons') {
+            // lessons continue and new
+            if(this.state.title.slice(0, 3) == 'New') { 
+                response = await seeAllContent('lessons', 'new', this.state.page, this.state.filters);
+            } else {
+                response = await seeAllContent('lessons', 'continue', this.state.page, this.state.filters);
+            }
+        } else if(this.state.parent == 'Courses') {
+            // courses new courses
+            response = await seeAllContent('courses', 'new', this.state.page, this.state.filters);
+        }
+        
+        
         const newContent = await response.data.map(data => {return new ContentModel(data)});
 
         items = [];
@@ -166,7 +180,6 @@ export default class SeeAll extends React.Component {
 
     filterResults = async () => {
         // function to be sent to filters page
-        console.log(this.state.filters);
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'SEEALL',
@@ -283,11 +296,12 @@ export default class SeeAll extends React.Component {
                                 isPaging={this.state.isPaging}
                                 title={this.state.title} // title for see all page
                                 type={typeDict[this.state.parent]} // the type of content on page
-                                showFilter={true}
                                 showType={false}
                                 showArtist={true}
                                 showSort={false}
                                 showLength={false}
+                                showFilter={true}
+                                hideFilterButton={(this.state.parent == 'Lessons') ? false : true} // only show filter button on lessons
                                 showLargeTitle={true}
                                 filters={this.state.filters} // show filter list
                                 imageRadius={5 * factorRatio} // radius of image shown

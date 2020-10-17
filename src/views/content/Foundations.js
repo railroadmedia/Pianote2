@@ -28,6 +28,8 @@ export default class Foundations extends React.Component {
         super(props);
         this.state = {
             items: [],
+            foundationIsStarted: this.props.navigation.state.params.foundationIsStarted,
+            foundationIsCompleted: this.props.navigation.state.params.foundationIsCompleted,
             showRestartCourse: false,
             id: null,
             isStarted: false,
@@ -56,13 +58,8 @@ export default class Foundations extends React.Component {
     }
 
     getContent = async () => {
-        const response = new ContentModel(
-            await foundationsService.getFoundation('foundations-2019'),
-        );
-        const newContent = response.post.units.map(data => {
-            return new ContentModel(data);
-        });
-
+        const response = new ContentModel(await foundationsService.getFoundation('foundations-2019'));
+        const newContent = response.post.units.map(data => {return new ContentModel(data)});
         items = [];
         for (i in newContent) {
             items.push({
@@ -74,6 +71,7 @@ export default class Foundations extends React.Component {
                     }))
                     .reduce((r, obj) => r.concat(obj.value, '  '), []),
                 thumbnail: newContent[i].getData('thumbnail_url'),
+                type: newContent[i].post.type,
                 description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
                 id: newContent[i].id,
                 progress_percent: newContent[i].post.progress_percent,
@@ -91,7 +89,7 @@ export default class Foundations extends React.Component {
             isLoadingAll: false,
             totalLength: response.post.length_in_seconds,
             xp: response.post.total_xp,
-            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+            description: response.getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
             progress: response.post.progress_percent,
             nextLesson: new ContentModel(response.post.current_lesson),
         });
@@ -222,17 +220,16 @@ export default class Foundations extends React.Component {
                                     key={'foundations'}
                                     style={{
                                         fontSize: 60 * factorRatio,
-                                        fontWeight: '700',
                                         color: 'white',
-                                        fontFamily: 'RobotoCondensed-Regular',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         transform: [{scaleX: 0.7}],
                                         textAlign: 'center',
                                     }}
                                 >
                                     FOUNDATIONS
-                                </Text>
+                                </Text>                             
                                 <View style={{flex: 0.6}} />
-                                {this.state.isCompleted ? (
+                                {this.state.foundationIsCompleted ? (
                                     <ResetIcon
                                         pxFromTop={
                                             onTablet
@@ -254,59 +251,22 @@ export default class Foundations extends React.Component {
                                             })
                                         }
                                     />
-                                ) : this.state.isStarted ? (
+                                ) : this.state.foundationIsStarted ? (
                                     <ContinueIcon
-                                        pxFromTop={
-                                            onTablet
-                                                ? fullHeight * 0.32 * 0.725
-                                                : fullHeight * 0.305 * 0.725
-                                        }
-                                        buttonHeight={
-                                            onTablet
-                                                ? fullHeight * 0.06
-                                                : Platform.OS == 'ios'
-                                                ? fullHeight * 0.05
-                                                : fullHeight * 0.055
-                                        }
+                                        pxFromTop={onTablet ? fullHeight * 0.32 * 0.725 : fullHeight * 0.305 * 0.725}
+                                        buttonHeight={onTablet ? fullHeight * 0.06 : Platform.OS == 'ios' ? fullHeight * 0.05 : fullHeight * 0.055}
                                         pxFromLeft={(fullWidth * 0.5) / 2}
                                         buttonWidth={fullWidth * 0.5}
-                                        pressed={() =>
-                                            this.props.navigation.navigate(
-                                                'VIDEOPLAYER',
-                                                {
-                                                    url: this.state.nextLesson
-                                                        .post.mobile_app_url,
-                                                },
-                                            )
-                                        }
+                                        pressed={() => this.props.navigation.navigate('VIDEOPLAYER', {url: this.state.nextLesson.post.mobile_app_url,})}
                                     />
                                 ) : (
-                                    !this.state.isStarted && (
+                                    !this.state.foundationIsStarted && (
                                         <StartIcon
-                                            pxFromTop={
-                                                onTablet
-                                                    ? fullHeight * 0.32 * 0.725
-                                                    : fullHeight * 0.305 * 0.725
-                                            }
-                                            buttonHeight={
-                                                onTablet
-                                                    ? fullHeight * 0.06
-                                                    : Platform.OS == 'ios'
-                                                    ? fullHeight * 0.05
-                                                    : fullHeight * 0.055
-                                            }
+                                            pxFromTop={onTablet ? fullHeight * 0.32 * 0.725 : fullHeight * 0.305 * 0.725}
+                                            buttonHeight={onTablet ? fullHeight * 0.06 : Platform.OS == 'ios' ? fullHeight * 0.05 : fullHeight * 0.055}
                                             pxFromLeft={(fullWidth * 0.5) / 2}
                                             buttonWidth={fullWidth * 0.5}
-                                            pressed={() =>
-                                                this.props.navigation.navigate(
-                                                    'VIDEOPLAYER',
-                                                    {
-                                                        url: this.state
-                                                            .nextLesson.post
-                                                            .mobile_app_url,
-                                                    },
-                                                )
-                                            }
+                                            pressed={() => this.props.navigation.navigate('VIDEOPLAYER', {url: this.state.nextLesson.post.mobile_app_url})}
                                         />
                                     )
                                 )}
@@ -365,7 +325,90 @@ export default class Foundations extends React.Component {
                                 </View>
                             </View>
                         </View>
-
+                        {this.state.foundationIsStarted && (
+                        <View
+                            key={'profile'}
+                            style={{
+                                height: fullHeight * 0.06,
+                                backgroundColor: colors.mainBackground,
+                                flexDirection: 'row',
+                            }}
+                        >
+                            <View style={{flex: 1}}/>
+                            <View style={{flexDirection: 'row'}}>
+                                {this.state.profileImage !== '' && (
+                                <View key={'profile-picture'}>
+                                    <View style={{flex: 1}} />
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <View
+                                            style={{
+                                                height: fullHeight * 0.06,
+                                                width: fullHeight * 0.06,
+                                                borderRadius: 100,
+                                                backgroundColor:
+                                                    colors.secondBackground,
+                                                alignSelf: 'stretch',
+                                                borderWidth: 3 * factorRatio,
+                                                borderColor:
+                                                    colors.secondBackground,
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    alignSelf: 'center',
+                                                }}
+                                            >
+                                                <FastImage
+                                                    style={{
+                                                        flex: 1,
+                                                        borderRadius: 100,
+                                                        backgroundColor:
+                                                            colors.secondBackground,
+                                                    }}
+                                                    source={{
+                                                        uri: this.state
+                                                            .profileImage,
+                                                    }}
+                                                    resizeMode={
+                                                        FastImage.resizeMode
+                                                            .cover
+                                                    }
+                                                />
+                                            </View>
+                                        </View>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                    <View style={{flex: 1}} />
+                                </View>
+                                )}
+                                {this.state.profileImage !== '' && (
+                                <View style={{width: 10*factorHorizontal}}/>
+                                )}
+                                <View>
+                                <View style={{flex: 1}} />
+                                <View>
+                                    <View style={{flex: 1}} />
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 35 * factorRatio,
+                                            fontFamily: 'OpenSans-ExtraBold',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        LEVEL 1
+                                    </Text>
+                                    <View style={{flex: 1}} />
+                                </View>
+                                <View style={{flex: 1}} />
+                            </View>
+                            </View>
+                            <View style={{flex: 1}}/>
+                        </View>
+                        )}
                         {this.state.showInfo && (
                             <View
                                 key={'info'}
@@ -463,43 +506,6 @@ export default class Foundations extends React.Component {
                                                         10 * factorVertical,
                                                 }}
                                             >
-                                                {this.state.totalLength}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: 13 * factorRatio,
-                                                    textAlign: 'left',
-                                                    color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    marginTop:
-                                                        10 * factorVertical,
-                                                }}
-                                            >
-                                                MINS
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={{width: 15 * factorRatio}}
-                                        />
-                                        <View
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    width: 70 * factorRatio,
-                                                },
-                                            ]}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontWeight: '700',
-                                                    fontSize: 17 * factorRatio,
-                                                    textAlign: 'left',
-                                                    color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    marginTop:
-                                                        10 * factorVertical,
-                                                }}
-                                            >
                                                 {this.state.xp}
                                             </Text>
                                             <Text
@@ -515,7 +521,6 @@ export default class Foundations extends React.Component {
                                                 XP
                                             </Text>
                                         </View>
-
                                         <View
                                             style={{
                                                 flex: 1,
@@ -541,41 +546,6 @@ export default class Foundations extends React.Component {
                                                 flex: 1,
                                                 alignSelf: 'stretch',
                                             }}
-                                        />
-                                        <TouchableOpacity
-                                            onPress={() => this.toggleLike()}
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    width: 70 * factorRatio,
-                                                },
-                                            ]}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <AntIcon
-                                                name={
-                                                    this.state.isLiked
-                                                        ? 'like1'
-                                                        : 'like2'
-                                                }
-                                                size={27.5 * factorRatio}
-                                                color={colors.pianoteRed}
-                                            />
-                                            <Text
-                                                style={{
-                                                    fontSize: 13 * factorRatio,
-                                                    textAlign: 'left',
-                                                    color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    marginTop:
-                                                        10 * factorVertical,
-                                                }}
-                                            >
-                                                {this.state.likeCount}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View
-                                            style={{width: 15 * factorRatio}}
                                         />
                                         <TouchableOpacity
                                             style={[
@@ -652,79 +622,6 @@ export default class Foundations extends React.Component {
                                 </View>
                             </View>
                         )}
-
-                        {/* TODO: check if we need this
-                        {this.state.isStarted && (
-                            <View
-                                style={{
-                                    height: fullHeight * 0.08,
-                                    width: fullWidth,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View
-                                    key={'image'}
-                                    style={{
-                                        flex: 0.4,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth * 0.035,
-                                    }}
-                                >
-                                    <View style={{flex: 1}} />
-                                    <View>
-                                        <View style={{flex: 1}} />
-                                        <View
-                                            style={{
-                                                height: fullHeight * 0.075,
-                                                width: fullHeight * 0.075,
-                                                backgroundColor: 'red',
-                                                borderRadius: 200,
-                                                borderWidth: 2 * factorRatio,
-                                                borderColor:
-                                                    colors.secondBackground,
-                                                backgroundColor:
-                                                    colors.secondBackground,
-                                            }}
-                                        >
-                                            <FastImage
-                                                style={{
-                                                    flex: 1,
-                                                    borderRadius: 100,
-                                                    backgroundColor:
-                                                        colors.secondBackground,
-                                                }}
-                                                source={{
-                                                    uri: this.state
-                                                        .profileImage,
-                                                }}
-                                                resizeMode={
-                                                    FastImage.resizeMode.cover
-                                                }
-                                            />
-                                        </View>
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                </View>
-                                <View style={{flex: 0.6}}>
-                                    <View style={{flex: 1}} />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontWeight:
-                                                Platform.OS == 'ios'
-                                                    ? '800'
-                                                    : 'bold',
-                                            color: 'white',
-                                            textAlign: 'left',
-                                            fontSize: 28 * factorRatio,
-                                        }}
-                                    >
-                                        LEVEL {this.state.level}
-                                    </Text>
-                                    <View style={{flex: 1}} />
-                                </View>
-                            </View>
-                        )} */}
                         <VerticalVideoList
                             items={this.state.items}
                             isLoading={this.state.isLoadingAll}
@@ -758,6 +655,7 @@ export default class Foundations extends React.Component {
                                 );
                             }}
                         />
+                        <View style={{height: 10*factorVertical}}/>
                     </ScrollView>
                     <Modal
                         key={'restartCourse'}
@@ -785,7 +683,7 @@ export default class Foundations extends React.Component {
                                     showRestartCourse: false,
                                 });
                             }}
-                            type='foundation'
+                            type='foundations'
                             onRestart={() => this.onRestartFoundation()}
                         />
                     </Modal>

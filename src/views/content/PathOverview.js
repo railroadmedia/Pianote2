@@ -27,9 +27,7 @@ export default class PathOverview extends React.Component {
             data: this.props.navigation.state.params.data,
             level: this.props.navigation.state.params.level,
             items: this.props.navigation.state.params.items || [],
-            isLiked: this.props.navigation.state.params.data.isLiked,
-            isAddedToList: this.props.navigation.state.params.data
-                .isAddedToList,
+            isAddedToList: this.props.navigation.state.params.data.isAddedToList,
             showInfo: false,
             totalLength: 0,
         };
@@ -39,7 +37,9 @@ export default class PathOverview extends React.Component {
         if (!this.state.items.length) this.getItems();
     }
 
-    getItems = () =>
+    getItems = async () => {
+        let response = await contentService.getContent(this.state.data.id)
+        console.log(response)
         contentService.getContent(this.state.data.id).then(r =>
             this.setState({
                 items:
@@ -50,8 +50,7 @@ export default class PathOverview extends React.Component {
                     })) || [],
             }),
         );
-
-    like = () => {};
+    }
 
     addToMyList = async () => {
         this.setState({isAddedToList: !this.state.isAddedToList});

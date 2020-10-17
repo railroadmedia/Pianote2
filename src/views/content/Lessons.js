@@ -9,6 +9,7 @@ import Modal from 'react-native-modal';
 import firebase from 'react-native-firebase';
 import RestartCourse from '../../modals/RestartCourse.js';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
+import ResetIcon from 'Pianote2/src/components/ResetIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
@@ -56,18 +57,15 @@ export default class Lessons extends React.Component {
                 progress: [],
                 instructors: [],
             },
-
             profileImage: '',
             xp: '',
             rank: '',
-            startedFoundations: false, // for showing start icon or continue
             currentLesson: [],
-            foundationIsStarted: false, // for showing start icon or continue
+            foundationIsStarted: false,
             foundationIsCompleted: false,
             foundationNextLesson: null,
             showRestartCourse: false,
-
-            lessonsStarted: true, // for showing continue lessons
+            lessonsStarted: false, // for showing continue lessons horizontal list
             isLoadingNew: true, // new lessons
             isLoadingProgress: true,
         };
@@ -78,13 +76,16 @@ export default class Lessons extends React.Component {
             'totalXP',
             'rank',
             'profileURI',
+            'foundationsIsStarted',
+            'foundationsIsCompleted'
         ]);
 
         await this.setState({
             xp: data[0][1],
             rank: data[1][1],
             profileImage: data[2][1],
-            lessonsStarted: false,
+            foundationIsStarted: (typeof data[3][1] !== null) ? JSON.parse(data[3][1]) : false,
+            foundationIsCompleted: (typeof data[4][1] !== null) ? JSON.parse(data[4][1]) : false
         });
 
         this.getFoundations();
@@ -145,9 +146,11 @@ export default class Lessons extends React.Component {
     };
 
     getFoundations = async () => {
-        const response = new ContentModel(
-            await foundationsService.getFoundation('foundations-2019'),
-        );
+        const response = new ContentModel(await foundationsService.getFoundation('foundations-2019'));
+        await AsyncStorage.multiSet([
+            ['foundationsIsStarted', response.isStarted.toString()],
+            ['foundationsIsCompleted', response.isCompleted.toString()]
+        ]);
         this.setState({
             foundationIsStarted: response.isStarted,
             foundationIsCompleted: response.isCompleted,
@@ -157,10 +160,7 @@ export default class Lessons extends React.Component {
 
     getNewLessons = async () => {
         let response = await getNewContent('');
-
-        const newContent = response.data.map(data => {
-            return new ContentModel(data);
-        });
+        const newContent = response.data.map(data => {return new ContentModel(data)});
 
         try {
             items = [];
@@ -509,9 +509,8 @@ export default class Lessons extends React.Component {
                                     key={'foundations'}
                                     style={{
                                         fontSize: 60 * factorRatio,
-                                        fontWeight: '700',
                                         color: 'white',
-                                        fontFamily: 'RobotoCondensed-Regular',
+                                        fontFamily: 'RobotoCondensed-Bold',
                                         transform: [{scaleX: 0.7}],
                                         textAlign: 'center',
                                     }}
@@ -614,7 +613,10 @@ export default class Lessons extends React.Component {
                                     buttonWidth={fullWidth * 0.42}
                                     pressed={() => {
                                         this.props.navigation.navigate(
-                                            'FOUNDATIONS',
+                                            'FOUNDATIONS', {
+                                                foundationIsStarted: this.state.foundationIsStarted,
+                                                foundationIsCompleted: this.state.foundationIsCompleted,
+                                            }
                                         );
                                     }}
                                 />
@@ -924,7 +926,7 @@ export default class Lessons extends React.Component {
                                     showRestartCourse: false,
                                 })
                             }
-                            type='foundation'
+                            type='foundations'
                             onRestart={() => this.onRestartFoundation()}
                         />
                     </Modal>

@@ -61,6 +61,7 @@ export default class SinglePack extends React.Component {
         const {response, error} = await getContentChildById({
             parentId: this.state.pack.id,
         });
+        
         console.log('RESPONSE: ', response, error);
 
         const newContent = response.data.data.map(data => {
@@ -597,47 +598,6 @@ export default class SinglePack extends React.Component {
                                         <View
                                             style={{width: 15 * factorRatio}}
                                         />
-                                        {this.state.isDisplayingLessons && (
-                                            <View
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        width: 70 * factorRatio,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontWeight: '700',
-                                                        fontSize:
-                                                            17 * factorRatio,
-                                                        textAlign: 'left',
-                                                        color: 'white',
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        marginTop:
-                                                            10 * factorVertical,
-                                                    }}
-                                                >
-                                                    {this.state.totalLength}
-                                                </Text>
-                                                <Text
-                                                    style={{
-                                                        fontSize:
-                                                            13 * factorRatio,
-                                                        textAlign: 'left',
-                                                        color: 'white',
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        marginTop:
-                                                            10 * factorVertical,
-                                                    }}
-                                                >
-                                                    MINS
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View
-                                            style={{width: 15 * factorRatio}}
-                                        />
                                         <View
                                             style={[
                                                 styles.centerContent,
@@ -697,43 +657,6 @@ export default class SinglePack extends React.Component {
                                                 flex: 1,
                                                 alignSelf: 'stretch',
                                             }}
-                                        />
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.like();
-                                            }}
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    width: 70 * factorRatio,
-                                                },
-                                            ]}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <AntIcon
-                                                name={
-                                                    this.state.pack.isLiked
-                                                        ? 'like1'
-                                                        : 'like2'
-                                                }
-                                                size={27.5 * factorRatio}
-                                                color={colors.pianoteRed}
-                                            />
-                                            <Text
-                                                style={{
-                                                    fontSize: 13 * factorRatio,
-                                                    textAlign: 'left',
-                                                    color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
-                                                    marginTop:
-                                                        10 * factorVertical,
-                                                }}
-                                            >
-                                                {this.state.pack.like_count}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <View
-                                            style={{width: 15 * factorRatio}}
                                         />
                                         <TouchableOpacity
                                             style={[
