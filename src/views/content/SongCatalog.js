@@ -41,7 +41,7 @@ export default class SongCatalog extends React.Component {
                 progress: [],
                 instructors: [],
             },
-
+            started: true,
             isLoadingProgress: true,
         };
     }
@@ -97,9 +97,7 @@ export default class SongCatalog extends React.Component {
 
     getProgressSongs = async () => {
         let response = await getStartedContent('song');
-        const newContent = response.data.map(data => {
-            return new ContentModel(data);
-        });
+        const newContent = response.data.map(data => {return new ContentModel(data)});
 
         items = [];
         for (i in newContent) {
@@ -126,6 +124,7 @@ export default class SongCatalog extends React.Component {
 
         this.setState({
             progressSongs: [...this.state.progressSongs, ...items],
+            started: (items.length == 0 && this.state.progressSongs.length == 0) ? false : true,
             isLoadingProgress: false,
         });
     };
@@ -284,6 +283,7 @@ export default class SongCatalog extends React.Component {
                                 backgroundColor: colors.mainBackground,
                             }}
                         >
+                            {(this.state.started) && (
                             <HorizontalVideoList
                                 Title={'CONTINUE'}
                                 isLoading={this.state.isLoadingProgress}
@@ -307,6 +307,7 @@ export default class SongCatalog extends React.Component {
                                         : fullHeight * 0.2
                                 }
                             />
+                            )}
                         </View>
                         <VerticalVideoList
                             items={this.state.allSongs}

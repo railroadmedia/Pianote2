@@ -8,7 +8,7 @@ export async function getNewContent(type) {
         }
         let auth = await getToken();
         let response = await fetch(
-            `http://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=newest&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
+            `http://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
             {
                 method: 'GET',
                 headers: {Authorization: `Bearer ${auth.token}`},
@@ -24,13 +24,12 @@ export async function getNewContent(type) {
 export async function getStartedContent(type) {
     try {
         if (type == '') {
-            type =
-                'unit&included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
+            type = 'unit&included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
         }
 
         let auth = await getToken();
         let response = await fetch(
-            `http://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=newest&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
+            `http://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
             {
                 method: 'GET',
                 headers: {
@@ -82,6 +81,9 @@ export async function getAllContent(type, sort, page, filtersDict) {
         }
     }
 
+    if(sort == 'newest') {sort = '-published_on'} 
+    else if(sort == 'oldest') { sort = 'published_on'}
+
     try {
         let auth = await getToken();
         let url = `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` + filters + required_user_states;
@@ -98,7 +100,9 @@ export async function getAllContent(type, sort, page, filtersDict) {
 
 export async function searchContent(term, page, filtersDict) {
     let included_types = ''; // types
-    if (filtersDict.topics.length > 0) {
+    if(isPackOnly == true) {
+        included_types = included_types + '&included_types[]=unit&included_types[]=pack-bundle-lesson';
+    } else if (filtersDict.topics.length > 0) {
         for (i in filtersDict.topics) {
             included_types =
                 included_types + `&included_types[]=${filtersDict.topics[i]}`;
@@ -144,7 +148,7 @@ export async function getMyListContent(page, filtersDict, progressState) {
 
     try {
         let auth = await getToken();
-        var url = `https://${serverLocation}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}` + included_types + progress_types;
+        var url = `https://${serverLocation}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}` + included_types + progress_types;
         let response = await fetch(url, {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
@@ -158,7 +162,7 @@ export async function getMyListContent(page, filtersDict, progressState) {
 }
 
 export async function seeAllContent(contentType, type, page, filtersDict) {
-    let url = `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&sort=newest&page=${page}`
+    let url = `https://app-staging.pianote.com/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}`
     
     if(contentType == 'lessons') {
         // add types

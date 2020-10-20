@@ -42,7 +42,12 @@ export default class NewMembership extends React.Component {
             } else if (this.state.newUser == 'EXPIRED') {
                 // save plan details
                 await AsyncStorage.setItem('plan', plan);
+                // was expired to renew 
                 await this.props.navigation.navigate('GETRESTARTED');
+            } else if(this.state.newUser == 'PACKONLY') {
+                await AsyncStorage.setItem('plan', plan);
+                // did upgrade from pack only to all
+                await this.props.navigation.dispatch(StackActions.reset({index: 0, actions: [NavigationActions.navigate({routeName: 'LESSONS'})]}), 0)
             }
         }
     };

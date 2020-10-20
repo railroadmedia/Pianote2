@@ -19,16 +19,14 @@ export default class StudentFocusCatalog extends React.Component {
         this.state = {
             progressStudentFocus: [], // videos
             isLoadingProgress: true,
-            lessonsStarted: false,
+            started: true,
         };
     }
 
     componentDidMount = async () => {
-        let response = await getStartedContent('quick-tips');
-        const newContent = await response.data.map(data => {
-            return new ContentModel(data);
-        });
-
+        let response = await getStartedContent('quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps');
+        const newContent = await response.data.map(data => {return new ContentModel(data)});
+        
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -59,7 +57,7 @@ export default class StudentFocusCatalog extends React.Component {
                 ...items,
             ],
             isLoadingProgress: false,
-            isStarted: response.data.length > 0 ? true : false,
+            started: (response.data.length == 0 && this.state.progressStudentFocus.length == 0) ? false : true,
         });
     };
 
@@ -138,7 +136,7 @@ export default class StudentFocusCatalog extends React.Component {
                             Student Focus
                         </Text>
                         <View style={{height: 15 * factorVertical}} />
-                        {this.state.isStarted && (
+                        {this.state.started && (
                             <View
                                 key={'continueCourses'}
                                 style={{

@@ -104,9 +104,7 @@ export default class Course extends React.Component {
 
     getProgressCourses = async () => {
         let response = await getStartedContent('course');
-        const newContent = response.data.map(data => {
-            return new ContentModel(data);
-        });
+        const newContent = response.data.map(data => {return new ContentModel(data)});
 
         items = [];
         for (i in newContent) {
@@ -135,7 +133,7 @@ export default class Course extends React.Component {
         await this.setState({
             progressCourses: [...this.state.progressCourses, ...items],
             isLoadingProgress: false,
-            started: false,
+            started: (this.state.progressCourses > 0 || items > 0) ? true : false,
         });
     };
 

@@ -188,7 +188,6 @@ export default class Search extends React.Component {
                     showCancel: true,
                 });
             } else {
-                console.log('RESPONSE: ', response);
                 let newContent = await response.data.map(data => {
                     return new ContentModel(data);
                 });

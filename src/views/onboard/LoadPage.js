@@ -9,16 +9,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 
-const resetAction = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
-});
-
-const resetAction2 = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'LOGIN'})],
-});
-
 export default class LoadPage extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
@@ -28,34 +18,28 @@ export default class LoadPage extends React.Component {
 
     componentDidMount = async () => {
         await SplashScreen.hide();
-
         isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-
         let userData = await getUserData();
-
+        
         if (isLoggedIn !== 'true' || userData.isMember == false) {
             // go to login
-            setTimeout(
-                () => this.props.navigation.dispatch(resetAction2),
-                1000,
-            );
+            setTimeout(() => this.props.navigation.dispatch(
+                StackActions.reset({index: 0, actions: [NavigationActions.navigate({routeName: 'LOGIN'})]})
+            ), 1000);
         } else {
+            global.isPackOnly = userData.isPackOlyOwner
+            let route = (isPackOnly) ? 'PACKS' : 'LESSONS'
             let currentDate = new Date().getTime() / 1000;
-            let userExpDate =
-                new Date(userData.expirationDate).getTime() / 1000;
+            let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
 
             if (userData.isLifetime || currentDate < userExpDate) {
                 // go to lessons
-                setTimeout(
-                    () => this.props.navigation.dispatch(resetAction),
-                    1000,
-                );
+                setTimeout(() => this.props.navigation.dispatch(
+                        StackActions.reset({index: 0, actions: [NavigationActions.navigate({routeName: route})]})
+                ), 1000);
             } else {
                 // go to membership expired
-                setTimeout(
-                    () => this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
-                    1000,
-                );
+                setTimeout(() => this.props.navigation.navigate('MEMBERSHIPEXPIRED'), 1000);
             }
         }
     };

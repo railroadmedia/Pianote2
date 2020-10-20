@@ -3,19 +3,28 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export async function getToken() {
     try {
-        const email = await AsyncStorage.getItem('email');
-        const password = await AsyncStorage.getItem('password');
-
-        let response = await fetch(
-            `http://app-staging.pianote.com/usora/api/login?email=${email}&password=${password}`,
-            {method: 'PUT'},
-        );
-
-        let data = await response.json();
-
-        await configure({authToken: data.token});
-
-        return data;
+        const data = await AsyncStorage.multiGet(['token', 'tokenTime', 'email', 'password']);
+        let timeNow = new Date().getTime() / 1000;
+        let token = data[0][1]
+        let tokenTime = data[1][1]
+        let email = data[2][1]
+        let password = data[3][1]
+        
+        if(typeof token == 'undefined' || token == null || (Number(timeNow) - Number(tokenTime) > 3600)) {
+            // if token dies not exist or is expired
+            let response = await fetch(`http://app-staging.pianote.com/usora/api/login?email=${email}&password=${password}`, {method: 'PUT'});
+            response = await response.json();
+            
+            await AsyncStorage.multiSet([
+                ['token', response.token], 
+                ['tokenTime', JSON.stringify(timeNow)]
+            ]);
+            await configure({authToken: response.token});
+            return response;
+        } else {
+            let response = {'token': token}
+            return response;
+        }
     } catch (error) {
         console.log('getToken Error', error);
         return new Error(error);
@@ -26,7 +35,6 @@ export async function getUserData() {
     // return profile details
     try {
         const auth = await getToken();
-
         let data = await fetch('http://app-staging.pianote.com/api/profile', {
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},

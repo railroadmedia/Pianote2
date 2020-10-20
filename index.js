@@ -42,7 +42,7 @@ global.colors = {
     pianoteRed: '#fb1b2f',
 };
 global.serverLocation = 'staging.pianote.com'
-
+global.isPackOnly = false
 
 configure({
     baseURL: 'https://app-staging.pianote.com',

@@ -255,17 +255,14 @@ export default class Lessons extends React.Component {
     getProgressLessons = async () => {
         try {
             let response = await getStartedContent('course');
-            const newContent = response.data.map(data => {
-                return new ContentModel(data);
-            });
+            const newContent = response.data.map(data => {return new ContentModel(data)});
 
             items = [];
             for (i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
+                        artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),

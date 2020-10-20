@@ -5,6 +5,7 @@ export default {
     tryCall: async function (url, method, body) {
         try {
             if (body) body = body ? JSON.stringify(body) : null;
+            let timeNow = new Date().getTime() / 1000;
             let token = await AsyncStorage.getItem('token');
             token = `Bearer ${JSON.parse(token)}`;
 
@@ -28,8 +29,8 @@ export default {
 
                 await configure({authToken: response.data.token});
                 await AsyncStorage.multiSet([
-                    ['token', JSON.stringify(response.data.token)],
-                    ['tokenTime', JSON.stringify(response.data.token)],
+                    ['token', response.data.token],
+                    ['tokenTime', JSON.stringify(timeNow)],
                 ]);
                 response = await fetch(url, {
                     headers,
