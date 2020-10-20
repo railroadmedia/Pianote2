@@ -141,24 +141,24 @@ class HorizontalVideoList extends React.Component {
                             </Text>
                             <View style={{flex: 1}} />
                             {!this.props.hideSeeAll && (
-                            <TouchableOpacity
-                                key={'seeAll'}
-                                style={{flex: 1}}
-                                onPress={() => this.props.seeAll()}
-                            >
-                                <Text
-                                    style={{
-                                        textAlign: 'right',
-                                        fontSize: 14.5 * factorRatio,
-                                        marginRight: 3.5 * factorHorizontal,
-                                        fontWeight: '300',
-                                        marginTop: 5 * factorVertical,
-                                        color: 'red',
-                                    }}
+                                <TouchableOpacity
+                                    key={'seeAll'}
+                                    style={{flex: 1}}
+                                    onPress={() => this.props.seeAll()}
                                 >
-                                    See All
-                                </Text>
-                            </TouchableOpacity>
+                                    <Text
+                                        style={{
+                                            textAlign: 'right',
+                                            fontSize: 14.5 * factorRatio,
+                                            marginRight: 3.5 * factorHorizontal,
+                                            fontWeight: '300',
+                                            marginTop: 5 * factorVertical,
+                                            color: 'red',
+                                        }}
+                                    >
+                                        See All
+                                    </Text>
+                                </TouchableOpacity>
                             )}
                             <View style={{flex: 0.1}} />
                         </View>
@@ -271,7 +271,8 @@ class HorizontalVideoList extends React.Component {
                                                         Platform.OS == 'ios'
                                                             ? '800'
                                                             : 'bold',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: 'white',
                                                 }}
                                             >

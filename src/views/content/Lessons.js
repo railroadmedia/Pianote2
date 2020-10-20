@@ -77,15 +77,17 @@ export default class Lessons extends React.Component {
             'rank',
             'profileURI',
             'foundationsIsStarted',
-            'foundationsIsCompleted'
+            'foundationsIsCompleted',
         ]);
 
         await this.setState({
             xp: data[0][1],
             rank: data[1][1],
             profileImage: data[2][1],
-            foundationIsStarted: (typeof data[3][1] !== null) ? JSON.parse(data[3][1]) : false,
-            foundationIsCompleted: (typeof data[4][1] !== null) ? JSON.parse(data[4][1]) : false
+            foundationIsStarted:
+                typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
+            foundationIsCompleted:
+                typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false,
         });
 
         this.getFoundations();
@@ -146,10 +148,12 @@ export default class Lessons extends React.Component {
     };
 
     getFoundations = async () => {
-        const response = new ContentModel(await foundationsService.getFoundation('foundations-2019'));
+        const response = new ContentModel(
+            await foundationsService.getFoundation('foundations-2019'),
+        );
         await AsyncStorage.multiSet([
             ['foundationsIsStarted', response.isStarted.toString()],
-            ['foundationsIsCompleted', response.isCompleted.toString()]
+            ['foundationsIsCompleted', response.isCompleted.toString()],
         ]);
         this.setState({
             foundationIsStarted: response.isStarted,
@@ -160,7 +164,9 @@ export default class Lessons extends React.Component {
 
     getNewLessons = async () => {
         let response = await getNewContent('');
-        const newContent = response.data.map(data => {return new ContentModel(data)});
+        const newContent = response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         try {
             items = [];
@@ -270,14 +276,17 @@ export default class Lessons extends React.Component {
     getProgressLessons = async () => {
         try {
             let response = await getStartedContent('course');
-            const newContent = response.data.map(data => {return new ContentModel(data)});
+            const newContent = response.data.map(data => {
+                return new ContentModel(data);
+            });
 
             let items = [];
             for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0].value,
+                        artist: newContent[i].getField('instructor').fields[0]
+                            .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i]
@@ -633,10 +642,14 @@ export default class Lessons extends React.Component {
                                     buttonWidth={fullWidth * 0.42}
                                     pressed={() => {
                                         this.props.navigation.navigate(
-                                            'FOUNDATIONS', {
-                                                foundationIsStarted: this.state.foundationIsStarted,
-                                                foundationIsCompleted: this.state.foundationIsCompleted,
-                                            }
+                                            'FOUNDATIONS',
+                                            {
+                                                foundationIsStarted: this.state
+                                                    .foundationIsStarted,
+                                                foundationIsCompleted: this
+                                                    .state
+                                                    .foundationIsCompleted,
+                                            },
                                         );
                                     }}
                                 />

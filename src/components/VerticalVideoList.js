@@ -2,12 +2,7 @@
  * VerticalVideoList
  */
 import React from 'react';
-import {
-    View,
-    Text,
-    ActivityIndicator,
-    TouchableOpacity,
-} from 'react-native';
+import {View, Text, ActivityIndicator, TouchableOpacity} from 'react-native';
 import {
     addToMyList,
     removeFromMyList,
@@ -241,11 +236,12 @@ class VerticalVideoList extends React.Component {
                         >
                             <TouchableOpacity
                                 onLongPress={() => {
-                                    (row.type == 'unit') ? null :
-                                    this.setState({
-                                        showModal: true,
-                                        item: row,
-                                    });
+                                    row.type == 'unit'
+                                        ? null
+                                        : this.setState({
+                                              showModal: true,
+                                              item: row,
+                                          });
                                 }}
                                 onPress={() => this.props.navigator(row, index)}
                                 style={{justifyContent: 'center'}}
@@ -385,15 +381,23 @@ class VerticalVideoList extends React.Component {
                                             >
                                                 <FastImage
                                                     style={{
-                                                        height: 8*factorRatio,
+                                                        height: 8 * factorRatio,
                                                         flex: 1,
                                                         alignSelf: 'stretch',
                                                     }}
                                                     source={require('Pianote2/src/assets/img/imgs/Pianote.png')}
-                                                    resizeMode={FastImage.resizeMode.contain}
+                                                    resizeMode={
+                                                        FastImage.resizeMode
+                                                            .contain
+                                                    }
                                                 />
                                             </View>
-                                            <View style={{height: 2.5*factorVertical}}/>
+                                            <View
+                                                style={{
+                                                    height:
+                                                        2.5 * factorVertical,
+                                                }}
+                                            />
                                             <Text
                                                 style={{
                                                     zIndex: 20,
@@ -634,11 +638,12 @@ class VerticalVideoList extends React.Component {
                             </View>
                             <TouchableOpacity
                                 onLongPress={() => {
-                                    (row.type == 'unit') ? null :
-                                    this.setState({
-                                        showModal: true,
-                                        item: row,
-                                    });
+                                    row.type == 'unit'
+                                        ? null
+                                        : this.setState({
+                                              showModal: true,
+                                              item: row,
+                                          });
                                 }}
                                 onPress={() => this.props.navigator(row, index)}
                                 style={{justifyContent: 'center'}}
@@ -835,7 +840,8 @@ class VerticalVideoList extends React.Component {
                                                 style={{
                                                     color: colors.pianoteRed,
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                 }}
                                             >
                                                 {
@@ -865,40 +871,43 @@ class VerticalVideoList extends React.Component {
                                     <View>
                                         <View style={{flex: 1}} />
                                         {!this.props.hideFilterButton && (
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.filterResults();
-                                            }}
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    borderWidth:
-                                                        1.5 * factorRatio,
-                                                    borderColor:
-                                                        colors.pianoteRed,
-                                                    height: 30 * factorRatio,
-                                                    width: 30 * factorRatio,
-                                                    borderRadius:
-                                                        20 * factorRatio,
-                                                },
-                                            ]}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={{
-                                                    transform: [
-                                                        {rotate: '90deg'},
-                                                    ],
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    this.props.filterResults();
                                                 }}
+                                                style={[
+                                                    styles.centerContent,
+                                                    {
+                                                        borderWidth:
+                                                            1.5 * factorRatio,
+                                                        borderColor:
+                                                            colors.pianoteRed,
+                                                        height:
+                                                            30 * factorRatio,
+                                                        width: 30 * factorRatio,
+                                                        borderRadius:
+                                                            20 * factorRatio,
+                                                    },
+                                                ]}
                                             >
-                                                <IonIcon
-                                                    size={14 * factorRatio}
-                                                    name={'md-options'}
-                                                    color={colors.pianoteRed}
-                                                />
-                                            </View>
-                                            <View style={{flex: 1}} />
-                                        </TouchableOpacity>
+                                                <View style={{flex: 1}} />
+                                                <View
+                                                    style={{
+                                                        transform: [
+                                                            {rotate: '90deg'},
+                                                        ],
+                                                    }}
+                                                >
+                                                    <IonIcon
+                                                        size={14 * factorRatio}
+                                                        name={'md-options'}
+                                                        color={
+                                                            colors.pianoteRed
+                                                        }
+                                                    />
+                                                </View>
+                                                <View style={{flex: 1}} />
+                                            </TouchableOpacity>
                                         )}
                                         <View style={{flex: 1}} />
                                     </View>

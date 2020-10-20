@@ -5,26 +5,38 @@ import commonService from './common.service';
 
 export async function getToken(userEmail, userPass) {
     try {
-        const data = await AsyncStorage.multiGet(['token', 'tokenTime', 'email', 'password']);
+        const data = await AsyncStorage.multiGet([
+            'token',
+            'tokenTime',
+            'email',
+            'password',
+        ]);
         let timeNow = new Date().getTime() / 1000;
-        let token = data[0][1]
-        let tokenTime = data[1][1]
-        let email = data[2][1]
-        let password = data[3][1]
-        
-        if(typeof token == 'undefined' || token == null || (Number(timeNow) - Number(tokenTime) > 3600)) {
+        let token = data[0][1];
+        let tokenTime = data[1][1];
+        let email = data[2][1];
+        let password = data[3][1];
+
+        if (
+            typeof token == 'undefined' ||
+            token == null ||
+            Number(timeNow) - Number(tokenTime) > 3600
+        ) {
             // if token dies not exist or is expired
-            let response = await fetch(`${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`, {method: 'PUT'});
+            let response = await fetch(
+                `${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`,
+                {method: 'PUT'},
+            );
             response = await response.json();
-            
+
             await AsyncStorage.multiSet([
-                ['token', response.token], 
-                ['tokenTime', JSON.stringify(timeNow)]
+                ['token', response.token],
+                ['tokenTime', JSON.stringify(timeNow)],
             ]);
             await configure({authToken: response.token});
             return response;
         } else {
-            let response = {'token': token}
+            let response = {token: token};
             return response;
         }
     } catch (error) {

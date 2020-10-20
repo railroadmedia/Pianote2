@@ -48,11 +48,17 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
-        let response = await getMyListContent(this.state.page, this.state.filters, '');
-        const newContent = await response.data.map(data => {return new ContentModel(data)});
-        
+        let response = await getMyListContent(
+            this.state.page,
+            this.state.filters,
+            '',
+        );
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
+
         console.log(newContent);
-        
+
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -67,7 +73,15 @@ export default class MyList extends React.Component {
                             : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
@@ -239,7 +253,7 @@ export default class MyList extends React.Component {
                                 fontSize: 30 * factorRatio,
                                 color: 'white',
                                 fontFamily: 'OpenSans-ExtraBold',
-                                fontStyle: 'normal'
+                                fontStyle: 'normal',
                             }}
                         >
                             My List
@@ -352,7 +366,9 @@ export default class MyList extends React.Component {
                             filters={this.state.filters} // show filter list
                             filterResults={() => this.filterResults()} // apply from filters page
                             outVideos={this.state.outVideos}
-                            removeItem={contentID => {this.removeFromMyList(contentID)}}
+                            removeItem={contentID => {
+                                this.removeFromMyList(contentID);
+                            }}
                             outVideos={this.state.outVideos} // if paging and out of videos
                             imageRadius={5 * factorRatio} // radius of image shown
                             containerBorderWidth={0} // border of box

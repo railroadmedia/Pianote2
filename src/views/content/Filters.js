@@ -235,19 +235,18 @@ const titleDict = {
 };
 
 const messageDict = {
-    1: 'A level 1 pianist is just beginning and might not yet have any skills yet. A level 1 pianist will learn how to navigate the keyboard, play a C scale, chords and begin to build dexterity and control in their hands.', 
+    1: 'A level 1 pianist is just beginning and might not yet have any skills yet. A level 1 pianist will learn how to navigate the keyboard, play a C scale, chords and begin to build dexterity and control in their hands.',
     2: 'A level 2 pianist can play a C scale hands together, a chord progression in the key of C and understands basic rhythm.',
     3: 'A level 3 pianist can read basic notation and is gaining confidence in playing hands together and reading simple notation on the grand staff.',
-    4: 'A level 4 pianist understands how to build and play both major and minor scales and the 1-5-6-4 chord progression. At level 4 you are beginning to play with dynamics and are becoming comfortable in moving your hands outside of “C position” as you play.', 
+    4: 'A level 4 pianist understands how to build and play both major and minor scales and the 1-5-6-4 chord progression. At level 4 you are beginning to play with dynamics and are becoming comfortable in moving your hands outside of “C position” as you play.',
     5: 'A level 5 pianist can play chord inversions and the G major scale as well as apply their knowledge of chord progressions to this new key. They can read notations that include accidentals and eighth notes.',
     6: 'A level 6 a pianist can play in the keys of F major and D minor and is using chord inversions while playing chord progressions.',
     7: 'A level 7 pianist can play with dynamics and the sustain pedal ,in 4/4 and ¾ time and is able to read and play most of the notation found within Pianote.',
     8: 'At level 8 a pianist understands the circle of 5th and is able to use it to help them play scales and songs in any key signature.',
     9: 'A level 9 pianist should be comfortable with the basics of improvisation and use a variety of left hand patterns and right hand fills as they create their own music. They also understand how to build and play 7th chords.',
     10: 'A level 10 pianist understands the 12 bar blues, the blues scale, and the 2-5-1 Jazz progression. By level 10 you can learn to play any song in our library and improvise in pop, blues or jazz styles.',
-    'All': 'This will display all piano lessons regardless of their difficulty.',
-
-}
+    All: 'This will display all piano lessons regardless of their difficulty.',
+};
 
 export default class Filters extends React.Component {
     static navigationOptions = {header: null};
@@ -941,7 +940,10 @@ export default class Filters extends React.Component {
                                             paddingRight: fullWidth * 0.1,
                                         }}
                                     >
-                                        {(this.state.level ==  null || this.state.allLevels) ? messageDict['All'] : messageDict[this.state.level]}
+                                        {this.state.level == null ||
+                                        this.state.allLevels
+                                            ? messageDict['All']
+                                            : messageDict[this.state.level]}
                                     </Text>
                                     <View style={{height: 10 * factorRatio}} />
                                     <View
@@ -1009,7 +1011,8 @@ export default class Filters extends React.Component {
                                                         textAlign: 'center',
                                                         fontSize:
                                                             12 * factorRatio,
-                                                        fontFamily: 'OpenSans-ExtraBold',
+                                                        fontFamily:
+                                                            'OpenSans-ExtraBold',
                                                         color: this.state
                                                             .allLevels
                                                             ? 'white'
@@ -8229,7 +8232,8 @@ export default class Filters extends React.Component {
                                                     textAlign: 'center',
                                                     fontWeight: 'bold',
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: this.state
                                                         .progressAll
                                                         ? 'white'
@@ -8276,7 +8280,8 @@ export default class Filters extends React.Component {
                                                     textAlign: 'center',
                                                     fontWeight: 'bold',
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: this.state
                                                         .progressProgress
                                                         ? 'white'
@@ -8323,7 +8328,8 @@ export default class Filters extends React.Component {
                                                     textAlign: 'center',
                                                     fontWeight: 'bold',
                                                     fontSize: 12 * factorRatio,
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: this.state
                                                         .progressComplete
                                                         ? 'white'
@@ -8488,7 +8494,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8555,7 +8562,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8621,7 +8629,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8687,7 +8696,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8768,7 +8778,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8834,7 +8845,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8900,7 +8912,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:
@@ -8966,7 +8979,8 @@ export default class Filters extends React.Component {
                                                 </TouchableOpacity>
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             5 * factorRatio,
                                                         fontSize:

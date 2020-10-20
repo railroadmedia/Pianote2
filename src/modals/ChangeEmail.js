@@ -170,7 +170,8 @@ class ChangeEmail extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 15 * factorRatio,
                                                     fontWeight: '700',
                                                     textAlign: 'center',

@@ -24,9 +24,13 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     componentDidMount = async () => {
-        let response = await getStartedContent('quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps');
-        const newContent = await response.data.map(data => {return new ContentModel(data)});
-        
+        let response = await getStartedContent(
+            'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps',
+        );
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
+
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -36,7 +40,15 @@ export default class StudentFocusCatalog extends React.Component {
                         .value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].likeCount,
@@ -57,7 +69,11 @@ export default class StudentFocusCatalog extends React.Component {
                 ...items,
             ],
             isLoadingProgress: false,
-            started: (response.data.length == 0 && this.state.progressStudentFocus.length == 0) ? false : true,
+            started:
+                response.data.length == 0 &&
+                this.state.progressStudentFocus.length == 0
+                    ? false
+                    : true,
         });
     };
 

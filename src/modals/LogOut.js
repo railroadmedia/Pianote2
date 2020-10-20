@@ -193,7 +193,8 @@ class LogOut extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 14 * factorRatio,
                                                     color: 'grey',
                                                     fontWeight: '700',

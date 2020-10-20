@@ -132,7 +132,8 @@ class CheckEmail extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 17 * factorRatio,
                                                     fontWeight: '700',
                                                     textAlign: 'center',
@@ -182,7 +183,8 @@ class CheckEmail extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 17 * factorRatio,
                                                     fontWeight: '700',
                                                     color: '#fb1b2f',

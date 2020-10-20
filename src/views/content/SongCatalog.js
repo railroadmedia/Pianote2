@@ -70,7 +70,15 @@ export default class SongCatalog extends React.Component {
                     artist: newContent[i].post.artist,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,
@@ -97,7 +105,9 @@ export default class SongCatalog extends React.Component {
 
     getProgressSongs = async () => {
         let response = await getStartedContent('song');
-        const newContent = response.data.map(data => {return new ContentModel(data)});
+        const newContent = response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         items = [];
         for (i in newContent) {
@@ -107,7 +117,15 @@ export default class SongCatalog extends React.Component {
                     artist: newContent[i].post.artist,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,
@@ -124,7 +142,10 @@ export default class SongCatalog extends React.Component {
 
         this.setState({
             progressSongs: [...this.state.progressSongs, ...items],
-            started: (items.length == 0 && this.state.progressSongs.length == 0) ? false : true,
+            started:
+                items.length == 0 && this.state.progressSongs.length == 0
+                    ? false
+                    : true,
             isLoadingProgress: false,
         });
     };
@@ -283,30 +304,33 @@ export default class SongCatalog extends React.Component {
                                 backgroundColor: colors.mainBackground,
                             }}
                         >
-                            {(this.state.started) && (
-                            <HorizontalVideoList
-                                Title={'CONTINUE'}
-                                isLoading={this.state.isLoadingProgress}
-                                seeAll={() =>
-                                    this.props.navigation.navigate('SEEALL', {
-                                        title: 'Continue',
-                                        parent: 'Songs',
-                                    })
-                                }
-                                hideSeeAll={true}
-                                showArtist={true}
-                                items={this.state.progressSongs}
-                                itemWidth={
-                                    isNotch
-                                        ? fullHeight * 0.175
-                                        : fullHeight * 0.2
-                                }
-                                itemHeight={
-                                    isNotch
-                                        ? fullHeight * 0.175
-                                        : fullHeight * 0.2
-                                }
-                            />
+                            {this.state.started && (
+                                <HorizontalVideoList
+                                    Title={'CONTINUE'}
+                                    isLoading={this.state.isLoadingProgress}
+                                    seeAll={() =>
+                                        this.props.navigation.navigate(
+                                            'SEEALL',
+                                            {
+                                                title: 'Continue',
+                                                parent: 'Songs',
+                                            },
+                                        )
+                                    }
+                                    hideSeeAll={true}
+                                    showArtist={true}
+                                    items={this.state.progressSongs}
+                                    itemWidth={
+                                        isNotch
+                                            ? fullHeight * 0.175
+                                            : fullHeight * 0.2
+                                    }
+                                    itemHeight={
+                                        isNotch
+                                            ? fullHeight * 0.175
+                                            : fullHeight * 0.2
+                                    }
+                                />
                             )}
                         </View>
                         <VerticalVideoList

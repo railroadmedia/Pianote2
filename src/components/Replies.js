@@ -247,7 +247,8 @@ class Replies extends React.Component {
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         fontSize:
                                                             9.5 * factorRatio,
                                                         color:

@@ -73,7 +73,9 @@ class NavMenuHeaders extends React.Component {
                                             index: 0,
                                             actions: [
                                                 NavigationActions.navigate({
-                                                    routeName: (isPackOnly) ? 'PACKS' : 'LESSONS',
+                                                    routeName: isPackOnly
+                                                        ? 'PACKS'
+                                                        : 'LESSONS',
                                                 }),
                                             ],
                                         }),
@@ -100,14 +102,18 @@ class NavMenuHeaders extends React.Component {
                         <TouchableOpacity
                             key={'lessons'}
                             onPress={() => {
-                                (isPackOnly) ? 
-                                this.props.navigation.navigate('NEWMEMBERSHIP', {data: {
-                                    type: 'PACKONLY',
-                                    email: null,
-                                    password: null,
-                                }})
-                                :
-                                this.setState({showModalMenu: true});
+                                isPackOnly
+                                    ? this.props.navigation.navigate(
+                                          'NEWMEMBERSHIP',
+                                          {
+                                              data: {
+                                                  type: 'PACKONLY',
+                                                  email: null,
+                                                  password: null,
+                                              },
+                                          },
+                                      )
+                                    : this.setState({showModalMenu: true});
                             }}
                         >
                             <View style={{flex: 2}} />

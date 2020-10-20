@@ -36,7 +36,10 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'LESSONS') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
+                                fontFamily:
+                                    this.props.parentPage == 'LESSONS'
+                                        ? 'OpenSans-ExtraBold'
+                                        : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'LESSONS'
                                         ? 'white'
@@ -72,7 +75,10 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'FOUNDATIONS') ? 'OpenSans-ExtraBold' : 'OpenSans-Regular',
+                                fontFamily:
+                                    this.props.parentPage == 'FOUNDATIONS'
+                                        ? 'OpenSans-ExtraBold'
+                                        : 'OpenSans-Regular',
                                 color:
                                     this.props.parentPage == 'FOUNDATIONS'
                                         ? 'white'
@@ -109,7 +115,10 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'COURSES') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
+                                fontFamily:
+                                    this.props.parentPage == 'COURSES'
+                                        ? 'OpenSans-ExtraBold'
+                                        : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'COURSES'
                                         ? 'white'
@@ -145,7 +154,10 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'SONGS') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
+                                fontFamily:
+                                    this.props.parentPage == 'SONGS'
+                                        ? 'OpenSans-ExtraBold'
+                                        : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'SONGS'
                                         ? 'white'
@@ -183,7 +195,10 @@ class NavigationMenu extends React.Component {
                     >
                         <Text
                             style={{
-                                fontFamily: (this.props.parentPage == 'STUDENT FOCUS') ? 'OpenSans-ExtraBold' : 'OpenSans-Bold',
+                                fontFamily:
+                                    this.props.parentPage == 'STUDENT FOCUS'
+                                        ? 'OpenSans-ExtraBold'
+                                        : 'OpenSans-Bold',
                                 color:
                                     this.props.parentPage == 'STUDENT FOCUS'
                                         ? 'white'

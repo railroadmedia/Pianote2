@@ -16,10 +16,10 @@ export default class LoadPage extends React.Component {
         super(props);
         this.state = {};
     }
-    
+
     componentDidMount() {
         Download_V2.resumeAll().then(async () => {
-            await SplashScreen.hide();    
+            await SplashScreen.hide();
 
             isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
             let resetKey = await AsyncStorage.getItem('resetKey');
@@ -27,16 +27,35 @@ export default class LoadPage extends React.Component {
             let userData = await getUserData();
             if (resetKey) {
                 setTimeout(
-                    () => this.props.navigation.dispatch(StackActions.reset({
-                        index: 0,
-                        actions: [NavigationActions.navigate({routeName: 'RESETPASSWORD'})],
-                    })
-                ), 1000);
+                    () =>
+                        this.props.navigation.dispatch(
+                            StackActions.reset({
+                                index: 0,
+                                actions: [
+                                    NavigationActions.navigate({
+                                        routeName: 'RESETPASSWORD',
+                                    }),
+                                ],
+                            }),
+                        ),
+                    1000,
+                );
             } else if (isLoggedIn !== 'true' || userData.isMember == false) {
                 // go to login
-                setTimeout(() => this.props.navigation.dispatch(
-                    StackActions.reset({index: 0, actions: [NavigationActions.navigate({routeName: 'LOGIN'})]})
-                ), 1000);
+                setTimeout(
+                    () =>
+                        this.props.navigation.dispatch(
+                            StackActions.reset({
+                                index: 0,
+                                actions: [
+                                    NavigationActions.navigate({
+                                        routeName: 'LOGIN',
+                                    }),
+                                ],
+                            }),
+                        ),
+                    1000,
+                );
             } else {
                 isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
                 let resetKey = await AsyncStorage.getItem('resetKey');
@@ -46,7 +65,10 @@ export default class LoadPage extends React.Component {
                         () => this.props.navigation.dispatch(resetPassAction),
                         1000,
                     );
-                } else if (isLoggedIn !== 'true' || userData.isMember == false) {
+                } else if (
+                    isLoggedIn !== 'true' ||
+                    userData.isMember == false
+                ) {
                     // go to login
                     setTimeout(
                         () =>
@@ -60,17 +82,36 @@ export default class LoadPage extends React.Component {
                         1000,
                     );
                 } else {
-                    global.isPackOnly = userData.isPackOlyOwner
-                    let route = (isPackOnly) ? 'PACKS' : 'LESSONS'
+                    global.isPackOnly = userData.isPackOlyOwner;
+                    let route = isPackOnly ? 'PACKS' : 'LESSONS';
                     let currentDate = new Date().getTime() / 1000;
-                    let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
+                    let userExpDate =
+                        new Date(userData.expirationDate).getTime() / 1000;
 
                     if (userData.isLifetime || currentDate < userExpDate) {
-                        setTimeout(() => this.props.navigation.dispatch(StackActions.reset({index: 0, actions: [NavigationActions.navigate({routeName: route})]})), 1000);
-                        
+                        setTimeout(
+                            () =>
+                                this.props.navigation.dispatch(
+                                    StackActions.reset({
+                                        index: 0,
+                                        actions: [
+                                            NavigationActions.navigate({
+                                                routeName: route,
+                                            }),
+                                        ],
+                                    }),
+                                ),
+                            1000,
+                        );
                     } else {
                         // go to membership expired
-                        setTimeout(() => this.props.navigation.navigate('MEMBERSHIPEXPIRED'), 1000);
+                        setTimeout(
+                            () =>
+                                this.props.navigation.navigate(
+                                    'MEMBERSHIPEXPIRED',
+                                ),
+                            1000,
+                        );
                     }
                 }
             }

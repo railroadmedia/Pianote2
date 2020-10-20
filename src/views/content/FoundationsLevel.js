@@ -18,7 +18,10 @@ import foundationsService from '../../services/foundations.service';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import {addToMyList, removeFromMyList} from 'Pianote2/src/services/UserActions.js';
+import {
+    addToMyList,
+    removeFromMyList,
+} from 'Pianote2/src/services/UserActions.js';
 
 export default class FoundationsLevel extends React.Component {
     static navigationOptions = {header: null};

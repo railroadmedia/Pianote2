@@ -142,7 +142,8 @@ class PasswordEmailMatch extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 17 * factorRatio,
                                                     fontWeight: 'bold',
                                                     color: '#fb1b2f',

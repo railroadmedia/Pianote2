@@ -76,7 +76,15 @@ export default class Course extends React.Component {
                         .value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].likeCount,
@@ -104,7 +112,9 @@ export default class Course extends React.Component {
 
     getProgressCourses = async () => {
         let response = await getStartedContent('course');
-        const newContent = response.data.map(data => {return new ContentModel(data)});
+        const newContent = response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         items = [];
         for (i in newContent) {
@@ -115,7 +125,15 @@ export default class Course extends React.Component {
                         .value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].likeCount,
@@ -133,7 +151,7 @@ export default class Course extends React.Component {
         await this.setState({
             progressCourses: [...this.state.progressCourses, ...items],
             isLoadingProgress: false,
-            started: (this.state.progressCourses > 0 || items > 0) ? true : false,
+            started: this.state.progressCourses > 0 || items > 0 ? true : false,
         });
     };
 
@@ -152,7 +170,15 @@ export default class Course extends React.Component {
                         .value,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].likeCount,

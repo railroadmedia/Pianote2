@@ -12,11 +12,11 @@ import {seeAllContent, getMyListContent} from '../../services/GetContent';
 // correlates to filters
 const typeDict = {
     'My List': 'MYLIST',
-    'Packs': 'PACKS',
-    'Lessons': 'LESSONS',
+    Packs: 'PACKS',
+    Lessons: 'LESSONS',
     'Student Focus': 'STUDENTFOCUS',
-    'Songs': 'SONGS',
-    'Courses': 'COURSES'
+    Songs: 'SONGS',
+    Courses: 'COURSES',
 };
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -56,25 +56,45 @@ export default class SeeAll extends React.Component {
     }
 
     async getAllLessons() {
-        let response = null
+        let response = null;
 
-        if(this.state.parent == 'My List') {
+        if (this.state.parent == 'My List') {
             // use my list API call when navigating to see all from my list
-            response = await getMyListContent(this.state.page, this.state.filters, (this.state.title == 'In Progress') ? 'started' : 'completed')
-        } else if(this.state.parent =='Lessons') {
+            response = await getMyListContent(
+                this.state.page,
+                this.state.filters,
+                this.state.title == 'In Progress' ? 'started' : 'completed',
+            );
+        } else if (this.state.parent == 'Lessons') {
             // lessons continue and new
-            if(this.state.title.slice(0, 3) == 'New') { 
-                response = await seeAllContent('lessons', 'new', this.state.page, this.state.filters);
+            if (this.state.title.slice(0, 3) == 'New') {
+                response = await seeAllContent(
+                    'lessons',
+                    'new',
+                    this.state.page,
+                    this.state.filters,
+                );
             } else {
-                response = await seeAllContent('lessons', 'continue', this.state.page, this.state.filters);
+                response = await seeAllContent(
+                    'lessons',
+                    'continue',
+                    this.state.page,
+                    this.state.filters,
+                );
             }
-        } else if(this.state.parent == 'Courses') {
+        } else if (this.state.parent == 'Courses') {
             // courses new courses
-            response = await seeAllContent('courses', 'new', this.state.page, this.state.filters);
+            response = await seeAllContent(
+                'courses',
+                'new',
+                this.state.page,
+                this.state.filters,
+            );
         }
-        
-        
-        const newContent = await response.data.map(data => {return new ContentModel(data)});
+
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         items = [];
         for (i in newContent) {
@@ -90,7 +110,15 @@ export default class SeeAll extends React.Component {
                             : newContent[i].getField('instructor').name,
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
-                    description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     like_count: newContent[i].post.like_count,
@@ -301,7 +329,11 @@ export default class SeeAll extends React.Component {
                                 showSort={false}
                                 showLength={false}
                                 showFilter={true}
-                                hideFilterButton={(this.state.parent == 'Lessons') ? false : true} // only show filter button on lessons
+                                hideFilterButton={
+                                    this.state.parent == 'Lessons'
+                                        ? false
+                                        : true
+                                } // only show filter button on lessons
                                 showLargeTitle={true}
                                 filters={this.state.filters} // show filter list
                                 imageRadius={5 * factorRatio} // radius of image shown

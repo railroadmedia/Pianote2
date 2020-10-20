@@ -32,7 +32,7 @@ export default class NewMembership extends React.Component {
             token: this.props.navigation.state.params.data.token,
         };
     }
-    
+
     async componentDidMount() {
         try {
             await RNIap.initConnection();
@@ -71,7 +71,7 @@ export default class NewMembership extends React.Component {
             console.log(response);
             if (response.meta) {
                 const token = `Bearer ${response.meta.auth_code}`;
-                
+
                 try {
                     await AsyncStorage.multiSet([
                         ['loggedInStatus', 'true'],
@@ -306,7 +306,8 @@ export default class NewMembership extends React.Component {
                                             $29.99
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 9 * factorRatio,
                                                     color: 'grey',
                                                 }}
@@ -339,7 +340,8 @@ export default class NewMembership extends React.Component {
                                                 <View style={{flex: 1}} />
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         textAlign: 'center',
                                                         color: 'white',
                                                         fontSize:
@@ -455,7 +457,8 @@ export default class NewMembership extends React.Component {
                                             $199.99
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 9 * factorRatio,
                                                     color: 'grey',
                                                 }}
@@ -490,7 +493,8 @@ export default class NewMembership extends React.Component {
                                                 <View style={{flex: 1}} />
                                                 <Text
                                                     style={{
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         textAlign: 'center',
                                                         color: 'white',
                                                         fontSize:

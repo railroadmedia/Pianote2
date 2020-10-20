@@ -99,12 +99,16 @@ class NavigationBar extends React.Component {
                                           index: 0,
                                           actions: [
                                               NavigationActions.navigate({
-                                                  routeName: (isPackOnly) ? 'PACKS' : 'LESSONS',
+                                                  routeName: isPackOnly
+                                                      ? 'PACKS'
+                                                      : 'LESSONS',
                                               }),
                                           ],
                                       }),
                                   )
-                                : this.props.navigation.navigate((isPackOnly) ? 'PACKS' : 'LESSONS',);
+                                : this.props.navigation.navigate(
+                                      isPackOnly ? 'PACKS' : 'LESSONS',
+                                  );
                         }}
                     >
                         <SimpleLineIcon

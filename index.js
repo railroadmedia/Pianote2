@@ -41,17 +41,11 @@ global.colors = {
     notificationColor: '#002038',
     pianoteRed: '#fb1b2f',
 };
-global.serverLocation = 'staging.pianote.com'
-global.isPackOnly = false
+global.serverLocation = 'staging.pianote.com';
+global.isPackOnly = false;
 
 configure({
     baseURL: 'https://app-staging.pianote.com',
     'Content-Type': 'application/x-www-form-urlencoded',
     Accept: 'application/json',
 });
-
-/**
-    'baseURL': 'https://devcaleb.pianote.com'
-    'baseURL': 'https://staging.musora.com',
-    'baseURL': 'https://staging.pianote.com',
-*/

@@ -3,13 +3,12 @@
  */
 import React from 'react';
 import {
-    View, 
-    Text, 
-    ScrollView, 
-    TouchableOpacity, 
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
     ActivityIndicator,
     FlatList,
-
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -26,13 +25,43 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
 
 const messageDict = {
-    'lesson comment reply': ['replied to your comment.', true, 'orange', 'comment reply notifications'], // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
-    'lesson comment liked': ['liked your comment.', true, 'blue', 'comment like notifications'], // notify_on_forum_post_like: this.state.notify_on_forum_post_like,
-    'forum post reply': ['replied to your forum post.', true, 'orange', 'forum post reply notifications'], // notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-    'forum post liked': ['liked your forum post.', true, 'blue', 'forum post like notifications'], // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
-    'forum post in followed thread': ['post in followed thread.', false, 'orange', 'forum post reply notifications'],
-    'new content releases': ['', false, 'red', 'new content release notifications'], // notify_weekly_update: this.state.notify_weekly_update,
-}
+    'lesson comment reply': [
+        'replied to your comment.',
+        true,
+        'orange',
+        'comment reply notifications',
+    ], // notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
+    'lesson comment liked': [
+        'liked your comment.',
+        true,
+        'blue',
+        'comment like notifications',
+    ], // notify_on_forum_post_like: this.state.notify_on_forum_post_like,
+    'forum post reply': [
+        'replied to your forum post.',
+        true,
+        'orange',
+        'forum post reply notifications',
+    ], // notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
+    'forum post liked': [
+        'liked your forum post.',
+        true,
+        'blue',
+        'forum post like notifications',
+    ], // notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
+    'forum post in followed thread': [
+        'post in followed thread.',
+        false,
+        'orange',
+        'forum post reply notifications',
+    ],
+    'new content releases': [
+        '',
+        false,
+        'red',
+        'new content release notifications',
+    ], // notify_weekly_update: this.state.notify_weekly_update,
+};
 
 export default class Profile extends React.Component {
     static navigationOptions = {header: null};
@@ -46,7 +75,7 @@ export default class Profile extends React.Component {
             showReplyNotification: false,
             memberSince: '',
             isLoading: true,
-            clickedNotificationStatus: false, 
+            clickedNotificationStatus: false,
             notify_on_forum_followed_thread_reply: false,
             notify_on_forum_post_like: false,
             notify_on_forum_post_reply: false,
@@ -65,7 +94,7 @@ export default class Profile extends React.Component {
             'joined',
         ]);
 
-        let xp = await this.changeXP(data[0][1])
+        let xp = await this.changeXP(data[0][1]);
 
         await this.setState({
             xp,
@@ -89,47 +118,64 @@ export default class Profile extends React.Component {
                     headers: {
                         Authorization: `Bearer ${auth.token}`,
                         'Content-Type': 'application/json',
-                    }
+                    },
                 },
             );
-            var notifications = await response.json()
+            var notifications = await response.json();
 
-            for(i in notifications.data) {
-                let timeCreated = notifications.data[i].created_at.slice(0,10)+'T'+notifications.data[i].created_at.slice(11)+'.000Z'                
-                let dateNote = new Date(timeCreated).getTime()/1000
-                let dateNow = new Date().getTime()/1000
-                let timeDelta = dateNow - dateNote // in seconds 
-                
-                if(timeDelta < 3600) {
-                    notifications.data[i].created_at = `${(timeDelta/60).toFixed(0)} minute${(timeDelta < 60*2 && timeDelta >= 60) ? '':'s'} ago`
-                } else if(timeDelta < 86400) {
-                    notifications.data[i].created_at = `${(timeDelta/3600).toFixed(0)} hour${(timeDelta < 3600*2) ? '':'s'} ago`
-                } else if(timeDelta < 604800) {
-                    notifications.data[i].created_at = `${(timeDelta/86400).toFixed(0)} day${(timeDelta < 86400*2) ? '':'s'} ago`
+            for (i in notifications.data) {
+                let timeCreated =
+                    notifications.data[i].created_at.slice(0, 10) +
+                    'T' +
+                    notifications.data[i].created_at.slice(11) +
+                    '.000Z';
+                let dateNote = new Date(timeCreated).getTime() / 1000;
+                let dateNow = new Date().getTime() / 1000;
+                let timeDelta = dateNow - dateNote; // in seconds
+
+                if (timeDelta < 3600) {
+                    notifications.data[i].created_at = `${(
+                        timeDelta / 60
+                    ).toFixed(0)} minute${
+                        timeDelta < 60 * 2 && timeDelta >= 60 ? '' : 's'
+                    } ago`;
+                } else if (timeDelta < 86400) {
+                    notifications.data[i].created_at = `${(
+                        timeDelta / 3600
+                    ).toFixed(0)} hour${timeDelta < 3600 * 2 ? '' : 's'} ago`;
+                } else if (timeDelta < 604800) {
+                    notifications.data[i].created_at = `${(
+                        timeDelta / 86400
+                    ).toFixed(0)} day${timeDelta < 86400 * 2 ? '' : 's'} ago`;
                 } else {
-                    notifications.data[i].created_at = `${(timeDelta/604800).toFixed(0)} week${(timeDelta < 604800*2) ? '':'s'} ago`
-                } 
+                    notifications.data[i].created_at = `${(
+                        timeDelta / 604800
+                    ).toFixed(0)} week${timeDelta < 604800 * 2 ? '' : 's'} ago`;
+                }
             }
-            
+
             await this.setState({
-                notifications_summary_frequency_minutes: userData.notifications_summary_frequency_minutes,
-                notify_on_forum_followed_thread_reply: userData.notify_on_forum_followed_thread_reply,
+                notifications_summary_frequency_minutes:
+                    userData.notifications_summary_frequency_minutes,
+                notify_on_forum_followed_thread_reply:
+                    userData.notify_on_forum_followed_thread_reply,
                 notify_on_forum_post_like: userData.notify_on_forum_post_like,
                 notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-                notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-                notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
+                notify_on_lesson_comment_like:
+                    userData.notify_on_lesson_comment_like,
+                notify_on_lesson_comment_reply:
+                    userData.notify_on_lesson_comment_reply,
                 notify_weekly_update: userData.notify_weekly_update,
                 notifications: notifications.data,
-            })
-            
+            });
         } catch (error) {
             console.log('ERROR: ', error);
-        }   
+        }
 
-        this.setState({isLoading: false})
+        this.setState({isLoading: false});
     };
 
-    changeXP = async (num) => {
+    changeXP = async num => {
         if (num !== '') {
             num = Number(num);
             if (num < 10000) {
@@ -143,21 +189,28 @@ export default class Profile extends React.Component {
         }
     };
 
-    removeNotification = async (data) => {
-        let auth = await getToken()
-        let commentID = data.data.commentId
+    removeNotification = async data => {
+        let auth = await getToken();
+        let commentID = data.data.commentId;
 
-        for(i in this.state.notifications) {
-            console.log(this.state.notifications[i].data.commentId, commentID, i)
-            if(this.state.notifications[i].data.commentId == commentID) {
+        for (i in this.state.notifications) {
+            console.log(
+                this.state.notifications[i].data.commentId,
+                commentID,
+                i,
+            );
+            if (this.state.notifications[i].data.commentId == commentID) {
                 await this.setState({
-                    notifications: [...this.state.notifications.splice(0,i), ...this.state.notifications.splice(i+1)]
-                })
+                    notifications: [
+                        ...this.state.notifications.splice(0, i),
+                        ...this.state.notifications.splice(i + 1),
+                    ],
+                });
             }
         }
 
-        await this.forceUpdate()
-                
+        await this.forceUpdate();
+
         try {
             let response = await fetch(
                 `https://app-staging.pianote.com/api/railnotifications/notification/${commentID}`,
@@ -175,28 +228,44 @@ export default class Profile extends React.Component {
         }
     };
 
-    checkNotificationTypeStatus = async (item) => {
-        let type = messageDict[item.type][0]
-        if(type == 'replied to your comment.') {
-            await this.setState({clickedNotificationStatus: this.state.notify_on_lesson_comment_reply})
-        } else if(type == 'liked your comment.') {
-            await this.setState({clickedNotificationStatus: this.state.notify_on_lesson_comment_like})
-        } else if(type == 'replied to your forum post.') {
-            await this.setState({clickedNotificationStatus: this.state.notify_on_forum_post_reply})
-        } else if(type == 'liked your forum post.') {
-            await this.setState({clickedNotificationStatus: this.state.notify_on_forum_post_like})
-        } else if(type == 'post in followed thread.') {
-            await this.setState({clickedNotificationStatus: this.state.notify_on_forum_followed_thread_reply})
-        } else if(type == '') {
-            await this.setState({clickedNotificationStatus: this.state.notify_weekly_update})
+    checkNotificationTypeStatus = async item => {
+        let type = messageDict[item.type][0];
+        if (type == 'replied to your comment.') {
+            await this.setState({
+                clickedNotificationStatus: this.state
+                    .notify_on_lesson_comment_reply,
+            });
+        } else if (type == 'liked your comment.') {
+            await this.setState({
+                clickedNotificationStatus: this.state
+                    .notify_on_lesson_comment_like,
+            });
+        } else if (type == 'replied to your forum post.') {
+            await this.setState({
+                clickedNotificationStatus: this.state
+                    .notify_on_forum_post_reply,
+            });
+        } else if (type == 'liked your forum post.') {
+            await this.setState({
+                clickedNotificationStatus: this.state.notify_on_forum_post_like,
+            });
+        } else if (type == 'post in followed thread.') {
+            await this.setState({
+                clickedNotificationStatus: this.state
+                    .notify_on_forum_followed_thread_reply,
+            });
+        } else if (type == '') {
+            await this.setState({
+                clickedNotificationStatus: this.state.notify_weekly_update,
+            });
         }
     };
 
-    turnOfffNotifications = async (data) => {
+    turnOfffNotifications = async data => {
         const auth = await getToken();
-        
-        this.setState(data)
-        
+
+        this.setState(data);
+
         try {
             let response = await fetch(
                 `https://app-staging.pianote.com/usora/api/profile/update`,
@@ -219,7 +288,7 @@ export default class Profile extends React.Component {
         } catch (error) {
             console.log('ERROR: ', error);
         }
-    }
+    };
 
     render() {
         return (
@@ -387,7 +456,9 @@ export default class Profile extends React.Component {
                                             source={{
                                                 uri: this.state.profileImage,
                                             }}
-                                            resizeMode={FastImage.resizeMode.cover}
+                                            resizeMode={
+                                                FastImage.resizeMode.cover
+                                            }
                                         />
                                     )}
                                 </View>
@@ -472,7 +543,8 @@ export default class Profile extends React.Component {
                                                 style={{
                                                     color: 'white',
                                                     fontSize: 24 * factorRatio,
-                                                    fontFamily: 'OpenSans-ExtraBold',
+                                                    fontFamily:
+                                                        'OpenSans-ExtraBold',
                                                     textAlign: 'center',
                                                 }}
                                             >
@@ -503,7 +575,8 @@ export default class Profile extends React.Component {
                                                 style={{
                                                     color: 'white',
                                                     fontSize: 24 * factorRatio,
-                                                    fontFamily: 'OpenSans-ExtraBold',
+                                                    fontFamily:
+                                                        'OpenSans-ExtraBold',
                                                     textAlign: 'center',
                                                 }}
                                             >
@@ -536,234 +609,367 @@ export default class Profile extends React.Component {
                                 </Text>
                                 <View style={{flex: 1}} />
                             </View>
-                            {(!this.state.isLoading && this.state.notifications.length > 0) && (
-                                <FlatList
-                                    data={this.state.notifications}
-                                    keyExtractor={(item, index) => (index)}
-                                    renderItem={({item, index}) => (
-                                        <View
-                                            style={{
-                                                height: 90 * factorRatio,
-                                                backgroundColor:
-                                                    index % 2
-                                                        ? colors.mainBackground
-                                                        : colors.notificationColor,
-                                                flexDirection: 'row',
-                                            }}
-                                        >
+                            {!this.state.isLoading &&
+                                this.state.notifications.length > 0 && (
+                                    <FlatList
+                                        data={this.state.notifications}
+                                        keyExtractor={(item, index) => index}
+                                        renderItem={({item, index}) => (
                                             <View
                                                 style={{
-                                                    flex: 0.275,
+                                                    height: 90 * factorRatio,
+                                                    backgroundColor:
+                                                        index % 2
+                                                            ? colors.mainBackground
+                                                            : colors.notificationColor,
                                                     flexDirection: 'row',
                                                 }}
                                             >
-                                                <View style={{flex: 1}} />
-                                                <View>
+                                                <View
+                                                    style={{
+                                                        flex: 0.275,
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
                                                     <View style={{flex: 1}} />
-                                                    <View
-                                                        style={{
-                                                            height: fullWidth * 0.175,
-                                                            width: fullWidth * 0.175,
-                                                            borderRadius: 150 * factorRatio,
-                                                            backgroundColor: '#ececec',
-                                                        }}
-                                                    >
-                                                        {(messageDict[item.type][2] == 'red') && (
+                                                    <View>
                                                         <View
-                                                            style={[
-                                                                styles.centerContent,
-                                                                {
-                                                                    position: 'absolute',
-                                                                    bottom: 0,
-                                                                    right: 0,
-                                                                    height: fullWidth * 0.075,
-                                                                    width: fullWidth * 0.075,
-                                                                    backgroundColor: 'red',
-                                                                    borderRadius: 100 * factorRatio,
-                                                                    zIndex: 5,
-                                                                },
-                                                            ]}
-                                                        >
-                                                            <FontAwesome
-                                                                size={fullWidth * 0.045}
-                                                                color={'white'}
-                                                                name={'video-camera'}
-                                                            />
-                                                        </View>                                                        
-                                                        )}
-                                                        {(messageDict[item.type][2] == 'orange') && (
+                                                            style={{flex: 1}}
+                                                        />
                                                         <View
-                                                            style={[
-                                                                styles.centerContent,
-                                                                {
-                                                                    position: 'absolute',
-                                                                    bottom: 0,
-                                                                    right: 0,
-                                                                    height: fullWidth * 0.075,
-                                                                    width: fullWidth * 0.075,
-                                                                    backgroundColor: 'orange',
-                                                                    borderRadius: 100 * factorRatio,
-                                                                    zIndex: 5,
-                                                                },
-                                                            ]}
+                                                            style={{
+                                                                height:
+                                                                    fullWidth *
+                                                                    0.175,
+                                                                width:
+                                                                    fullWidth *
+                                                                    0.175,
+                                                                borderRadius:
+                                                                    150 *
+                                                                    factorRatio,
+                                                                backgroundColor:
+                                                                    '#ececec',
+                                                            }}
                                                         >
-                                                            <Chat
-                                                                height={fullWidth * 0.05}
-                                                                width={fullWidth * 0.05}
-                                                                fill={'white'}
-                                                            />
-                                                        </View>                                                        
-                                                        )}
-                                                        {(messageDict[item.type][2] == 'blue') && (
-                                                        <View
-                                                            style={[
-                                                                styles.centerContent,
-                                                                {
-                                                                    position: 'absolute',
-                                                                    bottom: 0,
-                                                                    right: 0,
-                                                                    height: fullWidth * 0.075,
-                                                                    width: fullWidth * 0.075,
-                                                                    backgroundColor: 'blue',
-                                                                    borderRadius: 100 * factorRatio,
-                                                                    zIndex: 5,
-                                                                },
-                                                            ]}
-                                                        >
-                                                            <AntIcon
-                                                                size={fullWidth * 0.045}
-                                                                color={'white'}
-                                                                name={'like1'}
+                                                            {messageDict[
+                                                                item.type
+                                                            ][2] == 'red' && (
+                                                                <View
+                                                                    style={[
+                                                                        styles.centerContent,
+                                                                        {
+                                                                            position:
+                                                                                'absolute',
+                                                                            bottom: 0,
+                                                                            right: 0,
+                                                                            height:
+                                                                                fullWidth *
+                                                                                0.075,
+                                                                            width:
+                                                                                fullWidth *
+                                                                                0.075,
+                                                                            backgroundColor:
+                                                                                'red',
+                                                                            borderRadius:
+                                                                                100 *
+                                                                                factorRatio,
+                                                                            zIndex: 5,
+                                                                        },
+                                                                    ]}
+                                                                >
+                                                                    <FontAwesome
+                                                                        size={
+                                                                            fullWidth *
+                                                                            0.045
+                                                                        }
+                                                                        color={
+                                                                            'white'
+                                                                        }
+                                                                        name={
+                                                                            'video-camera'
+                                                                        }
+                                                                    />
+                                                                </View>
+                                                            )}
+                                                            {messageDict[
+                                                                item.type
+                                                            ][2] ==
+                                                                'orange' && (
+                                                                <View
+                                                                    style={[
+                                                                        styles.centerContent,
+                                                                        {
+                                                                            position:
+                                                                                'absolute',
+                                                                            bottom: 0,
+                                                                            right: 0,
+                                                                            height:
+                                                                                fullWidth *
+                                                                                0.075,
+                                                                            width:
+                                                                                fullWidth *
+                                                                                0.075,
+                                                                            backgroundColor:
+                                                                                'orange',
+                                                                            borderRadius:
+                                                                                100 *
+                                                                                factorRatio,
+                                                                            zIndex: 5,
+                                                                        },
+                                                                    ]}
+                                                                >
+                                                                    <Chat
+                                                                        height={
+                                                                            fullWidth *
+                                                                            0.05
+                                                                        }
+                                                                        width={
+                                                                            fullWidth *
+                                                                            0.05
+                                                                        }
+                                                                        fill={
+                                                                            'white'
+                                                                        }
+                                                                    />
+                                                                </View>
+                                                            )}
+                                                            {messageDict[
+                                                                item.type
+                                                            ][2] == 'blue' && (
+                                                                <View
+                                                                    style={[
+                                                                        styles.centerContent,
+                                                                        {
+                                                                            position:
+                                                                                'absolute',
+                                                                            bottom: 0,
+                                                                            right: 0,
+                                                                            height:
+                                                                                fullWidth *
+                                                                                0.075,
+                                                                            width:
+                                                                                fullWidth *
+                                                                                0.075,
+                                                                            backgroundColor:
+                                                                                'blue',
+                                                                            borderRadius:
+                                                                                100 *
+                                                                                factorRatio,
+                                                                            zIndex: 5,
+                                                                        },
+                                                                    ]}
+                                                                >
+                                                                    <AntIcon
+                                                                        size={
+                                                                            fullWidth *
+                                                                            0.045
+                                                                        }
+                                                                        color={
+                                                                            'white'
+                                                                        }
+                                                                        name={
+                                                                            'like1'
+                                                                        }
+                                                                    />
+                                                                </View>
+                                                            )}
+                                                            <FastImage
+                                                                style={{
+                                                                    flex: 1,
+                                                                    borderRadius: 100,
+                                                                }}
+                                                                source={{
+                                                                    uri:
+                                                                        item.type ==
+                                                                        'new content releases'
+                                                                            ? item
+                                                                                  .content
+                                                                                  .thumbnail_url
+                                                                            : item
+                                                                                  .sender
+                                                                                  .profile_image_url,
+                                                                }}
+                                                                resizeMode={
+                                                                    FastImage
+                                                                        .resizeMode
+                                                                        .stretch
+                                                                }
                                                             />
                                                         </View>
-                                                        )}
-                                                        <FastImage
-                                                            style={{
-                                                                flex: 1, 
-                                                                borderRadius: 100,
-                                                            }}
-                                                            source={{
-                                                                uri: (item.type == 'new content releases') ? 
-                                                                item.content.thumbnail_url
-                                                                :
-                                                                item.sender.profile_image_url
-                                                            }}
-                                                            resizeMode={FastImage.resizeMode.stretch}
+                                                        <View
+                                                            style={{flex: 1}}
                                                         />
                                                     </View>
                                                     <View style={{flex: 1}} />
                                                 </View>
-                                                <View style={{flex: 1}} />
-                                            </View>
-                                            <View style={{flex: 0.675}}>
-                                                <View style={{flex: 1}}>
-                                                    <View style={{flex: 1}} />
-                                                    <Text
-                                                        style={{
-                                                            fontFamily: 'OpenSans-Bold',
-                                                            fontSize: 15 * factorRatio,
-                                                            color: 'white',
-                                                        }}
-                                                    >
+                                                <View style={{flex: 0.675}}>
+                                                    <View style={{flex: 1}}>
+                                                        <View
+                                                            style={{flex: 1}}
+                                                        />
                                                         <Text
                                                             style={{
-                                                                fontFamily: 'OpenSans-ExtraBold',
-                                                                fontSize: 15 * factorRatio,
+                                                                fontFamily:
+                                                                    'OpenSans-Bold',
+                                                                fontSize:
+                                                                    15 *
+                                                                    factorRatio,
                                                                 color: 'white',
                                                             }}
                                                         >
-                                                            {(messageDict[item.type][1]) ? '' : 'NEW - '}
+                                                            <Text
+                                                                style={{
+                                                                    fontFamily:
+                                                                        'OpenSans-ExtraBold',
+                                                                    fontSize:
+                                                                        15 *
+                                                                        factorRatio,
+                                                                    color:
+                                                                        'white',
+                                                                }}
+                                                            >
+                                                                {messageDict[
+                                                                    item.type
+                                                                ][1]
+                                                                    ? ''
+                                                                    : 'NEW - '}
+                                                            </Text>
+                                                            {item.type ==
+                                                            'new content releases'
+                                                                ? item.content
+                                                                      .display_name
+                                                                : item.sender
+                                                                      .display_name}
+                                                            <Text
+                                                                style={{
+                                                                    fontFamily:
+                                                                        'OpenSans-Regular',
+                                                                    fontSize:
+                                                                        14 *
+                                                                        factorRatio,
+                                                                }}
+                                                            >
+                                                                {' '}
+                                                                {
+                                                                    messageDict[
+                                                                        item
+                                                                            .type
+                                                                    ][0]
+                                                                }
+                                                            </Text>
                                                         </Text>
-                                                        {(item.type == 'new content releases') ? 
-                                                            item.content.display_name 
-                                                            : 
-                                                            item.sender.display_name
-                                                        }
+                                                        <View
+                                                            style={{
+                                                                height:
+                                                                    5 *
+                                                                    factorVertical,
+                                                            }}
+                                                        />
                                                         <Text
                                                             style={{
-                                                                fontFamily: 'OpenSans-Regular',
-                                                                fontSize: 14 * factorRatio,
+                                                                fontFamily:
+                                                                    'OpenSans-Regular',
+                                                                fontSize:
+                                                                    13 *
+                                                                    factorRatio,
+                                                                color:
+                                                                    colors.secondBackground,
                                                             }}
                                                         >
-                                                            {' '}
-                                                            {messageDict[item.type][0]}
+                                                            {item.created_at}
                                                         </Text>
-                                                    </Text>
-                                                    <View style={{height: 5 * factorVertical}} />
-                                                    <Text
-                                                        style={{
-                                                            fontFamily: 'OpenSans-Regular',
-                                                            fontSize: 13 * factorRatio,
-                                                            color: colors.secondBackground,
-                                                        }}
-                                                    >
-                                                        {item.created_at}
-                                                    </Text>
-                                                    <View style={{flex: 1}} />
-                                                </View>
-                                            </View>
-                                            <View>
-                                                <View style={{flex: 1}} />
-                                                <View style={{flexDirection: 'row'}}>
-                                                    <View style={{flex: 1}} />
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            this.checkNotificationTypeStatus(item),
-                                                            this.setState({
-                                                                showReplyNotification: true,
-                                                                clickedNotification: item,
-                                                            })
-                                                        }}
-                                                        style={{
-                                                            height: 35 * factorRatio,
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        <EntypoIcon
-                                                            size={20 * factorRatio}
-                                                            name={'dots-three-horizontal'}
-                                                            color={colors.secondBackground}
+                                                        <View
+                                                            style={{flex: 1}}
                                                         />
-                                                    </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                                <View>
+                                                    <View style={{flex: 1}} />
+                                                    <View
+                                                        style={{
+                                                            flexDirection:
+                                                                'row',
+                                                        }}
+                                                    >
+                                                        <View
+                                                            style={{flex: 1}}
+                                                        />
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                this.checkNotificationTypeStatus(
+                                                                    item,
+                                                                ),
+                                                                    this.setState(
+                                                                        {
+                                                                            showReplyNotification: true,
+                                                                            clickedNotification: item,
+                                                                        },
+                                                                    );
+                                                            }}
+                                                            style={{
+                                                                height:
+                                                                    35 *
+                                                                    factorRatio,
+                                                                justifyContent:
+                                                                    'center',
+                                                            }}
+                                                        >
+                                                            <EntypoIcon
+                                                                size={
+                                                                    20 *
+                                                                    factorRatio
+                                                                }
+                                                                name={
+                                                                    'dots-three-horizontal'
+                                                                }
+                                                                color={
+                                                                    colors.secondBackground
+                                                                }
+                                                            />
+                                                        </TouchableOpacity>
+                                                        <View
+                                                            style={{flex: 1}}
+                                                        />
+                                                    </View>
                                                     <View style={{flex: 1}} />
                                                 </View>
-                                                <View style={{flex: 1}} />
                                             </View>
-                                        </View>
-                                    )}
-                                />
-                            )}
-                            {(!this.state.isLoading && this.state.notifications.length == 0) && (
-                            <View>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-ExtraBold',
-                                        fontSize: 15 * factorRatio,
-                                        textAlign: 'left',
-                                        paddingLeft: fullWidth * 0.05,
-                                        color: 'white',
-                                    }}
-                                >
-                                    No New Notifications...
-                                </Text>
-                            </View>
-                            )}
+                                        )}
+                                    />
+                                )}
+                            {!this.state.isLoading &&
+                                this.state.notifications.length == 0 && (
+                                    <View>
+                                        <Text
+                                            style={{
+                                                fontFamily:
+                                                    'OpenSans-ExtraBold',
+                                                fontSize: 15 * factorRatio,
+                                                textAlign: 'left',
+                                                paddingLeft: fullWidth * 0.05,
+                                                color: 'white',
+                                            }}
+                                        >
+                                            No New Notifications...
+                                        </Text>
+                                    </View>
+                                )}
                             {this.state.isLoading && (
-                            <View
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: fullHeight * 0.215,
-                                        marginTop: 15 * factorRatio,
-                                    },
-                                ]}
-                            >
-                                <ActivityIndicator
-                                    size={onTablet ? 'large' : 'small'}
-                                    animating={true}
-                                    color={colors.secondBackground}
-                                />
-                            </View>
+                                <View
+                                    style={[
+                                        styles.centerContent,
+                                        {
+                                            height: fullHeight * 0.215,
+                                            marginTop: 15 * factorRatio,
+                                        },
+                                    ]}
+                                >
+                                    <ActivityIndicator
+                                        size={onTablet ? 'large' : 'small'}
+                                        animating={true}
+                                        color={colors.secondBackground}
+                                    />
+                                </View>
                             )}
                         </ScrollView>
                     </View>
@@ -810,19 +1016,21 @@ export default class Profile extends React.Component {
                         hasBackdrop={true}
                     >
                         <ReplyNotification
-                            removeNotification={(data) => {
+                            removeNotification={data => {
                                 this.setState({showReplyNotification: false}),
-                                this.removeNotification(data)
+                                    this.removeNotification(data);
                             }}
-                            turnOfffNotifications={(data) => {
+                            turnOfffNotifications={data => {
                                 this.setState({showReplyNotification: false}),
-                                this.turnOfffNotifications(data)
+                                    this.turnOfffNotifications(data);
                             }}
                             hideReplyNotification={() => {
                                 this.setState({showReplyNotification: false});
                             }}
                             data={this.state.clickedNotification}
-                            notificationStatus={this.state.clickedNotificationStatus}
+                            notificationStatus={
+                                this.state.clickedNotificationStatus
+                            }
                         />
                     </Modal>
                     <NavigationBar currentPage={'PROFILE'} />

@@ -27,7 +27,8 @@ export default class PathOverview extends React.Component {
             data: this.props.navigation.state.params.data,
             level: this.props.navigation.state.params.level,
             items: this.props.navigation.state.params.items || [],
-            isAddedToList: this.props.navigation.state.params.data.isAddedToList,
+            isAddedToList: this.props.navigation.state.params.data
+                .isAddedToList,
             showInfo: false,
             totalLength: 0,
         };
@@ -38,8 +39,8 @@ export default class PathOverview extends React.Component {
     }
 
     getItems = async () => {
-        let response = await contentService.getContent(this.state.data.id)
-        console.log(response)
+        let response = await contentService.getContent(this.state.data.id);
+        console.log(response);
         contentService.getContent(this.state.data.id).then(r =>
             this.setState({
                 items:
@@ -50,7 +51,7 @@ export default class PathOverview extends React.Component {
                     })) || [],
             }),
         );
-    }
+    };
 
     addToMyList = async () => {
         this.setState({isAddedToList: !this.state.isAddedToList});
@@ -382,7 +383,8 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -399,7 +401,8 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -424,7 +427,8 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 17 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -436,7 +440,8 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -494,7 +499,8 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -528,7 +534,8 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
@@ -563,7 +570,8 @@ export default class PathOverview extends React.Component {
                                                     fontSize: 13 * factorRatio,
                                                     textAlign: 'left',
                                                     color: 'white',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     marginTop:
                                                         10 * factorVertical,
                                                 }}
