@@ -55,12 +55,8 @@ export async function getUserData() {
     // return profile details
     try {
         const auth = await getToken();
-<<<<<<< HEAD
-        let data = await fetch('http://app-staging.pianote.com/api/profile', {
-=======
 
         let data = await fetch(`${commonService.rootUrl}/api/profile`, {
->>>>>>> 76283fc36ae6c2c938d6f50321a989ecd4d5afd1
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
         });
