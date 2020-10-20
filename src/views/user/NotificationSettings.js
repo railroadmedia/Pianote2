@@ -8,6 +8,7 @@ import FontIcon from 'react-native-vector-icons/FontAwesome';
 import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import commonService from '../../services/common.service';
 
 export default class NotificationSettings extends React.Component {
     static navigationOptions = {header: null};
@@ -50,7 +51,7 @@ export default class NotificationSettings extends React.Component {
 
         try {
             let response = await fetch(
-                `https://app-staging.pianote.com/usora/api/profile/update`,
+                `${commonService.rootUrl}/api/profile/update`,
                 {
                     method: 'PATCH',
                     headers: {

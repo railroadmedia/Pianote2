@@ -11,19 +11,22 @@ import {
     Animated,
     TouchableHighlight,
     Platform,
+    Linking,
 } from 'react-native';
-import {userForgotPassword} from '@musora/services';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-
+import {forgotPass} from '../../services/UserDataAuth';
+import CustomModal from '../../modals/CustomModal';
+import Loading from '../../components/Loading';
+import {openInbox} from 'react-native-email-link';
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
     Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
-export default class forgotPassword extends React.Component {
+export default class ForgotPassword extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -92,14 +95,23 @@ export default class forgotPassword extends React.Component {
     };
 
     forgotPassword = async () => {
+        this.loadingRef.toggleLoading();
         this.textInput.clear();
-        const {response, error} = await userForgotPassword({
-            email: this.state.email,
-        });
+        const response = await forgotPass(this.state.email);
 
-        console.log(response, error);
-
-        this.props.navigation.navigate('LOGINCREDENTIALS');
+        console.log(response);
+        this.loadingRef.toggleLoading();
+        if (response.success) {
+            this.alertSuccess.toggle(
+                'Please check your email',
+                'Follow the instructions sent to your email address to reset your password.',
+            );
+        } else {
+            this.alertError.toggle(
+                'Invalid email address.',
+                'There is no user registered with that email address.',
+            );
+        }
     };
 
     render() {
@@ -314,6 +326,69 @@ export default class forgotPassword extends React.Component {
                         </View>
                     </View>
                 </Animated.View>
+                <Loading
+                    ref={ref => {
+                        this.loadingRef = ref;
+                    }}
+                />
+                <CustomModal
+                    ref={ref => {
+                        this.alertSuccess = ref;
+                    }}
+                    additionalBtn={
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: colors.pianoteRed,
+                                borderRadius: 25,
+                                marginTop: 10,
+                                height: 50,
+                                justifyContent: 'center',
+                                alignSelf: 'center',
+                            }}
+                            onPress={() => {
+                                this.alertSuccess.toggle();
+                                openInbox();
+                                this.props.navigation.navigate(
+                                    'LOGINCREDENTIALS',
+                                );
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    paddingHorizontal: 15,
+                                    fontSize: 15,
+                                    color: '#ffffff',
+                                }}
+                            >
+                                GO TO EMAIL
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                />
+                <CustomModal
+                    ref={ref => {
+                        this.alertError = ref;
+                    }}
+                    additionalBtn={
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.alertError.toggle();
+                                Linking.openURL('mailto:support@pianote.com');
+                            }}
+                            style={{marginTop: 20, alignSelf: 'center'}}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 12,
+                                    fontFamily: 'OpenSans',
+                                    color: colors.pianoteRed,
+                                }}
+                            >
+                                Still can't log in? Contact support.
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                />
             </View>
         );
     }

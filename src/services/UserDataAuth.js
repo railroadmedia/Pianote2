@@ -1,7 +1,9 @@
 import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Platform} from 'react-native';
+import commonService from './common.service';
 
-export async function getToken() {
+export async function getToken(userEmail, userPass) {
     try {
         const data = await AsyncStorage.multiGet(['token', 'tokenTime', 'email', 'password']);
         let timeNow = new Date().getTime() / 1000;
@@ -12,7 +14,7 @@ export async function getToken() {
         
         if(typeof token == 'undefined' || token == null || (Number(timeNow) - Number(tokenTime) > 3600)) {
             // if token dies not exist or is expired
-            let response = await fetch(`http://app-staging.pianote.com/usora/api/login?email=${email}&password=${password}`, {method: 'PUT'});
+            let response = await fetch(`${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`, {method: 'PUT'});
             response = await response.json();
             
             await AsyncStorage.multiSet([
@@ -30,12 +32,35 @@ export async function getToken() {
         return new Error(error);
     }
 }
+export async function forgotPass(emailAddress) {
+    return commonService.tryCall(
+        `${commonService.rootUrl}/api/forgot?email=${emailAddress}`,
+        'PUT',
+    );
+}
 
+export async function changePassword(email, pass, token) {
+    console.log(email, pass, token);
+    return commonService.tryCall(
+        `${commonService.rootUrl}/api/change-password`,
+        'PUT',
+        {
+            pass1: pass,
+            user_login: email,
+            rp_key: token,
+        },
+    );
+}
 export async function getUserData() {
     // return profile details
     try {
         const auth = await getToken();
+<<<<<<< HEAD
         let data = await fetch('http://app-staging.pianote.com/api/profile', {
+=======
+
+        let data = await fetch(`${commonService.rootUrl}/api/profile`, {
+>>>>>>> 76283fc36ae6c2c938d6f50321a989ecd4d5afd1
             method: 'GET',
             headers: {Authorization: `Bearer ${auth.token}`},
         });
@@ -86,7 +111,7 @@ export async function logOut() {
     try {
         const auth = await getToken();
         let response = await fetch(
-            'https://app-staging.pianote/usora/api/logout',
+            `${commonService.rootUrl}/usora/api/logout`,
             {
                 method: 'PUT',
                 headers: {
@@ -95,10 +120,114 @@ export async function logOut() {
                 },
             },
         );
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        return new Error(error);
+    }
+}
 
-        console.log(response);
+export async function signUp(email, password, purchase, oldToken) {
+    console.log('signup', email, password, purchase);
+    let platform = '';
+    let receiptType = '';
+    let attributes;
+    if (Platform.OS === 'ios') {
+        platform = 'apple';
+        receiptType = 'appleReceipt';
+        attributes = {email, password, receipt: purchase.transactionReceipt};
+    } else {
+        platform = 'google';
+        receiptType = 'googleReceipt';
+        attributes = {
+            email,
+            password,
+            package_name: `com.pianote2`,
+            product_id: purchase.productId || purchase.product_id,
+            purchase_token: purchase.purchaseToken || purchase.purchase_token,
+        };
+    }
+    let token = await AsyncStorage.getItem('token');
+    let headers;
+    if (token) {
+        token = `Bearer ${JSON.parse(token)}`;
+        headers = {
+            Authorization: token,
+            'Content-Type': 'application/json',
+        };
+    } else {
+        headers = {'Content-Type': 'application/json'};
+    }
 
-        console.log(await response.json());
+    console.log('signup token', token, headers);
+    console.log(attributes);
+    try {
+        let response = await fetch(
+            `${commonService.rootUrl}/mobile-app/${platform}/verify-receipt-and-process-payment`,
+            {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    data: {
+                        type: receiptType,
+                        attributes: attributes,
+                    },
+                }),
+            },
+        );
+        return await response.json();
+    } catch (error) {
+        console.log('err', error);
+        return new Error(error);
+    }
+}
+
+export async function restorePurchase(purchases) {
+    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    let token = await AsyncStorage.getItem('token');
+    console.log(token);
+    if (token) token = `Bearer ${JSON.parse(token)}`;
+    try {
+        let response = await fetch(
+            `${commonService.rootUrl}/mobile-app/${platform}/restore`,
+            {
+                method: 'POST',
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    Platform.OS === 'ios'
+                        ? {receipt: purchases[0].transactionReceipt}
+                        : {purchases},
+                ),
+            },
+        );
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        return new Error(error);
+    }
+}
+
+export async function validateSignUp(purchases) {
+    let platform = Platform.OS === 'ios' ? 'apple' : 'google';
+    console.log(purchases);
+    try {
+        let response = await fetch(
+            `${commonService.rootUrl}/mobile-app/${platform}/signup`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    Platform.OS === 'ios'
+                        ? {receipt: purchases[0].transactionReceipt}
+                        : {purchases},
+                ),
+            },
+        );
         return await response.json();
     } catch (error) {
         console.log(error);

@@ -1,12 +1,10 @@
 import commonService from './common.service';
 import {Platform} from 'react-native';
 
-const rootUrl = 'http://app-staging.pianote.com';
-
 export async function likeContent(contentID) {
     try {
         return commonService.tryCall(
-            `${rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
+            `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
             'PUT',
         );
     } catch (error) {
@@ -18,7 +16,7 @@ export async function likeContent(contentID) {
 export async function unlikeContent(contentID) {
     try {
         return commonService.tryCall(
-            `${rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
+            `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
             'DELETE',
         );
     } catch (error) {
@@ -29,34 +27,31 @@ export async function unlikeContent(contentID) {
 
 export async function addToMyList(contentID) {
     return commonService.tryCall(
-        `${rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
+        `${commonService.rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
         'PUT',
     );
 }
 
 export async function removeFromMyList(contentID) {
     return commonService.tryCall(
-        `${rootUrl}/api/railcontent/remove-from-my-list?content_id=${contentID}`,
+        `${commonService.rootUrl}/api/railcontent/remove-from-my-list?content_id=${contentID}`,
         'PUT',
     );
 }
 
 export async function resetProgress(contentID) {
     return commonService.tryCall(
-        `${rootUrl}/api/reset?content_id=${contentID}`,
+        `${commonService.rootUrl}/api/reset?content_id=${contentID}`,
         'PUT',
     );
 }
 
 export async function markComplete(contentID) {
-    console.log(
-        `${rootUrl}/api/complete?content_id=${contentID}&device_type=${
-            Platform.OS === 'ios' ? 'ios' : 'android'
-        }`,
-    );
     try {
         return commonService.tryCall(
-            `${rootUrl}/api/complete?content_id=${contentID}&device_type=${
+            `${
+                commonService.rootUrl
+            }/api/complete?content_id=${contentID}&device_type=${
                 Platform.OS === 'ios' ? 'ios' : 'android'
             }`,
             'PUT',
@@ -70,7 +65,7 @@ export async function markComplete(contentID) {
 export async function updateUsersVideoProgress(id, seconds, lengthInSeconds) {
     try {
         let response = await commonService.tryCall(
-            `${rootUrl}/api/media/${id}?seconds_played=${seconds}&current_second=${seconds}&length_in_seconds=${lengthInSeconds}`,
+            `${commonService.rootUrl}/api/media/${id}?seconds_played=${seconds}&current_second=${seconds}&length_in_seconds=${lengthInSeconds}`,
             'PUT',
         );
         console.log('UPDATE VIDEO PROGRESS: ', response);
@@ -81,11 +76,14 @@ export async function updateUsersVideoProgress(id, seconds, lengthInSeconds) {
 }
 
 export async function logout() {
-    return this.tryCall(`${rootUrl}/laravel/public/api/logout`, 'PUT');
+    return this.tryCall(
+        `${commonService.rootUrl}/laravel/public/api/logout`,
+        'PUT',
+    );
 }
 
 export async function updateUserDetails(picture, name, phoneNr, firebaseToken) {
-    let reqUrl = `${authService.rootUrl}/api/profile/update?`;
+    let reqUrl = `${commonService.rootUrl}/api/profile/update?`;
     if (picture) reqUrl += `file=${picture}`;
     if (name) reqUrl += `display_name=${name}`;
     if (phoneNr) reqUrl += `phone_number=${phoneNr}`;

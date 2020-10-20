@@ -13,6 +13,7 @@ import {
     TouchableOpacity,
     Platform,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
@@ -32,7 +33,6 @@ class Replies extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        console.log(props.parentComment);
         this.state = {
             replies: props.parentComment.replies, // video's comments
             profileImage: '',
@@ -47,7 +47,7 @@ class Replies extends React.Component {
     componentDidMount = async () => {
         // get profile image
         let profileImage = await AsyncStorage.getItem('profileURI');
-        this.userId = JSON.parse(await AsyncStorage.getItem('userId'));
+        let userId = JSON.parse(await AsyncStorage.getItem('userId'));
 
         await this.setState({profileImage, userId});
 
@@ -83,6 +83,7 @@ class Replies extends React.Component {
     };
 
     _keyboardDidHide = async () => {
+        this.setState({showMakeComment: false});
         Animated.timing(this.state.makeCommentVertDelta, {
             toValue: -250,
             duration: 275,
@@ -123,33 +124,11 @@ class Replies extends React.Component {
         this.props.onDeleteReply();
     };
 
-    showFooter() {
-        if (this.props.outReplies == false) {
-            return (
-                <View
-                    style={[
-                        styles.centerContent,
-                        {
-                            marginTop: 15 * factorRatio,
-                            height: 35 * factorVertical,
-                        },
-                    ]}
-                >
-                    <ActivityIndicator
-                        size={onTablet ? 'large' : 'small'}
-                        color={'grey'}
-                    />
-                </View>
-            );
-        } else {
-            return <View style={{height: 20 * factorVertical}} />;
-        }
-    }
-
     mapReplies() {
         return this.state.replies.map((reply, index) => {
             return (
                 <View
+                    key={index}
                     style={{
                         paddingTop: fullHeight * 0.01,
                         paddingBottom: fullHeight * 0.01,
@@ -286,7 +265,7 @@ class Replies extends React.Component {
                                     )}
                                 </View>
                                 <View style={{width: 20 * factorHorizontal}} />
-                                {this.userId === reply.user_id && (
+                                {this.state.userId === reply.user_id && (
                                     <TouchableOpacity
                                         onPress={() =>
                                             this.deleteReply(reply.id)
@@ -361,20 +340,12 @@ class Replies extends React.Component {
                 style={[
                     styles.centerContent,
                     {
-                        position: 'absolute',
-                        bottom: 0,
-                        height:
-                            fullHeight -
-                            ((isNotch ? fullHeight * 0.05 : fullHeight * 0.03) +
-                                (onTablet
-                                    ? fullHeight * 0.375
-                                    : fullHeight * 0.275)),
-                        width: fullWidth,
+                        flex: 1,
                         zIndex: 10,
                     },
                 ]}
             >
-                <ScrollView
+                <KeyboardAwareScrollView
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
                     style={{
@@ -697,7 +668,7 @@ class Replies extends React.Component {
                                                         20 * factorHorizontal,
                                                 }}
                                             />
-                                            {this.userId ===
+                                            {this.state.userId ===
                                                 this.state.parentComment
                                                     .user_id && (
                                                 <TouchableOpacity
@@ -751,10 +722,7 @@ class Replies extends React.Component {
                                             width: 40 * factorHorizontal,
                                             borderRadius: 100,
                                         }}
-                                        source={
-                                            require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
-                                            //    {uri: this.state.profileImage}
-                                        }
+                                        source={{uri: this.state.profileImage}}
                                         resizeMode={
                                             FastImage.resizeMode.stretch
                                         }
@@ -769,11 +737,11 @@ class Replies extends React.Component {
                                     onPress={() => {
                                         this.setState({
                                             showMakeComment: true,
-                                        }),
-                                            setTimeout(
-                                                () => this.textInputRef.focus(),
-                                                100,
-                                            );
+                                        });
+                                        setTimeout(
+                                            () => this.textInputRef.focus(),
+                                            100,
+                                        );
                                     }}
                                     style={{
                                         height: 85 * factorHorizontal,
@@ -807,14 +775,15 @@ class Replies extends React.Component {
                                 : 60 * factorVertical,
                         }}
                     />
-                </ScrollView>
+                </KeyboardAwareScrollView>
                 {this.state.showMakeComment && (
                     <Animated.View
                         key={'makeComment'}
                         style={{
                             position: 'absolute',
-                            bottom: this.state.makeCommentVertDelta,
+                            bottom: 0,
                             left: 0,
+                            zIndex: 10,
                             minHeight: fullHeight * 0.125,
                             maxHeight: fullHeight * 0.175,
                             width: fullWidth,

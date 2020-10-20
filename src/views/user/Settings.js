@@ -2,7 +2,15 @@
  * Settings
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    Platform,
+    Alert,
+} from 'react-native';
+import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
 import LogOut from '../../modals/LogOut.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -11,6 +19,11 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import Loading from '../../components/Loading.js';
+import CustomModal from '../../modals/CustomModal.js';
+import {logOut, restorePurchase} from '../../services/UserDataAuth.js';
+import {NavigationActions, StackActions} from 'react-navigation';
 
 export default class Settings extends React.Component {
     static navigationOptions = {header: null};
@@ -20,6 +33,126 @@ export default class Settings extends React.Component {
             showLogOut: false,
         };
     }
+
+    manageSubscriptions = async () => {
+        const userData = await getUserData();
+        let {isAppleAppSubscriber, isGoogleAppSubscriber} = userData;
+        if (Platform.OS === 'ios') {
+            if (isAppleAppSubscriber) {
+                Alert.alert(
+                    'Manage Subscription',
+                    'You have an Apple App Store subscription that can only be managed through the Apple I.D. used to purchase it.',
+                    [{text: 'View Subscriptions'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            } else {
+                Alert.alert(
+                    'Manage Subscription',
+                    'Sorry! You can only manage your Apple App Store based subscriptions here.',
+                    [{text: 'Got it!'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            }
+        } else {
+            if (isGoogleAppSubscriber) {
+                Alert.alert(
+                    'Manage Subscription',
+                    'You have a Google Play subscription that can only be managed through the Google Account used to purchase it.',
+                    [{text: 'View Subscriptions'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            } else {
+                Alert.alert(
+                    'Manage Subscription',
+                    'You can only manage Google Play subscriptions here. Please sign in to Pianote on your original subscription platform to manage your settings.',
+                    [{text: 'Got it!'}],
+                    {
+                        cancelable: false,
+                    },
+                );
+            }
+        }
+    };
+
+    restorePurchase = async () => {
+        if (this.loadingRef) this.loadingRef.toggleLoading();
+        try {
+            await RNIap.initConnection();
+        } catch (e) {
+            if (this.loadingRef) this.loadingRef.toggleLoading();
+            return this.customModal.toggle(
+                'Connection to app store refused',
+                'Please try again later.',
+            );
+        }
+        try {
+            purchases = await RNIap.getPurchaseHistory();
+            console.log(purchases);
+            if (!purchases.length) {
+                if (this.loadingRef) this.loadingRef.toggleLoading();
+                return this.restoreSuccessfull.toggle(
+                    'Restore',
+                    'All purchases restored',
+                );
+            }
+            if (Platform.OS === 'android') {
+                purchases = purchases.map(m => {
+                    return {
+                        purchase_token: m.purchaseToken,
+                        package_name: 'com.pianote2',
+                        product_id: m.productId,
+                    };
+                });
+            }
+            let restoreResponse = await restorePurchase(purchases);
+            console.log(restoreResponse);
+            if (restoreResponse.title && restoreResponse.message)
+                return this.customModal.toggle(
+                    restoreResponse.title,
+                    restoreResponse.message,
+                );
+            if (restoreResponse.email) {
+                await logOut();
+                this.props.navigation.navigate('LOGINCREDENTIALS', {
+                    email: restoreResponse.email,
+                });
+
+                return Alert.alert(
+                    'Restore',
+                    `This ${
+                        Platform.OS === 'ios' ? 'Apple' : 'Google'
+                    } account is already linked to another Pianote account. Please login with that account.`,
+                    [{text: 'OK'}],
+                    {cancelable: false},
+                );
+            } else if (restoreResponse.token) {
+                let {token} = restoreResponse;
+                await AsyncStorage.setItem('token', JSON.stringify(token));
+                this.props.navigation.dispatch(
+                    StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({
+                                routeName: 'LESSONS',
+                            }),
+                        ],
+                    }),
+                );
+            }
+        } catch (err) {
+            if (this.loadingRef) this.loadingRef.toggleLoading();
+            this.customModal.toggle(
+                'Something went wrong',
+                'Something went wrong.\nPlease try Again later.',
+            );
+        }
+    };
 
     render() {
         return (
@@ -247,6 +380,7 @@ export default class Settings extends React.Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     key={'manageSubscriptions'}
+                                    onPress={this.manageSubscriptions}
                                     style={[
                                         styles.centerContent,
                                         {
@@ -288,6 +422,52 @@ export default class Settings extends React.Component {
                                         color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    key={'restorePurchase'}
+                                    onPress={this.restorePurchase}
+                                    style={[
+                                        styles.centerContent,
+                                        {
+                                            height: 50 * factorRatio,
+                                            width: fullWidth,
+                                            borderBottomColor:
+                                                colors.secondBackground,
+                                            borderBottomWidth: 1 * factorRatio,
+                                            flexDirection: 'row',
+                                            paddingRight: fullWidth * 0.025,
+                                        },
+                                    ]}
+                                >
+                                    <View
+                                        style={[
+                                            styles.centerContent,
+                                            {width: 60 * factorHorizontal},
+                                        ]}
+                                    >
+                                        <AntIcon
+                                            name={'folder1'}
+                                            size={25 * factorRatio}
+                                            color={colors.pianoteRed}
+                                        />
+                                    </View>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'OpenSans',
+                                            fontSize: 18 * factorRatio,
+                                            color: colors.secondBackground,
+                                        }}
+                                    >
+                                        Restore Purchases
+                                    </Text>
+                                    <View style={{flex: 1}} />
+                                    <AntIcon
+                                        name={'right'}
+                                        size={22.5 * factorRatio}
+                                        color={colors.secondBackground}
+                                    />
+                                </TouchableOpacity>
+
                                 <TouchableOpacity
                                     key={'support'}
                                     onPress={() => {
@@ -513,7 +693,45 @@ export default class Settings extends React.Component {
                             }}
                         />
                     </Modal>
-
+                    <Loading
+                        ref={ref => {
+                            this.loadingRef = ref;
+                        }}
+                    />
+                    <CustomModal
+                        ref={ref => {
+                            this.customModal = ref;
+                        }}
+                    />
+                    <CustomModal
+                        ref={r => (this.restoreSuccessfull = r)}
+                        additionalBtn={
+                            <TouchableOpacity
+                                onPress={() => this.restoreSuccessfull.toggle()}
+                                style={{
+                                    marginTop: 10,
+                                    borderRadius: 50,
+                                    backgroundColor: colors.pianoteRed,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        padding: 15,
+                                        fontSize: 15,
+                                        color: '#ffffff',
+                                        textAlign: 'center',
+                                        fontFamily: 'OpenSans-Bold',
+                                    }}
+                                >
+                                    OK
+                                </Text>
+                            </TouchableOpacity>
+                        }
+                        onClose={() => {
+                            if (this.loadingRef)
+                                this.loadingRef.toggleLoading(false);
+                        }}
+                    />
                     <NavigationBar currentPage={'PROFILE'} />
                 </View>
             </View>

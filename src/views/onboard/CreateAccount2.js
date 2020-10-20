@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     Keyboard,
     Animated,
+    Alert,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -17,6 +18,8 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
+import {signUp} from '../../services/UserDataAuth';
+import AsyncStorage from '@react-native-community/async-storage';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -99,13 +102,61 @@ export default class CreateAccount extends React.Component {
     savePassword = async () => {
         if (this.state.password == this.state.confirmPassword) {
             if (this.state.password.length > 7) {
-                this.props.navigation.navigate('NEWMEMBERSHIP', {
-                    data: {
-                        type: 'SIGNUP',
-                        email: this.state.email,
-                        password: this.state.password,
-                    },
-                });
+                if (this.props.navigation.state.params?.purchase) {
+                    let response = await signUp(
+                        this.state.email,
+                        this.state.password,
+                        this.props.navigation.state.params?.purchase,
+                    );
+                    console.log(response);
+                    if (response.meta) {
+                        const token = `Bearer ${response.meta.auth_code}`;
+                        try {
+                            await AsyncStorage.multiSet([
+                                ['loggedInStatus', 'true'],
+                                ['email', this.state.email],
+                                ['password', this.state.password],
+                                ['token', token],
+                            ]);
+                        } catch (e) {}
+
+                        let userData = await getUserData();
+                        console.log(userData);
+                        let currentDate = new Date().getTime() / 1000;
+                        let userExpDate =
+                            new Date(userData.expirationDate).getTime() / 1000;
+                        console.log(currentDate, userExpDate);
+                        if (userData.isLifetime || currentDate < userExpDate) {
+                            this.props.navigation.navigate('CREATEACCOUNT3', {
+                                data: {
+                                    email: this.state.email,
+                                    password: this.state.password,
+                                },
+                            });
+                        } else {
+                            this.props.navigation.navigate(
+                                'MEMBERSHIPEXPIRED',
+                                {
+                                    email: this.state.email,
+                                    password: this.state.password,
+                                },
+                            );
+                        }
+                    } else {
+                        let {title, detail} = response.errors[0];
+                        Alert.alert(title, detail, [{text: 'OK'}], {
+                            cancelable: false,
+                        });
+                    }
+                } else {
+                    this.props.navigation.navigate('NEWMEMBERSHIP', {
+                        data: {
+                            type: 'SIGNUP',
+                            email: this.state.email,
+                            password: this.state.password,
+                        },
+                    });
+                }
             }
         } else {
             this.setState({showPasswordMatch: true});

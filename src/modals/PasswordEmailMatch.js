@@ -89,7 +89,7 @@ class PasswordEmailMatch extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                Your password and email{'\n'}do not match.
+                                {this.props.errorMessage}
                             </Text>
                         </View>
                         <View style={{flex: 0.075}} />

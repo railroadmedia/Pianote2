@@ -1,17 +1,25 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {userLogin, configure} from '@musora/services';
+import {configure} from '@musora/services';
+import {getToken} from './UserDataAuth';
 
 export default {
+    rootUrl: 'https://app-staging.pianote.com',
     tryCall: async function (url, method, body) {
         try {
             if (body) body = body ? JSON.stringify(body) : null;
             let timeNow = new Date().getTime() / 1000;
             let token = await AsyncStorage.getItem('token');
             token = `Bearer ${JSON.parse(token)}`;
-
-            let headers = {Authorization: token};
-
+            let headers = body
+                ? {
+                      Authorization: token,
+                      'Content-Type': 'application/json',
+                  }
+                : {
+                      Authorization: token,
+                  };
             let response = await fetch(url, {
+                body,
                 headers,
                 method: method || 'GET',
             });
@@ -22,22 +30,19 @@ export default {
             ) {
                 let email = await AsyncStorage.getItem('email');
                 let pass = await AsyncStorage.getItem('password');
-                const {response, error} = await userLogin({
-                    email,
-                    password: pass,
-                });
-
-                await configure({authToken: response.data.token});
+                const res = await getToken(email, pass);
+                await configure({authToken: res.token});
                 await AsyncStorage.multiSet([
-                    ['token', response.data.token],
+                    ['token', res.token],
                     ['tokenTime', JSON.stringify(timeNow)],
                 ]);
                 response = await fetch(url, {
+                    body,
                     headers,
                     method: method || 'GET',
                 });
-
-                return await response.json();
+                let newJson = await response.json();
+                return newJson;
             }
             return json;
         } catch (error) {

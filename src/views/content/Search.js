@@ -208,7 +208,15 @@ export default class Search extends React.Component {
                                     : newContent[i].getField('instructor').name,
                             thumbnail: newContent[i].getData('thumbnail_url'),
                             type: newContent[i].post.type,
-                            description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                            description: newContent[i]
+                                .getData('description')
+                                .replace(/(<([^>]+)>)/g, '')
+                                .replace(/&nbsp;/g, '')
+                                .replace(/&amp;/g, '&')
+                                .replace(/&#039;/g, "'")
+                                .replace(/&quot;/g, '"')
+                                .replace(/&gt;/g, '>')
+                                .replace(/&lt;/g, '<'),
                             xp: newContent[i].post.xp,
                             id: newContent[i].id,
                             like_count: newContent[i].post.like_count,
@@ -510,7 +518,8 @@ export default class Search extends React.Component {
                                                             12 * factorRatio,
                                                         fontWeight: 'bold',
                                                         color: '#fb1b2f',
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         zIndex: 3,
                                                         elevation: 0,
                                                     }}
@@ -587,7 +596,8 @@ export default class Search extends React.Component {
                                                         color:
                                                             colors.pianoteRed,
                                                         textAlign: 'right',
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         marginTop:
                                                             3 * factorVertical,
                                                     }}
@@ -729,7 +739,8 @@ export default class Search extends React.Component {
                                                     style={{
                                                         fontSize:
                                                             18 * factorRatio,
-                                                        fontFamily: 'OpenSans-Regular',
+                                                        fontFamily:
+                                                            'OpenSans-Regular',
                                                         color: 'white',
                                                         fontWeight: 'bold',
                                                     }}

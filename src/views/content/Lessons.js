@@ -44,7 +44,7 @@ export default class Lessons extends React.Component {
             newLessons: [],
 
             allLessons: [],
-            currentSort: 'newest',
+            currentSort: '-published_on',
             page: 1,
             outVideos: false,
             isLoadingAll: true, // all lessons
@@ -172,7 +172,15 @@ export default class Lessons extends React.Component {
                             .value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/g, '')
+                            .replace(/&nbsp;/g, '')
+                            .replace(/&amp;/g, '&')
+                            .replace(/&#039;/g, "'")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         like_count: newContent[i].post.like_count,
@@ -208,8 +216,8 @@ export default class Lessons extends React.Component {
                 return new ContentModel(data);
             });
 
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
@@ -222,7 +230,15 @@ export default class Lessons extends React.Component {
                                 : newContent[i].getField('instructor').name,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/g, '')
+                            .replace(/&nbsp;/g, '')
+                            .replace(/&amp;/g, '&')
+                            .replace(/&#039;/g, "'")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         like_count: newContent[i].post.like_count,
@@ -236,7 +252,6 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
                 outVideos:
@@ -257,15 +272,23 @@ export default class Lessons extends React.Component {
             let response = await getStartedContent('course');
             const newContent = response.data.map(data => {return new ContentModel(data)});
 
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
                         artist: newContent[i].getField('instructor').fields[0].value,
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
-                        description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/g, '')
+                            .replace(/&nbsp;/g, '')
+                            .replace(/&amp;/g, '&')
+                            .replace(/&#039;/g, "'")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         like_count: newContent[0].post.like_count,
@@ -279,7 +302,6 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-
             await this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
                 lessonsStarted: items.length > 0 ? true : false,
@@ -303,7 +325,6 @@ export default class Lessons extends React.Component {
             filters: this.state.filters,
             type: 'LESSONS',
             onGoBack: filters => {
-                console.log('filters: ', filters);
                 this.setState({
                     allLessons: [],
                     filters:
@@ -554,16 +575,17 @@ export default class Lessons extends React.Component {
                                         }
                                         pxFromLeft={fullWidth * 0.065}
                                         buttonWidth={fullWidth * 0.42}
-                                        pressed={() =>
-                                            this.props.navigation.navigate(
-                                                'VIDEOPLAYER',
-                                                {
-                                                    url: this.state
-                                                        .foundationNextLesson
-                                                        .mobile_app_url,
-                                                },
-                                            )
-                                        }
+                                        pressed={() => {
+                                            if (this.state.foundationNextLesson)
+                                                this.props.navigation.navigate(
+                                                    'VIDEOPLAYER',
+                                                    {
+                                                        url: this.state
+                                                            .foundationNextLesson
+                                                            .mobile_app_url,
+                                                    },
+                                                );
+                                        }}
                                     />
                                 ) : (
                                     <ContinueIcon
@@ -581,16 +603,17 @@ export default class Lessons extends React.Component {
                                         }
                                         pxFromLeft={fullWidth * 0.065}
                                         buttonWidth={fullWidth * 0.42}
-                                        pressed={() =>
-                                            this.props.navigation.navigate(
-                                                'VIDEOPLAYER',
-                                                {
-                                                    url: this.state
-                                                        .foundationNextLesson
-                                                        .mobile_app_url,
-                                                },
-                                            )
-                                        }
+                                        pressed={() => {
+                                            if (this.state.foundationNextLesson)
+                                                this.props.navigation.navigate(
+                                                    'VIDEOPLAYER',
+                                                    {
+                                                        url: this.state
+                                                            .foundationNextLesson
+                                                            .mobile_app_url,
+                                                    },
+                                                );
+                                        }}
                                     />
                                 )}
                                 <MoreInfoIcon
@@ -724,7 +747,8 @@ export default class Lessons extends React.Component {
                                             style={{
                                                 color: 'white',
                                                 fontSize: 24 * factorRatio,
-                                                fontFamily: 'OpenSans-ExtraBold',
+                                                fontFamily:
+                                                    'OpenSans-ExtraBold',
                                                 textAlign: 'center',
                                             }}
                                         >
@@ -755,7 +779,8 @@ export default class Lessons extends React.Component {
                                             style={{
                                                 color: 'white',
                                                 fontSize: 24 * factorRatio,
-                                                fontFamily: 'OpenSans-ExtraBold',
+                                                fontFamily:
+                                                    'OpenSans-ExtraBold',
                                                 textAlign: 'center',
                                             }}
                                         >

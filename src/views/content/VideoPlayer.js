@@ -17,8 +17,9 @@ import moment from 'moment';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-//import Video from 'RNVideoEnhanced';
+import Video from 'RNVideoEnhanced';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {Download_V2} from 'RNDownload';
 
 import Replies from '../../components/Replies.js';
 import CommentSort from '../../modals/CommentSort.js';
@@ -60,6 +61,8 @@ export default class VideoPlayer extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
+        this.limit = 10;
+        this.allCommentsNum = 0;
         this.state = {
             id: this.props.navigation.state.params.id,
             url: this.props.navigation.state.params.url,
@@ -84,9 +87,7 @@ export default class VideoPlayer extends React.Component {
             makeCommentVertDelta: new Animated.Value(0.01),
 
             comments: [],
-            commentsLoading: true,
             outComments: false,
-            page: 1,
 
             relatedLessons: [],
             likes: 0,
@@ -135,7 +136,6 @@ export default class VideoPlayer extends React.Component {
 
     _keyboardDidShow = async e => {
         const {height, screenX, screenY, width} = e.endCoordinates;
-
         if (Platform.OS == 'ios') {
             Animated.timing(this.state.makeCommentVertDelta, {
                 toValue: height,
@@ -162,7 +162,6 @@ export default class VideoPlayer extends React.Component {
             content = await foundationsService.getUnitLesson(this.state.url);
         } else {
             content = await contentService.getContent(this.state.id);
-            content = content.data[0];
         }
         content = new ContentModel(content);
         this.fetchComments(content.id);
@@ -181,7 +180,15 @@ export default class VideoPlayer extends React.Component {
                     id: assignments[a].id,
                     title: assignments[a].getField('title'),
                     isCompleted: assignments[a].isCompleted,
-                    description: assignments[a].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                    description: assignments[a]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
                     xp: assignments[a].xp,
                     progress:
                         parseInt(
@@ -213,14 +220,16 @@ export default class VideoPlayer extends React.Component {
                 thumbnail: relatedLessons[i].getData('thumbnail_url'),
                 type: relatedLessons[i].type,
                 id: relatedLessons[i].id,
-                duration: relatedLessons[i].post.length_in_seconds,
+                mobile_app_url: relatedLessons[i].post.mobile_app_url,
+                duration: new ContentModel(
+                    relatedLessons[i].getFieldMulti('video')[0],
+                ).getField('length_in_seconds'),
                 isAddedToList: relatedLessons[i].isAddedToList,
                 isStarted: relatedLessons[i].isStarted,
                 isCompleted: relatedLessons[i].isCompleted,
                 progress_percent: relatedLessons[i].post.progress_percent,
             });
         }
-
         this.setState(
             {
                 id: content.id,
@@ -228,7 +237,15 @@ export default class VideoPlayer extends React.Component {
                 type: content.type,
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
-                description: content.getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                description: content
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
                 xp: content.xp,
                 artist: content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),
@@ -237,7 +254,9 @@ export default class VideoPlayer extends React.Component {
                 relatedLessons: [...this.state.relatedLessons, ...rl],
                 likes: parseInt(content.likeCount),
                 isLiked: content.isLiked,
-                lengthInSec: content.post.length_in_seconds,
+                lengthInSec: new ContentModel(
+                    content.getFieldMulti('video')[0],
+                ).getField('length_in_seconds'),
                 lastWatchedPosInSec:
                     content.post.last_watch_position_in_seconds,
                 progress:
@@ -328,15 +347,33 @@ export default class VideoPlayer extends React.Component {
     };
 
     fetchComments = async id => {
-        this.setState({commentsLoading: true});
-
         let comments = await commentsService.getComments(
             id || this.state.id,
             this.state.commentSort,
-            10,
+            this.limit,
         );
         this.allCommentsNum = comments.meta.totalResults;
-        await this.setState({commentsLoading: false, comments: comments.data});
+        this.setState(state => ({
+            comments:
+                this.limit === 10
+                    ? comments.data
+                    : state.comments.concat(comments.data),
+        }));
+    };
+
+    isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+        const paddingToBottom = 40;
+        return (
+            layoutMeasurement.height + contentOffset.y >=
+            contentSize.height - paddingToBottom
+        );
+    };
+
+    loadMoreComments = () => {
+        if (this.limit < this.allCommentsNum) {
+            this.limit += 10;
+            this.fetchComments();
+        }
     };
 
     switchLesson(id, url) {
@@ -397,15 +434,21 @@ export default class VideoPlayer extends React.Component {
     makeComment = async () => {
         if (this.state.comment.length > 0) {
             let encodedCommentText = encodeURIComponent(this.state.comment);
-            await commentsService.addComment(encodedCommentText, this.state.id);
-
+            let res = await commentsService.addComment(
+                encodedCommentText,
+                this.state.id,
+            );
             const comments = await commentsService.getComments(
                 this.state.id,
                 this.state.commentSort,
                 this.allCommentsNum + 1,
             );
             this.allCommentsNum = comments.meta.totalResults;
-            this.setState({comment: '', comments: comments.data});
+            this.setState({
+                comment: '',
+                comments: comments.data,
+                showMakeComment: false,
+            });
 
             this.textInputRef.blur();
         }
@@ -422,254 +465,243 @@ export default class VideoPlayer extends React.Component {
     };
 
     mapComments() {
-        return this.state.comments.map((comment, index) => {
-            return (
+        return this.state.comments.map((item, index) => (
+            <View
+                key={index}
+                style={{
+                    backgroundColor: colors.mainBackground,
+                    paddingTop: fullHeight * 0.025,
+                    paddingBottom: fullHeight * 0.02,
+                    paddingLeft: fullWidth * 0.05,
+                    paddingRight: fullWidth * 0.03,
+                    minHeight: 40 * factorVertical,
+                    borderTopColor: colors.secondBackground,
+                    borderTopWidth: 0.25,
+                    flexDirection: 'row',
+                }}
+            >
+                <View>
+                    <View style={{alignItems: 'center'}}>
+                        <FastImage
+                            style={{
+                                height: 40 * factorHorizontal,
+                                width: 40 * factorHorizontal,
+                                borderRadius: 100,
+                            }}
+                            source={{
+                                uri:
+                                    item.user[
+                                        'fields.profile_picture_image_url'
+                                    ],
+                            }}
+                            resizeMode={FastImage.resizeMode.stretch}
+                        />
+                        <Text
+                            style={{
+                                fontFamily: 'OpenSans',
+                                fontSize: 10 * factorRatio,
+                                marginTop: 2 * factorRatio,
+                                fontWeight: 'bold',
+                                color: 'grey',
+                            }}
+                        >
+                            {this.changeXP(item.user.xp)}
+                        </Text>
+                    </View>
+                    <View style={{flex: 1}} />
+                </View>
                 <View
-                    key={index}
                     style={{
-                        backgroundColor: colors.mainBackground,
-                        paddingTop: fullHeight * 0.025,
-                        paddingBottom: fullHeight * 0.02,
-                        paddingLeft: fullWidth * 0.05,
-                        paddingRight: fullWidth * 0.03,
-                        minHeight: 40 * factorVertical,
-                        borderTopColor: colors.secondBackground,
-                        borderTopWidth: 0.25,
-                        flexDirection: 'row',
+                        flex: 1,
+                        paddingLeft: 12.5 * factorHorizontal,
                     }}
                 >
-                    <View>
-                        <View style={{alignItems: 'center'}}>
-                            <FastImage
-                                style={{
-                                    height: 40 * factorHorizontal,
-                                    width: 40 * factorHorizontal,
-                                    borderRadius: 100,
-                                }}
-                                source={{
-                                    uri:
-                                        comment.user[
-                                            'fields.profile_picture_image_url'
-                                        ],
-                                }}
-                                resizeMode={FastImage.resizeMode.stretch}
-                            />
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 10 * factorRatio,
-                                    marginTop: 2 * factorRatio,
-                                    fontWeight: 'bold',
-                                    color: 'grey',
-                                }}
-                            >
-                                {this.changeXP(comment.user.xp)}
-                            </Text>
+                    <View style={{height: 3 * factorVertical}} />
+                    <Text
+                        style={{
+                            fontFamily: 'OpenSans',
+                            fontSize: 13 * factorRatio,
+                            color: 'white',
+                        }}
+                    >
+                        {item.comment}
+                    </Text>
+                    <View style={{height: 7.5 * factorVertical}} />
+                    <Text
+                        style={{
+                            fontFamily: 'OpenSans',
+                            fontSize: 12 * factorRatio,
+                            color: colors.secondBackground,
+                        }}
+                    >
+                        {item.user['display_name']} | {item.user.rank} |{' '}
+                        {moment.utc(item.created_on).local().fromNow()}
+                    </Text>
+                    <View
+                        style={{
+                            paddingTop: 15 * factorVertical,
+                            paddingBottom: 15 * factorVertical,
+                        }}
+                    >
+                        <View style={{flex: 1}} />
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{flexDirection: 'row'}}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.likeComment(item.id);
+                                    }}
+                                >
+                                    <AntIcon
+                                        name={item.is_liked ? 'like1' : 'like2'}
+                                        size={20 * factorRatio}
+                                        color={colors.pianoteRed}
+                                    />
+                                </TouchableOpacity>
+                                <View
+                                    style={{
+                                        width: 10 * factorHorizontal,
+                                    }}
+                                />
+                                {item.like_count > 0 && (
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    borderRadius: 40,
+                                                    paddingLeft:
+                                                        8 * factorHorizontal,
+                                                    paddingRight:
+                                                        8 * factorHorizontal,
+                                                    paddingTop:
+                                                        4 * factorVertical,
+                                                    paddingBottom:
+                                                        4 * factorVertical,
+                                                    backgroundColor:
+                                                        colors.notificationColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'OpenSans',
+                                                    fontSize: 10 * factorRatio,
+                                                    color: colors.pianoteRed,
+                                                }}
+                                            >
+                                                {item.like_count}{' '}
+                                                {item.like_count === 1
+                                                    ? 'LIKE'
+                                                    : 'LIKES'}
+                                            </Text>
+                                        </View>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                )}
+                            </View>
+                            <View style={{width: 20 * factorHorizontal}} />
+                            <View style={{flexDirection: 'row'}}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.setState({
+                                            showReplies: true,
+                                            selectedComment: item,
+                                        });
+                                    }}
+                                >
+                                    <MaterialIcon
+                                        name={'comment-text-outline'}
+                                        size={20 * factorRatio}
+                                        color={colors.pianoteRed}
+                                    />
+                                </TouchableOpacity>
+                                <View
+                                    style={{
+                                        width: 10 * factorHorizontal,
+                                    }}
+                                />
+                                {item.replies.length > 0 && (
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    borderRadius: 40,
+                                                    paddingLeft:
+                                                        8 * factorHorizontal,
+                                                    paddingRight:
+                                                        8 * factorHorizontal,
+                                                    paddingTop:
+                                                        4 * factorVertical,
+                                                    paddingBottom:
+                                                        4 * factorVertical,
+                                                    backgroundColor:
+                                                        colors.notificationColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'OpenSans',
+                                                    fontSize: 10 * factorRatio,
+                                                    color: colors.pianoteRed,
+                                                }}
+                                            >
+                                                {item.replies.length}{' '}
+                                                {item.replies.length === 1
+                                                    ? 'REPLY'
+                                                    : 'REPLIES'}
+                                            </Text>
+                                        </View>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                )}
+                            </View>
+                            <View style={{width: 20 * factorHorizontal}} />
+                            {this.userId === item.user_id && (
+                                <TouchableOpacity
+                                    onPress={() => this.deleteComment(item.id)}
+                                >
+                                    <AntIcon
+                                        name={'delete'}
+                                        size={20 * factorRatio}
+                                        color={colors.pianoteRed}
+                                    />
+                                </TouchableOpacity>
+                            )}
                         </View>
                         <View style={{flex: 1}} />
                     </View>
-                    <View
-                        style={{
-                            flex: 1,
-                            paddingLeft: 12.5 * factorHorizontal,
-                        }}
-                    >
-                        <View style={{height: 3 * factorVertical}} />
-                        <Text
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 13 * factorRatio,
-                                color: 'white',
+                    {item.replies.length !== 0 && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.setState({
+                                    showReplies: true,
+                                    selectedComment: item,
+                                });
                             }}
                         >
-                            {comment.comment}
-                        </Text>
-                        <View style={{height: 7.5 * factorVertical}} />
-                        <Text
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 12 * factorRatio,
-                                color: colors.secondBackground,
-                            }}
-                        >
-                            {comment.user['display_name']} | {comment.user.rank}{' '}
-                            | {moment.utc(comment.created_on).local().fromNow()}
-                        </Text>
-                        <View
-                            style={{
-                                paddingTop: 15 * factorVertical,
-                                paddingBottom: 15 * factorVertical,
-                            }}
-                        >
-                            <View style={{flex: 1}} />
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={{flexDirection: 'row'}}>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.likeComment(comment.id);
-                                        }}
-                                    >
-                                        <AntIcon
-                                            name={
-                                                comment.is_liked
-                                                    ? 'like1'
-                                                    : 'like2'
-                                            }
-                                            size={20 * factorRatio}
-                                            color={colors.pianoteRed}
-                                        />
-                                    </TouchableOpacity>
-                                    <View
-                                        style={{width: 10 * factorHorizontal}}
-                                    />
-                                    {comment.like_count > 0 && (
-                                        <View>
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        borderRadius: 40,
-                                                        paddingLeft:
-                                                            8 *
-                                                            factorHorizontal,
-                                                        paddingRight:
-                                                            8 *
-                                                            factorHorizontal,
-                                                        paddingTop:
-                                                            4 * factorVertical,
-                                                        paddingBottom:
-                                                            4 * factorVertical,
-                                                        backgroundColor:
-                                                            colors.notificationColor,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        fontSize:
-                                                            10 * factorRatio,
-                                                        color:
-                                                            colors.pianoteRed,
-                                                    }}
-                                                >
-                                                    {comment.like_count}{' '}
-                                                    {comment.like_count === 1
-                                                        ? 'LIKE'
-                                                        : 'LIKES'}
-                                                </Text>
-                                            </View>
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                    )}
-                                </View>
-                                <View style={{width: 20 * factorHorizontal}} />
-                                <View style={{flexDirection: 'row'}}>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({
-                                                showReplies: true,
-                                                selectedComment: comment,
-                                            });
-                                        }}
-                                    >
-                                        <MaterialIcon
-                                            name={'comment-text-outline'}
-                                            size={20 * factorRatio}
-                                            color={colors.pianoteRed}
-                                        />
-                                    </TouchableOpacity>
-                                    <View
-                                        style={{width: 10 * factorHorizontal}}
-                                    />
-                                    {comment.replies.length > 0 && (
-                                        <View>
-                                            <View style={{flex: 1}} />
-                                            <View
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        borderRadius: 40,
-                                                        paddingLeft:
-                                                            8 *
-                                                            factorHorizontal,
-                                                        paddingRight:
-                                                            8 *
-                                                            factorHorizontal,
-                                                        paddingTop:
-                                                            4 * factorVertical,
-                                                        paddingBottom:
-                                                            4 * factorVertical,
-                                                        backgroundColor:
-                                                            colors.notificationColor,
-                                                    },
-                                                ]}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontFamily: 'OpenSans-Regular',
-                                                        fontSize:
-                                                            10 * factorRatio,
-                                                        color:
-                                                            colors.pianoteRed,
-                                                    }}
-                                                >
-                                                    {comment.replies.length}{' '}
-                                                    {comment.replies.length ===
-                                                    1
-                                                        ? 'REPLY'
-                                                        : 'REPLIES'}
-                                                </Text>
-                                            </View>
-                                            <View style={{flex: 1}} />
-                                        </View>
-                                    )}
-                                </View>
-                                <View style={{width: 20 * factorHorizontal}} />
-                                {this.userId === comment.user_id && (
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            this.deleteComment(comment.id)
-                                        }
-                                    >
-                                        <AntIcon
-                                            name={'delete'}
-                                            size={20 * factorRatio}
-                                            color={colors.pianoteRed}
-                                        />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
-                            <View style={{flex: 1}} />
-                        </View>
-                        {comment.replies.length !== 0 && (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.setState({
-                                        showReplies: true,
-                                        selectedComment: comment,
-                                    });
+                            <Text
+                                style={{
+                                    fontFamily: 'OpenSans',
+                                    fontSize: 12 * factorRatio,
+                                    color: colors.secondBackground,
                                 }}
                             >
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 12 * factorRatio,
-                                        color: colors.secondBackground,
-                                    }}
-                                >
-                                    VIEW {comment.replies.length}{' '}
-                                    {comment.replies.length === 1
-                                        ? 'REPLY'
-                                        : 'REPLIES'}
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-                    </View>
+                                VIEW {item.replies.length}{' '}
+                                {item.replies.length === 1
+                                    ? 'REPLY'
+                                    : 'REPLIES'}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
-            );
-        });
+            </View>
+            //     )}
+            // />
+        ));
     }
 
     changeXP = num => {
@@ -931,7 +963,7 @@ export default class VideoPlayer extends React.Component {
     };
 
     render() {
-        // this.props.navigation.goBack();
+        let {id, comments} = this.state;
         return (
             <View
                 style={[
@@ -1009,8 +1041,7 @@ export default class VideoPlayer extends React.Component {
                     <View
                         key={'container2'}
                         style={{
-                            height: fullHeight - navHeight,
-                            alignSelf: 'stretch',
+                            flex: 1,
                             backgroundColor: colors.mainBackground,
                         }}
                     >
@@ -1049,8 +1080,25 @@ export default class VideoPlayer extends React.Component {
                                     innerRef={ref => {
                                         this.scroll = ref;
                                     }}
+                                    removeClippedSubviews={false}
                                     showsVerticalScrollIndicator={false}
                                     contentInsetAdjustmentBehavior={'never'}
+                                    onScroll={({nativeEvent}) => {
+                                        if (
+                                            Platform.OS === 'android' &&
+                                            this.isCloseToBottom(nativeEvent)
+                                        ) {
+                                            this.loadMoreComments();
+                                        }
+                                    }}
+                                    onMomentumScrollEnd={({nativeEvent}) => {
+                                        if (
+                                            Platform.OS === 'ios' &&
+                                            this.isCloseToBottom(nativeEvent)
+                                        ) {
+                                            this.loadMoreComments();
+                                        }
+                                    }}
                                     style={{
                                         flex: 1,
                                         backgroundColor: colors.mainBackground,
@@ -1072,7 +1120,8 @@ export default class VideoPlayer extends React.Component {
                                                 style={{
                                                     fontSize: 20 * factorRatio,
                                                     fontWeight: 'bold',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     textAlign: 'center',
                                                     color: 'white',
                                                 }}
@@ -1089,7 +1138,8 @@ export default class VideoPlayer extends React.Component {
                                                     fontSize: 12 * factorRatio,
                                                     fontWeight: '400',
                                                     color: 'grey',
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     textAlign: 'center',
                                                     color:
                                                         colors.secondBackground,
@@ -1256,44 +1306,60 @@ export default class VideoPlayer extends React.Component {
                                                         </Text>
                                                     </TouchableOpacity>
                                                 )}
-                                                <TouchableOpacity
-                                                    key={'download'}
-                                                    onPress={() => {}}
-                                                    style={{
-                                                        flex: 1,
-                                                        alignItems: 'center',
+                                                <Download_V2
+                                                    entity={{
+                                                        id,
+                                                        comments,
+                                                        lesson: this.props
+                                                            .navigation.state
+                                                            .params.url
+                                                            ? foundationsService.getUnitLesson(
+                                                                  this.state
+                                                                      .url,
+                                                              )
+                                                            : contentService.getContent(
+                                                                  this.state.id,
+                                                              ),
                                                     }}
-                                                >
-                                                    <MaterialIcon
-                                                        name={
-                                                            'arrow-collapse-down'
-                                                        }
-                                                        size={
-                                                            27.5 * factorRatio
-                                                        }
-                                                        color={
-                                                            colors.pianoteRed
-                                                        }
-                                                    />
-                                                    <View
-                                                        style={{
-                                                            height:
-                                                                5 *
-                                                                factorVertical,
-                                                        }}
-                                                    />
-                                                    <Text
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            fontSize:
-                                                                12 *
-                                                                factorRatio,
-                                                            color: 'white',
-                                                        }}
-                                                    >
-                                                        Download
-                                                    </Text>
-                                                </TouchableOpacity>
+                                                    styles={{
+                                                        touchable: {flex: 1},
+                                                        iconDownloadColor:
+                                                            colors.pianoteRed,
+                                                        activityIndicatorColor:
+                                                            colors.pianoteRed,
+                                                        animatedProgressBackground:
+                                                            colors.pianoteRed,
+                                                        textStatus: {
+                                                            color: '#ffffff',
+                                                            fontSize: 10,
+                                                            fontFamily:
+                                                                'OpenSans',
+                                                            marginTop: 5,
+                                                        },
+                                                        alert: {
+                                                            alertTextMessageFontFamily:
+                                                                'OpenSans',
+                                                            alertTouchableTextDeleteColor:
+                                                                'white',
+                                                            alertTextTitleColor:
+                                                                'black',
+                                                            alertTextMessageColor:
+                                                                'black',
+                                                            alertTextTitleFontFamily:
+                                                                'OpenSans-Bold',
+                                                            alertTouchableTextCancelColor:
+                                                                colors.pianoteRed,
+                                                            alertTouchableDeleteBackground:
+                                                                colors.pianoteRed,
+                                                            alertBackground:
+                                                                'white',
+                                                            alertTouchableTextDeleteFontFamily:
+                                                                'OpenSans-Bold',
+                                                            alertTouchableTextCancelFontFamily:
+                                                                'OpenSans-Bold',
+                                                        },
+                                                    }}
+                                                />
                                                 <TouchableOpacity
                                                     key={'info'}
                                                     onPress={() => {
@@ -1512,557 +1578,179 @@ export default class VideoPlayer extends React.Component {
                                                 minHeight: fullHeight * 0.4,
                                             }}
                                         >
-                                            {!this.state.commentsLoading && (
-                                                <View
-                                                    key={'commentContainer'}
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            minHeight:
-                                                                fullHeight *
-                                                                0.4,
+                                            <View
+                                                key={'commentContainer'}
+                                                style={[
+                                                    styles.centerContent,
+                                                    {
+                                                        minHeight:
+                                                            fullHeight * 0.4,
+                                                        width: fullWidth,
+                                                        zIndex: 10,
+                                                    },
+                                                ]}
+                                            >
+                                                <View style={{flex: 1}}>
+                                                    <View
+                                                        style={{
                                                             width: fullWidth,
-                                                            zIndex: 10,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <View style={{flex: 1}}>
+                                                            backgroundColor:
+                                                                colors.mainBackground,
+                                                            zIndex: 5,
+                                                        }}
+                                                    >
                                                         <View
                                                             style={{
+                                                                height:
+                                                                    fullHeight *
+                                                                    0.025,
+                                                            }}
+                                                        />
+                                                        <View
+                                                            key={
+                                                                'commentHeader'
+                                                            }
+                                                            style={{
                                                                 width: fullWidth,
-                                                                backgroundColor:
-                                                                    colors.mainBackground,
-                                                                zIndex: 5,
+                                                                flexDirection:
+                                                                    'row',
+                                                                paddingLeft:
+                                                                    fullWidth *
+                                                                    0.05,
+                                                                paddingRight:
+                                                                    fullWidth *
+                                                                    0.01,
                                                             }}
                                                         >
-                                                            <View
-                                                                style={{
-                                                                    height:
-                                                                        fullHeight *
-                                                                        0.025,
-                                                                }}
-                                                            />
-                                                            <View
-                                                                key={
-                                                                    'commentHeader'
-                                                                }
-                                                                style={{
-                                                                    width: fullWidth,
-                                                                    flexDirection:
-                                                                        'row',
-                                                                    paddingLeft:
-                                                                        fullWidth *
-                                                                        0.05,
-                                                                    paddingRight:
-                                                                        fullWidth *
-                                                                        0.01,
-                                                                }}
-                                                            >
-                                                                <View>
-                                                                    <View
-                                                                        style={{
-                                                                            flex: 1,
-                                                                        }}
-                                                                    />
-                                                                    <Text
-                                                                        style={{
-                                                                            fontSize:
-                                                                                18 *
-                                                                                factorRatio,
-                                                                            fontFamily:
-                                                                                'RobotoCondensed-Bold',
-                                                                            color:
-                                                                                colors.secondBackground,
-                                                                        }}
-                                                                    >
-                                                                        {this
-                                                                            .state
-                                                                            .isReply
-                                                                            ? 'REPLIES'
-                                                                            : this
-                                                                                  .allCommentsNum +
-                                                                              ' COMMENTS'}
-                                                                    </Text>
-                                                                    <View
-                                                                        style={{
-                                                                            flex: 1,
-                                                                        }}
-                                                                    />
-                                                                </View>
+                                                            <View>
                                                                 <View
                                                                     style={{
                                                                         flex: 1,
                                                                     }}
                                                                 />
-                                                                {this.state
-                                                                    .isReply && (
-                                                                    <TouchableOpacity
-                                                                        onPress={() => {}}
-                                                                    >
-                                                                        <EntypoIcon
-                                                                            size={
-                                                                                27.5 *
-                                                                                factorRatio
-                                                                            }
-                                                                            name={
-                                                                                'cross'
-                                                                            }
-                                                                            color={
-                                                                                '#c2c2c2'
-                                                                            }
-                                                                        />
-                                                                    </TouchableOpacity>
-                                                                )}
-                                                                {!this.state
-                                                                    .isReply && (
-                                                                    <TouchableOpacity
-                                                                        style={{
-                                                                            marginLeft:
-                                                                                factorHorizontal *
-                                                                                10,
-                                                                        }}
-                                                                        onPress={() => {
-                                                                            this.setState(
-                                                                                {
-                                                                                    showCommentSort: true,
-                                                                                },
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        <FontIcon
-                                                                            size={
-                                                                                20 *
-                                                                                factorRatio
-                                                                            }
-                                                                            name={
-                                                                                'sort-amount-down'
-                                                                            }
-                                                                            color={
-                                                                                colors.pianoteRed
-                                                                            }
-                                                                        />
-                                                                    </TouchableOpacity>
-                                                                )}
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize:
+                                                                            18 *
+                                                                            factorRatio,
+                                                                        fontFamily:
+                                                                            'RobotoCondensed-Bold',
+                                                                        color:
+                                                                            colors.secondBackground,
+                                                                    }}
+                                                                >
+                                                                    {this.state
+                                                                        .isReply
+                                                                        ? 'REPLIES'
+                                                                        : this
+                                                                              .allCommentsNum +
+                                                                          ' COMMENTS'}
+                                                                </Text>
                                                                 <View
                                                                     style={{
-                                                                        flex: 0.1,
+                                                                        flex: 1,
                                                                     }}
                                                                 />
                                                             </View>
                                                             <View
                                                                 style={{
-                                                                    flex: 1.25,
+                                                                    flex: 1,
                                                                 }}
                                                             />
                                                             {this.state
                                                                 .isReply && (
-                                                                <View
-                                                                    key={
-                                                                        'originalReply'
-                                                                    }
-                                                                    style={{
-                                                                        backgroundColor:
-                                                                            colors.mainBackground,
-                                                                        paddingTop:
-                                                                            fullHeight *
-                                                                            0.025,
-                                                                        paddingBottom:
-                                                                            fullHeight *
-                                                                            0.02,
-                                                                        paddingLeft:
-                                                                            fullWidth *
-                                                                            0.05,
-                                                                        paddingRight:
-                                                                            fullWidth *
-                                                                            0.03,
-                                                                        minHeight:
-                                                                            40 *
-                                                                            factorVertical,
-                                                                        flexDirection:
-                                                                            'row',
-                                                                    }}
-                                                                >
-                                                                    <View>
-                                                                        <View
-                                                                            style={{
-                                                                                alignItems:
-                                                                                    'center',
-                                                                            }}
-                                                                        >
-                                                                            <FastImage
-                                                                                style={{
-                                                                                    height:
-                                                                                        40 *
-                                                                                        factorHorizontal,
-                                                                                    width:
-                                                                                        40 *
-                                                                                        factorHorizontal,
-                                                                                    borderRadius: 100,
-                                                                                }}
-                                                                                source={{
-                                                                                    uri:
-                                                                                        'https://facebook.github.io/react-native/img/tiny_logo.png',
-                                                                                }}
-                                                                                resizeMode={
-                                                                                    FastImage
-                                                                                        .resizeMode
-                                                                                        .stretch
-                                                                                }
-                                                                            />
-                                                                            <Text
-                                                                                style={{
-                                                                                    fontFamily:
-                                                                                        'OpenSans-Regular',
-                                                                                    fontSize:
-                                                                                        10 *
-                                                                                        factorRatio,
-                                                                                    marginTop:
-                                                                                        2 *
-                                                                                        factorRatio,
-                                                                                    fontWeight:
-                                                                                        Platform.OS ==
-                                                                                        'ios'
-                                                                                            ? '700'
-                                                                                            : 'bold',
-                                                                                    color:
-                                                                                        'grey',
-                                                                                }}
-                                                                            >
-                                                                                'Hello'
-                                                                            </Text>
-                                                                        </View>
-                                                                        <View
-                                                                            style={{
-                                                                                flex: 1,
-                                                                            }}
-                                                                        />
-                                                                    </View>
-                                                                    <View
-                                                                        style={{
-                                                                            flex: 1,
-                                                                            paddingLeft:
-                                                                                12.5 *
-                                                                                factorHorizontal,
-                                                                        }}
-                                                                    >
-                                                                        <View
-                                                                            style={{
-                                                                                height:
-                                                                                    3 *
-                                                                                    factorVertical,
-                                                                            }}
-                                                                        />
-                                                                        <Text
-                                                                            style={{
-                                                                                fontFamily:
-                                                                                    'OpenSans-Regular',
-                                                                                fontSize:
-                                                                                    13 *
-                                                                                    factorRatio,
-                                                                            }}
-                                                                        >
-                                                                            Lorem
-                                                                            ipsum
-                                                                            dolor
-                                                                            sit
-                                                                            smart
-                                                                            cosaf
-                                                                            adiffdsf
-                                                                            eli,
-                                                                            prascent
-                                                                            quie
-                                                                            eros
-                                                                            magnia.
-                                                                            Etrian
-                                                                            tincidunt
-                                                                        </Text>
-                                                                        <View
-                                                                            style={{
-                                                                                height:
-                                                                                    7.5 *
-                                                                                    factorVertical,
-                                                                            }}
-                                                                        />
-                                                                        <Text
-                                                                            style={{
-                                                                                fontFamily:
-                                                                                    'OpenSans-Regular',
-                                                                                fontSize:
-                                                                                    11 *
-                                                                                    factorRatio,
-                                                                                color:
-                                                                                    'grey',
-                                                                            }}
-                                                                        >
-                                                                            user
-                                                                            |
-                                                                            rank
-                                                                            |
-                                                                            time
-                                                                        </Text>
-                                                                        <View
-                                                                            style={{
-                                                                                height:
-                                                                                    50 *
-                                                                                    factorVertical,
-                                                                            }}
-                                                                        >
-                                                                            <View
-                                                                                style={{
-                                                                                    flex: 1,
-                                                                                }}
-                                                                            />
-                                                                            <View
-                                                                                style={{
-                                                                                    flexDirection:
-                                                                                        'row',
-                                                                                }}
-                                                                            >
-                                                                                <View
-                                                                                    style={{
-                                                                                        flexDirection:
-                                                                                            'row',
-                                                                                    }}
-                                                                                >
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => {
-                                                                                            this.likeComment();
-                                                                                        }}
-                                                                                    >
-                                                                                        <AntIcon
-                                                                                            name={
-                                                                                                'like2'
-                                                                                            }
-                                                                                            size={
-                                                                                                20 *
-                                                                                                factorRatio
-                                                                                            }
-                                                                                            color={
-                                                                                                'black'
-                                                                                            }
-                                                                                        />
-                                                                                    </TouchableOpacity>
-                                                                                    <View
-                                                                                        style={{
-                                                                                            width:
-                                                                                                10 *
-                                                                                                factorHorizontal,
-                                                                                        }}
-                                                                                    />
-                                                                                    <View>
-                                                                                        <View
-                                                                                            style={{
-                                                                                                flex: 1,
-                                                                                            }}
-                                                                                        />
-                                                                                        <View
-                                                                                            style={[
-                                                                                                styles.centerContent,
-                                                                                                {
-                                                                                                    borderRadius: 40,
-                                                                                                    paddingLeft:
-                                                                                                        8 *
-                                                                                                        factorHorizontal,
-                                                                                                    paddingRight:
-                                                                                                        8 *
-                                                                                                        factorHorizontal,
-                                                                                                    paddingTop:
-                                                                                                        4 *
-                                                                                                        factorVertical,
-                                                                                                    paddingBottom:
-                                                                                                        4 *
-                                                                                                        factorVertical,
-                                                                                                    backgroundColor:
-                                                                                                        '#ececec',
-                                                                                                },
-                                                                                            ]}
-                                                                                        >
-                                                                                            <Text
-                                                                                                style={{
-                                                                                                    fontFamily:
-                                                                                                        'OpenSans-Regular',
-                                                                                                    fontSize:
-                                                                                                        9.5 *
-                                                                                                        factorRatio,
-                                                                                                    color:
-                                                                                                        'dimgrey',
-                                                                                                }}
-                                                                                            >
-                                                                                                4
-                                                                                                LIKES
-                                                                                            </Text>
-                                                                                        </View>
-                                                                                        <View
-                                                                                            style={{
-                                                                                                flex: 1,
-                                                                                            }}
-                                                                                        />
-                                                                                    </View>
-                                                                                </View>
-                                                                                <View
-                                                                                    style={{
-                                                                                        width:
-                                                                                            20 *
-                                                                                            factorHorizontal,
-                                                                                    }}
-                                                                                />
-                                                                                <View
-                                                                                    style={{
-                                                                                        flexDirection:
-                                                                                            'row',
-                                                                                    }}
-                                                                                >
-                                                                                    <TouchableOpacity
-                                                                                        onPress={() => {}}
-                                                                                    >
-                                                                                        <MaterialIcon
-                                                                                            name={
-                                                                                                'comment-text-outline'
-                                                                                            }
-                                                                                            size={
-                                                                                                20 *
-                                                                                                factorRatio
-                                                                                            }
-                                                                                            color={
-                                                                                                'black'
-                                                                                            }
-                                                                                        />
-                                                                                    </TouchableOpacity>
-                                                                                    <View
-                                                                                        style={{
-                                                                                            width:
-                                                                                                10 *
-                                                                                                factorHorizontal,
-                                                                                        }}
-                                                                                    />
-                                                                                    <View>
-                                                                                        <View
-                                                                                            style={{
-                                                                                                flex: 1,
-                                                                                            }}
-                                                                                        />
-                                                                                        <View
-                                                                                            style={[
-                                                                                                styles.centerContent,
-                                                                                                {
-                                                                                                    borderRadius: 40,
-                                                                                                    paddingLeft:
-                                                                                                        8 *
-                                                                                                        factorHorizontal,
-                                                                                                    paddingRight:
-                                                                                                        8 *
-                                                                                                        factorHorizontal,
-                                                                                                    paddingTop:
-                                                                                                        4 *
-                                                                                                        factorVertical,
-                                                                                                    paddingBottom:
-                                                                                                        4 *
-                                                                                                        factorVertical,
-                                                                                                    backgroundColor:
-                                                                                                        '#ececec',
-                                                                                                },
-                                                                                            ]}
-                                                                                        >
-                                                                                            <Text
-                                                                                                style={{
-                                                                                                    fontFamily:
-                                                                                                        'OpenSans-Regular',
-                                                                                                    fontSize:
-                                                                                                        9.5 *
-                                                                                                        factorRatio,
-                                                                                                    color:
-                                                                                                        'dimgrey',
-                                                                                                }}
-                                                                                            >
-                                                                                                REPLIES
-                                                                                            </Text>
-                                                                                        </View>
-                                                                                        <View
-                                                                                            style={{
-                                                                                                flex: 1,
-                                                                                            }}
-                                                                                        />
-                                                                                    </View>
-                                                                                </View>
-                                                                            </View>
-                                                                            <View
-                                                                                style={{
-                                                                                    flex: 1,
-                                                                                }}
-                                                                            />
-                                                                        </View>
-                                                                        <TouchableOpacity
-                                                                            onPress={() => {}}
-                                                                        >
-                                                                            <Text
-                                                                                style={{
-                                                                                    fontFamily:
-                                                                                        'OpenSans-Regular',
-                                                                                    fontSize:
-                                                                                        11.5 *
-                                                                                        factorRatio,
-                                                                                    color:
-                                                                                        '#fb1b2f',
-                                                                                }}
-                                                                            >
-                                                                                VIEW
-                                                                                REPLIES
-                                                                            </Text>
-                                                                        </TouchableOpacity>
-                                                                    </View>
-                                                                </View>
-                                                            )}
-                                                            <View
-                                                                key={
-                                                                    'addComment'
-                                                                }
-                                                                style={{
-                                                                    width: fullWidth,
-                                                                    height:
-                                                                        fullHeight *
-                                                                        0.1,
-                                                                    flexDirection:
-                                                                        'row',
-                                                                    paddingLeft:
-                                                                        fullWidth *
-                                                                        0.05,
-                                                                }}
-                                                            >
                                                                 <TouchableOpacity
+                                                                    onPress={() => {}}
+                                                                >
+                                                                    <EntypoIcon
+                                                                        size={
+                                                                            27.5 *
+                                                                            factorRatio
+                                                                        }
+                                                                        name={
+                                                                            'cross'
+                                                                        }
+                                                                        color={
+                                                                            '#c2c2c2'
+                                                                        }
+                                                                    />
+                                                                </TouchableOpacity>
+                                                            )}
+                                                            {!this.state
+                                                                .isReply && (
+                                                                <TouchableOpacity
+                                                                    style={{
+                                                                        marginLeft:
+                                                                            factorHorizontal *
+                                                                            10,
+                                                                    }}
                                                                     onPress={() => {
                                                                         this.setState(
                                                                             {
-                                                                                showMakeComment: true,
+                                                                                showCommentSort: true,
                                                                             },
-                                                                        ),
-                                                                            setTimeout(
-                                                                                () =>
-                                                                                    this.textInputRef.focus(),
-                                                                                100,
-                                                                            );
-                                                                    }}
-                                                                    style={{
-                                                                        flexDirection:
-                                                                            'row',
+                                                                        );
                                                                     }}
                                                                 >
-                                                                    <View
-                                                                        key={
-                                                                            'profileImage'
+                                                                    <FontIcon
+                                                                        size={
+                                                                            20 *
+                                                                            factorRatio
                                                                         }
+                                                                        name={
+                                                                            'sort-amount-down'
+                                                                        }
+                                                                        color={
+                                                                            colors.pianoteRed
+                                                                        }
+                                                                    />
+                                                                </TouchableOpacity>
+                                                            )}
+                                                            <View
+                                                                style={{
+                                                                    flex: 0.1,
+                                                                }}
+                                                            />
+                                                        </View>
+                                                        <View
+                                                            style={{
+                                                                flex: 1.25,
+                                                            }}
+                                                        />
+                                                        {this.state.isReply && (
+                                                            <View
+                                                                key={
+                                                                    'originalReply'
+                                                                }
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        colors.mainBackground,
+                                                                    paddingTop:
+                                                                        fullHeight *
+                                                                        0.025,
+                                                                    paddingBottom:
+                                                                        fullHeight *
+                                                                        0.02,
+                                                                    paddingLeft:
+                                                                        fullWidth *
+                                                                        0.05,
+                                                                    paddingRight:
+                                                                        fullWidth *
+                                                                        0.03,
+                                                                    minHeight:
+                                                                        40 *
+                                                                        factorVertical,
+                                                                    flexDirection:
+                                                                        'row',
+                                                                }}
+                                                            >
+                                                                <View>
+                                                                    <View
                                                                         style={{
-                                                                            height:
-                                                                                '100%',
-                                                                            width:
-                                                                                40 *
-                                                                                factorHorizontal,
+                                                                            alignItems:
+                                                                                'center',
                                                                         }}
                                                                     >
-                                                                        <View
-                                                                            style={{
-                                                                                flex: 1,
-                                                                            }}
-                                                                        />
                                                                         <FastImage
                                                                             style={{
                                                                                 height:
@@ -2073,96 +1761,463 @@ export default class VideoPlayer extends React.Component {
                                                                                     factorHorizontal,
                                                                                 borderRadius: 100,
                                                                             }}
-                                                                            source={
-                                                                                require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
-                                                                                //    {uri: this.state.profileImage}
-                                                                            }
+                                                                            source={{
+                                                                                uri:
+                                                                                    'https://facebook.github.io/react-native/img/tiny_logo.png',
+                                                                            }}
                                                                             resizeMode={
                                                                                 FastImage
                                                                                     .resizeMode
                                                                                     .stretch
                                                                             }
                                                                         />
+                                                                        <Text
+                                                                            style={{
+                                                                                fontFamily:
+                                                                                    'OpenSans',
+                                                                                fontSize:
+                                                                                    10 *
+                                                                                    factorRatio,
+                                                                                marginTop:
+                                                                                    2 *
+                                                                                    factorRatio,
+                                                                                fontWeight:
+                                                                                    Platform.OS ==
+                                                                                    'ios'
+                                                                                        ? '700'
+                                                                                        : 'bold',
+                                                                                color:
+                                                                                    'grey',
+                                                                            }}
+                                                                        >
+                                                                            'Hello'
+                                                                        </Text>
+                                                                    </View>
+                                                                    <View
+                                                                        style={{
+                                                                            flex: 1,
+                                                                        }}
+                                                                    />
+                                                                </View>
+                                                                <View
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        paddingLeft:
+                                                                            12.5 *
+                                                                            factorHorizontal,
+                                                                    }}
+                                                                >
+                                                                    <View
+                                                                        style={{
+                                                                            height:
+                                                                                3 *
+                                                                                factorVertical,
+                                                                        }}
+                                                                    />
+                                                                    <Text
+                                                                        style={{
+                                                                            fontFamily:
+                                                                                'OpenSans',
+                                                                            fontSize:
+                                                                                13 *
+                                                                                factorRatio,
+                                                                        }}
+                                                                    >
+                                                                        Lorem
+                                                                        ipsum
+                                                                        dolor
+                                                                        sit
+                                                                        smart
+                                                                        cosaf
+                                                                        adiffdsf
+                                                                        eli,
+                                                                        prascent
+                                                                        quie
+                                                                        eros
+                                                                        magnia.
+                                                                        Etrian
+                                                                        tincidunt
+                                                                    </Text>
+                                                                    <View
+                                                                        style={{
+                                                                            height:
+                                                                                7.5 *
+                                                                                factorVertical,
+                                                                        }}
+                                                                    />
+                                                                    <Text
+                                                                        style={{
+                                                                            fontFamily:
+                                                                                'OpenSans',
+                                                                            fontSize:
+                                                                                11 *
+                                                                                factorRatio,
+                                                                            color:
+                                                                                'grey',
+                                                                        }}
+                                                                    >
+                                                                        user |
+                                                                        rank |
+                                                                        time
+                                                                    </Text>
+                                                                    <View
+                                                                        style={{
+                                                                            height:
+                                                                                50 *
+                                                                                factorVertical,
+                                                                        }}
+                                                                    >
+                                                                        <View
+                                                                            style={{
+                                                                                flex: 1,
+                                                                            }}
+                                                                        />
+                                                                        <View
+                                                                            style={{
+                                                                                flexDirection:
+                                                                                    'row',
+                                                                            }}
+                                                                        >
+                                                                            <View
+                                                                                style={{
+                                                                                    flexDirection:
+                                                                                        'row',
+                                                                                }}
+                                                                            >
+                                                                                <TouchableOpacity
+                                                                                    onPress={() => {
+                                                                                        this.likeComment();
+                                                                                    }}
+                                                                                >
+                                                                                    <AntIcon
+                                                                                        name={
+                                                                                            'like2'
+                                                                                        }
+                                                                                        size={
+                                                                                            20 *
+                                                                                            factorRatio
+                                                                                        }
+                                                                                        color={
+                                                                                            'black'
+                                                                                        }
+                                                                                    />
+                                                                                </TouchableOpacity>
+                                                                                <View
+                                                                                    style={{
+                                                                                        width:
+                                                                                            10 *
+                                                                                            factorHorizontal,
+                                                                                    }}
+                                                                                />
+                                                                                <View>
+                                                                                    <View
+                                                                                        style={{
+                                                                                            flex: 1,
+                                                                                        }}
+                                                                                    />
+                                                                                    <View
+                                                                                        style={[
+                                                                                            styles.centerContent,
+                                                                                            {
+                                                                                                borderRadius: 40,
+                                                                                                paddingLeft:
+                                                                                                    8 *
+                                                                                                    factorHorizontal,
+                                                                                                paddingRight:
+                                                                                                    8 *
+                                                                                                    factorHorizontal,
+                                                                                                paddingTop:
+                                                                                                    4 *
+                                                                                                    factorVertical,
+                                                                                                paddingBottom:
+                                                                                                    4 *
+                                                                                                    factorVertical,
+                                                                                                backgroundColor:
+                                                                                                    '#ececec',
+                                                                                            },
+                                                                                        ]}
+                                                                                    >
+                                                                                        <Text
+                                                                                            style={{
+                                                                                                fontFamily:
+                                                                                                    'OpenSans',
+                                                                                                fontSize:
+                                                                                                    9.5 *
+                                                                                                    factorRatio,
+                                                                                                color:
+                                                                                                    'dimgrey',
+                                                                                            }}
+                                                                                        >
+                                                                                            4
+                                                                                            LIKES
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                    <View
+                                                                                        style={{
+                                                                                            flex: 1,
+                                                                                        }}
+                                                                                    />
+                                                                                </View>
+                                                                            </View>
+                                                                            <View
+                                                                                style={{
+                                                                                    width:
+                                                                                        20 *
+                                                                                        factorHorizontal,
+                                                                                }}
+                                                                            />
+                                                                            <View
+                                                                                style={{
+                                                                                    flexDirection:
+                                                                                        'row',
+                                                                                }}
+                                                                            >
+                                                                                <TouchableOpacity
+                                                                                    onPress={() => {}}
+                                                                                >
+                                                                                    <MaterialIcon
+                                                                                        name={
+                                                                                            'comment-text-outline'
+                                                                                        }
+                                                                                        size={
+                                                                                            20 *
+                                                                                            factorRatio
+                                                                                        }
+                                                                                        color={
+                                                                                            'black'
+                                                                                        }
+                                                                                    />
+                                                                                </TouchableOpacity>
+                                                                                <View
+                                                                                    style={{
+                                                                                        width:
+                                                                                            10 *
+                                                                                            factorHorizontal,
+                                                                                    }}
+                                                                                />
+                                                                                <View>
+                                                                                    <View
+                                                                                        style={{
+                                                                                            flex: 1,
+                                                                                        }}
+                                                                                    />
+                                                                                    <View
+                                                                                        style={[
+                                                                                            styles.centerContent,
+                                                                                            {
+                                                                                                borderRadius: 40,
+                                                                                                paddingLeft:
+                                                                                                    8 *
+                                                                                                    factorHorizontal,
+                                                                                                paddingRight:
+                                                                                                    8 *
+                                                                                                    factorHorizontal,
+                                                                                                paddingTop:
+                                                                                                    4 *
+                                                                                                    factorVertical,
+                                                                                                paddingBottom:
+                                                                                                    4 *
+                                                                                                    factorVertical,
+                                                                                                backgroundColor:
+                                                                                                    '#ececec',
+                                                                                            },
+                                                                                        ]}
+                                                                                    >
+                                                                                        <Text
+                                                                                            style={{
+                                                                                                fontFamily:
+                                                                                                    'OpenSans',
+                                                                                                fontSize:
+                                                                                                    9.5 *
+                                                                                                    factorRatio,
+                                                                                                color:
+                                                                                                    'dimgrey',
+                                                                                            }}
+                                                                                        >
+                                                                                            REPLIES
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                    <View
+                                                                                        style={{
+                                                                                            flex: 1,
+                                                                                        }}
+                                                                                    />
+                                                                                </View>
+                                                                            </View>
+                                                                        </View>
                                                                         <View
                                                                             style={{
                                                                                 flex: 1,
                                                                             }}
                                                                         />
                                                                     </View>
-                                                                    <View
-                                                                        key={
-                                                                            'addComment'
-                                                                        }
-                                                                        style={{
-                                                                            height:
-                                                                                '100%',
-                                                                            width:
-                                                                                fullWidth *
-                                                                                    0.95 -
-                                                                                40 *
-                                                                                    factorHorizontal,
-                                                                            justifyContent:
-                                                                                'center',
-                                                                        }}
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {}}
                                                                     >
                                                                         <Text
                                                                             style={{
-                                                                                textAlign:
-                                                                                    'left',
                                                                                 fontFamily:
-                                                                                    'OpenSans-Regular',
+                                                                                    'OpenSans',
                                                                                 fontSize:
-                                                                                    13 *
+                                                                                    11.5 *
                                                                                     factorRatio,
                                                                                 color:
-                                                                                    'white',
-                                                                                paddingLeft:
-                                                                                    10 *
-                                                                                    factorHorizontal,
+                                                                                    '#fb1b2f',
                                                                             }}
                                                                         >
-                                                                            Add
-                                                                            a
-                                                                            comment...
+                                                                            VIEW
+                                                                            REPLIES
                                                                         </Text>
-                                                                    </View>
-                                                                </TouchableOpacity>
+                                                                    </TouchableOpacity>
+                                                                </View>
                                                             </View>
-                                                            <View
-                                                                style={{
-                                                                    flex: 1,
+                                                        )}
+                                                        <View
+                                                            key={'addComment'}
+                                                            style={{
+                                                                width: fullWidth,
+                                                                height:
+                                                                    fullHeight *
+                                                                    0.1,
+                                                                flexDirection:
+                                                                    'row',
+                                                                paddingLeft:
+                                                                    fullWidth *
+                                                                    0.05,
+                                                            }}
+                                                        >
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    this.setState(
+                                                                        {
+                                                                            showMakeComment: true,
+                                                                        },
+                                                                    ),
+                                                                        setTimeout(
+                                                                            () =>
+                                                                                this.textInputRef.focus(),
+                                                                            100,
+                                                                        );
                                                                 }}
-                                                            />
+                                                                style={{
+                                                                    flexDirection:
+                                                                        'row',
+                                                                }}
+                                                            >
+                                                                <View
+                                                                    key={
+                                                                        'profileImage'
+                                                                    }
+                                                                    style={{
+                                                                        height:
+                                                                            '100%',
+                                                                        width:
+                                                                            40 *
+                                                                            factorHorizontal,
+                                                                    }}
+                                                                >
+                                                                    <View
+                                                                        style={{
+                                                                            flex: 1,
+                                                                        }}
+                                                                    />
+                                                                    <FastImage
+                                                                        style={{
+                                                                            height:
+                                                                                40 *
+                                                                                factorHorizontal,
+                                                                            width:
+                                                                                40 *
+                                                                                factorHorizontal,
+                                                                            borderRadius: 100,
+                                                                        }}
+                                                                        source={
+                                                                            require('Pianote2/src/assets/img/imgs/lisa-witt.jpg')
+                                                                            //    {uri: this.state.profileImage}
+                                                                        }
+                                                                        resizeMode={
+                                                                            FastImage
+                                                                                .resizeMode
+                                                                                .stretch
+                                                                        }
+                                                                    />
+                                                                    <View
+                                                                        style={{
+                                                                            flex: 1,
+                                                                        }}
+                                                                    />
+                                                                </View>
+                                                                <View
+                                                                    key={
+                                                                        'addComment'
+                                                                    }
+                                                                    style={{
+                                                                        height:
+                                                                            '100%',
+                                                                        width:
+                                                                            fullWidth *
+                                                                                0.95 -
+                                                                            40 *
+                                                                                factorHorizontal,
+                                                                        justifyContent:
+                                                                            'center',
+                                                                    }}
+                                                                >
+                                                                    <Text
+                                                                        style={{
+                                                                            textAlign:
+                                                                                'left',
+                                                                            fontFamily:
+                                                                                'OpenSans',
+                                                                            fontSize:
+                                                                                13 *
+                                                                                factorRatio,
+                                                                            color:
+                                                                                'white',
+                                                                            paddingLeft:
+                                                                                10 *
+                                                                                factorHorizontal,
+                                                                        }}
+                                                                    >
+                                                                        Add a
+                                                                        comment...
+                                                                    </Text>
+                                                                </View>
+                                                            </TouchableOpacity>
                                                         </View>
-                                                        {this.mapComments()}
+                                                        <View
+                                                            style={{
+                                                                flex: 1,
+                                                            }}
+                                                        />
                                                     </View>
-                                                    <View
-                                                        style={{
-                                                            height:
-                                                                fullHeight *
-                                                                0.035,
-                                                        }}
-                                                    />
+                                                    {this.state.comments
+                                                        .length > 0 &&
+                                                        this.mapComments()}
                                                 </View>
-                                            )}
+                                                <View
+                                                    style={{
+                                                        height:
+                                                            fullHeight * 0.035,
+                                                    }}
+                                                />
+                                            </View>
                                         </View>
                                     </>
                                 </KeyboardAwareScrollView>
                             )}
                         </View>
-
                         {this.state.showMakeComment && (
                             <Animated.View
                                 key={'makeComment'}
                                 style={{
-                                    position: 'absolute',
-                                    bottom: this.state.makeCommentVertDelta,
-                                    left: 0,
+                                    justifyContent: 'flex-end',
                                     minHeight: fullHeight * 0.125,
                                     maxHeight: fullHeight * 0.175,
                                     width: fullWidth,
                                     backgroundColor: colors.mainBackground,
                                     flexDirection: 'row',
+                                    zIndex: 10,
                                 }}
                             >
                                 <View
@@ -2261,7 +2316,7 @@ export default class VideoPlayer extends React.Component {
                                         left: 0 * factorHorizontal,
                                         width: fullWidth,
                                         backgroundColor: colors.mainBackground,
-                                        zIndex: 5,
+                                        zIndex: 2,
                                         bottom: 0,
                                     },
                                 ]}
@@ -2450,6 +2505,31 @@ export default class VideoPlayer extends React.Component {
                                 </View>
                             </View>
                         )}
+                        {this.state.showReplies && (
+                            <Modal
+                                key={'replies'}
+                                isVisible={this.state.showReplies}
+                                style={{margin: 0}}
+                                animation={'slideInUp'}
+                                animationInTiming={350}
+                                animationOutTiming={350}
+                                coverScreen={false}
+                                hasBackdrop={false}
+                            >
+                                <Replies
+                                    hideReplies={() => {
+                                        this.setState({showReplies: false});
+                                    }}
+                                    parentComment={this.state.selectedComment}
+                                    onLikeOrDisikeParentComment={
+                                        this.likeComment
+                                    }
+                                    onAddReply={this.fetchComments}
+                                    onDeleteReply={this.fetchComments}
+                                    onDeleteComment={this.deleteComment}
+                                />
+                            </Modal>
+                        )}
                     </View>
                 ) : (
                     <ActivityIndicator
@@ -2524,34 +2604,7 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>
-                <Modal
-                    key={'replies'}
-                    isVisible={this.state.showReplies}
-                    style={[
-                        styles.centerContent,
-                        {
-                            margin: 0,
-                            height: fullHeight,
-                            width: fullWidth,
-                        },
-                    ]}
-                    animation={'slideInUp'}
-                    animationInTiming={350}
-                    animationOutTiming={350}
-                    coverScreen={false}
-                    hasBackdrop={false}
-                >
-                    <Replies
-                        hideReplies={() => {
-                            this.setState({showReplies: false});
-                        }}
-                        parentComment={this.state.selectedComment}
-                        onLikeOrDisikeParentComment={this.likeComment}
-                        onAddReply={this.fetchComments}
-                        onDeleteReply={this.fetchComments}
-                        onDeleteComment={this.deleteComment}
-                    />
-                </Modal>
+
                 {!this.state.isLoadingAll && (
                     <>
                         <Modal
@@ -2590,10 +2643,6 @@ export default class VideoPlayer extends React.Component {
                                                 .mobile_app_url,
                                         );
                                     } else if (this.state.nextUnit) {
-                                        console.log(
-                                            this.state.nextUnit.post
-                                                .mobile_app_url,
-                                        );
                                         this.props.navigation.dispatch(
                                             StackActions.reset({
                                                 index: 0,
@@ -2701,9 +2750,10 @@ export default class VideoPlayer extends React.Component {
                         }}
                         currentSort={this.state.commentSort}
                         changeSort={commentSort => {
-                            this.setState({commentSort}, () =>
-                                this.fetchComments(),
-                            );
+                            this.setState({commentSort}, () => {
+                                this.limit = 10;
+                                this.fetchComments();
+                            });
                         }}
                     />
                 </Modal>

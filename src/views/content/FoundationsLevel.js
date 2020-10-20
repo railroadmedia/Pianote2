@@ -4,20 +4,20 @@
 import React from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
-import RestartCourse from '../../modals/RestartCourse';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import ResetIcon from '../../components/ResetIcon';
+import RestartCourse from '../../modals/RestartCourse';
 import NextVideo from 'Pianote2/src/components/NextVideo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
+import foundationsService from '../../services/foundations.service';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import foundationsService from '../../services/foundations.service';
-import ResetIcon from '../../components/ResetIcon';
 import {addToMyList, removeFromMyList} from 'Pianote2/src/services/UserActions.js';
 
 export default class FoundationsLevel extends React.Component {
@@ -47,17 +47,13 @@ export default class FoundationsLevel extends React.Component {
     };
 
     getContent = async () => {
-        console.log('url', this.props.navigation.state.params.url);
-        const response = new ContentModel(
-            await foundationsService.getUnit(
-                this.props.navigation.state.params.url,
-            ),
+        let response = await foundationsService.getUnit(
+            this.props.navigation.state.params.url,
         );
-        console.log('level', response);
-        const newContent = response.post.lessons.map(data => {
+        const newContent = response.lessons.map(data => {
             return new ContentModel(data);
         });
-
+        response = new ContentModel(response);
         try {
             items = [];
             for (i in newContent) {
@@ -83,7 +79,15 @@ export default class FoundationsLevel extends React.Component {
                 id: response.id,
                 isStarted: response.isStarted,
                 isCompleted: response.isCompleted,
-                description: newContent[i].getData('description').replace(/(<([^>]+)>)/g, "").replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&gt;/g, '>').replace(/&lt;/g, '<'),
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
                 isAddedToList: response.isAddedToList,
                 progress: response.post.progress_percent,
             });
@@ -320,7 +324,8 @@ export default class FoundationsLevel extends React.Component {
                                             )}
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: 'white',
                                                     fontSize: 12 * factorRatio,
                                                 }}
@@ -431,7 +436,8 @@ export default class FoundationsLevel extends React.Component {
                                             />
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     color: 'white',
                                                     marginTop: 3 * factorRatio,
                                                     fontSize: 13 * factorRatio,

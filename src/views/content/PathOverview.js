@@ -43,7 +43,7 @@ export default class PathOverview extends React.Component {
         contentService.getContent(this.state.data.id).then(r =>
             this.setState({
                 items:
-                    r?.data[0]?.lessons?.map(l => ({
+                    r?.lessons?.map(l => ({
                         ...l,
                         thumbnail: l.data?.find(d => d.key === 'thumbnail_url')
                             ?.value,
