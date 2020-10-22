@@ -10,7 +10,7 @@ export async function getNewContent(type) {
         }
         let auth = await getToken();
         let response = await fetch(
-            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
+            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&required_fields[]=show_in_new_feed&limit=40&page=1&included_types[]=${type}`,
             {
                 method: 'GET',
                 headers: {Authorization: `Bearer ${auth.token}`},
