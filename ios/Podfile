@@ -39,7 +39,7 @@ target 'Pianote2' do
   pod 'react-native-video', :path => '../node_modules/react-native-video'
   
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
-  pod 'Firebase/Messaging', '~> 4.0.0'
+  pod 'Firebase/Messaging', '~> 6.34.0'
 
 
   use_native_modules!
