@@ -476,11 +476,7 @@ export default class SinglePack extends React.Component {
                                         {this.state.description}
                                     </Text>
                                     <View key={'containStats'}>
-                                        <View
-                                            style={{
-                                                height: 10 * factorVertical,
-                                            }}
-                                        />
+                                        <View style={{height: 10 * factorVertical}}/>
                                         <View
                                             key={'stats'}
                                             style={[
@@ -491,39 +487,14 @@ export default class SinglePack extends React.Component {
                                                 },
                                             ]}
                                         >
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    alignSelf: 'stretch',
-                                                }}
-                                            >
-                                                LESSONS
-                                            </Text>
+                                            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                                                <Text>LESSONS</Text>
+                                            </View>
                                         </View>
-                                        <View
-                                            style={{width: 15 * factorRatio}}
-                                        />
-                                        <View
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    width: 70 * factorRatio,
-                                                },
-                                            ]}
-                                        >
-                                            <Text
-                                                style={{
-                                                    width: 15 * factorRatio,
-                                                }}
-                                            />
-                                            <View
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        width: 70 * factorRatio,
-                                                    },
-                                                ]}
-                                            >
+                                        <View style={{width: 15 * factorRatio}}/>
+                                        <View style={[styles.centerContent, {width: 70 * factorRatio}]}>
+                                            <Text style={{width: 15 * factorRatio}}/>
+                                            <View style={[styles.centerContent, {width: 70 * factorRatio}]}>
                                                 <Text
                                                     style={{
                                                         fontWeight: '700',
@@ -552,32 +523,11 @@ export default class SinglePack extends React.Component {
                                                     XP
                                                 </Text>
                                             </View>
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    alignSelf: 'stretch',
-                                                }}
-                                            />
+                                            <View style={{flex: 1, alignSelf: 'stretch'}}/>
                                         </View>
-                                        <View
-                                            style={{
-                                                height: 15 * factorVertical,
-                                            }}
-                                        />
-                                        <View
-                                            style={{
-                                                flex: 1,
-                                                alignSelf: 'stretch',
-                                            }}
-                                        />
-                                        <TouchableOpacity
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    width: 70 * factorRatio,
-                                                },
-                                            ]}
-                                        >
+                                        <View style={{height: 15 * factorVertical}}/>
+                                        <View style={{flex: 1, alignSelf: 'stretch'}}/>
+                                        <TouchableOpacity style={[styles.centerContent, {width: 70 * factorRatio}]}>
                                             <View style={{flex: 1}} />
                                             <MaterialIcon
                                                 name={'arrow-collapse-down'}
@@ -585,16 +535,8 @@ export default class SinglePack extends React.Component {
                                                 color={colors.pianoteRed}
                                             />
                                             <TouchableOpacity
-                                                onPress={() => {
-                                                    this.like();
-                                                }}
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        width: 70 * factorRatio,
-                                                    },
-                                                ]}
-                                            >
+                                                onPress={() => this.like()}
+                                                style={[styles.centerContent, {width: 70 * factorRatio}]}>
                                                 <View style={{flex: 1}} />
                                                 <AntIcon
                                                     name={
@@ -619,19 +561,8 @@ export default class SinglePack extends React.Component {
                                                     {this.state.likeCount}
                                                 </Text>
                                             </TouchableOpacity>
-                                            <View
-                                                style={{
-                                                    width: 15 * factorRatio,
-                                                }}
-                                            />
-                                            <TouchableOpacity
-                                                style={[
-                                                    styles.centerContent,
-                                                    {
-                                                        width: 70 * factorRatio,
-                                                    },
-                                                ]}
-                                            >
+                                            <View style={{width: 15 * factorRatio}}/>
+                                            <TouchableOpacity style={[styles.centerContent, {width: 70 * factorRatio}]}>
                                                 <View style={{flex: 1}} />
                                                 <MaterialIcon
                                                     name={'arrow-collapse-down'}
@@ -652,11 +583,7 @@ export default class SinglePack extends React.Component {
                                                     Download
                                                 </Text>
                                             </TouchableOpacity>
-                                            <View
-                                                style={{
-                                                    width: 15 * factorRatio,
-                                                }}
-                                            />
+                                            <View style={{width: 15 * factorRatio}}/>
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     this.setState({
@@ -696,12 +623,8 @@ export default class SinglePack extends React.Component {
                                                     alignSelf: 'stretch',
                                                 }}
                                             />
-                                        </View>
-                                        <View
-                                            style={{
-                                                height: 30 * factorVertical,
-                                            }}
-                                        />
+                                        </TouchableOpacity>
+                                        <View style={{height: 30 * factorVertical}}/>
                                     </View>
                                 </View>
                             )}
