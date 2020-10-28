@@ -9,8 +9,16 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import commonService from '../../services/common.service';
+import {NetworkContext} from '../../context/NetworkProvider';
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+});
 
 export default class LoadPage extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -20,12 +28,38 @@ export default class LoadPage extends React.Component {
     componentDidMount() {
         Download_V2.resumeAll().then(async () => {
             await SplashScreen.hide();
-
-            isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-            let resetKey = await AsyncStorage.getItem('resetKey');
-            let pass = await AsyncStorage.getItem('password');
+            if (!this.context.isConnected)
+                return this.props.navigation.navigate('DOWNLOADS');
+            let data = await AsyncStorage.multiGet([
+                'loggedInStatus',
+                'resetKey',
+                'lessonUrl',
+                'commentId',
+            ]);
+            console.log(data);
+            isLoggedIn = data[0][1];
+            let resetKey = data[1][1];
+            let lessonUrl = data[2][1];
+            let commentId = data[3][1];
             let userData = await getUserData();
-            if (resetKey) {
+            console.log(userData);
+            if (lessonUrl && commentId) {
+                this.props.navigation.dispatch(
+                    StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({
+                                routeName: 'VIDEOPLAYER',
+                                params: {
+                                    url: lessonUrl,
+                                    commentId,
+                                },
+                            }),
+                        ],
+                    }),
+                );
+            } else if (resetKey) {
+                // go to reset pass
                 setTimeout(
                     () =>
                         this.props.navigation.dispatch(
@@ -57,62 +91,23 @@ export default class LoadPage extends React.Component {
                     1000,
                 );
             } else {
-                isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-                let resetKey = await AsyncStorage.getItem('resetKey');
-                let userData = await getUserData();
-                if (resetKey) {
+                let currentDate = new Date().getTime() / 1000;
+                let userExpDate =
+                    new Date(userData.expirationDate).getTime() / 1000;
+
+                if (userData.isLifetime || currentDate < userExpDate) {
+                    // go to lessons
                     setTimeout(
-                        () => this.props.navigation.dispatch(resetPassAction),
-                        1000,
-                    );
-                } else if (
-                    isLoggedIn !== 'true' ||
-                    userData.isMember == false
-                ) {
-                    // go to login
-                    setTimeout(
-                        () =>
-                            this.props.navigation.navigate(
-                                'MEMBERSHIPEXPIRED',
-                                {
-                                    email: userData.email,
-                                    password: pass,
-                                },
-                            ),
+                        () => this.props.navigation.dispatch(resetAction),
                         1000,
                     );
                 } else {
-                    global.isPackOnly = userData.isPackOlyOwner;
-                    let route = isPackOnly ? 'PACKS' : 'LESSONS';
-                    let currentDate = new Date().getTime() / 1000;
-                    let userExpDate =
-                        new Date(userData.expirationDate).getTime() / 1000;
-
-                    if (userData.isLifetime || currentDate < userExpDate) {
-                        setTimeout(
-                            () =>
-                                this.props.navigation.dispatch(
-                                    StackActions.reset({
-                                        index: 0,
-                                        actions: [
-                                            NavigationActions.navigate({
-                                                routeName: route,
-                                            }),
-                                        ],
-                                    }),
-                                ),
-                            1000,
-                        );
-                    } else {
-                        // go to membership expired
-                        setTimeout(
-                            () =>
-                                this.props.navigation.navigate(
-                                    'MEMBERSHIPEXPIRED',
-                                ),
-                            1000,
-                        );
-                    }
+                    // go to membership expired
+                    setTimeout(
+                        () =>
+                            this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
+                        1000,
+                    );
                 }
             }
         });
@@ -121,7 +116,7 @@ export default class LoadPage extends React.Component {
     render() {
         return (
             <View
-                styles={[
+                style={[
                     styles.centerContent,
                     {
                         flex: 1,

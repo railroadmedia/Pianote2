@@ -52,6 +52,7 @@ export default class SeeAll extends React.Component {
     }
 
     async componentDidMount() {
+        console.log(this.state.title, this.state.parent);
         this.getAllLessons();
     }
 
@@ -242,71 +243,64 @@ export default class SeeAll extends React.Component {
 
     render() {
         return (
-            <View styles={{flex: 1, alignSelf: 'stretch'}}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                    }}
-                >
-                    <View key={'contentContainer'} style={{flex: 1}}>
+            <View style={{flex: 1, alignSelf: 'stretch'}}>
+                <View key={'contentContainer'} style={{flex: 1}}>
+                    <View
+                        style={[
+                            styles.centerContent,
+                            {
+                                height:
+                                    fullHeight * 0.1 +
+                                    (isNotch ? 10 * factorVertical : 0),
+                                backgroundColor: colors.thirdBackground,
+                            },
+                        ]}
+                    >
+                        <View style={{flex: 1}} />
                         <View
                             style={[
                                 styles.centerContent,
                                 {
-                                    height:
-                                        fullHeight * 0.1 +
-                                        (isNotch ? 10 * factorVertical : 0),
+                                    flexDirection: 'row',
                                     backgroundColor: colors.thirdBackground,
                                 },
                             ]}
                         >
-                            <View style={{flex: 1}} />
-                            <View
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        flexDirection: 'row',
-                                        backgroundColor: colors.thirdBackground,
-                                    },
-                                ]}
-                            >
-                                <View style={{flex: 1, flexDirection: 'row'}}>
-                                    <View style={{flex: 0.1}} />
-                                    <View>
-                                        <View style={{flex: 1}} />
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                this.props.navigation.goBack()
-                                            }
-                                            style={{
-                                                paddingLeft: 10 * factorRatio,
-                                                paddingRight: 10 * factorRatio,
-                                            }}
-                                        >
-                                            <EntypoIcon
-                                                name={'chevron-thin-left'}
-                                                size={25 * factorRatio}
-                                                color={'white'}
-                                            />
-                                        </TouchableOpacity>
-                                        <View style={{flex: 1}} />
-                                    </View>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <View style={{flex: 0.1}} />
+                                <View>
+                                    <View style={{flex: 1}} />
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            this.props.navigation.goBack()
+                                        }
+                                        style={{
+                                            paddingLeft: 10 * factorRatio,
+                                            paddingRight: 10 * factorRatio,
+                                        }}
+                                    >
+                                        <EntypoIcon
+                                            name={'chevron-thin-left'}
+                                            size={25 * factorRatio}
+                                            color={'white'}
+                                        />
+                                    </TouchableOpacity>
+                                    <View style={{flex: 1}} />
                                 </View>
-                                <Text
-                                    style={{
-                                        fontSize: 22 * factorRatio,
-                                        color: 'white',
-                                        fontFamily: 'OpenSans-Bold',
-                                    }}
-                                >
-                                    {this.state.parent}
-                                </Text>
-                                <View style={{flex: 1}} />
                             </View>
-                            <View style={{height: 20 * factorVertical}} />
+                            <Text
+                                style={{
+                                    fontSize: 22 * factorRatio,
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                }}
+                            >
+                                {this.state.parent}
+                            </Text>
+                            <View style={{flex: 1}} />
                         </View>
-                        <ScrollView
+                        <View style={{height: 20 * factorVertical}} />
+                        {/* <ScrollView
                             showsVerticalScrollIndicator={false}
                             contentInsetAdjustmentBehavior={'never'}
                             style={{
@@ -372,10 +366,74 @@ export default class SeeAll extends React.Component {
                                     )
                                 }
                             />
-                        </ScrollView>
+                        </ScrollView> */}
                     </View>
-                    <NavigationBar currentPage={'SEEALL'} />
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        contentInsetAdjustmentBehavior={'never'}
+                        style={{
+                            flex: 0.9,
+                            backgroundColor: colors.mainBackground,
+                        }}
+                        onScroll={({nativeEvent}) =>
+                            this.handleScroll(nativeEvent)
+                        }
+                    >
+                        <View style={{height: 15 * factorVertical}} />
+                        <VerticalVideoList
+                            items={this.state.allLessons}
+                            isLoading={this.state.isLoadingAll}
+                            isPaging={this.state.isPaging}
+                            title={this.state.title} // title for see all page
+                            type={typeDict[this.state.parent]} // the type of content on page
+                            showFilter={true}
+                            hideFilterButton={
+                                this.state.parent == 'Lessons' ? false : true
+                            } // only show filter button on lessons
+                            showType={false}
+                            showArtist={true}
+                            showSort={false}
+                            showLength={false}
+                            showLargeTitle={true}
+                            filters={this.state.filters} // show filter list
+                            imageRadius={5 * factorRatio} // radius of image shown
+                            containerBorderWidth={0} // border of box
+                            containerWidth={fullWidth} // width of list
+                            currentSort={this.state.currentSort}
+                            changeSort={sort => {
+                                this.setState({
+                                    currentSort: sort,
+                                    allLessons: [],
+                                }),
+                                    this.getAllLessons();
+                            }} // change sort and reload videos
+                            filterResults={() => this.filterResults()} // apply from filters page
+                            containerHeight={
+                                onTablet
+                                    ? fullHeight * 0.15
+                                    : Platform.OS == 'android'
+                                    ? fullHeight * 0.115
+                                    : fullHeight * 0.0925
+                            } // height per row
+                            imageHeight={
+                                onTablet
+                                    ? fullHeight * 0.12
+                                    : Platform.OS == 'android'
+                                    ? fullHeight * 0.09
+                                    : fullHeight * 0.0825
+                            } // image height
+                            imageWidth={fullWidth * 0.26} // image width
+                            outVideos={this.state.outVideos} // if paging and out of videos
+                            //getVideos={() => this.getContent()} // for paging
+                            navigator={row =>
+                                this.props.navigation.navigate('VIDEOPLAYER', {
+                                    id: row.id,
+                                })
+                            }
+                        />
+                    </ScrollView>
                 </View>
+                <NavigationBar currentPage={'SEEALL'} />
             </View>
         );
     }

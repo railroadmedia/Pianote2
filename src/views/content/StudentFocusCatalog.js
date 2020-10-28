@@ -89,266 +89,255 @@ export default class StudentFocusCatalog extends React.Component {
 
     render() {
         return (
-            <View styles={styles.container}>
+            <View style={styles.container}>
                 <View
-                    key={'contentContainer'}
                     style={{
-                        height: fullHeight * 0.90625 - navHeight,
+                        height: fullHeight * 0.1,
+                        width: fullWidth,
+                        position: 'absolute',
+                        zIndex: 2,
+                        elevation: 2,
                         alignSelf: 'stretch',
                     }}
                 >
+                    <NavMenuHeaders
+                        currentPage={'LESSONS'}
+                        parentPage={'STUDENT FOCUS'}
+                    />
+                </View>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentInsetAdjustmentBehavior={'never'}
+                    style={{
+                        flex: 1,
+                        backgroundColor: colors.mainBackground,
+                    }}
+                >
                     <View
+                        key={'header'}
                         style={{
                             height: fullHeight * 0.1,
-                            width: fullWidth,
-                            position: 'absolute',
-                            zIndex: 2,
-                            elevation: 2,
-                            alignSelf: 'stretch',
+                            backgroundColor: colors.thirdBackground,
                         }}
-                    >
-                        <NavMenuHeaders
-                            currentPage={'LESSONS'}
-                            parentPage={'STUDENT FOCUS'}
-                        />
-                    </View>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentInsetAdjustmentBehavior={'never'}
+                    />
+                    <View
+                        key={'backgroundColoring'}
                         style={{
-                            flex: 1,
-                            backgroundColor: colors.mainBackground,
+                            backgroundColor: colors.thirdBackground,
+                            position: 'absolute',
+                            height: fullHeight,
+                            top: -fullHeight,
+                            left: 0,
+                            right: 0,
+                            zIndex: 10,
+                            elevation: 10,
+                        }}
+                    />
+                    <View style={{height: 20 * factorVertical}} />
+                    <Text
+                        style={{
+                            paddingLeft: 12 * factorHorizontal,
+                            fontSize: 30 * factorRatio,
+                            color: 'white',
+                            fontFamily: 'OpenSans-ExtraBold',
+                        }}
+                    >
+                        Student Focus
+                    </Text>
+                    <View style={{height: 15 * factorVertical}} />
+                    {this.state.started && (
+                        <View
+                            key={'continueCourses'}
+                            style={{
+                                minHeight: fullHeight * 0.305,
+                                paddingLeft: fullWidth * 0.035,
+                                backgroundColor: colors.mainBackground,
+                            }}
+                        >
+                            <HorizontalVideoList
+                                Title={'CONTINUE'}
+                                seeAll={() =>
+                                    this.props.navigation.navigate('SEEALL', {
+                                        title: 'Continue',
+                                        parent: 'Student Focus',
+                                    })
+                                }
+                                hideSeeAll={true}
+                                showArtist={true}
+                                isLoading={this.state.isLoadingProgress}
+                                showType={true}
+                                items={this.state.progressStudentFocus}
+                                itemWidth={
+                                    isNotch
+                                        ? fullWidth * 0.6
+                                        : onTablet
+                                        ? fullWidth * 0.425
+                                        : fullWidth * 0.55
+                                }
+                                itemHeight={
+                                    isNotch
+                                        ? fullHeight * 0.155
+                                        : fullHeight * 0.175
+                                }
+                            />
+                        </View>
+                    )}
+
+                    <View
+                        key={'pack'}
+                        style={{
+                            height: fullWidth * 0.45 * 2 + fullWidth * 0.033,
+                            width: fullWidth,
+                            justifyContent: 'space-around',
+                            alignContent: 'space-around',
                         }}
                     >
                         <View
-                            key={'header'}
+                            key={'Q&A'}
                             style={{
-                                height: fullHeight * 0.1,
-                                backgroundColor: colors.thirdBackground,
-                            }}
-                        />
-                        <View
-                            key={'backgroundColoring'}
-                            style={{
-                                backgroundColor: colors.thirdBackground,
+                                borderRadius: 12.5 * factorRatio,
                                 position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 10,
-                                elevation: 10,
-                            }}
-                        />
-                        <View style={{height: 20 * factorVertical}} />
-                        <Text
-                            style={{
-                                paddingLeft: 12 * factorHorizontal,
-                                fontSize: 30 * factorRatio,
-                                color: 'white',
-                                fontFamily: 'OpenSans-ExtraBold',
+                                top: 0,
+                                right: fullWidth * 0.035,
+                                height: fullWidth * 0.45,
+                                width: fullWidth * 0.45,
                             }}
                         >
-                            Student Focus
-                        </Text>
-                        <View style={{height: 15 * factorVertical}} />
-                        {this.state.started && (
-                            <View
-                                key={'continueCourses'}
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate(
+                                        'STUDENTFOCUSSHOW',
+                                        {
+                                            pack: 'Q&A',
+                                        },
+                                    );
+                                }}
                                 style={{
-                                    minHeight: fullHeight * 0.305,
-                                    paddingLeft: fullWidth * 0.035,
-                                    backgroundColor: colors.mainBackground,
+                                    height: fullWidth * 0.45,
+                                    width: fullWidth * 0.45,
+                                    zIndex: 10,
+                                    elevation: 10,
                                 }}
                             >
-                                <HorizontalVideoList
-                                    Title={'CONTINUE'}
-                                    seeAll={() =>
-                                        this.props.navigation.navigate(
-                                            'SEEALL',
-                                            {
-                                                title: 'Continue',
-                                                parent: 'Student Focus',
-                                            },
-                                        )
-                                    }
-                                    hideSeeAll={true}
-                                    showArtist={true}
-                                    isLoading={this.state.isLoadingProgress}
-                                    showType={true}
-                                    items={this.state.progressStudentFocus}
-                                    itemWidth={
-                                        isNotch
-                                            ? fullWidth * 0.6
-                                            : onTablet
-                                            ? fullWidth * 0.425
-                                            : fullWidth * 0.55
-                                    }
-                                    itemHeight={
-                                        isNotch
-                                            ? fullHeight * 0.155
-                                            : fullHeight * 0.175
-                                    }
+                                <FastImage
+                                    style={{
+                                        flex: 1,
+                                        borderRadius: 10 * factorRatio,
+                                    }}
+                                    source={require('Pianote2/src/assets/img/imgs/questionAnswer.jpg')}
+                                    resizeMode={FastImage.resizeMode.cover}
                                 />
-                            </View>
-                        )}
-
+                            </TouchableOpacity>
+                        </View>
                         <View
-                            key={'pack'}
+                            key={'bootcamps'}
                             style={{
-                                height:
-                                    fullWidth * 0.45 * 2 + fullWidth * 0.033,
-                                width: fullWidth,
-                                justifyContent: 'space-around',
-                                alignContent: 'space-around',
+                                borderRadius: 12.5 * factorRatio,
+                                position: 'absolute',
+                                top: 0,
+                                left: fullWidth * 0.035,
+                                height: fullWidth * 0.45,
+                                width: fullWidth * 0.45,
                             }}
                         >
-                            <View
-                                key={'Q&A'}
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate(
+                                        'STUDENTFOCUSSHOW',
+                                        {
+                                            pack: 'Bootcamps',
+                                        },
+                                    );
+                                }}
                                 style={{
-                                    borderRadius: 12.5 * factorRatio,
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: fullWidth * 0.035,
                                     height: fullWidth * 0.45,
                                     width: fullWidth * 0.45,
                                 }}
                             >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW',
-                                            {
-                                                pack: 'Q&A',
-                                            },
-                                        );
-                                    }}
+                                <FastImage
                                     style={{
-                                        height: fullWidth * 0.45,
-                                        width: fullWidth * 0.45,
-                                        zIndex: 10,
-                                        elevation: 10,
+                                        flex: 1,
+                                        borderRadius: 10 * factorRatio,
                                     }}
-                                >
-                                    <FastImage
-                                        style={{
-                                            flex: 1,
-                                            borderRadius: 10 * factorRatio,
-                                        }}
-                                        source={require('Pianote2/src/assets/img/imgs/questionAnswer.jpg')}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View
-                                key={'bootcamps'}
-                                style={{
-                                    borderRadius: 12.5 * factorRatio,
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: fullWidth * 0.035,
-                                    height: fullWidth * 0.45,
-                                    width: fullWidth * 0.45,
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW',
-                                            {
-                                                pack: 'Bootcamps',
-                                            },
-                                        );
-                                    }}
-                                    style={{
-                                        height: fullWidth * 0.45,
-                                        width: fullWidth * 0.45,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{
-                                            flex: 1,
-                                            borderRadius: 10 * factorRatio,
-                                        }}
-                                        source={require('Pianote2/src/assets/img/imgs/bootcamps.jpg')}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View
-                                key={'studentReviews'}
-                                style={{
-                                    borderRadius: 12.5 * factorRatio,
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    right: fullWidth * 0.035,
-                                    height: fullWidth * 0.45,
-                                    width: fullWidth * 0.45,
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW',
-                                            {
-                                                pack: 'Student Review',
-                                            },
-                                        );
-                                    }}
-                                    style={{
-                                        height: fullWidth * 0.45,
-                                        width: fullWidth * 0.45,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{
-                                            flex: 1,
-                                            borderRadius: 10 * factorRatio,
-                                        }}
-                                        source={require('Pianote2/src/assets/img/imgs/studentReview.jpg')}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View
-                                key={'quicktips'}
-                                style={{
-                                    borderRadius: 12.5 * factorRatio,
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    left: fullWidth * 0.035,
-                                    height: fullWidth * 0.45,
-                                    width: fullWidth * 0.45,
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'STUDENTFOCUSSHOW',
-                                            {
-                                                pack: 'Quick Tips',
-                                            },
-                                        );
-                                    }}
-                                    style={{
-                                        height: fullWidth * 0.45,
-                                        width: fullWidth * 0.45,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{
-                                            flex: 1,
-                                            borderRadius: 10 * factorRatio,
-                                        }}
-                                        source={require('Pianote2/src/assets/img/imgs/quickTips.jpg')}
-                                        resizeMode={FastImage.resizeMode.cover}
-                                    />
-                                </TouchableOpacity>
-                            </View>
+                                    source={require('Pianote2/src/assets/img/imgs/bootcamps.jpg')}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+                            </TouchableOpacity>
                         </View>
-                        <View style={{height: 15 * factorVertical}} />
-                    </ScrollView>
-                </View>
+                        <View
+                            key={'studentReviews'}
+                            style={{
+                                borderRadius: 12.5 * factorRatio,
+                                position: 'absolute',
+                                bottom: 0,
+                                right: fullWidth * 0.035,
+                                height: fullWidth * 0.45,
+                                width: fullWidth * 0.45,
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate(
+                                        'STUDENTFOCUSSHOW',
+                                        {
+                                            pack: 'Student Review',
+                                        },
+                                    );
+                                }}
+                                style={{
+                                    height: fullWidth * 0.45,
+                                    width: fullWidth * 0.45,
+                                }}
+                            >
+                                <FastImage
+                                    style={{
+                                        flex: 1,
+                                        borderRadius: 10 * factorRatio,
+                                    }}
+                                    source={require('Pianote2/src/assets/img/imgs/studentReview.jpg')}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View
+                            key={'quicktips'}
+                            style={{
+                                borderRadius: 12.5 * factorRatio,
+                                position: 'absolute',
+                                bottom: 0,
+                                left: fullWidth * 0.035,
+                                height: fullWidth * 0.45,
+                                width: fullWidth * 0.45,
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate(
+                                        'STUDENTFOCUSSHOW',
+                                        {
+                                            pack: 'Quick Tips',
+                                        },
+                                    );
+                                }}
+                                style={{
+                                    height: fullWidth * 0.45,
+                                    width: fullWidth * 0.45,
+                                }}
+                            >
+                                <FastImage
+                                    style={{
+                                        flex: 1,
+                                        borderRadius: 10 * factorRatio,
+                                    }}
+                                    source={require('Pianote2/src/assets/img/imgs/quickTips.jpg')}
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={{height: 15 * factorVertical}} />
+                </ScrollView>
+
                 <NavigationBar currentPage={''} />
                 <Modal
                     key={'navMenu'}
