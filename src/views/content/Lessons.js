@@ -106,7 +106,6 @@ export default class Lessons extends React.Component {
         const enabled = await firebase.messaging().hasPermission();
         if (enabled) {
             const fcmToken = await firebase.messaging().getToken();
-            console.log(fcmToken);
             if (fcmToken) {
                 updateUserDetails(null, null, null, fcmToken);
             }
@@ -174,8 +173,8 @@ export default class Lessons extends React.Component {
         });
 
         try {
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
@@ -229,39 +228,37 @@ export default class Lessons extends React.Component {
 
             let items = [];
             for (let i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist:
-                            newContent[i].post.type == 'song'
-                                ? newContent[i].post.artist
-                                : newContent[i].getField('instructor') !== 'TBD'
-                                ? newContent[i].getField('instructor').fields[0]
-                                      .value
-                                : newContent[i].getField('instructor').name,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/g, '')
-                            .replace(/&nbsp;/g, '')
-                            .replace(/&amp;/g, '&')
-                            .replace(/&#039;/g, "'")
-                            .replace(/&quot;/g, '"')
-                            .replace(/&gt;/g, '>')
-                            .replace(/&lt;/g, '<'),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist:
+                        newContent[i].post.type == 'song'
+                            ? newContent[i].post.artist
+                            : newContent[i].getField('instructor') !== 'TBD'
+                            ? newContent[i].getField('instructor').fields[0]
+                                  .value
+                            : newContent[i].getField('instructor').name,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].post.like_count,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                });
             }
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],

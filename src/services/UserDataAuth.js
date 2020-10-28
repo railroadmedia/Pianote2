@@ -1,44 +1,28 @@
-import {configure} from '@musora/services';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Platform} from 'react-native';
 import commonService from './common.service';
 
-export async function getToken(userEmail, userPass) {
+export async function getToken(userEmail, userPass, purchases) {
     try {
-        const data = await AsyncStorage.multiGet([
-            'token',
-            'tokenTime',
-            'email',
-            'password',
-        ]);
-        let timeNow = new Date().getTime() / 1000;
-        let token = data[0][1];
-        let tokenTime = data[1][1];
-        let email = data[2][1];
-        let password = data[3][1];
+        const data = await AsyncStorage.multiGet(['email', 'password']);
+        let email = data[0][1];
+        let password = data[1][1];
 
-        if (
-            typeof token == 'undefined' ||
-            token == null ||
-            Number(timeNow) - Number(tokenTime) > 3600
-        ) {
-            // if token dies not exist or is expired
-            let response = await fetch(
-                `${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`,
-                {method: 'PUT'},
-            );
-            response = await response.json();
-
-            await AsyncStorage.multiSet([
-                ['token', response.token],
-                ['tokenTime', JSON.stringify(timeNow)],
-            ]);
-            await configure({authToken: response.token});
-            return response;
-        } else {
-            let response = {token: token};
-            return response;
-        }
+        let response = await fetch(
+            `${commonService.rootUrl}/usora/api/login?email=${
+                userEmail || email
+            }&password=${userPass || password}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: purchases ? JSON.stringify(purchases) : {},
+            },
+        );
+        let jsonRes = await response.json();
+        console.log(jsonRes);
+        return jsonRes;
     } catch (error) {
         console.log('getToken Error', error);
         return new Error(error);
@@ -66,14 +50,9 @@ export async function changePassword(email, pass, token) {
 export async function getUserData() {
     // return profile details
     try {
-        const auth = await getToken();
-
-        let data = await fetch(`${commonService.rootUrl}/api/profile`, {
-            method: 'GET',
-            headers: {Authorization: `Bearer ${auth.token}`},
-        });
-
-        let userData = await data.json();
+        let userData = await commonService.tryCall(
+            `${commonService.rootUrl}/api/profile`,
+        );
         // update data
         await AsyncStorage.multiSet([
             ['totalXP', userData.totalXp.toString()],
@@ -117,18 +96,10 @@ export async function getUserData() {
 export async function logOut() {
     // return profile details
     try {
-        const auth = await getToken();
-        let response = await fetch(
+        return commonService.tryCall(
             `${commonService.rootUrl}/usora/api/logout`,
-            {
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${auth.token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
+            'PUT',
         );
-        return await response.json();
     } catch (error) {
         console.log(error);
         return new Error(error);

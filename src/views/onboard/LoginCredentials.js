@@ -159,7 +159,6 @@ export default class LoginCredentials extends React.Component {
                 ['email', this.state.email],
                 ['password', this.state.password],
                 ['token', JSON.stringify(response.token)],
-                ['tokenTime', JSON.stringify(response.token)],
                 ['userId', JSON.stringify(response.userId)],
             ]);
 

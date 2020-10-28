@@ -123,7 +123,6 @@ export default class ResetPassword extends React.Component {
                             ['email', email],
                             ['password', this.state.password],
                             ['token', JSON.stringify(res.token)],
-                            ['tokenTime', JSON.stringify(res.token)],
                         ]);
                     }
                     this.alert.toggle(res.title, res.message);

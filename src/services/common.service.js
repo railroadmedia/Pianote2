@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {configure} from '@musora/services';
 import {getToken} from './UserDataAuth';
 
 export default {
@@ -7,7 +6,6 @@ export default {
     tryCall: async function (url, method, body) {
         try {
             if (body) body = body ? JSON.stringify(body) : null;
-            let timeNow = new Date().getTime() / 1000;
             let token = await AsyncStorage.getItem('token');
             token = `Bearer ${JSON.parse(token)}`;
             let headers = body
@@ -32,14 +30,11 @@ export default {
                 json.error === 'TOKEN_EXPIRED' ||
                 json.error === 'Token not provided'
             ) {
+                console.log(json.error);
                 let email = await AsyncStorage.getItem('email');
                 let pass = await AsyncStorage.getItem('password');
                 const res = await getToken(email, pass);
-                await configure({authToken: res.token});
-                await AsyncStorage.multiSet([
-                    ['token', res.token],
-                    ['tokenTime', JSON.stringify(timeNow)],
-                ]);
+                await AsyncStorage.setItem('token', res.token);
                 response = await fetch(url, {
                     body,
                     headers,
