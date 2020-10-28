@@ -9,6 +9,7 @@ import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
+import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
 import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';

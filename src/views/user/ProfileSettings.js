@@ -17,11 +17,11 @@ import DisplayName from '../../modals/DisplayName.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import commonService from '../../services/common.service.js';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -52,7 +52,7 @@ export default class ProfileSettings extends React.Component {
         await this.setState({
             imageURI: imageURI == null ? '' : imageURI,
             currentlyView:
-                this.props.navigation.state.params.data == 'Profile Photo'
+                this.props.navigation.state.params?.data == 'Profile Photo'
                     ? 'Profile Photo'
                     : 'Profile Settings',
         });
@@ -100,22 +100,13 @@ export default class ProfileSettings extends React.Component {
         response = await response.json();
 
         if (response.unique) {
-            const auth = await getToken();
-            let nameResponse = await fetch(
+            let nameResponse = await commonService.tryCall(
                 `${commonService.rootUrl}/api/profile/update`,
+                'POST',
                 {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        display_name: this.state.displayName,
-                    }),
+                    display_name: this.state.displayName,
                 },
             );
-
-            nameResponse = await nameResponse.json();
 
             console.log(nameResponse);
 
@@ -129,7 +120,6 @@ export default class ProfileSettings extends React.Component {
 
     changeImage = async () => {
         const data = new FormData();
-        const auth = await getToken();
 
         data.append('target', this.state.imageName);
         data.append('file', {
@@ -140,37 +130,26 @@ export default class ProfileSettings extends React.Component {
                     ? this.state.imageURI.replace('file://', '')
                     : this.state.imageURI,
         });
-
+        console.log(data);
         try {
+            let url;
             if (this.state.imageURI !== '') {
-                let avatarResponse = await fetch(
+                url = await commonService.tryCall(
                     `${commonService.rootUrl}/api/avatar/upload`,
-                    {
-                        method: 'POST',
-                        headers: {Authorization: `Bearer ${auth.token}`},
-                        body: data,
-                    },
+                    'POST',
+                    data,
                 );
 
-                let url = await avatarResponse.json();
-                console.log(url.data[0].url);
+                console.log(url);
             }
 
-            let profileResponse = await fetch(
+            await commonService.tryCall(
                 `${commonService.rootUrl}/api/profile/update`,
+                'POST',
                 {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        file: url == '' ? url : url.data[0].url,
-                    }),
+                    file: url == '' ? url : url.data[0].url,
                 },
             );
-
-            console.log(await profileResponse.json());
 
             await AsyncStorage.setItem(
                 'profileURI',

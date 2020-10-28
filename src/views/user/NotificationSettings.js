@@ -5,7 +5,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
-import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import CustomSwitch from 'Pianote2/src/components/CustomSwitch.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import commonService from '../../services/common.service';
@@ -47,41 +47,31 @@ export default class NotificationSettings extends React.Component {
     };
 
     changeNotificationStatus = async () => {
-        const auth = await getToken();
-
         try {
-            let response = await fetch(
-                `${commonService.rootUrl}/api/profile/update`,
-                {
-                    method: 'PATCH',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
+            const body = {
+                data: {
+                    type: 'user',
+                    attributes: {
+                        notifications_summary_frequency_minutes: this.state
+                            .notifications_summary_frequency_minutes,
+                        notify_on_forum_post_like: this.state
+                            .notify_on_forum_post_like,
+                        notify_on_forum_post_reply: this.state
+                            .notify_on_forum_post_reply,
+                        notify_on_lesson_comment_like: this.state
+                            .notify_on_lesson_comment_like,
+                        notify_on_lesson_comment_reply: this.state
+                            .notify_on_lesson_comment_reply,
+                        notify_weekly_update: this.state.notify_weekly_update,
                     },
-                    body: JSON.stringify({
-                        data: {
-                            type: 'user',
-                            attributes: {
-                                notifications_summary_frequency_minutes: this
-                                    .state
-                                    .notifications_summary_frequency_minutes,
-                                notify_on_forum_post_like: this.state
-                                    .notify_on_forum_post_like,
-                                notify_on_forum_post_reply: this.state
-                                    .notify_on_forum_post_reply,
-                                notify_on_lesson_comment_like: this.state
-                                    .notify_on_lesson_comment_like,
-                                notify_on_lesson_comment_reply: this.state
-                                    .notify_on_lesson_comment_reply,
-                                notify_weekly_update: this.state
-                                    .notify_weekly_update,
-                            },
-                        },
-                    }),
                 },
+            };
+            let response = await commonService.tryCall(
+                `${commonService.rootUrl}/api/profile/update`,
+                'PATCH',
+                body,
             );
-
-            console.log(await response.json());
+            console.log(response);
         } catch (error) {
             console.log('ERROR: ', error);
         }
