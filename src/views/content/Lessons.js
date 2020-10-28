@@ -44,7 +44,7 @@ export default class Lessons extends React.Component {
             newLessons: [],
 
             allLessons: [],
-            currentSort: '-published_on',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: true, // all lessons
@@ -71,7 +71,7 @@ export default class Lessons extends React.Component {
         };
     }
 
-    componentWillMount = async () => {
+    UNSAFE_componentWillMount = async () => {
         let data = await AsyncStorage.multiGet([
             'totalXP',
             'rank',

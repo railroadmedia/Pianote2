@@ -29,7 +29,7 @@ class ContentModal extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         console.log('DATA: ', this.state.data);
     }
 

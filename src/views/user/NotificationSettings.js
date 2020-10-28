@@ -26,7 +26,7 @@ export default class NotificationSettings extends React.Component {
         };
     }
 
-    componentWillMount = async () => {
+    UNSAFE_componentWillMount = async () => {
         let userData = await getUserData();
 
         await this.setState({

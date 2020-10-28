@@ -380,7 +380,7 @@ export default class ForgotPassword extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 12,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     color: colors.pianoteRed,
                                 }}
                             >

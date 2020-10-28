@@ -299,7 +299,7 @@ export default class Login extends React.Component {
                                         fullHeight > 811) ||
                                     onTablet == true
                                         ? fullHeight * 0.03
-                                        : fullHeight * 0.01,
+                                        : fullHeight * 0.015,
                                 zIndex: 3,
                                 elevation: Platform.OS === 'android' ? 3 : 0,
                             }}
@@ -545,7 +545,7 @@ export default class Login extends React.Component {
                                         fullHeight > 811) ||
                                     onTablet == true
                                         ? fullHeight * 0.03
-                                        : fullHeight * 0.01,
+                                        : fullHeight * 0.015,
                                 zIndex: 2,
                                 elevation: Platform.OS === 'android' ? 3 : 0,
                             }}
@@ -811,7 +811,7 @@ export default class Login extends React.Component {
                                         fullHeight > 811) ||
                                     onTablet == true
                                         ? fullHeight * 0.03
-                                        : fullHeight * 0.01,
+                                        : fullHeight * 0.015,
                                 zIndex: 2,
                                 elevation: Platform.OS === 'android' ? 3 : 0,
                             }}
@@ -1076,7 +1076,7 @@ export default class Login extends React.Component {
                                         fullHeight > 811) ||
                                     onTablet == true
                                         ? fullHeight * 0.03
-                                        : fullHeight * 0.01,
+                                        : fullHeight * 0.015,
                                 zIndex: 2,
                                 elevation: Platform.OS === 'android' ? 3 : 0,
                             }}
@@ -1341,7 +1341,7 @@ export default class Login extends React.Component {
                                         fullHeight > 811) ||
                                     onTablet == true
                                         ? fullHeight * 0.03
-                                        : fullHeight * 0.01,
+                                        : fullHeight * 0.015,
                                 zIndex: 4,
                                 elevation: Platform.OS === 'android' ? 4 : 0,
                             }}

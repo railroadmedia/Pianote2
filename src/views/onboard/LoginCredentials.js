@@ -26,17 +26,11 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import {getToken, restorePurchase} from '../../services/UserDataAuth.js';
-import {configure} from '@musora/services';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
     Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-
-const resetAction = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
-});
 
 export default class LoginCredentials extends React.Component {
     static navigationOptions = {header: null};
@@ -48,7 +42,7 @@ export default class LoginCredentials extends React.Component {
                 : '',
             password: '',
             pianoteYdelta: new Animated.Value(0),
-            forgotYdelta: new Animated.Value(fullHeight * 0.075),
+            forgotYdelta: new Animated.Value(fullHeight * 0.05),
             secureTextEntry: true,
             showPasswordEmailMatch: false,
             loginErrorMessage: '',
@@ -76,9 +70,7 @@ export default class LoginCredentials extends React.Component {
             Animated.parallel([
                 Animated.timing(this.state.forgotYdelta, {
                     toValue:
-                        (Platform.OS === 'ios' && fullHeight > 811) || onTablet
-                            ? fullHeight * 0.325
-                            : fullHeight * 0.35,
+                        (Platform.OS === 'ios' && fullHeight > 811) || onTablet ? fullHeight * 0.325 : fullHeight * 0.3,
                     duration: 250,
                 }),
                 Animated.timing(this.state.pianoteYdelta, {
@@ -116,7 +108,8 @@ export default class LoginCredentials extends React.Component {
     getPurchases = async () => {
         try {
             await RNIap.initConnection();
-        } catch (e) {
+        } catch (error) {
+            console.log('ERROR: ', error)
             return;
         }
         try {
@@ -143,40 +136,43 @@ export default class LoginCredentials extends React.Component {
                     };
                 }
             }
-        } catch (err) {}
+        } catch (error) {
+            console.log('error getting purchases: ', error)
+        }
     };
 
     login = async () => {
-        const response = await getToken(
-            this.state.email,
-            this.state.password,
-            await this.getPurchases(),
-        );
-        console.log(response);
+        const response = await getToken(this.state.email, this.state.password);
+        
+        await this.getPurchases()
+        
         if (response.success) {
-            // store auth data
+            // store user data
             await AsyncStorage.multiSet([
-                ['loggedInStatus', 'true'],
+                ['loggedInStatus', 'true'], 
                 ['email', this.state.email],
-                ['password', this.state.password],
-                ['token', JSON.stringify(response.token)],
-                ['tokenTime', JSON.stringify(response.token)],
-                ['userId', JSON.stringify(response.userId)],
+                ['password', this.state.password], 
             ]);
 
-            // configure token
-            await configure({authToken: response.token});
-
             // checkmembership status
-            let userData = await getUserData();
-            console.log(userData);
+            let userData = await getUserData();            
             let currentDate = new Date().getTime() / 1000;
-            let userExpDate =
-                new Date(userData.expirationDate).getTime() / 1000;
-            console.log(currentDate, userExpDate);
-            if (userData.isLifetime || currentDate < userExpDate) {
-                await this.props.navigation.dispatch(resetAction);
+            let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
+            if(userData.isPackOlyOwner) {
+                // if pack only, make global & go to packs
+                global.isPackOnly = userData.isPackOlyOwner;
+                await this.props.navigation.dispatch(StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({routeName: route})],
+                }));
+            } else if (userData.isLifetime || currentDate < userExpDate) {
+                // is logged in with valid membership
+                await this.props.navigation.dispatch(StackActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+                }));
             } else {
+                // membership expired
                 this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
                     email: this.state.email,
                     password: this.state.password,
@@ -288,11 +284,12 @@ export default class LoginCredentials extends React.Component {
                             Forgot your password?
                         </Text>
                     </TouchableOpacity>
+                    <View style={{height: 5 * factorVertical}} />
                     <TouchableOpacity onPress={this.restorePurchases}>
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -301,7 +298,7 @@ export default class LoginCredentials extends React.Component {
                             Restore Purchases
                         </Text>
                     </TouchableOpacity>
-                    <View style={{height: 7.5 * factorVertical}} />
+                    <View style={{height: 5 * factorVertical}} />
                     <TouchableOpacity
                         onPress={() => {
                             this.props.navigation.navigate('SUPPORTSIGNUP');
@@ -317,7 +314,7 @@ export default class LoginCredentials extends React.Component {
                             }}
                         >
                             Can't log in? Contact support.
-                        </Text>
+                        </Text> 
                     </TouchableOpacity>
                 </Animated.View>
 

@@ -41,7 +41,7 @@ class XpRank extends React.Component {
         };
     }
 
-    componentWillMount = () => {
+    UNSAFE_componentWillMount = () => {
         for (i in ranks) {
             if (
                 this.state.XP >= ranks[i] &&

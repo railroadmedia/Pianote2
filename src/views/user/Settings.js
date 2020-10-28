@@ -453,7 +453,7 @@ export default class Settings extends React.Component {
                                     </View>
                                     <Text
                                         style={{
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                             fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}

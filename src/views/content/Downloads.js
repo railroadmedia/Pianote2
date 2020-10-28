@@ -193,7 +193,7 @@ export default class Downloads extends React.Component {
                                                 colors.pianoteRed,
                                             alert: {
                                                 alertTextMessageFontFamily:
-                                                    'OpenSans',
+                                                    'OpenSans-Regular',
                                                 alertTouchableTextDeleteColor:
                                                     'white',
                                                 alertTextTitleColor: 'black',

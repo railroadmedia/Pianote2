@@ -146,8 +146,8 @@ export default class LoadPage extends React.Component {
                     ]}
                 >
                     <Pianote
-                        height={90 * factorRatio}
-                        width={190 * factorRatio}
+                        height={77.5 * factorRatio}
+                        width={190 * factorHorizontal}
                         fill={'#fb1b2f'}
                     />
                 </View>

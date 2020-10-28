@@ -38,7 +38,12 @@ export default class MembershipExpired extends React.Component {
                         key={'pianote1'}
                         style={{
                             position: 'absolute',
-                            top: fullHeight * 0.03,
+                            top:
+                            (Platform.OS === 'ios' &&
+                                fullHeight > 811) ||
+                            onTablet == true
+                                ? fullHeight * 0.03
+                                : fullHeight * 0.015,
                             zIndex: 2,
                         }}
                     >
@@ -48,12 +53,12 @@ export default class MembershipExpired extends React.Component {
                             fill={'#fb1b2f'}
                         />
                     </View>
-                    {/* <GradientFeature
+                    <GradientFeature
                         color={'grey'}
-                        opacity={0.7}
+                        opacity={1}
                         height={'70%'}
                         borderRadius={0}
-                    /> */}
+                    />
                     <View
                         key={'image1'}
                         style={{

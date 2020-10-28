@@ -26,7 +26,7 @@ export default class SupportSignUp extends React.Component {
         //Intercom.removeEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         //Intercom.handlePushMessage();
     }
 

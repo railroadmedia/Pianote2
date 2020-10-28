@@ -102,7 +102,6 @@ export default class Profile extends React.Component {
             profileImage: data[2][1],
             username: data[3][1],
             memberSince: data[4][1],
-            lessonsStarted: false,
         });
     };
 
