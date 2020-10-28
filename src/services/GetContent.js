@@ -1,4 +1,3 @@
-import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from './common.service';
 
 export async function getNewContent(type) {

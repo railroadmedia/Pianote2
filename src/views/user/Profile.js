@@ -17,12 +17,13 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import {getToken, getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
+import commonService from '../../services/common.service';
 
 const messageDict = {
     'lesson comment reply': [
@@ -107,21 +108,12 @@ export default class Profile extends React.Component {
     };
 
     componentDidMount = async () => {
-        const auth = await getToken();
         let userData = await getUserData();
 
         try {
-            let response = await fetch(
+            let notifications = await commonService.tryCall(
                 `https://app-staging.pianote.com/api/railnotifications/notifications`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                },
             );
-            var notifications = await response.json();
 
             for (i in notifications.data) {
                 let timeCreated =
@@ -190,7 +182,6 @@ export default class Profile extends React.Component {
     };
 
     removeNotification = async data => {
-        let auth = await getToken();
         let commentID = data.data.commentId;
 
         for (i in this.state.notifications) {
@@ -212,17 +203,12 @@ export default class Profile extends React.Component {
         await this.forceUpdate();
 
         try {
-            let response = await fetch(
+            let response = await commonService.tryCall(
                 `https://app-staging.pianote.com/api/railnotifications/notification/${commentID}`,
-                {
-                    method: 'DELETE',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                },
+                'DELETE',
             );
-            console.log(await response);
+
+            console.log(response);
         } catch (error) {
             console.log('ERROR: ', error);
         }
@@ -262,29 +248,21 @@ export default class Profile extends React.Component {
     };
 
     turnOfffNotifications = async data => {
-        const auth = await getToken();
-
         this.setState(data);
 
         try {
-            let response = await fetch(
+            let response = await commonService.tryCall(
                 `https://app-staging.pianote.com/usora/api/profile/update`,
+                'PATCH',
                 {
-                    method: 'PATCH',
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                        'Content-Type': 'application/json',
+                    data: {
+                        type: 'user',
+                        attributes: data,
                     },
-                    body: JSON.stringify({
-                        data: {
-                            type: 'user',
-                            attributes: data,
-                        },
-                    }),
                 },
             );
 
-            console.log(await response.json());
+            console.log(response);
         } catch (error) {
             console.log('ERROR: ', error);
         }
