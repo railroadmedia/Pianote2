@@ -77,14 +77,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,.5)',
     },
     title: {
-        fontFamily: 'OpenSans',
+        fontFamily: 'OpenSans-Regular',
         fontWeight: 'bold',
         textAlign: 'center',
         paddingVertical: 10,
         color: '#000000',
     },
     text: {
-        fontFamily: 'OpenSans',
+        fontFamily: 'OpenSans-Regular',
         textAlign: 'center',
         paddingVertical: 10,
         color: '#000000',

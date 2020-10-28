@@ -3,7 +3,7 @@ import {configure} from '@musora/services';
 import {getToken} from './UserDataAuth';
 
 export default {
-    rootUrl: 'https://app-staging.pianote.com',
+    rootUrl: 'https://staging.pianote.com',
     tryCall: async function (url, method, body) {
         try {
             if (body) body = body ? JSON.stringify(body) : null;
@@ -18,7 +18,11 @@ export default {
                 : {
                       Authorization: token,
                   };
-            let response = await fetch(url, {
+            let newUrl = url;
+            if (!url.includes('https')) {
+                newUrl = url.replace('http', 'https');
+            }
+            let response = await fetch(newUrl, {
                 body,
                 headers,
                 method: method || 'GET',

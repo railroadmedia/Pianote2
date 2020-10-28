@@ -19,7 +19,7 @@ import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Video from 'RNVideoEnhanced';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {Download_V2} from 'RNDownload';
+import {Download_V2, offlineContent, DownloadResources} from 'RNDownload';
 
 import Replies from '../../components/Replies.js';
 import CommentSort from '../../modals/CommentSort.js';
@@ -45,19 +45,19 @@ import {
     resetProgress,
     markComplete,
 } from 'Pianote2/src/services/UserActions.js';
-import {DownloadResources} from '../../components/ConnectedDownloadResources';
 import OverviewComplete from '../../modals/OverviewComplete.js';
 import VideoPlayerSong from './VideoPlayerSong.js';
 import AssignmentComplete from '../../modals/AssignmentComplete.js';
 import RestartCourse from '../../modals/RestartCourse.js';
 import foundationsService from '../../services/foundations.service.js';
-
+import {NetworkContext} from '../../context/NetworkProvider';
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
     Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
 export default class VideoPlayer extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -66,6 +66,7 @@ export default class VideoPlayer extends React.Component {
         this.state = {
             id: this.props.navigation.state.params.id,
             url: this.props.navigation.state.params.url,
+            commentId: '',
             commentSort: 'Popular', // Newest, Oldest, Mine, Popular
             profileImage: '',
             isLoadingAll: true,
@@ -158,13 +159,20 @@ export default class VideoPlayer extends React.Component {
 
     getContent = async () => {
         let content;
-        if (this.props.navigation.state.params.url) {
+        if (!this.context.isConnected) {
+            content =
+                offlineContent[this.state.id]?.lesson ||
+                offlineContent[
+                    this.props.navigation.state.params.parentId
+                ]?.overview.lessons.find(l => l.id === this.state.id);
+        } else if (this.props.navigation.state.params.url) {
             content = await foundationsService.getUnitLesson(this.state.url);
         } else {
             content = await contentService.getContent(this.state.id);
         }
+        console.log(content);
         content = new ContentModel(content);
-        this.fetchComments(content.id);
+        await this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map(rl => {
             return new ContentModel(rl);
         });
@@ -213,17 +221,16 @@ export default class VideoPlayer extends React.Component {
             }
         }
         let rl = [];
-
-        for (i in relatedLessons) {
+        for (let i in relatedLessons) {
             rl.push({
                 title: relatedLessons[i].getField('title'),
                 thumbnail: relatedLessons[i].getData('thumbnail_url'),
                 type: relatedLessons[i].type,
                 id: relatedLessons[i].id,
                 mobile_app_url: relatedLessons[i].post.mobile_app_url,
-                duration: new ContentModel(
-                    relatedLessons[i].getFieldMulti('video')[0],
-                ).getField('length_in_seconds'),
+                // duration: new ContentModel(
+                //     relatedLessons[i].getFieldMulti('video')[0],
+                // )?.getField('length_in_seconds'),
                 isAddedToList: relatedLessons[i].isAddedToList,
                 isStarted: relatedLessons[i].isStarted,
                 isCompleted: relatedLessons[i].isCompleted,
@@ -291,6 +298,24 @@ export default class VideoPlayer extends React.Component {
             },
             () => {
                 if (this.state.resources) this.createResourcesArr();
+                const {comment, commentId} = this.props.navigation.state.params;
+                if (comment) {
+                    this.setState({
+                        showReplies: true,
+                        selectedComment: comment,
+                    });
+                } else if (commentId) {
+                    const selectedComment = this.state.comments.find(
+                        f => f.id == commentId,
+                    );
+
+                    if (selectedComment) {
+                        this.setState({
+                            showReplies: true,
+                            selectedComment,
+                        });
+                    }
+                }
             },
         );
     };
@@ -498,7 +523,7 @@ export default class VideoPlayer extends React.Component {
                         />
                         <Text
                             style={{
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 fontSize: 10 * factorRatio,
                                 marginTop: 2 * factorRatio,
                                 fontWeight: 'bold',
@@ -519,7 +544,7 @@ export default class VideoPlayer extends React.Component {
                     <View style={{height: 3 * factorVertical}} />
                     <Text
                         style={{
-                            fontFamily: 'OpenSans',
+                            fontFamily: 'OpenSans-Regular',
                             fontSize: 13 * factorRatio,
                             color: 'white',
                         }}
@@ -529,7 +554,7 @@ export default class VideoPlayer extends React.Component {
                     <View style={{height: 7.5 * factorVertical}} />
                     <Text
                         style={{
-                            fontFamily: 'OpenSans',
+                            fontFamily: 'OpenSans-Regular',
                             fontSize: 12 * factorRatio,
                             color: colors.secondBackground,
                         }}
@@ -585,7 +610,8 @@ export default class VideoPlayer extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 10 * factorRatio,
                                                     color: colors.pianoteRed,
                                                 }}
@@ -644,7 +670,8 @@ export default class VideoPlayer extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 10 * factorRatio,
                                                     color: colors.pianoteRed,
                                                 }}
@@ -685,7 +712,7 @@ export default class VideoPlayer extends React.Component {
                         >
                             <Text
                                 style={{
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     fontSize: 12 * factorRatio,
                                     color: colors.secondBackground,
                                 }}
@@ -976,6 +1003,7 @@ export default class VideoPlayer extends React.Component {
                     barStyle={'light-content'}
                 />
                 {!this.state.isLoadingAll &&
+                    this.state.showVideo &&
                     this.state.video_playback_endpoints && (
                         <Video
                             quality={''}
@@ -1080,6 +1108,7 @@ export default class VideoPlayer extends React.Component {
                                     innerRef={ref => {
                                         this.scroll = ref;
                                     }}
+                                    keyboardShouldPersistTaps='handled'
                                     removeClippedSubviews={false}
                                     showsVerticalScrollIndicator={false}
                                     contentInsetAdjustmentBehavior={'never'}
@@ -1333,12 +1362,12 @@ export default class VideoPlayer extends React.Component {
                                                             color: '#ffffff',
                                                             fontSize: 10,
                                                             fontFamily:
-                                                                'OpenSans',
+                                                                'OpenSans-Regular',
                                                             marginTop: 5,
                                                         },
                                                         alert: {
                                                             alertTextMessageFontFamily:
-                                                                'OpenSans',
+                                                                'OpenSans-Regular',
                                                             alertTouchableTextDeleteColor:
                                                                 'white',
                                                             alertTextTitleColor:
@@ -1774,7 +1803,7 @@ export default class VideoPlayer extends React.Component {
                                                                         <Text
                                                                             style={{
                                                                                 fontFamily:
-                                                                                    'OpenSans',
+                                                                                    'OpenSans-Regular',
                                                                                 fontSize:
                                                                                     10 *
                                                                                     factorRatio,
@@ -1817,7 +1846,7 @@ export default class VideoPlayer extends React.Component {
                                                                     <Text
                                                                         style={{
                                                                             fontFamily:
-                                                                                'OpenSans',
+                                                                                'OpenSans-Regular',
                                                                             fontSize:
                                                                                 13 *
                                                                                 factorRatio,
@@ -1848,7 +1877,7 @@ export default class VideoPlayer extends React.Component {
                                                                     <Text
                                                                         style={{
                                                                             fontFamily:
-                                                                                'OpenSans',
+                                                                                'OpenSans-Regular',
                                                                             fontSize:
                                                                                 11 *
                                                                                 factorRatio,
@@ -1940,7 +1969,7 @@ export default class VideoPlayer extends React.Component {
                                                                                         <Text
                                                                                             style={{
                                                                                                 fontFamily:
-                                                                                                    'OpenSans',
+                                                                                                    'OpenSans-Regular',
                                                                                                 fontSize:
                                                                                                     9.5 *
                                                                                                     factorRatio,
@@ -2026,7 +2055,7 @@ export default class VideoPlayer extends React.Component {
                                                                                         <Text
                                                                                             style={{
                                                                                                 fontFamily:
-                                                                                                    'OpenSans',
+                                                                                                    'OpenSans-Regular',
                                                                                                 fontSize:
                                                                                                     9.5 *
                                                                                                     factorRatio,
@@ -2057,7 +2086,7 @@ export default class VideoPlayer extends React.Component {
                                                                         <Text
                                                                             style={{
                                                                                 fontFamily:
-                                                                                    'OpenSans',
+                                                                                    'OpenSans-Regular',
                                                                                 fontSize:
                                                                                     11.5 *
                                                                                     factorRatio,
@@ -2168,7 +2197,7 @@ export default class VideoPlayer extends React.Component {
                                                                             textAlign:
                                                                                 'left',
                                                                             fontFamily:
-                                                                                'OpenSans',
+                                                                                'OpenSans-Regular',
                                                                             fontSize:
                                                                                 13 *
                                                                                 factorRatio,
@@ -2588,7 +2617,20 @@ export default class VideoPlayer extends React.Component {
                     hasBackdrop={true}
                 >
                     <DownloadResources
+                        styles={{
+                            container: {
+                                backgroundColor: colors.mainBackground,
+                                width: fullWidth,
+                            },
+                            touchableTextResourceNameFontFamily: 'OpenSans',
+                            touchableTextResourceExtensionFontFamily:
+                                'OpenSans',
+                            touchableTextResourceCancelFontFamily: 'OpenSans',
+                            borderColor: colors.secondBackground,
+                            color: '#ffffff',
+                        }}
                         resources={this.state.resources}
+                        lessonTitle={this.state.lessonTitle}
                         onClose={() => {
                             new Promise(res =>
                                 this.setState(

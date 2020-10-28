@@ -45,7 +45,7 @@ global.serverLocation = 'staging.pianote.com';
 global.isPackOnly = false;
 
 configure({
-    baseURL: 'https://app-staging.pianote.com',
+    baseURL: 'https://staging.pianote.com',
     'Content-Type': 'application/x-www-form-urlencoded',
     Accept: 'application/json',
 });

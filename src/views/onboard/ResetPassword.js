@@ -21,6 +21,7 @@ import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
 import {changePassword} from '../../services/UserDataAuth';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -135,14 +136,9 @@ export default class ResetPassword extends React.Component {
 
     render() {
         return (
-            <View
-                styles={[
-                    styles.centerContent,
-                    {
-                        flex: 1,
-                        alignSelf: 'stretch',
-                    },
-                ]}
+            <KeyboardAwareScrollView
+                style={{flex: 1}}
+                keyboardShouldPersistTaps='handled'
             >
                 <GradientFeature
                     color={'dark'}
@@ -555,7 +551,7 @@ export default class ResetPassword extends React.Component {
                         </TouchableOpacity>
                     }
                 />
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }

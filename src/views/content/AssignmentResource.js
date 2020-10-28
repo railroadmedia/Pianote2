@@ -146,7 +146,7 @@ export default class AssignmentResource extends React.Component {
         return (
             <ScrollView
                 horizontal={true}
-                styles={{flex: 1}}
+                style={{flex: 1}}
                 pagingEnabled={true}
                 removeClippedSubviews={false}
                 scrollEnabled={this.state.scroll}

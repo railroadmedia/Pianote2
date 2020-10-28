@@ -20,15 +20,37 @@ export default class App extends React.Component {
         Linking.addEventListener('url', this.handleOpenURL);
         this.removeNotificationOpenedListener = firebase
             .notifications()
-            .onNotificationOpened(notificationOpen => {
-                // TODO: deep linking
+            .onNotificationOpened(async notificationOpen => {
+                console.log(notificationOpen);
+                await AsyncStorage.multiSet([
+                    [
+                        'lessonUrl',
+                        notificationOpen?.notification?._data?.content
+                            .mobile_app_url,
+                    ],
+                    [
+                        'commentId',
+                        notificationOpen?.notification?._data?.commentId,
+                    ],
+                ]);
             });
         firebase
             .notifications()
             .getInitialNotification()
-            .then(notificationOpen => {
+            .then(async notificationOpen => {
+                console.log(notificationOpen);
                 if (notificationOpen) {
-                    // TODO: deep linking
+                    await AsyncStorage.multiSet([
+                        [
+                            'lessonUrl',
+                            notificationOpen?.notification?._data?.content
+                                ?.mobile_app_url,
+                        ],
+                        [
+                            'commentId',
+                            notificationOpen?.notification?._data?.commentId,
+                        ],
+                    ]);
                 }
             });
     }

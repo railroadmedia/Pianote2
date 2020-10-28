@@ -253,7 +253,7 @@ export default class CreateAccount3 extends React.Component {
                 >
                     <View key={'displayName'}>
                         <View
-                            styles={[
+                            style={[
                                 styles.centerContent,
                                 {
                                     height: fullHeight,
@@ -616,7 +616,7 @@ export default class CreateAccount3 extends React.Component {
                     </View>
                     <View key={'profilePic'}>
                         <View
-                            styles={[
+                            style={[
                                 styles.centerContent,
                                 {
                                     height: fullHeight,

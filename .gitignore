@@ -36,7 +36,7 @@ android/app/release
 node_modules/
 npm-debug.log
 yarn-error.log
-
+debug.log
 # BUCK
 buck-out/
 \.buckd/

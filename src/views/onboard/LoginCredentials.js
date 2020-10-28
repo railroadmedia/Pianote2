@@ -27,6 +27,7 @@ import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import {getToken, restorePurchase} from '../../services/UserDataAuth.js';
 import {configure} from '@musora/services';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -43,9 +44,7 @@ export default class LoginCredentials extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: this.props.navigation.state.params
-                ? this.props.navigation.state.params.email
-                : '',
+            email: props?.navigation?.state?.params?.email || '',
             password: '',
             pianoteYdelta: new Animated.Value(0),
             forgotYdelta: new Animated.Value(fullHeight * 0.075),
@@ -246,14 +245,9 @@ export default class LoginCredentials extends React.Component {
 
     render() {
         return (
-            <View
-                styles={[
-                    styles.centerContent,
-                    {
-                        flex: 1,
-                        alignSelf: 'stretch',
-                    },
-                ]}
+            <KeyboardAwareScrollView
+                style={{flex: 1}}
+                keyboardShouldPersistTaps='handled'
             >
                 <GradientFeature
                     color={'dark'}
@@ -292,7 +286,7 @@ export default class LoginCredentials extends React.Component {
                         <Text
                             style={{
                                 fontSize: 16 * factorRatio,
-                                fontFamily: 'OpenSans',
+                                fontFamily: 'OpenSans-Regular',
                                 color: 'grey',
                                 textAlign: 'center',
                                 textDecorationLine: 'underline',
@@ -412,6 +406,7 @@ export default class LoginCredentials extends React.Component {
                         >
                             <TextInput
                                 autoCorrect={false}
+                                value={this.state.email}
                                 keyboardAppearance={'dark'}
                                 placeholderTextColor={'grey'}
                                 placeholder={'Email Address'}
@@ -568,7 +563,7 @@ export default class LoginCredentials extends React.Component {
                         this.customModal = ref;
                     }}
                 />
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }

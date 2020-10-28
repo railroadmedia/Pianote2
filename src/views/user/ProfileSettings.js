@@ -21,6 +21,7 @@ import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -209,83 +210,35 @@ export default class ProfileSettings extends React.Component {
 
     render() {
         return (
-            <View styles={{flex: 1, alignSelf: 'stretch'}}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                        backgroundColor: colors.mainBackground,
-                    }}
-                >
-                    <View key={'contentContainer'} style={{flex: 1}}>
-                        <View
-                            key={'buffer'}
-                            style={{
-                                height: isNotch ? 15 * factorVertical : 0,
-                            }}
-                        ></View>
-                        <View
-                            key={'myProfileSettings'}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    flex: 0.1,
-                                },
-                            ]}
-                        >
-                            {this.state.currentlyView !==
-                                'Profile Settings' && (
-                                <View
-                                    key={'save'}
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            position: 'absolute',
-                                            right: 0,
-                                            bottom: 0 * factorRatio,
-                                            height: 50 * factorRatio,
-                                            width: 50 * factorRatio,
-                                        },
-                                    ]}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.save();
-                                        }}
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                height: '100%',
-                                                width: '100%',
-                                            },
-                                        ]}
-                                    >
-                                        <View
-                                            style={{height: 5 * factorVertical}}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 12 * factorRatio,
-                                                fontWeight:
-                                                    Platform.OS == 'android'
-                                                        ? 'bold'
-                                                        : '700',
-                                                color: 'red',
-                                            }}
-                                        >
-                                            SAVE
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
+            <KeyboardAwareScrollView
+                contentContainerStyle={{
+                    flex: 1,
+                    backgroundColor: colors.mainBackground,
+                }}
+                keyboardShouldPersistTaps='handled'
+            >
+                <View key={'contentContainer'} style={{flex: 1}}>
+                    <View
+                        key={'buffer'}
+                        style={{
+                            height: isNotch ? 15 * factorVertical : 0,
+                        }}
+                    ></View>
+                    <View
+                        key={'myProfileSettings'}
+                        style={[
+                            styles.centerContent,
+                            {height: 40 * factorRatio},
+                        ]}
+                    >
+                        {this.state.currentlyView !== 'Profile Settings' && (
                             <View
-                                key={'goback'}
+                                key={'save'}
                                 style={[
                                     styles.centerContent,
                                     {
                                         position: 'absolute',
-                                        left: 0,
+                                        right: 0,
                                         bottom: 0 * factorRatio,
                                         height: 50 * factorRatio,
                                         width: 50 * factorRatio,
@@ -294,13 +247,7 @@ export default class ProfileSettings extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.state.currentlyView ==
-                                        'Profile Settings'
-                                            ? this.props.navigation.goBack()
-                                            : this.setState({
-                                                  currentlyView:
-                                                      'Profile Settings',
-                                              });
+                                        this.save();
                                     }}
                                     style={[
                                         styles.centerContent,
@@ -310,430 +257,466 @@ export default class ProfileSettings extends React.Component {
                                         },
                                     ]}
                                 >
-                                    <EntypoIcon
-                                        name={'chevron-thin-left'}
+                                    <View
+                                        style={{height: 5 * factorVertical}}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontFamily: 'OpenSans-Regular',
+                                            fontSize: 12 * factorRatio,
+                                            fontWeight:
+                                                Platform.OS == 'android'
+                                                    ? 'bold'
+                                                    : '700',
+                                            color: 'red',
+                                        }}
+                                    >
+                                        SAVE
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                        <View
+                            key={'goback'}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    position: 'absolute',
+                                    left: 0,
+                                    bottom: 0 * factorRatio,
+                                    height: 50 * factorRatio,
+                                    width: 50 * factorRatio,
+                                },
+                            ]}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.state.currentlyView ==
+                                    'Profile Settings'
+                                        ? this.props.navigation.goBack()
+                                        : this.setState({
+                                              currentlyView: 'Profile Settings',
+                                          });
+                                }}
+                                style={[
+                                    styles.centerContent,
+                                    {
+                                        height: '100%',
+                                        width: '100%',
+                                    },
+                                ]}
+                            >
+                                <EntypoIcon
+                                    name={'chevron-thin-left'}
+                                    size={22.5 * factorRatio}
+                                    color={colors.secondBackground}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{flex: 0.66}} />
+                        <Text
+                            style={{
+                                fontSize: 22 * factorRatio,
+                                fontWeight: 'bold',
+                                fontFamily: 'OpenSans-Regular',
+                                color: colors.secondBackground,
+                            }}
+                        >
+                            {this.state.currentlyView}
+                        </Text>
+                        <View style={{flex: 0.33}} />
+                    </View>
+                    <View
+                        key={'scrollview'}
+                        style={{
+                            flex: 0.95,
+                        }}
+                    >
+                        {this.state.currentlyView == 'Profile Settings' && (
+                            <ScrollView style={{flex: 1}}>
+                                <TouchableOpacity
+                                    key={'profileProfileSettings'}
+                                    onPress={() =>
+                                        this.setState({
+                                            currentlyView: 'Display Name',
+                                        })
+                                    }
+                                    style={[
+                                        styles.centerContent,
+                                        {
+                                            height: 50 * factorRatio,
+                                            width: fullWidth,
+                                            borderBottomColor:
+                                                colors.secondBackground,
+                                            borderBottomWidth: 1 * factorRatio,
+                                            borderTopWidth: 1 * factorRatio,
+                                            borderTopColor:
+                                                colors.secondBackground,
+                                            flexDirection: 'row',
+                                            paddingRight: fullWidth * 0.025,
+                                        },
+                                    ]}
+                                >
+                                    <View
+                                        style={{
+                                            width: 20 * factorHorizontal,
+                                        }}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontFamily: 'OpenSans-Regular',
+                                            fontSize: 18 * factorRatio,
+                                            color: colors.secondBackground,
+                                        }}
+                                    >
+                                        Display Name
+                                    </Text>
+                                    <View style={{flex: 1}} />
+                                    <AntIcon
+                                        name={'right'}
                                         size={22.5 * factorRatio}
                                         color={colors.secondBackground}
                                     />
                                 </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 0.66}} />
-                            <Text
-                                style={{
-                                    fontSize: 22 * factorRatio,
-                                    fontWeight: 'bold',
-                                    fontFamily: 'OpenSans-Regular',
-                                    color: colors.secondBackground,
-                                }}
-                            >
-                                {this.state.currentlyView}
-                            </Text>
-                            <View style={{flex: 0.33}} />
-                        </View>
-                        <View
-                            key={'scrollview'}
-                            style={{
-                                flex: 0.95,
-                            }}
-                        >
-                            {this.state.currentlyView == 'Profile Settings' && (
-                                <ScrollView>
-                                    <TouchableOpacity
-                                        key={'profileProfileSettings'}
-                                        onPress={() =>
-                                            this.setState({
-                                                currentlyView: 'Display Name',
-                                            })
-                                        }
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                height: 50 * factorRatio,
-                                                width: fullWidth,
-                                                borderBottomColor:
-                                                    colors.secondBackground,
-                                                borderBottomWidth:
-                                                    1 * factorRatio,
-                                                borderTopWidth: 1 * factorRatio,
-                                                borderTopColor:
-                                                    colors.secondBackground,
-                                                flexDirection: 'row',
-                                                paddingRight: fullWidth * 0.025,
-                                            },
-                                        ]}
-                                    >
-                                        <View
-                                            style={{
-                                                width: 20 * factorHorizontal,
-                                            }}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 18 * factorRatio,
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            Display Name
-                                        </Text>
-                                        <View style={{flex: 1}} />
-                                        <AntIcon
-                                            name={'right'}
-                                            size={22.5 * factorRatio}
-                                            color={colors.secondBackground}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        key={'notificationProfileSettings'}
-                                        onPress={() => {
-                                            this.setState({
-                                                currentlyView: 'Profile Photo',
-                                            });
-                                        }}
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                height: 50 * factorRatio,
-                                                width: fullWidth,
-                                                borderBottomColor:
-                                                    colors.secondBackground,
-                                                borderBottomWidth:
-                                                    1 * factorRatio,
-                                                flexDirection: 'row',
-                                                paddingRight: fullWidth * 0.025,
-                                            },
-                                        ]}
-                                    >
-                                        <View
-                                            style={{
-                                                width: 20 * factorHorizontal,
-                                            }}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: 'OpenSans-Regular',
-                                                fontSize: 18 * factorRatio,
-                                                color: colors.secondBackground,
-                                            }}
-                                        >
-                                            Profile Photo
-                                        </Text>
-                                        <View style={{flex: 1}} />
-                                        <AntIcon
-                                            name={'right'}
-                                            size={22.5 * factorRatio}
-                                            color={colors.secondBackground}
-                                        />
-                                    </TouchableOpacity>
-                                </ScrollView>
-                            )}
-                            {this.state.currentlyView == 'Display Name' && (
-                                <View style={{width: fullWidth}}>
-                                    <TextInput
-                                        ref={txt => {
-                                            this.txt = txt;
-                                        }}
-                                        placeholder={'Display Name'}
-                                        value={this.state.displayName}
-                                        placeholderTextColor={
-                                            colors.secondBackground
-                                        }
-                                        onChangeText={displayName =>
-                                            this.setState({displayName})
-                                        }
-                                        onSubmitEditing={() => {}}
-                                        returnKeyType={'go'}
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            height:
-                                                Platform.OS == 'android'
-                                                    ? fullHeight * 0.07
-                                                    : fullHeight * 0.06,
-                                            paddingLeft: fullWidth * 0.045,
+                                <TouchableOpacity
+                                    key={'notificationProfileSettings'}
+                                    onPress={() => {
+                                        this.setState({
+                                            currentlyView: 'Profile Photo',
+                                        });
+                                    }}
+                                    style={[
+                                        styles.centerContent,
+                                        {
+                                            height: 50 * factorRatio,
                                             width: fullWidth,
-                                            justifyContent: 'center',
-                                            fontSize: 18 * factorRatio,
                                             borderBottomColor:
                                                 colors.secondBackground,
                                             borderBottomWidth: 1 * factorRatio,
-                                            color: colors.secondBackground,
-                                        }}
-                                    />
-                                    <View style={{height: 10 * factorRatio}} />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 16 * factorRatio,
-                                            paddingLeft: fullWidth * 0.045,
-                                            paddingRight: fullWidth * 0.045,
-                                            color: colors.secondBackground,
-                                        }}
-                                    >
-                                        This is the name that will appear on
-                                        your comments and forum posts.
-                                    </Text>
-                                </View>
-                            )}
-                            {this.state.currentlyView == 'Profile Photo' && (
-                                <View
-                                    style={{
-                                        height: fullHeight,
-                                        width: fullWidth,
-                                    }}
+                                            flexDirection: 'row',
+                                            paddingRight: fullWidth * 0.025,
+                                        },
+                                    ]}
                                 >
                                     <View
-                                        style={{height: 50 * factorVertical}}
+                                        style={{
+                                            width: 20 * factorHorizontal,
+                                        }}
                                     />
-                                    <View style={{flexDirection: 'row'}}>
-                                        <View style={{flex: 1}} />
-                                        <View
-                                            key={'imageCircle'}
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    height: fullWidth * 0.65,
-                                                    width: fullWidth * 0.65,
-                                                    borderRadius:
-                                                        200 * factorRatio,
-                                                    backgroundColor:
-                                                        colors.secondBackground,
-                                                },
-                                            ]}
-                                        >
-                                            {this.state.imageURI !== '' && (
-                                                <TouchableOpacity
-                                                    onPress={() =>
-                                                        this.setState({
-                                                            imageURI: '',
-                                                            imageType: '',
-                                                            imageName: '',
-                                                        })
-                                                    }
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            position:
-                                                                'absolute',
-                                                            top: 0,
-                                                            right: 0,
-                                                            height:
-                                                                35 *
-                                                                factorRatio,
-                                                            width:
-                                                                35 *
-                                                                factorRatio,
-                                                            borderRadius: 200,
-                                                            borderColor:
-                                                                colors.secondBackground,
-                                                            borderWidth: 2,
-                                                            zIndex: 5,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <EntypoIcon
-                                                        name={'cross'}
-                                                        size={25 * factorRatio}
-                                                        color={
-                                                            colors.secondBackground
-                                                        }
-                                                    />
-                                                </TouchableOpacity>
-                                            )}
-                                            {this.state.imageURI !== '' && (
-                                                <FastImage
-                                                    style={{
-                                                        height: '100%',
-                                                        width: '100%',
-                                                        borderRadius:
-                                                            200 * factorRatio,
-                                                    }}
-                                                    source={{
-                                                        uri: this.state
-                                                            .imageURI,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .cover
-                                                    }
-                                                />
-                                            )}
-                                            {this.state.imageURI == '' && (
-                                                <TouchableOpacity
-                                                    onPress={() =>
-                                                        this.chooseImage()
-                                                    }
-                                                    style={[
-                                                        styles.centerContent,
-                                                        {
-                                                            height: '100%',
-                                                            width: '100%',
-                                                        },
-                                                    ]}
-                                                >
-                                                    <AntIcon
-                                                        name={'plus'}
-                                                        size={65 * factorRatio}
-                                                        color={'white'}
-                                                    />
-                                                </TouchableOpacity>
-                                            )}
-                                        </View>
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <View style={{height: 35 * factorRatio}} />
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
-                                            fontSize: 15 * factorRatio,
-                                            paddingLeft: fullWidth * 0.045,
-                                            paddingRight: fullWidth * 0.045,
+                                            fontSize: 18 * factorRatio,
                                             color: colors.secondBackground,
                                         }}
                                     >
-                                        This is the image that will appear with
-                                        your comments and forum posts.
+                                        Profile Photo
                                     </Text>
+                                    <View style={{flex: 1}} />
+                                    <AntIcon
+                                        name={'right'}
+                                        size={22.5 * factorRatio}
+                                        color={colors.secondBackground}
+                                    />
+                                </TouchableOpacity>
+                            </ScrollView>
+                        )}
+                        {this.state.currentlyView == 'Display Name' && (
+                            <View style={{width: fullWidth}}>
+                                <TextInput
+                                    ref={txt => {
+                                        this.txt = txt;
+                                    }}
+                                    placeholder={'Display Name'}
+                                    value={this.state.displayName}
+                                    placeholderTextColor={
+                                        colors.secondBackground
+                                    }
+                                    onChangeText={displayName =>
+                                        this.setState({displayName})
+                                    }
+                                    onSubmitEditing={() => {}}
+                                    returnKeyType={'go'}
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        height:
+                                            Platform.OS == 'android'
+                                                ? fullHeight * 0.07
+                                                : fullHeight * 0.06,
+                                        paddingLeft: fullWidth * 0.045,
+                                        width: fullWidth,
+                                        justifyContent: 'center',
+                                        fontSize: 18 * factorRatio,
+                                        borderBottomColor:
+                                            colors.secondBackground,
+                                        borderBottomWidth: 1 * factorRatio,
+                                        color: colors.secondBackground,
+                                    }}
+                                />
+                                <View style={{height: 10 * factorRatio}} />
+                                <Text
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        fontSize: 16 * factorRatio,
+                                        paddingLeft: fullWidth * 0.045,
+                                        paddingRight: fullWidth * 0.045,
+                                        color: colors.secondBackground,
+                                    }}
+                                >
+                                    This is the name that will appear on your
+                                    comments and forum posts.
+                                </Text>
+                            </View>
+                        )}
+                        {this.state.currentlyView == 'Profile Photo' && (
+                            <View
+                                style={{
+                                    height: fullHeight,
+                                    width: fullWidth,
+                                }}
+                            >
+                                <View style={{height: 50 * factorVertical}} />
+                                <View style={{flexDirection: 'row'}}>
+                                    <View style={{flex: 1}} />
                                     <View
-                                        style={{
-                                            position: 'absolute',
-                                            bottom: 215 * factorVertical,
-                                            width: fullWidth,
-                                            flexDirection: 'row',
-                                            alignSelf: 'stretch',
-                                        }}
+                                        key={'imageCircle'}
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                height: fullWidth * 0.65,
+                                                width: fullWidth * 0.65,
+                                                borderRadius: 200 * factorRatio,
+                                                backgroundColor:
+                                                    colors.secondBackground,
+                                            },
+                                        ]}
                                     >
-                                        <View style={{flex: 1}} />
-                                        <TouchableOpacity
-                                            onPress={() => this.changeImage()}
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    height: fullWidth * 0.2,
-                                                    width: fullWidth * 0.2,
+                                        {this.state.imageURI !== '' && (
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    this.setState({
+                                                        imageURI: '',
+                                                        imageType: '',
+                                                        imageName: '',
+                                                    })
+                                                }
+                                                style={[
+                                                    styles.centerContent,
+                                                    {
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        right: 0,
+                                                        height:
+                                                            35 * factorRatio,
+                                                        width: 35 * factorRatio,
+                                                        borderRadius: 200,
+                                                        borderColor:
+                                                            colors.secondBackground,
+                                                        borderWidth: 2,
+                                                        zIndex: 5,
+                                                    },
+                                                ]}
+                                            >
+                                                <EntypoIcon
+                                                    name={'cross'}
+                                                    size={25 * factorRatio}
+                                                    color={
+                                                        colors.secondBackground
+                                                    }
+                                                />
+                                            </TouchableOpacity>
+                                        )}
+                                        {this.state.imageURI !== '' && (
+                                            <FastImage
+                                                style={{
+                                                    height: '100%',
+                                                    width: '100%',
                                                     borderRadius:
                                                         200 * factorRatio,
-                                                    borderColor:
-                                                        colors.secondBackground,
-                                                    borderWidth:
-                                                        2 * factorRatio,
-                                                },
-                                            ]}
-                                        >
-                                            <IonIcon
-                                                size={50 * factorRatio}
-                                                name={'ios-camera'}
-                                                color={colors.secondBackground}
+                                                }}
+                                                source={{
+                                                    uri: this.state.imageURI,
+                                                }}
+                                                resizeMode={
+                                                    FastImage.resizeMode.cover
+                                                }
                                             />
-                                        </TouchableOpacity>
-                                        <View style={{flex: 1}} />
+                                        )}
+                                        {this.state.imageURI == '' && (
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    this.chooseImage()
+                                                }
+                                                style={[
+                                                    styles.centerContent,
+                                                    {
+                                                        height: '100%',
+                                                        width: '100%',
+                                                    },
+                                                ]}
+                                            >
+                                                <AntIcon
+                                                    name={'plus'}
+                                                    size={65 * factorRatio}
+                                                    color={'white'}
+                                                />
+                                            </TouchableOpacity>
+                                        )}
                                     </View>
+                                    <View style={{flex: 1}} />
                                 </View>
-                            )}
-                            {this.state.currentlyView == 'Password' && (
-                                <View style={{width: fullWidth}}>
-                                    <TextInput
-                                        ref={txt => {
-                                            this.password = txt;
-                                        }}
-                                        placeholder={'Current Password'}
-                                        value={this.state.password}
-                                        placeholderTextColor={
-                                            colors.secondBackground
-                                        }
-                                        onChangeText={password =>
-                                            this.setState({password})
-                                        }
-                                        onSubmitEditing={() => {}}
-                                        returnKeyType={'go'}
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            height:
-                                                Platform.OS == 'android'
-                                                    ? fullHeight * 0.07
-                                                    : fullHeight * 0.06,
-                                            paddingLeft: fullWidth * 0.045,
-                                            width: fullWidth,
-                                            justifyContent: 'center',
-                                            fontSize: 18 * factorRatio,
-                                            borderBottomColor:
-                                                colors.secondBackground,
-                                            borderBottomWidth: 1 * factorRatio,
-                                            color: colors.secondBackground,
-                                        }}
-                                    />
-                                    <TextInput
-                                        ref={txt => {
-                                            this.newPassword = txt;
-                                        }}
-                                        placeholder={'New Password'}
-                                        value={this.state.newPassword}
-                                        placeholderTextColor={
-                                            colors.secondBackground
-                                        }
-                                        onChangeText={newPassword =>
-                                            this.setState({newPassword})
-                                        }
-                                        onSubmitEditing={() => {}}
-                                        returnKeyType={'go'}
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            height:
-                                                Platform.OS == 'android'
-                                                    ? fullHeight * 0.07
-                                                    : fullHeight * 0.06,
-                                            paddingLeft: fullWidth * 0.045,
-                                            width: fullWidth,
-                                            justifyContent: 'center',
-                                            fontSize: 18 * factorRatio,
-                                            color: colors.secondBackground,
-                                            borderBottomColor:
-                                                colors.secondBackground,
-                                            borderBottomWidth: 1 * factorRatio,
-                                        }}
-                                    />
-                                    <TextInput
-                                        ref={txt => {
-                                            this.retypeNewPassword = txt;
-                                        }}
-                                        placeholder={'Re-Type New Password'}
-                                        value={this.state.retypeNewPassword}
-                                        placeholderTextColor={
-                                            colors.secondBackground
-                                        }
-                                        onChangeText={retypeNewPassword => {
-                                            this.setState({retypeNewPassword});
-                                        }}
-                                        onSubmitEditing={() => {}}
-                                        returnKeyType={'go'}
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            height:
-                                                Platform.OS == 'android'
-                                                    ? fullHeight * 0.07
-                                                    : fullHeight * 0.06,
-                                            paddingLeft: fullWidth * 0.045,
-                                            width: fullWidth,
-                                            color: colors.secondBackground,
-                                            justifyContent: 'center',
-                                            fontSize: 18 * factorRatio,
-                                            borderBottomColor:
-                                                colors.secondBackground,
-                                            borderBottomWidth: 1 * factorRatio,
-                                        }}
-                                    />
+                                <View style={{height: 35 * factorRatio}} />
+                                <Text
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        fontSize: 15 * factorRatio,
+                                        paddingLeft: fullWidth * 0.045,
+                                        paddingRight: fullWidth * 0.045,
+                                        color: colors.secondBackground,
+                                    }}
+                                >
+                                    This is the image that will appear with your
+                                    comments and forum posts.
+                                </Text>
+                                <View
+                                    style={{
+                                        position: 'absolute',
+                                        bottom: 215 * factorVertical,
+                                        width: fullWidth,
+                                        flexDirection: 'row',
+                                        alignSelf: 'stretch',
+                                    }}
+                                >
+                                    <View style={{flex: 1}} />
+                                    <TouchableOpacity
+                                        onPress={() => this.changeImage()}
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                height: fullWidth * 0.2,
+                                                width: fullWidth * 0.2,
+                                                borderRadius: 200 * factorRatio,
+                                                borderColor:
+                                                    colors.secondBackground,
+                                                borderWidth: 2 * factorRatio,
+                                            },
+                                        ]}
+                                    >
+                                        <IonIcon
+                                            size={50 * factorRatio}
+                                            name={'ios-camera'}
+                                            color={colors.secondBackground}
+                                        />
+                                    </TouchableOpacity>
+                                    <View style={{flex: 1}} />
                                 </View>
-                            )}
-                        </View>
+                            </View>
+                        )}
+                        {this.state.currentlyView == 'Password' && (
+                            <View style={{width: fullWidth}}>
+                                <TextInput
+                                    ref={txt => {
+                                        this.password = txt;
+                                    }}
+                                    placeholder={'Current Password'}
+                                    value={this.state.password}
+                                    placeholderTextColor={
+                                        colors.secondBackground
+                                    }
+                                    onChangeText={password =>
+                                        this.setState({password})
+                                    }
+                                    onSubmitEditing={() => {}}
+                                    returnKeyType={'go'}
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        height:
+                                            Platform.OS == 'android'
+                                                ? fullHeight * 0.07
+                                                : fullHeight * 0.06,
+                                        paddingLeft: fullWidth * 0.045,
+                                        width: fullWidth,
+                                        justifyContent: 'center',
+                                        fontSize: 18 * factorRatio,
+                                        borderBottomColor:
+                                            colors.secondBackground,
+                                        borderBottomWidth: 1 * factorRatio,
+                                        color: colors.secondBackground,
+                                    }}
+                                />
+                                <TextInput
+                                    ref={txt => {
+                                        this.newPassword = txt;
+                                    }}
+                                    placeholder={'New Password'}
+                                    value={this.state.newPassword}
+                                    placeholderTextColor={
+                                        colors.secondBackground
+                                    }
+                                    onChangeText={newPassword =>
+                                        this.setState({newPassword})
+                                    }
+                                    onSubmitEditing={() => {}}
+                                    returnKeyType={'go'}
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        height:
+                                            Platform.OS == 'android'
+                                                ? fullHeight * 0.07
+                                                : fullHeight * 0.06,
+                                        paddingLeft: fullWidth * 0.045,
+                                        width: fullWidth,
+                                        justifyContent: 'center',
+                                        fontSize: 18 * factorRatio,
+                                        color: colors.secondBackground,
+                                        borderBottomColor:
+                                            colors.secondBackground,
+                                        borderBottomWidth: 1 * factorRatio,
+                                    }}
+                                />
+                                <TextInput
+                                    ref={txt => {
+                                        this.retypeNewPassword = txt;
+                                    }}
+                                    placeholder={'Re-Type New Password'}
+                                    value={this.state.retypeNewPassword}
+                                    placeholderTextColor={
+                                        colors.secondBackground
+                                    }
+                                    onChangeText={retypeNewPassword => {
+                                        this.setState({retypeNewPassword});
+                                    }}
+                                    onSubmitEditing={() => {}}
+                                    returnKeyType={'go'}
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        height:
+                                            Platform.OS == 'android'
+                                                ? fullHeight * 0.07
+                                                : fullHeight * 0.06,
+                                        paddingLeft: fullWidth * 0.045,
+                                        width: fullWidth,
+                                        color: colors.secondBackground,
+                                        justifyContent: 'center',
+                                        fontSize: 18 * factorRatio,
+                                        borderBottomColor:
+                                            colors.secondBackground,
+                                        borderBottomWidth: 1 * factorRatio,
+                                    }}
+                                />
+                            </View>
+                        )}
                     </View>
-
-                    {this.state.currentlyView == 'Profile Settings' && (
-                        <NavigationBar currentPage={'PROFILE'} />
-                    )}
-
-                    {this.state.currentlyView !== 'Profile Settings' && (
-                        <View style={{height: fullHeight * 0.09375}} />
-                    )}
                 </View>
+
+                {this.state.currentlyView == 'Profile Settings' && (
+                    <NavigationBar currentPage={'PROFILE'} />
+                )}
+
+                {this.state.currentlyView !== 'Profile Settings' && (
+                    <View style={{height: fullHeight * 0.09375}} />
+                )}
+
                 <Modal
                     isVisible={this.state.showDisplayName}
                     style={[
@@ -758,7 +741,7 @@ export default class ProfileSettings extends React.Component {
                         }}
                     />
                 </Modal>
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }

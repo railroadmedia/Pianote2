@@ -148,7 +148,7 @@ export default class VideoPlayerSong extends React.Component {
                                             paddingLeft: '5%',
                                             paddingRight: '5%',
                                             fontSize: 16 * factorRatio,
-                                            fontFamily: 'OpenSans',
+                                            fontFamily: 'OpenSans-Regular',
                                         }}
                                     >
                                         {description}

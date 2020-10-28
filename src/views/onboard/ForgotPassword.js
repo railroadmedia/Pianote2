@@ -21,6 +21,7 @@ import {forgotPass} from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import {openInbox} from 'react-native-email-link';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
@@ -116,14 +117,9 @@ export default class ForgotPassword extends React.Component {
 
     render() {
         return (
-            <View
-                styles={[
-                    styles.centerContent,
-                    {
-                        flex: 1,
-                        alignSelf: 'stretch',
-                    },
-                ]}
+            <KeyboardAwareScrollView
+                style={{flex: 1}}
+                keyboardShouldPersistTaps='handled'
             >
                 <GradientFeature
                     color={'dark'}
@@ -380,7 +376,7 @@ export default class ForgotPassword extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 12,
-                                    fontFamily: 'OpenSans',
+                                    fontFamily: 'OpenSans-Regular',
                                     color: colors.pianoteRed,
                                 }}
                             >
@@ -389,7 +385,7 @@ export default class ForgotPassword extends React.Component {
                         </TouchableOpacity>
                     }
                 />
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }

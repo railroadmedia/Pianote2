@@ -8,8 +8,11 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import {Download_V2, offlineContent} from 'RNDownload';
 import IconFeather from 'react-native-vector-icons/Feather';
 import {SafeAreaView} from 'react-navigation';
+import {NetworkContext} from '../../context/NetworkProvider';
+import {ContentModel} from '@musora/models';
 
 export default class Downloads extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -30,14 +33,61 @@ export default class Downloads extends React.Component {
     }
 
     percentageListener = p => {
-        if (this.state.items.length !== Object.values(offlineContent).length)
-            this.setState({
-                items: Object.values(offlineContent),
-            });
+        let items = Object.values(offlineContent);
+        if (this.state.items.length !== items.length)
+            this.setState(({edit}) => ({
+                items,
+                edit: items.length ? edit : false,
+            }));
     };
 
     onDone = () => {
         this.setState({items: Object.values(offlineContent)});
+    };
+
+    navigate = item => {
+        if (item.overview) {
+            item = new ContentModel(item.overview);
+            return this.props.navigation.navigate('PATHOVERVIEW', {
+                data: {
+                    isLiked: item.post.is_liked_by_current_user,
+                    id: item.post.id,
+                    thumbnail: item.getData('thumbnail_url'),
+                    title: item.getField('title'),
+                    artist: item.getField('instructor').fields[0].value,
+                    xp: item.post.xp,
+                    description: item.getData('description'),
+                    like_count: item.post.like_count,
+                    isAddedToList: item.post.is_added_to_primary_playlist,
+                },
+                items: item.post.lessons
+                    .map(l => new ContentModel(l))
+                    .map(l => ({
+                        title: l.getField('title'),
+                        artist: l.getField('instructor')?.fields?.[0]?.value,
+                        thumbnail: l.getData('thumbnail_url'),
+                        type: l.post.type,
+                        description: l.getData('description'),
+                        xp: l.post.xp,
+                        id: l.post.id,
+                        like_count: l.post.like_count,
+                        duration: l.post.fields
+                            ?.find(f => f.key === 'video')
+                            ?.value?.fields?.find(
+                                f => f.key === 'length_in_seconds',
+                            )?.value,
+                        isLiked: l.post.is_liked_by_current_user,
+                        isAddedToList: l.post.is_added_to_primary_playlist,
+                        isStarted: l.post.started,
+                        isCompleted: l.post.completed,
+                        bundle_count: l.post.bundle_count,
+                        progress_percent: l.post.progress_percent,
+                    })),
+            });
+        }
+        this.props.navigation.navigate('VIDEOPLAYER', {
+            id: item.id,
+        });
     };
 
     render() {
@@ -63,7 +113,9 @@ export default class Downloads extends React.Component {
                     </Text>
                     <TouchableOpacity
                         onPress={() =>
-                            this.setState(({edit}) => ({edit: !edit}))
+                            this.setState(({edit}) => ({
+                                edit: items.length ? !edit : false,
+                            }))
                         }
                         style={{
                             right: 0,
@@ -102,18 +154,11 @@ export default class Downloads extends React.Component {
                             Any lessons you download will be available here.
                         </Text>
                     )}
-                    renderItem={({item, index}) => {
+                    renderItem={({item}) => {
                         let type = item.lesson ? 'lesson' : 'overview';
                         return (
                             <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.navigate(
-                                        'VIDEOPLAYER',
-                                        {
-                                            id: item.id,
-                                        },
-                                    );
-                                }}
+                                onPress={() => this.navigate(item)}
                                 style={{
                                     padding: 5,
                                     borderTopWidth: 0.5,
@@ -193,7 +238,7 @@ export default class Downloads extends React.Component {
                                                 colors.pianoteRed,
                                             alert: {
                                                 alertTextMessageFontFamily:
-                                                    'OpenSans',
+                                                    'OpenSans-Regular',
                                                 alertTouchableTextDeleteColor:
                                                     'white',
                                                 alertTextTitleColor: 'black',

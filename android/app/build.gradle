@@ -199,8 +199,9 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-video')
     implementation project(':react-native-google-cast')
+    implementation project(':react-native-background-downloader')
+    implementation project(':rn-fetch-blob')
     implementation project(':react-native-fs')
     implementation project(':react-native-firebase')
     implementation project(':react-native-intercom')

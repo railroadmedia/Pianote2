@@ -27,6 +27,7 @@ import java.util.List;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.reactnative.googlecast.GoogleCastPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -44,8 +45,9 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           packages.add(new RNFirebaseMessagingPackage());
           packages.add(new RNFirebaseNotificationsPackage());
-          // packages.add(new GoogleCastPackage());
-          packages.add(new RNBackgroundDownloaderPackage());
+           packages.add(new GoogleCastPackage());
+            packages.add(new RNBackgroundDownloaderPackage());
+            packages.add(new RNFetchBlobPackage());
           packages.add(new ReactVideoPackage());
           // packages.add(new MyReactNativePackage());
           return packages;

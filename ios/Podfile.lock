@@ -310,7 +310,7 @@ PODS:
     - React
     - react-native-video/Video (= 5.1.0-alpha8)
   - react-native-video/Video (5.1.0-alpha8):
-    - React
+    - React-Core
   - react-native-viewpager (3.3.1):
     - React
   - react-native-webview (10.10.0):
@@ -354,7 +354,7 @@ PODS:
     - React
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNAirplay (1.0.7):
+  - RNAirplay (1.0.9):
     - React
   - RNCAsyncStorage (1.12.1):
     - React-Core
@@ -381,8 +381,8 @@ PODS:
     - React-Core
   - RNPDF (0.11.0):
     - React
-  - RNScreens (2.11.0):
-    - React
+  - RNScreens (2.12.0):
+    - React-Core
   - RNSVG (9.13.6):
     - React
   - RNVectorIcons (7.1.0):
@@ -629,7 +629,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: e36c1bb6df27ab84aa933679b3f5bbf9d180b18f
   react-native-orientation-locker: 47aaa55d59bfc1613804dc22f159e6bb1cca5f30
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 8d97379f3c2322a569f1e27542ad1a646cad9444
+  react-native-video: 0c9eb61b06ef78b6e2598e1159743de1d82b6e9e
   react-native-viewpager: 248267e605c2d4edd26924da7f15032d57ac0b75
   react-native-webview: 2e330b109bfd610e9818bf7865d1979f898960a7
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
@@ -644,7 +644,7 @@ SPEC CHECKSUMS:
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   ReactNativeNavigation: bed6f504aa1a4dadd151503bf99d0ef96d06847f
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAirplay: 5d0c88d8059dedb132c0f8a74b65e84af9120eea
+  RNAirplay: d863b69586b2ac0270cbb349c44c37a525681329
   RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
   RNDeviceInfo: e841619c3dac5495a095c5455473579ff04908d4
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
@@ -653,13 +653,13 @@ SPEC CHECKSUMS:
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNIap: 091b98e143440e580e51d08b43a3196ae788e87b
   RNPDF: f9dc9bac0b82da5f250df9bdd0d59b5993828fa2
-  RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
+  RNScreens: 4b488fdf9537bbce829e2910c8cce1d17f6d9be8
   RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: a0ba0aa326edce445692e6de4caa9cef83f12b0f
+PODFILE CHECKSUM: 1fa5141bb38acaa11b877a1268277b6de9ea8604
 
 COCOAPODS: 1.9.1

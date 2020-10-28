@@ -100,14 +100,14 @@ export default class CreateAccount extends React.Component {
                 .then(response => response.json())
                 .then(response => {
                     console.log(response);
-                    if (response.unique == true) {
+                    if (response?.exists) {
+                        this.setState({showCheckEmail: true});
+                    } else {
                         this.props.navigation.navigate('CREATEACCOUNT2', {
                             email: this.state.email,
                             purchase: this.props.navigation.state.params
                                 ?.purchase,
                         });
-                    } else {
-                        this.setState({showCheckEmail: true});
                     }
                 })
                 .catch(error => {
@@ -119,7 +119,7 @@ export default class CreateAccount extends React.Component {
     render() {
         return (
             <View
-                styles={[
+                style={[
                     styles.centerContent,
                     {
                         flex: 1,

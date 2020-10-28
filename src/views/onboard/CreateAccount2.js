@@ -18,8 +18,9 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
-import {signUp} from '../../services/UserDataAuth';
+import {signUp, getUserData} from '../../services/UserDataAuth';
 import AsyncStorage from '@react-native-community/async-storage';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -165,14 +166,9 @@ export default class CreateAccount extends React.Component {
 
     render() {
         return (
-            <View
-                styles={[
-                    styles.centerContent,
-                    {
-                        flex: 1,
-                        alignSelf: 'stretch',
-                    },
-                ]}
+            <KeyboardAwareScrollView
+                style={{flex: 1}}
+                keyboardShouldPersistTaps='handled'
             >
                 <GradientFeature
                     color={'dark'}
@@ -725,7 +721,7 @@ export default class CreateAccount extends React.Component {
                         }}
                     />
                 </Modal>
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }
