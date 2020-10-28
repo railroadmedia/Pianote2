@@ -19,7 +19,6 @@
         "@react-native-community/viewpager": "^3.3.0",
         "RNDownload": "https://github.com/bogdan-vol/RNDownload.git",
         "RNVideoEnhanced": "https://github.com/railroadmedia/RNVideoEnhanced.git",
-        "firebase": "^8.0.0",
         "link": "^0.1.5",
         "moment": "^2.27.0",
         "opentype.js": "^1.1.0",

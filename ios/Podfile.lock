@@ -307,7 +307,7 @@ PODS:
   - react-native-splash-screen (3.2.0):
     - React
   - react-native-video (5.1.0-alpha8):
-    - React
+    - React-Core
     - react-native-video/Video (= 5.1.0-alpha8)
   - react-native-video/Video (5.1.0-alpha8):
     - React-Core
@@ -660,6 +660,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 1fa5141bb38acaa11b877a1268277b6de9ea8604
+PODFILE CHECKSUM: 717edc54f2b5997acda81deed41ec06fd0a53d80
 
 COCOAPODS: 1.9.1

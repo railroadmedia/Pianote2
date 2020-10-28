@@ -158,26 +158,45 @@ export default class VideoPlayer extends React.Component {
     };
 
     getContent = async () => {
-        let content;
+        let content, comments;
         if (!this.context.isConnected) {
             content =
                 offlineContent[this.state.id]?.lesson ||
                 offlineContent[
                     this.props.navigation.state.params.parentId
                 ]?.overview.lessons.find(l => l.id === this.state.id);
-        } else if (this.props.navigation.state.params.url) {
-            content = await foundationsService.getUnitLesson(this.state.url);
+            comments = content.comments;
+            this.allCommentsNum = comments.length;
         } else {
-            content = await contentService.getContent(this.state.id);
+            let result;
+            if (this.props.navigation.state.params.url)
+                result = await Promise.all([
+                    foundationsService.getUnitLesson(this.state.url),
+                    commentsService.getComments(
+                        this.state.id,
+                        this.state.commentSort,
+                        this.limit,
+                    ),
+                ]);
+            else
+                result = await Promise.all([
+                    contentService.getContent(this.state.id),
+                    commentsService.getComments(
+                        this.state.id,
+                        this.state.commentSort,
+                        this.limit,
+                    ),
+                ]);
+            content = result[0];
+            comments = result[1].data;
+            this.allCommentsNum = result[1].meta.totalResults;
         }
-        console.log(content);
         content = new ContentModel(content);
-        await this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map(rl => {
             return new ContentModel(rl);
         });
         let al = [];
-        if (content.post.assignments) {
+        if (content.post.assignments && this.context.isConnected) {
             await downloadService.getAssignWHRatio(content.post.assignments);
             let assignments = content.post.assignments.map(assignment => {
                 return new ContentModel(assignment);
@@ -239,6 +258,7 @@ export default class VideoPlayer extends React.Component {
         }
         this.setState(
             {
+                comments,
                 id: content.id,
                 url: content.post.mobile_app_url,
                 type: content.type,
@@ -1006,25 +1026,16 @@ export default class VideoPlayer extends React.Component {
                     this.state.showVideo &&
                     this.state.video_playback_endpoints && (
                         <Video
-                            quality={''}
-                            aCasting={''}
-                            gCasting={''}
-                            offlinePath={''}
-                            orientation={''}
-                            connection={true}
                             toSupport={() => {}}
                             onRefresh={() => {}}
                             content={this.state}
                             maxFontMultiplier={1}
                             settingsMode={'bottom'}
                             onFullscreen={() => {}}
-                            onQualityChange={q => {}}
-                            onACastingChange={c => {}}
-                            onGCastingChange={c => {}}
                             ref={r => (this.video = r)}
-                            onOrientationChange={o => {}}
                             type={false ? 'audio' : 'video'}
                             onUpdateVideoProgress={() => {}}
+                            connection={this.context.isConnected}
                             onBack={this.props.navigation.goBack}
                             goToNextLesson={() =>
                                 this.switchLesson(
