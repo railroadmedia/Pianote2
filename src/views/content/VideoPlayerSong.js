@@ -35,7 +35,7 @@ export default class VideoPlayerSong extends React.Component {
                     contentInsetAdjustmentBehavior={'never'}
                     style={{
                         flex: 1,
-                        backgroundColor: 'white',
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
                     <View style={{height: 25 * factorVertical}} />
@@ -53,7 +53,7 @@ export default class VideoPlayerSong extends React.Component {
                                 <AntIcon
                                     name={'close'}
                                     size={30 * factorRatio}
-                                    color={'#000000'}
+                                    color={'#ffffff'}
                                 />
                             </TouchableOpacity>
                             <Text
@@ -63,7 +63,7 @@ export default class VideoPlayerSong extends React.Component {
                                     fontSize: 16 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
-                                    color: '#b9b9b9',
+                                    color: colors.secondBackground,
                                 }}
                             >
                                 ASSIGNMENT #{index}
@@ -76,6 +76,7 @@ export default class VideoPlayerSong extends React.Component {
                                     fontSize: 28 * factorRatio,
                                     fontWeight: '700',
                                     textAlign: 'center',
+                                    color: '#ffffff',
                                 }}
                             >
                                 {title}
@@ -135,7 +136,7 @@ export default class VideoPlayerSong extends React.Component {
                             <View
                                 style={{
                                     height: 25 * factorVertical,
-                                    borderBottomColor: '#ececec',
+                                    borderBottomColor: colors.secondBackground,
                                     borderBottomWidth: 1 * factorRatio,
                                 }}
                             />
@@ -149,6 +150,7 @@ export default class VideoPlayerSong extends React.Component {
                                             paddingRight: '5%',
                                             fontSize: 16 * factorRatio,
                                             fontFamily: 'OpenSans-Regular',
+                                            color: '#ffffff',
                                         }}
                                     >
                                         {description}
@@ -167,7 +169,7 @@ export default class VideoPlayerSong extends React.Component {
                     />
                 </ScrollView>
                 {!this.state.hideTitles && (
-                    <View style={{backgroundColor: '#ffffff'}}>
+                    <View style={{backgroundColor: colors.mainBackground}}>
                         {slug && (
                             <TouchableOpacity
                                 onPress={() =>

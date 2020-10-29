@@ -196,6 +196,7 @@ export default class VideoPlayer extends React.Component {
             return new ContentModel(rl);
         });
         let al = [];
+        console.log(content.post);
         if (content.post.assignments && this.context.isConnected) {
             await downloadService.getAssignWHRatio(content.post.assignments);
             let assignments = content.post.assignments.map(assignment => {
@@ -240,21 +241,26 @@ export default class VideoPlayer extends React.Component {
             }
         }
         let rl = [];
-        for (let i in relatedLessons) {
-            rl.push({
-                title: relatedLessons[i].getField('title'),
-                thumbnail: relatedLessons[i].getData('thumbnail_url'),
-                type: relatedLessons[i].type,
-                id: relatedLessons[i].id,
-                mobile_app_url: relatedLessons[i].post.mobile_app_url,
-                // duration: new ContentModel(
-                //     relatedLessons[i].getFieldMulti('video')[0],
-                // )?.getField('length_in_seconds'),
-                isAddedToList: relatedLessons[i].isAddedToList,
-                isStarted: relatedLessons[i].isStarted,
-                isCompleted: relatedLessons[i].isCompleted,
-                progress_percent: relatedLessons[i].post.progress_percent,
-            });
+        if (relatedLessons) {
+            for (let i in relatedLessons) {
+                console.log(relatedLessons[i]);
+                rl.push({
+                    title: relatedLessons[i].getField('title'),
+                    thumbnail: relatedLessons[i].getData('thumbnail_url'),
+                    type: relatedLessons[i].type,
+                    id: relatedLessons[i].id,
+                    mobile_app_url: relatedLessons[i].post.mobile_app_url,
+                    duration: relatedLessons[i].fields.find('video')
+                        ? new ContentModel(
+                              relatedLessons[i].getFieldMulti('video')[0],
+                          )?.getField('length_in_seconds')
+                        : 0,
+                    isAddedToList: relatedLessons[i].isAddedToList,
+                    isStarted: relatedLessons[i].isStarted,
+                    isCompleted: relatedLessons[i].isCompleted,
+                    progress_percent: relatedLessons[i].post.progress_percent,
+                });
+            }
         }
         this.setState(
             {
@@ -283,7 +289,7 @@ export default class VideoPlayer extends React.Component {
                 isLiked: content.post.is_liked_by_current_user,
                 lengthInSec: new ContentModel(
                     content.getFieldMulti('video')[0],
-                ).getField('length_in_seconds'),
+                )?.getField('length_in_seconds'),
                 lastWatchedPosInSec:
                     content.post.last_watch_position_in_seconds,
                 progress:
