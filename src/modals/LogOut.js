@@ -26,7 +26,7 @@ class LogOut extends React.Component {
     logOut = async () => {
         Intercom.logout();
         await AsyncStorage.clear();
-        await AsyncStorage.setItem('loggedInStatus', 'false');
+        await AsyncStorage.setItem('loggedIn', 'false');
         await this.props.navigation.dispatch(resetAction);
     };
 

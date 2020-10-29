@@ -35,7 +35,7 @@ class GradientFeature extends React.Component {
                     position: 'absolute',
                     width: '100%',
                     bottom: 0,
-                    zIndex: 2,
+                    zIndex: this.props.zIndex || 2,
                     elevation: Platform.OS === 'android' ? 2 : 0,
                     left: 0,
                 }}

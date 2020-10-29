@@ -15,7 +15,6 @@ import FastImage from 'react-native-fast-image';
 import PasswordMatch from '../../modals/PasswordMatch';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
-import {NavigationActions, StackActions} from 'react-navigation';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
@@ -119,7 +118,7 @@ export default class ResetPassword extends React.Component {
                 if (res.success) {
                     if (res.token) {
                         await AsyncStorage.multiSet([
-                            ['loggedInStatus', 'true'],
+                            ['loggedIn', 'true'],
                             ['email', email],
                             ['password', this.state.password],
                             ['token', JSON.stringify(res.token)],

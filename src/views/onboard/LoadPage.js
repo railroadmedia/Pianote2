@@ -3,13 +3,14 @@
  */
 import React from 'react';
 import {View} from 'react-native';
+
 import {Download_V2} from 'RNDownload';
 import SplashScreen from 'react-native-splash-screen';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {getUserData, getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import {NetworkContext} from '../../context/NetworkProvider';
+import Pianote from '../../assets/img/svgs/pianote';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -27,16 +28,11 @@ export default class LoadPage extends React.Component {
     componentDidMount() {
         Download_V2.resumeAll().then(async () => {
             await SplashScreen.hide();
-            if (!this.context.isConnected)
+            if (!this.context.isConnected) {
                 return this.props.navigation.navigate('DOWNLOADS');
-            let data = await AsyncStorage.multiGet([
-                'loggedInStatus',
-                'resetKey',
-                'lessonUrl',
-                'commentId',
-                'email',
-                'password',
-            ]);
+            }
+
+            let data = await AsyncStorage.multiGet(['loggedInStatus', 'resetKey', 'lessonUrl', 'commentId', 'email', 'password']);
 
             const isLoggedIn = data[0][1];
             const resetKey = data[1][1];
@@ -46,13 +42,16 @@ export default class LoadPage extends React.Component {
             const pass = data[5][1];
             const res = await getToken(email, pass);
 
-            if (res.success) {    
+            // if getToken success, else == no email or pass, which means not logged in
+            if (res.success || isLoggedIn == true || isLoggedIn == 'true') {    
+                // set logged in status to true
                 await AsyncStorage.multiSet([['loggedInStatus', 'true']]);
-
+                
+                // get userData
                 let userData = await getUserData();
                 
                 if (lessonUrl && commentId) {
-                    // if lesson or comment notification? go to video
+                    // if lesson or comment notification go to video
                     this.props.navigation.dispatch(
                         StackActions.reset({
                             index: 0,
@@ -69,35 +68,27 @@ export default class LoadPage extends React.Component {
                     );
                 } else if (resetKey) {
                     // go to reset pass
-                    setTimeout(
-                        () =>
-                            this.props.navigation.dispatch(
-                                StackActions.reset({
-                                    index: 0,
-                                    actions: [
-                                        NavigationActions.navigate({
-                                            routeName: 'RESETPASSWORD',
-                                        }),
-                                    ],
+                    this.props.navigation.dispatch(
+                        StackActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({
+                                    routeName: 'RESETPASSWORD',
                                 }),
-                            ),
-                        1000,
+                            ],
+                        }),
                     );
                 } else if (isLoggedIn !== 'true' || userData.isMember == false) {
-                    // go to login
-                    setTimeout(
-                        () =>
-                            this.props.navigation.dispatch(
-                                StackActions.reset({
-                                    index: 0,
-                                    actions: [
-                                        NavigationActions.navigate({
-                                            routeName: 'LOGIN',
-                                        }),
-                                    ],
+                    // if not logged in or not a member go to login
+                    this.props.navigation.dispatch(
+                        StackActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({
+                                    routeName: 'LOGIN',
                                 }),
-                            ),
-                        1000,
+                            ],
+                        }),
                     );
                 } else {
                     // if member then check membership type   
@@ -125,7 +116,8 @@ export default class LoadPage extends React.Component {
                         });
                     }
                 }
-            } else if(!res.success) {
+            } else if(!res.success || isLoggedIn == false || isLoggedIn == 'false') {
+                // is not logged in
                 setTimeout(
                     () =>
                         this.props.navigation.dispatch(

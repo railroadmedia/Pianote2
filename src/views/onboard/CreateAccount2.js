@@ -114,7 +114,7 @@ export default class CreateAccount extends React.Component {
                         const token = `Bearer ${response.meta.auth_code}`;
                         try {
                             await AsyncStorage.multiSet([
-                                ['loggedInStatus', 'true'],
+                                ['loggedIn', 'true'],
                                 ['email', this.state.email],
                                 ['password', this.state.password],
                                 ['token', token],

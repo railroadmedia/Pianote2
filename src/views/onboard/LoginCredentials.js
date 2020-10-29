@@ -5,34 +5,25 @@ import React from 'react';
 import {
     View,
     Text,
-    TextInput,
-    TouchableOpacity,
     Keyboard,
-    Animated,
     Platform,
+    TextInput,
     ScrollView,
+    TouchableOpacity,
 } from 'react-native';
-import Modal from 'react-native-modal';
 import RNIap from 'react-native-iap';
+import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import Loading from '../../components/Loading.js';
+import Pianote from '../../assets/img/svgs/pianote';
+import CustomModal from '../../modals/CustomModal.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
+import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
+import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import PasswordHidden from 'Pianote2/src/assets/img/svgs/passwordHidden.svg';
-import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
-import Loading from '../../components/Loading.js';
-import CustomModal from '../../modals/CustomModal.js';
-import {getToken, restorePurchase} from '../../services/UserDataAuth.js';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
-var showListener =
-    Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-var hideListener =
-    Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+import {getToken, getUserData, restorePurchase} from '../../services/UserDataAuth.js';
 
 export default class LoginCredentials extends React.Component {
     static navigationOptions = {header: null};
@@ -46,17 +37,18 @@ export default class LoginCredentials extends React.Component {
             secureTextEntry: true,
             showPasswordEmailMatch: false,
             loginErrorMessage: '',
+            scrollViewContentFlex: {flex: 1},
         };
     }
 
     componentDidMount() {
         this.keyboardDidShowListener = Keyboard.addListener(
-            showListener,
-            this._keyboardDidShow,
+            'keyboardWillShow',
+            () => this.setState({scrollViewContentFlex: {}}),
         );
         this.keyboardDidHideListener = Keyboard.addListener(
-            hideListener,
-            this._keyboardDidHide,
+            'keyboardWillHide',
+            () => this.setState({scrollViewContentFlex: {flex: 1}}),
         );
     }
 
@@ -118,23 +110,20 @@ export default class LoginCredentials extends React.Component {
                     ? 'getAvailablePurchases'
                     : 'getPurchaseHistory'
             ]();
-            console.log('login sync', purchases);
             if (purchases.length) {
-                if (Platform.OS === 'ios') {
+                if (Platform.OS === 'ios')
                     return {
                         receipt: purchases[0].transactionReceipt,
                     };
-                } else {
-                    return {
-                        purchases: purchases.map(m => {
-                            return {
-                                purchase_token: m.purchaseToken,
-                                package_name: 'com.pianote2',
-                                product_id: m.productId,
-                            };
-                        }),
-                    };
-                }
+                return {
+                    purchases: purchases.map(m => {
+                        return {
+                            purchase_token: m.purchaseToken,
+                            package_name: 'com.pianote2',
+                            product_id: m.productId,
+                        };
+                    }),
+                };
             }
         } catch (error) {
             console.log('error getting purchases: ', error)
@@ -186,10 +175,10 @@ export default class LoginCredentials extends React.Component {
                 loginErrorMessage: response.message,
             });
         }
+        this.loadingRef.toggleLoading(false);
     };
 
     restorePurchases = async () => {
-        console.log('restore');
         try {
             await RNIap.initConnection();
         } catch (e) {
@@ -201,7 +190,6 @@ export default class LoginCredentials extends React.Component {
         this.loadingRef?.toggleLoading();
         try {
             const purchases = await RNIap.getAvailablePurchases();
-            console.log(purchases);
             if (!purchases.length) {
                 this.loadingRef?.toggleLoading();
                 return this.customModal.toggle(
@@ -221,9 +209,7 @@ export default class LoginCredentials extends React.Component {
                     };
                 });
             }
-            console.log(reducedPurchase);
             let resp = restorePurchase(reducedPurchase);
-            console.log(resp);
             if (this.loadingRef) this.loadingRef.toggleLoading();
             if (resp) {
                 if (resp.shouldCreateAccount) {
