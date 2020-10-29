@@ -732,8 +732,8 @@ export default class SinglePack extends React.Component {
                         style={[
                             styles.centerContent,
                             {
-                                height: fullHeight * 0.4,
-                                width: '100%',
+                                flex: 1,
+                                backgroundColor: colors.mainBackground,
                             },
                         ]}
                     >

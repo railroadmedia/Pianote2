@@ -11,6 +11,7 @@ import {NavigationActions, StackActions} from 'react-navigation';
 import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from '../../services/common.service';
 import {NetworkContext} from '../../context/NetworkProvider';
+import {getToken} from '../../services/UserDataAuth';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -35,79 +36,94 @@ export default class LoadPage extends React.Component {
                 'resetKey',
                 'lessonUrl',
                 'commentId',
+                'email',
+                'password',
             ]);
             console.log(data);
-            isLoggedIn = data[0][1];
-            let resetKey = data[1][1];
-            let lessonUrl = data[2][1];
-            let commentId = data[3][1];
-            let userData = await getUserData();
-            console.log(userData);
-            if (lessonUrl && commentId) {
-                this.props.navigation.dispatch(
-                    StackActions.reset({
-                        index: 0,
-                        actions: [
-                            NavigationActions.navigate({
-                                routeName: 'VIDEOPLAYER',
-                                params: {
-                                    url: lessonUrl,
-                                    commentId,
-                                },
-                            }),
-                        ],
-                    }),
-                );
-            } else if (resetKey) {
-                // go to reset pass
-                setTimeout(
-                    () =>
-                        this.props.navigation.dispatch(
-                            StackActions.reset({
-                                index: 0,
-                                actions: [
-                                    NavigationActions.navigate({
-                                        routeName: 'RESETPASSWORD',
-                                    }),
-                                ],
-                            }),
-                        ),
-                    1000,
-                );
-            } else if (isLoggedIn !== 'true' || userData.isMember == false) {
-                // go to login
-                setTimeout(
-                    () =>
-                        this.props.navigation.dispatch(
-                            StackActions.reset({
-                                index: 0,
-                                actions: [
-                                    NavigationActions.navigate({
-                                        routeName: 'LOGIN',
-                                    }),
-                                ],
-                            }),
-                        ),
-                    1000,
-                );
-            } else {
-                let currentDate = new Date().getTime() / 1000;
-                let userExpDate =
-                    new Date(userData.expirationDate).getTime() / 1000;
-
-                if (userData.isLifetime || currentDate < userExpDate) {
-                    // go to lessons
+            const isLoggedIn = data[0][1];
+            const resetKey = data[1][1];
+            const lessonUrl = data[2][1];
+            const commentId = data[3][1];
+            const email = data[4][1];
+            const pass = data[5][1];
+            const res = await getToken(email, pass);
+            if (res.success) {
+                await AsyncStorage.multiSet([
+                    ['loggedInStatus', 'true'],
+                    ['token', JSON.stringify(res.token)],
+                ]);
+                let userData = await getUserData();
+                if (lessonUrl && commentId) {
+                    this.props.navigation.dispatch(
+                        StackActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({
+                                    routeName: 'VIDEOPLAYER',
+                                    params: {
+                                        url: lessonUrl,
+                                        commentId,
+                                    },
+                                }),
+                            ],
+                        }),
+                    );
+                } else if (resetKey) {
+                    // go to reset pass
                     setTimeout(
-                        () => this.props.navigation.dispatch(resetAction),
+                        () =>
+                            this.props.navigation.dispatch(
+                                StackActions.reset({
+                                    index: 0,
+                                    actions: [
+                                        NavigationActions.navigate({
+                                            routeName: 'RESETPASSWORD',
+                                        }),
+                                    ],
+                                }),
+                            ),
+                        1000,
+                    );
+                } else if (
+                    isLoggedIn !== 'true' ||
+                    userData.isMember == false
+                ) {
+                    // go to login
+                    setTimeout(
+                        () =>
+                            this.props.navigation.dispatch(
+                                StackActions.reset({
+                                    index: 0,
+                                    actions: [
+                                        NavigationActions.navigate({
+                                            routeName: 'LOGIN',
+                                        }),
+                                    ],
+                                }),
+                            ),
                         1000,
                     );
                 } else {
-                    // go to membership expired
-                    setTimeout(
-                        () =>
-                            this.props.navigation.navigate('MEMBERSHIPEXPIRED'),
-                        1000,
-                    );
+                    let currentDate = new Date().getTime() / 1000;
+                    let userExpDate =
+                        new Date(userData.expirationDate).getTime() / 1000;
+
+                    if (userData.isLifetime || currentDate < userExpDate) {
+                        // go to lessons
+                        setTimeout(
+                            () => this.props.navigation.dispatch(resetAction),
+                            1000,
+                        );
+                    } else {
+                        // go to membership expired
+                        setTimeout(
+                            () =>
+                                this.props.navigation.navigate(
+                                    'MEMBERSHIPEXPIRED',
+                                ),
+                            1000,
+                        );
+                    }
                 }
             }
         });

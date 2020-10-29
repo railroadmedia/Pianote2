@@ -21,7 +21,6 @@ export async function getToken(userEmail, userPass, purchases) {
             },
         );
         let jsonRes = await response.json();
-        console.log(jsonRes);
         return jsonRes;
     } catch (error) {
         console.log('getToken Error', error);

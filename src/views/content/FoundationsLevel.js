@@ -82,7 +82,7 @@ export default class FoundationsLevel extends React.Component {
                 id: response.id,
                 isStarted: response.isStarted,
                 isCompleted: response.isCompleted,
-                description: newContent[i]
+                description: response
                     .getData('description')
                     .replace(/(<([^>]+)>)/g, '')
                     .replace(/&nbsp;/g, '')
@@ -105,17 +105,7 @@ export default class FoundationsLevel extends React.Component {
         } else {
             addToMyList(this.state.id);
         }
-    };
-
-    addToMyList = () => {
-        // api call here
-        this.state.data.isAddedToList = !this.state.data.isAddedToList;
-        this.setState({data: this.state.data});
-        if (this.state.data.isAddedToList) {
-            addToMyList(this.state.data.id);
-        } else {
-            removeFromMyList(this.state.data.id);
-        }
+        this.setState(state => ({isAddedToList: !state.isAddedToList}));
     };
 
     render() {
