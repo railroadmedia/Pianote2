@@ -362,7 +362,7 @@ export default class StudentFocusShow extends React.Component {
                         getVideos={() => this.getVideos()}
                         navigator={row =>
                             this.props.navigation.navigate('VIDEOPLAYER', {
-                                data: row,
+                                id: row.id,
                             })
                         }
                     />
