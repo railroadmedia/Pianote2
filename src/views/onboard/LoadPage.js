@@ -3,15 +3,18 @@
  */
 import React from 'react';
 import {View} from 'react-native';
+
 import {Download_V2} from 'RNDownload';
 import SplashScreen from 'react-native-splash-screen';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
-import commonService from '../../services/common.service';
+
 import {NetworkContext} from '../../context/NetworkProvider';
+
 import {getToken} from '../../services/UserDataAuth';
+import {getUserData} from '../../services/UserDataAuth';
+
+import Pianote from '../../assets/img/svgs/pianote';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -31,25 +34,43 @@ export default class LoadPage extends React.Component {
             await SplashScreen.hide();
             if (!this.context.isConnected)
                 return this.props.navigation.navigate('DOWNLOADS');
-            let data = await AsyncStorage.multiGet([
-                'loggedInStatus',
-                'resetKey',
-                'lessonUrl',
-                'commentId',
-                'email',
-                'password',
-            ]);
-            console.log(data);
-            const isLoggedIn = data[0][1];
-            const resetKey = data[1][1];
-            const lessonUrl = data[2][1];
-            const commentId = data[3][1];
-            const email = data[4][1];
-            const pass = data[5][1];
-            const res = await getToken(email, pass);
+            let data = (
+                await AsyncStorage.multiGet([
+                    'loggedIn',
+                    'resetKey',
+                    'lessonUrl',
+                    'commentId',
+                    'email',
+                    'password',
+                ])
+            ).reduce((i, j) => {
+                i[j[0]] =
+                    j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
+                return i;
+            }, {});
+            const {
+                email,
+                resetKey,
+                password,
+                loggedIn,
+                lessonUrl,
+                commentId,
+            } = data;
+            if (!loggedIn)
+                return this.props.navigation.dispatch(
+                    StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({
+                                routeName: 'LOGIN',
+                            }),
+                        ],
+                    }),
+                );
+            const res = await getToken(email, password);
             if (res.success) {
                 await AsyncStorage.multiSet([
-                    ['loggedInStatus', 'true'],
+                    ['loggedIn', 'true'],
                     ['token', JSON.stringify(res.token)],
                 ]);
                 let userData = await getUserData();
@@ -70,38 +91,27 @@ export default class LoadPage extends React.Component {
                     );
                 } else if (resetKey) {
                     // go to reset pass
-                    setTimeout(
-                        () =>
-                            this.props.navigation.dispatch(
-                                StackActions.reset({
-                                    index: 0,
-                                    actions: [
-                                        NavigationActions.navigate({
-                                            routeName: 'RESETPASSWORD',
-                                        }),
-                                    ],
+                    this.props.navigation.dispatch(
+                        StackActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({
+                                    routeName: 'RESETPASSWORD',
                                 }),
-                            ),
-                        1000,
+                            ],
+                        }),
                     );
-                } else if (
-                    isLoggedIn !== 'true' ||
-                    userData.isMember == false
-                ) {
+                } else if (userData.isMember == false) {
                     // go to login
-                    setTimeout(
-                        () =>
-                            this.props.navigation.dispatch(
-                                StackActions.reset({
-                                    index: 0,
-                                    actions: [
-                                        NavigationActions.navigate({
-                                            routeName: 'LOGIN',
-                                        }),
-                                    ],
+                    this.props.navigation.dispatch(
+                        StackActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({
+                                    routeName: 'LOGIN',
                                 }),
-                            ),
-                        1000,
+                            ],
+                        }),
                     );
                 } else {
                     let currentDate = new Date().getTime() / 1000;
@@ -110,19 +120,10 @@ export default class LoadPage extends React.Component {
 
                     if (userData.isLifetime || currentDate < userExpDate) {
                         // go to lessons
-                        setTimeout(
-                            () => this.props.navigation.dispatch(resetAction),
-                            1000,
-                        );
+                        this.props.navigation.dispatch(resetAction);
                     } else {
                         // go to membership expired
-                        setTimeout(
-                            () =>
-                                this.props.navigation.navigate(
-                                    'MEMBERSHIPEXPIRED',
-                                ),
-                            1000,
-                        );
+                        this.props.navigation.navigate('MEMBERSHIPEXPIRED');
                     }
                 }
             }

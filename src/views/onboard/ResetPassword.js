@@ -119,7 +119,7 @@ export default class ResetPassword extends React.Component {
                 if (res.success) {
                     if (res.token) {
                         await AsyncStorage.multiSet([
-                            ['loggedInStatus', 'true'],
+                            ['loggedIn', 'true'],
                             ['email', email],
                             ['password', this.state.password],
                             ['token', JSON.stringify(res.token)],
