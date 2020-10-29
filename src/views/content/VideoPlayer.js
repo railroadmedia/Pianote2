@@ -19,7 +19,7 @@ import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Video from 'RNVideoEnhanced';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {Download_V2} from 'RNDownload';
+import {Download_V2, offlineContent, DownloadResources} from 'RNDownload';
 
 import Replies from '../../components/Replies.js';
 import CommentSort from '../../modals/CommentSort.js';
@@ -45,19 +45,19 @@ import {
     resetProgress,
     markComplete,
 } from 'Pianote2/src/services/UserActions.js';
-import {DownloadResources} from '../../components/ConnectedDownloadResources';
 import OverviewComplete from '../../modals/OverviewComplete.js';
 import VideoPlayerSong from './VideoPlayerSong.js';
 import AssignmentComplete from '../../modals/AssignmentComplete.js';
 import RestartCourse from '../../modals/RestartCourse.js';
 import foundationsService from '../../services/foundations.service.js';
-
+import {NetworkContext} from '../../context/NetworkProvider';
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
     Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
 export default class VideoPlayer extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -66,6 +66,7 @@ export default class VideoPlayer extends React.Component {
         this.state = {
             id: this.props.navigation.state.params.id,
             url: this.props.navigation.state.params.url,
+            commentId: '',
             commentSort: 'Popular', // Newest, Oldest, Mine, Popular
             profileImage: '',
             isLoadingAll: true,
@@ -157,19 +158,46 @@ export default class VideoPlayer extends React.Component {
     };
 
     getContent = async () => {
-        let content;
-        if (this.props.navigation.state.params.url) {
-            content = await foundationsService.getUnitLesson(this.state.url);
+        let content, comments;
+        if (!this.context.isConnected) {
+            content =
+                offlineContent[this.state.id]?.lesson ||
+                offlineContent[
+                    this.props.navigation.state.params.parentId
+                ]?.overview.lessons.find(l => l.id === this.state.id);
+            comments = content.comments;
+            this.allCommentsNum = comments.length;
         } else {
-            content = await contentService.getContent(this.state.id);
+            let result;
+            if (this.props.navigation.state.params.url)
+                result = await Promise.all([
+                    foundationsService.getUnitLesson(this.state.url),
+                    commentsService.getComments(
+                        this.state.id,
+                        this.state.commentSort,
+                        this.limit,
+                    ),
+                ]);
+            else
+                result = await Promise.all([
+                    contentService.getContent(this.state.id),
+                    commentsService.getComments(
+                        this.state.id,
+                        this.state.commentSort,
+                        this.limit,
+                    ),
+                ]);
+            content = result[0];
+            comments = result[1].data;
+            this.allCommentsNum = result[1].meta.totalResults;
         }
         content = new ContentModel(content);
-        this.fetchComments(content.id);
         let relatedLessons = content.post.related_lessons?.map(rl => {
             return new ContentModel(rl);
         });
         let al = [];
-        if (content.post.assignments) {
+        console.log(content.post);
+        if (content.post.assignments && this.context.isConnected) {
             await downloadService.getAssignWHRatio(content.post.assignments);
             let assignments = content.post.assignments.map(assignment => {
                 return new ContentModel(assignment);
@@ -213,25 +241,30 @@ export default class VideoPlayer extends React.Component {
             }
         }
         let rl = [];
-
-        for (i in relatedLessons) {
-            rl.push({
-                title: relatedLessons[i].getField('title'),
-                thumbnail: relatedLessons[i].getData('thumbnail_url'),
-                type: relatedLessons[i].type,
-                id: relatedLessons[i].id,
-                mobile_app_url: relatedLessons[i].post.mobile_app_url,
-                duration: new ContentModel(
-                    relatedLessons[i].getFieldMulti('video')[0],
-                ).getField('length_in_seconds'),
-                isAddedToList: relatedLessons[i].isAddedToList,
-                isStarted: relatedLessons[i].isStarted,
-                isCompleted: relatedLessons[i].isCompleted,
-                progress_percent: relatedLessons[i].post.progress_percent,
-            });
+        if (relatedLessons) {
+            for (let i in relatedLessons) {
+                console.log(relatedLessons[i]);
+                rl.push({
+                    title: relatedLessons[i].getField('title'),
+                    thumbnail: relatedLessons[i].getData('thumbnail_url'),
+                    type: relatedLessons[i].type,
+                    id: relatedLessons[i].id,
+                    mobile_app_url: relatedLessons[i].post.mobile_app_url,
+                    duration: relatedLessons[i].fields.find('video')
+                        ? new ContentModel(
+                              relatedLessons[i].getFieldMulti('video')[0],
+                          )?.getField('length_in_seconds')
+                        : 0,
+                    isAddedToList: relatedLessons[i].isAddedToList,
+                    isStarted: relatedLessons[i].isStarted,
+                    isCompleted: relatedLessons[i].isCompleted,
+                    progress_percent: relatedLessons[i].post.progress_percent,
+                });
+            }
         }
         this.setState(
             {
+                comments,
                 id: content.id,
                 url: content.post.mobile_app_url,
                 type: content.type,
@@ -253,10 +286,10 @@ export default class VideoPlayer extends React.Component {
                 publishedOn: content.publishedOn,
                 relatedLessons: [...this.state.relatedLessons, ...rl],
                 likes: parseInt(content.likeCount),
-                isLiked: content.isLiked,
+                isLiked: content.post.is_liked_by_current_user,
                 lengthInSec: new ContentModel(
                     content.getFieldMulti('video')[0],
-                ).getField('length_in_seconds'),
+                )?.getField('length_in_seconds'),
                 lastWatchedPosInSec:
                     content.post.last_watch_position_in_seconds,
                 progress:
@@ -291,6 +324,24 @@ export default class VideoPlayer extends React.Component {
             },
             () => {
                 if (this.state.resources) this.createResourcesArr();
+                const {comment, commentId} = this.props.navigation.state.params;
+                if (comment) {
+                    this.setState({
+                        showReplies: true,
+                        selectedComment: comment,
+                    });
+                } else if (commentId) {
+                    const selectedComment = this.state.comments.find(
+                        f => f.id == commentId,
+                    );
+
+                    if (selectedComment) {
+                        this.setState({
+                            showReplies: true,
+                            selectedComment,
+                        });
+                    }
+                }
             },
         );
     };
@@ -585,7 +636,8 @@ export default class VideoPlayer extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 10 * factorRatio,
                                                     color: colors.pianoteRed,
                                                 }}
@@ -644,7 +696,8 @@ export default class VideoPlayer extends React.Component {
                                         >
                                             <Text
                                                 style={{
-                                                    fontFamily: 'OpenSans-Regular',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
                                                     fontSize: 10 * factorRatio,
                                                     color: colors.pianoteRed,
                                                 }}
@@ -976,27 +1029,19 @@ export default class VideoPlayer extends React.Component {
                     barStyle={'light-content'}
                 />
                 {!this.state.isLoadingAll &&
+                    this.state.showVideo &&
                     this.state.video_playback_endpoints && (
                         <Video
-                            quality={''}
-                            aCasting={''}
-                            gCasting={''}
-                            offlinePath={''}
-                            orientation={''}
-                            connection={true}
                             toSupport={() => {}}
                             onRefresh={() => {}}
                             content={this.state}
                             maxFontMultiplier={1}
                             settingsMode={'bottom'}
                             onFullscreen={() => {}}
-                            onQualityChange={q => {}}
-                            onACastingChange={c => {}}
-                            onGCastingChange={c => {}}
                             ref={r => (this.video = r)}
-                            onOrientationChange={o => {}}
                             type={false ? 'audio' : 'video'}
                             onUpdateVideoProgress={() => {}}
+                            connection={this.context.isConnected}
                             onBack={this.props.navigation.goBack}
                             goToNextLesson={() =>
                                 this.switchLesson(
@@ -1080,6 +1125,7 @@ export default class VideoPlayer extends React.Component {
                                     innerRef={ref => {
                                         this.scroll = ref;
                                     }}
+                                    keyboardShouldPersistTaps='handled'
                                     removeClippedSubviews={false}
                                     showsVerticalScrollIndicator={false}
                                     contentInsetAdjustmentBehavior={'never'}
@@ -2588,7 +2634,20 @@ export default class VideoPlayer extends React.Component {
                     hasBackdrop={true}
                 >
                     <DownloadResources
+                        styles={{
+                            container: {
+                                backgroundColor: colors.mainBackground,
+                                width: fullWidth,
+                            },
+                            touchableTextResourceNameFontFamily: 'OpenSans',
+                            touchableTextResourceExtensionFontFamily:
+                                'OpenSans',
+                            touchableTextResourceCancelFontFamily: 'OpenSans',
+                            borderColor: colors.secondBackground,
+                            color: '#ffffff',
+                        }}
                         resources={this.state.resources}
+                        lessonTitle={this.state.lessonTitle}
                         onClose={() => {
                             new Promise(res =>
                                 this.setState(

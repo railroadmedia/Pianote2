@@ -195,207 +195,198 @@ export default class MyList extends React.Component {
 
     render() {
         return (
-            <View styles={styles.container}>
+            <View style={styles.container}>
                 <View
-                    key={'contentContainer'}
                     style={{
-                        height: fullHeight * 0.90625 - navHeight,
+                        height: fullHeight * 0.1,
+                        width: fullWidth,
+                        position: 'absolute',
+                        zIndex: 2,
+                        elevation: 2,
                         alignSelf: 'stretch',
                     }}
                 >
+                    <NavMenuHeaders currentPage={'MYLIST'} />
+                </View>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentInsetAdjustmentBehavior={'never'}
+                    onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                    style={{
+                        flex: 1,
+                        backgroundColor: colors.mainBackground,
+                    }}
+                >
                     <View
+                        key={'header'}
                         style={{
                             height: fullHeight * 0.1,
-                            width: fullWidth,
-                            position: 'absolute',
-                            zIndex: 2,
-                            elevation: 2,
-                            alignSelf: 'stretch',
+                            backgroundColor: colors.thirdBackground,
                         }}
-                    >
-                        <NavMenuHeaders currentPage={'MYLIST'} />
-                    </View>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentInsetAdjustmentBehavior={'never'}
-                        onScroll={({nativeEvent}) =>
-                            this.handleScroll(nativeEvent)
-                        }
+                    />
+                    <View
+                        key={'backgroundColoring'}
                         style={{
-                            flex: 1,
-                            backgroundColor: colors.mainBackground,
+                            backgroundColor: colors.thirdBackground,
+                            position: 'absolute',
+                            height: fullHeight,
+                            top: -fullHeight,
+                            left: 0,
+                            right: 0,
+                            zIndex: 10,
+                            elevation: 10,
+                        }}
+                    ></View>
+                    <View style={{height: 30 * factorVertical}} />
+                    <Text
+                        style={{
+                            paddingLeft: 12 * factorHorizontal,
+                            fontSize: 30 * factorRatio,
+                            color: 'white',
+                            fontFamily: 'OpenSans-ExtraBold',
+                            fontStyle: 'normal',
                         }}
                     >
-                        <View
-                            key={'header'}
-                            style={{
-                                height: fullHeight * 0.1,
-                                backgroundColor: colors.thirdBackground,
-                            }}
-                        />
-                        <View
-                            key={'backgroundColoring'}
-                            style={{
-                                backgroundColor: colors.thirdBackground,
-                                position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 10,
-                                elevation: 10,
-                            }}
-                        ></View>
-                        <View style={{height: 30 * factorVertical}} />
-                        <Text
-                            style={{
-                                paddingLeft: 12 * factorHorizontal,
-                                fontSize: 30 * factorRatio,
-                                color: 'white',
-                                fontFamily: 'OpenSans-ExtraBold',
-                                fontStyle: 'normal',
-                            }}
-                        >
-                            My List
-                        </Text>
-                        <View style={{height: 30 * factorVertical}} />
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.props.navigation.navigate('SEEALL', {
-                                    title: 'In Progress',
-                                    parent: 'My List',
-                                });
-                            }}
-                            style={{
-                                height: fullHeight * 0.075,
-                                width: fullWidth,
-                                borderTopWidth: 0.25 * factorRatio,
-                                borderTopColor: colors.secondBackground,
-                                borderBottomWidth: 0.25 * factorRatio,
-                                borderBottomColor: colors.secondBackground,
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <View>
-                                <View style={{flex: 1}} />
-                                <Text
-                                    style={{
-                                        paddingLeft: 12 * factorHorizontal,
-                                        fontSize: 20 * factorRatio,
-                                        marginBottom: 5 * factorVertical,
-                                        textAlign: 'left',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        color: colors.secondBackground,
-                                    }}
-                                >
-                                    In Progress
-                                </Text>
-                                <View style={{flex: 1}} />
-                            </View>
+                        My List
+                    </Text>
+                    <View style={{height: 30 * factorVertical}} />
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('SEEALL', {
+                                title: 'In Progress',
+                                parent: 'My List',
+                            });
+                        }}
+                        style={{
+                            height: fullHeight * 0.075,
+                            width: fullWidth,
+                            borderTopWidth: 0.25 * factorRatio,
+                            borderTopColor: colors.secondBackground,
+                            borderBottomWidth: 0.25 * factorRatio,
+                            borderBottomColor: colors.secondBackground,
+                            flexDirection: 'row',
+                        }}
+                    >
+                        <View>
                             <View style={{flex: 1}} />
-                            <View
+                            <Text
                                 style={{
-                                    paddingRight: 12 * factorHorizontal,
+                                    paddingLeft: 12 * factorHorizontal,
+                                    fontSize: 20 * factorRatio,
+                                    marginBottom: 5 * factorVertical,
+                                    textAlign: 'left',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'RobotoCondensed-Bold',
+                                    color: colors.secondBackground,
                                 }}
                             >
-                                <View style={{flex: 1}} />
-                                <EntypoIcon
-                                    name={'chevron-thin-right'}
-                                    size={22.5 * factorRatio}
-                                    color={colors.secondBackground}
-                                />
-                                <View style={{flex: 1}} />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.props.navigation.navigate('SEEALL', {
-                                    title: 'Completed',
-                                    parent: 'My List',
-                                });
-                            }}
+                                In Progress
+                            </Text>
+                            <View style={{flex: 1}} />
+                        </View>
+                        <View style={{flex: 1}} />
+                        <View
                             style={{
-                                height: fullHeight * 0.075,
-                                width: fullWidth,
-                                borderBottomWidth: 0.25 * factorRatio,
-                                borderBottomColor: colors.secondBackground,
-                                flexDirection: 'row',
+                                paddingRight: 12 * factorHorizontal,
                             }}
                         >
-                            <View>
-                                <View style={{flex: 1}} />
-                                <Text
-                                    style={{
-                                        paddingLeft: 12 * factorHorizontal,
-                                        fontSize: 20 * factorRatio,
-                                        marginBottom: 5 * factorVertical,
-                                        textAlign: 'left',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        color: colors.secondBackground,
-                                    }}
-                                >
-                                    Completed
-                                </Text>
-                                <View style={{flex: 1}} />
-                            </View>
                             <View style={{flex: 1}} />
-                            <View style={{paddingRight: 12 * factorHorizontal}}>
-                                <View style={{flex: 1}} />
-                                <EntypoIcon
-                                    name={'chevron-thin-right'}
-                                    size={22.5 * factorRatio}
-                                    color={colors.secondBackground}
-                                />
-                                <View style={{flex: 1}} />
-                            </View>
-                        </TouchableOpacity>
-                        <View style={{height: 15 * factorVertical}} />
-                        <VerticalVideoList
-                            items={this.state.allLessons}
-                            isLoading={this.state.isLoadingAll}
-                            title={'ADDED TO MY LIST'}
-                            isPaging={this.state.isPaging}
-                            type={'MYLIST'} // the type of content on page
-                            showFilter={true} // shows filters button
-                            showType={false} // show course / song by artist name
-                            showArtist={true} // show artist name
-                            showLength={false} // duration of song
-                            showSort={false}
-                            filters={this.state.filters} // show filter list
-                            filterResults={() => this.filterResults()} // apply from filters page
-                            outVideos={this.state.outVideos}
-                            removeItem={contentID => {
-                                this.removeFromMyList(contentID);
-                            }}
-                            outVideos={this.state.outVideos} // if paging and out of videos
-                            imageRadius={5 * factorRatio} // radius of image shown
-                            containerBorderWidth={0} // border of box
-                            containerWidth={fullWidth} // width of list
-                            containerHeight={
-                                onTablet
-                                    ? fullHeight * 0.15
-                                    : Platform.OS == 'android'
-                                    ? fullHeight * 0.115
-                                    : fullHeight * 0.095
-                            } // height per row
-                            imageHeight={
-                                onTablet
-                                    ? fullHeight * 0.12
-                                    : Platform.OS == 'android'
-                                    ? fullHeight * 0.095
-                                    : fullHeight * 0.0825
-                            } // image height
-                            imageWidth={fullWidth * 0.26} // image width
-                            navigator={row =>
-                                this.props.navigation.navigate('VIDEOPLAYER', {
-                                    id: row.id,
-                                })
-                            }
-                        />
-                    </ScrollView>
-                </View>
+                            <EntypoIcon
+                                name={'chevron-thin-right'}
+                                size={22.5 * factorRatio}
+                                color={colors.secondBackground}
+                            />
+                            <View style={{flex: 1}} />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('SEEALL', {
+                                title: 'Completed',
+                                parent: 'My List',
+                            });
+                        }}
+                        style={{
+                            height: fullHeight * 0.075,
+                            width: fullWidth,
+                            borderBottomWidth: 0.25 * factorRatio,
+                            borderBottomColor: colors.secondBackground,
+                            flexDirection: 'row',
+                        }}
+                    >
+                        <View>
+                            <View style={{flex: 1}} />
+                            <Text
+                                style={{
+                                    paddingLeft: 12 * factorHorizontal,
+                                    fontSize: 20 * factorRatio,
+                                    marginBottom: 5 * factorVertical,
+                                    textAlign: 'left',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'RobotoCondensed-Bold',
+                                    color: colors.secondBackground,
+                                }}
+                            >
+                                Completed
+                            </Text>
+                            <View style={{flex: 1}} />
+                        </View>
+                        <View style={{flex: 1}} />
+                        <View style={{paddingRight: 12 * factorHorizontal}}>
+                            <View style={{flex: 1}} />
+                            <EntypoIcon
+                                name={'chevron-thin-right'}
+                                size={22.5 * factorRatio}
+                                color={colors.secondBackground}
+                            />
+                            <View style={{flex: 1}} />
+                        </View>
+                    </TouchableOpacity>
+                    <View style={{height: 15 * factorVertical}} />
+                    <VerticalVideoList
+                        items={this.state.allLessons}
+                        isLoading={this.state.isLoadingAll}
+                        title={'ADDED TO MY LIST'}
+                        isPaging={this.state.isPaging}
+                        type={'MYLIST'} // the type of content on page
+                        showFilter={true} // shows filters button
+                        showType={false} // show course / song by artist name
+                        showArtist={true} // show artist name
+                        showLength={false} // duration of song
+                        showSort={false}
+                        filters={this.state.filters} // show filter list
+                        filterResults={() => this.filterResults()} // apply from filters page
+                        outVideos={this.state.outVideos}
+                        removeItem={contentID => {
+                            this.removeFromMyList(contentID);
+                        }}
+                        outVideos={this.state.outVideos} // if paging and out of videos
+                        imageRadius={5 * factorRatio} // radius of image shown
+                        containerBorderWidth={0} // border of box
+                        containerWidth={fullWidth} // width of list
+                        containerHeight={
+                            onTablet
+                                ? fullHeight * 0.15
+                                : Platform.OS == 'android'
+                                ? fullHeight * 0.115
+                                : fullHeight * 0.095
+                        } // height per row
+                        imageHeight={
+                            onTablet
+                                ? fullHeight * 0.12
+                                : Platform.OS == 'android'
+                                ? fullHeight * 0.095
+                                : fullHeight * 0.0825
+                        } // image height
+                        imageWidth={fullWidth * 0.26} // image width
+                        navigator={row =>
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                                id: row.id,
+                            })
+                        }
+                    />
+                </ScrollView>
+
                 <NavigationBar currentPage={'MyList'} />
                 <Modal
                     key={'navMenu'}

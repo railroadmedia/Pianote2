@@ -89,7 +89,7 @@ export async function updateUserDetails(picture, name, phoneNr, firebaseToken) {
     if (phoneNr) reqUrl += `phone_number=${phoneNr}`;
     if (firebaseToken)
         reqUrl += `firebase_token_${
-            commonService.isiOS ? 'ios' : 'android'
+            Platform.OS === 'ios' ? 'ios' : 'android'
         }=${firebaseToken}`;
     return commonService.tryCall(reqUrl, 'POST');
 }

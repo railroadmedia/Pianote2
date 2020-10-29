@@ -129,7 +129,7 @@ export default class AssignmentResource extends React.Component {
                             },
                             index === i
                                 ? {backgroundColor: colors.pianoteRed}
-                                : {backgroundColor: colors.thirdBackground},
+                                : {backgroundColor: colors.secondBackground},
                         ]}
                     />
                 ))}
@@ -146,7 +146,7 @@ export default class AssignmentResource extends React.Component {
         return (
             <ScrollView
                 horizontal={true}
-                styles={{flex: 1}}
+                style={{flex: 1}}
                 pagingEnabled={true}
                 removeClippedSubviews={false}
                 scrollEnabled={this.state.scroll}
@@ -192,6 +192,7 @@ export default class AssignmentResource extends React.Component {
                                             style={{
                                                 width: '100%',
                                                 height: '100%',
+                                                backgroundColor: 'white',
                                             }}
                                         />
                                     </View>
@@ -237,6 +238,7 @@ export default class AssignmentResource extends React.Component {
                                                 style={{
                                                     width: '100%',
                                                     height: '100%',
+                                                    backgroundColor: 'white',
                                                 }}
                                             />
                                         </View>
@@ -282,6 +284,7 @@ export default class AssignmentResource extends React.Component {
                                                 style={{
                                                     width: '100%',
                                                     height: '100%',
+                                                    backgroundColor: 'white',
                                                 }}
                                             />
                                         </View>

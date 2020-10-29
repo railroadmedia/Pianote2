@@ -25,6 +25,7 @@ import {
     getStartedContent,
     getAllContent,
 } from '../../services/GetContent';
+import {updateUserDetails} from '../../services/UserActions';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -106,7 +107,7 @@ export default class Lessons extends React.Component {
         if (enabled) {
             const fcmToken = await firebase.messaging().getToken();
             if (fcmToken) {
-                // userService.updateUserDetails(null, null, null, fcmToken);
+                updateUserDetails(null, null, null, fcmToken);
             }
         }
         if (Platform.OS === 'ios') {
@@ -126,7 +127,8 @@ export default class Lessons extends React.Component {
         } else {
             this.removeNotificationListener = firebase
                 .notifications()
-                .onNotification(notification => {
+                .onNotification(async notification => {
+                    console.log(notification);
                     // Build a channel
                     const channel = new firebase.notifications.Android.Channel(
                         'pianote-channel',
@@ -134,7 +136,9 @@ export default class Lessons extends React.Component {
                         firebase.notifications.Android.Importance.Max,
                     ).setDescription('Pianote notification channel');
                     // Create the channel
-                    firebase.notifications().android.createChannel(channel);
+                    await firebase
+                        .notifications()
+                        .android.createChannel(channel);
                     notification.android.setChannelId(channel.channelId);
                     notification.android.setSmallIcon('notifications_logo');
                     notification.android.setLargeIcon(
@@ -169,8 +173,8 @@ export default class Lessons extends React.Component {
         });
 
         try {
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
@@ -224,39 +228,37 @@ export default class Lessons extends React.Component {
 
             let items = [];
             for (let i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist:
-                            newContent[i].post.type == 'song'
-                                ? newContent[i].post.artist
-                                : newContent[i].getField('instructor') !== 'TBD'
-                                ? newContent[i].getField('instructor').fields[0]
-                                      .value
-                                : newContent[i].getField('instructor').name,
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/g, '')
-                            .replace(/&nbsp;/g, '')
-                            .replace(/&amp;/g, '&')
-                            .replace(/&#039;/g, "'")
-                            .replace(/&quot;/g, '"')
-                            .replace(/&gt;/g, '>')
-                            .replace(/&lt;/g, '<'),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
+                items.push({
+                    title: newContent[i].getField('title'),
+                    artist:
+                        newContent[i].post.type == 'song'
+                            ? newContent[i].post.artist
+                            : newContent[i].getField('instructor') !== 'TBD'
+                            ? newContent[i].getField('instructor').fields[0]
+                                  .value
+                            : newContent[i].getField('instructor').name,
+                    thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].post.type,
+                    description: newContent[i]
+                        .getData('description')
+                        .replace(/(<([^>]+)>)/g, '')
+                        .replace(/&nbsp;/g, '')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&lt;/g, '<'),
+                    xp: newContent[i].post.xp,
+                    id: newContent[i].id,
+                    like_count: newContent[i].post.like_count,
+                    duration: this.getDuration(newContent[i]),
+                    isLiked: newContent[i].isLiked,
+                    isAddedToList: newContent[i].isAddedToList,
+                    isStarted: newContent[i].isStarted,
+                    isCompleted: newContent[i].isCompleted,
+                    bundle_count: newContent[i].post.bundle_count,
+                    progress_percent: newContent[i].post.progress_percent,
+                });
             }
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
@@ -432,7 +434,7 @@ export default class Lessons extends React.Component {
 
     render() {
         return (
-            <View styles={styles.container}>
+            <View style={styles.container}>
                 <View
                     style={{
                         height: fullHeight * 0.1,
@@ -448,184 +450,96 @@ export default class Lessons extends React.Component {
                         parentPage={'LESSONS'}
                     />
                 </View>
-                <View
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentInsetAdjustmentBehavior={'never'}
                     style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                        zIndex: 1,
-                        elevation: 1,
+                        flex: 1,
+                        backgroundColor: colors.mainBackground,
                     }}
+                    onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                    scrollEventThrottle={400}
                 >
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentInsetAdjustmentBehavior={'never'}
+                    <View
+                        key={'backgroundColoring'}
                         style={{
-                            flex: 1,
-                            backgroundColor: colors.mainBackground,
+                            backgroundColor: colors.thirdBackground,
+                            position: 'absolute',
+                            height: fullHeight,
+                            top: -fullHeight,
+                            left: 0,
+                            right: 0,
+                            zIndex: 10,
+                            elevation: 10,
                         }}
-                        onScroll={({nativeEvent}) =>
-                            this.handleScroll(nativeEvent)
-                        }
-                        scrollEventThrottle={400}
+                    />
+                    <View
+                        key={'header'}
+                        style={{
+                            height: fullHeight * 0.1,
+                            backgroundColor: colors.thirdBackground,
+                        }}
+                    />
+                    <View
+                        key={'image'}
+                        style={[
+                            styles.centerContent,
+                            {
+                                height: fullHeight * 0.32,
+                            },
+                        ]}
                     >
-                        <View
-                            key={'backgroundColoring'}
+                        <GradientFeature
+                            color={'blue'}
+                            opacity={1}
+                            height={'100%'}
+                            borderRadius={0}
+                        />
+                        <FastImage
                             style={{
-                                backgroundColor: colors.thirdBackground,
+                                flex: 1,
+                                alignSelf: 'stretch',
+                                backgroundColor: colors.mainBackground,
+                            }}
+                            source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
+                            resizeMode={FastImage.resizeMode.cover}
+                        />
+                        <View
+                            key={'pianoteSVG'}
+                            style={{
                                 position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 10,
-                                elevation: 10,
+                                height: '100%',
+                                width: fullWidth,
+                                zIndex: 2,
+                                elevation: 2,
                             }}
-                        />
-                        <View
-                            key={'header'}
-                            style={{
-                                height: fullHeight * 0.1,
-                                backgroundColor: colors.thirdBackground,
-                            }}
-                        />
-                        <View
-                            key={'image'}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    height: fullHeight * 0.32,
-                                },
-                            ]}
                         >
-                            <GradientFeature
-                                color={'blue'}
-                                opacity={1}
-                                height={'100%'}
-                                borderRadius={0}
-                            />
-                            <FastImage
+                            <View style={{flex: 0.4}} />
+                            <View style={{flexDirection: 'row'}}>
+                                <View style={{flex: 1}} />
+                                <Pianote
+                                    height={fullHeight * 0.03}
+                                    width={fullWidth * 0.35}
+                                    fill={'white'}
+                                />
+                                <View style={{flex: 1}} />
+                            </View>
+                            <Text
+                                key={'foundations'}
                                 style={{
-                                    flex: 1,
-                                    alignSelf: 'stretch',
-                                    backgroundColor: colors.mainBackground,
-                                }}
-                                source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
-                                resizeMode={FastImage.resizeMode.cover}
-                            />
-                            <View
-                                key={'pianoteSVG'}
-                                style={{
-                                    position: 'absolute',
-                                    height: '100%',
-                                    width: fullWidth,
-                                    zIndex: 2,
-                                    elevation: 2,
+                                    fontSize: 60 * factorRatio,
+                                    color: 'white',
+                                    fontFamily: 'RobotoCondensed-Bold',
+                                    transform: [{scaleX: 0.7}],
+                                    textAlign: 'center',
                                 }}
                             >
-                                <View style={{flex: 0.4}} />
-                                <View style={{flexDirection: 'row'}}>
-                                    <View style={{flex: 1}} />
-                                    <Pianote
-                                        height={fullHeight * 0.03}
-                                        width={fullWidth * 0.35}
-                                        fill={'white'}
-                                    />
-                                    <View style={{flex: 1}} />
-                                </View>
-                                <Text
-                                    key={'foundations'}
-                                    style={{
-                                        fontSize: 60 * factorRatio,
-                                        color: 'white',
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        transform: [{scaleX: 0.7}],
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    FOUNDATIONS
-                                </Text>
-                                <View style={{flex: 0.6}} />
+                                FOUNDATIONS
+                            </Text>
+                            <View style={{flex: 0.6}} />
 
-                                {this.state.foundationIsCompleted ? (
-                                    <ResetIcon
-                                        pxFromTop={
-                                            onTablet
-                                                ? fullHeight * 0.32 * 0.725
-                                                : fullHeight * 0.305 * 0.725
-                                        }
-                                        buttonHeight={
-                                            onTablet
-                                                ? fullHeight * 0.06
-                                                : Platform.OS == 'ios'
-                                                ? fullHeight * 0.05
-                                                : fullHeight * 0.055
-                                        }
-                                        pxFromLeft={fullWidth * 0.065}
-                                        buttonWidth={fullWidth * 0.42}
-                                        pressed={() =>
-                                            this.setState({
-                                                showRestartCourse: true,
-                                            })
-                                        }
-                                    />
-                                ) : !this.state.foundationIsStarted ? (
-                                    <StartIcon
-                                        pxFromTop={
-                                            onTablet
-                                                ? fullHeight * 0.32 * 0.725
-                                                : fullHeight * 0.305 * 0.725
-                                        }
-                                        buttonHeight={
-                                            onTablet
-                                                ? fullHeight * 0.06
-                                                : Platform.OS == 'ios'
-                                                ? fullHeight * 0.05
-                                                : fullHeight * 0.055
-                                        }
-                                        pxFromLeft={fullWidth * 0.065}
-                                        buttonWidth={fullWidth * 0.42}
-                                        pressed={() => {
-                                            if (this.state.foundationNextLesson)
-                                                this.props.navigation.navigate(
-                                                    'VIDEOPLAYER',
-                                                    {
-                                                        url: this.state
-                                                            .foundationNextLesson
-                                                            .mobile_app_url,
-                                                    },
-                                                );
-                                        }}
-                                    />
-                                ) : (
-                                    <ContinueIcon
-                                        pxFromTop={
-                                            onTablet
-                                                ? fullHeight * 0.32 * 0.725
-                                                : fullHeight * 0.305 * 0.725
-                                        }
-                                        buttonHeight={
-                                            onTablet
-                                                ? fullHeight * 0.06
-                                                : Platform.OS == 'ios'
-                                                ? fullHeight * 0.05
-                                                : fullHeight * 0.055
-                                        }
-                                        pxFromLeft={fullWidth * 0.065}
-                                        buttonWidth={fullWidth * 0.42}
-                                        pressed={() => {
-                                            if (this.state.foundationNextLesson)
-                                                this.props.navigation.navigate(
-                                                    'VIDEOPLAYER',
-                                                    {
-                                                        url: this.state
-                                                            .foundationNextLesson
-                                                            .mobile_app_url,
-                                                    },
-                                                );
-                                        }}
-                                    />
-                                )}
-                                <MoreInfoIcon
+                            {this.state.foundationIsCompleted ? (
+                                <ResetIcon
                                     pxFromTop={
                                         onTablet
                                             ? fullHeight * 0.32 * 0.725
@@ -638,215 +552,251 @@ export default class Lessons extends React.Component {
                                             ? fullHeight * 0.05
                                             : fullHeight * 0.055
                                     }
-                                    pxFromRight={fullWidth * 0.065}
+                                    pxFromLeft={fullWidth * 0.065}
+                                    buttonWidth={fullWidth * 0.42}
+                                    pressed={() =>
+                                        this.setState({
+                                            showRestartCourse: true,
+                                        })
+                                    }
+                                />
+                            ) : !this.state.foundationIsStarted ? (
+                                <StartIcon
+                                    pxFromTop={
+                                        onTablet
+                                            ? fullHeight * 0.32 * 0.725
+                                            : fullHeight * 0.305 * 0.725
+                                    }
+                                    buttonHeight={
+                                        onTablet
+                                            ? fullHeight * 0.06
+                                            : Platform.OS == 'ios'
+                                            ? fullHeight * 0.05
+                                            : fullHeight * 0.055
+                                    }
+                                    pxFromLeft={fullWidth * 0.065}
                                     buttonWidth={fullWidth * 0.42}
                                     pressed={() => {
-                                        this.props.navigation.navigate(
-                                            'FOUNDATIONS',
-                                            {
-                                                foundationIsStarted: this.state
-                                                    .foundationIsStarted,
-                                                foundationIsCompleted: this
-                                                    .state
-                                                    .foundationIsCompleted,
-                                            },
-                                        );
+                                        if (this.state.foundationNextLesson)
+                                            this.props.navigation.navigate(
+                                                'VIDEOPLAYER',
+                                                {
+                                                    url: this.state
+                                                        .foundationNextLesson
+                                                        .mobile_app_url,
+                                                },
+                                            );
                                     }}
                                 />
-                            </View>
-                        </View>
-                        <View
-                            key={'profile'}
-                            style={{
-                                borderTopColor: colors.secondBackground,
-                                borderTopWidth: 0.25,
-                                borderBottomColor: colors.secondBackground,
-                                borderBottomWidth: 0.25,
-                                height: fullHeight * 0.1,
-                                paddingTop: 10 * factorVertical,
-                                paddingBottom: 10 * factorVertical,
-                                backgroundColor: colors.mainBackground,
-                                flexDirection: 'row',
-                            }}
-                        >
-                            {this.state.profileImage !== '' && (
-                                <View
-                                    key={'profile-picture'}
-                                    style={[
-                                        styles.centerContent,
+                            ) : (
+                                <ContinueIcon
+                                    pxFromTop={
+                                        onTablet
+                                            ? fullHeight * 0.32 * 0.725
+                                            : fullHeight * 0.305 * 0.725
+                                    }
+                                    buttonHeight={
+                                        onTablet
+                                            ? fullHeight * 0.06
+                                            : Platform.OS == 'ios'
+                                            ? fullHeight * 0.05
+                                            : fullHeight * 0.055
+                                    }
+                                    pxFromLeft={fullWidth * 0.065}
+                                    buttonWidth={fullWidth * 0.42}
+                                    pressed={() => {
+                                        if (this.state.foundationNextLesson)
+                                            this.props.navigation.navigate(
+                                                'VIDEOPLAYER',
+                                                {
+                                                    url: this.state
+                                                        .foundationNextLesson
+                                                        .mobile_app_url,
+                                                },
+                                            );
+                                    }}
+                                />
+                            )}
+                            <MoreInfoIcon
+                                pxFromTop={
+                                    onTablet
+                                        ? fullHeight * 0.32 * 0.725
+                                        : fullHeight * 0.305 * 0.725
+                                }
+                                buttonHeight={
+                                    onTablet
+                                        ? fullHeight * 0.06
+                                        : Platform.OS == 'ios'
+                                        ? fullHeight * 0.05
+                                        : fullHeight * 0.055
+                                }
+                                pxFromRight={fullWidth * 0.065}
+                                buttonWidth={fullWidth * 0.42}
+                                pressed={() => {
+                                    this.props.navigation.navigate(
+                                        'FOUNDATIONS',
                                         {
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            alignSelf: 'stretch',
+                                            foundationIsStarted: this.state
+                                                .foundationIsStarted,
+                                            foundationIsCompleted: this.state
+                                                .foundationIsCompleted,
                                         },
-                                    ]}
-                                >
+                                    );
+                                }}
+                            />
+                        </View>
+                    </View>
+                    <View
+                        key={'profile'}
+                        style={{
+                            borderTopColor: colors.secondBackground,
+                            borderTopWidth: 0.25,
+                            borderBottomColor: colors.secondBackground,
+                            borderBottomWidth: 0.25,
+                            height: fullHeight * 0.1,
+                            paddingTop: 10 * factorVertical,
+                            paddingBottom: 10 * factorVertical,
+                            backgroundColor: colors.mainBackground,
+                            flexDirection: 'row',
+                        }}
+                    >
+                        {this.state.profileImage !== '' && (
+                            <View
+                                key={'profile-picture'}
+                                style={[
+                                    styles.centerContent,
+                                    {
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignSelf: 'stretch',
+                                    },
+                                ]}
+                            >
+                                <View style={{flex: 1}} />
+                                <View>
                                     <View style={{flex: 1}} />
-                                    <View>
-                                        <View style={{flex: 1}} />
+                                    <View
+                                        style={{
+                                            height: fullHeight * 0.075,
+                                            width: fullHeight * 0.075,
+                                            borderRadius: 100,
+                                            backgroundColor:
+                                                colors.secondBackground,
+                                            alignSelf: 'stretch',
+                                            borderWidth: 3 * factorRatio,
+                                            borderColor:
+                                                colors.secondBackground,
+                                        }}
+                                    >
                                         <View
                                             style={{
-                                                height: fullHeight * 0.075,
-                                                width: fullHeight * 0.075,
-                                                borderRadius: 100,
-                                                backgroundColor:
-                                                    colors.secondBackground,
-                                                alignSelf: 'stretch',
-                                                borderWidth: 3 * factorRatio,
-                                                borderColor:
-                                                    colors.secondBackground,
+                                                height: '100%',
+                                                width: '100%',
+                                                alignSelf: 'center',
                                             }}
                                         >
-                                            <View
+                                            <FastImage
                                                 style={{
-                                                    height: '100%',
-                                                    width: '100%',
-                                                    alignSelf: 'center',
+                                                    flex: 1,
+                                                    borderRadius: 100,
+                                                    backgroundColor:
+                                                        colors.secondBackground,
                                                 }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                        backgroundColor:
-                                                            colors.secondBackground,
-                                                    }}
-                                                    source={{
-                                                        uri: this.state
-                                                            .profileImage,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .cover
-                                                    }
-                                                />
-                                            </View>
+                                                source={{
+                                                    uri: this.state
+                                                        .profileImage,
+                                                }}
+                                                resizeMode={
+                                                    FastImage.resizeMode.cover
+                                                }
+                                            />
                                         </View>
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <View style={{flex: 1}} />
-                                </View>
-                            )}
-                            <View
-                                key={'XP-rank'}
-                                style={{
-                                    flex: 3,
-                                    flexDirection: 'row',
-                                    alignSelf: 'stretch',
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        flex:
-                                            this.state.profileImage !== ''
-                                                ? 0.5
-                                                : 1,
-                                    }}
-                                />
-                                <View>
-                                    <View style={{flex: 1}} />
-                                    <View>
-                                        <Text
-                                            style={{
-                                                color: colors.pianoteRed,
-                                                fontSize: 12 * factorRatio,
-                                                fontWeight: 'bold',
-                                                textAlign: 'center',
-                                            }}
-                                        >
-                                            XP
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: 24 * factorRatio,
-                                                fontFamily:
-                                                    'OpenSans-ExtraBold',
-                                                textAlign: 'center',
-                                            }}
-                                        >
-                                            {this.state.xp?.length > 4
-                                                ? (Number(this.state.xp) / 1000)
-                                                      .toFixed(1)
-                                                      .toString() + 'k'
-                                                : this.state.xp?.toString()}
-                                        </Text>
-                                    </View>
-                                    <View style={{flex: 1}} />
-                                </View>
-                                <View style={{flex: 1}} />
-                                <View>
-                                    <View style={{flex: 1}} />
-                                    <View>
-                                        <Text
-                                            style={{
-                                                color: colors.pianoteRed,
-                                                fontSize: 12 * factorRatio,
-                                                fontWeight: 'bold',
-                                                textAlign: 'center',
-                                            }}
-                                        >
-                                            RANK
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: 24 * factorRatio,
-                                                fontFamily:
-                                                    'OpenSans-ExtraBold',
-                                                textAlign: 'center',
-                                            }}
-                                        >
-                                            {this.state.rank}
-                                        </Text>
                                     </View>
                                     <View style={{flex: 1}} />
                                 </View>
                                 <View style={{flex: 1}} />
                             </View>
-                        </View>
-                        <View>
-                            {this.state.lessonsStarted && (
-                                <View
-                                    key={'progressCourses'}
-                                    style={{
-                                        minHeight: fullHeight * 0.225,
-                                        paddingLeft: fullWidth * 0.035,
-                                        backgroundColor: colors.mainBackground,
-                                    }}
-                                >
-                                    <HorizontalVideoList
-                                        Title={'CONTINUE'}
-                                        seeAll={() =>
-                                            this.props.navigation.navigate(
-                                                'SEEALL',
-                                                {
-                                                    title: 'Continue',
-                                                    parent: 'Lessons',
-                                                },
-                                            )
-                                        }
-                                        showArtist={true}
-                                        showType={true}
-                                        items={this.state.progressLessons}
-                                        isLoading={this.state.isLoadingProgress}
-                                        itemWidth={
-                                            isNotch
-                                                ? fullWidth * 0.6
-                                                : onTablet
-                                                ? fullWidth * 0.425
-                                                : fullWidth * 0.55
-                                        }
-                                        itemHeight={
-                                            isNotch
-                                                ? fullHeight * 0.155
-                                                : fullHeight * 0.175
-                                        }
-                                    />
-                                </View>
-                            )}
+                        )}
+                        <View
+                            key={'XP-rank'}
+                            style={{
+                                flex: 3,
+                                flexDirection: 'row',
+                                alignSelf: 'stretch',
+                            }}
+                        >
                             <View
-                                key={'newLessons'}
+                                style={{
+                                    flex:
+                                        this.state.profileImage !== ''
+                                            ? 0.5
+                                            : 1,
+                                }}
+                            />
+                            <View>
+                                <View style={{flex: 1}} />
+                                <View>
+                                    <Text
+                                        style={{
+                                            color: colors.pianoteRed,
+                                            fontSize: 12 * factorRatio,
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        XP
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 24 * factorRatio,
+                                            fontFamily: 'OpenSans-ExtraBold',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        {this.state.xp?.length > 4
+                                            ? (Number(this.state.xp) / 1000)
+                                                  .toFixed(1)
+                                                  .toString() + 'k'
+                                            : this.state.xp?.toString()}
+                                    </Text>
+                                </View>
+                                <View style={{flex: 1}} />
+                            </View>
+                            <View style={{flex: 1}} />
+                            <View>
+                                <View style={{flex: 1}} />
+                                <View>
+                                    <Text
+                                        style={{
+                                            color: colors.pianoteRed,
+                                            fontSize: 12 * factorRatio,
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        RANK
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 24 * factorRatio,
+                                            fontFamily: 'OpenSans-ExtraBold',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        {this.state.rank}
+                                    </Text>
+                                </View>
+                                <View style={{flex: 1}} />
+                            </View>
+                            <View style={{flex: 1}} />
+                        </View>
+                    </View>
+                    <View>
+                        {this.state.lessonsStarted && (
+                            <View
+                                key={'progressCourses'}
                                 style={{
                                     minHeight: fullHeight * 0.225,
                                     paddingLeft: fullWidth * 0.035,
@@ -854,20 +804,20 @@ export default class Lessons extends React.Component {
                                 }}
                             >
                                 <HorizontalVideoList
-                                    Title={'NEW LESSONS'}
+                                    Title={'CONTINUE'}
                                     seeAll={() =>
                                         this.props.navigation.navigate(
                                             'SEEALL',
                                             {
-                                                title: 'New Lessons',
+                                                title: 'Continue',
                                                 parent: 'Lessons',
                                             },
                                         )
                                     }
                                     showArtist={true}
                                     showType={true}
-                                    isLoading={this.state.isLoadingNew}
-                                    items={this.state.newLessons}
+                                    items={this.state.progressLessons}
+                                    isLoading={this.state.isLoadingProgress}
                                     itemWidth={
                                         isNotch
                                             ? fullWidth * 0.6
@@ -882,91 +832,125 @@ export default class Lessons extends React.Component {
                                     }
                                 />
                             </View>
-                            <View style={{height: 5 * factorRatio}} />
-                            {!this.state.filtering && (
-                                <VerticalVideoList
-                                    items={this.state.allLessons}
-                                    isLoading={this.state.isLoadingAll}
-                                    title={'ALL LESSONS'} // title for see all page
-                                    type={'LESSONS'} // the type of content on page
-                                    showFilter={true}
-                                    isPaging={this.state.isPaging}
-                                    showType={true} // show course / song by artist name
-                                    showArtist={true} // show artist name
-                                    showSort={true}
-                                    showLength={false}
-                                    filters={this.state.filters} // show filter list
-                                    imageRadius={5 * factorRatio} // radius of image shown
-                                    containerBorderWidth={0} // border of box
-                                    containerWidth={fullWidth} // width of list
-                                    currentSort={this.state.currentSort}
-                                    changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                                    filterResults={() => this.filterResults()} // apply from filters page
-                                    containerHeight={
-                                        onTablet
-                                            ? fullHeight * 0.15
-                                            : Platform.OS == 'android'
-                                            ? fullHeight * 0.115
-                                            : fullHeight * 0.0925
-                                    } // height per row
-                                    imageHeight={
-                                        onTablet
-                                            ? fullHeight * 0.12
-                                            : Platform.OS == 'android'
-                                            ? fullHeight * 0.09
-                                            : fullHeight * 0.0825
-                                    } // image height
-                                    imageWidth={fullWidth * 0.26} // image width
-                                    outVideos={this.state.outVideos} // if paging and out of videos
-                                    getVideos={() => this.getVideos()}
-                                    navigator={row =>
-                                        row.duration === undefined
-                                            ? this.props.navigation.navigate(
-                                                  'PATHOVERVIEW',
-                                                  {
-                                                      data: row,
-                                                  },
-                                              )
-                                            : this.props.navigation.navigate(
-                                                  'VIDEOPLAYER',
-                                                  {
-                                                      id: row.id,
-                                                  },
-                                              )
-                                    }
-                                />
-                            )}
+                        )}
+                        <View
+                            key={'newLessons'}
+                            style={{
+                                minHeight: fullHeight * 0.225,
+                                paddingLeft: fullWidth * 0.035,
+                                backgroundColor: colors.mainBackground,
+                            }}
+                        >
+                            <HorizontalVideoList
+                                Title={'NEW LESSONS'}
+                                seeAll={() =>
+                                    this.props.navigation.navigate('SEEALL', {
+                                        title: 'New Lessons',
+                                        parent: 'Lessons',
+                                    })
+                                }
+                                showArtist={true}
+                                showType={true}
+                                isLoading={this.state.isLoadingNew}
+                                items={this.state.newLessons}
+                                itemWidth={
+                                    isNotch
+                                        ? fullWidth * 0.6
+                                        : onTablet
+                                        ? fullWidth * 0.425
+                                        : fullWidth * 0.55
+                                }
+                                itemHeight={
+                                    isNotch
+                                        ? fullHeight * 0.155
+                                        : fullHeight * 0.175
+                                }
+                            />
                         </View>
-                    </ScrollView>
-                    <Modal
-                        key={'restartCourse'}
-                        isVisible={this.state.showRestartCourse}
-                        style={[
-                            styles.centerContent,
-                            {
-                                margin: 0,
-                                height: fullHeight,
-                                width: fullWidth,
-                            },
-                        ]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={true}
-                    >
-                        <RestartCourse
-                            hideRestartCourse={() =>
-                                this.setState({
-                                    showRestartCourse: false,
-                                })
-                            }
-                            type='foundations'
-                            onRestart={() => this.onRestartFoundation()}
-                        />
-                    </Modal>
-                    <NavigationBar currentPage={'LESSONS'} />
-                </View>
+                        <View style={{height: 5 * factorRatio}} />
+                        {!this.state.filtering && (
+                            <VerticalVideoList
+                                items={this.state.allLessons}
+                                isLoading={this.state.isLoadingAll}
+                                title={'ALL LESSONS'} // title for see all page
+                                type={'LESSONS'} // the type of content on page
+                                showFilter={true}
+                                isPaging={this.state.isPaging}
+                                showType={true} // show course / song by artist name
+                                showArtist={true} // show artist name
+                                showSort={true}
+                                showLength={false}
+                                filters={this.state.filters} // show filter list
+                                imageRadius={5 * factorRatio} // radius of image shown
+                                containerBorderWidth={0} // border of box
+                                containerWidth={fullWidth} // width of list
+                                currentSort={this.state.currentSort}
+                                changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                                filterResults={() => this.filterResults()} // apply from filters page
+                                containerHeight={
+                                    onTablet
+                                        ? fullHeight * 0.15
+                                        : Platform.OS == 'android'
+                                        ? fullHeight * 0.115
+                                        : fullHeight * 0.0925
+                                } // height per row
+                                imageHeight={
+                                    onTablet
+                                        ? fullHeight * 0.12
+                                        : Platform.OS == 'android'
+                                        ? fullHeight * 0.09
+                                        : fullHeight * 0.0825
+                                } // image height
+                                imageWidth={fullWidth * 0.26} // image width
+                                outVideos={this.state.outVideos} // if paging and out of videos
+                                getVideos={() => this.getVideos()}
+                                navigator={row =>
+                                    row.duration === undefined
+                                        ? this.props.navigation.navigate(
+                                              'PATHOVERVIEW',
+                                              {
+                                                  data: row,
+                                              },
+                                          )
+                                        : this.props.navigation.navigate(
+                                              'VIDEOPLAYER',
+                                              {
+                                                  id: row.id,
+                                              },
+                                          )
+                                }
+                            />
+                        )}
+                    </View>
+                </ScrollView>
+                <Modal
+                    key={'restartCourse'}
+                    isVisible={this.state.showRestartCourse}
+                    style={[
+                        styles.centerContent,
+                        {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        },
+                    ]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <RestartCourse
+                        hideRestartCourse={() =>
+                            this.setState({
+                                showRestartCourse: false,
+                            })
+                        }
+                        type='foundation'
+                        onRestart={() => this.onRestartFoundation()}
+                    />
+                </Modal>
+                <NavigationBar currentPage={'LESSONS'} />
             </View>
         );
     }

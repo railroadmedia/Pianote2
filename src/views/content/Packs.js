@@ -87,186 +87,108 @@ export default class Packs extends React.Component {
 
     render() {
         return (
-            <View styles={styles.container}>
+            <View
+                style={[
+                    styles.container,
+                    {backgroundColor: colors.mainBackground},
+                ]}
+            >
                 <View
                     style={{
-                        height: fullHeight - navHeight,
+                        height: fullHeight * 0.1,
+                        width: fullWidth,
+                        position: 'absolute',
+                        zIndex: 2,
+                        elevation: 2,
                         alignSelf: 'stretch',
-                        backgroundColor: colors.mainBackground,
                     }}
                 >
-                    <View
-                        style={{
-                            height: fullHeight * 0.1,
-                            width: fullWidth,
-                            position: 'absolute',
-                            zIndex: 2,
-                            elevation: 2,
-                            alignSelf: 'stretch',
-                        }}
-                    >
-                        <NavMenuHeaders currentPage={'PACKS'} />
-                    </View>
+                    <NavMenuHeaders currentPage={'PACKS'} />
+                </View>
 
-                    <FlatList
-                        windowSize={10}
-                        style={{flex: 1}}
-                        initialNumToRender={5}
-                        maxToRenderPerBatch={10}
-                        numColumns={3}
-                        removeClippedSubviews={true}
-                        keyExtractor={item => item.id}
-                        data={this.state.packs}
-                        keyboardShouldPersistTaps='handled'
-                        ListEmptyComponent={() => (
+                <FlatList
+                    windowSize={10}
+                    style={{flex: 1}}
+                    initialNumToRender={5}
+                    maxToRenderPerBatch={10}
+                    numColumns={3}
+                    removeClippedSubviews={true}
+                    keyExtractor={item => item.id}
+                    data={this.state.packs}
+                    keyboardShouldPersistTaps='handled'
+                    ListEmptyComponent={() => (
+                        <View
+                            style={[
+                                styles.centerContent,
+                                {
+                                    height: fullHeight * 0.4,
+                                    width: '100%',
+                                },
+                            ]}
+                        >
+                            <ActivityIndicator
+                                size={onTablet ? 'large' : 'small'}
+                                animating={true}
+                                color={colors.secondBackground}
+                            />
+                        </View>
+                    )}
+                    ListHeaderComponent={() => (
+                        <View
+                            key={'image'}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    height: fullHeight * 0.5,
+                                },
+                            ]}
+                        >
+                            <GradientFeature
+                                color={'blue'}
+                                opacity={1}
+                                height={'100%'}
+                                borderRadius={0}
+                            />
+                            <FastImage
+                                style={{
+                                    flex: 1,
+                                    alignSelf: 'stretch',
+                                    backgroundColor: colors.mainBackground,
+                                }}
+                                source={{
+                                    uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+                                        fullWidth,
+                                    )},ar_2,c_fill,g_face/${
+                                        this.state.headerPackImg
+                                    }`,
+                                }}
+                                resizeMode={FastImage.resizeMode.contain}
+                            />
                             <View
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: fullHeight * 0.4,
-                                        width: '100%',
-                                    },
-                                ]}
+                                key={'pianoteSVG'}
+                                style={{
+                                    position: 'absolute',
+                                    height: '100%',
+                                    width: fullWidth,
+                                    zIndex: 2,
+                                    elevation: 2,
+                                }}
                             >
-                                <ActivityIndicator
-                                    size={onTablet ? 'large' : 'small'}
-                                    animating={true}
-                                    color={colors.secondBackground}
-                                />
-                            </View>
-                        )}
-                        ListHeaderComponent={() => (
-                            <View
-                                key={'image'}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: fullHeight * 0.5,
-                                    },
-                                ]}
-                            >
-                                <GradientFeature
-                                    color={'blue'}
-                                    opacity={1}
-                                    height={'100%'}
-                                    borderRadius={0}
-                                />
                                 <FastImage
                                     style={{
-                                        flex: 1,
-                                        alignSelf: 'stretch',
-                                        backgroundColor: colors.mainBackground,
+                                        width: '80%',
+                                        height: '100%',
+                                        borderRadius: 7.5 * factorRatio,
+                                        alignSelf: 'center',
                                     }}
                                     source={{
-                                        uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                                            fullWidth,
-                                        )},ar_2,c_fill,g_face/${
-                                            this.state.headerPackImg
-                                        }`,
+                                        uri: this.state.headerPackLogo,
                                     }}
                                     resizeMode={FastImage.resizeMode.contain}
                                 />
-                                <View
-                                    key={'pianoteSVG'}
-                                    style={{
-                                        position: 'absolute',
-                                        height: '100%',
-                                        width: fullWidth,
-                                        zIndex: 2,
-                                        elevation: 2,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{
-                                            width: '80%',
-                                            height: '100%',
-                                            borderRadius: 7.5 * factorRatio,
-                                            alignSelf: 'center',
-                                        }}
-                                        source={{
-                                            uri: this.state.headerPackLogo,
-                                        }}
-                                        resizeMode={
-                                            FastImage.resizeMode.contain
-                                        }
-                                    />
 
-                                    {this.state.headerPackCompleted ? (
-                                        <ResetIcon
-                                            pxFromTop={
-                                                onTablet
-                                                    ? fullHeight * 0.5 * 0.725
-                                                    : fullHeight * 0.5 * 0.725
-                                            }
-                                            buttonHeight={
-                                                onTablet
-                                                    ? fullHeight * 0.06
-                                                    : Platform.OS == 'ios'
-                                                    ? fullHeight * 0.05
-                                                    : fullHeight * 0.055
-                                            }
-                                            pxFromLeft={fullWidth * 0.065}
-                                            buttonWidth={fullWidth * 0.42}
-                                            pressed={() =>
-                                                this.setState({
-                                                    showRestartCourse: true,
-                                                })
-                                            }
-                                        />
-                                    ) : !this.state.headerPackStarted ? (
-                                        <StartIcon
-                                            pxFromTop={
-                                                onTablet
-                                                    ? fullHeight * 0.5 * 0.725
-                                                    : fullHeight * 0.5 * 0.725
-                                            }
-                                            buttonHeight={
-                                                onTablet
-                                                    ? fullHeight * 0.06
-                                                    : Platform.OS == 'ios'
-                                                    ? fullHeight * 0.05
-                                                    : fullHeight * 0.055
-                                            }
-                                            pxFromLeft={fullWidth * 0.065}
-                                            buttonWidth={fullWidth * 0.42}
-                                            pressed={() =>
-                                                this.props.navigation.navigate(
-                                                    'VIDEOPLAYER',
-                                                    {
-                                                        url: this.state
-                                                            .headerPackNextLessonUrl,
-                                                    },
-                                                )
-                                            }
-                                        />
-                                    ) : (
-                                        <ContinueIcon
-                                            pxFromTop={
-                                                onTablet
-                                                    ? fullHeight * 0.5 * 0.725
-                                                    : fullHeight * 0.5 * 0.725
-                                            }
-                                            buttonHeight={
-                                                onTablet
-                                                    ? fullHeight * 0.06
-                                                    : Platform.OS == 'ios'
-                                                    ? fullHeight * 0.05
-                                                    : fullHeight * 0.055
-                                            }
-                                            pxFromLeft={fullWidth * 0.065}
-                                            buttonWidth={fullWidth * 0.42}
-                                            pressed={() =>
-                                                this.props.navigation.navigate(
-                                                    'VIDEOPLAYER',
-                                                    {
-                                                        url: this.state
-                                                            .headerPackNextLessonUrl,
-                                                    },
-                                                )
-                                            }
-                                        />
-                                    )}
-                                    <MoreInfoIcon
+                                {this.state.headerPackCompleted ? (
+                                    <ResetIcon
                                         pxFromTop={
                                             onTablet
                                                 ? fullHeight * 0.5 * 0.725
@@ -279,106 +201,178 @@ export default class Packs extends React.Component {
                                                 ? fullHeight * 0.05
                                                 : fullHeight * 0.055
                                         }
-                                        pxFromRight={fullWidth * 0.065}
+                                        pxFromLeft={fullWidth * 0.065}
                                         buttonWidth={fullWidth * 0.42}
-                                        pressed={() => {
-                                            this.props.navigation.push(
-                                                'SINGLEPACK',
+                                        pressed={() =>
+                                            this.setState({
+                                                showRestartCourse: true,
+                                            })
+                                        }
+                                    />
+                                ) : !this.state.headerPackStarted ? (
+                                    <StartIcon
+                                        pxFromTop={
+                                            onTablet
+                                                ? fullHeight * 0.5 * 0.725
+                                                : fullHeight * 0.5 * 0.725
+                                        }
+                                        buttonHeight={
+                                            onTablet
+                                                ? fullHeight * 0.06
+                                                : Platform.OS == 'ios'
+                                                ? fullHeight * 0.05
+                                                : fullHeight * 0.055
+                                        }
+                                        pxFromLeft={fullWidth * 0.065}
+                                        buttonWidth={fullWidth * 0.42}
+                                        pressed={() =>
+                                            this.props.navigation.navigate(
+                                                'VIDEOPLAYER',
                                                 {
                                                     url: this.state
-                                                        .headerPackUrl,
+                                                        .headerPackNextLessonUrl,
                                                 },
-                                            );
-                                        }}
+                                            )
+                                        }
                                     />
-                                </View>
+                                ) : (
+                                    <ContinueIcon
+                                        pxFromTop={
+                                            onTablet
+                                                ? fullHeight * 0.5 * 0.725
+                                                : fullHeight * 0.5 * 0.725
+                                        }
+                                        buttonHeight={
+                                            onTablet
+                                                ? fullHeight * 0.06
+                                                : Platform.OS == 'ios'
+                                                ? fullHeight * 0.05
+                                                : fullHeight * 0.055
+                                        }
+                                        pxFromLeft={fullWidth * 0.065}
+                                        buttonWidth={fullWidth * 0.42}
+                                        pressed={() =>
+                                            this.props.navigation.navigate(
+                                                'VIDEOPLAYER',
+                                                {
+                                                    url: this.state
+                                                        .headerPackNextLessonUrl,
+                                                },
+                                            )
+                                        }
+                                    />
+                                )}
+                                <MoreInfoIcon
+                                    pxFromTop={
+                                        onTablet
+                                            ? fullHeight * 0.5 * 0.725
+                                            : fullHeight * 0.5 * 0.725
+                                    }
+                                    buttonHeight={
+                                        onTablet
+                                            ? fullHeight * 0.06
+                                            : Platform.OS == 'ios'
+                                            ? fullHeight * 0.05
+                                            : fullHeight * 0.055
+                                    }
+                                    pxFromRight={fullWidth * 0.065}
+                                    buttonWidth={fullWidth * 0.42}
+                                    pressed={() => {
+                                        this.props.navigation.push(
+                                            'SINGLEPACK',
+                                            {
+                                                url: this.state.headerPackUrl,
+                                            },
+                                        );
+                                    }}
+                                />
                             </View>
-                        )}
-                        renderItem={({item}) => (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.push('SINGLEPACK', {
-                                        url: item.mobile_app_url,
-                                    });
-                                }}
+                        </View>
+                    )}
+                    renderItem={({item}) => (
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.push('SINGLEPACK', {
+                                    url: item.mobile_app_url,
+                                });
+                            }}
+                            style={{
+                                marginLeft: 5 * factorHorizontal,
+                                marginBottom: 5 * factorHorizontal,
+                                width:
+                                    (fullWidth - 3 * 5 * factorHorizontal) / 3,
+                                height: fullWidth * 0.285 * (95 / 65),
+                                backgroundColor: colors.secondBackground,
+                                borderRadius: 7.5 * factorRatio,
+                            }}
+                        >
+                            <GradientFeature
+                                color={'black'}
+                                opacity={0.45}
+                                height={'100%'}
+                                borderRadius={0}
+                            />
+                            <View
+                                key={'logo'}
                                 style={{
-                                    marginLeft: 5 * factorHorizontal,
-                                    marginBottom: 5 * factorHorizontal,
-                                    width:
-                                        (fullWidth - 3 * 5 * factorHorizontal) /
-                                        3,
+                                    position: 'absolute',
+                                    zIndex: 10,
+                                    elevation: 5000,
+                                    left: 0,
+                                    top: 0,
                                     height: fullWidth * 0.285 * (95 / 65),
-                                    backgroundColor: colors.secondBackground,
+                                    width: fullWidth * 0.285,
                                     borderRadius: 7.5 * factorRatio,
                                 }}
                             >
-                                <GradientFeature
-                                    color={'black'}
-                                    opacity={0.45}
-                                    height={'100%'}
-                                    borderRadius={0}
-                                />
+                                <View style={{flex: 1}} />
                                 <View
-                                    key={'logo'}
                                     style={{
-                                        position: 'absolute',
-                                        zIndex: 10,
-                                        elevation: 5000,
-                                        left: 0,
-                                        top: 0,
-                                        height: fullWidth * 0.285 * (95 / 65),
-                                        width: fullWidth * 0.285,
-                                        borderRadius: 7.5 * factorRatio,
+                                        flexDirection: 'row',
+                                        width: '100%',
+                                        height: '25%',
                                     }}
                                 >
                                     <View style={{flex: 1}} />
-                                    <View
+                                    <FastImage
                                         style={{
-                                            flexDirection: 'row',
-                                            width: '100%',
-                                            height: '25%',
+                                            width: '80%',
+                                            height: '100%',
+                                            borderRadius: 7.5 * factorRatio,
+                                            alignSelf: 'stretch',
                                         }}
-                                    >
-                                        <View style={{flex: 1}} />
-                                        <FastImage
-                                            style={{
-                                                width: '80%',
-                                                height: '100%',
-                                                borderRadius: 7.5 * factorRatio,
-                                                alignSelf: 'stretch',
-                                            }}
-                                            source={{
-                                                uri: item.logo,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.contain
-                                            }
-                                        />
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <View
-                                        style={{
-                                            height: 5 * factorVertical,
+                                        source={{
+                                            uri: item.logo,
                                         }}
+                                        resizeMode={
+                                            FastImage.resizeMode.contain
+                                        }
                                     />
+                                    <View style={{flex: 1}} />
                                 </View>
-                                <FastImage
+                                <View
                                     style={{
-                                        flex: 1,
-                                        borderRadius: 7.5 * factorRatio,
-                                        alignSelf: 'stretch',
+                                        height: 5 * factorVertical,
                                     }}
-                                    source={{
-                                        uri: item.thumbnail,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.cover}
                                 />
-                            </TouchableOpacity>
-                        )}
-                    />
+                            </View>
+                            <FastImage
+                                style={{
+                                    flex: 1,
+                                    borderRadius: 7.5 * factorRatio,
+                                    alignSelf: 'stretch',
+                                }}
+                                source={{
+                                    uri: item.thumbnail,
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
+                        </TouchableOpacity>
+                    )}
+                />
 
-                    <NavigationBar currentPage={'PACKS'} />
-                </View>
+                <NavigationBar currentPage={'PACKS'} />
+
                 <Modal
                     key={'navMenu'}
                     isVisible={this.state.showModalMenu}

@@ -14,7 +14,7 @@ export default class Terms extends React.Component {
 
     render() {
         return (
-            <View styles={{flex: 1, alignSelf: 'stretch'}}>
+            <View style={{flex: 1, alignSelf: 'stretch'}}>
                 <View
                     style={{
                         height: fullHeight,

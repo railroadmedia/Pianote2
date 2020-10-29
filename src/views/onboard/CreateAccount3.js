@@ -21,7 +21,6 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import Courses from 'Pianote2/src/assets/img/svgs/courses.svg';
 import Support from 'Pianote2/src/assets/img/svgs/support.svg';
-import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import {NavigationActions, StackActions} from 'react-navigation';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
@@ -196,36 +195,25 @@ export default class CreateAccount3 extends React.Component {
     };
 
     createAccount = async () => {
-        const auth = await getToken();
-
         // if there is profile image upload it
+        let url;
         if (data !== null) {
-            let avatarResponse = await fetch(
+            url = await commonService.tryCall(
                 `${commonService.rootUrl}/api/avatar/upload`,
-                {
-                    method: 'POST',
-                    headers: {Authorization: `Bearer ${auth.token}`},
-                    body: data,
-                },
+                'POST',
+                data,
             );
-
-            url = await avatarResponse.json();
         }
 
         // take image url and update profile
-        let profileResponse = await fetch(
+        let profileResponse = await commonService.tryCall(
             `${commonService.rootUrl}/api/profile/update`,
+            'POST',
             {
-                method: 'POST',
-                headers: {Authorization: `Bearer ${auth.token}`},
-                data: {
-                    file: data !== null ? url : '',
-                    display_name: this.state.displayName,
-                },
+                file: data !== null ? url : '',
+                display_name: this.state.displayName,
             },
         );
-
-        profileResponse = await profileResponse.json();
 
         // send to loadpage to update asyncstorage with new data
         await this.props.navigation.dispatch(resetAction);
@@ -253,7 +241,7 @@ export default class CreateAccount3 extends React.Component {
                 >
                     <View key={'displayName'}>
                         <View
-                            styles={[
+                            style={[
                                 styles.centerContent,
                                 {
                                     height: fullHeight,
@@ -616,7 +604,7 @@ export default class CreateAccount3 extends React.Component {
                     </View>
                     <View key={'profilePic'}>
                         <View
-                            styles={[
+                            style={[
                                 styles.centerContent,
                                 {
                                     height: fullHeight,

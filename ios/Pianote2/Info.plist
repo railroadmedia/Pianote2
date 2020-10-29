@@ -37,6 +37,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Pianote would like to use your camera to upload a profile picture.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -47,12 +49,11 @@
 	<array>
 		<string>RobotoCondensed-Bold.ttf</string>
 		<string>RobotoCondensed-Regular.ttf</string>
-		<string>OpenSans-ExtraBold.ttf</string>
 		<string>OpenSans-Bold.ttf</string>
+		<string>OpenSans-ExtraBold.ttf</string>
 		<string>OpenSans-Regular.ttf</string>
-		<string>Entypo.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>AntDesign.ttf</string>
+		<string>OpenSans-SemiBold.ttf</string>
+		<string>OpenSans.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
 		<string>FontAwesome.ttf</string>
@@ -66,12 +67,18 @@
 		<string>MaterialIcons.ttf</string>
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

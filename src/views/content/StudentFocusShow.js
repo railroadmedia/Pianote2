@@ -196,191 +196,178 @@ export default class StudentFocusShow extends React.Component {
 
     render() {
         return (
-            <View styles={styles.container}>
-                <View
+            <View style={styles.container}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentInsetAdjustmentBehavior={'never'}
+                    onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
                     style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
+                        flex: 1,
+                        backgroundColor: colors.mainBackground,
                     }}
                 >
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentInsetAdjustmentBehavior={'never'}
-                        onScroll={({nativeEvent}) =>
-                            this.handleScroll(nativeEvent)
-                        }
+                    <View
+                        key={'backgroundColoring'}
                         style={{
-                            flex: 1,
                             backgroundColor: colors.mainBackground,
+                            position: 'absolute',
+                            height: fullHeight,
+                            top: -fullHeight,
+                            left: 0,
+                            right: 0,
+                            zIndex: 10,
+                        }}
+                    />
+                    <View
+                        key={'imageContainer'}
+                        style={{
+                            width: fullWidth,
                         }}
                     >
                         <View
-                            key={'backgroundColoring'}
-                            style={{
-                                backgroundColor: colors.mainBackground,
-                                position: 'absolute',
-                                height: fullHeight,
-                                top: -fullHeight,
-                                left: 0,
-                                right: 0,
-                                zIndex: 10,
-                            }}
-                        />
-                        <View
-                            key={'imageContainer'}
-                            style={{
-                                width: fullWidth,
-                            }}
+                            key={'goBackIcon'}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    height:
+                                        Platform.OS == 'android'
+                                            ? fullHeight * 0.1
+                                            : isNotch
+                                            ? fullHeight * 0.12
+                                            : fullHeight * 0.055,
+                                    width: fullWidth,
+                                    position: 'absolute',
+                                    top: 0,
+                                    zIndex: 5,
+                                },
+                            ]}
                         >
+                            <View style={{flex: 1}} />
                             <View
-                                key={'goBackIcon'}
                                 style={[
                                     styles.centerContent,
                                     {
-                                        height:
-                                            Platform.OS == 'android'
-                                                ? fullHeight * 0.1
-                                                : isNotch
-                                                ? fullHeight * 0.12
-                                                : fullHeight * 0.055,
-                                        width: fullWidth,
-                                        position: 'absolute',
-                                        top: 0,
-                                        zIndex: 5,
+                                        flexDirection: 'row',
                                     },
                                 ]}
                             >
-                                <View style={{flex: 1}} />
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            flexDirection: 'row',
-                                        },
-                                    ]}
-                                >
-                                    <View
-                                        style={{flex: 1, flexDirection: 'row'}}
-                                    >
-                                        <View style={{flex: 0.1}} />
-                                        <View>
-                                            <View style={{flex: 1}} />
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    this.props.navigation.goBack()
-                                                }
-                                                style={{
-                                                    paddingLeft:
-                                                        10 * factorRatio,
-                                                    paddingRight:
-                                                        10 * factorRatio,
-                                                }}
-                                            >
-                                                <EntypoIcon
-                                                    name={'chevron-thin-left'}
-                                                    size={25 * factorRatio}
-                                                    color={'white'}
-                                                />
-                                            </TouchableOpacity>
-                                            <View style={{flex: 1}} />
-                                        </View>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View style={{flex: 0.1}} />
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                this.props.navigation.goBack()
+                                            }
+                                            style={{
+                                                paddingLeft: 10 * factorRatio,
+                                                paddingRight: 10 * factorRatio,
+                                            }}
+                                        >
+                                            <EntypoIcon
+                                                name={'chevron-thin-left'}
+                                                size={25 * factorRatio}
+                                                color={'white'}
+                                            />
+                                        </TouchableOpacity>
+                                        <View style={{flex: 1}} />
                                     </View>
-                                    <Text
-                                        style={{
-                                            fontSize: 22 * factorRatio,
-                                            fontWeight: 'bold',
-                                            color: colors.mainBackground,
-                                            fontFamily: 'OpenSans-Regular',
-                                        }}
-                                    >
-                                        Filter Courses
-                                    </Text>
-                                    <View style={{flex: 1}} />
                                 </View>
-                                <View style={{height: 20 * factorVertical}} />
-                            </View>
-                            <View
-                                key={'bootcampImage'}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        paddingTop: fullHeight * 0.1,
-                                        width: fullWidth,
-                                        zIndex: 2,
-                                    },
-                                ]}
-                            >
-                                <FastImage
+                                <Text
                                     style={{
-                                        height: onTablet
-                                            ? fullWidth * 0.45
-                                            : Platform.OS == 'ios'
-                                            ? fullWidth * 0.625
-                                            : fullWidth * 0.525,
-                                        width: onTablet
-                                            ? fullWidth * 0.45
-                                            : Platform.OS == 'ios'
-                                            ? fullWidth * 0.625
-                                            : fullWidth * 0.525,
-                                        zIndex: 2,
-                                        borderRadius: 10 * factorRatio,
-                                        borderColor: colors.thirdBackground,
-                                        borderWidth: 5,
+                                        fontSize: 22 * factorRatio,
+                                        fontWeight: 'bold',
+                                        color: colors.mainBackground,
+                                        fontFamily: 'OpenSans-Regular',
                                     }}
-                                    source={packDict[this.state.pack]}
-                                    resizeMode={FastImage.resizeMode.stretch}
-                                />
+                                >
+                                    Filter Courses
+                                </Text>
+                                <View style={{flex: 1}} />
                             </View>
+                            <View style={{height: 20 * factorVertical}} />
                         </View>
-                        <View style={{height: 25 * factorVertical}} />
-                        <VerticalVideoList
-                            items={this.state.allLessons}
-                            title={'EPISODES'}
-                            isPaging={this.state.isPaging}
-                            isLoading={this.state.isLoadingAll}
-                            type={'STUDENTFOCUSSHOW'}
-                            showType={true}
-                            showArtist={true}
-                            showLength={false}
-                            showFilter={
-                                this.state.pack == 'Quick Tips' ? true : false
-                            }
-                            showSort={
-                                this.state.pack == 'Quick Tips' ? true : false
-                            }
-                            filters={this.state.filters}
-                            containerWidth={fullWidth}
-                            imageRadius={5 * factorRatio}
-                            containerBorderWidth={0}
-                            currentSort={this.state.currentSort}
-                            changeSort={sort => this.changeSort(sort)}
-                            filterResults={() => this.filterResults()}
-                            containerHeight={
-                                onTablet
-                                    ? fullHeight * 0.15
-                                    : Platform.OS == 'android'
-                                    ? fullHeight * 0.115
-                                    : fullHeight * 0.0925
-                            }
-                            imageHeight={
-                                onTablet
-                                    ? fullHeight * 0.125
-                                    : Platform.OS == 'android'
-                                    ? fullHeight * 0.0925
-                                    : fullHeight * 0.0825
-                            }
-                            imageWidth={fullWidth * 0.26}
-                            outVideos={this.state.outVideos}
-                            getVideos={() => this.getVideos()}
-                            navigator={row =>
-                                this.props.navigation.navigate('VIDEOPLAYER', {
-                                    data: row,
-                                })
-                            }
-                        />
-                    </ScrollView>
-                    <NavigationBar currentPage={'NONE'} />
-                </View>
+                        <View
+                            key={'bootcampImage'}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    paddingTop: fullHeight * 0.1,
+                                    width: fullWidth,
+                                    zIndex: 2,
+                                },
+                            ]}
+                        >
+                            <FastImage
+                                style={{
+                                    height: onTablet
+                                        ? fullWidth * 0.45
+                                        : Platform.OS == 'ios'
+                                        ? fullWidth * 0.625
+                                        : fullWidth * 0.525,
+                                    width: onTablet
+                                        ? fullWidth * 0.45
+                                        : Platform.OS == 'ios'
+                                        ? fullWidth * 0.625
+                                        : fullWidth * 0.525,
+                                    zIndex: 2,
+                                    borderRadius: 10 * factorRatio,
+                                    borderColor: colors.thirdBackground,
+                                    borderWidth: 5,
+                                }}
+                                source={packDict[this.state.pack]}
+                                resizeMode={FastImage.resizeMode.stretch}
+                            />
+                        </View>
+                    </View>
+                    <View style={{height: 25 * factorVertical}} />
+                    <VerticalVideoList
+                        items={this.state.allLessons}
+                        title={'EPISODES'}
+                        isPaging={this.state.isPaging}
+                        isLoading={this.state.isLoadingAll}
+                        type={'STUDENTFOCUSSHOW'}
+                        showType={true}
+                        showArtist={true}
+                        showLength={false}
+                        showFilter={
+                            this.state.pack == 'Quick Tips' ? true : false
+                        }
+                        showSort={
+                            this.state.pack == 'Quick Tips' ? true : false
+                        }
+                        filters={this.state.filters}
+                        containerWidth={fullWidth}
+                        imageRadius={5 * factorRatio}
+                        containerBorderWidth={0}
+                        currentSort={this.state.currentSort}
+                        changeSort={sort => this.changeSort(sort)}
+                        filterResults={() => this.filterResults()}
+                        containerHeight={
+                            onTablet
+                                ? fullHeight * 0.15
+                                : Platform.OS == 'android'
+                                ? fullHeight * 0.115
+                                : fullHeight * 0.0925
+                        }
+                        imageHeight={
+                            onTablet
+                                ? fullHeight * 0.125
+                                : Platform.OS == 'android'
+                                ? fullHeight * 0.0925
+                                : fullHeight * 0.0825
+                        }
+                        imageWidth={fullWidth * 0.26}
+                        outVideos={this.state.outVideos}
+                        getVideos={() => this.getVideos()}
+                        navigator={row =>
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                                id: row.id,
+                            })
+                        }
+                    />
+                </ScrollView>
+                <NavigationBar currentPage={'NONE'} />
             </View>
         );
     }

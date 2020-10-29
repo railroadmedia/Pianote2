@@ -30,7 +30,7 @@ export default class Course extends React.Component {
             newCourses: [],
 
             allCourses: [],
-            currentSort: 'newest',
+            currentSort: '-published_on',
             page: 1,
             outVideos: false,
             isLoadingAll: true, // all lessons
@@ -309,7 +309,7 @@ export default class Course extends React.Component {
 
     render() {
         return (
-            <View styles={styles.container}>
+            <View style={styles.container}>
                 <View
                     key={'container'}
                     style={{
@@ -491,8 +491,10 @@ export default class Course extends React.Component {
                                 getVideos={() => this.getVideos()}
                                 navigator={row =>
                                     this.props.navigation.navigate(
-                                        'VIDEOPLAYER',
-                                        {id: row.id},
+                                        'PATHOVERVIEW',
+                                        {
+                                            data: row,
+                                        },
                                     )
                                 }
                             />

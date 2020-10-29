@@ -347,6 +347,7 @@ class Replies extends React.Component {
                 ]}
             >
                 <KeyboardAwareScrollView
+                    keyboardShouldPersistTaps='handled'
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
                     style={{

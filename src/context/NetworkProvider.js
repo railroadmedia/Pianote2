@@ -7,7 +7,7 @@ export const NetworkContext = React.createContext({
 
 export default class NetworkProvider extends React.PureComponent {
     state = {
-        isConnected: true,
+        isConnected: null,
     };
 
     componentDidMount() {
@@ -25,7 +25,9 @@ export default class NetworkProvider extends React.PureComponent {
     };
 
     render() {
-        return (
+        return this.state.isConnected === null ? (
+            <></>
+        ) : (
             <NetworkContext.Provider value={this.state}>
                 {this.props.children}
             </NetworkContext.Provider>

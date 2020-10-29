@@ -1,4 +1,3 @@
-import {getToken} from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from './common.service';
 
 export async function getNewContent(type) {
@@ -8,15 +7,10 @@ export async function getNewContent(type) {
             type =
                 'course&included_types[]=song&included_types[]=unit&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
         }
-        let auth = await getToken();
-        let response = await fetch(
-            `${commonService.rootUrl}/api/railcontent/content?required_fields[]=show_in_new_feed,1&brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
-            {
-                method: 'GET',
-                headers: {Authorization: `Bearer ${auth.token}`},
-            },
-        );
-        return await response.json();
+
+        let response = await commonService.tryCall(`${commonService.rootUrl}/api/railcontent/content?show_in_new_feed,1&brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`, 'GET');
+        
+        return response
     } catch (error) {
         console.log('Error', error);
         return new Error(error);
@@ -29,18 +23,9 @@ export async function getStartedContent(type) {
             type =
                 'unit&included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
         }
-
-        let auth = await getToken();
-        let response = await fetch(
+        return commonService.tryCall(
             `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
-            {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${auth.token}`,
-                },
-            },
         );
-        return await response.json();
     } catch (error) {
         console.log('Error', error);
         return new Error(error);
@@ -93,16 +78,11 @@ export async function getAllContent(type, sort, page, filtersDict) {
     }
 
     try {
-        let auth = await getToken();
         let url =
             `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
             filters +
             required_user_states;
-        let response = await fetch(url, {
-            method: 'GET',
-            headers: {Authorization: `Bearer ${auth.token}`},
-        });
-        return await response.json();
+        return commonService.tryCall(url);
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);
@@ -127,15 +107,10 @@ export async function searchContent(term, page, filtersDict) {
     }
 
     try {
-        let auth = await getToken();
         let url =
             `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` +
             included_types;
-        let response = await fetch(url, {
-            method: 'GET',
-            headers: {Authorization: `Bearer ${auth.token}`},
-        });
-        return await response.json();
+        return commonService.tryCall(url);
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);
@@ -162,17 +137,11 @@ export async function getMyListContent(page, filtersDict, progressState) {
     }
 
     try {
-        let auth = await getToken();
         var url =
-            `https://${serverLocation}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}` +
+            `${commonService.rootUrl}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}` +
             included_types +
             progress_types;
-        let response = await fetch(url, {
-            method: 'GET',
-            headers: {Authorization: `Bearer ${auth.token}`},
-        });
-
-        return await response.json();
+        return commonService.tryCall(url);
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);
@@ -212,12 +181,7 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
     }
 
     try {
-        let auth = await getToken();
-        let response = await fetch(url, {
-            method: 'GET',
-            headers: {Authorization: `Bearer ${auth.token}`},
-        });
-        return await response.json();
+        return commonService.tryCall(url);
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);
@@ -226,18 +190,9 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
 
 export async function getContentById(contentID) {
     try {
-        let auth = await getToken();
-        let response = await fetch(
+        return commonService.tryCall(
             `${commonService.rootUrl}/railcontent/content/${contentID}`,
-            {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${auth.token}`,
-                },
-            },
         );
-
-        return await response.json();
     } catch (error) {
         console.log('Get content by ID error: ', error);
         return new Error(error);

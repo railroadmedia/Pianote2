@@ -8,9 +8,16 @@ import SplashScreen from 'react-native-splash-screen';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
+import {getUserData, getToken} from 'Pianote2/src/services/UserDataAuth.js';
+import {NetworkContext} from '../../context/NetworkProvider';
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+});
 
 export default class LoadPage extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -20,28 +27,105 @@ export default class LoadPage extends React.Component {
     componentDidMount() {
         Download_V2.resumeAll().then(async () => {
             await SplashScreen.hide();
+            if (!this.context.isConnected)
+                return this.props.navigation.navigate('DOWNLOADS');
+            let data = await AsyncStorage.multiGet([
+                'loggedInStatus',
+                'resetKey',
+                'lessonUrl',
+                'commentId',
+                'email',
+                'password',
+            ]);
 
-            isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-            let resetKey = await AsyncStorage.getItem('resetKey');
-            let pass = await AsyncStorage.getItem('password');
-            let userData = await getUserData();
-            if (resetKey) {
-                setTimeout(
-                    () =>
-                        this.props.navigation.dispatch(
-                            StackActions.reset({
-                                index: 0,
-                                actions: [
-                                    NavigationActions.navigate({
-                                        routeName: 'RESETPASSWORD',
-                                    }),
-                                ],
-                            }),
-                        ),
-                    1000,
-                );
-            } else if (isLoggedIn !== 'true' || userData.isMember == false) {
-                // go to login
+            const isLoggedIn = data[0][1];
+            const resetKey = data[1][1];
+            const lessonUrl = data[2][1];
+            const commentId = data[3][1];
+            const email = data[4][1];
+            const pass = data[5][1];
+            const res = await getToken(email, pass);
+
+            if (res.success) {    
+                await AsyncStorage.multiSet([['loggedInStatus', 'true']]);
+
+                let userData = await getUserData();
+                
+                if (lessonUrl && commentId) {
+                    // if lesson or comment notification? go to video
+                    this.props.navigation.dispatch(
+                        StackActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({
+                                    routeName: 'VIDEOPLAYER',
+                                    params: {
+                                        url: lessonUrl,
+                                        commentId,
+                                    },
+                                }),
+                            ],
+                        }),
+                    );
+                } else if (resetKey) {
+                    // go to reset pass
+                    setTimeout(
+                        () =>
+                            this.props.navigation.dispatch(
+                                StackActions.reset({
+                                    index: 0,
+                                    actions: [
+                                        NavigationActions.navigate({
+                                            routeName: 'RESETPASSWORD',
+                                        }),
+                                    ],
+                                }),
+                            ),
+                        1000,
+                    );
+                } else if (isLoggedIn !== 'true' || userData.isMember == false) {
+                    // go to login
+                    setTimeout(
+                        () =>
+                            this.props.navigation.dispatch(
+                                StackActions.reset({
+                                    index: 0,
+                                    actions: [
+                                        NavigationActions.navigate({
+                                            routeName: 'LOGIN',
+                                        }),
+                                    ],
+                                }),
+                            ),
+                        1000,
+                    );
+                } else {
+                    // if member then check membership type   
+                    let currentDate = new Date().getTime() / 1000;
+                    let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
+                    if(userData.isPackOlyOwner) {
+                        // if pack only, set global variable to true & go to packs
+                        global.isPackOnly = userData.isPackOlyOwner;
+                        await this.props.navigation.dispatch(StackActions.reset({
+                            index: 0,
+                            actions: [NavigationActions.navigate({routeName: 'PACKS'})],
+                        }));
+                    } else if (userData.isLifetime || currentDate < userExpDate) {
+                        // is logged in with valid membership go to lessons
+                        await this.props.navigation.dispatch(StackActions.reset({
+                            index: 0,
+                            actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
+                        }));
+                    } else {
+                        // membership expired, go to membership expired
+                        this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
+                            email: this.state.email,
+                            password: this.state.password,
+                            token: res.token,
+                        });
+                    }
+                }
+            } else if(!res.success) {
                 setTimeout(
                     () =>
                         this.props.navigation.dispatch(
@@ -56,64 +140,6 @@ export default class LoadPage extends React.Component {
                         ),
                     1000,
                 );
-            } else {
-                isLoggedIn = await AsyncStorage.getItem('loggedInStatus');
-                let resetKey = await AsyncStorage.getItem('resetKey');
-                let userData = await getUserData();
-                if (resetKey) {
-                    setTimeout(
-                        () => this.props.navigation.dispatch(resetPassAction),
-                        1000,
-                    );
-                } else if (
-                    isLoggedIn !== 'true' ||
-                    userData.isMember == false
-                ) {
-                    // go to login
-                    setTimeout(
-                        () =>
-                            this.props.navigation.navigate(
-                                'MEMBERSHIPEXPIRED',
-                                {
-                                    email: userData.email,
-                                    password: pass,
-                                },
-                            ),
-                        1000,
-                    );
-                } else {
-                    global.isPackOnly = userData.isPackOlyOwner;
-                    let route = isPackOnly ? 'PACKS' : 'LESSONS';
-                    let currentDate = new Date().getTime() / 1000;
-                    let userExpDate =
-                        new Date(userData.expirationDate).getTime() / 1000;
-
-                    if (userData.isLifetime || currentDate < userExpDate) {
-                        setTimeout(
-                            () =>
-                                this.props.navigation.dispatch(
-                                    StackActions.reset({
-                                        index: 0,
-                                        actions: [
-                                            NavigationActions.navigate({
-                                                routeName: route,
-                                            }),
-                                        ],
-                                    }),
-                                ),
-                            1000,
-                        );
-                    } else {
-                        // go to membership expired
-                        setTimeout(
-                            () =>
-                                this.props.navigation.navigate(
-                                    'MEMBERSHIPEXPIRED',
-                                ),
-                            1000,
-                        );
-                    }
-                }
             }
         });
     }
@@ -121,7 +147,7 @@ export default class LoadPage extends React.Component {
     render() {
         return (
             <View
-                styles={[
+                style={[
                     styles.centerContent,
                     {
                         flex: 1,
