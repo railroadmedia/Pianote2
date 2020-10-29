@@ -287,6 +287,7 @@ export default class SongCatalog extends React.Component {
                         Songs
                     </Text>
                     <View style={{height: 15 * factorVertical}} />
+                    {this.state.started && (
                     <View
                         key={'continueCourses'}
                         style={{
@@ -295,32 +296,31 @@ export default class SongCatalog extends React.Component {
                             backgroundColor: colors.mainBackground,
                         }}
                     >
-                        {this.state.started && (
-                            <HorizontalVideoList
-                                Title={'CONTINUE'}
-                                isLoading={this.state.isLoadingProgress}
-                                seeAll={() =>
-                                    this.props.navigation.navigate('SEEALL', {
-                                        title: 'Continue',
-                                        parent: 'Songs',
-                                    })
-                                }
-                                hideSeeAll={true}
-                                showArtist={true}
-                                items={this.state.progressSongs}
-                                itemWidth={
-                                    isNotch
-                                        ? fullHeight * 0.175
-                                        : fullHeight * 0.2
-                                }
-                                itemHeight={
-                                    isNotch
-                                        ? fullHeight * 0.175
-                                        : fullHeight * 0.2
-                                }
-                            />
-                        )}
+                        <HorizontalVideoList
+                            Title={'CONTINUE'}
+                            isLoading={this.state.isLoadingProgress}
+                            seeAll={() =>
+                                this.props.navigation.navigate('SEEALL', {
+                                    title: 'Continue',
+                                    parent: 'Songs',
+                                })
+                            }
+                            hideSeeAll={true}
+                            showArtist={true}
+                            items={this.state.progressSongs}
+                            itemWidth={
+                                isNotch
+                                    ? fullHeight * 0.175
+                                    : fullHeight * 0.2
+                            }
+                            itemHeight={
+                                isNotch
+                                    ? fullHeight * 0.175
+                                    : fullHeight * 0.2
+                            }
+                        />
                     </View>
+                    )}
                     <VerticalVideoList
                         items={this.state.allSongs}
                         isLoading={this.state.isLoadingAll}

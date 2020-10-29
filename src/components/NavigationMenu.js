@@ -5,13 +5,28 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {withNavigation} from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class NavigationMenu extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            foundationIsStarted: false,
+            foundationIsCompleted: false,
+        };
     }
+
+    UNSAFE_componentWillMount = async () => {
+        let data = await AsyncStorage.multiGet(['foundationsIsStarted', 'foundationsIsCompleted']);
+
+        await this.setState({
+            foundationIsStarted: typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
+            foundationIsCompleted: typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false,
+        });
+
+        
+    };
 
     lessonNav() {
         return (
@@ -69,7 +84,10 @@ class NavigationMenu extends React.Component {
                     <TouchableOpacity
                         onPress={() => {
                             this.props.onClose(false),
-                                this.props.navigation.navigate('FOUNDATIONS');
+                                this.props.navigation.navigate('FOUNDATIONS', {
+                                    foundationIsStarted: this.state.foundationIsStarted,
+                                    foundationIsCompleted: this.state.foundationIsCompleted,
+                                });
                         }}
                         style={{flex: 1}}
                     >

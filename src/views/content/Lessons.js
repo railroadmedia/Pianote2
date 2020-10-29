@@ -8,6 +8,7 @@ import {View, Text, ScrollView, Platform} from 'react-native';
 import Modal from 'react-native-modal';
 import firebase from 'react-native-firebase';
 import RestartCourse from '../../modals/RestartCourse.js';
+import {updateUserDetails} from '../../services/UserActions';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import ResetIcon from 'Pianote2/src/components/ResetIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
@@ -20,12 +21,7 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import foundationsService from 'Pianote2/src/services/foundations.service.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
-import {
-    getNewContent,
-    getStartedContent,
-    getAllContent,
-} from '../../services/GetContent';
-import {updateUserDetails} from '../../services/UserActions';
+import {getNewContent, getStartedContent, getAllContent} from '../../services/GetContent';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -636,10 +632,8 @@ export default class Lessons extends React.Component {
                                     this.props.navigation.navigate(
                                         'FOUNDATIONS',
                                         {
-                                            foundationIsStarted: this.state
-                                                .foundationIsStarted,
-                                            foundationIsCompleted: this.state
-                                                .foundationIsCompleted,
+                                            foundationIsStarted: this.state.foundationIsStarted,
+                                            foundationIsCompleted: this.state.foundationIsCompleted,
                                         },
                                     );
                                 }}
