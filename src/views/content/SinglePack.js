@@ -19,8 +19,6 @@ import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import packsService from '../../services/packs.service';
 import {ActivityIndicator} from 'react-native';
 import {
-    likeContent,
-    unlikeContent,
     addToMyList,
     removeFromMyList,
     resetProgress,
@@ -40,8 +38,6 @@ export default class SinglePack extends React.Component {
             thumbnail: '',
             logo: '',
             xp: 0,
-            isLiked: false,
-            likeCount: 0,
             isStarted: false,
             isCompleted: false,
             nextLessonUrl: '',
@@ -63,14 +59,20 @@ export default class SinglePack extends React.Component {
         // if more than one bundle then display bundles otherwise show videos
         if (newContent.post.bundle_count > 1)
             this.setState({isDisplayingLessons: false});
-        items = [];
+        let items = [];
         try {
-            for (i in lessons) {
+            for (let i in lessons) {
                 items.push({
                     title: lessons[i].getField('title'),
                     thumbnail: lessons[i].getData('thumbnail_url'),
                     id: lessons[i].id,
-                    duration: lessons[i].length_in_seconds || 0,
+                    duration:
+                        newContent.post.bundle_count > 1
+                            ? 0
+                            : new ContentModel(
+                                  lessons[i].getFieldMulti('video')[0],
+                              )?.getField('length_in_seconds'),
+
                     isAddedToList: lessons[i].isAddedToList,
                     isStarted: lessons[i].isStarted,
                     isCompleted: lessons[i].isCompleted,
@@ -81,18 +83,17 @@ export default class SinglePack extends React.Component {
         } catch (error) {
             console.log(error);
         }
-
         this.setState({
             id: newContent.id,
             isAddedToList: newContent.isAddedToList,
-            thumbnail: newContent.post.thumbnail_url,
+            thumbnail:
+                newContent.post.thumbnail_url ||
+                newContent.getData('thumbnail_url'),
             logo: newContent.post.pack_logo,
             description: newContent.getData('description'),
             isStarted: newContent.isStarted,
             isCompleted: newContent.isCompleted,
             xp: newContent.xp,
-            isLiked: newContent.post.is_liked_by_current_user,
-            likeCount: parseInt(newContent.likeCount),
             videos: [...this.state.videos, ...items],
             nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
             isLoadingAll: false,
@@ -103,20 +104,6 @@ export default class SinglePack extends React.Component {
         await resetProgress(this.state.id);
         this.setState({isLoadingAll: true}, () => this.getBundle());
     }
-
-    like = () => {
-        if (this.state.isLiked) {
-            unlikeContent(this.state.id);
-        } else {
-            likeContent(this.state.id);
-        }
-        this.setState({
-            isLiked: !this.state.isLiked,
-            likeCount: this.state.isLiked
-                ? this.state.likeCount - 1
-                : this.state.likeCount + 1,
-        });
-    };
 
     toggleMyList = () => {
         if (this.state.isAddedToList) {
@@ -477,18 +464,44 @@ export default class SinglePack extends React.Component {
                                                 flex: 1,
                                                 alignSelf: 'stretch',
                                             }}
+                                        />
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    width: 70 * factorRatio,
+                                                },
+                                            ]}
                                         >
-                                            <Text>LESSONS</Text>
+                                            <Text
+                                                style={{
+                                                    fontWeight: '700',
+                                                    fontSize: 17 * factorRatio,
+                                                    textAlign: 'left',
+                                                    color: 'white',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
+                                                    marginTop:
+                                                        10 * factorVertical,
+                                                }}
+                                            >
+                                                {this.state.videos.length}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: 13 * factorRatio,
+                                                    textAlign: 'left',
+                                                    color: 'white',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
+                                                    marginTop:
+                                                        10 * factorVertical,
+                                                }}
+                                            >
+                                                LESSONS
+                                            </Text>
                                         </View>
-                                    </View>
-                                    <View style={{width: 15 * factorRatio}} />
-                                    <View
-                                        style={[
-                                            styles.centerContent,
-                                            {width: 70 * factorRatio},
-                                        ]}
-                                    >
-                                        <Text
+                                        <View
                                             style={{
                                                 width: 15 * factorRatio,
                                             }}
@@ -496,7 +509,9 @@ export default class SinglePack extends React.Component {
                                         <View
                                             style={[
                                                 styles.centerContent,
-                                                {width: 70 * factorRatio},
+                                                {
+                                                    width: 70 * factorRatio,
+                                                },
                                             ]}
                                         >
                                             <Text
@@ -540,54 +555,22 @@ export default class SinglePack extends React.Component {
                                         }}
                                     />
                                     <View
-                                        style={{
-                                            flex: 1,
-                                            alignSelf: 'stretch',
-                                        }}
-                                    />
-                                    <TouchableOpacity
+                                        key={'buttons'}
                                         style={[
                                             styles.centerContent,
-                                            {width: 70 * factorRatio},
+                                            {
+                                                flex: 0.25,
+                                                flexDirection: 'row',
+                                            },
                                         ]}
                                     >
-                                        <View style={{flex: 1}} />
-                                        <MaterialIcon
-                                            name={'arrow-collapse-down'}
-                                            size={27.5 * factorRatio}
-                                            color={colors.pianoteRed}
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                alignSelf: 'stretch',
+                                            }}
                                         />
-                                        <TouchableOpacity
-                                            onPress={() => this.like()}
-                                            style={[
-                                                styles.centerContent,
-                                                {width: 70 * factorRatio},
-                                            ]}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <AntIcon
-                                                name={
-                                                    this.state.isLiked
-                                                        ? 'like1'
-                                                        : 'like2'
-                                                }
-                                                size={27.5 * factorRatio}
-                                                color={colors.pianoteRed}
-                                            />
-                                            <Text
-                                                style={{
-                                                    fontSize: 13 * factorRatio,
-                                                    textAlign: 'left',
-                                                    color: 'white',
-                                                    fontFamily:
-                                                        'OpenSans-Regular',
-                                                    marginTop:
-                                                        10 * factorVertical,
-                                                }}
-                                            >
-                                                {this.state.likeCount}
-                                            </Text>
-                                        </TouchableOpacity>
+
                                         <View
                                             style={{
                                                 width: 15 * factorRatio,
@@ -596,7 +579,9 @@ export default class SinglePack extends React.Component {
                                         <TouchableOpacity
                                             style={[
                                                 styles.centerContent,
-                                                {width: 70 * factorRatio},
+                                                {
+                                                    width: 70 * factorRatio,
+                                                },
                                             ]}
                                         >
                                             <View style={{flex: 1}} />
@@ -663,7 +648,7 @@ export default class SinglePack extends React.Component {
                                                 alignSelf: 'stretch',
                                             }}
                                         />
-                                    </TouchableOpacity>
+                                    </View>
                                     <View
                                         style={{
                                             height: 30 * factorVertical,

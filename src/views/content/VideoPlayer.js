@@ -280,7 +280,7 @@ export default class VideoPlayer extends React.Component {
                 publishedOn: content.publishedOn,
                 relatedLessons: [...this.state.relatedLessons, ...rl],
                 likes: parseInt(content.likeCount),
-                isLiked: content.isLiked,
+                isLiked: content.post.is_liked_by_current_user,
                 lengthInSec: new ContentModel(
                     content.getFieldMulti('video')[0],
                 ).getField('length_in_seconds'),
