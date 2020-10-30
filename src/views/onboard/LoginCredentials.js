@@ -52,22 +52,6 @@ export default class LoginCredentials extends React.Component {
         };
     }
 
-    componentDidMount() {
-        this.keyboardDidShowListener = Keyboard.addListener(
-            'keyboardWillShow',
-            () => this.setState({scrollViewContentFlex: {}}),
-        );
-        this.keyboardDidHideListener = Keyboard.addListener(
-            'keyboardWillHide',
-            () => this.setState({scrollViewContentFlex: {flex: 1}}),
-        );
-    }
-
-    componentWillUnmount() {
-        this.keyboardDidShowListener.remove();
-        this.keyboardDidHideListener.remove();
-    }
-
     getPurchases = async () => {
         if (!this.context.isConnected) {
             this.context.showNoConnectionAlert();
@@ -218,8 +202,9 @@ export default class LoginCredentials extends React.Component {
                 source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
             >
                 <GradientFeature
-                    zIndex={0.1}
+                    zIndex={0}
                     opacity={0.5}
+                    elevation={0}
                     color={'dark'}
                     height={'100%'}
                     borderRadius={0}
@@ -288,6 +273,16 @@ export default class LoginCredentials extends React.Component {
                                     </Text>
                                 </View>
                                 <TextInput
+                                    onBlur={() =>
+                                        this.setState({
+                                            scrollViewContentFlex: {flex: 1},
+                                        })
+                                    }
+                                    onFocus={() =>
+                                        this.setState({
+                                            scrollViewContentFlex: {},
+                                        })
+                                    }
                                     autoCorrect={false}
                                     value={this.state.email}
                                     keyboardAppearance={'dark'}
@@ -317,6 +312,18 @@ export default class LoginCredentials extends React.Component {
                                     }}
                                 >
                                     <TextInput
+                                        onBlur={() =>
+                                            this.setState({
+                                                scrollViewContentFlex: {
+                                                    flex: 1,
+                                                },
+                                            })
+                                        }
+                                        onFocus={() =>
+                                            this.setState({
+                                                scrollViewContentFlex: {},
+                                            })
+                                        }
                                         autoCorrect={false}
                                         keyboardAppearance={'dark'}
                                         placeholderTextColor={'grey'}

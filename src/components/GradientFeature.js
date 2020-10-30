@@ -27,25 +27,38 @@ class GradientFeature extends React.Component {
     }
 
     render = () => {
+        let {
+            color,
+            height,
+            zIndex,
+            opacity,
+            elevation,
+            borderRadius,
+        } = this.props;
         return (
             <View
                 style={{
-                    opacity: this.props.opacity,
-                    height: this.props.height,
-                    position: 'absolute',
-                    width: '100%',
-                    bottom: 0,
-                    zIndex: this.props.zIndex || 2,
-                    elevation: Platform.OS === 'android' ? 2 : 0,
+                    height,
                     left: 0,
+                    opacity,
+                    bottom: 0,
+                    width: '100%',
+                    position: 'absolute',
+                    zIndex: isNaN(zIndex) ? 2 : zIndex,
+                    elevation:
+                        Platform.OS === 'android'
+                            ? isNaN(elevation)
+                                ? 2
+                                : elevation
+                            : 0,
                 }}
             >
                 <LinearGradient
-                    colors={colorDict[this.props.color]}
+                    colors={colorDict[color]}
                     style={{
-                        borderRadius: this.props.borderRadius,
-                        height: '100%',
+                        borderRadius,
                         width: '100%',
+                        height: '100%',
                     }}
                 />
             </View>
