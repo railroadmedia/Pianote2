@@ -196,7 +196,6 @@ export default class VideoPlayer extends React.Component {
             return new ContentModel(rl);
         });
         let al = [];
-        console.log(content.post);
         if (content.post.assignments && this.context.isConnected) {
             await downloadService.getAssignWHRatio(content.post.assignments);
             let assignments = content.post.assignments.map(assignment => {
@@ -243,18 +242,16 @@ export default class VideoPlayer extends React.Component {
         let rl = [];
         if (relatedLessons) {
             for (let i in relatedLessons) {
-                console.log(relatedLessons[i]);
+                let duration = new ContentModel(
+                    relatedLessons[i].getFieldMulti('video')[0],
+                )?.getField('length_in_seconds');
                 rl.push({
                     title: relatedLessons[i].getField('title'),
                     thumbnail: relatedLessons[i].getData('thumbnail_url'),
                     type: relatedLessons[i].type,
                     id: relatedLessons[i].id,
                     mobile_app_url: relatedLessons[i].post.mobile_app_url,
-                    duration: relatedLessons[i].fields?.find('video')
-                        ? new ContentModel(
-                              relatedLessons[i].getFieldMulti('video')[0],
-                          )?.getField('length_in_seconds')
-                        : 0,
+                    duration: duration < 60 ? 60 : duration,
                     isAddedToList: relatedLessons[i].isAddedToList,
                     isStarted: relatedLessons[i].isStarted,
                     isCompleted: relatedLessons[i].isCompleted,
