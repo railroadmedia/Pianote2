@@ -45,6 +45,7 @@ export default class LoadPage extends React.Component {
             ).reduce((i, j) => {
                 i[j[0]] =
                     j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
+                i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
                 return i;
             }, {});
             const {
@@ -157,23 +158,19 @@ export default class LoadPage extends React.Component {
                 }
             } else if (
                 !res.success ||
-                isLoggedIn == false ||
-                isLoggedIn == 'false'
+                loggedIn == false ||
+                loggedIn == 'false'
             ) {
                 // is not logged in
-                setTimeout(
-                    () =>
-                        this.props.navigation.dispatch(
-                            StackActions.reset({
-                                index: 0,
-                                actions: [
-                                    NavigationActions.navigate({
-                                        routeName: 'LOGIN',
-                                    }),
-                                ],
+                this.props.navigation.dispatch(
+                    StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({
+                                routeName: 'LOGIN',
                             }),
-                        ),
-                    1000,
+                        ],
+                    }),
                 );
             }
         });
