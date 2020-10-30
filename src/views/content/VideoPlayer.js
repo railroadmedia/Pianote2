@@ -250,7 +250,7 @@ export default class VideoPlayer extends React.Component {
                     type: relatedLessons[i].type,
                     id: relatedLessons[i].id,
                     mobile_app_url: relatedLessons[i].post.mobile_app_url,
-                    duration: relatedLessons[i].fields.find('video')
+                    duration: relatedLessons[i].fields?.find('video')
                         ? new ContentModel(
                               relatedLessons[i].getFieldMulti('video')[0],
                           )?.getField('length_in_seconds')
