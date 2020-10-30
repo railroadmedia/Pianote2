@@ -8,8 +8,11 @@ import {Download_V2} from 'RNDownload';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {getUserData, getToken} from 'Pianote2/src/services/UserDataAuth.js';
+
 import {NetworkContext} from '../../context/NetworkProvider';
+
+import {getToken, getUserData} from '../../services/UserDataAuth';
+
 import Pianote from '../../assets/img/svgs/pianote';
 
 const resetAction = StackActions.reset({
@@ -28,28 +31,48 @@ export default class LoadPage extends React.Component {
     componentDidMount() {
         Download_V2.resumeAll().then(async () => {
             await SplashScreen.hide();
-            if (!this.context.isConnected) {
+            if (!this.context.isConnected)
                 return this.props.navigation.navigate('DOWNLOADS');
-            }
-
-            let data = await AsyncStorage.multiGet(['loggedInStatus', 'resetKey', 'lessonUrl', 'commentId', 'email', 'password']);
-
-            const isLoggedIn = data[0][1];
-            const resetKey = data[1][1];
-            const lessonUrl = data[2][1];
-            const commentId = data[3][1];
-            const email = data[4][1];
-            const pass = data[5][1];
-            const res = await getToken(email, pass);
-
-            // if getToken success, else == no email or pass, which means not logged in
-            if (res.success || isLoggedIn == true || isLoggedIn == 'true') {    
-                // set logged in status to true
-                await AsyncStorage.multiSet([['loggedInStatus', 'true']]);
-                
-                // get userData
+            let data = (
+                await AsyncStorage.multiGet([
+                    'loggedIn',
+                    'resetKey',
+                    'lessonUrl',
+                    'commentId',
+                    'email',
+                    'password',
+                ])
+            ).reduce((i, j) => {
+                i[j[0]] =
+                    j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
+                return i;
+            }, {});
+            const {
+                email,
+                resetKey,
+                password,
+                loggedIn,
+                lessonUrl,
+                commentId,
+            } = data;
+            if (!loggedIn)
+                return this.props.navigation.dispatch(
+                    StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({
+                                routeName: 'LOGIN',
+                            }),
+                        ],
+                    }),
+                );
+            const res = await getToken(email, password);
+            if (res.success) {
+                token = res.token;
+                await AsyncStorage.multiSet([['loggedIn', 'true']]);
                 let userData = await getUserData();
-                
+                console.log('ud', userData);
+
                 if (lessonUrl && commentId) {
                     // if lesson or comment notification go to video
                     this.props.navigation.dispatch(
@@ -78,8 +101,8 @@ export default class LoadPage extends React.Component {
                             ],
                         }),
                     );
-                } else if (isLoggedIn !== 'true' || userData.isMember == false) {
-                    // if not logged in or not a member go to login
+                } else if (userData.isMember == false) {
+                    // go to login
                     this.props.navigation.dispatch(
                         StackActions.reset({
                             index: 0,
@@ -91,22 +114,38 @@ export default class LoadPage extends React.Component {
                         }),
                     );
                 } else {
-                    // if member then check membership type   
+                    // if member then check membership type
                     let currentDate = new Date().getTime() / 1000;
-                    let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
-                    if(userData.isPackOlyOwner) {
+                    let userExpDate =
+                        new Date(userData.expirationDate).getTime() / 1000;
+                    if (userData.isPackOlyOwner) {
                         // if pack only, set global variable to true & go to packs
                         global.isPackOnly = userData.isPackOlyOwner;
-                        await this.props.navigation.dispatch(StackActions.reset({
-                            index: 0,
-                            actions: [NavigationActions.navigate({routeName: 'PACKS'})],
-                        }));
-                    } else if (userData.isLifetime || currentDate < userExpDate) {
+                        await this.props.navigation.dispatch(
+                            StackActions.reset({
+                                index: 0,
+                                actions: [
+                                    NavigationActions.navigate({
+                                        routeName: 'PACKS',
+                                    }),
+                                ],
+                            }),
+                        );
+                    } else if (
+                        userData.isLifetime ||
+                        currentDate < userExpDate
+                    ) {
                         // is logged in with valid membership go to lessons
-                        await this.props.navigation.dispatch(StackActions.reset({
-                            index: 0,
-                            actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
-                        }));
+                        await this.props.navigation.dispatch(
+                            StackActions.reset({
+                                index: 0,
+                                actions: [
+                                    NavigationActions.navigate({
+                                        routeName: 'LESSONS',
+                                    }),
+                                ],
+                            }),
+                        );
                     } else {
                         // membership expired, go to membership expired
                         this.props.navigation.navigate('MEMBERSHIPEXPIRED', {
@@ -116,7 +155,11 @@ export default class LoadPage extends React.Component {
                         });
                     }
                 }
-            } else if(!res.success || isLoggedIn == false || isLoggedIn == 'false') {
+            } else if (
+                !res.success ||
+                isLoggedIn == false ||
+                isLoggedIn == 'false'
+            ) {
                 // is not logged in
                 setTimeout(
                     () =>

@@ -6,20 +6,17 @@ export default {
     tryCall: async function (url, method, body) {
         try {
             if (body) body = body ? JSON.stringify(body) : null;
-            let token = await AsyncStorage.getItem('token');
-            
-            token = `Bearer ${token}`;
             let headers = body
                 ? {
-                      Authorization: token,
+                      Authorization: `Bearer ${token}`,
                       'Content-Type': 'application/json',
                   }
                 : {
-                      Authorization: token,
+                      Authorization: `Bearer ${token}`,
                   };
             let newUrl = url;
             if (!url.includes('https')) {
-                newUrl = url.replace('http', 'https')
+                newUrl = url.replace('http', 'https');
             }
             let response = await fetch(newUrl, {
                 body,
@@ -27,7 +24,7 @@ export default {
                 method: method || 'GET',
             });
             let json = await response.json();
-            
+
             if (
                 json.error === 'TOKEN_EXPIRED' ||
                 json.error === 'Token not provided'

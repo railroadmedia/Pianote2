@@ -12,6 +12,7 @@ Orientation.lockToPortrait();
 AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;
 
+global.token = '';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.statusBarHeight = StatusBar.statusBarHeight || 24;
 global.fullWidth = Dimensions.get('window').width;

@@ -132,8 +132,7 @@ export default class Settings extends React.Component {
                     {cancelable: false},
                 );
             } else if (restoreResponse.token) {
-                let {token} = restoreResponse;
-                await AsyncStorage.setItem('token', JSON.stringify(token));
+                token = restoreResponse.token;
                 this.props.navigation.dispatch(
                     StackActions.reset({
                         index: 0,
