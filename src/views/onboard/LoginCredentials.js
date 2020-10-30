@@ -6,7 +6,6 @@ import {
     View,
     Text,
     Keyboard,
-    Platform,
     TextInput,
     ScrollView,
     TouchableOpacity,
@@ -36,6 +35,7 @@ import GradientFeature from '../../components/GradientFeature';
 
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
+import {Dimensions} from 'react-native';
 
 export default class LoginCredentials extends React.Component {
     static navigationOptions = {header: null};
@@ -77,12 +77,10 @@ export default class LoginCredentials extends React.Component {
         }
         try {
             const purchases = await RNIap[
-                Platform.OS === 'ios'
-                    ? 'getAvailablePurchases'
-                    : 'getPurchaseHistory'
+                isiOS ? 'getAvailablePurchases' : 'getPurchaseHistory'
             ]();
             if (purchases.length) {
-                if (Platform.OS === 'ios')
+                if (isiOS)
                     return {
                         receipt: purchases[0].transactionReceipt,
                     };
@@ -180,7 +178,7 @@ export default class LoginCredentials extends React.Component {
                 );
             }
             let reducedPurchase = '';
-            if (Platform.OS === 'ios') {
+            if (isiOS) {
                 reducedPurchase = purchases;
             } else {
                 reducedPurchase = purchases.map(m => {
@@ -210,9 +208,11 @@ export default class LoginCredentials extends React.Component {
     };
 
     render() {
+        console.log(Dimensions.get('window'));
+        console.log(Dimensions.get('screen'));
         return (
             <FastImage
-                style={{height: fullHeight}}
+                style={{flex: 1}}
                 resizeMode={FastImage.resizeMode.cover}
                 source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
             >
@@ -226,7 +226,7 @@ export default class LoginCredentials extends React.Component {
                 <SafeAreaView style={{flex: 1}}>
                     <KeyboardAvoidingView
                         style={{flex: 1}}
-                        behavior={`${Platform.OS === 'ios' ? 'padding' : ''}`}
+                        behavior={`${isiOS ? 'padding' : ''}`}
                     >
                         <ScrollView
                             style={{flex: 1}}
@@ -258,7 +258,7 @@ export default class LoginCredentials extends React.Component {
                                         numberOfLines={1}
                                         adjustsFontSizeToFit
                                         style={{
-                                            fontSize: 99,
+                                            fontSize: isiOS ? 99 : 18,
                                             color: 'white',
                                             paddingTop: 15,
                                             alignSelf: 'center',
@@ -273,7 +273,7 @@ export default class LoginCredentials extends React.Component {
                                         numberOfLines={1}
                                         adjustsFontSizeToFit
                                         style={{
-                                            fontSize: 99,
+                                            fontSize: isiOS ? 99 : 18,
                                             color: 'white',
                                             alignSelf: 'center',
                                             textAlign: 'center',
