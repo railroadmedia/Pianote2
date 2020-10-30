@@ -22,6 +22,7 @@ import {NavigationActions, StackActions} from 'react-navigation';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import commonService from '../../services/common.service.js';
+import {NetworkContext} from '../../context/NetworkProvider.js';
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -30,6 +31,7 @@ const resetAction = StackActions.reset({
 
 export default class ProfileSettings extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -69,6 +71,9 @@ export default class ProfileSettings extends React.Component {
     }
 
     changePassword = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         const email = await AsyncStorage.getItem('email');
 
         const {response, error} = await userForgotPassword({email});
@@ -78,6 +83,9 @@ export default class ProfileSettings extends React.Component {
     };
 
     changeName = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         // check if display name available
         let response = await fetch(
             `${commonService.rootUrl}/usora/is-display-name-unique?display_name=${this.state.displayName}`,
@@ -104,6 +112,9 @@ export default class ProfileSettings extends React.Component {
     };
 
     changeImage = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         const data = new FormData();
 
         data.append('target', this.state.imageName);
@@ -190,10 +201,7 @@ export default class ProfileSettings extends React.Component {
                     ></View>
                     <View
                         key={'myProfileSettings'}
-                        style={[
-                            styles.centerContent,
-                            {flex: 0.1},
-                        ]}
+                        style={[styles.centerContent, {flex: 0.1}]}
                     >
                         {this.state.currentlyView !== 'Profile Settings' && (
                             <View

@@ -23,9 +23,11 @@ import {
     removeFromMyList,
     resetProgress,
 } from 'Pianote2/src/services/UserActions.js';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class SinglePack extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -50,6 +52,9 @@ export default class SinglePack extends React.Component {
     };
 
     getBundle = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         // get bundles
         const response = await packsService.getPack(this.state.url);
         const newContent = new ContentModel(response);
@@ -101,11 +106,17 @@ export default class SinglePack extends React.Component {
     };
 
     async resetProgress() {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         await resetProgress(this.state.id);
         this.setState({isLoadingAll: true}, () => this.getBundle());
     }
 
     toggleMyList = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.isAddedToList) {
             removeFromMyList(this.state.id);
         } else {

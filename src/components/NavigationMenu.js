@@ -18,14 +18,17 @@ class NavigationMenu extends React.Component {
     }
 
     UNSAFE_componentWillMount = async () => {
-        let data = await AsyncStorage.multiGet(['foundationsIsStarted', 'foundationsIsCompleted']);
+        let data = await AsyncStorage.multiGet([
+            'foundationsIsStarted',
+            'foundationsIsCompleted',
+        ]);
 
         await this.setState({
-            foundationIsStarted: typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
-            foundationIsCompleted: typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false,
+            foundationIsStarted:
+                typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
+            foundationIsCompleted:
+                typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false,
         });
-
-        
     };
 
     lessonNav() {
@@ -44,8 +47,8 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false),
-                                this.props.navigation.navigate('LESSONS');
+                            this.props.onClose(false);
+                            this.props.navigation.navigate('LESSONS');
                         }}
                         style={{flex: 1}}
                     >
@@ -85,8 +88,10 @@ class NavigationMenu extends React.Component {
                         onPress={() => {
                             this.props.onClose(false),
                                 this.props.navigation.navigate('FOUNDATIONS', {
-                                    foundationIsStarted: this.state.foundationIsStarted,
-                                    foundationIsCompleted: this.state.foundationIsCompleted,
+                                    foundationIsStarted: this.state
+                                        .foundationIsStarted,
+                                    foundationIsCompleted: this.state
+                                        .foundationIsCompleted,
                                 });
                         }}
                         style={{flex: 1}}

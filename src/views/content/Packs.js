@@ -22,9 +22,11 @@ import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import {resetProgress} from 'Pianote2/src/services/UserActions.js';
 import packsService from '../../services/packs.service';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class Packs extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -46,6 +48,9 @@ export default class Packs extends React.Component {
     };
 
     async getData() {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         const response = await packsService.allPacks();
         console.log(response);
         const newContent = response.myPacks.map(data => {
@@ -81,6 +86,9 @@ export default class Packs extends React.Component {
     }
 
     onRestartPack = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         await resetProgress(this.state.id);
         this.setState({isLoading: true}, () => this.getData());
     };

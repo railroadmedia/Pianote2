@@ -17,6 +17,7 @@ import CheckEmail from '../../modals/CheckEmail.js';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import commonService from '../../services/common.service.js';
+import {NetworkContext} from '../../context/NetworkProvider.js';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -25,6 +26,7 @@ var hideListener =
 
 export default class CreateAccount extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -93,6 +95,9 @@ export default class CreateAccount extends React.Component {
     };
 
     verifyEmail = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.email.length > 0) {
             await fetch(
                 `${commonService.rootUrl}/usora/is-email-unique?email=${this.state.email}`,

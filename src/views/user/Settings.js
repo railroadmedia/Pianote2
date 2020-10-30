@@ -24,9 +24,11 @@ import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import {logOut, restorePurchase} from '../../services/UserDataAuth.js';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {NetworkContext} from '../../context/NetworkProvider.js';
 
 export default class Settings extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -35,6 +37,9 @@ export default class Settings extends React.Component {
     }
 
     manageSubscriptions = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         const userData = await getUserData();
         let {isAppleAppSubscriber, isGoogleAppSubscriber} = userData;
         if (Platform.OS === 'ios') {
@@ -81,6 +86,9 @@ export default class Settings extends React.Component {
     };
 
     restorePurchase = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.loadingRef) this.loadingRef.toggleLoading();
         try {
             await RNIap.initConnection();

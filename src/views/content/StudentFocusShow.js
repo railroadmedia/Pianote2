@@ -9,6 +9,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import {getAllContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const packDict = {
     Bootcamps: require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
@@ -34,6 +35,7 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 
 export default class StudentFocusShow extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -60,6 +62,9 @@ export default class StudentFocusShow extends React.Component {
     };
 
     getAllLessons = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getAllContent(
             typeDict[this.state.pack],
             this.state.currentSort,

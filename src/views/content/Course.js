@@ -12,6 +12,7 @@ import {
     getStartedContent,
     getAllContent,
 } from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -23,6 +24,7 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 
 export default class Course extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -57,6 +59,9 @@ export default class Course extends React.Component {
     };
 
     getAllCourses = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getAllContent(
             'course',
             this.state.currentSort,
@@ -111,6 +116,9 @@ export default class Course extends React.Component {
     };
 
     getProgressCourses = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getStartedContent('course');
         const newContent = response.data.map(data => {
             return new ContentModel(data);
@@ -156,6 +164,9 @@ export default class Course extends React.Component {
     };
 
     getNewCourses = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getNewContent('course');
         const newContent = response.data.map(data => {
             return new ContentModel(data);

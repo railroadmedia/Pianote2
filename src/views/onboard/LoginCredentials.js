@@ -23,7 +23,6 @@ import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote';
 import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
-
 import {
     getToken,
     getUserData,
@@ -35,10 +34,11 @@ import GradientFeature from '../../components/GradientFeature';
 
 import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
-import {Dimensions} from 'react-native';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class LoginCredentials extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -69,6 +69,9 @@ export default class LoginCredentials extends React.Component {
     }
 
     getPurchases = async () => {
+        if (!this.context.isConnected) {
+            this.context.showNoConnectionAlert();
+        }
         try {
             await RNIap.initConnection();
         } catch (error) {
@@ -208,8 +211,6 @@ export default class LoginCredentials extends React.Component {
     };
 
     render() {
-        console.log(Dimensions.get('window'));
-        console.log(Dimensions.get('screen'));
         return (
             <FastImage
                 style={{flex: 1}}

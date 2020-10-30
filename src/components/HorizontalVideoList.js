@@ -19,9 +19,11 @@ import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
 import ContentModal from '../modals/ContentModal';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import {NetworkContext} from '../context/NetworkProvider';
 
 class HorizontalVideoList extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -41,6 +43,9 @@ class HorizontalVideoList extends React.Component {
     };
 
     addToMyList = async contentID => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         // change data structure
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
@@ -53,6 +58,9 @@ class HorizontalVideoList extends React.Component {
     };
 
     removeFromMyList = async contentID => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
@@ -86,6 +94,9 @@ class HorizontalVideoList extends React.Component {
     };
 
     like = contentID => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isLiked = !this.state.items.isLiked;

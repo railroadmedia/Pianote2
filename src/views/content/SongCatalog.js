@@ -11,6 +11,7 @@ import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 import {getStartedContent, getAllContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -22,6 +23,7 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 
 export default class SongCatalog extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -52,6 +54,9 @@ export default class SongCatalog extends React.Component {
     };
 
     getAllSongs = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getAllContent(
             'song',
             this.state.currentSort,
@@ -104,6 +109,9 @@ export default class SongCatalog extends React.Component {
     };
 
     getProgressSongs = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getStartedContent('song');
         const newContent = response.data.map(data => {
             return new ContentModel(data);
@@ -288,38 +296,38 @@ export default class SongCatalog extends React.Component {
                     </Text>
                     <View style={{height: 15 * factorVertical}} />
                     {this.state.started && (
-                    <View
-                        key={'continueCourses'}
-                        style={{
-                            minHeight: fullHeight * 0.225,
-                            paddingLeft: fullWidth * 0.035,
-                            backgroundColor: colors.mainBackground,
-                        }}
-                    >
-                        <HorizontalVideoList
-                            Title={'CONTINUE'}
-                            isLoading={this.state.isLoadingProgress}
-                            seeAll={() =>
-                                this.props.navigation.navigate('SEEALL', {
-                                    title: 'Continue',
-                                    parent: 'Songs',
-                                })
-                            }
-                            hideSeeAll={true}
-                            showArtist={true}
-                            items={this.state.progressSongs}
-                            itemWidth={
-                                isNotch
-                                    ? fullHeight * 0.175
-                                    : fullHeight * 0.2
-                            }
-                            itemHeight={
-                                isNotch
-                                    ? fullHeight * 0.175
-                                    : fullHeight * 0.2
-                            }
-                        />
-                    </View>
+                        <View
+                            key={'continueCourses'}
+                            style={{
+                                minHeight: fullHeight * 0.225,
+                                paddingLeft: fullWidth * 0.035,
+                                backgroundColor: colors.mainBackground,
+                            }}
+                        >
+                            <HorizontalVideoList
+                                Title={'CONTINUE'}
+                                isLoading={this.state.isLoadingProgress}
+                                seeAll={() =>
+                                    this.props.navigation.navigate('SEEALL', {
+                                        title: 'Continue',
+                                        parent: 'Songs',
+                                    })
+                                }
+                                hideSeeAll={true}
+                                showArtist={true}
+                                items={this.state.progressSongs}
+                                itemWidth={
+                                    isNotch
+                                        ? fullHeight * 0.175
+                                        : fullHeight * 0.2
+                                }
+                                itemHeight={
+                                    isNotch
+                                        ? fullHeight * 0.175
+                                        : fullHeight * 0.2
+                                }
+                            />
+                        </View>
                     )}
                     <VerticalVideoList
                         items={this.state.allSongs}

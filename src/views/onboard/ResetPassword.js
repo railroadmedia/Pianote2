@@ -21,6 +21,7 @@ import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
 import {changePassword} from '../../services/UserDataAuth';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -29,6 +30,7 @@ var hideListener =
 
 export default class ResetPassword extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -99,6 +101,9 @@ export default class ResetPassword extends React.Component {
     };
 
     savePassword = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.password == this.state.confirmPassword) {
             if (this.state.password.length > 7) {
                 let email = await AsyncStorage.getItem('email');

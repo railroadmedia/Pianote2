@@ -43,6 +43,9 @@ export default class PathOverview extends React.Component {
     }
 
     getItems = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await contentService.getContent(this.state.data.id);
         console.log(response);
         contentService.getContent(this.state.data.id).then(r =>
@@ -58,6 +61,9 @@ export default class PathOverview extends React.Component {
     };
 
     addToMyList = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         this.setState({isAddedToList: !this.state.isAddedToList});
         if (this.state.isAddedToList) {
             removeFromMyList(this.state.data.id);
