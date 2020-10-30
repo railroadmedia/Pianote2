@@ -31,14 +31,13 @@ export default {
             ) {
                 let email = await AsyncStorage.getItem('email');
                 let pass = await AsyncStorage.getItem('password');
-                const res = await getToken(email, pass);
+                token = (await getToken(email, pass)).token;
                 response = await fetch(url, {
                     body,
                     headers,
                     method: method || 'GET',
                 });
-                let newJson = await response.json();
-                return newJson;
+                return await response.json();
             }
             return json;
         } catch (error) {
