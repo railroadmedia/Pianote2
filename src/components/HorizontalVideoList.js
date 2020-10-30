@@ -232,14 +232,21 @@ class HorizontalVideoList extends React.Component {
                                                     });
                                                 }}
                                                 delayLongPress={350}
-                                                onPress={() => {
-                                                    this.props.navigation.navigate(
-                                                        'VIDEOPLAYER',
-                                                        {
-                                                            id: item.id,
-                                                        },
-                                                    );
-                                                }}
+                                                onPress={() =>
+                                                    item.type === 'course'
+                                                        ? this.props.navigation.navigate(
+                                                              'PATHOVERVIEW',
+                                                              {
+                                                                  data: item,
+                                                              },
+                                                          )
+                                                        : this.props.navigation.navigate(
+                                                              'VIDEOPLAYER',
+                                                              {
+                                                                  id: item.id,
+                                                              },
+                                                          )
+                                                }
                                                 style={{
                                                     flex: 1,
                                                     alignSelf: 'stretch',
