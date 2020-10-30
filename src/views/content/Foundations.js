@@ -25,9 +25,11 @@ import {
     unlikeContent,
     resetProgress,
 } from 'Pianote2/src/services/UserActions.js';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class Foundations extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -64,6 +66,9 @@ export default class Foundations extends React.Component {
     }
 
     getContent = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         const response = new ContentModel(
             await foundationsService.getFoundation('foundations-2019'),
         );
@@ -122,6 +127,9 @@ export default class Foundations extends React.Component {
     };
 
     toggleLike = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.isLiked) {
             unlikeContent(this.state.id);
         } else {
@@ -136,6 +144,9 @@ export default class Foundations extends React.Component {
     };
 
     onRestartFoundation = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         resetProgress(this.state.id);
         this.setState({
             isStarted: false,

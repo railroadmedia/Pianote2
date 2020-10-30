@@ -11,9 +11,11 @@ import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class StudentFocusCatalog extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -24,6 +26,9 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     componentDidMount = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getStartedContent(
             'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps',
         );

@@ -21,7 +21,12 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import foundationsService from 'Pianote2/src/services/foundations.service.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
-import {getNewContent, getStartedContent, getAllContent} from '../../services/GetContent';
+import {
+    getNewContent,
+    getStartedContent,
+    getAllContent,
+} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider.js';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -33,6 +38,7 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 
 export default class Lessons extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -148,6 +154,9 @@ export default class Lessons extends React.Component {
     };
 
     getFoundations = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         const response = new ContentModel(
             await foundationsService.getFoundation('foundations-2019'),
         );
@@ -163,6 +172,9 @@ export default class Lessons extends React.Component {
     };
 
     getNewLessons = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getNewContent('');
         const newContent = response.data.map(data => {
             return new ContentModel(data);
@@ -211,6 +223,9 @@ export default class Lessons extends React.Component {
     };
 
     getAllLessons = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         try {
             let response = await getAllContent(
                 '',
@@ -272,6 +287,9 @@ export default class Lessons extends React.Component {
     };
 
     getProgressLessons = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         try {
             let response = await getStartedContent('course');
             const newContent = response.data.map(data => {
@@ -320,6 +338,9 @@ export default class Lessons extends React.Component {
     };
 
     onRestartFoundation = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         resetProgress(this.state.id);
         this.setState({
             foundationIsStarted: false,
@@ -632,8 +653,10 @@ export default class Lessons extends React.Component {
                                     this.props.navigation.navigate(
                                         'FOUNDATIONS',
                                         {
-                                            foundationIsStarted: this.state.foundationIsStarted,
-                                            foundationIsCompleted: this.state.foundationIsCompleted,
+                                            foundationIsStarted: this.state
+                                                .foundationIsStarted,
+                                            foundationIsCompleted: this.state
+                                                .foundationIsCompleted,
                                         },
                                     );
                                 }}

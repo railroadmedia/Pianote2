@@ -11,6 +11,7 @@ import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import {getMyListContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -22,6 +23,7 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 
 export default class MyList extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -48,6 +50,9 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await getMyListContent(
             this.state.page,
             this.state.filters,
@@ -108,6 +113,9 @@ export default class MyList extends React.Component {
     };
 
     removeFromMyList = async contentID => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         for (i in this.state.allLessons) {
             // remove if ID matches
             if (this.state.allLessons[i].id == contentID) {

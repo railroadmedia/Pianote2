@@ -23,6 +23,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import commentsService from '../services/comments.service';
+import {NetworkContext} from '../context/NetworkProvider';
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -31,6 +32,7 @@ var hideListener =
 
 class Replies extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -91,6 +93,9 @@ class Replies extends React.Component {
     };
 
     makeReply = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.comment.length > 0) {
             let encodedReply = encodeURIComponent(this.state.comment);
             let res = await commentsService.addReplyToComment(
@@ -113,6 +118,9 @@ class Replies extends React.Component {
     };
 
     deleteReply = id => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let replies = [...this.state.replies];
         let parentComment = {...this.state.parentComment};
         parentComment.replies = parentComment.replies.filter(c => c.id !== id);
@@ -303,6 +311,9 @@ class Replies extends React.Component {
     };
 
     likeOrDislikeParentComment = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let parentComment = {...this.state.parentComment};
         if (parentComment.is_liked) {
             parentComment.like_count--;
@@ -318,6 +329,9 @@ class Replies extends React.Component {
     };
 
     likeOrDislikeReply = id => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let replies = [...this.state.replies];
         let reply = replies.find(f => f.id === id);
         if (reply) {

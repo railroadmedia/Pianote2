@@ -466,6 +466,9 @@ export default class VideoPlayer extends React.Component {
     }
 
     likeComment = async id => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let comments = [...this.state.comments];
         let comment = comments?.find(f => f.id === id);
         if (comment) {
@@ -483,6 +486,9 @@ export default class VideoPlayer extends React.Component {
     };
 
     makeComment = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.comment.length > 0) {
             let encodedCommentText = encodeURIComponent(this.state.comment);
             let res = await commentsService.addComment(
@@ -506,6 +512,9 @@ export default class VideoPlayer extends React.Component {
     };
 
     deleteComment = id => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let {comments} = this.state;
         this.allCommentsNum -= 1;
         this.setState({
@@ -772,6 +781,9 @@ export default class VideoPlayer extends React.Component {
     };
 
     async onResetProgress() {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let {selectedAssignment, id} = this.state;
         id = selectedAssignment ? selectedAssignment.id : id;
         let res = await resetProgress(id);
@@ -802,6 +814,9 @@ export default class VideoPlayer extends React.Component {
     }
 
     async onComplete(id) {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let incompleteAssignments;
         let {assignmentList, nextLesson, nextUnit} = this.state;
         if (id !== this.state.id) {
@@ -852,6 +867,9 @@ export default class VideoPlayer extends React.Component {
     }
 
     likeOrDislikeLesson = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.isLiked) {
             unlikeContent(this.state.id);
         } else {
@@ -866,6 +884,9 @@ export default class VideoPlayer extends React.Component {
     };
 
     toggleMyList = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.isAddedToMyList) {
             removeFromMyList(this.state.id);
         } else {

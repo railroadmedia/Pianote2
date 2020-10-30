@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
 import commonService from '../../services/common.service';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const messageDict = {
     'lesson comment reply': [
@@ -66,6 +67,7 @@ const messageDict = {
 
 export default class Profile extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -107,10 +109,16 @@ export default class Profile extends React.Component {
     };
 
     componentDidMount = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let userData = await getUserData();
 
         try {
-            let notifications = await commonService.tryCall(`${commonService.rootUrl}/api/railnotifications/notifications`, 'GET');
+            let notifications = await commonService.tryCall(
+                `${commonService.rootUrl}/api/railnotifications/notifications`,
+                'GET',
+            );
 
             for (i in notifications.data) {
                 let timeCreated =
@@ -179,6 +187,9 @@ export default class Profile extends React.Component {
     };
 
     removeNotification = async data => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let commentID = data.data.commentId;
 
         for (i in this.state.notifications) {
@@ -245,6 +256,9 @@ export default class Profile extends React.Component {
     };
 
     turnOfffNotifications = async data => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         this.setState(data);
 
         try {
@@ -762,7 +776,7 @@ export default class Profile extends React.Component {
                                                                                   .thumbnail_url
                                                                             : item
                                                                                   .sender
-                                                                                  .profile_image_url,
+                                                                                  ?.profile_image_url,
                                                                 }}
                                                                 resizeMode={
                                                                     FastImage
@@ -814,7 +828,7 @@ export default class Profile extends React.Component {
                                                                 ? item.content
                                                                       .display_name
                                                                 : item.sender
-                                                                      .display_name}
+                                                                      ?.display_name}
                                                             <Text
                                                                 style={{
                                                                     fontFamily:

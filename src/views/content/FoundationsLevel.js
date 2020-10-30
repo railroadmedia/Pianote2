@@ -22,9 +22,11 @@ import {
     addToMyList,
     removeFromMyList,
 } from 'Pianote2/src/services/UserActions.js';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class FoundationsLevel extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -50,6 +52,9 @@ export default class FoundationsLevel extends React.Component {
     };
 
     getContent = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = await foundationsService.getUnit(
             this.props.navigation.state.params.url,
         );
@@ -100,6 +105,9 @@ export default class FoundationsLevel extends React.Component {
     };
 
     toggleMyList = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.isAddedToList) {
             removeFromMyList(this.state.id);
         } else {

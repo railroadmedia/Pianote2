@@ -18,6 +18,7 @@ import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
+import {NetworkContext} from '../context/NetworkProvider';
 
 const sortDict = {
     newest: 'NEWEST',
@@ -44,6 +45,7 @@ const instructorDict = {
 
 class VerticalVideoList extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -98,6 +100,9 @@ class VerticalVideoList extends React.Component {
     };
 
     addToMyList = async contentID => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = true;
@@ -108,6 +113,9 @@ class VerticalVideoList extends React.Component {
     };
 
     removeFromMyList = async contentID => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isAddedToList = false;
@@ -202,6 +210,9 @@ class VerticalVideoList extends React.Component {
     };
 
     like = contentID => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         for (i in this.state.items) {
             if (this.state.items[i].id == contentID) {
                 this.state.items[i].isLiked = !this.state.items.isLiked;

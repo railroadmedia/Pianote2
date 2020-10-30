@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import {searchContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -29,6 +30,7 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 
 export default class Search extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -141,6 +143,9 @@ export default class Search extends React.Component {
     }
 
     search = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let term = this.state.searchTerm;
         if (term.length > 0) {
             var isNewTerm = true;

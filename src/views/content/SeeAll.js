@@ -8,6 +8,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import {seeAllContent, getMyListContent} from '../../services/GetContent';
+import {NetworkContext} from '../../context/NetworkProvider';
 
 // correlates to filters
 const typeDict = {
@@ -29,6 +30,7 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 
 export default class SeeAll extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -57,6 +59,9 @@ export default class SeeAll extends React.Component {
     }
 
     async getAllLessons() {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         let response = null;
 
         if (this.state.parent == 'My List') {

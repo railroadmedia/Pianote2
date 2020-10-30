@@ -25,6 +25,7 @@ import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import {NavigationActions, StackActions} from 'react-navigation';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 import commonService from '../../services/common.service.js';
+import {NetworkContext} from '../../context/NetworkProvider.js';
 
 var data = new FormData();
 
@@ -41,6 +42,7 @@ const resetAction = StackActions.reset({
 
 export default class CreateAccount3 extends React.Component {
     static navigationOptions = {header: null};
+    static contextType = NetworkContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -159,6 +161,9 @@ export default class CreateAccount3 extends React.Component {
     };
 
     setName = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         if (this.state.displayName.length > 0) {
             // check if valid
             let response = await fetch(
@@ -195,6 +200,9 @@ export default class CreateAccount3 extends React.Component {
     };
 
     createAccount = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
         // if there is profile image upload it
         let url;
         if (data !== null) {
@@ -636,12 +644,11 @@ export default class CreateAccount3 extends React.Component {
                             >
                                 <TouchableOpacity
                                     onPress={() => {
-                                        console.log('HELLO'),
-                                            this.myScroll.scrollTo({
-                                                x: 0,
-                                                y: 0,
-                                                animated: true,
-                                            });
+                                        this.myScroll.scrollTo({
+                                            x: 0,
+                                            y: 0,
+                                            animated: true,
+                                        });
                                     }}
                                     style={{
                                         paddingLeft: 12.5 * factorHorizontal,
@@ -835,12 +842,12 @@ export default class CreateAccount3 extends React.Component {
                                                     x: fullWidth * 2,
                                                     y: 0,
                                                     animated: true,
-                                                }),
-                                                    this.setState({
-                                                        page: 3,
-                                                        canScroll: true,
-                                                    }),
-                                                    this.forceUpdate();
+                                                });
+                                                this.setState({
+                                                    page: 3,
+                                                    canScroll: true,
+                                                });
+                                                this.forceUpdate();
                                             }}
                                             style={[
                                                 styles.centerContent,
