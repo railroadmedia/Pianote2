@@ -20,6 +20,7 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import RestartCourse from '../../modals/RestartCourse';
 import contentService from '../../services/content.service';
 import {NetworkContext} from '../../context/NetworkProvider';
+import {ContentModel} from '@musora/models';
 
 export default class PathOverview extends React.Component {
     static contextType = NetworkContext;
@@ -47,15 +48,27 @@ export default class PathOverview extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         let response = await contentService.getContent(this.state.data.id);
-        console.log(response);
         contentService.getContent(this.state.data.id).then(r =>
             this.setState({
                 items:
-                    r?.lessons?.map(l => ({
-                        ...l,
-                        thumbnail: l.data?.find(d => d.key === 'thumbnail_url')
-                            ?.value,
-                    })) || [],
+                    r?.lessons?.map(l => {
+                        l = new ContentModel(l);
+                        let duration = new ContentModel(
+                            l.getFieldMulti('video')[0],
+                        )?.getField('length_in_seconds');
+                        return {
+                            title: l.getField('title'),
+                            thumbnail: l.getData('thumbnail_url'),
+                            type: l.type,
+                            id: l.id,
+                            mobile_app_url: l.post.mobile_app_url,
+                            duration: duration < 60 ? 60 : duration,
+                            isAddedToList: l.isAddedToList,
+                            isStarted: l.isStarted,
+                            isCompleted: l.isCompleted,
+                            progress_percent: l.post.progress_percent,
+                        };
+                    }) || [],
             }),
         );
     };

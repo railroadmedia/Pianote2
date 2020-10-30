@@ -4,9 +4,9 @@
 import React from 'react';
 import {View, Text, ScrollView, Platform} from 'react-native';
 import {ContentModel} from '@musora/models';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import VerticalVideoList from '../../components/VerticalVideoList';
+import HorizontalVideoList from '../../components/HorizontalVideoList';
 import {
     getNewContent,
     getStartedContent,
