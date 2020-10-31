@@ -197,20 +197,14 @@ export default class Search extends React.Component {
                     return new ContentModel(data);
                 });
 
+                console.log(newContent)
                 items = [];
                 for (i in newContent) {
                     console.log(newContent[i].getField('instructor'));
                     if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                         items.push({
                             title: newContent[i].getField('title'),
-                            artist:
-                                newContent[i].post.type == 'song'
-                                    ? newContent[i].post.artist
-                                    : newContent[i].getField('instructor') !==
-                                      'TBD'
-                                    ? newContent[i].getField('instructor')
-                                          .fields[0].value
-                                    : newContent[i].getField('instructor').name,
+                            artist: this.getArtist(newContent[i]),
                             thumbnail: newContent[i].getData('thumbnail_url'),
                             type: newContent[i].post.type,
                             description: newContent[i]
@@ -253,6 +247,26 @@ export default class Search extends React.Component {
             }
         }
     };
+
+    getArtist = newContent => {
+        if(newContent.post.type == 'song') {
+            if(typeof newContent.post.artist !== 'undefined') {
+                return newContent.post.artist
+            } else {
+                for(i in newContent.post.fields) {
+                    if(newContent.post.fields[i].key == 'artist') {
+                        return newContent.post.fields[i].value
+                    }
+                }
+            }
+        } else {
+            if(newContent.getField('instructor') !== 'TBD') {
+                return newContent.getField('instructor').fields[0].value 
+            } else {
+                return newContent.getField('instructor').name
+            }
+        }
+    }
 
     getDuration = newContent => {
         var data = 0;

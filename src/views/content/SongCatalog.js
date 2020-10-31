@@ -66,13 +66,13 @@ export default class SongCatalog extends React.Component {
         const newContent = await response.data.map(data => {
             return new ContentModel(data);
         });
-
+        console.log(newContent)
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: newContent[i].post.artist,
+                    artist: newContent[i].getField('artist'),
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
                     description: newContent[i]

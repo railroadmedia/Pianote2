@@ -32,7 +32,7 @@ export default class Course extends React.Component {
             newCourses: [],
 
             allCourses: [],
-            currentSort: '-published_on',
+            currentSort: 'newest',
             page: 1,
             outVideos: false,
             isLoadingAll: true, // all lessons

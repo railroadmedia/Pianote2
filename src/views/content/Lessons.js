@@ -176,9 +176,7 @@ export default class Lessons extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         let response = await getNewContent('');
-        const newContent = response.data.map(data => {
-            return new ContentModel(data);
-        });
+        const newContent = response.data.map(data => {return new ContentModel(data)});
 
         try {
             let items = [];
@@ -186,8 +184,7 @@ export default class Lessons extends React.Component {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
+                        artist: this.getArtist(newContent[i]),
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i]
@@ -226,6 +223,7 @@ export default class Lessons extends React.Component {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
+
         try {
             let response = await getAllContent(
                 '',
@@ -236,41 +234,38 @@ export default class Lessons extends React.Component {
             const newContent = await response.data.map(data => {
                 return new ContentModel(data);
             });
-
+            console.log('items: ', newContent)
             let items = [];
             for (let i in newContent) {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist:
-                        newContent[i].post.type == 'song'
-                            ? newContent[i].post.artist
-                            : newContent[i].getField('instructor') !== 'TBD'
-                            ? newContent[i].getField('instructor').fields[0]
-                                  .value
-                            : newContent[i].getField('instructor').name,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/g, '')
-                        .replace(/&nbsp;/g, '')
-                        .replace(/&amp;/g, '&')
-                        .replace(/&#039;/g, "'")
-                        .replace(/&quot;/g, '"')
-                        .replace(/&gt;/g, '>')
-                        .replace(/&lt;/g, '<'),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].isLiked,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
+                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: this.getArtist(newContent[i]),
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/g, '')
+                            .replace(/&nbsp;/g, '')
+                            .replace(/&amp;/g, '&')
+                            .replace(/&#039;/g, "'")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&lt;/g, '<'),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].isLiked,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
+                    });
+                }
             }
+            
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
                 outVideos:
@@ -301,8 +296,7 @@ export default class Lessons extends React.Component {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                     items.push({
                         title: newContent[i].getField('title'),
-                        artist: newContent[i].getField('instructor').fields[0]
-                            .value,
+                        artist: this.getArtist(newContent[i]),
                         thumbnail: newContent[i].getData('thumbnail_url'),
                         type: newContent[i].post.type,
                         description: newContent[i]
@@ -374,6 +368,26 @@ export default class Lessons extends React.Component {
             .find(f => f.key === 'video')
             ?.value.fields.find(f => f.key === 'length_in_seconds')?.value;
     };
+
+    getArtist = newContent => {
+        if(newContent.post.type == 'song') {
+            if(typeof newContent.post.artist !== 'undefined') {
+                return newContent.post.artist
+            } else {
+                for(i in newContent.post.fields) {
+                    if(newContent.post.fields[i].key == 'artist') {
+                        return newContent.post.fields[i].value
+                    }
+                }
+            }
+        } else {
+            if(newContent.getField('instructor') !== 'TBD') {
+                return newContent.getField('instructor').fields[0].value 
+            } else {
+                return newContent.getField('instructor').name
+            }
+        }
+    }    
 
     getDuration = newContent => {
         newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;

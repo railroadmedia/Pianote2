@@ -84,7 +84,7 @@ export default class StudentFocusShow extends React.Component {
                 );
                 items.push({
                     title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').name,
+                    artist: this.getArtist(newContent[i]),
                     thumbnail: newContent[i].getData('thumbnail_url'),
                     type: newContent[i].post.type,
                     description: newContent[i]
@@ -140,6 +140,26 @@ export default class StudentFocusShow extends React.Component {
             this.getAllLessons();
         }
     };
+
+    getArtist = newContent => {
+        if(newContent.post.type == 'song') {
+            if(typeof newContent.post.artist !== 'undefined') {
+                return newContent.post.artist
+            } else {
+                for(i in newContent.post.fields) {
+                    if(newContent.post.fields[i].key == 'artist') {
+                        return newContent.post.fields[i].value
+                    }
+                }
+            }
+        } else {
+            if(newContent.getField('instructor') !== 'TBD') {
+                return newContent.getField('instructor').fields[0].value 
+            } else {
+                return newContent.getField('instructor').name
+            }
+        }
+    }    
 
     handleScroll = async event => {
         if (
