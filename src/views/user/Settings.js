@@ -668,7 +668,7 @@ export default class Settings extends React.Component {
                                     fontSize: 12 * factorRatio,
                                 }}
                             >
-                                APP VERSION 1.0.7
+                                APP VERSION {global.versionNumber}
                             </Text>
                         </ScrollView>
                     </View>
