@@ -176,7 +176,9 @@ export default class Lessons extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         let response = await getNewContent('');
-        const newContent = response.data.map(data => {return new ContentModel(data)});
+        const newContent = response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         try {
             let items = [];
@@ -234,7 +236,7 @@ export default class Lessons extends React.Component {
             const newContent = await response.data.map(data => {
                 return new ContentModel(data);
             });
-            console.log('items: ', newContent)
+            console.log('items: ', newContent);
             let items = [];
             for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -265,7 +267,7 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-            
+
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
                 outVideos:
@@ -370,24 +372,24 @@ export default class Lessons extends React.Component {
     };
 
     getArtist = newContent => {
-        if(newContent.post.type == 'song') {
-            if(typeof newContent.post.artist !== 'undefined') {
-                return newContent.post.artist
+        if (newContent.post.type == 'song') {
+            if (typeof newContent.post.artist !== 'undefined') {
+                return newContent.post.artist;
             } else {
-                for(i in newContent.post.fields) {
-                    if(newContent.post.fields[i].key == 'artist') {
-                        return newContent.post.fields[i].value
+                for (i in newContent.post.fields) {
+                    if (newContent.post.fields[i].key == 'artist') {
+                        return newContent.post.fields[i].value;
                     }
                 }
             }
         } else {
-            if(newContent.getField('instructor') !== 'TBD') {
-                return newContent.getField('instructor').fields[0].value 
+            if (newContent.getField('instructor') !== 'TBD') {
+                return newContent.getField('instructor').fields[0].value;
             } else {
-                return newContent.getField('instructor').name
+                return newContent.getField('instructor').name;
             }
         }
-    }    
+    };
 
     getDuration = newContent => {
         newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;

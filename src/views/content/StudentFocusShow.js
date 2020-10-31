@@ -142,24 +142,24 @@ export default class StudentFocusShow extends React.Component {
     };
 
     getArtist = newContent => {
-        if(newContent.post.type == 'song') {
-            if(typeof newContent.post.artist !== 'undefined') {
-                return newContent.post.artist
+        if (newContent.post.type == 'song') {
+            if (typeof newContent.post.artist !== 'undefined') {
+                return newContent.post.artist;
             } else {
-                for(i in newContent.post.fields) {
-                    if(newContent.post.fields[i].key == 'artist') {
-                        return newContent.post.fields[i].value
+                for (i in newContent.post.fields) {
+                    if (newContent.post.fields[i].key == 'artist') {
+                        return newContent.post.fields[i].value;
                     }
                 }
             }
         } else {
-            if(newContent.getField('instructor') !== 'TBD') {
-                return newContent.getField('instructor').fields[0].value 
+            if (newContent.getField('instructor') !== 'TBD') {
+                return newContent.getField('instructor').fields[0].value;
             } else {
-                return newContent.getField('instructor').name
+                return newContent.getField('instructor').name;
             }
         }
-    }    
+    };
 
     handleScroll = async event => {
         if (

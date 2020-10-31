@@ -110,7 +110,11 @@ export default class Downloads extends React.Component {
                         ]}
                     >
                         <TouchableOpacity
-                            onPress={() => this.setState(({edit}) => ({edit: items.length ? !edit : false}))}
+                            onPress={() =>
+                                this.setState(({edit}) => ({
+                                    edit: items.length ? !edit : false,
+                                }))
+                            }
                             style={{
                                 position: 'absolute',
                                 zIndex: 10,
@@ -193,87 +197,97 @@ export default class Downloads extends React.Component {
                                                 d => d.key === 'thumbnail_url',
                                             )?.value,
                                         }}
-                                        resizeMode={FastImage.resizeMode.stretch}
+                                        resizeMode={
+                                            FastImage.resizeMode.stretch
+                                        }
                                     />
-                                        <View
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            padding: 10,
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Text
                                             style={{
-                                                flex: 1,
-                                                padding: 10,
-                                                justifyContent: 'center',
+                                                fontSize: 18,
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Bold',
                                             }}
                                         >
-                                            <Text
-                                                style={{
-                                                    fontSize: 18,
-                                                    color: 'white',
-                                                    fontFamily: 'OpenSans-Bold',
-                                                }}
-                                            >
-                                                {
-                                                    item[type]?.fields?.find(
-                                                        f => f.key === 'title',
-                                                    )?.value
-                                                }
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                }}
-                                            >
-                                                {item[type]?.type?.replace('-', ' ')} |{' '}
-                                                {parseInt(
-                                                    item.sizeInBytes / 1024 / 1024,
-                                                )}
-                                                MB
-                                            </Text>
-                                        </View>
-                                        {!item.dlding.length && !edit ? (
-                                            <View style={{justifyContent: 'center'}}>
-                                                <IconFeather
-                                                    name={'chevron-right'}
-                                                    size={25 * factorRatio}
-                                                    color={'white'}
-                                                />
-                                            </View>
-                                        ) : (
-                                            <Download_V2
-                                                onDone={this.onDone}
-                                                entity={item}
-                                                styles={{
-                                                    touchable: {
-                                                        padding: 10,
-                                                        paddingRight: 0,
-                                                        alignSelf: 'center',
-                                                    },
-                                                    iconDownloadColor:
-                                                        colors.pianoteRed,
-                                                    activityIndicatorColor:
-                                                        colors.pianoteRed,
-                                                    animatedProgressBackground:
-                                                        colors.pianoteRed,
-                                                    alert: {
-                                                        alertTextMessageFontFamily:
-                                                            'OpenSans-Regular',
-                                                        alertTouchableTextDeleteColor:
-                                                            'white',
-                                                        alertTextTitleColor: 'black',
-                                                        alertTextMessageColor: 'black',
-                                                        alertTextTitleFontFamily:
-                                                            'OpenSans-Bold',
-                                                        alertTouchableTextCancelColor:
-                                                            colors.pianoteRed,
-                                                        alertTouchableDeleteBackground:
-                                                            colors.pianoteRed,
-                                                        alertBackground: 'white',
-                                                        alertTouchableTextDeleteFontFamily:
-                                                            'OpenSans-Bold',
-                                                        alertTouchableTextCancelFontFamily:
-                                                            'OpenSans-Bold',
-                                                    },
-                                                }}
+                                            {
+                                                item[type]?.fields?.find(
+                                                    f => f.key === 'title',
+                                                )?.value
+                                            }
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: 'white',
+                                            }}
+                                        >
+                                            {item[type]?.type?.replace(
+                                                '-',
+                                                ' ',
+                                            )}{' '}
+                                            |{' '}
+                                            {parseInt(
+                                                item.sizeInBytes / 1024 / 1024,
+                                            )}
+                                            MB
+                                        </Text>
+                                    </View>
+                                    {!item.dlding.length && !edit ? (
+                                        <View
+                                            style={{justifyContent: 'center'}}
+                                        >
+                                            <IconFeather
+                                                name={'chevron-right'}
+                                                size={25 * factorRatio}
+                                                color={'white'}
                                             />
-                                        )}
-                                            </TouchableOpacity>
+                                        </View>
+                                    ) : (
+                                        <Download_V2
+                                            onDone={this.onDone}
+                                            entity={item}
+                                            styles={{
+                                                touchable: {
+                                                    padding: 10,
+                                                    paddingRight: 0,
+                                                    alignSelf: 'center',
+                                                },
+                                                iconDownloadColor:
+                                                    colors.pianoteRed,
+                                                activityIndicatorColor:
+                                                    colors.pianoteRed,
+                                                animatedProgressBackground:
+                                                    colors.pianoteRed,
+                                                alert: {
+                                                    alertTextMessageFontFamily:
+                                                        'OpenSans-Regular',
+                                                    alertTouchableTextDeleteColor:
+                                                        'white',
+                                                    alertTextTitleColor:
+                                                        'black',
+                                                    alertTextMessageColor:
+                                                        'black',
+                                                    alertTextTitleFontFamily:
+                                                        'OpenSans-Bold',
+                                                    alertTouchableTextCancelColor:
+                                                        colors.pianoteRed,
+                                                    alertTouchableDeleteBackground:
+                                                        colors.pianoteRed,
+                                                    alertBackground: 'white',
+                                                    alertTouchableTextDeleteFontFamily:
+                                                        'OpenSans-Bold',
+                                                    alertTouchableTextCancelFontFamily:
+                                                        'OpenSans-Bold',
+                                                },
+                                            }}
+                                        />
+                                    )}
+                                </TouchableOpacity>
                             );
                         }}
                     />
@@ -283,4 +297,3 @@ export default class Downloads extends React.Component {
         );
     }
 }
-

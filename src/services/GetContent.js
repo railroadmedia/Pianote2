@@ -6,26 +6,47 @@ export async function getAllContent(type, sort, page, filtersDict) {
     let included_types = '';
 
     if (type == '') {
-        included_types = `included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&included_types[]=podcasts&`
+        included_types = `included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&included_types[]=podcasts&`;
     } else {
-        included_types = `included_types[]=${type}&`
+        included_types = `included_types[]=${type}&`;
     }
-    
-    for (i in filtersDict.topics) {filters = filters + `required_fields[]=${filtersDict.topics[i]}&`}
-    for (i in filtersDict.instructors) {filters = filters + `required_fields[]=instructor,${filtersDict.instructors[i]}&`}
-    for (i in filtersDict.level) {if (typeof filtersDict.level[i] == 'number') {filters =filters + `required_fields[]=difficulty,${filtersDict.level[i]}&`;}}
-    for (i in filtersDict.progress) {required_user_states = required_user_states + `required_user_states[]=${filtersDict.progress[i]}`;}
 
-    if (sort == 'newest') {sort = '-published_on'} 
-    else if (sort == 'oldest') {sort = 'published_on'}
+    for (i in filtersDict.topics) {
+        filters = filters + `required_fields[]=${filtersDict.topics[i]}&`;
+    }
+    for (i in filtersDict.instructors) {
+        filters =
+            filters +
+            `required_fields[]=instructor,${filtersDict.instructors[i]}&`;
+    }
+    for (i in filtersDict.level) {
+        if (typeof filtersDict.level[i] == 'number') {
+            filters =
+                filters +
+                `required_fields[]=difficulty,${filtersDict.level[i]}&`;
+        }
+    }
+    for (i in filtersDict.progress) {
+        required_user_states =
+            required_user_states +
+            `required_user_states[]=${filtersDict.progress[i]}`;
+    }
+
+    if (sort == 'newest') {
+        sort = '-published_on';
+    } else if (sort == 'oldest') {
+        sort = 'published_on';
+    }
 
     try {
-        let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` + filters + required_user_states;
-        let x = await commonService.tryCall(url)
-        console.log('URL: ', url, x)
-        
-        return x
-        
+        let url =
+            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
+            filters +
+            required_user_states;
+        let x = await commonService.tryCall(url);
+        console.log('URL: ', url, x);
+
+        return x;
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);
@@ -36,12 +57,16 @@ export async function getNewContent(type) {
     try {
         if (type == '') {
             // if type not specified take almost all lesson types
-            type = 'course&included_types[]=song&included_types[]=unit&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
+            type =
+                'course&included_types[]=song&included_types[]=unit&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
         }
 
-        let response = await commonService.tryCall(`${commonService.rootUrl}/api/railcontent/content?show_in_new_feed,1&brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`, 'GET');
-        
-        return response
+        let response = await commonService.tryCall(
+            `${commonService.rootUrl}/api/railcontent/content?show_in_new_feed,1&brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}`,
+            'GET',
+        );
+
+        return response;
     } catch (error) {
         console.log('Error', error);
         return new Error(error);
@@ -65,12 +90,25 @@ export async function getStartedContent(type) {
 
 export async function searchContent(term, page, filtersDict) {
     let included_types = ''; // types
-    if (isPackOnly == true) {included_types = included_types + '&included_types[]=unit&included_types[]=pack-bundle-lesson';} 
-    else if (filtersDict.topics.length > 0) {for (i in filtersDict.topics) {included_types = included_types + `&included_types[]=${filtersDict.topics[i]}`}} 
-    else {included_types = included_types + '&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';}
+    if (isPackOnly == true) {
+        included_types =
+            included_types +
+            '&included_types[]=unit&included_types[]=pack-bundle-lesson';
+    } else if (filtersDict.topics.length > 0) {
+        for (i in filtersDict.topics) {
+            included_types =
+                included_types + `&included_types[]=${filtersDict.topics[i]}`;
+        }
+    } else {
+        included_types =
+            included_types +
+            '&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
+    }
 
     try {
-        let url = `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` + included_types;
+        let url =
+            `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` +
+            included_types;
         return commonService.tryCall(url);
     } catch (error) {
         console.log('Error: ', error);

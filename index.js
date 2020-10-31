@@ -45,7 +45,7 @@ global.colors = {
 };
 global.serverLocation = 'staging.pianote.com';
 global.isPackOnly = false;
-global.versionNumber = '1.0.9'
+global.versionNumber = '1.0.9';
 
 configure({
     baseURL: 'https://staging.pianote.com',

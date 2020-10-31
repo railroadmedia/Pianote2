@@ -307,10 +307,10 @@ PODS:
   - react-native-splash-screen (3.2.0):
     - React
   - react-native-video (5.1.0-alpha8):
-    - React-Core
+    - React
     - react-native-video/Video (= 5.1.0-alpha8)
   - react-native-video/Video (5.1.0-alpha8):
-    - React-Core
+    - React
   - react-native-viewpager (3.3.1):
     - React
   - react-native-webview (10.10.0):
@@ -354,7 +354,7 @@ PODS:
     - React
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNAirplay (1.0.9):
+  - RNAirplay (1.0.7):
     - React
   - RNCAsyncStorage (1.12.1):
     - React-Core
@@ -381,8 +381,8 @@ PODS:
     - React-Core
   - RNPDF (0.11.0):
     - React
-  - RNScreens (2.12.0):
-    - React-Core
+  - RNScreens (2.11.0):
+    - React
   - RNSVG (9.13.6):
     - React
   - RNVectorIcons (7.1.0):
@@ -588,7 +588,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
-  DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
+  DoubleConversion: 877725bddf3a9bc11ffe9cc3939222a6a762ef64
   Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
@@ -599,8 +599,8 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
-  Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
-  glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  Folly: 09a68b9fdc13701774f4747cfa4398f87e0e56ee
+  glog: 9f5faaaabd591cf93bb61ba0494376b4cda79f74
   google-cast-sdk-no-bluetooth: 73ac8e9edbee16f52c2a445e391bd531e116bb31
   GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
@@ -629,7 +629,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: e36c1bb6df27ab84aa933679b3f5bbf9d180b18f
   react-native-orientation-locker: 47aaa55d59bfc1613804dc22f159e6bb1cca5f30
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 0c9eb61b06ef78b6e2598e1159743de1d82b6e9e
+  react-native-video: 8d97379f3c2322a569f1e27542ad1a646cad9444
   react-native-viewpager: 248267e605c2d4edd26924da7f15032d57ac0b75
   react-native-webview: 2e330b109bfd610e9818bf7865d1979f898960a7
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
@@ -644,7 +644,7 @@ SPEC CHECKSUMS:
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   ReactNativeNavigation: bed6f504aa1a4dadd151503bf99d0ef96d06847f
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAirplay: d863b69586b2ac0270cbb349c44c37a525681329
+  RNAirplay: 5d0c88d8059dedb132c0f8a74b65e84af9120eea
   RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
   RNDeviceInfo: e841619c3dac5495a095c5455473579ff04908d4
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
@@ -653,7 +653,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNIap: 091b98e143440e580e51d08b43a3196ae788e87b
   RNPDF: f9dc9bac0b82da5f250df9bdd0d59b5993828fa2
-  RNScreens: 4b488fdf9537bbce829e2910c8cce1d17f6d9be8
+  RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
   RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
@@ -662,4 +662,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c9f9df42e9be5df84ef51c9c4350592703b0c5fc
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.8.4
