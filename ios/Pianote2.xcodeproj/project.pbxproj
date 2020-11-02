@@ -20,6 +20,7 @@
 		433619B22547318D00589634 /* Pianote.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 433619302547187F00589634 /* Pianote.entitlements */; };
 		43A49CF72511F2F400AB8390 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43A49CF62511F2F400AB8390 /* GoogleService-Info.plist */; };
 		43A49CFA25120A3F00AB8390 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A49CF825120A3F00AB8390 /* dummy.swift */; };
+		43DFF6E425500CFD00535A27 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 43DFF6E325500CFD00535A27 /* main.jsbundle */; };
 		4FEE23B3237C7E3900907E72 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FEE23B2237C7E3900907E72 /* libRNGestureHandler.a */; };
 		6D071037B44D40ACB66CDFEA /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE85F26D5FC441F798A9CD1D /* OpenSans-Bold.ttf */; };
 		92AFAB12302145F19A837E51 /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF58EB6996614ACE894B80D8 /* OpenSans-ExtraBold.ttf */; };
@@ -69,10 +70,10 @@
 		4336193A25471E9800589634 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4336194C254720D000589634 /* NotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		433619532547274500589634 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
-		4350D4AD253475E30076F8C6 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		43A49CF62511F2F400AB8390 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		43A49CF825120A3F00AB8390 /* dummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		43A49CF925120A3F00AB8390 /* Pianote2-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pianote2-Bridging-Header.h"; sourceTree = "<group>"; };
+		43DFF6E325500CFD00535A27 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = Pianote2/main.jsbundle; sourceTree = "<group>"; };
 		47900C9CE3A24136A96BEACA /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		4FEE23B2237C7E3900907E72 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		50EEE914514E46639EB8DA96 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -134,8 +135,8 @@
 		13B07FAE1A68108700A75B9A /* Pianote2 */ = {
 			isa = PBXGroup;
 			children = (
+				43DFF6E325500CFD00535A27 /* main.jsbundle */,
 				433619302547187F00589634 /* Pianote.entitlements */,
-				4350D4AD253475E30076F8C6 /* main.jsbundle */,
 				43A49CF825120A3F00AB8390 /* dummy.swift */,
 				43A49CF925120A3F00AB8390 /* Pianote2-Bridging-Header.h */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -329,6 +330,7 @@
 				3A96A54EE14142BDA84F9AD2 /* OpenSans-Regular.ttf in Resources */,
 				AA3FF5F839674B7CA91EB793 /* OpenSans-SemiBold.ttf in Resources */,
 				A31BEC41CA264A75949EECA3 /* OpenSans.ttf in Resources */,
+				43DFF6E425500CFD00535A27 /* main.jsbundle in Resources */,
 				19D6A0E35D4C40D2B5A98DD7 /* RobotoCondensed-Bold.ttf in Resources */,
 				253C98D988C04A5E8DDDD362 /* RobotoCondensed-Regular.ttf in Resources */,
 			);
