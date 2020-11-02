@@ -279,6 +279,23 @@ export default class Profile extends React.Component {
         }
     };
 
+    openNotification = notification => {
+        console.log(notification);
+        if (notification.type === 'new content releases') {
+            this.props.navigation.navigate('VIDEOPLAYER', {
+                url: notification.content.mobile_app_url,
+            });
+        } else if (
+            notification.type === 'lesson comment reply' ||
+            notification.type === 'lesson comment liked'
+        ) {
+            this.props.navigation.navigate('VIDEOPLAYER', {
+                comment: notification.comment,
+                url: notification.content.mobile_app_url,
+            });
+        }
+    };
+
     render() {
         return (
             <View styles={{flex: 1, alignSelf: 'stretch'}}>
@@ -604,7 +621,7 @@ export default class Profile extends React.Component {
                                         data={this.state.notifications}
                                         keyExtractor={(item, index) => index}
                                         renderItem={({item, index}) => (
-                                            <View
+                                            <TouchableOpacity
                                                 style={{
                                                     height: 90 * factorRatio,
                                                     backgroundColor:
@@ -613,6 +630,9 @@ export default class Profile extends React.Component {
                                                             : colors.notificationColor,
                                                     flexDirection: 'row',
                                                 }}
+                                                onPress={() =>
+                                                    this.openNotification(item)
+                                                }
                                             >
                                                 <View
                                                     style={{
@@ -922,7 +942,7 @@ export default class Profile extends React.Component {
                                                     </View>
                                                     <View style={{flex: 1}} />
                                                 </View>
-                                            </View>
+                                            </TouchableOpacity>
                                         )}
                                     />
                                 )}
