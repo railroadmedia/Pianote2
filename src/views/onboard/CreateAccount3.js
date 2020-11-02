@@ -135,7 +135,7 @@ export default class CreateAccount3 extends React.Component {
                         uri:
                             Platform.OS == 'ios'
                                 ? response.uri.replace('file://', '')
-                                : response.uri,
+                                : 'file://' + response.path,
                     });
 
                     this.setState({
@@ -206,11 +206,15 @@ export default class CreateAccount3 extends React.Component {
         // if there is profile image upload it
         let url;
         if (data !== null) {
-            url = await commonService.tryCall(
+            let response = await fetch(
                 `${commonService.rootUrl}/api/avatar/upload`,
-                'POST',
-                data,
+                {
+                    method: 'POST',
+                    headers: {Authorization: `Bearer ${token}`},
+                    body: data,
+                },
             );
+            url = await response.json();
         }
 
         // take image url and update profile
