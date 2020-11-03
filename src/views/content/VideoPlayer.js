@@ -1061,6 +1061,8 @@ export default class VideoPlayer extends React.Component {
                             onUpdateVideoProgress={() => {}}
                             connection={this.context.isConnected}
                             onBack={this.props.navigation.goBack}
+                            showControls={true}
+                            paused={true}
                             goToNextLesson={() =>
                                 this.switchLesson(
                                     this.state.nextLesson.id,
