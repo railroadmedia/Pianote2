@@ -294,6 +294,7 @@ export default class LoginCredentials extends React.Component {
                                     style={{
                                         padding: 15,
                                         marginTop: 40,
+                                        color: 'black',
                                         borderRadius: 100,
                                         marginHorizontal: 15,
                                         backgroundColor: 'white',
@@ -333,6 +334,7 @@ export default class LoginCredentials extends React.Component {
                                         }
                                         style={{
                                             padding: 15,
+                                            color: 'black',
                                             marginRight: 45,
                                             fontFamily: 'OpenSans-Regular',
                                         }}
