@@ -46,6 +46,7 @@ export default class ProfileSettings extends React.Component {
             imageType: '',
             imageName: '',
             passwordKey: '',
+            imagePath: '',
         };
     }
 
@@ -117,26 +118,27 @@ export default class ProfileSettings extends React.Component {
         }
         const data = new FormData();
 
-        data.append('target', this.state.imageName);
         data.append('file', {
             name: this.state.imageName,
             type: this.state.imageType,
             uri:
                 Platform.OS == 'ios'
-                    ? this.state.imageURI.replace('file://', '')
-                    : this.state.imageURI,
+                    ? this.state.imagePath.replace('file://', '')
+                    : this.state.imagePath,
         });
-        console.log(data);
+        data.append('target', this.state.imageName);
         try {
             let url;
             if (this.state.imageURI !== '') {
-                url = await commonService.tryCall(
+                let response = await fetch(
                     `${commonService.rootUrl}/api/avatar/upload`,
-                    'POST',
-                    data,
+                    {
+                        method: 'POST',
+                        headers: {Authorization: `Bearer ${token}`},
+                        body: data,
+                    },
                 );
-
-                console.log(url);
+                url = await response.json();
             }
 
             await commonService.tryCall(
@@ -168,7 +170,6 @@ export default class ProfileSettings extends React.Component {
                 },
             },
             response => {
-                console.log(response);
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
@@ -176,6 +177,7 @@ export default class ProfileSettings extends React.Component {
                         imageURI: response.uri,
                         imageType: response.type,
                         imageName: response.fileName || 'avatar',
+                        imagePath: 'file://' + response.path,
                     });
                     this.forceUpdate();
                 }

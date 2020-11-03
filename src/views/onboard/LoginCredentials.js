@@ -42,9 +42,8 @@ export default class LoginCredentials extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: 'kentonp@drumeo.com',
-            password: 'Katrinapalmer7!',
-
+            email: props?.navigation?.state?.params?.email || '',
+            password: '',
             secureTextEntry: true,
             showPasswordEmailMatch: false,
             loginErrorMessage: '',
