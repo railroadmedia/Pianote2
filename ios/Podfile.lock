@@ -287,11 +287,11 @@ PODS:
     - React
   - react-native-blur (0.8.0):
     - React
-  - react-native-google-cast/NoBluetooth (3.3.0):
+  - react-native-google-cast/NoBluetooth (3.4.0):
     - google-cast-sdk-no-bluetooth
     - React
     - react-native-google-cast/RNGoogleCast
-  - react-native-google-cast/RNGoogleCast (3.3.0):
+  - react-native-google-cast/RNGoogleCast (3.4.0):
     - React
   - react-native-home-indicator (0.2.6):
     - React-Core
@@ -622,7 +622,7 @@ SPEC CHECKSUMS:
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-background-downloader: f33bf10a731164e272c9101254f63c74b8dc09f9
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
-  react-native-google-cast: 410619ef162b8b91815ecf7271502224998dee8e
+  react-native-google-cast: e19d00c9ec8909f3e842a7175ba35294b57c627d
   react-native-home-indicator: 4001d2f40e9e0d6d430a46662f3d04feee170945
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
   react-native-intercom: 25ceddd224fdf63be29d4e25e95a893e5befe18f
