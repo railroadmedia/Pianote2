@@ -242,9 +242,12 @@ export default class VideoPlayer extends React.Component {
         let rl = [];
         if (relatedLessons) {
             for (let i in relatedLessons) {
-                let duration = new ContentModel(
-                    relatedLessons[i].getFieldMulti('video')[0],
-                )?.getField('length_in_seconds');
+                let duration =
+                    relatedLessons[i].fields?.find('video').length > 0
+                        ? new ContentModel(
+                              relatedLessons[i].getFieldMulti('video')[0],
+                          )?.getField('length_in_seconds')
+                        : 0;
                 rl.push({
                     title: relatedLessons[i].getField('title'),
                     thumbnail: relatedLessons[i].getData('thumbnail_url'),
@@ -1397,10 +1400,14 @@ export default class VideoPlayer extends React.Component {
                                                             colors.pianoteRed,
                                                         textStatus: {
                                                             color: '#ffffff',
-                                                            fontSize: 10,
+                                                            fontSize:
+                                                                12 *
+                                                                factorRatio,
                                                             fontFamily:
                                                                 'OpenSans-Regular',
-                                                            marginTop: 5,
+                                                            marginTop:
+                                                                7.5 *
+                                                                factorVertical,
                                                         },
                                                         alert: {
                                                             alertTextMessageFontFamily:
