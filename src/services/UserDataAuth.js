@@ -171,7 +171,9 @@ export async function signUp(email, password, purchase, oldToken) {
                 }),
             },
         );
-        return await response.json();
+        response = await response.json();
+        token = response?.meta?.auth_code;
+        return response;
     } catch (error) {
         console.log('err', error);
         return new Error(error);
@@ -196,7 +198,9 @@ export async function restorePurchase(purchases) {
                 ),
             },
         );
-        return await response.json();
+        response = await response.json();
+        token = response?.token;
+        return response;
     } catch (error) {
         console.log(error);
         return new Error(error);

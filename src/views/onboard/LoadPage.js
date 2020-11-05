@@ -12,13 +12,9 @@ import {NavigationActions, StackActions} from 'react-navigation';
 import {NetworkContext} from '../../context/NetworkProvider';
 
 import {getToken, getUserData} from '../../services/UserDataAuth';
+import {notif, updateFcmToken} from '../../services/notification.service';
 
 import Pianote from '../../assets/img/svgs/pianote';
-
-const resetAction = StackActions.reset({
-    index: 0,
-    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
-});
 
 export default class LoadPage extends React.Component {
     static contextType = NetworkContext;
@@ -37,8 +33,6 @@ export default class LoadPage extends React.Component {
                 await AsyncStorage.multiGet([
                     'loggedIn',
                     'resetKey',
-                    'lessonUrl',
-                    'commentId',
                     'email',
                     'password',
                 ])
@@ -48,14 +42,7 @@ export default class LoadPage extends React.Component {
                 i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
                 return i;
             }, {});
-            const {
-                email,
-                resetKey,
-                password,
-                loggedIn,
-                lessonUrl,
-                commentId,
-            } = data;
+            const {email, resetKey, password, loggedIn} = data;
             if (!loggedIn)
                 return this.props.navigation.dispatch(
                     StackActions.reset({
@@ -69,11 +56,11 @@ export default class LoadPage extends React.Component {
                 );
             const res = await getToken(email, password);
             if (res.success) {
-                token = res.token;
+                updateFcmToken();
                 await AsyncStorage.multiSet([['loggedIn', 'true']]);
                 let userData = await getUserData();
                 console.log('ud', userData);
-
+                let {lessonUrl, commentId} = notif;
                 if (lessonUrl && commentId) {
                     // if lesson or comment notification go to video
                     this.props.navigation.dispatch(

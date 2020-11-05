@@ -6,9 +6,8 @@ import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import {View, Text, ScrollView, Platform} from 'react-native';
 import Modal from 'react-native-modal';
-import firebase from 'react-native-firebase';
+import messaging from '@react-native-firebase/messaging';
 import RestartCourse from '../../modals/RestartCourse.js';
-import {updateUserDetails} from '../../services/UserActions';
 import StartIcon from 'Pianote2/src/components/StartIcon.js';
 import ResetIcon from 'Pianote2/src/components/ResetIcon.js';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
@@ -74,83 +73,30 @@ export default class Lessons extends React.Component {
         };
     }
 
-    UNSAFE_componentWillMount = async () => {
-        let data = await AsyncStorage.multiGet([
+    componentDidMount = async () => {
+        AsyncStorage.multiGet([
             'totalXP',
             'rank',
             'profileURI',
             'foundationsIsStarted',
             'foundationsIsCompleted',
-        ]);
-
-        await this.setState({
-            xp: data[0][1],
-            rank: data[1][1],
-            profileImage: data[2][1],
-            foundationIsStarted:
-                typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
-            foundationIsCompleted:
-                typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false,
+        ]).then(data => {
+            this.setState({
+                xp: data[0][1],
+                rank: data[1][1],
+                profileImage: data[2][1],
+                foundationIsStarted:
+                    typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
+                foundationIsCompleted:
+                    typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false,
+            });
         });
 
         this.getFoundations();
-    };
-
-    componentDidMount = async () => {
-        this.initializeFirebase();
+        messaging().requestPermission();
         this.getProgressLessons();
         this.getNewLessons();
         this.getAllLessons();
-    };
-
-    initializeFirebase = async () => {
-        await firebase.messaging().requestPermission();
-        const enabled = await firebase.messaging().hasPermission();
-        if (enabled) {
-            const fcmToken = await firebase.messaging().getToken();
-            if (fcmToken) {
-                updateUserDetails(null, null, null, fcmToken);
-            }
-        }
-        if (Platform.OS === 'ios') {
-            this.removeNotificationListener = firebase
-                .notifications()
-                .onNotification(notification => {
-                    firebase
-                        .notifications()
-                        .displayNotification(
-                            new firebase.notifications.Notification()
-                                .setNotificationId(notification._notificationId)
-                                .setTitle(notification._title)
-                                .setBody(notification._body)
-                                .setData(notification._data),
-                        );
-                });
-        } else {
-            this.removeNotificationListener = firebase
-                .notifications()
-                .onNotification(async notification => {
-                    console.log(notification);
-                    // Build a channel
-                    const channel = new firebase.notifications.Android.Channel(
-                        'pianote-channel',
-                        'Pianote Channel',
-                        firebase.notifications.Android.Importance.Max,
-                    ).setDescription('Pianote notification channel');
-                    // Create the channel
-                    await firebase
-                        .notifications()
-                        .android.createChannel(channel);
-                    notification.android.setChannelId(channel.channelId);
-                    notification.android.setSmallIcon('notifications_logo');
-                    notification.android.setLargeIcon(
-                        notification._data?.image,
-                    );
-                    notification.android.setColor(colors.pianoteRed);
-                    notification.android.setAutoCancel(true);
-                    firebase.notifications().displayNotification(notification);
-                });
-        }
     };
 
     getFoundations = async () => {
@@ -176,7 +122,9 @@ export default class Lessons extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         let response = await getNewContent('');
-        const newContent = response.data.map(data => {return new ContentModel(data)});
+        const newContent = response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         try {
             let items = [];
@@ -234,7 +182,7 @@ export default class Lessons extends React.Component {
             const newContent = await response.data.map(data => {
                 return new ContentModel(data);
             });
-            console.log('items: ', newContent)
+            console.log('items: ', newContent);
             let items = [];
             for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -265,7 +213,7 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-            
+
             await this.setState({
                 allLessons: [...this.state.allLessons, ...items],
                 outVideos:
@@ -370,24 +318,24 @@ export default class Lessons extends React.Component {
     };
 
     getArtist = newContent => {
-        if(newContent.post.type == 'song') {
-            if(typeof newContent.post.artist !== 'undefined') {
-                return newContent.post.artist
+        if (newContent.post.type == 'song') {
+            if (typeof newContent.post.artist !== 'undefined') {
+                return newContent.post.artist;
             } else {
-                for(i in newContent.post.fields) {
-                    if(newContent.post.fields[i].key == 'artist') {
-                        return newContent.post.fields[i].value
+                for (i in newContent.post.fields) {
+                    if (newContent.post.fields[i].key == 'artist') {
+                        return newContent.post.fields[i].value;
                     }
                 }
             }
         } else {
-            if(newContent.getField('instructor') !== 'TBD') {
-                return newContent.getField('instructor').fields[0].value 
+            if (newContent.getField('instructor') !== 'TBD') {
+                return newContent.getField('instructor').fields[0].value;
             } else {
-                return newContent.getField('instructor').name
+                return newContent.getField('instructor').name;
             }
         }
-    }    
+    };
 
     getDuration = newContent => {
         newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;

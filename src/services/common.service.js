@@ -1,6 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import {getToken} from './UserDataAuth';
-
 export default {
     rootUrl: 'https://staging.pianote.com',
     tryCall: async function (url, method, body) {
@@ -29,9 +26,6 @@ export default {
                 json.error === 'TOKEN_EXPIRED' ||
                 json.error === 'Token not provided'
             ) {
-                let email = await AsyncStorage.getItem('email');
-                let pass = await AsyncStorage.getItem('password');
-                token = (await getToken(email, pass)).token;
                 response = await fetch(url, {
                     body,
                     headers,

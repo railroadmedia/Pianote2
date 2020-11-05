@@ -2,10 +2,7 @@ PODS:
   - boost-for-react-native (1.63.0)
   - BVLinearGradient (2.5.6):
     - React
-  - Crashlytics (3.14.0):
-    - Fabric (~> 1.10.2)
   - DoubleConversion (1.1.6)
-  - Fabric (1.10.2)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
     - Folly (= 2018.10.22.00)
@@ -14,23 +11,14 @@ PODS:
     - React-Core (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/turbomodule/core (= 0.61.5)
-  - Firebase/Core (6.34.0):
-    - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.9.0)
   - Firebase/CoreOnly (6.34.0):
     - FirebaseCore (= 6.10.4)
+  - Firebase/Crashlytics (6.34.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 4.6.2)
   - Firebase/Messaging (6.34.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.7.1)
-  - FirebaseAnalytics (6.9.0):
-    - FirebaseCore (~> 6.10)
-    - FirebaseInstallations (~> 1.7)
-    - GoogleAppMeasurement (= 6.9.0)
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/MethodSwizzler (~> 6.7)
-    - GoogleUtilities/Network (~> 6.7)
-    - "GoogleUtilities/NSData+zlib (~> 6.7)"
-    - nanopb (~> 1.30906.0)
   - FirebaseCore (6.10.4):
     - FirebaseCoreDiagnostics (~> 1.6)
     - GoogleUtilities/Environment (~> 6.7)
@@ -40,6 +28,12 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
     - nanopb (~> 1.30906.0)
+  - FirebaseCrashlytics (4.6.2):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstallations (~> 1.6)
+    - GoogleDataTransport (~> 7.2)
+    - nanopb (~> 1.30906.0)
+    - PromisesObjC (~> 1.2)
   - FirebaseInstallations (1.7.0):
     - FirebaseCore (~> 6.10)
     - GoogleUtilities/Environment (~> 6.7)
@@ -75,12 +69,6 @@ PODS:
   - google-cast-sdk-no-bluetooth/Core (4.5.1):
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.12)
-  - GoogleAppMeasurement (6.9.0):
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/MethodSwizzler (~> 6.7)
-    - GoogleUtilities/Network (~> 6.7)
-    - "GoogleUtilities/NSData+zlib (~> 6.7)"
-    - nanopb (~> 1.30906.0)
   - GoogleDataTransport (7.5.1):
     - nanopb (~> 1.30906.0)
   - GoogleUtilities/AppDelegateSwizzler (6.7.2):
@@ -91,8 +79,6 @@ PODS:
     - PromisesObjC (~> 1.2)
   - GoogleUtilities/Logger (6.7.2):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (6.7.2):
-    - GoogleUtilities/Logger
   - GoogleUtilities/Network (6.7.2):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
@@ -358,21 +344,25 @@ PODS:
     - React
   - RNCAsyncStorage (1.12.1):
     - React-Core
+  - RNCPushNotificationIOS (1.7.1):
+    - React-Core
   - RNDeviceInfo (5.6.5):
     - React
   - RNFastImage (7.0.2):
     - React
     - SDWebImage (~> 5.0)
     - SDWebImageWebPCoder (~> 0.2.3)
-  - RNFirebase (5.6.0):
-    - Firebase/Core
-    - React
-    - RNFirebase/Crashlytics (= 5.6.0)
-  - RNFirebase/Crashlytics (5.6.0):
-    - Crashlytics
-    - Fabric
-    - Firebase/Core
-    - React
+  - RNFBApp (8.4.7):
+    - Firebase/CoreOnly (~> 6.34.0)
+    - React-Core
+  - RNFBCrashlytics (8.4.12):
+    - Firebase/Crashlytics (~> 6.34.0)
+    - React-Core
+    - RNFBApp
+  - RNFBMessaging (7.9.2):
+    - Firebase/Messaging (~> 6.34.0)
+    - React-Core
+    - RNFBApp
   - RNFS (2.16.6):
     - React
   - RNGestureHandler (1.8.0):
@@ -441,9 +431,12 @@ DEPENDENCIES:
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNAirplay (from `../node_modules/react-native-airplay-ios`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
-  - RNFirebase (from `../node_modules/react-native-firebase/ios`)
+  - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
+  - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNIap (from `../node_modules/react-native-iap`)
@@ -456,17 +449,14 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
-    - Crashlytics
-    - Fabric
     - Firebase
-    - FirebaseAnalytics
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseCrashlytics
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
     - google-cast-sdk-no-bluetooth
-    - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
     - GTMSessionFetcher
@@ -561,12 +551,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-airplay-ios"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNCPushNotificationIOS:
+    :path: "../node_modules/@react-native-community/push-notification-ios"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
-  RNFirebase:
-    :path: "../node_modules/react-native-firebase/ios"
+  RNFBApp:
+    :path: "../node_modules/@react-native-firebase/app"
+  RNFBCrashlytics:
+    :path: "../node_modules/@react-native-firebase/crashlytics"
+  RNFBMessaging:
+    :path: "../node_modules/@react-native-firebase/messaging"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -587,22 +583,19 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
-  Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
-  FirebaseAnalytics: 3bb096873ee0d7fa4b6c70f5e9166b6da413cc7f
   FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
+  FirebaseCrashlytics: 1a747c9cc084a24dc6d9511c991db1cd078154eb
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   google-cast-sdk-no-bluetooth: 73ac8e9edbee16f52c2a445e391bd531e116bb31
-  GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
@@ -646,9 +639,12 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNAirplay: d863b69586b2ac0270cbb349c44c37a525681329
   RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
+  RNCPushNotificationIOS: eaf01f848a0b872b194d31bcad94bb864299e01e
   RNDeviceInfo: e841619c3dac5495a095c5455473579ff04908d4
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
-  RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
+  RNFBApp: 804b98033f45c3a3e35b56de8c894f85ef5e4388
+  RNFBCrashlytics: 99a37e88b45e599908d8b2fabfda1f98420ae48a
+  RNFBMessaging: 9287cbf850ed3524c9f915f5b3daaf1cfaabbf06
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNIap: 091b98e143440e580e51d08b43a3196ae788e87b
@@ -660,6 +656,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: c9f9df42e9be5df84ef51c9c4350592703b0c5fc
+PODFILE CHECKSUM: 211a442cdb61790063a77af5f3dc7ffb2780ce09
 
 COCOAPODS: 1.9.1

@@ -23,6 +23,8 @@ import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote';
 import PasswordHidden from '../../assets/img/svgs/passwordHidden.svg';
 import PasswordVisible from '../../assets/img/svgs/passwordVisible.svg';
+
+import {updateFcmToken} from '../../services/notification.service';
 import {
     getToken,
     getUserData,
@@ -95,6 +97,7 @@ export default class LoginCredentials extends React.Component {
         );
         if (response.success) {
             // store user data
+            updateFcmToken();
             await AsyncStorage.multiSet([
                 ['loggedIn', 'true'],
                 ['email', this.state.email],
