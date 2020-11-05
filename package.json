@@ -17,7 +17,12 @@
         "@ptomasroos/react-native-multi-slider": "^2.2.2",
         "@react-native-community/async-storage": "^1.7.1",
         "@react-native-community/blur": "^3.3.1",
+        "@react-native-community/netinfo": "^5.9.6",
+        "@react-native-community/push-notification-ios": "^1.7.1",
         "@react-native-community/viewpager": "^3.3.0",
+        "@react-native-firebase/app": "^8.4.7",
+        "@react-native-firebase/crashlytics": "^8.4.12",
+        "@react-native-firebase/messaging": "^7.9.2",
         "RNDownload": "https://github.com/railroadmedia/RNDownload.git",
         "RNVideoEnhanced": "https://github.com/railroadmedia/RNVideoEnhanced.git",
         "link": "^0.1.5",
@@ -31,7 +36,6 @@
         "react-native-device-info": "^5.3.1",
         "react-native-email-link": "^1.9.2",
         "react-native-fast-image": "^7.0.2",
-        "react-native-firebase": "^5.6.0",
         "react-native-fs": "^2.16.6",
         "react-native-gesture-handler": "^1.5.0",
         "react-native-iap": "^4.6.3",
@@ -43,6 +47,7 @@
         "react-native-navigation": "^3.5.1",
         "react-native-orientation-locker": "^1.2.0",
         "react-native-progress-circle": "^2.1.0",
+        "react-native-push-notification": "^6.1.2",
         "react-native-remote-svg": "^2.0.6",
         "react-native-screens": "^2.7.0",
         "react-native-splash-screen": "^3.2.0",
@@ -53,8 +58,7 @@
         "react-native-view-pdf": "^0.11.0",
         "react-native-webview": "^10.4.0",
         "react-navigation": "^4.0.10",
-        "react-navigation-stack": "^1.10.3",
-        "@react-native-community/netinfo": "^5.9.6"
+        "react-navigation-stack": "^1.10.3"
     },
     "devDependencies": {
         "@babel/core": "^7.7.2",

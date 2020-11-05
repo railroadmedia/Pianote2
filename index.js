@@ -8,6 +8,31 @@ import {configure} from '@musora/services';
 import DeviceInfo from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
 
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+var PushNotification = require('react-native-push-notification');
+
+import NavigationService from './src/services/navigation.service';
+import {localNotification, notif} from './src/services/notification.service';
+
+localNotification();
+PushNotification.configure({
+    requestPermissions: false,
+    popInitialNotification: true,
+    permissions: {alert: true, sound: true},
+    onNotification: function ({data: {commentId, mobile_app_url}, finish}) {
+        if (token)
+            NavigationService.navigate('VIDEOPLAYER', {
+                commentId,
+                url: mobile_app_url,
+            });
+        else {
+            notif.commentId = commentId;
+            notif.lessonUrl = mobile_app_url;
+        }
+        finish(PushNotificationIOS?.FetchResult?.NoData);
+    },
+});
+
 Orientation.lockToPortrait();
 AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;

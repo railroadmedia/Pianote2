@@ -5,8 +5,10 @@ import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import {
     addToMyList,
+    likeContent,
     removeFromMyList,
     resetProgress,
+    unlikeContent,
 } from '../../services/UserActions';
 import Modal from 'react-native-modal';
 import {Download_V2} from 'RNDownload';
@@ -15,6 +17,8 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import StartIcon from '../../components/StartIcon';
+import ContinueIcon from '../../components/ContinueIcon';
+import ResetIcon from '../../components/ResetIcon';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import RestartCourse from '../../modals/RestartCourse';
@@ -29,12 +33,17 @@ export default class PathOverview extends React.Component {
         super(props);
         this.state = {
             data: this.props.navigation.state.params.data,
-            level: this.props.navigation.state.params.level,
             items: this.props.navigation.state.params.items || [],
             isAddedToList: this.props.navigation.state.params.data
                 .isAddedToList,
             showInfo: false,
             totalLength: 0,
+            isLiked: false,
+            likeCount: 0,
+            started: false,
+            completed: false,
+            showRestartCourse: false,
+            nextLesson: 0,
         };
     }
 
@@ -47,9 +56,17 @@ export default class PathOverview extends React.Component {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
-        let response = await contentService.getContent(this.state.data.id);
-        contentService.getContent(this.state.data.id).then(r =>
+        // let response = await contentService.getContent(this.state.data.id);
+        contentService.getContent(this.state.data.id).then(r => {
+            console.log(r);
             this.setState({
+                likeCount: r.like_count,
+                isLiked: r.is_liked_by_current_user,
+                isAddedToList: r.is_added_to_primary_playlist,
+                totalLength: r.length_in_seconds,
+                started: r.started,
+                completed: r.completed,
+                nextLesson: r.next_lesson.id,
                 items:
                     r?.lessons?.map(l => {
                         l = new ContentModel(l);
@@ -69,8 +86,8 @@ export default class PathOverview extends React.Component {
                             progress_percent: l.post.progress_percent,
                         };
                     }) || [],
-            }),
-        );
+            });
+        });
     };
 
     addToMyList = async () => {
@@ -78,11 +95,42 @@ export default class PathOverview extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         this.setState({isAddedToList: !this.state.isAddedToList});
+        let res;
         if (this.state.isAddedToList) {
-            removeFromMyList(this.state.data.id);
+            res = await removeFromMyList(this.state.data.id);
         } else {
-            addToMyList(this.state.data.id);
+            res = await addToMyList(this.state.data.id);
         }
+        console.log(res);
+    };
+
+    toggleLike = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
+        if (this.state.isLiked) {
+            unlikeContent(this.state.data.id);
+        } else {
+            likeContent(this.state.data.id);
+        }
+        this.setState({
+            isLiked: !this.state.isLiked,
+            likeCount: this.state.isLiked
+                ? this.state.likeCount - 1
+                : this.state.likeCount + 1,
+        });
+    };
+
+    onRestartCourse = () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
+        resetProgress(this.state.data.id);
+        this.setState({
+            started: false,
+            completed: false,
+            showRestartCourse: false,
+        });
     };
 
     render() {
@@ -217,8 +265,8 @@ export default class PathOverview extends React.Component {
                                     fontSize: 14 * factorRatio,
                                 }}
                             >
-                                {this.state.data.artist} | LEVEL{' '}
-                                {this.state.level} | {this.state.data.xp}XP
+                                {this.state.data.artist.toUpperCase()} |{' '}
+                                {this.state.data.xp} XP
                             </Text>
                         </View>
                         <View style={{height: 20 * factorVertical}} />
@@ -279,24 +327,64 @@ export default class PathOverview extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <StartIcon
-                                pxFromTop={0}
-                                buttonHeight={
-                                    onTablet
-                                        ? fullHeight * 0.065
-                                        : fullHeight * 0.053
-                                }
-                                pxFromLeft={(fullWidth * 0.5) / 2}
-                                buttonWidth={fullWidth * 0.5}
-                                pressed={() =>
-                                    this.props.navigation.navigate(
-                                        'VIDEOPLAYER',
-                                        {
-                                            id: this.state.data.id,
-                                        },
-                                    )
-                                }
-                            />
+                            {this.state.completed ? (
+                                <ResetIcon
+                                    pxFromTop={0}
+                                    buttonHeight={
+                                        onTablet
+                                            ? fullHeight * 0.065
+                                            : fullHeight * 0.053
+                                    }
+                                    pxFromLeft={(fullWidth * 0.5) / 2}
+                                    buttonWidth={fullWidth * 0.5}
+                                    pressed={() =>
+                                        this.props.navigation.navigate(
+                                            'VIDEOPLAYER',
+                                            {
+                                                id: this.state.data.id,
+                                            },
+                                        )
+                                    }
+                                />
+                            ) : this.state.started ? (
+                                <ContinueIcon
+                                    pxFromTop={0}
+                                    buttonHeight={
+                                        onTablet
+                                            ? fullHeight * 0.065
+                                            : fullHeight * 0.053
+                                    }
+                                    pxFromLeft={(fullWidth * 0.5) / 2}
+                                    buttonWidth={fullWidth * 0.5}
+                                    pressed={() =>
+                                        this.props.navigation.navigate(
+                                            'VIDEOPLAYER',
+                                            {
+                                                id: this.state.nextLesson,
+                                            },
+                                        )
+                                    }
+                                />
+                            ) : (
+                                <StartIcon
+                                    pxFromTop={0}
+                                    buttonHeight={
+                                        onTablet
+                                            ? fullHeight * 0.065
+                                            : fullHeight * 0.053
+                                    }
+                                    pxFromLeft={(fullWidth * 0.5) / 2}
+                                    buttonWidth={fullWidth * 0.5}
+                                    pressed={() =>
+                                        this.props.navigation.navigate(
+                                            'VIDEOPLAYER',
+                                            {
+                                                id: this.state.nextLesson,
+                                            },
+                                        )
+                                    }
+                                />
+                            )}
                             <View
                                 key={'info'}
                                 style={[
@@ -405,11 +493,42 @@ export default class PathOverview extends React.Component {
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
+                                            {this.state.items.length}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                fontSize: 13 * factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10 * factorVertical,
+                                            }}
+                                        >
+                                            LESSONS
+                                        </Text>
+                                    </View>
+                                    <View style={{width: 15 * factorRatio}} />
+                                    <View
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                width: 70 * factorRatio,
+                                            },
+                                        ]}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontWeight: '700',
+                                                fontSize: 17 * factorRatio,
+                                                textAlign: 'left',
+                                                color: 'white',
+                                                fontFamily: 'OpenSans-Regular',
+                                                marginTop: 10 * factorVertical,
+                                            }}
+                                        >
                                             {Math.floor(
-                                                Number(
-                                                    this.state.data.duration,
-                                                ) / 60,
-                                            ).toString()}
+                                                this.state.totalLength / 60,
+                                            )}
                                         </Text>
                                         <Text
                                             style={{
@@ -481,7 +600,7 @@ export default class PathOverview extends React.Component {
                                         }}
                                     />
                                     <TouchableOpacity
-                                        onPress={() => this.like()}
+                                        onPress={() => this.toggleLike()}
                                         style={[
                                             styles.centerContent,
                                             {
@@ -508,9 +627,7 @@ export default class PathOverview extends React.Component {
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
-                                            {this.state.isLiked
-                                                ? this.state.data.like_count + 1
-                                                : this.state.data.like_count}
+                                            {this.state.likeCount}
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{width: 15 * factorRatio}} />
@@ -532,9 +649,9 @@ export default class PathOverview extends React.Component {
                                                 colors.pianoteRed,
                                             textStatus: {
                                                 color: '#ffffff',
-                                                fontSize: 10,
+                                                fontSize: 13 * factorRatio,
                                                 fontFamily: 'OpenSans-Regular',
-                                                marginTop: 5,
+                                                marginTop: 10 * factorVertical,
                                             },
                                             alert: {
                                                 alertTextMessageFontFamily:
@@ -676,8 +793,8 @@ export default class PathOverview extends React.Component {
                                 showRestartCourse: false,
                             });
                         }}
-                        type=''
-                        onRestart={() => {}}
+                        type='course'
+                        onRestart={this.onRestartCourse}
                     />
                 </Modal>
                 <NavigationBar currentPage={'LessonsPathOverview'} />
