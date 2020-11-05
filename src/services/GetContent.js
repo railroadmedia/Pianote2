@@ -119,9 +119,13 @@ export async function searchContent(term, page, filtersDict) {
 export async function getMyListContent(page, filtersDict, progressState) {
     let included_types = '';
     let progress_types = ''; // completed || started
+    let sort = '-published_on'
 
     if (progressState !== '') {
         progress_types = '&state=' + progressState;
+        if(progressState == 'started') {
+            sort = 'progress'
+        }
     }
 
     if (filtersDict.topics.length > 0) {
@@ -137,7 +141,7 @@ export async function getMyListContent(page, filtersDict, progressState) {
 
     try {
         var url =
-            `${commonService.rootUrl}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}` +
+            `${commonService.rootUrl}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=${sort}&page=${page}` +
             included_types +
             progress_types;
         return commonService.tryCall(url);

@@ -38,7 +38,7 @@ target 'Pianote2' do
   pod 'react-native-google-cast/NoBluetooth', path: '../node_modules/react-native-google-cast/ios/'
   pod 'RNAirplay', :path => '../node_modules/react-native-airplay-ios'
   pod 'react-native-video', :path => '../node_modules/react-native-video'
-  
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
   pod 'Firebase/Messaging', '~> 6.34.0'
 
   use_native_modules!
