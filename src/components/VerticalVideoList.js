@@ -209,6 +209,25 @@ class VerticalVideoList extends React.Component {
         );
     };
 
+    changeType = (word) => {
+        word = word.replace(/[- )(]/g,' ').split(" ")
+        let string = ''
+
+        for (let i = 0; i < word.length; i++) {
+            if(word[i] !== 'and') {
+                word[i] = word[i][0].toUpperCase() + word[i].substr(1);    
+            }
+        }
+        
+        for(i in word) {
+            console.log(word[i])
+            string = string + word[i] + ' '
+            
+        }
+        
+        return string
+    }
+
     like = contentID => {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
@@ -526,9 +545,7 @@ class VerticalVideoList extends React.Component {
                                                 fontFamily: 'OpenSans-Regular',
                                             }}
                                         >
-                                            {row.type.charAt(0).toUpperCase() +
-                                                row.type.slice(1)}
-                                            {' / '}
+                                            {this.changeType(row.type)}/{' '}
                                         </Text>
                                     )}
                                     {this.props.showArtist && (

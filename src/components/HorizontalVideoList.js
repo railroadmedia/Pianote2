@@ -108,6 +108,25 @@ class HorizontalVideoList extends React.Component {
         this.setState({items: this.state.items});
     };
 
+    changeType = (word) => {
+        word = word.replace(/[- )(]/g,' ').split(" ")
+        let string = ''
+
+        for (let i = 0; i < word.length; i++) {
+            if(word[i] !== 'and') {
+                word[i] = word[i][0].toUpperCase() + word[i].substr(1);    
+            }
+        }
+        
+        for(i in word) {
+            console.log(word[i])
+            string = string + word[i] + ' '
+            
+        }
+        
+        return string
+    }
+
     render = () => {
         return (
             <View style={styles.container}>
@@ -320,13 +339,7 @@ class HorizontalVideoList extends React.Component {
                                                                 factorRatio,
                                                         }}
                                                     >
-                                                        {item.type
-                                                            .charAt(0)
-                                                            .toUpperCase() +
-                                                            item.type.slice(
-                                                                1,
-                                                            )}{' '}
-                                                        /
+                                                        {this.changeType(item.type)}/
                                                     </Text>
                                                 )}
                                                 {this.props.showArtist && (
