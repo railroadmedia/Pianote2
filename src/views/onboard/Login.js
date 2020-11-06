@@ -15,16 +15,13 @@ import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import {
-    validateSignUp,
-    restorePurchase,
-} from '../../services/UserDataAuth';
+import {validateSignUp, restorePurchase} from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 
 const skus = Platform.select({
     android: ['test', 'test.pianote'],
-    ios: ['test.pianote'],
+    ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership'],
 });
 let purchases = [];
 

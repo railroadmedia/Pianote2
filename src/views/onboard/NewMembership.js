@@ -17,7 +17,7 @@ let purchaseUpdateSubscription = null;
 
 const skus = Platform.select({
     android: ['test', 'test.pianote'],
-    ios: ['test.pianote'],
+    ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership'],
 });
 
 export default class NewMembership extends React.Component {
@@ -324,7 +324,7 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.startPlan('test')
+                                                    this.startPlan(skus[0])
                                                 }
                                                 style={{
                                                     height: '80%',
@@ -475,9 +475,7 @@ export default class NewMembership extends React.Component {
                                             <View style={{flex: 1}} />
                                             <TouchableOpacity
                                                 onPress={() =>
-                                                    this.startPlan(
-                                                        'test.pianote',
-                                                    )
+                                                    this.startPlan(skus[1])
                                                 }
                                                 style={{
                                                     height: '80%',
