@@ -119,7 +119,6 @@ class HorizontalVideoList extends React.Component {
         }
         
         for(i in word) {
-            console.log(word[i])
             string = string + word[i] + ' '
             
         }
