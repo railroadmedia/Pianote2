@@ -40,7 +40,6 @@ import Login from './src/views/onboard/Login.js';
 import ResetPassword from './src/views/onboard/ResetPassword';
 // user
 import NotificationSettings from './src/views/user/NotificationSettings.js';
-import PaymentHistory from './src/views/user/PaymentHistory.js';
 import ProfileSettings from './src/views/user/ProfileSettings';
 import PrivacyPolicy from './src/views/user/PrivacyPolicy.js';
 import Settings from './src/views/user/Settings.js';
@@ -55,7 +54,6 @@ const AppNavigator = createStackNavigator(
         // user
         NOTIFICATIONSETTINGS: {screen: NotificationSettings},
         PROFILESETTINGS: {screen: ProfileSettings},
-        PAYMENTHISTORY: {screen: PaymentHistory},
         PRIVACYPOLICY: {screen: PrivacyPolicy},
         SETTINGS: {screen: Settings},
         PROFILE: {screen: Profile},
