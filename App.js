@@ -1,5 +1,5 @@
 import React from 'react';
-import {Linking} from 'react-native';
+import {Linking, StatusBar} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import AppNavigator from './AppNavigator';
@@ -35,6 +35,7 @@ export default class App extends React.Component {
     render() {
         return (
             <NetworkProvider>
+                <StatusBar barStyle="light-content"/>
                 <AppNavigator
                     ref={navigatorRef =>
                         NavigationService.setTopLevelNavigator(navigatorRef)

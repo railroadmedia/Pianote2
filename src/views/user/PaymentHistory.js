@@ -5,6 +5,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+import RNIap from 'react-native-iap';
 
 export default class PaymentHistory extends React.Component {
     static navigationOptions = {header: null};
@@ -30,6 +31,39 @@ export default class PaymentHistory extends React.Component {
             ],
         };
     }
+
+    componentDidMount = async () => { 
+        if (await this.iapInitialized()) {
+            try {
+                purchases = await RNIap.getPurchaseHistory();    
+                console.log(purchases)
+            } catch (e) {
+                this.iapConnectionError(e);
+            }
+        }        
+    }
+
+    iapInitialized = async () => {
+        try {
+            return await RNIap.initConnection();
+        } catch (e) {
+            this.iapConnectionError();
+        }
+    };
+
+    iapConnectionError = (e) => {
+        console.log('Error: ', e)
+        Alert.alert(
+            `Connection to ${
+                Platform.OS === 'ios' ? 'app store' : 'play store'
+            } refused`,
+            'Please try again later.',
+            [{text: 'OK'}],
+            {
+                cancelable: false,
+            },
+        );
+    };
 
     mapPayments() {
         return this.state.payments.map((row, index) => {

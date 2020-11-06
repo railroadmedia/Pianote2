@@ -704,14 +704,7 @@ export default class Lessons extends React.Component {
                                 alignSelf: 'stretch',
                             }}
                         >
-                            <View
-                                style={{
-                                    flex:
-                                        this.state.profileImage !== ''
-                                            ? 0.5
-                                            : 1,
-                                }}
-                            />
+                            <View style={{flex: this.state.profileImage !== '' ? 0.5 : 1}}/>
                             <View>
                                 <View style={{flex: 1}} />
                                 <View>

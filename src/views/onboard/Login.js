@@ -16,7 +16,6 @@ import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import {
-    logOut,
     validateSignUp,
     restorePurchase,
 } from '../../services/UserDataAuth';
