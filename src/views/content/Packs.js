@@ -8,6 +8,7 @@ import {
     ActivityIndicator,
     Platform,
     FlatList,
+    RefreshControl,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
@@ -58,8 +59,8 @@ export default class Packs extends React.Component {
         });
         const topHeaderPack = new ContentModel(response.topHeaderPack);
 
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     id: newContent[i].id,
@@ -93,6 +94,12 @@ export default class Packs extends React.Component {
         this.setState({isLoading: true}, () => this.getData());
     };
 
+    refresh = () => {
+        this.setState({isLoading: true}, () => {
+            this.getData();
+        });
+    };
+
     render() {
         return (
             <View
@@ -124,6 +131,13 @@ export default class Packs extends React.Component {
                     keyExtractor={item => item.id}
                     data={this.state.packs}
                     keyboardShouldPersistTaps='handled'
+                    refreshControl={
+                        <RefreshControl
+                            colors={[colors.pianoteRed]}
+                            refreshing={this.state.isLoading}
+                            onRefresh={() => this.refresh()}
+                        />
+                    }
                     ListEmptyComponent={() => (
                         <View
                             style={[

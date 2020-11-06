@@ -51,6 +51,8 @@ import AssignmentComplete from '../../modals/AssignmentComplete.js';
 import RestartCourse from '../../modals/RestartCourse.js';
 import foundationsService from '../../services/foundations.service.js';
 import {NetworkContext} from '../../context/NetworkProvider';
+import CustomModal from '../../modals/CustomModal.js';
+import {RefreshControl} from 'react-native';
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
 var hideListener =
@@ -169,7 +171,7 @@ export default class VideoPlayer extends React.Component {
             this.allCommentsNum = comments.length;
         } else {
             let result;
-            if (this.props.navigation.state.params.url)
+            if (this.props.navigation.state.params.url) {
                 result = await Promise.all([
                     foundationsService.getUnitLesson(this.state.url),
                     commentsService.getComments(
@@ -178,7 +180,7 @@ export default class VideoPlayer extends React.Component {
                         this.limit,
                     ),
                 ]);
-            else
+            } else {
                 result = await Promise.all([
                     contentService.getContent(this.state.id),
                     commentsService.getComments(
@@ -187,6 +189,11 @@ export default class VideoPlayer extends React.Component {
                         this.limit,
                     ),
                 ]);
+            }
+            console.log(result);
+            if (result[0].title && result[0].message) {
+                return this.alert.toggle(result[0].title, result[0].message);
+            }
             content = result[0];
             comments = result[1].data;
             this.allCommentsNum = result[1].meta.totalResults;
@@ -780,6 +787,12 @@ export default class VideoPlayer extends React.Component {
         }
     };
 
+    refresh = () => {
+        this.setState({isLoadingAll: true}, () => {
+            this.getContent();
+        });
+    };
+
     async onResetProgress() {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
@@ -1168,6 +1181,13 @@ export default class VideoPlayer extends React.Component {
                                             this.loadMoreComments();
                                         }
                                     }}
+                                    refreshControl={
+                                        <RefreshControl
+                                            colors={[colors.pianoteRed]}
+                                            refreshing={this.state.isLoadingAll}
+                                            onRefresh={() => this.refresh()}
+                                        />
+                                    }
                                     style={{
                                         flex: 1,
                                         backgroundColor: colors.mainBackground,
@@ -2869,6 +2889,32 @@ export default class VideoPlayer extends React.Component {
                         }}
                     />
                 </Modal>
+                <CustomModal
+                    ref={r => (this.alert = r)}
+                    additionalBtn={
+                        <TouchableOpacity
+                            onPress={() => {}}
+                            style={{
+                                marginTop: 10,
+                                borderRadius: 50,
+                                backgroundColor: colors.pianoteRed,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    padding: 15,
+                                    fontSize: 15,
+                                    color: '#ffffff',
+                                    textAlign: 'center',
+                                    fontFamily: 'OpenSans-Bold',
+                                }}
+                            >
+                                RELOAD LESSON
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                    onClose={() => {}}
+                />
             </View>
         );
     }

@@ -16,6 +16,12 @@ import {localNotification, notif} from './src/services/notification.service';
 
 localNotification();
 PushNotification.configure({
+    onRegister: function () {
+        PushNotification.createChannel({
+            channelId: 'pianote-app-chanel',
+            channelName: 'pianote-app-chanel',
+        });
+    },
     requestPermissions: false,
     popInitialNotification: true,
     permissions: {alert: true, sound: true},

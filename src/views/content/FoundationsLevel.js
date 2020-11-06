@@ -2,7 +2,13 @@
  * FoundationsLevel
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    RefreshControl,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -63,8 +69,8 @@ export default class FoundationsLevel extends React.Component {
         });
         response = new ContentModel(response);
         try {
-            items = [];
-            for (i in newContent) {
+            let items = [];
+            for (let i in newContent) {
                 items.push({
                     title: newContent[i].getField('title'),
                     thumbnail: newContent[i].getData('thumbnail_url'),
@@ -116,6 +122,12 @@ export default class FoundationsLevel extends React.Component {
         this.setState(state => ({isAddedToList: !state.isAddedToList}));
     };
 
+    refresh = () => {
+        this.setState({isLoadingAll: true}, () => {
+            this.getContent();
+        });
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -126,6 +138,13 @@ export default class FoundationsLevel extends React.Component {
                         flex: 1,
                         backgroundColor: colors.mainBackground,
                     }}
+                    refreshControl={
+                        <RefreshControl
+                            colors={[colors.pianoteRed]}
+                            refreshing={this.state.isLoadingAll}
+                            onRefresh={() => this.refresh()}
+                        />
+                    }
                 >
                     <View
                         style={{
@@ -544,24 +563,16 @@ export default class FoundationsLevel extends React.Component {
                     />
                 </Modal>
                 {this.state.nextLesson && (
-                    <View>
-                        {!this.state.isLoadingAll && (
-                            <NextVideo
-                                item={this.state.nextLesson}
-                                progress={this.state.progress}
-                                type='UNIT'
-                                onNextLesson={() =>
-                                    this.props.navigation.navigate(
-                                        'VIDEOPLAYER',
-                                        {
-                                            url: this.state.nextLesson.post
-                                                .mobile_app_url,
-                                        },
-                                    )
-                                }
-                            />
-                        )}
-                    </View>
+                    <NextVideo
+                        item={this.state.nextLesson}
+                        progress={this.state.progress}
+                        type='UNIT'
+                        onNextLesson={() =>
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                                url: this.state.nextLesson.post.mobile_app_url,
+                            })
+                        }
+                    />
                 )}
 
                 <NavigationBar currentPage={''} />

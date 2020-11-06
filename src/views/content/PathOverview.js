@@ -2,7 +2,13 @@
  * PathOverview
  */
 import React from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
 import {
     addToMyList,
     likeContent,
@@ -44,6 +50,7 @@ export default class PathOverview extends React.Component {
             completed: false,
             showRestartCourse: false,
             nextLesson: 0,
+            isLoadingAll: true,
         };
     }
 
@@ -58,7 +65,6 @@ export default class PathOverview extends React.Component {
         }
         // let response = await contentService.getContent(this.state.data.id);
         contentService.getContent(this.state.data.id).then(r => {
-            console.log(r);
             this.setState({
                 likeCount: r.like_count,
                 isLiked: r.is_liked_by_current_user,
@@ -67,6 +73,7 @@ export default class PathOverview extends React.Component {
                 started: r.started,
                 completed: r.completed,
                 nextLesson: r.next_lesson.id,
+                isLoadingAll: false,
                 items:
                     r?.lessons?.map(l => {
                         l = new ContentModel(l);
@@ -133,6 +140,12 @@ export default class PathOverview extends React.Component {
         });
     };
 
+    refresh = () => {
+        this.setState({isLoadingAll: true}, () => {
+            this.getItems();
+        });
+    };
+
     render() {
         return (
             <View
@@ -148,6 +161,13 @@ export default class PathOverview extends React.Component {
                         flex: 1,
                         backgroundColor: colors.mainBackground,
                     }}
+                    refreshControl={
+                        <RefreshControl
+                            colors={[colors.pianoteRed]}
+                            refreshing={this.state.isLoadingAll}
+                            onRefresh={() => this.refresh()}
+                        />
+                    }
                 >
                     <View
                         style={{
@@ -265,8 +285,8 @@ export default class PathOverview extends React.Component {
                                     fontSize: 14 * factorRatio,
                                 }}
                             >
-                                {this.state.data.artist.toUpperCase()} |{' '}
-                                {this.state.data.xp} XP
+                                {this.state.data.artist.toUpperCase()} | LEVEL{' '}
+                                {this.state.level} | {this.state.data.xp}XP
                             </Text>
                         </View>
                         <View style={{height: 20 * factorVertical}} />

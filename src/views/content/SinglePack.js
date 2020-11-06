@@ -2,7 +2,13 @@
  * SinglePack
  */
 import React from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -139,6 +145,12 @@ export default class SinglePack extends React.Component {
         }
     };
 
+    refresh = () => {
+        this.setState({isLoadingAll: true}, () => {
+            this.getBundle();
+        });
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -147,6 +159,13 @@ export default class SinglePack extends React.Component {
                         style={{backgroundColor: colors.mainBackground}}
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
+                        refreshControl={
+                            <RefreshControl
+                                colors={[colors.pianoteRed]}
+                                refreshing={this.state.isLoadingAll}
+                                onRefresh={() => this.refresh()}
+                            />
+                        }
                     >
                         <View
                             style={{

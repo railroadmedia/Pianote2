@@ -16,7 +16,7 @@ let purchaseErrorSubscription = null;
 let purchaseUpdateSubscription = null;
 
 const skus = Platform.select({
-    android: ['test', 'test.pianote'],
+    android: ['pianote_app_1_month_member', 'pianote_app_1_year_member'],
     ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership'],
 });
 

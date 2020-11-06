@@ -4,8 +4,11 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage;
+import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import com.rnfs.RNFSPackage;
-import io.invertase.firebase.RNFirebasePackage;
 import com.eko.RNBackgroundDownloaderPackage;
 import com.brentvatne.react.ReactVideoPackage;
 
@@ -24,8 +27,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
-import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.reactnative.googlecast.GoogleCastPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 
@@ -43,11 +44,9 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          packages.add(new RNFirebaseMessagingPackage());
-          packages.add(new RNFirebaseNotificationsPackage());
-           packages.add(new GoogleCastPackage());
-            packages.add(new RNBackgroundDownloaderPackage());
-            packages.add(new RNFetchBlobPackage());
+          packages.add(new GoogleCastPackage());
+          packages.add(new RNBackgroundDownloaderPackage());
+          packages.add(new RNFetchBlobPackage());
           packages.add(new ReactVideoPackage());
           // packages.add(new MyReactNativePackage());
           return packages;

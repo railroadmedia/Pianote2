@@ -2,7 +2,14 @@
  * Foundations
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Platform} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    Platform,
+    RefreshControl,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -75,8 +82,8 @@ export default class Foundations extends React.Component {
         const newContent = response.post.units.map(data => {
             return new ContentModel(data);
         });
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             items.push({
                 title: newContent[i].getField('title'),
                 artist: newContent[i].post.fields
@@ -155,6 +162,12 @@ export default class Foundations extends React.Component {
         });
     };
 
+    refresh = () => {
+        this.setState({isLoadingAll: true}, () => {
+            this.getContent();
+        });
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -181,6 +194,13 @@ export default class Foundations extends React.Component {
                         flex: 1,
                         backgroundColor: colors.mainBackground,
                     }}
+                    refreshControl={
+                        <RefreshControl
+                            colors={[colors.pianoteRed]}
+                            refreshing={this.state.isLoadingAll}
+                            onRefresh={() => this.refresh()}
+                        />
+                    }
                 >
                     <View
                         key={'backgroundColoring'}
@@ -741,7 +761,7 @@ export default class Foundations extends React.Component {
                         onRestart={() => this.onRestartFoundation()}
                     />
                 </Modal>
-                {!this.state.isLoadingAll && this.state.nextLesson && (
+                {this.state.nextLesson && (
                     <NextVideo
                         item={this.state.nextLesson}
                         progress={this.state.progress}

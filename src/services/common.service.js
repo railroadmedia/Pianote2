@@ -26,7 +26,7 @@ export default {
                 json.error === 'TOKEN_EXPIRED' ||
                 json.error === 'Token not provided'
             ) {
-                response = await fetch(url, {
+                response = await fetch(newUrl, {
                     body,
                     headers,
                     method: method || 'GET',
@@ -35,7 +35,10 @@ export default {
             }
             return json;
         } catch (error) {
-            return error;
+            return {
+                title: 'Something went wrong...',
+                message: `Pianote is down, we are working on a fix and it should be back shortly, thank you for your patience.`,
+            };
         }
     },
 };
