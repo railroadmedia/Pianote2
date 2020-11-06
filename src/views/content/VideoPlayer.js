@@ -2626,13 +2626,13 @@ export default class VideoPlayer extends React.Component {
                     </View>
                 ) : (
                     <ActivityIndicator
-                        size='large'
+                        size='small'
                         style={{
                             flex: 1,
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}
-                        color={colors.pianoteRed}
+                        color={colors.secondBackground}
                     />
                 )}
 

@@ -123,9 +123,7 @@ export async function getMyListContent(page, filtersDict, progressState) {
 
     if (progressState !== '') {
         progress_types = '&state=' + progressState;
-        if(progressState == 'started') {
-            sort = 'progress'
-        }
+        sort = '-progress'
     }
 
     if (filtersDict.topics.length > 0) {
