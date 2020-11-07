@@ -173,7 +173,7 @@ export default class SongCatalog extends React.Component {
             allSongs: [],
             currentSort,
             outVideos: false,
-            isPaging: true,
+            isPaging: false,
             page: 1,
         });
 

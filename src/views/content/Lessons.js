@@ -346,7 +346,7 @@ export default class Lessons extends React.Component {
         await this.setState({
             currentSort,
             outVideos: false,
-            isPaging: true,
+            isPaging: false,
             allLessons: [],
             page: 1,
         });

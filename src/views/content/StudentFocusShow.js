@@ -125,7 +125,7 @@ export default class StudentFocusShow extends React.Component {
         await this.setState({
             currentSort,
             outVideos: false,
-            isPaging: true,
+            isPaging: false,
             allLessons: [],
             page: 1,
         });
