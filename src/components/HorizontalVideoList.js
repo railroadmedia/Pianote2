@@ -108,6 +108,23 @@ class HorizontalVideoList extends React.Component {
         this.setState({items: this.state.items});
     };
 
+    changeType = word => {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+        let string = '';
+
+        for (let i = 0; i < word.length; i++) {
+            if (word[i] !== 'and') {
+                word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+            }
+        }
+
+        for (i in word) {
+            string = string + word[i] + ' ';
+        }
+
+        return string;
+    };
+
     render = () => {
         return (
             <View style={styles.container}>
@@ -203,72 +220,64 @@ class HorizontalVideoList extends React.Component {
                             showsHorizontalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({item, index}) => (
-                                <View>
-                                    <TouchableHighlight
-                                        underlayColor={'transparent'}
-                                        onPress={() =>
-                                            this.props.navigation.goBack()
-                                        }
+                                <TouchableOpacity
+                                    onLongPress={() => {
+                                        this.setState({
+                                            showModal: true,
+                                            item,
+                                        });
+                                    }}
+                                    delayLongPress={350}
+                                    onPress={() =>
+                                        item.type === 'course'
+                                            ? this.props.navigation.navigate(
+                                                  'PATHOVERVIEW',
+                                                  {
+                                                      data: item,
+                                                  },
+                                              )
+                                            : this.props.navigation.navigate(
+                                                  'VIDEOPLAYER',
+                                                  {
+                                                      id: item.id,
+                                                  },
+                                              )
+                                    }
+                                >
+                                    <View
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                width: this.props.itemWidth,
+                                                height: this.props.itemHeight,
+                                                marginRight:
+                                                    10 * factorHorizontal,
+                                                borderRadius: 7.5 * factorRatio,
+                                            },
+                                        ]}
                                     >
                                         <View
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    width: this.props.itemWidth,
-                                                    height: this.props
-                                                        .itemHeight,
-                                                    marginRight:
-                                                        10 * factorHorizontal,
-                                                    borderRadius:
-                                                        7.5 * factorRatio,
-                                                },
-                                            ]}
+                                            style={{
+                                                flex: 1,
+                                                alignSelf: 'stretch',
+                                            }}
                                         >
-                                            <TouchableOpacity
-                                                onLongPress={() => {
-                                                    this.setState({
-                                                        showModal: true,
-                                                        item,
-                                                    });
-                                                }}
-                                                delayLongPress={350}
-                                                onPress={() =>
-                                                    item.type === 'course'
-                                                        ? this.props.navigation.navigate(
-                                                              'PATHOVERVIEW',
-                                                              {
-                                                                  data: item,
-                                                              },
-                                                          )
-                                                        : this.props.navigation.navigate(
-                                                              'VIDEOPLAYER',
-                                                              {
-                                                                  id: item.id,
-                                                              },
-                                                          )
-                                                }
+                                            <FastImage
                                                 style={{
                                                     flex: 1,
-                                                    alignSelf: 'stretch',
+                                                    borderRadius:
+                                                        7.5 * factorRatio,
                                                 }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius:
-                                                            7.5 * factorRatio,
-                                                    }}
-                                                    source={{
-                                                        uri: item.thumbnail,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .cover
-                                                    }
-                                                />
-                                            </TouchableOpacity>
+                                                source={{
+                                                    uri: item.thumbnail,
+                                                }}
+                                                resizeMode={
+                                                    FastImage.resizeMode.cover
+                                                }
+                                            />
                                         </View>
-                                    </TouchableHighlight>
+                                    </View>
+
                                     <View
                                         style={{
                                             width: this.props.itemWidth,
@@ -320,12 +329,9 @@ class HorizontalVideoList extends React.Component {
                                                                 factorRatio,
                                                         }}
                                                     >
-                                                        {item.type
-                                                            .charAt(0)
-                                                            .toUpperCase() +
-                                                            item.type.slice(
-                                                                1,
-                                                            )}{' '}
+                                                        {this.changeType(
+                                                            item.type,
+                                                        )}
                                                         /
                                                     </Text>
                                                 )}
@@ -412,7 +418,7 @@ class HorizontalVideoList extends React.Component {
                                             )}
                                         </View>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             )}
                         />
                     )}

@@ -335,54 +335,6 @@ export default class Settings extends React.Component {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
-                                key={'paymentHistory'}
-                                onPress={() => {
-                                    this.props.navigation.navigate(
-                                        'PAYMENTHISTORY',
-                                    );
-                                }}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: 50 * factorRatio,
-                                        width: fullWidth,
-                                        borderBottomColor:
-                                            colors.secondBackground,
-                                        borderBottomWidth: 1 * factorRatio,
-                                        flexDirection: 'row',
-                                        paddingRight: fullWidth * 0.025,
-                                    },
-                                ]}
-                            >
-                                <View
-                                    style={[
-                                        styles.centerContent,
-                                        {width: 60 * factorHorizontal},
-                                    ]}
-                                >
-                                    <FontIcon
-                                        name={'credit-card'}
-                                        size={24 * factorRatio}
-                                        color={colors.pianoteRed}
-                                    />
-                                </View>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 18 * factorRatio,
-                                        color: colors.secondBackground,
-                                    }}
-                                >
-                                    Payment History
-                                </Text>
-                                <View style={{flex: 1}} />
-                                <AntIcon
-                                    name={'right'}
-                                    size={22.5 * factorRatio}
-                                    color={colors.secondBackground}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
                                 key={'manageSubscriptions'}
                                 onPress={this.manageSubscriptions}
                                 style={[

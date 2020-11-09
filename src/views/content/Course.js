@@ -254,7 +254,7 @@ export default class Course extends React.Component {
         await this.setState({
             currentSort,
             outVideos: false,
-            isPaging: true,
+            isPaging: false,
             allCourses: [],
             page: 1,
         });

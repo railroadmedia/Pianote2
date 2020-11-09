@@ -5,7 +5,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class MembershipExpired extends React.Component {
     static navigationOptions = {header: null};
@@ -16,68 +16,41 @@ export default class MembershipExpired extends React.Component {
 
     render() {
         return (
-            <View
-                style={[
-                    styles.centerContent,
-                    {
-                        height: fullHeight,
-                    },
-                ]}
-            >
+            <View key={'MembershipExpiredSignup'} style={{flex: 1}}>
                 <View
-                    key={'MembershipExpiredSignup'}
-                    style={[
-                        styles.centerContent,
-                        {
-                            width: fullWidth,
-                            height: fullHeight,
-                        },
-                    ]}
+                    key={'pianote1'}
+                    style={{
+                        position: 'absolute',
+                        top:
+                            (Platform.OS === 'ios' && fullHeight > 811) ||
+                            onTablet == true
+                                ? fullHeight * 0.03
+                                : fullHeight * 0.015,
+                        zIndex: 2,
+                        alignSelf: 'center',
+                    }}
                 >
-                    <View
-                        key={'pianote1'}
-                        style={{
-                            position: 'absolute',
-                            top:
-                                (Platform.OS === 'ios' && fullHeight > 811) ||
-                                onTablet == true
-                                    ? fullHeight * 0.03
-                                    : fullHeight * 0.015,
-                            zIndex: 2,
-                        }}
-                    >
-                        <Pianote
-                            height={75 * factorRatio}
-                            width={125 * factorRatio}
-                            fill={'#fb1b2f'}
-                        />
-                    </View>
-                    <GradientFeature
-                        color={'grey'}
-                        opacity={1}
-                        height={'70%'}
-                        borderRadius={0}
+                    <Pianote
+                        height={75 * factorRatio}
+                        width={125 * factorRatio}
+                        fill={'#fb1b2f'}
                     />
-                    <View
-                        key={'image1'}
+                </View>
+
+                <FastImage
+                    style={{flex: 1}}
+                    source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
+                    resizeMode={FastImage.resizeMode.cover}
+                >
+                    <LinearGradient
                         style={{
-                            flex: 0.75,
-                            alignSelf: 'stretch',
+                            bottom: 0,
+                            position: 'absolute',
+                            justifyContent: 'flex-end',
+                            width: '100%',
+                            height: '70%',
                         }}
-                    >
-                        <FastImage
-                            style={{flex: 1}}
-                            source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
-                            resizeMode={FastImage.resizeMode.cover}
-                        />
-                    </View>
-                    <View
-                        key={'buffer1'}
-                        style={{
-                            flex: 0.25,
-                            backgroundColor: 'rgba(23, 26, 26, 1)',
-                            alignSelf: 'stretch',
-                        }}
+                        colors={['transparent', colors.mainBackground]}
                     />
                     <View
                         key={'content1'}
@@ -195,7 +168,7 @@ export default class MembershipExpired extends React.Component {
                             </View>
                         </View>
                     </View>
-                </View>
+                </FastImage>
             </View>
         );
     }
