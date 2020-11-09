@@ -422,62 +422,55 @@ export default class Foundations extends React.Component {
                         >
                             <View style={{flex: 1}} />
                             <View style={{flexDirection: 'row'}}>
-                                {this.state.profileImage !== '' && (
-                                    <View key={'profile-picture'}>
+                                <View key={'profile-picture'}>
+                                    <View style={{flex: 1}} />
+                                    <View>
                                         <View style={{flex: 1}} />
-                                        <View>
-                                            <View style={{flex: 1}} />
+                                        <View
+                                            style={{
+                                                height: fullHeight * 0.06,
+                                                width: fullHeight * 0.06,
+                                                borderRadius: 100,
+                                                backgroundColor:
+                                                    colors.secondBackground,
+                                                alignSelf: 'stretch',
+                                                borderWidth: 3 * factorRatio,
+                                                borderColor:
+                                                    colors.secondBackground,
+                                            }}
+                                        >
                                             <View
                                                 style={{
-                                                    height: fullHeight * 0.06,
-                                                    width: fullHeight * 0.06,
-                                                    borderRadius: 100,
-                                                    backgroundColor:
-                                                        colors.secondBackground,
-                                                    alignSelf: 'stretch',
-                                                    borderWidth:
-                                                        3 * factorRatio,
-                                                    borderColor:
-                                                        colors.secondBackground,
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    alignSelf: 'center',
                                                 }}
                                             >
-                                                <View
+                                                <FastImage
                                                     style={{
-                                                        height: '100%',
-                                                        width: '100%',
-                                                        alignSelf: 'center',
+                                                        flex: 1,
+                                                        borderRadius: 100,
+                                                        backgroundColor:
+                                                            colors.secondBackground,
                                                     }}
-                                                >
-                                                    <FastImage
-                                                        style={{
-                                                            flex: 1,
-                                                            borderRadius: 100,
-                                                            backgroundColor:
-                                                                colors.secondBackground,
-                                                        }}
-                                                        source={{
-                                                            uri: this.state
-                                                                .profileImage,
-                                                        }}
-                                                        resizeMode={
-                                                            FastImage.resizeMode
-                                                                .cover
-                                                        }
-                                                    />
-                                                </View>
+                                                    source={{
+                                                        uri:
+                                                            this.state
+                                                                .profileImage ||
+                                                            'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                                                    }}
+                                                    resizeMode={
+                                                        FastImage.resizeMode
+                                                            .cover
+                                                    }
+                                                />
                                             </View>
-                                            <View style={{flex: 1}} />
                                         </View>
                                         <View style={{flex: 1}} />
                                     </View>
-                                )}
-                                {this.state.profileImage !== '' && (
-                                    <View
-                                        style={{
-                                            width: 10 * factorHorizontal,
-                                        }}
-                                    />
-                                )}
+                                    <View style={{flex: 1}} />
+                                </View>
+
                                 <View>
                                     <View style={{flex: 1}} />
                                     <View>

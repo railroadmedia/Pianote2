@@ -738,7 +738,11 @@ class Replies extends React.Component {
                                             width: 40 * factorHorizontal,
                                             borderRadius: 100,
                                         }}
-                                        source={{uri: this.state.profileImage}}
+                                        source={{
+                                            uri:
+                                                this.state.profileImage ||
+                                                'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                                        }}
                                         resizeMode={
                                             FastImage.resizeMode.stretch
                                         }
