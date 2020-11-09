@@ -693,7 +693,6 @@ export default class Lessons extends React.Component {
                             </View>
                             <View style={{flex: 1}} />
                         </View>
-
                         <View
                             key={'XP-rank'}
                             style={{
@@ -702,14 +701,7 @@ export default class Lessons extends React.Component {
                                 alignSelf: 'stretch',
                             }}
                         >
-                            <View
-                                style={{
-                                    flex:
-                                        this.state.profileImage !== ''
-                                            ? 0.5
-                                            : 1,
-                                }}
-                            />
+                            <View style={{flex: 0.5}}/>
                             <View>
                                 <View style={{flex: 1}} />
                                 <View>

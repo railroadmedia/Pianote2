@@ -53,7 +53,6 @@ export default class Packs extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         const response = await packsService.allPacks();
-        console.log(response);
         const newContent = response.myPacks.map(data => {
             return new ContentModel(data);
         });
