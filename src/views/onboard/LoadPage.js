@@ -59,7 +59,6 @@ export default class LoadPage extends React.Component {
                 updateFcmToken();
                 await AsyncStorage.multiSet([['loggedIn', 'true']]);
                 let userData = await getUserData();
-                console.log('ud', userData);
                 let {lessonUrl, commentId} = notif;
                 if (lessonUrl && commentId) {
                     // if lesson or comment notification go to video

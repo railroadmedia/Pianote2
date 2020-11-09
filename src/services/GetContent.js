@@ -44,7 +44,6 @@ export async function getAllContent(type, sort, page, filtersDict) {
             filters +
             required_user_states;
         let x = await commonService.tryCall(url);
-        console.log('URL: ', url, x);
 
         return x;
     } catch (error) {

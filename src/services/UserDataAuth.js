@@ -3,7 +3,6 @@ import {Platform} from 'react-native';
 import commonService from './common.service';
 
 export async function getToken(userEmail, userPass, purchases) {
-    console.log(await AsyncStorage.multiGet(['email', 'password']));
     const data = (await AsyncStorage.multiGet(['email', 'password'])).reduce(
         (i, j) => {
             i[j[0]] = j[1] === 'true' ? true : j[1] === 'false' ? false : j[1];
@@ -47,7 +46,6 @@ export async function getUserData() {
 
         if (typeof userData.error == 'undefined') {
             userData = await userData.json();
-            console.log('udd', userData);
             // if received data, update data
             await AsyncStorage.multiSet([
                 ['totalXP', userData.totalXp.toString()],

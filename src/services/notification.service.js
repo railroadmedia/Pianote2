@@ -9,7 +9,6 @@ export const updateFcmToken = () =>
     messaging()
         .getToken()
         .then(fcmToken => {
-            console.log(fcmToken);
             if (fcmToken) updateUserDetails(null, null, null, fcmToken);
         });
 
