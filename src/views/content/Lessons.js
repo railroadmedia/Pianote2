@@ -182,7 +182,7 @@ export default class Lessons extends React.Component {
             const newContent = await response.data.map(data => {
                 return new ContentModel(data);
             });
-            console.log('items: ', newContent);
+
             let items = [];
             for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -356,7 +356,6 @@ export default class Lessons extends React.Component {
 
     getVideos = async () => {
         // change page before getting more lessons if paging
-        console.log('GET VIDEOS: ');
         if (!this.state.outVideos) {
             await this.setState({page: this.state.page + 1});
             this.getAllLessons();
