@@ -638,63 +638,62 @@ export default class Lessons extends React.Component {
                             flexDirection: 'row',
                         }}
                     >
-                        {this.state.profileImage !== '' && (
-                            <View
-                                key={'profile-picture'}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        alignSelf: 'stretch',
-                                    },
-                                ]}
-                            >
+                        <View
+                            key={'profile-picture'}
+                            style={[
+                                styles.centerContent,
+                                {
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    alignSelf: 'stretch',
+                                },
+                            ]}
+                        >
+                            <View style={{flex: 1}} />
+                            <View>
                                 <View style={{flex: 1}} />
-                                <View>
-                                    <View style={{flex: 1}} />
+                                <View
+                                    style={{
+                                        height: fullHeight * 0.075,
+                                        width: fullHeight * 0.075,
+                                        borderRadius: 100,
+                                        backgroundColor:
+                                            colors.secondBackground,
+                                        alignSelf: 'stretch',
+                                        borderWidth: 3 * factorRatio,
+                                        borderColor: colors.secondBackground,
+                                    }}
+                                >
                                     <View
                                         style={{
-                                            height: fullHeight * 0.075,
-                                            width: fullHeight * 0.075,
-                                            borderRadius: 100,
-                                            backgroundColor:
-                                                colors.secondBackground,
-                                            alignSelf: 'stretch',
-                                            borderWidth: 3 * factorRatio,
-                                            borderColor:
-                                                colors.secondBackground,
+                                            height: '100%',
+                                            width: '100%',
+                                            alignSelf: 'center',
                                         }}
                                     >
-                                        <View
+                                        <FastImage
                                             style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                alignSelf: 'center',
+                                                flex: 1,
+                                                borderRadius: 100,
+                                                backgroundColor:
+                                                    colors.secondBackground,
                                             }}
-                                        >
-                                            <FastImage
-                                                style={{
-                                                    flex: 1,
-                                                    borderRadius: 100,
-                                                    backgroundColor:
-                                                        colors.secondBackground,
-                                                }}
-                                                source={{
-                                                    uri: this.state
-                                                        .profileImage,
-                                                }}
-                                                resizeMode={
-                                                    FastImage.resizeMode.cover
-                                                }
-                                            />
-                                        </View>
+                                            source={{
+                                                uri:
+                                                    this.state.profileImage ||
+                                                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                                            }}
+                                            resizeMode={
+                                                FastImage.resizeMode.cover
+                                            }
+                                        />
                                     </View>
-                                    <View style={{flex: 1}} />
                                 </View>
                                 <View style={{flex: 1}} />
                             </View>
-                        )}
+                            <View style={{flex: 1}} />
+                        </View>
+
                         <View
                             key={'XP-rank'}
                             style={{
@@ -703,7 +702,14 @@ export default class Lessons extends React.Component {
                                 alignSelf: 'stretch',
                             }}
                         >
-                            <View style={{flex: this.state.profileImage !== '' ? 0.5 : 1}}/>
+                            <View
+                                style={{
+                                    flex:
+                                        this.state.profileImage !== ''
+                                            ? 0.5
+                                            : 1,
+                                }}
+                            />
                             <View>
                                 <View style={{flex: 1}} />
                                 <View>
@@ -876,7 +882,7 @@ export default class Lessons extends React.Component {
                                 outVideos={this.state.outVideos} // if paging and out of videos
                                 getVideos={() => this.getVideos()}
                                 navigator={row =>
-                                    row.duration === undefined
+                                    row.type === 'course'
                                         ? this.props.navigation.navigate(
                                               'PATHOVERVIEW',
                                               {

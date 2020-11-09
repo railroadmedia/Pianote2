@@ -209,22 +209,22 @@ class VerticalVideoList extends React.Component {
         );
     };
 
-    changeType = (word) => {
-        word = word.replace(/[- )(]/g,' ').split(" ")
-        let string = ''
+    changeType = word => {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+        let string = '';
 
         for (let i = 0; i < word.length; i++) {
-            if(word[i] !== 'and') {
-                word[i] = word[i][0].toUpperCase() + word[i].substr(1);    
+            if (word[i] !== 'and') {
+                word[i] = word[i][0].toUpperCase() + word[i].substr(1);
             }
         }
-        
-        for(i in word) {
-            string = string + word[i] + ' '
+
+        for (i in word) {
+            string = string + word[i] + ' ';
         }
-        
-        return string
-    }
+
+        return string;
+    };
 
     like = contentID => {
         if (!this.context.isConnected) {
@@ -250,7 +250,18 @@ class VerticalVideoList extends React.Component {
 
         return this.state.items.map((row, index) => {
             return (
-                <View key={index}>
+                <TouchableOpacity
+                    key={index}
+                    onLongPress={() => {
+                        row.type == 'unit'
+                            ? null
+                            : this.setState({
+                                  showModal: true,
+                                  item: row,
+                              });
+                    }}
+                    onPress={() => this.props.navigator(row, index)}
+                >
                     {(index >= 0 || this.props.showNextVideo == false) && (
                         <View
                             style={{
@@ -262,16 +273,7 @@ class VerticalVideoList extends React.Component {
                                 borderTopColor: '#ececec',
                             }}
                         >
-                            <TouchableOpacity
-                                onLongPress={() => {
-                                    row.type == 'unit'
-                                        ? null
-                                        : this.setState({
-                                              showModal: true,
-                                              item: row,
-                                          });
-                                }}
-                                onPress={() => this.props.navigator(row, index)}
+                            <View
                                 style={{justifyContent: 'center'}}
                                 underlayColor={'transparent'}
                             >
@@ -457,7 +459,7 @@ class VerticalVideoList extends React.Component {
                                         />
                                     )}
                                 </View>
-                            </TouchableOpacity>
+                            </View>
                             <View style={{width: 10 * factorHorizontal}} />
                             <View style={{flex: 1.5, justifyContent: 'center'}}>
                                 {this.props.isFoundationsLevel && (
@@ -800,7 +802,7 @@ class VerticalVideoList extends React.Component {
                             </View>
                         </View>
                     )}
-                </View>
+                </TouchableOpacity>
             );
         });
     };
@@ -1022,7 +1024,6 @@ class VerticalVideoList extends React.Component {
                     style={[
                         styles.centerContent,
                         {
-                            minHeight: this.props.containerHeight * 4,
                             flex: 1,
                         },
                     ]}
