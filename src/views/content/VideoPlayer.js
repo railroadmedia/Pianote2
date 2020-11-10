@@ -727,9 +727,12 @@ export default class VideoPlayer extends React.Component {
     };
 
     refresh = () => {
-        this.setState({isLoadingAll: true}, () => {
-            this.getContent();
-        });
+        this.setState(
+            {isLoadingAll: true, relatedLessons: [], assignmentList: []},
+            () => {
+                this.getContent();
+            },
+        );
     };
 
     async onResetProgress() {

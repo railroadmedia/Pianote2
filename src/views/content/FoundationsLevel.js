@@ -123,7 +123,7 @@ export default class FoundationsLevel extends React.Component {
     };
 
     refresh = () => {
-        this.setState({isLoadingAll: true}, () => {
+        this.setState({isLoadingAll: true, items: []}, () => {
             this.getContent();
         });
     };

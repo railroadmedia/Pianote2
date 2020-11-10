@@ -15,9 +15,9 @@ import ContentModal from '../modals/ContentModal';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
+import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import {NetworkContext} from '../context/NetworkProvider';
 
 const sortDict = {
@@ -309,27 +309,24 @@ class VerticalVideoList extends React.Component {
                                         borderRadius: this.props.imageRadius,
                                     }}
                                 >
-                                    <View
-                                        style={[
-                                            styles.centerContent,
-                                            {
+                                    {row.isCompleted && (
+                                        <View
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
                                                 width: this.props.imageWidth,
                                                 height: this.props.imageHeight,
                                                 borderRadius: this.props
                                                     .imageRadius,
-                                                zIndex: 4,
-                                                opacity: 0.3,
-                                                top: 0,
-                                                left: 0,
-                                                position: 'absolute',
+                                                zIndex: 1,
+                                                opacity: 0.2,
                                                 backgroundColor:
-                                                    row.progress == 'check' ||
-                                                    row.progress == 'progress'
-                                                        ? '#ff3333'
-                                                        : 'transparent',
-                                            },
-                                        ]}
-                                    />
+                                                    colors.pianoteRed,
+                                            }}
+                                        />
+                                    )}
+
                                     <View
                                         style={[
                                             styles.centerContent,
@@ -339,22 +336,23 @@ class VerticalVideoList extends React.Component {
                                                 left: 0,
                                                 width: this.props.imageWidth,
                                                 height: this.props.imageHeight,
-                                                borderRadius: this.props
-                                                    .imageRadius,
-                                                zIndex: 4,
-                                                opacity: 1,
-                                                backgroundColor: 'transparent',
+                                                zIndex: 2,
                                             },
                                         ]}
                                     >
-                                        {(row.progress == 'check' ||
-                                            row.progress == 'progress') && (
+                                        {row.isStarted ? (
+                                            <Progress
+                                                height={40}
+                                                width={40 * factorRatio}
+                                                fill={'white'}
+                                            />
+                                        ) : row.isCompleted ? (
                                             <ApprovedTeacher
                                                 height={50}
                                                 width={50 * factorRatio}
                                                 fill={'white'}
                                             />
-                                        )}
+                                        ) : null}
                                     </View>
 
                                     {this.props.showLines && (
@@ -473,7 +471,6 @@ class VerticalVideoList extends React.Component {
                                         <FastImage
                                             style={{
                                                 flex: 1,
-                                                zIndex: 10,
                                                 borderRadius: this.props
                                                     .imageRadius,
                                             }}

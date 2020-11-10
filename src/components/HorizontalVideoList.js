@@ -20,6 +20,8 @@ import {withNavigation} from 'react-navigation';
 import ContentModal from '../modals/ContentModal';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import {NetworkContext} from '../context/NetworkProvider';
+import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
+import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 
 class HorizontalVideoList extends React.Component {
     static navigationOptions = {header: null};
@@ -256,6 +258,54 @@ class HorizontalVideoList extends React.Component {
                                             },
                                         ]}
                                     >
+                                        {item.isCompleted && (
+                                            <View
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: this.props.itemWidth,
+                                                    height: this.props
+                                                        .itemHeight,
+                                                    borderRadius:
+                                                        7.5 * factorRatio,
+                                                    zIndex: 1,
+                                                    opacity: 0.2,
+                                                    backgroundColor:
+                                                        colors.pianoteRed,
+                                                }}
+                                            />
+                                        )}
+
+                                        <View
+                                            style={[
+                                                styles.centerContent,
+                                                {
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: this.props.itemWidth,
+                                                    height: this.props
+                                                        .itemHeight,
+                                                    zIndex: 2,
+                                                },
+                                            ]}
+                                        >
+                                            {item.isStarted ? (
+                                                <Progress
+                                                    height={50}
+                                                    width={50 * factorRatio}
+                                                    fill={'white'}
+                                                />
+                                            ) : item.isCompleted ? (
+                                                <ApprovedTeacher
+                                                    height={60}
+                                                    width={60 * factorRatio}
+                                                    fill={'white'}
+                                                />
+                                            ) : null}
+                                        </View>
+
                                         <View
                                             style={{
                                                 flex: 1,
