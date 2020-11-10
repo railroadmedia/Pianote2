@@ -401,11 +401,6 @@ export default class MyList extends React.Component {
                                 : fullHeight * 0.0825
                         } // image height
                         imageWidth={fullWidth * 0.26} // image width
-                        navigator={row =>
-                            this.props.navigation.navigate('VIDEOPLAYER', {
-                                id: row.id,
-                            })
-                        }
                     />
                 </ScrollView>
 

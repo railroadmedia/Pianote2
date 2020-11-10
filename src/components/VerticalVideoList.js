@@ -241,6 +241,31 @@ class VerticalVideoList extends React.Component {
         this.setState({items: this.state.items});
     };
 
+    navigate = (content, index) => {
+        if (this.props.navigator) return this.props.navigator(content, index);
+        switch (content.type) {
+            case 'course':
+                return this.props.navigation.navigate('PATHOVERVIEW', {
+                    data: content,
+                });
+            case 'unit':
+                console.log('foundationlevel');
+                return this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+                    url: content.mobile_app_url,
+                    level: index + 1,
+                });
+            case 'pack-bundle':
+                return this.props.navigation.push('SINGLEPACK', {
+                    url: content.mobile_app_url,
+                });
+
+            default:
+                return this.props.navigation.navigate('VIDEOPLAYER', {
+                    id: content.id,
+                });
+        }
+    };
+
     renderMappedList = () => {
         if (this.state.items.length == 0 && this.state.outVideos) {
             return;
@@ -260,7 +285,7 @@ class VerticalVideoList extends React.Component {
                                   item: row,
                               });
                     }}
-                    onPress={() => this.props.navigator(row, index)}
+                    onPress={() => this.navigate(row, index)}
                 >
                     {(index >= 0 || this.props.showNextVideo == false) && (
                         <View

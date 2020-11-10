@@ -385,11 +385,6 @@ export default class StudentFocusShow extends React.Component {
                         imageWidth={fullWidth * 0.26}
                         outVideos={this.state.outVideos}
                         getVideos={() => this.getVideos()}
-                        navigator={row =>
-                            this.props.navigation.navigate('VIDEOPLAYER', {
-                                id: row.id,
-                            })
-                        }
                     />
                 </ScrollView>
                 <NavigationBar currentPage={'NONE'} />

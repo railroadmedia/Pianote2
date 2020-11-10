@@ -86,7 +86,9 @@ export default class SongCatalog extends React.Component {
                         .replace(/&gt;/g, '>')
                         .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
-                    id: newContent[i].post.current_lesson?.id,
+                    id:
+                        newContent[i].post.current_lesson?.id ||
+                        newContent[i].post.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].post.is_liked_by_current_user,
@@ -136,7 +138,9 @@ export default class SongCatalog extends React.Component {
                         .replace(/&gt;/g, '>')
                         .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
-                    id: newContent[i].post.current_lesson.id,
+                    id:
+                        newContent[i].post.current_lesson.id ||
+                        newContent[i].post.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].post.is_liked_by_current_user,
@@ -367,13 +371,6 @@ export default class SongCatalog extends React.Component {
                                 ? fullHeight * 0.125
                                 : fullHeight * 0.09
                         } // image height
-                        navigator={row => {
-                            console.log('song', row);
-
-                            this.props.navigation.navigate('VIDEOPLAYER', {
-                                id: row.id,
-                            });
-                        }}
                     />
                 </ScrollView>
 

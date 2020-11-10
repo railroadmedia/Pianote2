@@ -87,7 +87,7 @@ export default class VideoPlayer extends React.Component {
 
             relatedLessons: [],
             likes: 0,
-            isStarted: false, 
+            isStarted: false,
             isLiked: false,
             isAddedToMyList: false,
             artist: null,
@@ -149,7 +149,7 @@ export default class VideoPlayer extends React.Component {
                     ),
                 ]);
             }
-            
+
             if (result[0].title && result[0].message) {
                 return this.alert.toggle(result[0].title, result[0].message);
             }
@@ -235,7 +235,7 @@ export default class VideoPlayer extends React.Component {
                 id: content.id,
                 url: content.post.mobile_app_url,
                 type: content.type,
-                
+
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
                 description: content
@@ -820,10 +820,10 @@ export default class VideoPlayer extends React.Component {
     }
 
     async onStart() {
-        if(!this.state.isStarted) {
+        if (!this.state.isStarted) {
             let res = await markStarted(this.state.id);
-            this.setState({isStarted: true})
-            console.log(res)
+            this.setState({isStarted: true});
+            console.log(res);
         }
     }
 
@@ -983,7 +983,6 @@ export default class VideoPlayer extends React.Component {
 
         let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
         let xpTag = `${xp || 0} XP`;
-        console.log(type);
         switch (type) {
             case 'song-part':
                 return artistTag + xpTag;
@@ -1025,7 +1024,9 @@ export default class VideoPlayer extends React.Component {
                             onFullscreen={() => {}}
                             ref={r => (this.video = r)}
                             type={false ? 'audio' : 'video'}
-                            onUpdateVideoProgress={() => {(this.state.isStarted) ? null : this.onStart()}}
+                            onUpdateVideoProgress={() => {
+                                this.state.isStarted ? null : this.onStart();
+                            }}
                             connection={this.context.isConnected}
                             onBack={this.props.navigation.goBack}
                             showControls={true}

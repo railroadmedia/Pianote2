@@ -501,14 +501,6 @@ export default class Course extends React.Component {
                                 imageWidth={fullWidth * 0.26} // image width
                                 outVideos={this.state.outVideos}
                                 getVideos={() => this.getVideos()}
-                                navigator={row =>
-                                    this.props.navigation.navigate(
-                                        'PATHOVERVIEW',
-                                        {
-                                            data: row,
-                                        },
-                                    )
-                                }
                             />
                             <View style={{height: fullHeight * 0.025}} />
                         </ScrollView>

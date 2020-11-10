@@ -75,6 +75,7 @@ export default class SinglePack extends React.Component {
             for (let i in lessons) {
                 items.push({
                     title: lessons[i].getField('title'),
+                    type: lessons[i].post.type,
                     thumbnail: lessons[i].getData('thumbnail_url'),
                     id: lessons[i].id,
                     duration:

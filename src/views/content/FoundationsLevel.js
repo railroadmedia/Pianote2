@@ -528,11 +528,6 @@ export default class FoundationsLevel extends React.Component {
                                 : fullHeight * 0.0825
                         } // image height
                         imageWidth={fullWidth * 0.3} // image width
-                        navigator={row => {
-                            this.props.navigation.navigate('VIDEOPLAYER', {
-                                url: row.mobile_app_url,
-                            });
-                        }}
                     />
                 </ScrollView>
                 <Modal

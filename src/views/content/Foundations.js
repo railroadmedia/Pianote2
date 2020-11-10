@@ -715,12 +715,6 @@ export default class Foundations extends React.Component {
                         containerHeight={fullWidth * 0.285}
                         imageHeight={fullWidth * 0.25}
                         imageWidth={fullWidth * 0.25}
-                        navigator={(row, index) => {
-                            this.props.navigation.navigate('FOUNDATIONSLEVEL', {
-                                url: row.mobile_app_url,
-                                level: index + 1,
-                            });
-                        }}
                     />
                     <View style={{height: 10 * factorVertical}} />
                 </ScrollView>

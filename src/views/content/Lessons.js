@@ -877,21 +877,6 @@ export default class Lessons extends React.Component {
                                 imageWidth={fullWidth * 0.26} // image width
                                 outVideos={this.state.outVideos} // if paging and out of videos
                                 getVideos={() => this.getVideos()}
-                                navigator={row =>
-                                    row.type === 'course'
-                                        ? this.props.navigation.navigate(
-                                              'PATHOVERVIEW',
-                                              {
-                                                  data: row,
-                                              },
-                                          )
-                                        : this.props.navigation.navigate(
-                                              'VIDEOPLAYER',
-                                              {
-                                                  id: row.id,
-                                              },
-                                          )
-                                }
                             />
                         )}
                     </View>
