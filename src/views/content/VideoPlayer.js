@@ -5,7 +5,6 @@ import React from 'react';
 import {
     View,
     Text,
-    Keyboard,
     Platform,
     Animated,
     StatusBar,
@@ -19,7 +18,6 @@ import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Video from 'RNVideoEnhanced';
 import {Download_V2, offlineContent, DownloadResources} from 'RNDownload';
-
 import Replies from '../../components/Replies.js';
 import CommentSort from '../../modals/CommentSort.js';
 import SoundSlice from '../../components/SoundSlice.js';
@@ -43,6 +41,7 @@ import {
     removeFromMyList,
     resetProgress,
     markComplete,
+    markStarted,
 } from 'Pianote2/src/services/UserActions.js';
 import OverviewComplete from '../../modals/OverviewComplete.js';
 import VideoPlayerSong from './VideoPlayerSong.js';
@@ -52,10 +51,6 @@ import foundationsService from '../../services/foundations.service.js';
 import {NetworkContext} from '../../context/NetworkProvider';
 import CustomModal from '../../modals/CustomModal.js';
 import {RefreshControl} from 'react-native';
-var showListener =
-    Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-var hideListener =
-    Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
 export default class VideoPlayer extends React.Component {
     static contextType = NetworkContext;
@@ -92,6 +87,7 @@ export default class VideoPlayer extends React.Component {
 
             relatedLessons: [],
             likes: 0,
+            isStarted: false, 
             isLiked: false,
             isAddedToMyList: false,
             artist: null,
@@ -153,7 +149,7 @@ export default class VideoPlayer extends React.Component {
                     ),
                 ]);
             }
-            console.log(result);
+            
             if (result[0].title && result[0].message) {
                 return this.alert.toggle(result[0].title, result[0].message);
             }
@@ -232,12 +228,14 @@ export default class VideoPlayer extends React.Component {
                 });
             }
         }
+
         this.setState(
             {
                 comments,
                 id: content.id,
                 url: content.post.mobile_app_url,
                 type: content.type,
+                
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
                 description: content
@@ -268,6 +266,7 @@ export default class VideoPlayer extends React.Component {
                             .progress_percent,
                     ) || 0,
                 isAddedToMyList: content.isAddedToList,
+                isStarted: content.isStarted,
                 assignmentList: [...this.state.assignmentList, ...al],
                 nextUnit: content.post.next_unit
                     ? new ContentModel(content.post.next_unit)
@@ -812,10 +811,19 @@ export default class VideoPlayer extends React.Component {
             }));
         }
         let res = await markComplete(id);
+
         if (res?.parent[0]) {
             this.setState({
                 progress: res.parent[0].progress_percent,
             });
+        }
+    }
+
+    async onStart() {
+        if(this.state.isStarted == false) {
+            let res = await markStarted(this.state.id);
+            this.setState({isStarted: true})
+            console.log(res)
         }
     }
 
@@ -1017,7 +1025,7 @@ export default class VideoPlayer extends React.Component {
                             onFullscreen={() => {}}
                             ref={r => (this.video = r)}
                             type={false ? 'audio' : 'video'}
-                            onUpdateVideoProgress={() => {}}
+                            onUpdateVideoProgress={() => {(this.state.isStarted) ? null : this.onStart()}}
                             connection={this.context.isConnected}
                             onBack={this.props.navigation.goBack}
                             showControls={true}

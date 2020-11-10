@@ -237,7 +237,7 @@ export default class Lessons extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         try {
-            let response = await getStartedContent('course');
+            let response = await getStartedContent();
             const newContent = response.data.map(data => {
                 return new ContentModel(data);
             });

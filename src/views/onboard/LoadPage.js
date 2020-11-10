@@ -24,7 +24,7 @@ export default class LoadPage extends React.Component {
         this.state = {};
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         Download_V2.resumeAll().then(async () => {
             await SplashScreen.hide();
             if (!this.context.isConnected)

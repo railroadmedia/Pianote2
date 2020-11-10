@@ -2,15 +2,10 @@ import commonService from './common.service';
 import {Platform} from 'react-native';
 
 export async function likeContent(contentID) {
-    try {
-        return commonService.tryCall(
-            `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
-            'PUT',
-        );
-    } catch (error) {
-        console.log('ERROR LIKING CONTENT: ', error);
-        return new Error(error);
-    }
+    return commonService.tryCall(
+        `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
+        'PUT',
+    );
 }
 
 export async function unlikeContent(contentID) {
@@ -48,16 +43,22 @@ export async function resetProgress(contentID) {
 
 export async function markComplete(contentID) {
     try {
-        return commonService.tryCall(
-            `${
-                commonService.rootUrl
-            }/api/complete?content_id=${contentID}&device_type=${
-                Platform.OS === 'ios' ? 'ios' : 'android'
-            }`,
+        return commonService.tryCall(`${commonService.rootUrl}/api/complete?content_id=${contentID}&device_type=${Platform.OS === 'ios' ? 'ios' : 'android'}`,
             'PUT',
         );
     } catch (error) {
         console.log('ERROR MARKING AS COMPLETE: ', error);
+        return new Error(error);
+    }
+}
+
+export async function markStarted(contentID) {
+    try {
+        return commonService.tryCall(`${commonService.rootUrl}/api/start?content_id=${contentID}&device_type=${Platform.OS === 'ios' ? 'ios' : 'android'}`,
+            'PUT',
+        );
+    } catch (error) {
+        console.log('ERROR MARKING AS STARTED: ', error);
         return new Error(error);
     }
 }
