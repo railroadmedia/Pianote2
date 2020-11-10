@@ -54,7 +54,7 @@ export async function markComplete(contentID) {
 
 export async function markStarted(contentID) {
     try {
-        return commonService.tryCall(`${commonService.rootUrl}/api/start?content_id=${contentID}&device_type=${Platform.OS === 'ios' ? 'ios' : 'android'}`,
+        return commonService.tryCall(`${commonService.rootUrl}/api/railcontent/start?content_id=${contentID}&device_type=${Platform.OS === 'ios' ? 'ios' : 'android'}`,
             'PUT',
         );
     } catch (error) {
