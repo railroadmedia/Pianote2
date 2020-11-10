@@ -53,12 +53,12 @@ class ReplyNotification extends React.Component {
         this.state = {
             user:
                 this.props.data.type == 'new content releases'
-                    ? this.props.data.content.display_name
-                    : this.props.data.sender.display_name,
+                    ? this.props.data.content?.display_name
+                    : this.props.data.sender?.display_name,
             profileImage:
                 this.props.data.type == 'new content releases'
-                    ? this.props.data.content.thumbnail_url
-                    : this.props.data.sender.profile_image_url,
+                    ? this.props.data.content?.thumbnail_url
+                    : this.props.data.sender?.profile_image_url,
             type: messageDict[this.props.data.type][0],
             notificationStatus: this.props.notificationStatus,
             notify_on_forum_followed_thread_reply: false,
