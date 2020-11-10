@@ -20,7 +20,6 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import commonService from '../../services/common.service.js';
 import {NetworkContext} from '../../context/NetworkProvider.js';
 
@@ -113,20 +112,20 @@ export default class ProfileSettings extends React.Component {
     };
 
     changeImage = async () => {
-        if (!this.context.isConnected) {
-            return this.context.showNoConnectionAlert();
-        }
+        if (!this.context.isConnected) {return this.context.showNoConnectionAlert()}
+        
         const data = new FormData();
+
+        console.log('IMAGE: ', this.state.imageURI)
 
         data.append('file', {
             name: this.state.imageName,
             type: this.state.imageType,
-            uri:
-                Platform.OS == 'ios'
-                    ? this.state.imagePath.replace('file://', '')
-                    : this.state.imagePath,
+            uri: this.state.imageURI,
         });
+        
         data.append('target', this.state.imageName);
+        
         try {
             let url;
             if (this.state.imageURI !== '') {
@@ -170,6 +169,7 @@ export default class ProfileSettings extends React.Component {
                 },
             },
             response => {
+                
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
@@ -177,7 +177,7 @@ export default class ProfileSettings extends React.Component {
                         imageURI: response.uri,
                         imageType: response.type,
                         imageName: response.fileName || 'avatar',
-                        imagePath: 'file://' + response.path,
+                        imagePath: response.path,
                     });
                     this.forceUpdate();
                 }
