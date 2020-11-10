@@ -53,6 +53,23 @@ class ContentModal extends React.Component {
         removeFromMyList(contentID);
     };
 
+    changeType = word => {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+        let string = '';
+
+        for (let i = 0; i < word.length; i++) {
+            if (word[i] !== 'and') {
+                word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+            }
+        }
+
+        for (i in word) {
+            string = string + word[i] + ' ';
+        }
+
+        return string;
+    };
+
     like = async contentID => {
         // change data on modal
         this.state.data.isLiked = !this.state.data.isLiked;
@@ -185,10 +202,7 @@ class ContentModal extends React.Component {
                                         color: 'grey',
                                     }}
                                 >
-                                    {this.state.data.type
-                                        .charAt(0)
-                                        .toUpperCase() +
-                                        this.state.data.type.slice(1)}{' '}
+                                    {this.changeType(this.state.data.type)}
                                     / {this.state.data.artist}
                                 </Text>
                             </View>
