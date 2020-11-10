@@ -75,8 +75,7 @@ export async function getNewContent(type) {
 export async function getStartedContent(type) {
     try {
         if (type == '') {
-            type =
-                'unit&included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
+            type = 'unit&included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
         }
         return commonService.tryCall(
             `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,

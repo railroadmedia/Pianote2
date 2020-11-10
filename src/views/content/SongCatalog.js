@@ -66,7 +66,7 @@ export default class SongCatalog extends React.Component {
         const newContent = await response.data.map(data => {
             return new ContentModel(data);
         });
-        console.log(newContent);
+
         items = [];
         for (i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
@@ -150,10 +150,7 @@ export default class SongCatalog extends React.Component {
 
         this.setState({
             progressSongs: [...this.state.progressSongs, ...items],
-            started:
-                items.length == 0 && this.state.progressSongs.length == 0
-                    ? false
-                    : true,
+            started: items.length == 0 && this.state.progressSongs.length == 0 ? false : true,
             isLoadingProgress: false,
         });
     };

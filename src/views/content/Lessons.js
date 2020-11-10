@@ -67,7 +67,7 @@ export default class Lessons extends React.Component {
             foundationIsCompleted: false,
             foundationNextLesson: null,
             showRestartCourse: false,
-            lessonsStarted: false, // for showing continue lessons horizontal list
+            lessonsStarted: true, // for showing continue lessons horizontal list
             isLoadingNew: true, // new lessons
             isLoadingProgress: true,
         };
@@ -106,6 +106,9 @@ export default class Lessons extends React.Component {
         const response = new ContentModel(
             await foundationsService.getFoundation('foundations-2019'),
         );
+
+        console.log('RESPONSE: ', response)
+
         await AsyncStorage.multiSet([
             ['foundationsIsStarted', response.isStarted.toString()],
             ['foundationsIsCompleted', response.isCompleted.toString()],
@@ -269,11 +272,13 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
+            
             await this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
-                lessonsStarted: items.length > 0 ? true : false,
+                lessonsStarted: items.length == 0 && this.state.progressLessons.length == 0 ? false : true,
                 isLoadingProgress: false,
             });
+
         } catch (error) {
             console.log('error progress: ', error);
         }

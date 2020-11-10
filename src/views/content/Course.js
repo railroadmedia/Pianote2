@@ -48,7 +48,7 @@ export default class Course extends React.Component {
 
             isLoadingNew: true, // new course
             isLoadingProgress: true, // progress course
-            started: false, // if started lesson
+            started: true, // if started lesson
         };
     }
 
@@ -119,10 +119,11 @@ export default class Course extends React.Component {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
+        
         let response = await getStartedContent('course');
         const newContent = response.data.map(data => {
-            return new ContentModel(data);
-        });
+            return new ContentModel(data)}
+        );
 
         let items = [];
         for (let i in newContent) {
@@ -159,7 +160,7 @@ export default class Course extends React.Component {
         await this.setState({
             progressCourses: [...this.state.progressCourses, ...items],
             isLoadingProgress: false,
-            started: this.state.progressCourses > 0 || items > 0 ? true : false,
+            started: this.state.progressCourses.length == 0 && items.length == 0 ? false : true,
         });
     };
 
