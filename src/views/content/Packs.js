@@ -94,7 +94,7 @@ export default class Packs extends React.Component {
     };
 
     refresh = () => {
-        this.setState({isLoading: true}, () => {
+        this.setState({isLoading: true, packs: []}, () => {
             this.getData();
         });
     };

@@ -147,7 +147,7 @@ export default class SinglePack extends React.Component {
     };
 
     refresh = () => {
-        this.setState({isLoadingAll: true}, () => {
+        this.setState({isLoadingAll: true, videos: []}, () => {
             this.getBundle();
         });
     };
