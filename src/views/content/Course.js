@@ -430,42 +430,6 @@ export default class Course extends React.Component {
                                     />
                                 </View>
                             )}
-                            <View
-                                key={'newCourses'}
-                                style={{
-                                    minHeight: fullHeight * 0.225,
-                                    paddingLeft: fullWidth * 0.035,
-                                    backgroundColor: colors.mainBackground,
-                                }}
-                            >
-                                <HorizontalVideoList
-                                    Title={'NEW COURSES'}
-                                    seeAll={() =>
-                                        this.props.navigation.navigate(
-                                            'SEEALL',
-                                            {
-                                                title: 'New Courses',
-                                                parent: 'Courses',
-                                            },
-                                        )
-                                    }
-                                    showArtist={true}
-                                    isLoading={this.state.isLoadingNew}
-                                    items={this.state.newCourses}
-                                    itemWidth={
-                                        isNotch
-                                            ? fullWidth * 0.6
-                                            : onTablet
-                                            ? fullWidth * 0.425
-                                            : fullWidth * 0.55
-                                    }
-                                    itemHeight={
-                                        isNotch
-                                            ? fullHeight * 0.155
-                                            : fullHeight * 0.175
-                                    }
-                                />
-                            </View>
                             <VerticalVideoList
                                 items={this.state.allCourses}
                                 isLoading={this.state.isLoadingAll}

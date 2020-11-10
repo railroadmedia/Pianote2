@@ -806,40 +806,6 @@ export default class Lessons extends React.Component {
                                 />
                             </View>
                         )}
-                        <View
-                            key={'newLessons'}
-                            style={{
-                                minHeight: fullHeight * 0.225,
-                                paddingLeft: fullWidth * 0.035,
-                                backgroundColor: colors.mainBackground,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'NEW LESSONS'}
-                                seeAll={() =>
-                                    this.props.navigation.navigate('SEEALL', {
-                                        title: 'New Lessons',
-                                        parent: 'Lessons',
-                                    })
-                                }
-                                showArtist={true}
-                                showType={true}
-                                isLoading={this.state.isLoadingNew}
-                                items={this.state.newLessons}
-                                itemWidth={
-                                    isNotch
-                                        ? fullWidth * 0.6
-                                        : onTablet
-                                        ? fullWidth * 0.425
-                                        : fullWidth * 0.55
-                                }
-                                itemHeight={
-                                    isNotch
-                                        ? fullHeight * 0.155
-                                        : fullHeight * 0.175
-                                }
-                            />
-                        </View>
                         <View style={{height: 5 * factorRatio}} />
                         {!this.state.filtering && (
                             <VerticalVideoList
