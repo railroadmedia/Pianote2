@@ -820,7 +820,7 @@ export default class VideoPlayer extends React.Component {
     }
 
     async onStart() {
-        if(this.state.isStarted == false) {
+        if(!this.state.isStarted) {
             let res = await markStarted(this.state.id);
             this.setState({isStarted: true})
             console.log(res)
