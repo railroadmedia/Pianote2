@@ -61,7 +61,8 @@ class ContentModal extends React.Component {
         // change data on parent data
         // ADD IN
         // like on backend
-        likeContent(contentID);
+        let res = await likeContent(contentID);
+        console.log('Like content: ', res)
     };
 
     unlike = async contentID => {

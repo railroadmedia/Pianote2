@@ -220,7 +220,7 @@ export default class Search extends React.Component {
                             id: newContent[i].id,
                             like_count: newContent[i].post.like_count,
                             duration: this.getDuration(newContent[i]),
-                            isLiked: newContent[i].isLiked,
+                            isLiked: newContent[i].post.is_liked_by_current_user,
                             isAddedToList: newContent[i].isAddedToList,
                             isStarted: newContent[i].isStarted,
                             isCompleted: newContent[i].isCompleted,

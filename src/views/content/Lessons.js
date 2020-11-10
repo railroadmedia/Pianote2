@@ -151,7 +151,7 @@ export default class Lessons extends React.Component {
                         id: newContent[i].id,
                         like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
+                        isLiked: newContent[i].post.is_liked_by_current_user,
                         isAddedToList: newContent[i].isAddedToList,
                         isStarted: newContent[i].isStarted,
                         isCompleted: newContent[i].isCompleted,
@@ -160,7 +160,6 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-
             await this.setState({
                 newLessons: [...this.state.newLessons, ...items],
                 isLoadingNew: false,
@@ -207,7 +206,7 @@ export default class Lessons extends React.Component {
                         id: newContent[i].id,
                         like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
+                        isLiked: newContent[i].post.is_liked_by_current_user,
                         isAddedToList: newContent[i].isAddedToList,
                         isStarted: newContent[i].isStarted,
                         isCompleted: newContent[i].isCompleted,
@@ -261,9 +260,9 @@ export default class Lessons extends React.Component {
                             .replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
-                        like_count: newContent[0].post.like_count,
+                        like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].isLiked,
+                        isLiked: newContent[i].post.is_liked_by_current_user,
                         isAddedToList: newContent[i].isAddedToList,
                         isStarted: newContent[i].isStarted,
                         isCompleted: newContent[i].isCompleted,

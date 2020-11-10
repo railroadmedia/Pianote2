@@ -63,6 +63,7 @@ export default class SongCatalog extends React.Component {
             this.state.page,
             this.state.filters,
         );
+
         const newContent = await response.data.map(data => {
             return new ContentModel(data);
         });
@@ -88,7 +89,7 @@ export default class SongCatalog extends React.Component {
                     id: newContent[i].post.current_lesson?.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].isLiked,
+                    isLiked: newContent[i].post.is_liked_by_current_user,
                     isAddedToList: newContent[i].isAddedToList,
                     isStarted: newContent[i].isStarted,
                     isCompleted: newContent[i].isCompleted,
@@ -138,7 +139,7 @@ export default class SongCatalog extends React.Component {
                     id: newContent[i].post.current_lesson.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].isLiked,
+                    isLiked: newContent[i].post.is_liked_by_current_user,
                     isAddedToList: newContent[i].isAddedToList,
                     isStarted: newContent[i].isStarted,
                     isCompleted: newContent[i].isCompleted,
