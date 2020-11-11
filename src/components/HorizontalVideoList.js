@@ -236,7 +236,9 @@ class HorizontalVideoList extends React.Component {
                                     }}
                                     delayLongPress={350}
                                     onPress={() =>
-                                        item.type === 'course'
+                                        !this.context.isConnected
+                                            ? this.context.showNoConnectionAlert()
+                                            : item.type === 'course'
                                             ? this.props.navigation.navigate(
                                                   'PATHOVERVIEW',
                                                   {
