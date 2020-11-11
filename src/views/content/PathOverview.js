@@ -32,6 +32,7 @@ import contentService from '../../services/content.service';
 import {NetworkContext} from '../../context/NetworkProvider';
 import {ContentModel} from '@musora/models';
 
+let greaterWDim;
 export default class PathOverview extends React.Component {
     static contextType = NetworkContext;
     static navigationOptions = {header: null};
@@ -52,6 +53,7 @@ export default class PathOverview extends React.Component {
             nextLesson: 0,
             isLoadingAll: true,
         };
+        greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
     }
 
     componentDidMount() {
@@ -193,7 +195,13 @@ export default class PathOverview extends React.Component {
                                 alignSelf: 'stretch',
                                 backgroundColor: colors.mainBackground,
                             }}
-                            source={{uri: this.state.data.thumbnail}}
+                            source={{
+                                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                                    greaterWDim >> 0
+                                },ar_16:9,c_fill,g_face/${
+                                    this.state.data.thumbnail
+                                }`,
+                            }}
                             resizeMode={FastImage.resizeMode.cover}
                         />
                         <View

@@ -157,6 +157,7 @@ export default class VideoPlayer extends React.Component {
             comments = result[1].data;
             this.allCommentsNum = result[1].meta.totalResults;
         }
+        console.log(content);
         content = new ContentModel(content);
         let relatedLessons = content.post.related_lessons?.map(rl => {
             return new ContentModel(rl);

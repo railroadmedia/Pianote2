@@ -119,9 +119,11 @@ class NextVideo extends React.Component {
                                         borderRadius: 7 * factorRatio,
                                     }}
                                     source={{
-                                        uri: this.props.item.getData(
+                                        uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                            fullWidth * 0.24,
+                                        )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${this.props.item.getData(
                                             'thumbnail_url',
-                                        ),
+                                        )}`,
                                     }}
                                     resizeMode={FastImage.resizeMode.cover}
                                 />
