@@ -12,8 +12,10 @@ import Modal from 'react-native-modal';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
+import {NetworkContext} from '../context/NetworkProvider';
 
 class NavMenuHeaders extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -68,18 +70,22 @@ class NavMenuHeaders extends React.Component {
                         >
                             <TouchableOpacity
                                 onPress={() => {
-                                    this.props.navigation.dispatch(
-                                        StackActions.reset({
-                                            index: 0,
-                                            actions: [
-                                                NavigationActions.navigate({
-                                                    routeName: isPackOnly
-                                                        ? 'PACKS'
-                                                        : 'LESSONS',
-                                                }),
-                                            ],
-                                        }),
-                                    );
+                                    !this.context.isConnected
+                                        ? this.context.showNoConnectionAlert()
+                                        : this.props.navigation.dispatch(
+                                              StackActions.reset({
+                                                  index: 0,
+                                                  actions: [
+                                                      NavigationActions.navigate(
+                                                          {
+                                                              routeName: isPackOnly
+                                                                  ? 'PACKS'
+                                                                  : 'LESSONS',
+                                                          },
+                                                      ),
+                                                  ],
+                                              }),
+                                          );
                                 }}
                                 style={[
                                     styles.centerContent,
@@ -102,7 +108,9 @@ class NavMenuHeaders extends React.Component {
                         <TouchableOpacity
                             key={'lessons'}
                             onPress={() => {
-                                isPackOnly
+                                !this.context.isConnected
+                                    ? this.context.showNoConnectionAlert()
+                                    : isPackOnly
                                     ? this.props.navigation.navigate(
                                           'NEWMEMBERSHIP',
                                           {
@@ -155,7 +163,9 @@ class NavMenuHeaders extends React.Component {
                         <TouchableOpacity
                             key={'packs'}
                             onPress={() => {
-                                this.props.navigation.navigate('PACKS');
+                                !this.context.isConnected
+                                    ? this.context.showNoConnectionAlert()
+                                    : this.props.navigation.navigate('PACKS');
                             }}
                         >
                             <View style={{flex: 2}} />
@@ -188,7 +198,9 @@ class NavMenuHeaders extends React.Component {
                         <TouchableOpacity
                             key={'mylist'}
                             onPress={() => {
-                                this.props.navigation.navigate('MYLIST');
+                                !this.context.isConnected
+                                    ? this.context.showNoConnectionAlert()
+                                    : this.props.navigation.navigate('MYLIST');
                             }}
                         >
                             <View style={{flex: 2}} />
