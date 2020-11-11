@@ -185,8 +185,6 @@ export default class Lessons extends React.Component {
                 return new ContentModel(data);
             });
 
-            console.log(response)
-
             let items = [];
             for (let i in newContent) {
                 if (newContent[i].getData('thumbnail_url') !== 'TBD') {
