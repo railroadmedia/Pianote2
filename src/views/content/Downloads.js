@@ -193,15 +193,9 @@ export default class Downloads extends React.Component {
                                             aspectRatio: 16 / 9,
                                         }}
                                         source={{
-                                            uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                                fullHeight * 0.09,
-                                            )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                                                item[type]?.data?.find(
-                                                    d =>
-                                                        d.key ===
-                                                        'thumbnail_url',
-                                                )?.value
-                                            }`,
+                                            uri: item[type]?.data?.find(
+                                                d => d.key === 'thumbnail_url',
+                                            )?.value,
                                         }}
                                         resizeMode={
                                             FastImage.resizeMode.stretch
