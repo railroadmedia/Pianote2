@@ -10,6 +10,7 @@ import {
     Platform,
     Alert,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
 import LogOut from '../../modals/LogOut.js';
@@ -25,6 +26,7 @@ import CustomModal from '../../modals/CustomModal.js';
 import {logOut, restorePurchase} from '../../services/UserDataAuth.js';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {NetworkContext} from '../../context/NetworkProvider.js';
+import commonService from '../../services/common.service.js';
 
 export default class Settings extends React.Component {
     static navigationOptions = {header: null};
@@ -619,8 +621,21 @@ export default class Settings extends React.Component {
                                     fontSize: 12 * factorRatio,
                                 }}
                             >
-                                APP VERSION {global.versionNumber}
+                                APP VERSION {DeviceInfo.getVersion()}
                             </Text>
+                            {commonService.rootUrl.includes('staging') && (
+                                <Text
+                                    style={{
+                                        fontFamily: 'OpenSans-Regular',
+                                        textAlign: 'center',
+                                        color: colors.secondBackground,
+                                        marginTop: 15 * factorRatio,
+                                        fontSize: 12 * factorRatio,
+                                    }}
+                                >
+                                    BUILD NUMBER {DeviceInfo.getBuildNumber()}
+                                </Text>
+                            )}
                         </ScrollView>
                     </View>
                 </View>
