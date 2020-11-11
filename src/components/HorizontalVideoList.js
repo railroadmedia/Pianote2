@@ -329,7 +329,7 @@ class HorizontalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .itemWidth,
+                                                                .itemWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .itemWidth ===
@@ -357,7 +357,7 @@ class HorizontalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .itemWidth,
+                                                                .itemWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .itemWidth ===

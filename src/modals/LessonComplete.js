@@ -164,7 +164,7 @@ class LessonComplete extends React.Component {
                                         }}
                                         source={{
                                             uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                                fullWidth * 0.55,
+                                                fullWidth * 0.55 * 2,
                                             )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`,
                                         }}
                                         resizeMode={FastImage.resizeMode.cover}
@@ -262,7 +262,7 @@ class LessonComplete extends React.Component {
                                     }}
                                     source={{
                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                            fullWidth * 0.55,
+                                            fullWidth * 0.55 * 2,
                                         )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson.getData(
                                             'thumbnail_url',
                                         )}`,

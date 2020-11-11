@@ -196,7 +196,7 @@ export default class PathOverview extends React.Component {
                             }}
                             source={{
                                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                                    greaterWDim >> 0
+                                    (greaterWDim >> 0) * 2
                                 },ar_16:9,c_fill,g_face/${
                                     this.state.data.thumbnail
                                 }`,

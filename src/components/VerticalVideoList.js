@@ -490,7 +490,7 @@ class VerticalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .imageWidth,
+                                                                .imageWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .imageWidth ===
@@ -517,7 +517,7 @@ class VerticalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .imageWidth,
+                                                                .imageWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .imageWidth ===
