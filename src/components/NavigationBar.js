@@ -14,8 +14,10 @@ import {
     NavigationActions,
     StackActions,
 } from 'react-navigation';
+import {NetworkContext} from '../context/NetworkProvider';
 
 class NavigationBar extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -93,7 +95,9 @@ class NavigationBar extends React.Component {
                     <TouchableOpacity
                         key={'lessons'}
                         onPress={() => {
-                            this.state.onMain
+                            !this.context.isConnected
+                                ? this.context.showNoConnectionAlert()
+                                : this.state.onMain
                                 ? this.props.navigation.dispatch(
                                       StackActions.reset({
                                           index: 0,
@@ -124,7 +128,9 @@ class NavigationBar extends React.Component {
                     <TouchableOpacity
                         key={'search'}
                         onPress={() => {
-                            this.state.onMain
+                            !this.context.isConnected
+                                ? this.context.showNoConnectionAlert()
+                                : this.state.onMain
                                 ? this.props.navigation.dispatch(
                                       StackActions.reset({
                                           index: 0,
@@ -178,7 +184,9 @@ class NavigationBar extends React.Component {
                     <TouchableOpacity
                         key={'profile'}
                         onPress={() => {
-                            this.state.onMain
+                            !this.context.isConnected
+                                ? this.context.showNoConnectionAlert()
+                                : this.state.onMain
                                 ? this.props.navigation.dispatch(
                                       StackActions.reset({
                                           index: 0,
