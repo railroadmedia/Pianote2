@@ -9,6 +9,8 @@ import {
     ActivityIndicator,
     TouchableOpacity,
     TouchableHighlight,
+    Platform,
+    Image,
 } from 'react-native';
 import {
     addToMyList,
@@ -23,6 +25,8 @@ import {NetworkContext} from '../context/NetworkProvider';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 
+let greaterWDim;
+
 class HorizontalVideoList extends React.Component {
     static navigationOptions = {header: null};
     static contextType = NetworkContext;
@@ -33,6 +37,7 @@ class HorizontalVideoList extends React.Component {
             items: this.props.items,
             isLoading: this.props.isLoading,
         };
+        greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
     }
 
     UNSAFE_componentWillReceiveProps = async props => {
@@ -312,19 +317,58 @@ class HorizontalVideoList extends React.Component {
                                                 alignSelf: 'stretch',
                                             }}
                                         >
-                                            <FastImage
-                                                style={{
-                                                    flex: 1,
-                                                    borderRadius:
-                                                        7.5 * factorRatio,
-                                                }}
-                                                source={{
-                                                    uri: item.thumbnail,
-                                                }}
-                                                resizeMode={
-                                                    FastImage.resizeMode.cover
-                                                }
-                                            />
+                                            {Platform.OS === 'ios' ? (
+                                                <FastImage
+                                                    style={{
+                                                        flex: 1,
+                                                        borderRadius:
+                                                            7.5 * factorRatio,
+                                                    }}
+                                                    source={{
+                                                        uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                                            this.props
+                                                                .itemWidth,
+                                                        )},ar_${
+                                                            this.props
+                                                                .itemWidth ===
+                                                            this.props
+                                                                .itemHeight
+                                                                ? '1'
+                                                                : '16:9'
+                                                        },fl_lossy,q_auto:eco,c_fill,g_face/${
+                                                            item.thumbnail
+                                                        }`,
+                                                    }}
+                                                    resizeMode={
+                                                        FastImage.resizeMode
+                                                            .cover
+                                                    }
+                                                />
+                                            ) : (
+                                                <Image
+                                                    style={{
+                                                        flex: 1,
+                                                        borderRadius:
+                                                            7.5 * factorRatio,
+                                                    }}
+                                                    resizeMode='cover'
+                                                    source={{
+                                                        uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                                            this.props
+                                                                .itemWidth,
+                                                        )},ar_${
+                                                            this.props
+                                                                .itemWidth ===
+                                                            this.props
+                                                                .itemHeight
+                                                                ? '1'
+                                                                : '16:9'
+                                                        },fl_lossy,q_auto:eco,c_fill,g_face/${
+                                                            item.thumbnail
+                                                        }`,
+                                                    }}
+                                                />
+                                            )}
                                         </View>
                                     </View>
 

@@ -159,13 +159,11 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
             }
         } else {
             // if user did not filter for types use all types except 2
-            url =
-                url +
-                '&included_types[]=course&included_types[]=song&included_types[]=unit&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
+            url = url + '&included_types[]=course&included_types[]=song&included_types[]=unit&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
         }
         // if user clicked see all on started videos
         if (type == 'continue') {
-            url = url + `required_user_states[]=started`;
+            url = url + `&required_user_states[]=started`;
         }
     } else if (contentType == 'courses') {
         // add types
@@ -178,9 +176,11 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
         // }
         //}
     }
-
     try {
-        return commonService.tryCall(url);
+        let x = await commonService.tryCall(url)
+        console.log('URL: ', url)
+        console.log(x)
+        return x;
     } catch (error) {
         console.log('Error: ', error);
         return new Error(error);

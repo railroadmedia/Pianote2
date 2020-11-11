@@ -21,7 +21,6 @@ import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import foundationsService from 'Pianote2/src/services/foundations.service.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
 import {
-    getNewContent,
     getStartedContent,
     getAllContent,
 } from '../../services/GetContent';
@@ -43,8 +42,6 @@ export default class Lessons extends React.Component {
         this.state = {
             foundations: [],
             progressLessons: [],
-            newLessons: [],
-
             allLessons: [],
             currentSort: 'newest',
             page: 1,
@@ -68,7 +65,6 @@ export default class Lessons extends React.Component {
             foundationNextLesson: null,
             showRestartCourse: false,
             lessonsStarted: true, // for showing continue lessons horizontal list
-            isLoadingNew: true, // new lessons
             isLoadingProgress: true,
         };
     }
@@ -95,7 +91,6 @@ export default class Lessons extends React.Component {
         this.getFoundations();
         messaging().requestPermission();
         this.getProgressLessons();
-        this.getNewLessons();
         this.getAllLessons();
     };
 
@@ -107,8 +102,6 @@ export default class Lessons extends React.Component {
             await foundationsService.getFoundation('foundations-2019'),
         );
 
-        console.log('RESPONSE: ', response)
-
         await AsyncStorage.multiSet([
             ['foundationsIsStarted', response.isStarted.toString()],
             ['foundationsIsCompleted', response.isCompleted.toString()],
@@ -118,55 +111,6 @@ export default class Lessons extends React.Component {
             foundationIsCompleted: response.isCompleted,
             foundationNextLesson: response.post.next_lesson,
         });
-    };
-
-    getNewLessons = async () => {
-        if (!this.context.isConnected) {
-            return this.context.showNoConnectionAlert();
-        }
-        let response = await getNewContent('');
-        const newContent = response.data.map(data => {
-            return new ContentModel(data);
-        });
-
-        try {
-            let items = [];
-            for (let i in newContent) {
-                if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                    items.push({
-                        title: newContent[i].getField('title'),
-                        artist: this.getArtist(newContent[i]),
-                        thumbnail: newContent[i].getData('thumbnail_url'),
-                        type: newContent[i].post.type,
-                        description: newContent[i]
-                            .getData('description')
-                            .replace(/(<([^>]+)>)/g, '')
-                            .replace(/&nbsp;/g, '')
-                            .replace(/&amp;/g, '&')
-                            .replace(/&#039;/g, "'")
-                            .replace(/&quot;/g, '"')
-                            .replace(/&gt;/g, '>')
-                            .replace(/&lt;/g, '<'),
-                        xp: newContent[i].post.xp,
-                        id: newContent[i].id,
-                        like_count: newContent[i].post.like_count,
-                        duration: this.getDuration(newContent[i]),
-                        isLiked: newContent[i].post.is_liked_by_current_user,
-                        isAddedToList: newContent[i].isAddedToList,
-                        isStarted: newContent[i].isStarted,
-                        isCompleted: newContent[i].isCompleted,
-                        bundle_count: newContent[i].post.bundle_count,
-                        progress_percent: newContent[i].post.progress_percent,
-                    });
-                }
-            }
-            await this.setState({
-                newLessons: [...this.state.newLessons, ...items],
-                isLoadingNew: false,
-            });
-        } catch (error) {
-            console.log('new lesson error: ', error);
-        }
     };
 
     getAllLessons = async () => {
@@ -236,7 +180,7 @@ export default class Lessons extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         try {
-            let response = await getStartedContent();
+            let response = await getStartedContent('');
             const newContent = response.data.map(data => {
                 return new ContentModel(data);
             });
@@ -806,40 +750,6 @@ export default class Lessons extends React.Component {
                                 />
                             </View>
                         )}
-                        <View
-                            key={'newLessons'}
-                            style={{
-                                minHeight: fullHeight * 0.225,
-                                paddingLeft: fullWidth * 0.035,
-                                backgroundColor: colors.mainBackground,
-                            }}
-                        >
-                            <HorizontalVideoList
-                                Title={'NEW LESSONS'}
-                                seeAll={() =>
-                                    this.props.navigation.navigate('SEEALL', {
-                                        title: 'New Lessons',
-                                        parent: 'Lessons',
-                                    })
-                                }
-                                showArtist={true}
-                                showType={true}
-                                isLoading={this.state.isLoadingNew}
-                                items={this.state.newLessons}
-                                itemWidth={
-                                    isNotch
-                                        ? fullWidth * 0.6
-                                        : onTablet
-                                        ? fullWidth * 0.425
-                                        : fullWidth * 0.55
-                                }
-                                itemHeight={
-                                    isNotch
-                                        ? fullHeight * 0.155
-                                        : fullHeight * 0.175
-                                }
-                            />
-                        </View>
                         <View style={{height: 5 * factorRatio}} />
                         {!this.state.filtering && (
                             <VerticalVideoList

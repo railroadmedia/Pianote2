@@ -254,15 +254,9 @@ export default class StudentFocusShow extends React.Component {
                             style={[
                                 styles.centerContent,
                                 {
-                                    height:
-                                        Platform.OS == 'android'
-                                            ? fullHeight * 0.1
-                                            : isNotch
-                                            ? fullHeight * 0.12
-                                            : fullHeight * 0.055,
+                                    top: isNotch ? 50 * factorVertical : 30 * factorVertical,
                                     width: fullWidth,
                                     position: 'absolute',
-                                    top: 0,
                                     zIndex: 5,
                                 },
                             ]}

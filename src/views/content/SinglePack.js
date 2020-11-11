@@ -31,6 +31,7 @@ import {
 } from 'Pianote2/src/services/UserActions.js';
 import {NetworkContext} from '../../context/NetworkProvider';
 
+let greaterWDim;
 export default class SinglePack extends React.Component {
     static navigationOptions = {header: null};
     static contextType = NetworkContext;
@@ -51,6 +52,7 @@ export default class SinglePack extends React.Component {
             nextLessonUrl: '',
             isLoadingAll: true,
         };
+        greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
     }
 
     componentDidMount = () => {
@@ -252,7 +254,13 @@ export default class SinglePack extends React.Component {
                             />
                             <FastImage
                                 style={{flex: 1}}
-                                source={{uri: this.state.thumbnail}}
+                                source={{
+                                    uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                                        greaterWDim >> 0
+                                    },ar_16:9,c_fill,g_face/${
+                                        this.state.thumbnail
+                                    }`,
+                                }}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
                             <View

@@ -168,9 +168,7 @@ export default class NewMembership extends React.Component {
                             {
                                 position: 'absolute',
                                 left: 17.5 * factorHorizontal,
-                                top: isNotch
-                                    ? 50 * factorVertical
-                                    : 30 * factorVertical,
+                                top: isNotch ? 50 * factorVertical : 30 * factorVertical,
                                 height: 50 * factorRatio,
                                 width: 50 * factorRatio,
                                 zIndex: 10,

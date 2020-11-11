@@ -25,6 +25,7 @@ import {resetProgress} from 'Pianote2/src/services/UserActions.js';
 import packsService from '../../services/packs.service';
 import {NetworkContext} from '../../context/NetworkProvider';
 
+let greaterWDim;
 export default class Packs extends React.Component {
     static navigationOptions = {header: null};
     static contextType = NetworkContext;
@@ -42,6 +43,7 @@ export default class Packs extends React.Component {
             isLoading: true,
             showRestartCourse: false,
         };
+        greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
     }
 
     componentDidMount = () => {
@@ -203,7 +205,9 @@ export default class Packs extends React.Component {
                                         alignSelf: 'center',
                                     }}
                                     source={{
-                                        uri: this.state.headerPackLogo,
+                                        uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
+                                            fullWidth,
+                                        )}/${this.state.headerPackLogo}`,
                                     }}
                                     resizeMode={FastImage.resizeMode.contain}
                                 />
@@ -363,7 +367,9 @@ export default class Packs extends React.Component {
                                             alignSelf: 'stretch',
                                         }}
                                         source={{
-                                            uri: item.logo,
+                                            uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                                                ((0.9 * greaterWDim) / 3) >> 0
+                                            }/${item.logo}`,
                                         }}
                                         resizeMode={
                                             FastImage.resizeMode.contain
@@ -384,7 +390,9 @@ export default class Packs extends React.Component {
                                     alignSelf: 'stretch',
                                 }}
                                 source={{
-                                    uri: item.thumbnail,
+                                    uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,c_thumb,w_${
+                                        (greaterWDim / 3) >> 0
+                                    },ar_0.7/${item.thumbnail}`,
                                 }}
                                 resizeMode={FastImage.resizeMode.cover}
                             />
