@@ -110,7 +110,6 @@ export default class PathOverview extends React.Component {
         } else {
             res = await addToMyList(this.state.data.id);
         }
-        console.log(res);
     };
 
     toggleLike = () => {
@@ -197,7 +196,7 @@ export default class PathOverview extends React.Component {
                             }}
                             source={{
                                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                                    greaterWDim >> 0
+                                    (greaterWDim >> 0) * 2
                                 },ar_16:9,c_fill,g_face/${
                                     this.state.data.thumbnail
                                 }`,
@@ -492,65 +491,58 @@ export default class PathOverview extends React.Component {
                                     style={[
                                         styles.centerContent,
                                         {
-                                            flex: 0.22,
                                             flexDirection: 'row',
                                         },
                                     ]}
                                 >
                                     <View
-                                        style={{
-                                            flex: 1,
-                                            alignSelf: 'stretch',
-                                        }}
-                                    />
-                                    <View
                                         style={[
                                             styles.centerContent,
                                             {
-                                                width: 70 * factorRatio,
+                                                flex: 1,
+                                                alignItems: 'flex-end',
                                             },
                                         ]}
                                     >
                                         <Text
                                             style={{
-                                                fontWeight: '700',
                                                 fontSize: 17 * factorRatio,
-                                                textAlign: 'left',
+                                                textAlign: 'center',
                                                 color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans-Bold',
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
                                             {this.state.items.length}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                fontSize: 13 * factorRatio,
-                                                textAlign: 'left',
-                                                color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
-                                                marginTop: 10 * factorVertical,
-                                            }}
-                                        >
-                                            LESSONS
+                                            {`\n`}
+                                            <Text
+                                                style={{
+                                                    fontSize: 13 * factorRatio,
+                                                    textAlign: 'center',
+                                                    color: 'white',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
+                                                    marginTop:
+                                                        10 * factorVertical,
+                                                }}
+                                            >
+                                                LESSONS
+                                            </Text>
                                         </Text>
                                     </View>
-                                    <View style={{width: 15 * factorRatio}} />
                                     <View
                                         style={[
                                             styles.centerContent,
                                             {
-                                                width: 70 * factorRatio,
+                                                flex: 1,
                                             },
                                         ]}
                                     >
                                         <Text
                                             style={{
-                                                fontWeight: '700',
                                                 fontSize: 17 * factorRatio,
-                                                textAlign: 'left',
                                                 color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans-Bold',
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
@@ -561,7 +553,6 @@ export default class PathOverview extends React.Component {
                                         <Text
                                             style={{
                                                 fontSize: 13 * factorRatio,
-                                                textAlign: 'left',
                                                 color: 'white',
                                                 fontFamily: 'OpenSans-Regular',
                                                 marginTop: 10 * factorVertical,
@@ -570,95 +561,84 @@ export default class PathOverview extends React.Component {
                                             MINS
                                         </Text>
                                     </View>
-                                    <View style={{width: 15 * factorRatio}} />
                                     <View
                                         style={[
                                             styles.centerContent,
                                             {
-                                                width: 70 * factorRatio,
+                                                flex: 1,
+                                                alignItems: 'flex-start',
                                             },
                                         ]}
                                     >
                                         <Text
                                             style={{
-                                                fontWeight: '700',
                                                 fontSize: 17 * factorRatio,
-                                                textAlign: 'left',
+                                                textAlign: 'center',
                                                 color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
+                                                fontFamily: 'OpenSans-Bold',
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
                                             {this.state.data.xp}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                fontSize: 13 * factorRatio,
-                                                textAlign: 'left',
-                                                color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
-                                                marginTop: 10 * factorVertical,
-                                            }}
-                                        >
-                                            XP
+                                            {`\n`}
+                                            <Text
+                                                style={{
+                                                    fontSize: 13 * factorRatio,
+                                                    textAlign: 'center',
+                                                    color: 'white',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
+                                                    marginTop:
+                                                        10 * factorVertical,
+                                                }}
+                                            >
+                                                XP
+                                            </Text>
                                         </Text>
                                     </View>
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignSelf: 'stretch',
-                                        }}
-                                    />
                                 </View>
-                                <View style={{height: 15 * factorVertical}} />
                                 <View
                                     key={'buttons'}
                                     style={[
                                         styles.centerContent,
                                         {
-                                            flex: 0.25,
                                             flexDirection: 'row',
+                                            marginTop: 15 * factorVertical,
                                         },
                                     ]}
                                 >
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignSelf: 'stretch',
-                                        }}
-                                    />
                                     <TouchableOpacity
                                         onPress={() => this.toggleLike()}
                                         style={[
                                             styles.centerContent,
                                             {
-                                                width: 70 * factorRatio,
+                                                flex: 1,
+                                                alignItems: 'flex-end',
                                             },
                                         ]}
                                     >
-                                        <View style={{flex: 1}} />
-                                        <AntIcon
-                                            name={
-                                                this.state.isLiked
-                                                    ? 'like1'
-                                                    : 'like2'
-                                            }
-                                            size={27.5 * factorRatio}
-                                            color={colors.pianoteRed}
-                                        />
                                         <Text
                                             style={{
                                                 fontSize: 13 * factorRatio,
-                                                textAlign: 'left',
+                                                textAlign: 'center',
                                                 color: 'white',
                                                 fontFamily: 'OpenSans-Regular',
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
+                                            <AntIcon
+                                                name={
+                                                    this.state.isLiked
+                                                        ? 'like1'
+                                                        : 'like2'
+                                                }
+                                                size={27.5 * factorRatio}
+                                                color={colors.pianoteRed}
+                                            />
+                                            {`\n`}
                                             {this.state.likeCount}
                                         </Text>
                                     </TouchableOpacity>
-                                    <View style={{width: 15 * factorRatio}} />
                                     <Download_V2
                                         entity={{
                                             id: this.state.data.id,
@@ -702,7 +682,6 @@ export default class PathOverview extends React.Component {
                                             },
                                         }}
                                     />
-                                    <View style={{width: 15 * factorRatio}} />
                                     <TouchableOpacity
                                         onPress={() => {
                                             this.setState({
@@ -712,34 +691,29 @@ export default class PathOverview extends React.Component {
                                         style={[
                                             styles.centerContent,
                                             {
-                                                width: 70 * factorRatio,
+                                                flex: 1,
+                                                alignItems: 'flex-start',
                                             },
                                         ]}
                                     >
-                                        <View style={{flex: 1}} />
-                                        <MaterialIcon
-                                            name={'replay'}
-                                            size={27.5 * factorRatio}
-                                            color={colors.pianoteRed}
-                                        />
                                         <Text
                                             style={{
                                                 fontSize: 13 * factorRatio,
-                                                textAlign: 'left',
+                                                textAlign: 'center',
                                                 color: 'white',
                                                 fontFamily: 'OpenSans-Regular',
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
+                                            <MaterialIcon
+                                                name={'replay'}
+                                                size={27.5 * factorRatio}
+                                                color={colors.pianoteRed}
+                                            />
+                                            {`\n`}
                                             Restart
                                         </Text>
                                     </TouchableOpacity>
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignSelf: 'stretch',
-                                        }}
-                                    />
                                 </View>
                                 <View style={{height: 30 * factorVertical}} />
                             </View>

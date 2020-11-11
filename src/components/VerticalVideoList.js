@@ -251,6 +251,8 @@ class VerticalVideoList extends React.Component {
     };
 
     navigate = (content, index) => {
+        if (!this.context.isConnected)
+            return this.context.showNoConnectionAlert();
         if (this.props.navigator) return this.props.navigator(content, index);
         switch (content.type) {
             case 'course':
@@ -488,7 +490,7 @@ class VerticalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .imageWidth,
+                                                                .imageWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .imageWidth ===
@@ -515,7 +517,7 @@ class VerticalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .imageWidth,
+                                                                .imageWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .imageWidth ===

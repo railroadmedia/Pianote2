@@ -256,7 +256,7 @@ export default class SinglePack extends React.Component {
                                 style={{flex: 1}}
                                 source={{
                                     uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                                        greaterWDim >> 0
+                                        (greaterWDim >> 0) * 2
                                     },ar_16:9,c_fill,g_face/${
                                         this.state.thumbnail
                                     }`,

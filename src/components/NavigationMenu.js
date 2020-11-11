@@ -6,8 +6,10 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {withNavigation} from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
+import {NetworkContext} from '../context/NetworkProvider';
 
 class NavigationMenu extends React.Component {
+    static contextType = NetworkContext;
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
@@ -47,6 +49,8 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
+                            if (!this.context.isConnected)
+                                return this.context.showNoConnectionAlert();
                             this.props.onClose(false);
                             this.props.navigation.navigate('LESSONS');
                         }}
@@ -86,13 +90,15 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false),
-                                this.props.navigation.navigate('FOUNDATIONS', {
-                                    foundationIsStarted: this.state
-                                        .foundationIsStarted,
-                                    foundationIsCompleted: this.state
-                                        .foundationIsCompleted,
-                                });
+                            if (!this.context.isConnected)
+                                return this.context.showNoConnectionAlert();
+                            this.props.onClose(false);
+                            this.props.navigation.navigate('FOUNDATIONS', {
+                                foundationIsStarted: this.state
+                                    .foundationIsStarted,
+                                foundationIsCompleted: this.state
+                                    .foundationIsCompleted,
+                            });
                         }}
                         style={{flex: 1}}
                     >
@@ -131,8 +137,10 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false),
-                                this.props.navigation.navigate('COURSE');
+                            if (!this.context.isConnected)
+                                return this.context.showNoConnectionAlert();
+                            this.props.onClose(false);
+                            this.props.navigation.navigate('COURSE');
                         }}
                         style={{flex: 1}}
                     >
@@ -170,8 +178,10 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false),
-                                this.props.navigation.navigate('SONGCATALOG');
+                            if (!this.context.isConnected)
+                                return this.context.showNoConnectionAlert();
+                            this.props.onClose(false);
+                            this.props.navigation.navigate('SONGCATALOG');
                         }}
                         style={{flex: 1}}
                     >
@@ -209,10 +219,12 @@ class NavigationMenu extends React.Component {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            this.props.onClose(false),
-                                this.props.navigation.navigate(
-                                    'STUDENTFOCUSCATALOG',
-                                );
+                            if (!this.context.isConnected)
+                                return this.context.showNoConnectionAlert();
+                            this.props.onClose(false);
+                            this.props.navigation.navigate(
+                                'STUDENTFOCUSCATALOG',
+                            );
                         }}
                         style={{flex: 1}}
                     >

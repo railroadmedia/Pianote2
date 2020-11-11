@@ -152,7 +152,6 @@ export default class VideoPlayer extends React.Component {
                     ),
                 ]);
             }
-
             if (result[0].title && result[0].message) {
                 return this.alert.toggle(result[0].title, result[0].message);
             }
@@ -212,12 +211,13 @@ export default class VideoPlayer extends React.Component {
         let rl = [];
         if (relatedLessons) {
             for (let i in relatedLessons) {
-                let duration =
-                    relatedLessons[i].fields?.find('video').length > 0
-                        ? new ContentModel(
-                              relatedLessons[i].getFieldMulti('video')[0],
-                          )?.getField('length_in_seconds')
-                        : 0;
+                let duration = relatedLessons[i].post.fields?.find(
+                    f => f.key === 'video',
+                )
+                    ? new ContentModel(
+                          relatedLessons[i].getFieldMulti('video')[0],
+                      )?.getField('length_in_seconds')
+                    : 0;
                 rl.push({
                     title: relatedLessons[i].getField('title'),
                     thumbnail: relatedLessons[i].getData('thumbnail_url'),
@@ -400,18 +400,29 @@ export default class VideoPlayer extends React.Component {
     };
 
     switchLesson(id, url) {
-        this.setState(
-            {
-                id,
-                url,
-                isLoadingAll: true,
-                assignmentList: [],
-                relatedLessons: [],
-                resources: null,
-                selectedAssignment: null,
-            },
-            () => this.getContent(),
-        );
+        setState = () =>
+            this.setState(
+                {
+                    id,
+                    url,
+                    isLoadingAll: true,
+                    assignmentList: [],
+                    relatedLessons: [],
+                    resources: null,
+                    selectedAssignment: null,
+                },
+                () => this.getContent(),
+            );
+        if (!this.context.isConnected)
+            if (
+                offlineContent[id]?.lesson ||
+                offlineContent[
+                    this.props.navigation.state.params.parentId
+                ]?.overview.lessons.find(l => l.id === id)
+            )
+                setState();
+            else this.context.showNoConnectionAlert();
+        else setState();
     }
 
     likeComment = async id => {
@@ -829,7 +840,6 @@ export default class VideoPlayer extends React.Component {
         if (!this.state.isStarted) {
             let res = await markStarted(this.state.id);
             this.setState({isStarted: true});
-            console.log(res);
         }
     }
 

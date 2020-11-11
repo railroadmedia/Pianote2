@@ -236,7 +236,9 @@ class HorizontalVideoList extends React.Component {
                                     }}
                                     delayLongPress={350}
                                     onPress={() =>
-                                        item.type === 'course'
+                                        !this.context.isConnected
+                                            ? this.context.showNoConnectionAlert()
+                                            : item.type === 'course'
                                             ? this.props.navigation.navigate(
                                                   'PATHOVERVIEW',
                                                   {
@@ -327,7 +329,7 @@ class HorizontalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .itemWidth,
+                                                                .itemWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .itemWidth ===
@@ -355,7 +357,7 @@ class HorizontalVideoList extends React.Component {
                                                     source={{
                                                         uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                                                             this.props
-                                                                .itemWidth,
+                                                                .itemWidth * 2,
                                                         )},ar_${
                                                             this.props
                                                                 .itemWidth ===

@@ -180,7 +180,7 @@ export default class Packs extends React.Component {
                                 }}
                                 source={{
                                     uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                                        fullWidth,
+                                        fullWidth * 2,
                                     )},ar_2,c_fill,g_face/${
                                         this.state.headerPackImg
                                     }`,
@@ -206,7 +206,7 @@ export default class Packs extends React.Component {
                                     }}
                                     source={{
                                         uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
-                                            fullWidth,
+                                            fullWidth * 2,
                                         )}/${this.state.headerPackLogo}`,
                                     }}
                                     resizeMode={FastImage.resizeMode.contain}
@@ -368,7 +368,9 @@ export default class Packs extends React.Component {
                                         }}
                                         source={{
                                             uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                                                ((0.9 * greaterWDim) / 3) >> 0
+                                                (((0.9 * greaterWDim) / 3) >>
+                                                    0) *
+                                                2
                                             }/${item.logo}`,
                                         }}
                                         resizeMode={
@@ -391,7 +393,7 @@ export default class Packs extends React.Component {
                                 }}
                                 source={{
                                     uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,c_thumb,w_${
-                                        (greaterWDim / 3) >> 0
+                                        ((greaterWDim / 3) >> 0) * 2
                                     },ar_0.7/${item.thumbnail}`,
                                 }}
                                 resizeMode={FastImage.resizeMode.cover}
