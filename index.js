@@ -12,7 +12,11 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 var PushNotification = require('react-native-push-notification');
 
 import NavigationService from './src/services/navigation.service';
-import {localNotification, notif} from './src/services/notification.service';
+import {
+    localNotification,
+    notif,
+    showNotification,
+} from './src/services/notification.service';
 
 localNotification();
 PushNotification.configure({
@@ -25,17 +29,33 @@ PushNotification.configure({
     requestPermissions: false,
     popInitialNotification: true,
     permissions: {alert: true, sound: true},
-    onNotification: function ({data: {commentId, mobile_app_url}, finish}) {
-        if (token)
-            NavigationService.navigate('VIDEOPLAYER', {
-                commentId,
-                url: mobile_app_url,
-            });
-        else {
+    onNotification: function ({
+        data: {commentId, mobile_app_url, image},
+        finish,
+        userInteraction,
+        title,
+        message,
+        id,
+    }) {
+        if (token) {
+            if (isiOS || (!isiOS && userInteraction)) {
+                NavigationService.navigate('VIDEOPLAYER', {
+                    commentId,
+                    url: mobile_app_url,
+                });
+            } else {
+                showNotification({
+                    notification: {body: message, title},
+                    data: {commentId, mobile_app_url, image},
+                    messageId: id,
+                });
+            }
+        } else {
             notif.commentId = commentId;
             notif.lessonUrl = mobile_app_url;
         }
-        finish(PushNotificationIOS?.FetchResult?.NoData);
+        if (isiOS) finish(PushNotificationIOS?.FetchResult?.NoData);
+        else finish();
     },
 });
 

@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     FlatList,
+    Linking,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -293,6 +294,10 @@ export default class Profile extends React.Component {
                 comment: notification.comment,
                 url: notification.content.mobile_app_url,
             });
+        } else {
+            Linking.openURL(
+                `${commonService.rootUrl}/members/forums/632?page=1#post${notification.data.postId}`,
+            );
         }
     };
 

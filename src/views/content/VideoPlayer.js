@@ -134,7 +134,10 @@ export default class VideoPlayer extends React.Component {
                 result = await Promise.all([
                     foundationsService.getUnitLesson(this.state.url),
                     commentsService.getComments(
-                        this.state.id,
+                        this.state.id ||
+                            this.state.url.substr(
+                                this.state.url.lastIndexOf('/') + 1,
+                            ),
                         this.state.commentSort,
                         this.limit,
                     ),
@@ -301,10 +304,9 @@ export default class VideoPlayer extends React.Component {
                         selectedComment: comment,
                     });
                 } else if (commentId) {
-                    const selectedComment = this.state.comments.find(
+                    const selectedComment = comments.find(
                         f => f.id == commentId,
                     );
-
                     if (selectedComment) {
                         this.setState({
                             showReplies: true,
