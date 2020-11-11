@@ -177,6 +177,7 @@ export default class Downloads extends React.Component {
                             let type = item.lesson ? 'lesson' : 'overview';
                             return (
                                 <TouchableOpacity
+                                    disabled={!!item.dlding.length}
                                     onPress={() => this.navigate(item)}
                                     style={{
                                         padding: 5,
@@ -237,6 +238,19 @@ export default class Downloads extends React.Component {
                                             MB
                                         </Text>
                                     </View>
+                                    {!!item.dlding.length && (
+                                        <View
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                bottom: 0,
+                                                backgroundColor:
+                                                    'rgba(255,255,255,.2)',
+                                            }}
+                                        />
+                                    )}
                                     {!item.dlding.length && !edit ? (
                                         <View
                                             style={{justifyContent: 'center'}}
