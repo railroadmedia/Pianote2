@@ -184,7 +184,7 @@ export default class Search extends React.Component {
                 this.state.page,
                 this.state.filters,
             );
-            console.log(response);
+
             if (response.data.length == 0) {
                 this.setState({
                     searchEntered: false,
@@ -227,7 +227,6 @@ export default class Search extends React.Component {
                         progress_percent: newContent[i].post.progress_percent,
                     });
                 }
-                console.log(items);
 
                 this.setState({
                     searchResults: [...this.state.searchResults, ...items],

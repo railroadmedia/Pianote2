@@ -27,9 +27,11 @@ export async function getAllContent(type, sort, page, filtersDict) {
         }
     }
     for (i in filtersDict.progress) {
+        if(filtersDict.progress[i] !== 'all') {
         required_user_states =
             required_user_states +
             `required_user_states[]=${filtersDict.progress[i]}`;
+        }
     }
 
     if (sort == 'newest') {
