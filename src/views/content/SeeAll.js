@@ -54,7 +54,6 @@ export default class SeeAll extends React.Component {
     }
 
     async componentDidMount() {
-        console.log(this.state.title, this.state.parent);
         this.getAllLessons();
     }
 
@@ -97,12 +96,12 @@ export default class SeeAll extends React.Component {
                 this.state.filters,
             );
         }
-
+        
         const newContent = await response.data.map(data => {
             return new ContentModel(data);
         });
-        console.log(newContent);
-        let items = [];
+        
+        items = [];
         for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
@@ -121,10 +120,10 @@ export default class SeeAll extends React.Component {
                         .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
+                    duration: i,
+                    like_count: newContent[i].post.like_count,
                     mobile_app_url: newContent[i].post.mobile_app_url,
                     currentLessonId: newContent[i].post?.current_lesson?.id,
-                    like_count: newContent[i].post.like_count,
-                    duration: i,
                     isLiked: newContent[i].post.is_liked_by_current_user,
                     isAddedToList: newContent[i].isAddedToList,
                     isStarted: newContent[i].isStarted,
@@ -133,12 +132,12 @@ export default class SeeAll extends React.Component {
                     progress_percent: newContent[i].post.progress_percent,
                 });
             }
-        }
+        }      
 
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos:
-                items.length == 0 || response.data.length < 20 ? true : false,
+            outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+            page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
             isPaging: false,
@@ -167,6 +166,7 @@ export default class SeeAll extends React.Component {
     };
 
     getArtist = newContent => {
+        
         if (newContent.post.type == 'song') {
             if (typeof newContent.post.artist !== 'undefined') {
                 return newContent.post.artist;
@@ -202,6 +202,14 @@ export default class SeeAll extends React.Component {
             }
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    getVideos = async () => {
+        // change page before getting more lessons if paging
+        if (!this.state.outVideos) {
+            await this.setState({page: this.state.page + 1});
+            this.getAllLessons();
         }
     };
 

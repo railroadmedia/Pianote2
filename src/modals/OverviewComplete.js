@@ -14,6 +14,23 @@ class OverviewComplete extends React.Component {
         this.state = {};
     }
 
+    changeType = word => {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+        let string = '';
+
+        for (let i = 0; i < word.length; i++) {
+            if (word[i] !== 'and') {
+                word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+            }
+        }
+
+        for (i in word) {
+            string = string + word[i] + ' ';
+        }
+
+        return string;
+    };
+
     render = () => {
         return (
             <BlurView style={{flex: 1}} blurAmount={5}>
@@ -63,7 +80,7 @@ class OverviewComplete extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                {this.props.type.toUpperCase()}
+                                {this.changeType(this.props.type).toUpperCase()}
                                 {'\n'}Complete
                             </Text>
                         </View>

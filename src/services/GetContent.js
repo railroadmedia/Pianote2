@@ -178,8 +178,6 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
     }
     try {
         let x = await commonService.tryCall(url)
-        console.log('URL: ', url)
-        console.log(x)
         return x;
     } catch (error) {
         console.log('Error: ', error);

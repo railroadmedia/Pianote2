@@ -18,6 +18,23 @@ class RestartCourse extends React.Component {
         this.state = {};
     }
 
+    changeType = word => {
+        word = word.replace(/[- )(]/g, ' ').split(' ');
+        let string = '';
+
+        for (let i = 0; i < word.length; i++) {
+            if (word[i] !== 'and') {
+                word[i] = word[i][0].toUpperCase() + word[i].substr(1);
+            }
+        }
+
+        for (i in word) {
+            string = string + word[i] + ' ';
+        }
+
+        return string;
+    };
+
     render = () => {
         const {type} = this.props;
         return (
@@ -89,7 +106,7 @@ class RestartCourse extends React.Component {
                                     Restart{' '}
                                     {type == 'foundations'
                                         ? 'foundations'
-                                        : 'this ' + type}
+                                        : 'this ' + this.changeType(type)}
                                     ?
                                 </Text>
                             </View>
@@ -164,7 +181,7 @@ class RestartCourse extends React.Component {
                                                 fontSize: 14 * factorRatio,
                                             }}
                                         >
-                                            RESTART {type.toUpperCase()}
+                                            RESTART {this.changeType(type).toUpperCase()}
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
