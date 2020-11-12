@@ -52,6 +52,7 @@ export default class PathOverview extends React.Component {
             showRestartCourse: false,
             nextLesson: 0,
             isLoadingAll: true,
+            difficulty: 0,
         };
         greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
     }
@@ -75,6 +76,7 @@ export default class PathOverview extends React.Component {
                 started: r.started,
                 completed: r.completed,
                 nextLesson: r.next_lesson.id,
+                difficulty: r.fields.find(f => f.key === 'difficulty').value,
                 isLoadingAll: false,
                 items:
                     r?.lessons?.map(l => {
@@ -146,6 +148,21 @@ export default class PathOverview extends React.Component {
             this.getItems();
         });
     };
+
+    formatDifficulty() {
+        const {difficulty} = this.state;
+        try {
+            let text = '';
+            difficulty < 5
+                ? (text = 'BEGINNER ' + difficulty)
+                : difficulty < 8
+                ? (text = 'INTERMEDIATE ' + difficulty)
+                : (text = 'ADVANCED ' + difficulty);
+            return text;
+        } catch (e) {
+            return '';
+        }
+    }
 
     render() {
         return (
@@ -292,8 +309,9 @@ export default class PathOverview extends React.Component {
                                     fontSize: 14 * factorRatio,
                                 }}
                             >
-                                {this.state.data.artist.toUpperCase()} | LEVEL{' '}
-                                {this.state.level} | {this.state.data.xp}XP
+                                {this.state.data.artist.toUpperCase()} |{' '}
+                                {this.formatDifficulty()} | {this.state.data.xp}{' '}
+                                XP
                             </Text>
                         </View>
                         <View style={{height: 20 * factorVertical}} />

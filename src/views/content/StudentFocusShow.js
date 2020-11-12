@@ -75,8 +75,8 @@ export default class StudentFocusShow extends React.Component {
             return new ContentModel(data);
         });
 
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 console.log(
                     'INSTRUCTORL ',
@@ -254,7 +254,9 @@ export default class StudentFocusShow extends React.Component {
                             style={[
                                 styles.centerContent,
                                 {
-                                    top: isNotch ? 50 * factorVertical : 30 * factorVertical,
+                                    top: isNotch
+                                        ? 50 * factorVertical
+                                        : 30 * factorVertical,
                                     width: fullWidth,
                                     position: 'absolute',
                                     zIndex: 5,

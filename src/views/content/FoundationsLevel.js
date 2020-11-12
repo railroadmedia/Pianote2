@@ -74,6 +74,7 @@ export default class FoundationsLevel extends React.Component {
                 items.push({
                     title: newContent[i].getField('title'),
                     thumbnail: newContent[i].getData('thumbnail_url'),
+                    type: newContent[i].type,
                     id: newContent[i].id,
                     isAddedToList: newContent[i].isAddedToList,
                     isStarted: newContent[i].isStarted,

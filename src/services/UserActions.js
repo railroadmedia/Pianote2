@@ -43,7 +43,12 @@ export async function resetProgress(contentID) {
 
 export async function markComplete(contentID) {
     try {
-        return commonService.tryCall(`${commonService.rootUrl}/api/complete?content_id=${contentID}&device_type=${Platform.OS === 'ios' ? 'ios' : 'android'}`,
+        return commonService.tryCall(
+            `${
+                commonService.rootUrl
+            }/api/complete?content_id=${contentID}&device_type=${
+                Platform.OS === 'ios' ? 'ios' : 'android'
+            }`,
             'PUT',
         );
     } catch (error) {
@@ -54,24 +59,16 @@ export async function markComplete(contentID) {
 
 export async function markStarted(contentID) {
     try {
-        return commonService.tryCall(`${commonService.rootUrl}/api/railcontent/start?content_id=${contentID}&device_type=${Platform.OS === 'ios' ? 'ios' : 'android'}`,
+        return commonService.tryCall(
+            `${
+                commonService.rootUrl
+            }/api/railcontent/start?content_id=${contentID}&device_type=${
+                Platform.OS === 'ios' ? 'ios' : 'android'
+            }`,
             'PUT',
         );
     } catch (error) {
         console.log('ERROR MARKING AS STARTED: ', error);
-        return new Error(error);
-    }
-}
-
-export async function updateUsersVideoProgress(id, seconds, lengthInSeconds) {
-    try {
-        let response = await commonService.tryCall(
-            `${commonService.rootUrl}/api/media/${id}?seconds_played=${seconds}&current_second=${seconds}&length_in_seconds=${lengthInSeconds}`,
-            'PUT',
-        );
-        console.log('UPDATE VIDEO PROGRESS: ', response);
-    } catch (error) {
-        console.log('ERROR UPDATING PROGRESS: ', error);
         return new Error(error);
     }
 }
@@ -93,4 +90,22 @@ export async function updateUserDetails(picture, name, phoneNr, firebaseToken) {
             Platform.OS === 'ios' ? 'ios' : 'android'
         }=${firebaseToken}`;
     return commonService.tryCall(reqUrl, 'POST');
+}
+
+export async function getMediaSessionId(
+    id,
+    content_id,
+    length_in_seconds,
+    media_category,
+) {
+    return commonService.tryCall(
+        `${commonService.rootUrl}/api/media?media_category=${media_category}&media_id=${id}&content_id=${content_id}&media_length_seconds=${length_in_seconds}&media_type=video`,
+        'PUT',
+    );
+}
+export async function updateUsersVideoProgress(id, seconds, lengthInSeconds) {
+    return commonService.tryCall(
+        `${commonService.rootUrl}/api/media/${id}?seconds_played=${seconds}&current_second=${seconds}&length_in_seconds=${lengthInSeconds}`,
+        'PUT',
+    );
 }

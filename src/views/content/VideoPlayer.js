@@ -51,6 +51,10 @@ import foundationsService from '../../services/foundations.service.js';
 import {NetworkContext} from '../../context/NetworkProvider';
 import CustomModal from '../../modals/CustomModal.js';
 import {RefreshControl} from 'react-native';
+import {
+    getMediaSessionId,
+    updateUsersVideoProgress,
+} from '../../services/UserActions.js';
 
 export default class VideoPlayer extends React.Component {
     static contextType = NetworkContext;
@@ -87,6 +91,7 @@ export default class VideoPlayer extends React.Component {
 
             relatedLessons: [],
             likes: 0,
+            videoId: 0,
             isStarted: false,
             isLiked: false,
             isAddedToMyList: false,
@@ -239,7 +244,9 @@ export default class VideoPlayer extends React.Component {
                 id: content.id,
                 url: content.post.mobile_app_url,
                 type: content.type,
-
+                videoId: new ContentModel(
+                    content.getFieldMulti('video')[0],
+                )?.getField('vimeo_video_id'),
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
                 description: content
@@ -251,7 +258,7 @@ export default class VideoPlayer extends React.Component {
                     .replace(/&quot;/g, '"')
                     .replace(/&gt;/g, '>')
                     .replace(/&lt;/g, '<'),
-                xp: content.xp,
+                xp: content.post.total_xp,
                 artist: content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),
                 isLoadingAll: false,
@@ -1040,9 +1047,6 @@ export default class VideoPlayer extends React.Component {
                             onFullscreen={() => {}}
                             ref={r => (this.video = r)}
                             type={false ? 'audio' : 'video'}
-                            onUpdateVideoProgress={() => {
-                                this.state.isStarted ? null : this.onStart();
-                            }}
                             connection={this.context.isConnected}
                             onBack={this.props.navigation.goBack}
                             showControls={true}
@@ -1060,6 +1064,32 @@ export default class VideoPlayer extends React.Component {
                                         .mobile_app_url,
                                 )
                             }
+                            onUpdateVideoProgress={async (
+                                videoId,
+                                id,
+                                lengthInSec,
+                                currentTime,
+                            ) => {
+                                if (this.context.isConnected) {
+                                    if (!this.sessionId)
+                                        try {
+                                            this.sessionId = (
+                                                await getMediaSessionId(
+                                                    videoId,
+                                                    id,
+                                                    lengthInSec,
+                                                    'vimeo',
+                                                )
+                                            ).session_id.id;
+                                        } catch (e) {}
+
+                                    updateUsersVideoProgress(
+                                        this.sessionId,
+                                        currentTime,
+                                        lengthInSec,
+                                    );
+                                }
+                            }}
                             styles={{
                                 timerCursorBackground: colors.pianoteRed,
                                 beforeTimerCursorBackground: colors.pianoteRed,

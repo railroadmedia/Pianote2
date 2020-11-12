@@ -64,8 +64,8 @@ export default class MyList extends React.Component {
 
         console.log(newContent);
 
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
@@ -83,6 +83,8 @@ export default class MyList extends React.Component {
                         .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
+                    mobile_app_url: newContent[i].post.mobile_app_url,
+                    currentLessonId: newContent[i].post?.current_lesson?.id,
                     like_count: newContent[i].post.like_count,
                     duration: i,
                     isLiked: newContent[i].post.is_liked_by_current_user,

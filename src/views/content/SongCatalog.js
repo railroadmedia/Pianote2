@@ -68,8 +68,8 @@ export default class SongCatalog extends React.Component {
             return new ContentModel(data);
         });
 
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
@@ -86,9 +86,8 @@ export default class SongCatalog extends React.Component {
                         .replace(/&gt;/g, '>')
                         .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
-                    id:
-                        newContent[i].post.current_lesson?.id ||
-                        newContent[i].post.id,
+                    id: newContent[i].post.id,
+                    currentLessonId: newContent[i].post?.current_lesson?.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].post.is_liked_by_current_user,
@@ -120,8 +119,8 @@ export default class SongCatalog extends React.Component {
             return new ContentModel(data);
         });
 
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
@@ -138,9 +137,8 @@ export default class SongCatalog extends React.Component {
                         .replace(/&gt;/g, '>')
                         .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
-                    id:
-                        newContent[i].post.current_lesson.id ||
-                        newContent[i].post.id,
+                    id: newContent[i].post.id,
+                    currentLessonId: newContent[i].post?.current_lesson?.id,
                     like_count: newContent[i].post.like_count,
                     duration: this.getDuration(newContent[i]),
                     isLiked: newContent[i].post.is_liked_by_current_user,
@@ -155,7 +153,10 @@ export default class SongCatalog extends React.Component {
 
         this.setState({
             progressSongs: [...this.state.progressSongs, ...items],
-            started: items.length == 0 && this.state.progressSongs.length == 0 ? false : true,
+            started:
+                items.length == 0 && this.state.progressSongs.length == 0
+                    ? false
+                    : true,
             isLoadingProgress: false,
         });
     };
