@@ -50,9 +50,8 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
-        if (!this.context.isConnected) {
+        if (!this.context.isConnected)
             return this.context.showNoConnectionAlert();
-        }
         let response = await getMyListContent(
             this.state.page,
             this.state.filters,
@@ -61,8 +60,6 @@ export default class MyList extends React.Component {
         const newContent = await response.data.map(data => {
             return new ContentModel(data);
         });
-
-        console.log(newContent);
 
         let items = [];
         for (let i in newContent) {
@@ -96,12 +93,10 @@ export default class MyList extends React.Component {
                 });
             }
         }
-
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
             outVideos:
                 items.length == 0 || response.data.length < 20 ? true : false,
-            page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
             isPaging: false,
@@ -138,33 +133,6 @@ export default class MyList extends React.Component {
             } else {
                 return newContent.getField('instructor').name;
             }
-        }
-    };
-
-    getDuration = newContent => {
-        var data = 0;
-        try {
-            for (i in newContent.post.current_lesson.fields) {
-                if (newContent.post.current_lesson.fields[i].key == 'video') {
-                    var data =
-                        newContent.post.current_lesson.fields[i].value.fields;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].key == 'length_in_seconds') {
-                            return data[i].value;
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    getVideos = async () => {
-        // change page before getting more lessons if paging
-        if (!this.state.outVideos) {
-            await this.setState({page: this.state.page + 1});
-            this.getMyList();
         }
     };
 
@@ -380,7 +348,6 @@ export default class MyList extends React.Component {
                         showSort={false}
                         filters={this.state.filters} // show filter list
                         filterResults={() => this.filterResults()} // apply from filters page
-                        outVideos={this.state.outVideos}
                         removeItem={contentID => {
                             this.removeFromMyList(contentID);
                         }}

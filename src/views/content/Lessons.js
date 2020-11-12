@@ -2,26 +2,32 @@
  * Lessons
  */
 import React from 'react';
+import {View, Text, ScrollView, Platform} from 'react-native';
+
+import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import {View, Text, ScrollView, Platform} from 'react-native';
-import Modal from 'react-native-modal';
 import messaging from '@react-native-firebase/messaging';
-import RestartCourse from '../../modals/RestartCourse.js';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import ResetIcon from 'Pianote2/src/components/ResetIcon.js';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
-import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
-import foundationsService from 'Pianote2/src/services/foundations.service.js';
-import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+
+import RestartCourse from '../../modals/RestartCourse';
+
+import Pianote from '../../assets/img/svgs/pianote';
+
+import StartIcon from '../../components/StartIcon';
+import ResetIcon from '../../components/ResetIcon';
+import MoreInfoIcon from '../../components/MoreInfoIcon';
+import ContinueIcon from '../../components/ContinueIcon';
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import GradientFeature from '../../components/GradientFeature';
+import VerticalVideoList from '../../components/VerticalVideoList';
+import HorizontalVideoList from '../../components/HorizontalVideoList';
+
+import {NetworkContext} from '../../context/NetworkProvider';
+
+import foundationsService from '../../services/foundations.service';
 import {getStartedContent, getAllContent} from '../../services/GetContent';
-import {NetworkContext} from '../../context/NetworkProvider.js';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;

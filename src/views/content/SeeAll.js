@@ -139,7 +139,6 @@ export default class SeeAll extends React.Component {
             allLessons: [...this.state.allLessons, ...items],
             outVideos:
                 items.length == 0 || response.data.length < 20 ? true : false,
-            page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
             isPaging: false,
@@ -203,14 +202,6 @@ export default class SeeAll extends React.Component {
             }
         } catch (error) {
             console.log(error);
-        }
-    };
-
-    getVideos = async () => {
-        // change page before getting more lessons if paging
-        if (!this.state.outVideos) {
-            await this.setState({page: this.state.page + 1});
-            this.getAllLessons();
         }
     };
 
