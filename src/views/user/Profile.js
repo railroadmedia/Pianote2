@@ -123,9 +123,9 @@ export default class Profile extends React.Component {
 
             for (i in notifications.data) {
                 let timeCreated =
-                    notifications.data[i].created_at.slice(0, 10) +
+                    notifications.data[i].created_at?.slice(0, 10) +
                     'T' +
-                    notifications.data[i].created_at.slice(11) +
+                    notifications.data[i].created_at?.slice(11) +
                     '.000Z';
                 let dateNote = new Date(timeCreated).getTime() / 1000;
                 let dateNow = new Date().getTime() / 1000;
@@ -506,7 +506,7 @@ export default class Profile extends React.Component {
                                         }}
                                     >
                                         MEMBER SINCE{' '}
-                                        {this.state.memberSince.slice(0, 4)}
+                                        {this.state.memberSince?.slice(0, 4)}
                                     </Text>
                                 </View>
                                 <View style={{flex: 1}} />

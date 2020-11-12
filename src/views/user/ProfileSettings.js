@@ -13,13 +13,14 @@ import {
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
-import DisplayName from '../../modals/DisplayName.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
+
+import DisplayName from '../../modals/DisplayName.js';
+import NavigationBar from '../../components/NavigationBar.js';
 import commonService from '../../services/common.service.js';
 import {NetworkContext} from '../../context/NetworkProvider.js';
 
@@ -112,20 +113,23 @@ export default class ProfileSettings extends React.Component {
     };
 
     changeImage = async () => {
-        if (!this.context.isConnected) {return this.context.showNoConnectionAlert()}
-        
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
+
         const data = new FormData();
 
-        console.log('IMAGE: ', this.state.imageURI)
+        console.log('IMAGE: ', this.state.imageURI);
 
         data.append('file', {
             name: this.state.imageName,
             type: this.state.imageType,
-            uri: this.state.imageURI,
+            uri:
+                Platform.OS == 'ios'
+                    ? this.state.imageURI
+                    : 'file://' + this.state.imagePath,
         });
-        
         data.append('target', this.state.imageName);
-        
         try {
             let url;
             if (this.state.imageURI !== '') {
@@ -138,22 +142,23 @@ export default class ProfileSettings extends React.Component {
                     },
                 );
                 url = await response.json();
+                if (url.data[0].url) {
+                    await commonService.tryCall(
+                        `${commonService.rootUrl}/api/profile/update`,
+                        'POST',
+                        {
+                            file: url == '' ? url : url.data[0].url,
+                        },
+                    );
+
+                    await AsyncStorage.setItem(
+                        'profileURI',
+                        url == '' ? url : url.data[0].url,
+                    );
+
+                    this.props.navigation.dispatch(resetAction);
+                }
             }
-
-            await commonService.tryCall(
-                `${commonService.rootUrl}/api/profile/update`,
-                'POST',
-                {
-                    file: url == '' ? url : url.data[0].url,
-                },
-            );
-
-            await AsyncStorage.setItem(
-                'profileURI',
-                url == '' ? url : url.data[0].url,
-            );
-
-            this.props.navigation.dispatch(resetAction);
         } catch (error) {
             console.log('ERROR UPLOADING IMAGE: ', error);
         }
@@ -169,7 +174,6 @@ export default class ProfileSettings extends React.Component {
                 },
             },
             response => {
-                
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
