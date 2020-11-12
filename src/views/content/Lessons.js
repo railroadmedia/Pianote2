@@ -20,10 +20,7 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
 import foundationsService from 'Pianote2/src/services/foundations.service.js';
 import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
-import {
-    getStartedContent,
-    getAllContent,
-} from '../../services/GetContent';
+import {getStartedContent, getAllContent} from '../../services/GetContent';
 import {NetworkContext} from '../../context/NetworkProvider.js';
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -148,6 +145,7 @@ export default class Lessons extends React.Component {
                             .replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
+                        currentLessonId: newContent[i].post.current_lesson?.id,
                         like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
                         isLiked: newContent[i].post.is_liked_by_current_user,
@@ -204,6 +202,7 @@ export default class Lessons extends React.Component {
                             .replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
+                        currentLessonId: newContent[i].post?.current_lesson?.id,
                         like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
                         isLiked: newContent[i].post.is_liked_by_current_user,
@@ -215,13 +214,15 @@ export default class Lessons extends React.Component {
                     });
                 }
             }
-            
+
             await this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
-                lessonsStarted: items.length == 0 && this.state.progressLessons.length == 0 ? false : true,
+                lessonsStarted:
+                    items.length == 0 && this.state.progressLessons.length == 0
+                        ? false
+                        : true,
                 isLoadingProgress: false,
             });
-
         } catch (error) {
             console.log('error progress: ', error);
         }
@@ -649,7 +650,7 @@ export default class Lessons extends React.Component {
                                 alignSelf: 'stretch',
                             }}
                         >
-                            <View style={{flex: 0.5}}/>
+                            <View style={{flex: 0.5}} />
                             <View>
                                 <View style={{flex: 1}} />
                                 <View>

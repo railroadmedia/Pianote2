@@ -197,38 +197,34 @@ export default class Search extends React.Component {
                     return new ContentModel(data);
                 });
 
-                console.log(newContent);
-                items = [];
-                for (i in newContent) {
-                    console.log(newContent[i].getField('instructor'));
-                    if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                        items.push({
-                            title: newContent[i].getField('title'),
-                            artist: this.getArtist(newContent[i]),
-                            thumbnail: newContent[i].getData('thumbnail_url'),
-                            type: newContent[i].post.type,
-                            description: newContent[i]
-                                .getData('description')
-                                .replace(/(<([^>]+)>)/g, '')
-                                .replace(/&nbsp;/g, '')
-                                .replace(/&amp;/g, '&')
-                                .replace(/&#039;/g, "'")
-                                .replace(/&quot;/g, '"')
-                                .replace(/&gt;/g, '>')
-                                .replace(/&lt;/g, '<'),
-                            xp: newContent[i].post.xp,
-                            id: newContent[i].id,
-                            like_count: newContent[i].post.like_count,
-                            duration: this.getDuration(newContent[i]),
-                            isLiked: newContent[i].post.is_liked_by_current_user,
-                            isAddedToList: newContent[i].isAddedToList,
-                            isStarted: newContent[i].isStarted,
-                            isCompleted: newContent[i].isCompleted,
-                            bundle_count: newContent[i].post.bundle_count,
-                            progress_percent:
-                                newContent[i].post.progress_percent,
-                        });
-                    }
+                let items = [];
+                for (let i in newContent) {
+                    items.push({
+                        title: newContent[i].getField('title'),
+                        artist: this.getArtist(newContent[i]),
+                        thumbnail: newContent[i].getData('thumbnail_url'),
+                        type: newContent[i].post.type,
+                        description: newContent[i]
+                            .getData('description')
+                            .replace(/(<([^>]+)>)/g, '')
+                            .replace(/&nbsp;/g, '')
+                            .replace(/&amp;/g, '&')
+                            .replace(/&#039;/g, "'")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&lt;/g, '<'),
+                        xp: newContent[i].post.xp,
+                        id: newContent[i].id,
+                        currentLessonId: newContent[i].post?.current_lesson?.id,
+                        like_count: newContent[i].post.like_count,
+                        duration: this.getDuration(newContent[i]),
+                        isLiked: newContent[i].post.is_liked_by_current_user,
+                        isAddedToList: newContent[i].isAddedToList,
+                        isStarted: newContent[i].isStarted,
+                        isCompleted: newContent[i].isCompleted,
+                        bundle_count: newContent[i].post.bundle_count,
+                        progress_percent: newContent[i].post.progress_percent,
+                    });
                 }
                 console.log(items);
 

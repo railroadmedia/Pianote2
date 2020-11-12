@@ -97,14 +97,14 @@ export default class SeeAll extends React.Component {
                 this.state.filters,
             );
         }
-        
+
         const newContent = await response.data.map(data => {
             return new ContentModel(data);
         });
-        
+
         items = [];
         for (let i in newContent) {
-            console.log(newContent[i])            
+            console.log(newContent[i]);
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
@@ -122,6 +122,7 @@ export default class SeeAll extends React.Component {
                         .replace(/&lt;/g, '<'),
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
+                    currentLessonId: newContent[i].post?.current_lesson?.id,
                     like_count: newContent[i].post.like_count,
                     duration: i,
                     isLiked: newContent[i].post.is_liked_by_current_user,
@@ -132,11 +133,12 @@ export default class SeeAll extends React.Component {
                     progress_percent: newContent[i].post.progress_percent,
                 });
             }
-        }      
+        }
 
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
@@ -166,7 +168,6 @@ export default class SeeAll extends React.Component {
     };
 
     getArtist = newContent => {
-        
         if (newContent.post.type == 'song') {
             if (typeof newContent.post.artist !== 'undefined') {
                 return newContent.post.artist;

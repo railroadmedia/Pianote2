@@ -248,7 +248,10 @@ class HorizontalVideoList extends React.Component {
                                             : this.props.navigation.navigate(
                                                   'VIDEOPLAYER',
                                                   {
-                                                      id: item.id,
+                                                      id:
+                                                          item.type === 'song'
+                                                              ? item.currentLessonId
+                                                              : item.id,
                                                   },
                                               )
                                     }
