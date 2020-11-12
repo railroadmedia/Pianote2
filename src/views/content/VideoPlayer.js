@@ -1127,6 +1127,7 @@ export default class VideoPlayer extends React.Component {
                         <View key={'belowVideo'} style={{flex: 1}}>
                             {this.state.selectedAssignment ? (
                                 <VideoPlayerSong
+                                    onSeek={time => this.video?.onSeek?.(time)}
                                     assignment={this.state.selectedAssignment}
                                     onAssignmentFullscreen={() =>
                                         this.setState({
