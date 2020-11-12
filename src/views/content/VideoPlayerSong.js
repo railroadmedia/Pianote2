@@ -106,7 +106,9 @@ export default class VideoPlayerSong extends React.Component {
                                         ]}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => {}}
+                                            onPress={() =>
+                                                this.props.onSeek?.(tc.value)
+                                            }
                                             style={[
                                                 styles.centerContent,
                                                 {
@@ -126,7 +128,8 @@ export default class VideoPlayerSong extends React.Component {
                                                     alignSelf: 'center',
                                                 }}
                                             >
-                                                SKIP VIDEO TO {tc.value}
+                                                SKIP VIDEO TO{' '}
+                                                {formatTimeHHMMSS(tc.value)}
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
@@ -262,4 +265,13 @@ export default class VideoPlayerSong extends React.Component {
             </>
         );
     }
+}
+function formatTimeHHMMSS(seconds) {
+    let h = parseInt(seconds / 3600),
+        m = parseInt((seconds - h * 3600) / 60),
+        s = parseInt(seconds - h * 3600 - m * 60);
+    h = h ? `${h}:` : '';
+    m = m < 10 && h ? `0${m}:` : `${m}:`;
+    s = s < 10 ? `0${s}` : s;
+    return h + m + s;
 }
