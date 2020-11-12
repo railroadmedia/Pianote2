@@ -12,22 +12,23 @@ import {
     ScrollView,
     Platform,
 } from 'react-native';
+
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import X from 'Pianote2/src/assets/img/svgs/X.svg';
 import ImagePicker from 'react-native-image-picker';
-import DisplayName from '../../modals/DisplayName.js';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import {NavigationActions, StackActions} from 'react-navigation';
+
+import X from 'Pianote2/src/assets/img/svgs/X.svg';
 import Courses from 'Pianote2/src/assets/img/svgs/courses.svg';
 import Support from 'Pianote2/src/assets/img/svgs/support.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
-import {NavigationActions, StackActions} from 'react-navigation';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
+
+import DisplayName from '../../modals/DisplayName.js';
 import commonService from '../../services/common.service.js';
 import {NetworkContext} from '../../context/NetworkProvider.js';
-
-var data = new FormData();
 
 var showListener =
     Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -37,7 +38,7 @@ var data = new FormData();
 
 const resetAction = StackActions.reset({
     index: 0,
-    actions: [NavigationActions.navigate({routeName: 'LOADPAGE'})],
+    actions: [NavigationActions.navigate({routeName: 'LESSONS'})],
 });
 
 export default class CreateAccount3 extends React.Component {
@@ -96,23 +97,22 @@ export default class CreateAccount3 extends React.Component {
         }).start();
     };
 
-    changeColor = async number => {
-        let index = number.nativeEvent.contentOffset.x / fullWidth;
+    changeColor = number => {
+        let index = Math.round(number.nativeEvent.contentOffset.x / fullWidth);
+        console.log(index);
         if (index == 0) {
-            await this.setState({page: 1});
+            this.setState({page: 1});
         } else if (index == 1) {
-            await this.setState({page: 2, canScroll: false});
+            this.setState({page: 2, canScroll: false});
         } else if (index == 2) {
-            await this.setState({page: 3, canScroll: true});
+            this.setState({page: 3, canScroll: true});
         } else if (index == 3) {
-            await this.setState({page: 4});
+            this.setState({page: 4});
         }
-        await this.forceUpdate();
     };
 
     typingDisplayName = async displayName => {
         await this.setState({displayName});
-        await this.forceUpdate();
     };
 
     chooseImage = async () => {
@@ -128,7 +128,6 @@ export default class CreateAccount3 extends React.Component {
                 if (response.didCancel) {
                 } else if (response.error) {
                 } else {
-                    data.append('target', response.fileName || 'avatar');
                     data.append('file', {
                         name: response.fileName || 'avatar',
                         type: response.type,
@@ -137,14 +136,13 @@ export default class CreateAccount3 extends React.Component {
                                 ? response.uri.replace('file://', '')
                                 : 'file://' + response.path,
                     });
+                    data.append('target', response.fileName || 'avatar');
 
                     this.setState({
                         response,
                         imageURI: response.uri,
                         showImage: true,
                     });
-
-                    this.forceUpdate();
                 }
             },
         );
@@ -157,7 +155,6 @@ export default class CreateAccount3 extends React.Component {
             showImage: false,
             response: null,
         });
-        await this.forceUpdate();
     };
 
     setName = async () => {
@@ -180,22 +177,9 @@ export default class CreateAccount3 extends React.Component {
                     page: 2,
                     displayNameValid: true,
                 });
-                this.forceUpdate();
             } else {
                 this.setState({showDisplayName: true});
             }
-        }
-    };
-
-    goHome = async () => {
-        // if display name already validated or no name enter
-        if (this.state.displayNameValid || this.state.displayName == '') {
-            await this.createAccount();
-        } else {
-            // validate name
-            await this.setName();
-            // create account
-            await this.createAccount();
         }
     };
 
@@ -203,32 +187,63 @@ export default class CreateAccount3 extends React.Component {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
-        // if there is profile image upload it
-        let url;
-        if (data !== null) {
-            let response = await fetch(
-                `${commonService.rootUrl}/api/avatar/upload`,
+        if (this.state.page === 1) {
+            this.myScroll.scrollTo({
+                x: fullWidth,
+                y: 0,
+                animated: true,
+            });
+            this.setState({page: 2, canScroll: false});
+        } else if (this.state.page === 2) {
+            this.myScroll.scrollTo({
+                x: fullWidth * 2,
+                y: 0,
+                animated: true,
+            });
+            this.setState({
+                page: 3,
+                canScroll: true,
+            });
+        } else if (this.state.page === 3) {
+            this.myScroll.scrollTo({
+                x: fullWidth * 3,
+                y: 0,
+                animated: true,
+            });
+            this.setState({page: 4});
+        } else {
+            // if there is profile image upload it
+            let url;
+            console.log(data);
+            if (data !== null) {
+                try {
+                    let response = await fetch(
+                        `${commonService.rootUrl}/api/avatar/upload`,
+                        {
+                            method: 'POST',
+                            headers: {Authorization: `Bearer ${token}`},
+                            body: data,
+                        },
+                    );
+                    url = await response.json();
+                    console.log(url);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+            await commonService.tryCall(
+                `${commonService.rootUrl}/api/profile/update`,
+                'POST',
                 {
-                    method: 'POST',
-                    headers: {Authorization: `Bearer ${token}`},
-                    body: data,
+                    file: url?.data?.[0]?.url,
+                    display_name: this.state.displayName,
                 },
             );
-            url = await response.json();
+
+            // send to loadpage to update asyncstorage with new data
+            await this.props.navigation.dispatch(resetAction);
         }
-
-        // take image url and update profile
-        let profileResponse = await commonService.tryCall(
-            `${commonService.rootUrl}/api/profile/update`,
-            'POST',
-            {
-                file: data !== null ? url : '',
-                display_name: this.state.displayName,
-            },
-        );
-
-        // send to loadpage to update asyncstorage with new data
-        await this.props.navigation.dispatch(resetAction);
     };
 
     render() {
@@ -246,6 +261,7 @@ export default class CreateAccount3 extends React.Component {
                     ref={ref => {
                         this.myScroll = ref;
                     }}
+                    keyboardShouldPersistTaps='handled'
                     pagingEnabled={true}
                     scrollEnabled={this.state.canScroll}
                     onMomentumScrollEnd={e => this.changeColor(e)}
@@ -851,7 +867,6 @@ export default class CreateAccount3 extends React.Component {
                                                     page: 3,
                                                     canScroll: true,
                                                 });
-                                                this.forceUpdate();
                                             }}
                                             style={[
                                                 styles.centerContent,

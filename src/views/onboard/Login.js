@@ -14,7 +14,8 @@ import {
 import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
+
+import GradientFeature from '../../components/GradientFeature.js';
 import {validateSignUp, restorePurchase} from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
@@ -35,21 +36,19 @@ export default class Login extends React.Component {
         };
     }
 
-    async changeColor(number) {
-        number = number.nativeEvent.contentOffset.x / fullWidth;
+    changeColor(number) {
+        number = Math.round(number.nativeEvent.contentOffset.x / fullWidth);
         if (number == 0) {
-            await this.setState({page: 1});
+            this.setState({page: 1});
         } else if (number == 1) {
-            await this.setState({page: 2});
+            this.setState({page: 2});
         } else if (number == 2) {
-            await this.setState({page: 3});
+            this.setState({page: 3});
         } else if (number == 3) {
-            await this.setState({page: 4});
+            this.setState({page: 4});
         } else if (number == 4) {
-            await this.setState({page: 5});
+            this.setState({page: 5});
         }
-
-        await this.forceUpdate();
     }
 
     onLogin = () => {
