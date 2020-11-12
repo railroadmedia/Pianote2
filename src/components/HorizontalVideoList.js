@@ -132,6 +132,50 @@ class HorizontalVideoList extends React.Component {
         return string;
     };
 
+    navigate = (content, index) => {
+        if (!this.context.isConnected)
+            return this.context.showNoConnectionAlert();
+        switch (content.type) {
+            case 'course':
+                return this.props.navigation.navigate('PATHOVERVIEW', {
+                    data: content,
+                });
+            case 'song':
+                return this.props.navigation.navigate('VIDEOPLAYER', {
+                    id: content.currentLessonId,
+                });
+            case 'learning-path':
+                return this.props.navigation.navigate('FOUNDATIONS', {
+                    url: content.mobile_app_url,
+                });
+            case 'unit':
+                return this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+                    url: content.mobile_app_url,
+                    level: index + 1,
+                });
+            case 'unit-part':
+                return this.props.navigation.push('VIDEOPLAYER', {
+                    url: content.mobile_app_url,
+                });
+            case 'pack':
+                return this.props.navigation.push('SINGLEPACK', {
+                    url: content.mobile_app_url,
+                });
+            case 'pack-bundle':
+                return this.props.navigation.push('SINGLEPACK', {
+                    url: content.mobile_app_url,
+                });
+            case 'pack-bundle-lesson':
+                return this.props.navigation.push('VIDEOPLAYER', {
+                    url: content.mobile_app_url,
+                });
+            default:
+                return this.props.navigation.navigate('VIDEOPLAYER', {
+                    id: content.id,
+                });
+        }
+    };
+
     render = () => {
         return (
             <View style={styles.container}>
@@ -235,26 +279,7 @@ class HorizontalVideoList extends React.Component {
                                         });
                                     }}
                                     delayLongPress={350}
-                                    onPress={() =>
-                                        !this.context.isConnected
-                                            ? this.context.showNoConnectionAlert()
-                                            : item.type === 'course'
-                                            ? this.props.navigation.navigate(
-                                                  'PATHOVERVIEW',
-                                                  {
-                                                      data: item,
-                                                  },
-                                              )
-                                            : this.props.navigation.navigate(
-                                                  'VIDEOPLAYER',
-                                                  {
-                                                      id:
-                                                          item.type === 'song'
-                                                              ? item.currentLessonId
-                                                              : item.id,
-                                                  },
-                                              )
-                                    }
+                                    onPress={() => this.navigate(item, index)}
                                 >
                                     <View
                                         style={[

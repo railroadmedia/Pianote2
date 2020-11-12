@@ -263,17 +263,31 @@ class VerticalVideoList extends React.Component {
                 return this.props.navigation.navigate('VIDEOPLAYER', {
                     id: content.currentLessonId,
                 });
+            case 'learning-path':
+                return this.props.navigation.navigate('FOUNDATIONS', {
+                    url: content.mobile_app_url,
+                });
             case 'unit':
-                console.log('foundationlevel');
                 return this.props.navigation.navigate('FOUNDATIONSLEVEL', {
                     url: content.mobile_app_url,
                     level: index + 1,
+                });
+            case 'unit-part':
+                return this.props.navigation.push('VIDEOPLAYER', {
+                    url: content.mobile_app_url,
+                });
+            case 'pack':
+                return this.props.navigation.push('SINGLEPACK', {
+                    url: content.mobile_app_url,
                 });
             case 'pack-bundle':
                 return this.props.navigation.push('SINGLEPACK', {
                     url: content.mobile_app_url,
                 });
-
+            case 'pack-bundle-lesson':
+                return this.props.navigation.push('VIDEOPLAYER', {
+                    url: content.mobile_app_url,
+                });
             default:
                 return this.props.navigation.navigate('VIDEOPLAYER', {
                     id: content.id,

@@ -68,8 +68,8 @@ export default class SongCatalog extends React.Component {
             return new ContentModel(data);
         });
 
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),
@@ -119,8 +119,8 @@ export default class SongCatalog extends React.Component {
             return new ContentModel(data);
         });
 
-        items = [];
-        for (i in newContent) {
+        let items = [];
+        for (let i in newContent) {
             if (newContent[i].getData('thumbnail_url') !== 'TBD') {
                 items.push({
                     title: newContent[i].getField('title'),

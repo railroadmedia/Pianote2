@@ -215,6 +215,7 @@ export default class Search extends React.Component {
                             .replace(/&lt;/g, '<'),
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
+                        mobile_app_url: newContent[i].post.mobile_app_url,
                         currentLessonId: newContent[i].post?.current_lesson?.id,
                         like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
