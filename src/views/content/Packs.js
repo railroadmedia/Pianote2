@@ -13,15 +13,16 @@ import {
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import MoreInfoIcon from 'Pianote2/src/components/MoreInfoIcon.js';
-import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import {resetProgress} from 'Pianote2/src/services/UserActions.js';
+
+import StartIcon from '../../components/StartIcon.js';
+import MoreInfoIcon from '../../components/MoreInfoIcon.js';
+import RestartCourse from '../../modals/RestartCourse.js';
+import ContinueIcon from '../../components/ContinueIcon.js';
+import NavigationBar from '../../components/NavigationBar.js';
+import NavigationMenu from '../../components/NavigationMenu.js';
+import NavMenuHeaders from '../../components/NavMenuHeaders.js';
+import GradientFeature from '../../components/GradientFeature.js';
+import {resetProgress} from '../../services/UserActions.js';
 import packsService from '../../services/packs.service';
 import {NetworkContext} from '../../context/NetworkProvider';
 
