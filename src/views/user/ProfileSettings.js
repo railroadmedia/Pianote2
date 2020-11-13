@@ -18,8 +18,8 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-
 import DisplayName from '../../modals/DisplayName.js';
+import ProfileImage from '../../modals/ProfileImage.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import commonService from '../../services/common.service.js';
 import {NetworkContext} from '../../context/NetworkProvider.js';
@@ -36,6 +36,7 @@ export default class ProfileSettings extends React.Component {
         super(props);
         this.state = {
             showDisplayName: false,
+            showProfileImage: false,
             currentlyView: 'Profile Settings',
             displayName: '',
             currentPassword: '',
@@ -79,7 +80,6 @@ export default class ProfileSettings extends React.Component {
 
         const {response, error} = await userForgotPassword({email});
 
-        console.log('RESET PASSWORD LINK: ', response, error);
         await this.setState({showChangePassword: true});
     };
 
@@ -113,25 +113,20 @@ export default class ProfileSettings extends React.Component {
     };
 
     changeImage = async () => {
-        if (!this.context.isConnected) {
-            return this.context.showNoConnectionAlert();
-        }
+        if (!this.context.isConnected) {return this.context.showNoConnectionAlert()}
 
         const data = new FormData();
 
-        console.log('IMAGE: ', this.state.imageURI);
-
         data.append('file', {
-            name: this.state.imageName,
-            type: this.state.imageType,
-            uri:
-                Platform.OS == 'ios'
-                    ? this.state.imageURI
-                    : 'file://' + this.state.imagePath,
+            name: this.state.imageName, 
+            type: this.state.imageType, 
+            uri: this.state.imageURI
         });
         data.append('target', this.state.imageName);
+
+        console.log(data)
+
         try {
-            let url;
             if (this.state.imageURI !== '') {
                 let response = await fetch(
                     `${commonService.rootUrl}/api/avatar/upload`,
@@ -141,21 +136,16 @@ export default class ProfileSettings extends React.Component {
                         body: data,
                     },
                 );
-                url = await response.json();
+                console.log('URL: ', response)
+                if(response.status == 413) {
+                    this.setState({showProfileImage: true})
+                    return 
+                }
+                let url = await response.json();
+                
                 if (url.data[0].url) {
-                    await commonService.tryCall(
-                        `${commonService.rootUrl}/api/profile/update`,
-                        'POST',
-                        {
-                            file: url == '' ? url : url.data[0].url,
-                        },
-                    );
-
-                    await AsyncStorage.setItem(
-                        'profileURI',
-                        url == '' ? url : url.data[0].url,
-                    );
-
+                    await commonService.tryCall(`${commonService.rootUrl}/api/profile/update`, 'POST', {file: url == '' ? url : url.data[0].url});
+                    await AsyncStorage.setItem('profileURI', url == '' ? url : url.data[0].url);
                     this.props.navigation.dispatch(resetAction);
                 }
             }
@@ -204,7 +194,7 @@ export default class ProfileSettings extends React.Component {
                         style={{
                             height: 15 * factorVertical,
                         }}
-                    ></View>
+                    />
                     <View
                         key={'myProfileSettings'}
                         style={[styles.centerContent, {flex: 0.1}]}
@@ -216,7 +206,7 @@ export default class ProfileSettings extends React.Component {
                                     styles.centerContent,
                                     {
                                         position: 'absolute',
-                                        right: 0,
+                                        right: 10,
                                         bottom: 0 * factorRatio,
                                         height: 50 * factorRatio,
                                         width: 50 * factorRatio,
@@ -241,7 +231,6 @@ export default class ProfileSettings extends React.Component {
                                     <Text
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
-                                            fontSize: 12 * factorRatio,
                                             fontWeight:
                                                 Platform.OS == 'android'
                                                     ? 'bold'
@@ -567,7 +556,7 @@ export default class ProfileSettings extends React.Component {
                                 >
                                     <View style={{flex: 1}} />
                                     <TouchableOpacity
-                                        onPress={() => this.changeImage()}
+                                        onPress={() => this.chooseImage()}
                                         style={[
                                             styles.centerContent,
                                             {
@@ -719,6 +708,30 @@ export default class ProfileSettings extends React.Component {
                         }}
                     />
                 </Modal>
+                <Modal
+                    isVisible={this.state.showProfileImage}
+                    style={[
+                        styles.centerContent,
+                        {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        },
+                    ]}
+                    animation={'slideInUp'}
+                    animationInTiming={350}
+                    animationOutTiming={350}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <ProfileImage
+                        hideProfileImage={() => {
+                            this.setState({
+                                showProfileImage: false,
+                            });
+                        }}
+                    />
+                </Modal>                
             </View>
         );
     }
