@@ -1,7 +1,13 @@
 /**
  * Index
  */
-import {AppRegistry, Dimensions, StatusBar, Platform} from 'react-native';
+import {
+    AppRegistry,
+    Dimensions,
+    StatusBar,
+    Platform,
+    Linking,
+} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import {configure} from '@musora/services';
@@ -17,6 +23,7 @@ import {
     notif,
     showNotification,
 } from './src/services/notification.service';
+import AsyncStorage from '@react-native-community/async-storage';
 
 localNotification();
 PushNotification.configure({
@@ -29,16 +36,27 @@ PushNotification.configure({
     requestPermissions: false,
     popInitialNotification: true,
     permissions: {alert: true, sound: true},
-    onNotification: function ({
-        data: {commentId, mobile_app_url, image},
+    onNotification: async function ({
+        data: {commentId, mobile_app_url, image, type, uri},
         finish,
         userInteraction,
+        foreground,
         title,
         message,
         id,
     }) {
+        if (type.includes('forum') && userInteraction) {
+            if (foreground) {
+                Linking.openURL(uri);
+            } else {
+                await AsyncStorage.setItem('forumUrl', uri);
+            }
+        }
         if (token) {
-            if (isiOS || (!isiOS && userInteraction)) {
+            if (
+                (isiOS || (!isiOS && userInteraction)) &&
+                !type.includes('forum')
+            ) {
                 NavigationService.navigate('VIDEOPLAYER', {
                     commentId,
                     url: mobile_app_url,
@@ -46,7 +64,7 @@ PushNotification.configure({
             } else {
                 showNotification({
                     notification: {body: message, title},
-                    data: {commentId, mobile_app_url, image},
+                    data: {commentId, mobile_app_url, image, type, uri},
                     messageId: id,
                 });
             }

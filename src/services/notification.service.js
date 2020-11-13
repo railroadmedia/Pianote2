@@ -16,7 +16,7 @@ export const showNotification = ({
     notification: {body, title},
     data,
     messageId,
-}) =>
+}) => {
     PushNotification.localNotification({
         title,
         id: messageId,
@@ -29,10 +29,16 @@ export const showNotification = ({
         userInfo: {
             commentId: data.commentId,
             mobile_app_url: data.mobile_app_url,
+            type: data.type,
+            uri: data.uri,
         },
     });
-
-export const localNotification = () =>
+};
+export const localNotification = () => {
     messaging().onMessage(notification => {
         showNotification(notification);
     });
+    messaging().setBackgroundMessageHandler(notification => {
+        showNotification(notification);
+    });
+};

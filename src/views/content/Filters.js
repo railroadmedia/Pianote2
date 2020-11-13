@@ -622,16 +622,20 @@ export default class Filters extends React.Component {
                 ['Pack Bundle Lesson', false, 'pack-bundle-lesson'],
             ],
         };
-        await this.setState({displayTopics: [], topics: []});        
-        
+        await this.setState({displayTopics: [], topics: []});
+
         if (
             filterDict[this.props.navigation.state.params.type][num][1] == false
         ) {
             filterDict[this.props.navigation.state.params.type][num][1] = true;
             let topics = this.state.topics;
             let displayTopics = this.state.displayTopics;
-            await topics.push(filterDict[this.props.navigation.state.params.type][num][2]);
-            await displayTopics.push(filterDict[this.props.navigation.state.params.type][num][0]);
+            await topics.push(
+                filterDict[this.props.navigation.state.params.type][num][2],
+            );
+            await displayTopics.push(
+                filterDict[this.props.navigation.state.params.type][num][0],
+            );
             await this.setState({topics, displayTopics});
         } else {
             filterDict[this.props.navigation.state.params.type][num][1] = false;
@@ -864,8 +868,7 @@ export default class Filters extends React.Component {
                 ['Pack Bundle Lesson', false, 'pack-bundle-lesson'],
             ],
         };
-        await this.setState({displayTopics: [], topics: []});        
-        
+        await this.setState({displayTopics: [], topics: []});
 
         if (filterDict['ARTISTS'][num][1] == false) {
             filterDict['ARTISTS'][num][1] = true;
@@ -1187,8 +1190,7 @@ export default class Filters extends React.Component {
         return (
             <View
                 style={{
-                    height: fullHeight - navHeight,
-                    alignSelf: 'stretch',
+                    flex: 1,
                     backgroundColor: colors.mainBackground,
                 }}
             >

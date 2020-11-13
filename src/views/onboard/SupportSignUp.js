@@ -3,9 +3,8 @@
  */
 import React from 'react';
 import {View, Text, TouchableOpacity, ScrollView, Linking} from 'react-native';
-//import Intercom from 'react-native-intercom';
+import Intercom from 'react-native-intercom';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 
 export default class SupportSignUp extends React.Component {
     static navigationOptions = {header: null};
@@ -15,27 +14,11 @@ export default class SupportSignUp extends React.Component {
     }
 
     componentDidMount = async () => {
-        const userData = await getUserData();
-        //Intercom.registerUnidentifiedUser({userId: this.props.user});
-        //Intercom.addEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
-        //Intercom.addEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
+        Intercom.registerUnidentifiedUser();
     };
 
-    componentWillUnmount() {
-        //Intercom.removeEventListener(Intercom.Notifications.UNREAD_COUNT, this.onUnreadChange);
-        //Intercom.removeEventListener(Intercom.Notifications.WINDOW_DID_HIDE, this.onUnreadChange);
-    }
-
-    UNSAFE_componentWillMount() {
-        //Intercom.handlePushMessage();
-    }
-
-    onUnreadChange(event) {
-        console.log(event);
-    }
-
     onIntercomPress = () => {
-        //Intercom.displayMessenger();
+        Intercom.displayMessenger();
     };
 
     render() {

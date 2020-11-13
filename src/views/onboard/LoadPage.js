@@ -2,7 +2,7 @@
  * LoadPage
  */
 import React from 'react';
-import {View} from 'react-native';
+import {Linking, View} from 'react-native';
 
 import {Download_V2} from 'RNDownload';
 import SplashScreen from 'react-native-splash-screen';
@@ -35,6 +35,7 @@ export default class LoadPage extends React.Component {
                     'resetKey',
                     'email',
                     'password',
+                    'forumUrl',
                 ])
             ).reduce((i, j) => {
                 i[j[0]] =
@@ -42,7 +43,7 @@ export default class LoadPage extends React.Component {
                 i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
                 return i;
             }, {});
-            const {email, resetKey, password, loggedIn} = data;
+            const {email, resetKey, password, loggedIn, forumUrl} = data;
             if (!loggedIn)
                 return this.props.navigation.dispatch(
                     StackActions.reset({
@@ -101,6 +102,11 @@ export default class LoadPage extends React.Component {
                         }),
                     );
                 } else {
+                    if (forumUrl) {
+                        // if user got a forum related notification
+                        Linking.openURL(forumUrl);
+                        await AsyncStorage.removeItem('forumUrl');
+                    }
                     // if member then check membership type
                     let currentDate = new Date().getTime() / 1000;
                     let userExpDate =
