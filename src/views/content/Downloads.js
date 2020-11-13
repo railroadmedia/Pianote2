@@ -104,7 +104,7 @@ export default class Downloads extends React.Component {
                                         ? fullHeight * 0.1
                                         : isNotch
                                         ? fullHeight * 0.12
-                                        : fullHeight * 0.1,
+                                        : fullHeight * 0.1+10,
                                 backgroundColor: colors.thirdBackground,
                             },
                         ]}
