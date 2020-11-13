@@ -301,677 +301,356 @@ export default class Profile extends React.Component {
 
     render() {
         return (
-            <View styles={{flex: 1, alignSelf: 'stretch'}}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                    }}
-                >
-                    <View key={'contentContainer'} style={{flex: 1}}>
+            <View style={{flex: 1, backgroundColor: colors.mainBackground}}>
+                <View key={'contentContainer'} style={{flex: 1}}>
+                    <View
+                        style={[
+                            styles.centerContent,
+                            {
+                                height:
+                                    Platform.OS == 'android'
+                                        ? fullHeight * 0.1
+                                        : isNotch
+                                        ? fullHeight * 0.12
+                                        : fullHeight * 0.1,
+                                backgroundColor: colors.thirdBackground,
+                            },
+                        ]}
+                    >
+                        <View style={{flex: 1}} />
                         <View
                             style={[
                                 styles.centerContent,
                                 {
-                                    height:
-                                        Platform.OS == 'android'
-                                            ? fullHeight * 0.1
-                                            : isNotch
-                                            ? fullHeight * 0.12
-                                            : fullHeight * 0.1,
                                     backgroundColor: colors.thirdBackground,
                                 },
                             ]}
                         >
-                            <View style={{flex: 1}} />
-                            <View
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        backgroundColor: colors.thirdBackground,
-                                    },
-                                ]}
+                            <Text
+                                style={{
+                                    fontSize: 22 * factorRatio,
+                                    color: 'white',
+                                    fontFamily: 'OpenSans-Bold',
+                                }}
                             >
-                                <Text
-                                    style={{
-                                        fontSize: 22 * factorRatio,
-                                        color: 'white',
-                                        fontFamily: 'OpenSans-Bold',
+                                My Profile
+                            </Text>
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    right: 20 * factorHorizontal,
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.navigate(
+                                            'SETTINGS',
+                                        );
                                     }}
                                 >
-                                    My Profile
-                                </Text>
-                                <View
-                                    style={{
-                                        position: 'absolute',
-                                        right: 20 * factorHorizontal,
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.props.navigation.navigate(
-                                                'SETTINGS',
-                                            );
-                                        }}
-                                    >
-                                        <Settings
-                                            height={20 * factorRatio}
-                                            width={20 * factorRatio}
-                                            fill={colors.pianoteRed}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
+                                    <Settings
+                                        height={20 * factorRatio}
+                                        width={20 * factorRatio}
+                                        fill={colors.pianoteRed}
+                                    />
+                                </TouchableOpacity>
                             </View>
-                            <View style={{height: 20 * factorVertical}} />
                         </View>
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            contentInsetAdjustmentBehavior={'never'}
-                            style={{
-                                flex: 1,
-                                backgroundColor: colors.mainBackground,
-                            }}
-                        >
-                            <View style={{height: 20 * factorVertical}} />
-                            <View
-                                key={'profilePicture'}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        backgroundColor: colors.mainBackground,
-                                    },
-                                ]}
-                            >
+                        <View style={{flex: 1}} />
+                    </View>
+
+                    <FlatList
+                        style={{
+                            flex: 1,
+                            backgroundColor: colors.mainBackground,
+                        }}
+                        data={this.state.notifications}
+                        keyExtractor={(item, index) => index}
+                        ListHeaderComponent={() => (
+                            <>
+                                <View style={{height: 20 * factorVertical}} />
                                 <View
-                                    key={'imageProfile'}
-                                    style={{
-                                        borderRadius: 250,
-                                        borderWidth: 2 * factorRatio,
-                                        borderColor: colors.pianoteRed,
-                                        height: onTablet
-                                            ? 112 * factorRatio
-                                            : 140 * factorRatio,
-                                        width: onTablet
-                                            ? 112 * factorRatio
-                                            : 140 * factorRatio,
-                                    }}
+                                    key={'profilePicture'}
+                                    style={[
+                                        styles.centerContent,
+                                        {
+                                            backgroundColor:
+                                                colors.mainBackground,
+                                        },
+                                    ]}
                                 >
                                     <View
-                                        style={[
-                                            styles.centerContent,
-                                            {
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                                elevation: 10,
-                                                top: -12.5 * factorRatio,
-                                                right: -12.5 * factorRatio,
-                                                height: 35 * factorRatio,
-                                                width: 35 * factorRatio,
-                                                borderRadius: 100,
-                                                borderColor: colors.pianoteRed,
-                                                borderWidth: 1.5 * factorRatio,
-                                            },
-                                        ]}
+                                        key={'imageProfile'}
+                                        style={{
+                                            borderRadius: 250,
+                                            borderWidth: 2 * factorRatio,
+                                            borderColor: colors.pianoteRed,
+                                            height: onTablet
+                                                ? 112 * factorRatio
+                                                : 140 * factorRatio,
+                                            width: onTablet
+                                                ? 112 * factorRatio
+                                                : 140 * factorRatio,
+                                        }}
                                     >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    'PROFILESETTINGS',
-                                                    {data: 'Profile Photo'},
-                                                );
-                                            }}
-                                            style={[
-                                                styles.centerContent,
-                                                {
-                                                    height: '100%',
-                                                    width: '100%',
-                                                },
-                                            ]}
-                                        >
-                                            <IonIcon
-                                                size={25 * factorRatio}
-                                                name={'ios-camera'}
-                                                color={colors.pianoteRed}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                    {this.state.profileImage == '' && (
                                         <View
                                             style={[
                                                 styles.centerContent,
                                                 {
-                                                    height: '100%',
-                                                    width: '100%',
-                                                    alignSelf: 'stretch',
+                                                    position: 'absolute',
+                                                    zIndex: 10,
+                                                    elevation: 10,
+                                                    top: -12.5 * factorRatio,
+                                                    right: -12.5 * factorRatio,
+                                                    height: 35 * factorRatio,
+                                                    width: 35 * factorRatio,
+                                                    borderRadius: 100,
+                                                    borderColor:
+                                                        colors.pianoteRed,
+                                                    borderWidth:
+                                                        1.5 * factorRatio,
                                                 },
                                             ]}
                                         >
-                                            <AntIcon
-                                                name={'user'}
-                                                color={colors.pianoteRed}
-                                                size={85 * factorRatio}
-                                            />
-                                        </View>
-                                    )}
-                                    {this.state.profileImage !== '' && (
-                                        <FastImage
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                borderRadius: 250,
-                                                backgroundColor:
-                                                    colors.secondBackground,
-                                            }}
-                                            source={{
-                                                uri: this.state.profileImage,
-                                            }}
-                                            resizeMode={
-                                                FastImage.resizeMode.cover
-                                            }
-                                        />
-                                    )}
-                                </View>
-                                <View style={{height: 10 * factorVertical}} />
-                                <View
-                                    key={'name'}
-                                    style={[
-                                        styles.centerContent,
-                                        {
-                                            alignSelf: 'stretch',
-                                        },
-                                    ]}
-                                >
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-ExtraBold',
-                                            fontSize: 30 * factorRatio,
-                                            textAlign: 'center',
-                                            color: 'white',
-                                        }}
-                                    >
-                                        {this.state.username}
-                                    </Text>
-                                    <View
-                                        style={{height: 10 * factorVertical}}
-                                    />
-                                    <Text
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 14 * factorRatio,
-                                            textAlign: 'center',
-                                            color: colors.secondBackground,
-                                        }}
-                                    >
-                                        MEMBER SINCE{' '}
-                                        {this.state.memberSince?.slice(0, 4)}
-                                    </Text>
-                                </View>
-                                <View style={{flex: 1}} />
-                            </View>
-                            <View style={{height: 20 * factorVertical}} />
-                            <View
-                                key={'rank'}
-                                style={{
-                                    borderTopColor: colors.secondBackground,
-                                    borderTopWidth: 0.25,
-                                    borderBottomColor: colors.secondBackground,
-                                    borderBottomWidth: 0.25,
-                                    height: fullHeight * 0.1,
-                                    paddingTop: 10 * factorVertical,
-                                    paddingBottom: 10 * factorVertical,
-                                    backgroundColor: colors.mainBackground,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        flex: 3,
-                                        flexDirection: 'row',
-                                        alignSelf: 'stretch',
-                                    }}
-                                >
-                                    <View style={{flex: 1}} />
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({showXpRank: true});
-                                        }}
-                                    >
-                                        <View style={{flex: 1}} />
-                                        <View>
-                                            <Text
-                                                style={{
-                                                    color: colors.pianoteRed,
-                                                    fontSize: 12 * factorRatio,
-                                                    fontWeight: 'bold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                XP
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: 24 * factorRatio,
-                                                    fontFamily:
-                                                        'OpenSans-ExtraBold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                {this.state.xp}
-                                            </Text>
-                                        </View>
-                                        <View style={{flex: 1}} />
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}} />
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.setState({showXpRank: true});
-                                        }}
-                                    >
-                                        <View style={{flex: 1}} />
-                                        <View>
-                                            <Text
-                                                style={{
-                                                    color: colors.pianoteRed,
-                                                    fontSize: 12 * factorRatio,
-                                                    fontWeight: 'bold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                RANK
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    color: 'white',
-                                                    fontSize: 24 * factorRatio,
-                                                    fontFamily:
-                                                        'OpenSans-ExtraBold',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                {this.state.rank}
-                                            </Text>
-                                        </View>
-                                        <View style={{flex: 1}} />
-                                    </TouchableOpacity>
-                                    <View style={{flex: 1}} />
-                                </View>
-                            </View>
-                            <View
-                                key={'notifications'}
-                                style={{
-                                    paddingTop: 25 * factorVertical,
-                                    paddingBottom: 15 * factorVertical,
-                                    elevation: 1,
-                                }}
-                            >
-                                <View style={{flex: 0.5}} />
-                                <Text
-                                    style={{
-                                        paddingLeft: fullWidth * 0.05,
-                                        fontSize: 18 * factorRatio,
-                                        fontFamily: 'OpenSans-ExtraBold',
-                                        color: colors.secondBackground,
-                                    }}
-                                >
-                                    NOTIFICATIONS
-                                </Text>
-                                <View style={{flex: 1}} />
-                            </View>
-                            {!this.state.isLoading &&
-                                this.state.notifications.length > 0 && (
-                                    <FlatList
-                                        data={this.state.notifications}
-                                        keyExtractor={(item, index) => index}
-                                        renderItem={({item, index}) => (
                                             <TouchableOpacity
-                                                style={{
-                                                    height: 90 * factorRatio,
-                                                    backgroundColor:
-                                                        index % 2
-                                                            ? colors.mainBackground
-                                                            : colors.notificationColor,
-                                                    flexDirection: 'row',
+                                                onPress={() => {
+                                                    this.props.navigation.navigate(
+                                                        'PROFILESETTINGS',
+                                                        {
+                                                            data:
+                                                                'Profile Photo',
+                                                        },
+                                                    );
                                                 }}
-                                                onPress={() =>
-                                                    this.openNotification(item)
-                                                }
+                                                style={[
+                                                    styles.centerContent,
+                                                    {
+                                                        height: '100%',
+                                                        width: '100%',
+                                                    },
+                                                ]}
                                             >
-                                                <View
-                                                    style={{
-                                                        flex: 0.275,
-                                                        flexDirection: 'row',
-                                                    }}
-                                                >
-                                                    <View style={{flex: 1}} />
-                                                    <View>
-                                                        <View
-                                                            style={{flex: 1}}
-                                                        />
-                                                        <View
-                                                            style={{
-                                                                height:
-                                                                    fullWidth *
-                                                                    0.175,
-                                                                width:
-                                                                    fullWidth *
-                                                                    0.175,
-                                                                borderRadius:
-                                                                    150 *
-                                                                    factorRatio,
-                                                                backgroundColor:
-                                                                    '#ececec',
-                                                            }}
-                                                        >
-                                                            {messageDict[
-                                                                item.type
-                                                            ][2] == 'red' && (
-                                                                <View
-                                                                    style={[
-                                                                        styles.centerContent,
-                                                                        {
-                                                                            position:
-                                                                                'absolute',
-                                                                            bottom: 0,
-                                                                            right: 0,
-                                                                            height:
-                                                                                fullWidth *
-                                                                                0.075,
-                                                                            width:
-                                                                                fullWidth *
-                                                                                0.075,
-                                                                            backgroundColor:
-                                                                                'red',
-                                                                            borderRadius:
-                                                                                100 *
-                                                                                factorRatio,
-                                                                            zIndex: 5,
-                                                                        },
-                                                                    ]}
-                                                                >
-                                                                    <FontAwesome
-                                                                        size={
-                                                                            fullWidth *
-                                                                            0.045
-                                                                        }
-                                                                        color={
-                                                                            'white'
-                                                                        }
-                                                                        name={
-                                                                            'video-camera'
-                                                                        }
-                                                                    />
-                                                                </View>
-                                                            )}
-                                                            {messageDict[
-                                                                item.type
-                                                            ][2] ==
-                                                                'orange' && (
-                                                                <View
-                                                                    style={[
-                                                                        styles.centerContent,
-                                                                        {
-                                                                            position:
-                                                                                'absolute',
-                                                                            bottom: 0,
-                                                                            right: 0,
-                                                                            height:
-                                                                                fullWidth *
-                                                                                0.075,
-                                                                            width:
-                                                                                fullWidth *
-                                                                                0.075,
-                                                                            backgroundColor:
-                                                                                'orange',
-                                                                            borderRadius:
-                                                                                100 *
-                                                                                factorRatio,
-                                                                            zIndex: 5,
-                                                                        },
-                                                                    ]}
-                                                                >
-                                                                    <Chat
-                                                                        height={
-                                                                            fullWidth *
-                                                                            0.05
-                                                                        }
-                                                                        width={
-                                                                            fullWidth *
-                                                                            0.05
-                                                                        }
-                                                                        fill={
-                                                                            'white'
-                                                                        }
-                                                                    />
-                                                                </View>
-                                                            )}
-                                                            {messageDict[
-                                                                item.type
-                                                            ][2] == 'blue' && (
-                                                                <View
-                                                                    style={[
-                                                                        styles.centerContent,
-                                                                        {
-                                                                            position:
-                                                                                'absolute',
-                                                                            bottom: 0,
-                                                                            right: 0,
-                                                                            height:
-                                                                                fullWidth *
-                                                                                0.075,
-                                                                            width:
-                                                                                fullWidth *
-                                                                                0.075,
-                                                                            backgroundColor:
-                                                                                'blue',
-                                                                            borderRadius:
-                                                                                100 *
-                                                                                factorRatio,
-                                                                            zIndex: 5,
-                                                                        },
-                                                                    ]}
-                                                                >
-                                                                    <AntIcon
-                                                                        size={
-                                                                            fullWidth *
-                                                                            0.045
-                                                                        }
-                                                                        color={
-                                                                            'white'
-                                                                        }
-                                                                        name={
-                                                                            'like1'
-                                                                        }
-                                                                    />
-                                                                </View>
-                                                            )}
-                                                            <FastImage
-                                                                style={{
-                                                                    flex: 1,
-                                                                    borderRadius: 100,
-                                                                }}
-                                                                source={{
-                                                                    uri:
-                                                                        item.type ==
-                                                                        'new content releases'
-                                                                            ? item
-                                                                                  .content
-                                                                                  .thumbnail_url
-                                                                            : item
-                                                                                  .sender
-                                                                                  ?.profile_image_url,
-                                                                }}
-                                                                resizeMode={
-                                                                    FastImage
-                                                                        .resizeMode
-                                                                        .stretch
-                                                                }
-                                                            />
-                                                        </View>
-                                                        <View
-                                                            style={{flex: 1}}
-                                                        />
-                                                    </View>
-                                                    <View style={{flex: 1}} />
-                                                </View>
-                                                <View style={{flex: 0.675}}>
-                                                    <View style={{flex: 1}}>
-                                                        <View
-                                                            style={{flex: 1}}
-                                                        />
-                                                        <Text
-                                                            style={{
-                                                                fontFamily:
-                                                                    'OpenSans-Bold',
-                                                                fontSize:
-                                                                    15 *
-                                                                    factorRatio,
-                                                                color: 'white',
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontFamily:
-                                                                        'OpenSans-ExtraBold',
-                                                                    fontSize:
-                                                                        15 *
-                                                                        factorRatio,
-                                                                    color:
-                                                                        'white',
-                                                                }}
-                                                            >
-                                                                {messageDict[
-                                                                    item.type
-                                                                ][1]
-                                                                    ? ''
-                                                                    : 'NEW - '}
-                                                            </Text>
-                                                            {item.type ==
-                                                            'new content releases'
-                                                                ? item.content
-                                                                      .display_name
-                                                                : item.sender
-                                                                      ?.display_name}
-                                                            <Text
-                                                                style={{
-                                                                    fontFamily:
-                                                                        'OpenSans-Regular',
-                                                                    fontSize:
-                                                                        14 *
-                                                                        factorRatio,
-                                                                }}
-                                                            >
-                                                                {' '}
-                                                                {
-                                                                    messageDict[
-                                                                        item
-                                                                            .type
-                                                                    ][0]
-                                                                }
-                                                            </Text>
-                                                        </Text>
-                                                        <View
-                                                            style={{
-                                                                height:
-                                                                    5 *
-                                                                    factorVertical,
-                                                            }}
-                                                        />
-                                                        <Text
-                                                            style={{
-                                                                fontFamily:
-                                                                    'OpenSans-Regular',
-                                                                fontSize:
-                                                                    13 *
-                                                                    factorRatio,
-                                                                color:
-                                                                    colors.secondBackground,
-                                                            }}
-                                                        >
-                                                            {item.created_at}
-                                                        </Text>
-                                                        <View
-                                                            style={{flex: 1}}
-                                                        />
-                                                    </View>
-                                                </View>
-                                                <View>
-                                                    <View style={{flex: 1}} />
-                                                    <View
-                                                        style={{
-                                                            flexDirection:
-                                                                'row',
-                                                        }}
-                                                    >
-                                                        <View
-                                                            style={{flex: 1}}
-                                                        />
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                this.checkNotificationTypeStatus(
-                                                                    item,
-                                                                ),
-                                                                    this.setState(
-                                                                        {
-                                                                            showReplyNotification: true,
-                                                                            clickedNotification: item,
-                                                                        },
-                                                                    );
-                                                            }}
-                                                            style={{
-                                                                height:
-                                                                    35 *
-                                                                    factorRatio,
-                                                                justifyContent:
-                                                                    'center',
-                                                            }}
-                                                        >
-                                                            <EntypoIcon
-                                                                size={
-                                                                    20 *
-                                                                    factorRatio
-                                                                }
-                                                                name={
-                                                                    'dots-three-horizontal'
-                                                                }
-                                                                color={
-                                                                    colors.secondBackground
-                                                                }
-                                                            />
-                                                        </TouchableOpacity>
-                                                        <View
-                                                            style={{flex: 1}}
-                                                        />
-                                                    </View>
-                                                    <View style={{flex: 1}} />
-                                                </View>
+                                                <IonIcon
+                                                    size={25 * factorRatio}
+                                                    name={'ios-camera'}
+                                                    color={colors.pianoteRed}
+                                                />
                                             </TouchableOpacity>
+                                        </View>
+                                        {this.state.profileImage == '' && (
+                                            <View
+                                                style={[
+                                                    styles.centerContent,
+                                                    {
+                                                        height: '100%',
+                                                        width: '100%',
+                                                        alignSelf: 'stretch',
+                                                    },
+                                                ]}
+                                            >
+                                                <AntIcon
+                                                    name={'user'}
+                                                    color={colors.pianoteRed}
+                                                    size={85 * factorRatio}
+                                                />
+                                            </View>
                                         )}
+                                        {this.state.profileImage !== '' && (
+                                            <FastImage
+                                                style={{
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    borderRadius: 250,
+                                                    backgroundColor:
+                                                        colors.secondBackground,
+                                                }}
+                                                source={{
+                                                    uri: this.state
+                                                        .profileImage,
+                                                }}
+                                                resizeMode={
+                                                    FastImage.resizeMode.cover
+                                                }
+                                            />
+                                        )}
+                                    </View>
+                                    <View
+                                        style={{
+                                            height: 10 * factorVertical,
+                                        }}
                                     />
-                                )}
-                            {!this.state.isLoading &&
-                                this.state.notifications.length == 0 && (
-                                    <View>
+                                    <View
+                                        key={'name'}
+                                        style={[
+                                            styles.centerContent,
+                                            {
+                                                alignSelf: 'stretch',
+                                            },
+                                        ]}
+                                    >
                                         <Text
                                             style={{
                                                 fontFamily:
                                                     'OpenSans-ExtraBold',
-                                                fontSize: 15 * factorRatio,
-                                                textAlign: 'left',
-                                                paddingLeft: fullWidth * 0.05,
+                                                fontSize: 30 * factorRatio,
+                                                textAlign: 'center',
                                                 color: 'white',
                                             }}
                                         >
-                                            No New Notifications...
+                                            {this.state.username}
+                                        </Text>
+                                        <View
+                                            style={{
+                                                height: 10 * factorVertical,
+                                            }}
+                                        />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                fontSize: 14 * factorRatio,
+                                                textAlign: 'center',
+                                                color: colors.secondBackground,
+                                            }}
+                                        >
+                                            MEMBER SINCE{' '}
+                                            {this.state.memberSince?.slice(
+                                                0,
+                                                4,
+                                            )}
                                         </Text>
                                     </View>
-                                )}
-                            {this.state.isLoading && (
+                                    <View style={{flex: 1}} />
+                                </View>
+                                <View style={{height: 20 * factorVertical}} />
+                                <View
+                                    key={'rank'}
+                                    style={{
+                                        borderTopColor: colors.secondBackground,
+                                        borderTopWidth: 0.25,
+                                        borderBottomColor:
+                                            colors.secondBackground,
+                                        borderBottomWidth: 0.25,
+                                        height: fullHeight * 0.1,
+                                        paddingTop: 10 * factorVertical,
+                                        paddingBottom: 10 * factorVertical,
+                                        backgroundColor: colors.mainBackground,
+                                        flexDirection: 'row',
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            flex: 3,
+                                            flexDirection: 'row',
+                                            alignSelf: 'stretch',
+                                        }}
+                                    >
+                                        <View style={{flex: 1}} />
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    showXpRank: true,
+                                                });
+                                            }}
+                                        >
+                                            <View style={{flex: 1}} />
+                                            <View>
+                                                <Text
+                                                    style={{
+                                                        color:
+                                                            colors.pianoteRed,
+                                                        fontSize:
+                                                            12 * factorRatio,
+                                                        fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    XP
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        color: 'white',
+                                                        fontSize:
+                                                            24 * factorRatio,
+                                                        fontFamily:
+                                                            'OpenSans-ExtraBold',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    {this.state.xp}
+                                                </Text>
+                                            </View>
+                                            <View style={{flex: 1}} />
+                                        </TouchableOpacity>
+                                        <View style={{flex: 1}} />
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    showXpRank: true,
+                                                });
+                                            }}
+                                        >
+                                            <View style={{flex: 1}} />
+                                            <View>
+                                                <Text
+                                                    style={{
+                                                        color:
+                                                            colors.pianoteRed,
+                                                        fontSize:
+                                                            12 * factorRatio,
+                                                        fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    RANK
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        color: 'white',
+                                                        fontSize:
+                                                            24 * factorRatio,
+                                                        fontFamily:
+                                                            'OpenSans-ExtraBold',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    {this.state.rank}
+                                                </Text>
+                                            </View>
+                                            <View style={{flex: 1}} />
+                                        </TouchableOpacity>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                </View>
+                                <View
+                                    key={'notifications'}
+                                    style={{
+                                        paddingTop: 25 * factorVertical,
+                                        paddingBottom: 15 * factorVertical,
+                                        elevation: 1,
+                                    }}
+                                >
+                                    <View style={{flex: 0.5}} />
+                                    <Text
+                                        style={{
+                                            paddingLeft: fullWidth * 0.05,
+                                            fontSize: 18 * factorRatio,
+                                            fontFamily: 'OpenSans-ExtraBold',
+                                            color: colors.secondBackground,
+                                        }}
+                                    >
+                                        NOTIFICATIONS
+                                    </Text>
+                                    <View style={{flex: 1}} />
+                                </View>
+                            </>
+                        )}
+                        ListEmptyComponent={() =>
+                            this.state.isLoading ? (
                                 <View
                                     style={[
                                         styles.centerContent,
                                         {
-                                            height: fullHeight * 0.215,
+                                            flex: 1,
                                             marginTop: 15 * factorRatio,
                                         },
                                     ]}
@@ -982,71 +661,321 @@ export default class Profile extends React.Component {
                                         color={colors.secondBackground}
                                     />
                                 </View>
-                            )}
-                        </ScrollView>
-                    </View>
-                    <Modal
-                        key={'XpRank'}
-                        isVisible={this.state.showXpRank}
-                        style={[
-                            styles.centerContent,
-                            {
-                                margin: 0,
-                                height: fullHeight,
-                                width: fullWidth,
-                            },
-                        ]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={true}
-                    >
-                        <XpRank
-                            hideXpRank={() => {
-                                this.setState({showXpRank: false});
-                            }}
-                            xp={this.state.xp}
-                            rank={this.state.rank}
-                        />
-                    </Modal>
-                    <Modal
-                        key={'replyNotification'}
-                        isVisible={this.state.showReplyNotification}
-                        style={[
-                            styles.centerContent,
-                            {
-                                margin: 0,
-                                height: fullHeight,
-                                width: fullWidth,
-                            },
-                        ]}
-                        animation={'slideInUp'}
-                        animationInTiming={250}
-                        animationOutTiming={250}
-                        coverScreen={true}
-                        hasBackdrop={true}
-                    >
-                        <ReplyNotification
-                            removeNotification={data => {
-                                this.setState({showReplyNotification: false}),
-                                    this.removeNotification(data);
-                            }}
-                            turnOfffNotifications={data => {
-                                this.setState({showReplyNotification: false}),
-                                    this.turnOfffNotifications(data);
-                            }}
-                            hideReplyNotification={() => {
-                                this.setState({showReplyNotification: false});
-                            }}
-                            data={this.state.clickedNotification}
-                            notificationStatus={
-                                this.state.clickedNotificationStatus
-                            }
-                        />
-                    </Modal>
-                    <NavigationBar currentPage={'PROFILE'} />
+                            ) : (
+                                <Text
+                                    style={{
+                                        fontFamily: 'OpenSans-ExtraBold',
+                                        fontSize: 15 * factorRatio,
+                                        textAlign: 'left',
+                                        paddingLeft: fullWidth * 0.05,
+                                        color: 'white',
+                                    }}
+                                >
+                                    No New Notifications...
+                                </Text>
+                            )
+                        }
+                        renderItem={({item, index}) => (
+                            <TouchableOpacity
+                                style={{
+                                    height: 90 * factorRatio,
+                                    backgroundColor:
+                                        index % 2
+                                            ? colors.mainBackground
+                                            : colors.notificationColor,
+                                    flexDirection: 'row',
+                                }}
+                                onPress={() => this.openNotification(item)}
+                            >
+                                <View
+                                    style={{
+                                        flex: 0.275,
+                                        flexDirection: 'row',
+                                    }}
+                                >
+                                    <View style={{flex: 1}} />
+                                    <View>
+                                        <View style={{flex: 1}} />
+                                        <View
+                                            style={{
+                                                height: fullWidth * 0.175,
+                                                width: fullWidth * 0.175,
+                                                borderRadius: 150 * factorRatio,
+                                                backgroundColor: '#ececec',
+                                            }}
+                                        >
+                                            {messageDict[item.type][2] ==
+                                                'red' && (
+                                                <View
+                                                    style={[
+                                                        styles.centerContent,
+                                                        {
+                                                            position:
+                                                                'absolute',
+                                                            bottom: 0,
+                                                            right: 0,
+                                                            height:
+                                                                fullWidth *
+                                                                0.075,
+                                                            width:
+                                                                fullWidth *
+                                                                0.075,
+                                                            backgroundColor:
+                                                                'red',
+                                                            borderRadius:
+                                                                100 *
+                                                                factorRatio,
+                                                            zIndex: 5,
+                                                        },
+                                                    ]}
+                                                >
+                                                    <FontAwesome
+                                                        size={fullWidth * 0.045}
+                                                        color={'white'}
+                                                        name={'video-camera'}
+                                                    />
+                                                </View>
+                                            )}
+                                            {messageDict[item.type][2] ==
+                                                'orange' && (
+                                                <View
+                                                    style={[
+                                                        styles.centerContent,
+                                                        {
+                                                            position:
+                                                                'absolute',
+                                                            bottom: 0,
+                                                            right: 0,
+                                                            height:
+                                                                fullWidth *
+                                                                0.075,
+                                                            width:
+                                                                fullWidth *
+                                                                0.075,
+                                                            backgroundColor:
+                                                                'orange',
+                                                            borderRadius:
+                                                                100 *
+                                                                factorRatio,
+                                                            zIndex: 5,
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Chat
+                                                        height={
+                                                            fullWidth * 0.05
+                                                        }
+                                                        width={fullWidth * 0.05}
+                                                        fill={'white'}
+                                                    />
+                                                </View>
+                                            )}
+                                            {messageDict[item.type][2] ==
+                                                'blue' && (
+                                                <View
+                                                    style={[
+                                                        styles.centerContent,
+                                                        {
+                                                            position:
+                                                                'absolute',
+                                                            bottom: 0,
+                                                            right: 0,
+                                                            height:
+                                                                fullWidth *
+                                                                0.075,
+                                                            width:
+                                                                fullWidth *
+                                                                0.075,
+                                                            backgroundColor:
+                                                                'blue',
+                                                            borderRadius:
+                                                                100 *
+                                                                factorRatio,
+                                                            zIndex: 5,
+                                                        },
+                                                    ]}
+                                                >
+                                                    <AntIcon
+                                                        size={fullWidth * 0.045}
+                                                        color={'white'}
+                                                        name={'like1'}
+                                                    />
+                                                </View>
+                                            )}
+                                            <FastImage
+                                                style={{
+                                                    flex: 1,
+                                                    borderRadius: 100,
+                                                }}
+                                                source={{
+                                                    uri:
+                                                        item.type ==
+                                                        'new content releases'
+                                                            ? item.content
+                                                                  .thumbnail_url
+                                                            : item.sender
+                                                                  ?.profile_image_url,
+                                                }}
+                                                resizeMode={
+                                                    FastImage.resizeMode.stretch
+                                                }
+                                            />
+                                        </View>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                    <View style={{flex: 1}} />
+                                </View>
+                                <View style={{flex: 0.675}}>
+                                    <View style={{flex: 1}}>
+                                        <View style={{flex: 1}} />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Bold',
+                                                fontSize: 15 * factorRatio,
+                                                color: 'white',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontFamily:
+                                                        'OpenSans-ExtraBold',
+                                                    fontSize: 15 * factorRatio,
+                                                    color: 'white',
+                                                }}
+                                            >
+                                                {messageDict[item.type][1]
+                                                    ? ''
+                                                    : 'NEW - '}
+                                            </Text>
+                                            {item.type == 'new content releases'
+                                                ? item.content.display_name
+                                                : item.sender?.display_name}
+                                            <Text
+                                                style={{
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
+                                                    fontSize: 14 * factorRatio,
+                                                }}
+                                            >
+                                                {' '}
+                                                {messageDict[item.type][0]}
+                                            </Text>
+                                        </Text>
+                                        <View
+                                            style={{
+                                                height: 5 * factorVertical,
+                                            }}
+                                        />
+                                        <Text
+                                            style={{
+                                                fontFamily: 'OpenSans-Regular',
+                                                fontSize: 13 * factorRatio,
+                                                color: colors.secondBackground,
+                                            }}
+                                        >
+                                            {item.created_at}
+                                        </Text>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                </View>
+                                <View>
+                                    <View style={{flex: 1}} />
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                        }}
+                                    >
+                                        <View style={{flex: 1}} />
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.checkNotificationTypeStatus(
+                                                    item,
+                                                ),
+                                                    this.setState({
+                                                        showReplyNotification: true,
+                                                        clickedNotification: item,
+                                                    });
+                                            }}
+                                            style={{
+                                                height: 35 * factorRatio,
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <EntypoIcon
+                                                size={20 * factorRatio}
+                                                name={'dots-three-horizontal'}
+                                                color={colors.secondBackground}
+                                            />
+                                        </TouchableOpacity>
+                                        <View style={{flex: 1}} />
+                                    </View>
+                                    <View style={{flex: 1}} />
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    />
                 </View>
+                <Modal
+                    key={'XpRank'}
+                    isVisible={this.state.showXpRank}
+                    style={[
+                        styles.centerContent,
+                        {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        },
+                    ]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <XpRank
+                        hideXpRank={() => {
+                            this.setState({showXpRank: false});
+                        }}
+                        xp={this.state.xp}
+                        rank={this.state.rank}
+                    />
+                </Modal>
+                <Modal
+                    key={'replyNotification'}
+                    isVisible={this.state.showReplyNotification}
+                    style={[
+                        styles.centerContent,
+                        {
+                            margin: 0,
+                            height: fullHeight,
+                            width: fullWidth,
+                        },
+                    ]}
+                    animation={'slideInUp'}
+                    animationInTiming={250}
+                    animationOutTiming={250}
+                    coverScreen={true}
+                    hasBackdrop={true}
+                >
+                    <ReplyNotification
+                        removeNotification={data => {
+                            this.setState({showReplyNotification: false}),
+                                this.removeNotification(data);
+                        }}
+                        turnOfffNotifications={data => {
+                            this.setState({showReplyNotification: false}),
+                                this.turnOfffNotifications(data);
+                        }}
+                        hideReplyNotification={() => {
+                            this.setState({showReplyNotification: false});
+                        }}
+                        data={this.state.clickedNotification}
+                        notificationStatus={
+                            this.state.clickedNotificationStatus
+                        }
+                    />
+                </Modal>
+                <NavigationBar currentPage={'PROFILE'} />
             </View>
         );
     }

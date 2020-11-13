@@ -11,29 +11,39 @@ import {
     TextInput,
     TouchableOpacity,
     ActivityIndicator,
+    RefreshControl,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import Video from 'RNVideoEnhanced';
 import {Download_V2, offlineContent, DownloadResources} from 'RNDownload';
-import Replies from '../../components/Replies.js';
-import CommentSort from '../../modals/CommentSort.js';
-import SoundSlice from '../../components/SoundSlice.js';
+import AsyncStorage from '@react-native-community/async-storage';
+
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import LessonComplete from '../../modals/LessonComplete.js';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-community/async-storage';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
+
+import Replies from '../../components/Replies.js';
+import CommentSort from '../../modals/CommentSort.js';
+import SoundSlice from '../../components/SoundSlice.js';
+import LessonComplete from '../../modals/LessonComplete.js';
 import Resources from 'Pianote2/src/assets/img/svgs/resources.svg';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import downloadService from '../../services/download.service.js';
 import commentsService from '../../services/comments.service.js';
 import contentService from '../../services/content.service.js';
+import OverviewComplete from '../../modals/OverviewComplete.js';
+import VideoPlayerSong from './VideoPlayerSong.js';
+import AssignmentComplete from '../../modals/AssignmentComplete.js';
+import RestartCourse from '../../modals/RestartCourse.js';
+import foundationsService from '../../services/foundations.service.js';
+import {NetworkContext} from '../../context/NetworkProvider';
+import CustomModal from '../../modals/CustomModal.js';
 import {
     likeContent,
     unlikeContent,
@@ -42,16 +52,6 @@ import {
     resetProgress,
     markComplete,
     markStarted,
-} from 'Pianote2/src/services/UserActions.js';
-import OverviewComplete from '../../modals/OverviewComplete.js';
-import VideoPlayerSong from './VideoPlayerSong.js';
-import AssignmentComplete from '../../modals/AssignmentComplete.js';
-import RestartCourse from '../../modals/RestartCourse.js';
-import foundationsService from '../../services/foundations.service.js';
-import {NetworkContext} from '../../context/NetworkProvider';
-import CustomModal from '../../modals/CustomModal.js';
-import {RefreshControl} from 'react-native';
-import {
     getMediaSessionId,
     updateUsersVideoProgress,
 } from '../../services/UserActions.js';
@@ -136,33 +136,15 @@ export default class VideoPlayer extends React.Component {
         } else {
             let result;
             if (this.props.navigation.state.params.url) {
-                result = await Promise.all([
-                    foundationsService.getUnitLesson(this.state.url),
-                    commentsService.getComments(
-                        this.state.id ||
-                            this.state.url.substr(
-                                this.state.url.lastIndexOf('/') + 1,
-                            ),
-                        this.state.commentSort,
-                        this.limit,
-                    ),
-                ]);
+                result = await foundationsService.getUnitLesson(this.state.url);
             } else {
-                result = await Promise.all([
-                    contentService.getContent(this.state.id),
-                    commentsService.getComments(
-                        this.state.id,
-                        this.state.commentSort,
-                        this.limit,
-                    ),
-                ]);
+                result = await contentService.getContent(this.state.id);
             }
-            if (result[0].title && result[0].message) {
+            if (result.title && result.message) {
                 return this.alert.toggle(result[0].title, result[0].message);
             }
-            content = result[0];
-            comments = result[1].data;
-            this.allCommentsNum = result[1].meta.totalResults;
+            content = result;
+            this.allCommentsNum = result.total_comments;
         }
         console.log(content);
         content = new ContentModel(content);
@@ -240,7 +222,7 @@ export default class VideoPlayer extends React.Component {
 
         this.setState(
             {
-                comments,
+                comments: content.post.comments,
                 id: content.id,
                 url: content.post.mobile_app_url,
                 type: content.type,
@@ -382,6 +364,7 @@ export default class VideoPlayer extends React.Component {
             this.state.commentSort,
             this.limit,
         );
+
         this.allCommentsNum = comments.meta.totalResults;
         this.setState(state => ({
             comments:

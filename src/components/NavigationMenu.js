@@ -8,6 +8,28 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NetworkContext} from '../context/NetworkProvider';
 
+const navigationOptions = [
+    {
+        title: 'Home',
+        navigator: 'LESSONS',
+    },
+    {
+        title: 'Foundations',
+        navigator: 'FOUNDATIONS',
+    },
+    {
+        title: 'Courses',
+        navigator: 'COURSE',
+    },
+    {
+        title: 'Songs',
+        navigator: 'SONGCATALOG',
+    },
+    {
+        title: 'Student Focus',
+        navigator: 'STUDENTFOCUSCATALOG',
+    },
+];
 class NavigationMenu extends React.Component {
     static contextType = NetworkContext;
     static navigationOptions = {header: null};
@@ -36,217 +58,93 @@ class NavigationMenu extends React.Component {
     lessonNav() {
         return (
             <View>
+                {navigationOptions.map((nav, index) => (
+                    <View
+                        key={index}
+                        style={[
+                            styles.centerContent,
+                            {
+                                height: onTablet
+                                    ? fullHeight * 0.125
+                                    : fullHeight * 0.1,
+                            },
+                        ]}
+                    >
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (!this.context.isConnected)
+                                    return this.context.showNoConnectionAlert();
+                                this.props.onClose(false);
+                                if (nav.title === 'Foundations') {
+                                    this.props.navigation.navigate(
+                                        'FOUNDATIONS',
+                                        {
+                                            foundationIsStarted: this.state
+                                                .foundationIsStarted,
+                                            foundationIsCompleted: this.state
+                                                .foundationIsCompleted,
+                                        },
+                                    );
+                                } else {
+                                    this.props.navigation.navigate(
+                                        nav.navigator,
+                                    );
+                                }
+                            }}
+                            style={{flex: 1}}
+                        >
+                            <Text
+                                style={{
+                                    fontFamily:
+                                        this.props.parentPage ==
+                                        nav.title.toUpperCase()
+                                            ? 'OpenSans-ExtraBold'
+                                            : 'OpenSans-Bold',
+                                    color:
+                                        this.props.parentPage ==
+                                        nav.title.toUpperCase()
+                                            ? 'white'
+                                            : colors.secondBackground,
+                                    fontSize:
+                                        (this.props.parentPage ==
+                                        nav.title.toUpperCase()
+                                            ? 32.5 * factorRatio
+                                            : 27.5 * factorRatio) +
+                                        (onTablet ? 27.5 : 0),
+                                }}
+                            >
+                                {nav.title}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                ))}
+
                 <View
-                    key={'LESSONS'}
                     style={[
                         styles.centerContent,
                         {
                             height: onTablet
                                 ? fullHeight * 0.125
                                 : fullHeight * 0.1,
+                            alignSelf: 'center',
                         },
                     ]}
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            if (!this.context.isConnected)
-                                return this.context.showNoConnectionAlert();
                             this.props.onClose(false);
-                            this.props.navigation.navigate('LESSONS');
                         }}
-                        style={{flex: 1}}
+                        style={[
+                            styles.centerContent,
+                            styles.innerRedButton,
+                            styles.redButton,
+                        ]}
                     >
-                        <Text
-                            style={{
-                                fontFamily:
-                                    this.props.parentPage == 'LESSONS'
-                                        ? 'OpenSans-ExtraBold'
-                                        : 'OpenSans-Bold',
-                                color:
-                                    this.props.parentPage == 'LESSONS'
-                                        ? 'white'
-                                        : colors.secondBackground,
-                                fontSize:
-                                    (this.props.parentPage == 'LESSONS'
-                                        ? 32.5 * factorRatio
-                                        : 27.5 * factorRatio) +
-                                    (onTablet ? 27.5 : 0),
-                            }}
-                        >
-                            Home
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View
-                    key={'FOUNDATIONS'}
-                    style={[
-                        styles.centerContent,
-                        {
-                            height: onTablet
-                                ? fullHeight * 0.125
-                                : fullHeight * 0.1,
-                        },
-                    ]}
-                >
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (!this.context.isConnected)
-                                return this.context.showNoConnectionAlert();
-                            this.props.onClose(false);
-                            this.props.navigation.navigate('FOUNDATIONS', {
-                                foundationIsStarted: this.state
-                                    .foundationIsStarted,
-                                foundationIsCompleted: this.state
-                                    .foundationIsCompleted,
-                            });
-                        }}
-                        style={{flex: 1}}
-                    >
-                        <Text
-                            style={{
-                                fontFamily:
-                                    this.props.parentPage == 'FOUNDATIONS'
-                                        ? 'OpenSans-ExtraBold'
-                                        : 'OpenSans-Regular',
-                                color:
-                                    this.props.parentPage == 'FOUNDATIONS'
-                                        ? 'white'
-                                        : colors.secondBackground,
-                                fontSize:
-                                    (this.props.parentPage == 'FOUNDATIONS'
-                                        ? 32.5 * factorRatio
-                                        : 27.5 * factorRatio) +
-                                    (onTablet ? 27.5 : 0),
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            Foundations
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View
-                    key={'COURSES'}
-                    style={[
-                        styles.centerContent,
-                        {
-                            height: onTablet
-                                ? fullHeight * 0.125
-                                : fullHeight * 0.1,
-                        },
-                    ]}
-                >
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (!this.context.isConnected)
-                                return this.context.showNoConnectionAlert();
-                            this.props.onClose(false);
-                            this.props.navigation.navigate('COURSE');
-                        }}
-                        style={{flex: 1}}
-                    >
-                        <Text
-                            style={{
-                                fontFamily:
-                                    this.props.parentPage == 'COURSES'
-                                        ? 'OpenSans-ExtraBold'
-                                        : 'OpenSans-Bold',
-                                color:
-                                    this.props.parentPage == 'COURSES'
-                                        ? 'white'
-                                        : colors.secondBackground,
-                                fontSize:
-                                    (this.props.parentPage == 'COURSES'
-                                        ? 32.5 * factorRatio
-                                        : 27.5 * factorRatio) +
-                                    (onTablet ? 27.5 : 0),
-                            }}
-                        >
-                            Courses
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View
-                    key={'SONGS'}
-                    style={[
-                        styles.centerContent,
-                        {
-                            height: onTablet
-                                ? fullHeight * 0.125
-                                : fullHeight * 0.1,
-                        },
-                    ]}
-                >
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (!this.context.isConnected)
-                                return this.context.showNoConnectionAlert();
-                            this.props.onClose(false);
-                            this.props.navigation.navigate('SONGCATALOG');
-                        }}
-                        style={{flex: 1}}
-                    >
-                        <Text
-                            style={{
-                                fontFamily:
-                                    this.props.parentPage == 'SONGS'
-                                        ? 'OpenSans-ExtraBold'
-                                        : 'OpenSans-Bold',
-                                color:
-                                    this.props.parentPage == 'SONGS'
-                                        ? 'white'
-                                        : colors.secondBackground,
-                                fontSize:
-                                    (this.props.parentPage == 'SONGS'
-                                        ? 32.5 * factorRatio
-                                        : 27.5 * factorRatio) +
-                                    (onTablet ? 27.5 : 0),
-                            }}
-                        >
-                            Songs
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View
-                    key={'STUDENT FOCUS'}
-                    style={[
-                        styles.centerContent,
-                        {
-                            height: onTablet
-                                ? fullHeight * 0.125
-                                : fullHeight * 0.1,
-                        },
-                    ]}
-                >
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (!this.context.isConnected)
-                                return this.context.showNoConnectionAlert();
-                            this.props.onClose(false);
-                            this.props.navigation.navigate(
-                                'STUDENTFOCUSCATALOG',
-                            );
-                        }}
-                        style={{flex: 1}}
-                    >
-                        <Text
-                            style={{
-                                fontFamily:
-                                    this.props.parentPage == 'STUDENT FOCUS'
-                                        ? 'OpenSans-ExtraBold'
-                                        : 'OpenSans-Bold',
-                                color:
-                                    this.props.parentPage == 'STUDENT FOCUS'
-                                        ? 'white'
-                                        : colors.secondBackground,
-                                fontSize:
-                                    (this.props.parentPage == 'STUDENT FOCUS'
-                                        ? 32.5 * factorRatio
-                                        : 27.5 * factorRatio) +
-                                    (onTablet ? 27.5 : 0),
-                            }}
-                        >
-                            Student Focus
-                        </Text>
+                        <FeatherIcon
+                            size={50 * factorRatio}
+                            name={'x'}
+                            color={'white'}
+                        />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -257,64 +155,16 @@ class NavigationMenu extends React.Component {
         return (
             <View
                 key={'componentContainer'}
-                style={[
-                    styles.centerContent,
-                    {
-                        height: fullHeight,
-                        width: fullWidth,
-                        elevation: 5,
-                        backgroundColor: colors.mainBackground,
-                    },
-                ]}
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: colors.mainBackground,
+                    borderWidth: 1,
+                    borderColor: 'red',
+                }}
             >
-                <View
-                    style={{
-                        position: 'absolute',
-                        zIndex: 5,
-                        height: fullHeight - navHeight,
-                        width: fullWidth,
-                    }}
-                >
-                    <View style={{flex: 0.4, alignSelf: 'stretch'}} />
-                    <View key={'menuItems'} style={{alignSelf: 'stretch'}}>
-                        {this.lessonNav()}
-                    </View>
-                    <View style={{flex: 0.55, alignSelf: 'stretch'}} />
-                    <View
-                        key={'buttonContainer'}
-                        style={[
-                            styles.buttonContainer,
-                            styles.centerContent,
-                            {},
-                        ]}
-                    >
-                        <View style={{flex: 1, alignSelf: 'stretch'}} />
-                        <View
-                            key={'closeButton'}
-                            style={[styles.centerContent, styles.redButton]}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.onClose(false);
-                                }}
-                                style={[
-                                    styles.centerContent,
-                                    styles.innerRedButton,
-                                    {},
-                                ]}
-                            >
-                                <View style={{flex: 1}} />
-                                <FeatherIcon
-                                    size={50 * factorRatio}
-                                    name={'x'}
-                                    color={'white'}
-                                />
-                                <View style={{flex: 1}} />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{flex: 1, alignSelf: 'stretch'}} />
-                    </View>
-                </View>
+                {this.lessonNav()}
             </View>
         );
     };
