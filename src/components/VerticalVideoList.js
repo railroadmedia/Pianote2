@@ -251,7 +251,11 @@ class VerticalVideoList extends React.Component {
     };
 
     navigate = (content, index) => {
-        if (!this.context.isConnected && this.props.title !== 'RELATED LESSONS')
+        if (
+            !this.context.isConnected &&
+            this.props.title !== 'RELATED LESSONS' &&
+            this.props.title !== 'Foundations'
+        )
             return this.context.showNoConnectionAlert();
         if (this.props.navigator) return this.props.navigator(content, index);
         switch (content.type) {
