@@ -251,7 +251,7 @@ class VerticalVideoList extends React.Component {
     };
 
     navigate = (content, index) => {
-        if (!this.context.isConnected)
+        if (!this.context.isConnected && this.props.title !== 'RELATED LESSONS')
             return this.context.showNoConnectionAlert();
         if (this.props.navigator) return this.props.navigator(content, index);
         switch (content.type) {
@@ -506,19 +506,24 @@ class VerticalVideoList extends React.Component {
                                                             .imageRadius,
                                                     }}
                                                     source={{
-                                                        uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                                            this.props
-                                                                .imageWidth * 2,
-                                                        )},ar_${
-                                                            this.props
-                                                                .imageWidth ===
-                                                            this.props
-                                                                .imageHeight
-                                                                ? '1'
-                                                                : '16:9'
-                                                        },fl_lossy,q_auto:eco,c_fill,g_face/${
-                                                            row.thumbnail
-                                                        }`,
+                                                        uri: row.thumbnail.includes(
+                                                            'http',
+                                                        )
+                                                            ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                                                  this.props
+                                                                      .imageWidth *
+                                                                      2,
+                                                              )},ar_${
+                                                                  this.props
+                                                                      .imageWidth ===
+                                                                  this.props
+                                                                      .imageHeight
+                                                                      ? '1'
+                                                                      : '16:9'
+                                                              },fl_lossy,q_auto:eco,c_fill,g_face/${
+                                                                  row.thumbnail
+                                                              }`
+                                                            : row.thumbnail,
                                                     }}
                                                     resizeMode={
                                                         FastImage.resizeMode
