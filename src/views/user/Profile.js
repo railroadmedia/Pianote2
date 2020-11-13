@@ -295,10 +295,7 @@ export default class Profile extends React.Component {
                 url: notification.content.mobile_app_url,
             });
         } else {
-            // TODO: change 632 when we get param from BE
-            Linking.openURL(
-                `${commonService.rootUrl}/members/forums/632?page=1#post${notification.data.postId}`,
-            );
+            Linking.openURL(notification.url);
         }
     };
 
