@@ -93,8 +93,9 @@ export default class LoginCredentials extends React.Component {
         const response = await getToken(
             this.state.email,
             this.state.password,
-            await this.getPurchases(),
+            await this.getPurchases()
         );
+
         if (response.success) {
             // store user data
             updateFcmToken();

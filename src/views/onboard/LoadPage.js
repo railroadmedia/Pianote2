@@ -3,17 +3,13 @@
  */
 import React from 'react';
 import {Linking, View} from 'react-native';
-
 import {Download_V2} from 'RNDownload';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NavigationActions, StackActions} from 'react-navigation';
-
 import {NetworkContext} from '../../context/NetworkProvider';
-
 import {getToken, getUserData} from '../../services/UserDataAuth';
 import {notif, updateFcmToken} from '../../services/notification.service';
-
 import Pianote from '../../assets/img/svgs/pianote';
 
 export default class LoadPage extends React.Component {
