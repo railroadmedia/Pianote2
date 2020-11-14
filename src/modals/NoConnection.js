@@ -66,7 +66,7 @@ class NoConnection extends React.Component {
                                     textAlign: 'center',
                                 }}
                             >
-                                Sorry, our server is down right now.
+                                Sorry, our server {"\n"}is down right now.
                             </Text>
                         </View>
                         <View style={{height: fullHeight * 0.035}} />
