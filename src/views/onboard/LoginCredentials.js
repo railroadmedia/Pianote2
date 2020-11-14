@@ -48,6 +48,7 @@ export default class LoginCredentials extends React.Component {
             password: '',
             secureTextEntry: true,
             showPasswordEmailMatch: false,
+            showNoConnection: false, 
             loginErrorMessage: '',
             scrollViewContentFlex: {flex: 1},
         };
@@ -88,6 +89,11 @@ export default class LoginCredentials extends React.Component {
     };
 
     login = async () => {
+        if (this.context.isConnected) {
+            this.context.showNoConnectionAlert();
+        }
+
+
         Keyboard.dismiss();
         this.loadingRef?.toggleLoading(true);
         const response = await getToken(
