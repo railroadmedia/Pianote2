@@ -230,9 +230,7 @@ export default class LoadPage extends React.Component {
                 >
                     <NoConnection
                         hideNoConnection={() => {
-                            this.setState({showNoConnection: false})
-                        }}
-                        handleNoConnection={() => {
+                            this.setState({showNoConnection: false}),
                             this.handleNoConnection()
                         }}
                     />

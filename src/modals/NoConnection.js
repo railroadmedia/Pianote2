@@ -109,8 +109,7 @@ class NoConnection extends React.Component {
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                this.props.hideNoConnection(),
-                                                this.props.handleNoConnection()
+                                                this.props.hideNoConnection()
                                             }}
                                             style={{
                                                 height: '100%',
