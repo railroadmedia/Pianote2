@@ -34,7 +34,7 @@ class NoConnection extends React.Component {
                 <View
                     key={'content'}
                     style={{
-                        height: fullWidth * 0.65,
+                        height: fullWidth * 0.6,
                         width: '100%',
                         flexDirection: 'row',
                     }}
@@ -75,7 +75,7 @@ class NoConnection extends React.Component {
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontSize: 16 * factorRatio,
+                                    fontSize: 18 * factorRatio,
                                     textAlign: 'center',
                                 }}
                             >
@@ -119,7 +119,7 @@ class NoConnection extends React.Component {
                                             <View style={{flex: 1}} />
                                             <Text
                                                 style={{
-                                                    fontSize: 17 * factorRatio,
+                                                    fontSize: 20 * factorRatio,
                                                     fontWeight: 'bold',
                                                     color: '#fb1b2f',
                                                     textAlign: 'center',
