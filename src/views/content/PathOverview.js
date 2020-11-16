@@ -9,6 +9,7 @@ import {
     ScrollView,
     RefreshControl,
 } from 'react-native';
+import {SafeAreaView} from 'react-navigation';
 import {
     addToMyList,
     likeContent,
@@ -42,7 +43,8 @@ export default class PathOverview extends React.Component {
             data: this.props.navigation.state.params.data,
             items: this.props.navigation.state.params.items || [],
             isAddedToList: this.props.navigation.state.params.data
-                .isAddedToList,
+                ?.isAddedToList,
+            thumbnail: this.props.navigation.state.params.data?.isAddedToList,
             showInfo: false,
             totalLength: 0,
             isLiked: false,
@@ -51,7 +53,9 @@ export default class PathOverview extends React.Component {
             completed: false,
             showRestartCourse: false,
             nextLesson: 0,
-            isLoadingAll: true,
+            isLoadingAll: this.props.navigation.state.params.items?.length
+                ? false
+                : true,
             difficulty: 0,
         };
         greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
@@ -77,6 +81,7 @@ export default class PathOverview extends React.Component {
                 completed: r.completed,
                 nextLesson: r.next_lesson.id,
                 difficulty: r.fields.find(f => f.key === 'difficulty').value,
+                thumbnail: r.data.find(f => f.key === 'thumbnail_url').value,
                 isLoadingAll: false,
                 items:
                     r?.lessons?.map(l => {
@@ -166,10 +171,16 @@ export default class PathOverview extends React.Component {
 
     render() {
         return (
-            <View
+            <SafeAreaView
+                forceInset={{
+                    bottom: 'never',
+                }}
                 style={[
-                    styles.container,
-                    {backgroundColor: colors.mainBackground},
+                    {
+                        flex: 1,
+                        width: '100%',
+                        backgroundColor: colors.mainBackground,
+                    },
                 ]}
             >
                 <ScrollView
@@ -187,13 +198,6 @@ export default class PathOverview extends React.Component {
                         />
                     }
                 >
-                    <View
-                        style={{
-                            height: isNotch
-                                ? fullHeight * 0.05
-                                : fullHeight * 0.03,
-                        }}
-                    />
                     <View
                         key={'image'}
                         style={[
@@ -215,7 +219,7 @@ export default class PathOverview extends React.Component {
                                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
                                     (greaterWDim >> 0) * 2
                                 },ar_16:9,c_fill,g_face/${
-                                    this.state.data.thumbnail
+                                    this.state.thumbnail
                                 }`,
                             }}
                             resizeMode={FastImage.resizeMode.cover}
@@ -818,7 +822,7 @@ export default class PathOverview extends React.Component {
                     />
                 </Modal>
                 <NavigationBar currentPage={'LessonsPathOverview'} />
-            </View>
+            </SafeAreaView>
         );
     }
 }

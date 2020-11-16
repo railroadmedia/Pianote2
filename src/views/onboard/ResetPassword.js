@@ -306,6 +306,7 @@ export default class ResetPassword extends React.Component {
                                     this.setState({password})
                                 }
                                 style={{
+                                    color: 'black',
                                     fontSize: 18 * factorRatio,
                                     fontFamily: 'OpenSans-Regular',
                                     flex: 1,
@@ -395,6 +396,7 @@ export default class ResetPassword extends React.Component {
                                     this.setState({confirmPassword})
                                 }
                                 style={{
+                                    color: 'black',
                                     fontFamily: 'OpenSans-Regular',
                                     fontSize: 18 * factorRatio,
                                     flex: 1,

@@ -130,6 +130,7 @@ class ChangeEmail extends React.Component {
                                             onSubmitEditing={() => {}}
                                             returnKeyType={'go'}
                                             style={{
+                                                color: 'black',
                                                 fontFamily: 'OpenSans-Regular',
                                                 height: fullHeight * 0.06,
                                                 paddingLeft: fullWidth * 0.075,

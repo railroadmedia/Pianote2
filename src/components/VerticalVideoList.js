@@ -264,8 +264,12 @@ class VerticalVideoList extends React.Component {
                     data: content,
                 });
             case 'song':
-                return this.props.navigation.navigate('VIDEOPLAYER', {
-                    id: content.currentLessonId,
+                if (content.lesson_count === 1)
+                    return this.props.navigation.navigate('VIDEOPLAYER', {
+                        id: content.currentLessonId,
+                    });
+                return this.props.navigation.navigate('PATHOVERVIEW', {
+                    data: content,
                 });
             case 'learning-path':
                 return this.props.navigation.navigate('FOUNDATIONS', {

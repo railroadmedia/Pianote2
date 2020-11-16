@@ -403,6 +403,7 @@ export default class CreateAccount3 extends React.Component {
                                                 );
                                             }}
                                             style={{
+                                                color: 'black',
                                                 fontFamily: 'OpenSans-Regular',
                                                 fontSize: 18 * factorRatio,
                                                 flex: 1,

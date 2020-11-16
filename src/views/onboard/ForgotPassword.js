@@ -286,6 +286,7 @@ export default class ForgotPassword extends React.Component {
                                         this.setState({email})
                                     }
                                     style={{
+                                        color: 'black',
                                         fontFamily: 'OpenSans-Regular',
                                         fontSize: 18 * factorRatio,
                                     }}
