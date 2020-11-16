@@ -175,7 +175,7 @@ export default class Settings extends React.Component {
                     <View
                         key={'buffer'}
                         style={{
-                            height: isNotch ? 15 * factorVertical : 0,
+                            height: 15 * factorVertical,
                         }}
                     />
                     <View

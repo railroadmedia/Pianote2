@@ -5,7 +5,6 @@ import React from 'react';
 import {
     View,
     Text,
-    ScrollView,
     TouchableOpacity,
     ActivityIndicator,
     FlatList,
@@ -312,11 +311,31 @@ export default class Profile extends React.Component {
                                         ? fullHeight * 0.1
                                         : isNotch
                                         ? fullHeight * 0.12
-                                        : fullHeight * 0.1,
+                                        : fullHeight * 0.1+10,
                                 backgroundColor: colors.thirdBackground,
                             },
                         ]}
                     >
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigation.navigate(
+                                    'SETTINGS',
+                                );
+                            }}
+                            style={{
+                                position: 'absolute',
+                                zIndex: 10,
+                                elevation: 10,
+                                right: 20 * factorRatio,
+                                bottom: 20 * factorRatio,
+                            }}
+                        >
+                            <Settings
+                                height={25 * factorRatio}
+                                width={25 * factorRatio}
+                                fill={colors.pianoteRed}
+                            />
+                        </TouchableOpacity>
                         <View style={{flex: 1}} />
                         <View
                             style={[
@@ -329,36 +348,17 @@ export default class Profile extends React.Component {
                             <Text
                                 style={{
                                     fontSize: 22 * factorRatio,
+                                    fontWeight: 'bold',
                                     color: 'white',
-                                    fontFamily: 'OpenSans-Bold',
+                                    fontFamily: 'OpenSans-Regular',
                                 }}
                             >
                                 My Profile
                             </Text>
-                            <View
-                                style={{
-                                    position: 'absolute',
-                                    right: 20 * factorHorizontal,
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.props.navigation.navigate(
-                                            'SETTINGS',
-                                        );
-                                    }}
-                                >
-                                    <Settings
-                                        height={20 * factorRatio}
-                                        width={20 * factorRatio}
-                                        fill={colors.pianoteRed}
-                                    />
-                                </TouchableOpacity>
-                            </View>
                         </View>
-                        <View style={{flex: 1}} />
+                        <View style={{height: 20 * factorVertical}} />
                     </View>
-
+                    <View style={{height: 10}}/>
                     <FlatList
                         style={{
                             flex: 1,

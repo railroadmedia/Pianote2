@@ -187,7 +187,7 @@ export default class StudentFocusCatalog extends React.Component {
                             />
                         </View>
                     )}
-
+                    <View style={{height: 15 * factorRatio}} />
                     <View
                         key={'pack'}
                         style={{
