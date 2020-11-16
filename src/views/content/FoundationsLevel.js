@@ -10,6 +10,7 @@ import {
     RefreshControl,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import {SafeAreaView} from 'react-navigation';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import ResetIcon from '../../components/ResetIcon';
@@ -131,7 +132,12 @@ export default class FoundationsLevel extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <SafeAreaView
+                forceInset={{
+                    bottom: 'never',
+                }}
+                style={styles.container}
+            >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
@@ -148,13 +154,6 @@ export default class FoundationsLevel extends React.Component {
                     }
                 >
                     <View
-                        style={{
-                            height: isNotch
-                                ? fullHeight * 0.05
-                                : fullHeight * 0.03,
-                        }}
-                    />
-                    <View
                         key={'image'}
                         style={[
                             styles.centerContent,
@@ -170,9 +169,7 @@ export default class FoundationsLevel extends React.Component {
                                 {
                                     position: 'absolute',
                                     left: 7.5 * factorHorizontal,
-                                    top: isNotch
-                                        ? 10 * factorVertical
-                                        : 10 * factorVertical,
+                                    top: 10 * factorVertical,
                                     height: 35 * factorRatio,
                                     width: 35 * factorRatio,
                                     borderRadius: 100,
@@ -481,25 +478,6 @@ export default class FoundationsLevel extends React.Component {
                                 {this.state.description}
                             </Text>
                             <View style={{height: 15 * factorVertical}} />
-                            <TouchableOpacity onPress={() => {}} style={{}}>
-                                <Text
-                                    style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 15 * factorRatio,
-                                        color: colors.pianoteRed,
-                                        fontWeight: 'bold',
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    <EntypoIcon
-                                        name={'controller-play'}
-                                        color={colors.pianoteRed}
-                                        size={15 * factorRatio}
-                                    />{' '}
-                                    WATCH THE TRAILER
-                                </Text>
-                            </TouchableOpacity>
-                            <View style={{height: 20 * factorVertical}} />
                         </View>
                     )}
                     <VerticalVideoList
@@ -572,7 +550,7 @@ export default class FoundationsLevel extends React.Component {
                 )}
 
                 <NavigationBar currentPage={''} />
-            </View>
+            </SafeAreaView>
         );
     }
 }
