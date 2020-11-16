@@ -9,6 +9,7 @@ import {
     ScrollView,
     RefreshControl,
 } from 'react-native';
+import {SafeAreaView} from 'react-navigation';
 import {
     addToMyList,
     likeContent,
@@ -170,10 +171,16 @@ export default class PathOverview extends React.Component {
 
     render() {
         return (
-            <View
+            <SafeAreaView
+                forceInset={{
+                    bottom: 'never',
+                }}
                 style={[
-                    styles.container,
-                    {backgroundColor: colors.mainBackground},
+                    {
+                        flex: 1,
+                        width: '100%',
+                        backgroundColor: colors.mainBackground,
+                    },
                 ]}
             >
                 <ScrollView
@@ -191,13 +198,6 @@ export default class PathOverview extends React.Component {
                         />
                     }
                 >
-                    <View
-                        style={{
-                            height: isNotch
-                                ? fullHeight * 0.05
-                                : fullHeight * 0.03,
-                        }}
-                    />
                     <View
                         key={'image'}
                         style={[
@@ -822,7 +822,7 @@ export default class PathOverview extends React.Component {
                     />
                 </Modal>
                 <NavigationBar currentPage={'LessonsPathOverview'} />
-            </View>
+            </SafeAreaView>
         );
     }
 }
