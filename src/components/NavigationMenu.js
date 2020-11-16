@@ -160,8 +160,6 @@ class NavigationMenu extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: colors.mainBackground,
-                    borderWidth: 1,
-                    borderColor: 'red',
                 }}
             >
                 {this.lessonNav()}
