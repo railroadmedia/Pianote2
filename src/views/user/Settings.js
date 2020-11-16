@@ -88,24 +88,22 @@ export default class Settings extends React.Component {
     };
 
     restorePurchase = async () => {
-        if (!this.context.isConnected) {
+        if (!this.context.isConnected)
             return this.context.showNoConnectionAlert();
-        }
-        if (this.loadingRef) this.loadingRef.toggleLoading();
+        this.loadingRef?.toggleLoading();
         try {
             await RNIap.initConnection();
         } catch (e) {
-            if (this.loadingRef) this.loadingRef.toggleLoading();
+            this.loadingRef?.toggleLoading();
             return this.customModal.toggle(
                 'Connection to app store refused',
                 'Please try again later.',
             );
         }
         try {
-            purchases = await RNIap.getPurchaseHistory();
-            console.log(purchases);
+            let purchases = await RNIap.getPurchaseHistory();
             if (!purchases.length) {
-                if (this.loadingRef) this.loadingRef.toggleLoading();
+                this.loadingRef?.toggleLoading();
                 return this.restoreSuccessfull.toggle(
                     'Restore',
                     'All purchases restored',
@@ -121,14 +119,16 @@ export default class Settings extends React.Component {
                 });
             }
             let restoreResponse = await restorePurchase(purchases);
-            console.log(restoreResponse);
+            this.loadingRef?.toggleLoading();
             if (restoreResponse.title && restoreResponse.message)
                 return this.customModal.toggle(
                     restoreResponse.title,
                     restoreResponse.message,
                 );
             if (restoreResponse.email) {
+                this.loadingRef?.toggleLoading();
                 await logOut();
+                this.loadingRef?.toggleLoading();
                 this.props.navigation.navigate('LOGINCREDENTIALS', {
                     email: restoreResponse.email,
                 });
@@ -152,9 +152,10 @@ export default class Settings extends React.Component {
                         ],
                     }),
                 );
-            }
+            } else if (restoreResponse.shouldCreateAccount)
+                this.props.navigation.navigate('CREATEACCOUNT');
         } catch (err) {
-            if (this.loadingRef) this.loadingRef.toggleLoading();
+            this.loadingRef?.toggleLoading();
             this.customModal.toggle(
                 'Something went wrong',
                 'Something went wrong.\nPlease try Again later.',
