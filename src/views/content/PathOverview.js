@@ -42,7 +42,8 @@ export default class PathOverview extends React.Component {
             data: this.props.navigation.state.params.data,
             items: this.props.navigation.state.params.items || [],
             isAddedToList: this.props.navigation.state.params.data
-                .isAddedToList,
+                ?.isAddedToList,
+            thumbnail: this.props.navigation.state.params.data?.isAddedToList,
             showInfo: false,
             totalLength: 0,
             isLiked: false,
@@ -79,6 +80,7 @@ export default class PathOverview extends React.Component {
                 completed: r.completed,
                 nextLesson: r.next_lesson.id,
                 difficulty: r.fields.find(f => f.key === 'difficulty').value,
+                thumbnail: r.data.find(f => f.key === 'thumbnail_url').value,
                 isLoadingAll: false,
                 items:
                     r?.lessons?.map(l => {
@@ -214,15 +216,11 @@ export default class PathOverview extends React.Component {
                                 backgroundColor: colors.mainBackground,
                             }}
                             source={{
-                                uri: this.state.data?.thumbnail?.includes(
-                                    'http',
-                                )
-                                    ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                                          (greaterWDim >> 0) * 2
-                                      },ar_16:9,c_fill,g_face/${
-                                          this.state.data.thumbnail
-                                      }`
-                                    : this.state.data.thumbnail,
+                                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                                    (greaterWDim >> 0) * 2
+                                },ar_16:9,c_fill,g_face/${
+                                    this.state.thumbnail
+                                }`,
                             }}
                             resizeMode={FastImage.resizeMode.cover}
                         />

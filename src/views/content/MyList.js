@@ -81,6 +81,7 @@ export default class MyList extends React.Component {
                     xp: newContent[i].post.xp,
                     id: newContent[i].id,
                     mobile_app_url: newContent[i].post.mobile_app_url,
+                    lesson_count: newContent[i].post.lesson_count,
                     currentLessonId: newContent[i].post?.current_lesson?.id,
                     like_count: newContent[i].post.like_count,
                     duration: i,
