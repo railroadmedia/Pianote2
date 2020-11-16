@@ -462,6 +462,7 @@ export default class CreateAccount extends React.Component {
                                 }
                                 onChangeText={email => this.setState({email})}
                                 style={{
+                                    color: 'black',
                                     fontSize: 18 * factorRatio,
                                     fontFamily: 'OpenSans-Regular',
                                     flex: 1,
