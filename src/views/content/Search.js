@@ -216,6 +216,7 @@ export default class Search extends React.Component {
                         xp: newContent[i].post.xp,
                         id: newContent[i].id,
                         mobile_app_url: newContent[i].post.mobile_app_url,
+                        lesson_count: newContent[i].post.lesson_count,
                         currentLessonId: newContent[i].post?.current_lesson?.id,
                         like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
@@ -369,7 +370,7 @@ export default class Search extends React.Component {
                                         ? fullHeight * 0.1
                                         : isNotch
                                         ? fullHeight * 0.12
-                                        : fullHeight * 0.1+10,
+                                        : fullHeight * 0.1 + 10,
                                 backgroundColor: colors.thirdBackground,
                             },
                         ]}
