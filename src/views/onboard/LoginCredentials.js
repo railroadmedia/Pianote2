@@ -101,7 +101,7 @@ export default class LoginCredentials extends React.Component {
             this.state.password,
             await this.getPurchases()
         );
-
+console.log(response)
         if (response.success) {
             // store user data
             updateFcmToken();

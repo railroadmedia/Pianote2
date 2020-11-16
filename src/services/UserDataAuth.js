@@ -14,7 +14,6 @@ export async function getToken(userEmail, userPass, purchases) {
     
     let email = userEmail || data.email;
     let password = userPass || data.password;
-
     let response = await fetch(
         `${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`,
         {
@@ -23,12 +22,12 @@ export async function getToken(userEmail, userPass, purchases) {
             body: purchases ? JSON.stringify(purchases) : {},
         },
     );
-    
+
     if(response.status == 500) { 
         return 500
     } else {
         response = await response.json()
-
+        console.log(response)
         if (response.success) {
             token = response.token;
             await AsyncStorage.multiSet([
@@ -50,6 +49,7 @@ export async function getUserData() {
 
         if (typeof userData.error == 'undefined') {
             userData = await userData.json();
+            console.log('USERDATA: ' , userData)
             // if received data, update data
             await AsyncStorage.multiSet([
                 ['totalXP', userData.totalXp.toString()],
