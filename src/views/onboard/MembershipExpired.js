@@ -25,7 +25,7 @@ export default class MembershipExpired extends React.Component {
                             (Platform.OS === 'ios' && fullHeight > 811) ||
                             onTablet == true
                                 ? fullHeight * 0.03
-                                : fullHeight * 0.015,
+                                : fullHeight * 0.02,
                         zIndex: 2,
                         alignSelf: 'center',
                     }}

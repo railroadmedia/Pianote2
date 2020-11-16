@@ -14,6 +14,9 @@ export async function getToken(userEmail, userPass, purchases) {
     
     let email = userEmail || data.email;
     let password = userPass || data.password;
+    email = encodeURIComponent(email)
+    password = encodeURIComponent(password)
+    console.log(email, password)
     let response = await fetch(
         `${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`,
         {
