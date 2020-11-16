@@ -12,6 +12,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     RefreshControl,
+    KeyboardAvoidingView,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
@@ -1821,105 +1822,6 @@ export default class VideoPlayer extends React.Component {
                                 </KeyboardAwareScrollView>
                             )}
                         </View>
-                        {this.state.showMakeComment && (
-                            <Modal
-                                isVisible={this.state.showMakeComment}
-                                style={{margin: 0}}
-                                animation={'slideInUp'}
-                                animationInTiming={350}
-                                animationOutTiming={350}
-                                coverScreen={false}
-                                hasBackdrop={true}
-                                onBackdropPress={() =>
-                                    this.setState({showMakeComment: false})
-                                }
-                            >
-                                <View
-                                    key={'makeComment'}
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        minHeight: fullHeight * 0.125,
-                                        maxHeight: fullHeight * 0.175,
-                                        width: fullWidth,
-                                        backgroundColor: colors.mainBackground,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        zIndex: 10,
-                                        borderTopWidth: 0.5 * factorRatio,
-                                        borderTopColor: colors.secondBackground,
-                                    }}
-                                >
-                                    <FastImage
-                                        style={{
-                                            height: 40 * factorHorizontal,
-                                            width: 40 * factorHorizontal,
-                                            borderRadius: 100,
-                                            marginRight: 15,
-                                        }}
-                                        source={{
-                                            uri:
-                                                this.state.profileImage ||
-                                                'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
-                                        }}
-                                        resizeMode={
-                                            FastImage.resizeMode.stretch
-                                        }
-                                    />
-
-                                    <TextInput
-                                        multiline={true}
-                                        ref={ref => {
-                                            this.textInputRef = ref;
-                                        }}
-                                        style={{
-                                            fontFamily: 'OpenSans-Regular',
-                                            fontSize: 14 * factorRatio,
-                                            width: '75%',
-                                            backgroundColor:
-                                                colors.mainBackground,
-                                            color: colors.secondBackground,
-                                            paddingVertical:
-                                                10 * factorVertical,
-                                        }}
-                                        onSubmitEditing={() => {
-                                            this.makeComment();
-                                            this.textInputRef.clear();
-                                        }}
-                                        returnKeyType={'go'}
-                                        onChangeText={comment =>
-                                            this.setState({comment})
-                                        }
-                                        onBlur={() => this.textInputRef.clear()}
-                                        placeholder={'Add a comment'}
-                                        placeholderTextColor={
-                                            colors.secondBackground
-                                        }
-                                    />
-
-                                    <View style={styles.centerContent}>
-                                        <TouchableOpacity
-                                            style={{
-                                                marginBottom:
-                                                    Platform.OS == 'android'
-                                                        ? 10 * factorVertical
-                                                        : 0,
-                                            }}
-                                            onPress={() => {
-                                                this.makeComment();
-                                                this.textInputRef.clear();
-                                            }}
-                                        >
-                                            <IonIcon
-                                                name={'md-send'}
-                                                size={25 * factorRatio}
-                                                color={colors.pianoteRed}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </Modal>
-                        )}
                         {!this.state.selectedAssignment &&
                             !this.state.showMakeComment && (
                                 <View
@@ -2453,6 +2355,118 @@ export default class VideoPlayer extends React.Component {
                     }
                     onClose={() => {}}
                 />
+
+                {this.state.showMakeComment && (
+                    <Modal
+                        isVisible={this.state.showMakeComment}
+                        style={{margin: 0}}
+                        backdropColor={'transparent'}
+                        animation={'slideInUp'}
+                        animationInTiming={350}
+                        animationOutTiming={350}
+                        coverScreen={false}
+                        hasBackdrop={true}
+                        transparent={true}
+                        onBackdropPress={() =>
+                            this.setState({showMakeComment: false})
+                        }
+                    >
+                        <TouchableOpacity
+                            style={{flex: 1}}
+                            onPress={() =>
+                                this.setState({showMakeComment: false})
+                            }
+                        >
+                            <KeyboardAvoidingView
+                                key={'makeComment'}
+                                behavior={`${isiOS ? 'padding' : ''}`}
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        backgroundColor: colors.mainBackground,
+                                        flexDirection: 'row',
+                                        padding: 10,
+                                        alignItems: 'center',
+                                        borderTopWidth: 0.5 * factorRatio,
+                                        borderTopColor: colors.secondBackground,
+                                    }}
+                                >
+                                    <FastImage
+                                        style={{
+                                            height: 40 * factorHorizontal,
+                                            width: 40 * factorHorizontal,
+                                            borderRadius: 100,
+                                            marginRight: 15,
+                                        }}
+                                        source={{
+                                            uri:
+                                                this.state.profileImage ||
+                                                'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                                        }}
+                                        resizeMode={
+                                            FastImage.resizeMode.stretch
+                                        }
+                                    />
+
+                                    <TextInput
+                                        multiline={true}
+                                        ref={ref => {
+                                            this.textInputRef = ref;
+                                        }}
+                                        style={{
+                                            fontFamily: 'OpenSans-Regular',
+                                            fontSize: 14 * factorRatio,
+                                            width: '75%',
+                                            backgroundColor:
+                                                colors.mainBackground,
+                                            color: colors.secondBackground,
+                                            paddingVertical:
+                                                10 * factorVertical,
+                                        }}
+                                        onSubmitEditing={() => {
+                                            this.makeComment();
+                                            this.textInputRef.clear();
+                                        }}
+                                        returnKeyType={'go'}
+                                        onChangeText={comment =>
+                                            this.setState({comment})
+                                        }
+                                        onBlur={() => this.textInputRef.clear()}
+                                        placeholder={'Add a comment'}
+                                        placeholderTextColor={
+                                            colors.secondBackground
+                                        }
+                                    />
+
+                                    <View style={styles.centerContent}>
+                                        <TouchableOpacity
+                                            style={{
+                                                marginBottom:
+                                                    Platform.OS == 'android'
+                                                        ? 10 * factorVertical
+                                                        : 0,
+                                            }}
+                                            onPress={() => {
+                                                this.makeComment();
+                                                this.textInputRef.clear();
+                                            }}
+                                        >
+                                            <IonIcon
+                                                name={'md-send'}
+                                                size={25 * factorRatio}
+                                                color={colors.pianoteRed}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </KeyboardAvoidingView>
+                        </TouchableOpacity>
+                    </Modal>
+                )}
             </View>
         );
     }
