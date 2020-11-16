@@ -62,13 +62,13 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - google-cast-sdk-no-bluetooth (4.5.1):
-    - google-cast-sdk-no-bluetooth/Core (= 4.5.1)
+  - google-cast-sdk-no-bluetooth (4.5.2):
+    - google-cast-sdk-no-bluetooth/Core (= 4.5.2)
     - GTMSessionFetcher/Core (~> 1.1)
-    - Protobuf (~> 3.12)
-  - google-cast-sdk-no-bluetooth/Core (4.5.1):
+    - Protobuf (~> 3.13)
+  - google-cast-sdk-no-bluetooth/Core (4.5.2):
     - GTMSessionFetcher/Core (~> 1.1)
-    - Protobuf (~> 3.12)
+    - Protobuf (~> 3.13)
   - GoogleDataTransport (7.5.1):
     - nanopb (~> 1.30906.0)
   - GoogleUtilities/AppDelegateSwizzler (6.7.2):
@@ -377,9 +377,9 @@ PODS:
     - React
   - RNVectorIcons (7.1.0):
     - React
-  - SDWebImage (5.9.4):
-    - SDWebImage/Core (= 5.9.4)
-  - SDWebImage/Core (5.9.4)
+  - SDWebImage (5.9.5):
+    - SDWebImage/Core (= 5.9.5)
+  - SDWebImage/Core (5.9.5)
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
@@ -595,7 +595,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
-  google-cast-sdk-no-bluetooth: 73ac8e9edbee16f52c2a445e391bd531e116bb31
+  google-cast-sdk-no-bluetooth: 622cfa34fc9a42ad87b9e009b72dbb02b08c1307
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
@@ -652,7 +652,7 @@ SPEC CHECKSUMS:
   RNScreens: 4b488fdf9537bbce829e2910c8cce1d17f6d9be8
   RNSVG: 8ba35cbeb385a52fd960fd28db9d7d18b4c2974f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
-  SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
+  SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
