@@ -2174,6 +2174,7 @@ export default class VideoPlayer extends React.Component {
                                 completedLessonImg={this.state.lessonImage}
                                 completedLessonTitle={this.state.lessonTitle}
                                 completedLessonXp={this.state.xp}
+                                type={this.state.type}
                                 nextLesson={
                                     this.state.nextLesson || this.state.nextUnit
                                 }
