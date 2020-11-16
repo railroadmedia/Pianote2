@@ -12,19 +12,25 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import XpRank from 'Pianote2/src/modals/XpRank.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import {getUserData} from 'Pianote2/src/services/UserDataAuth.js';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import ReplyNotification from 'Pianote2/src/modals/ReplyNotification.js';
+
+import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
+import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
+
+import XpRank from '../../modals/XpRank.js';
+import {getUserData} from '../../services/UserDataAuth.js';
+import NavigationBar from '../../components/NavigationBar.js';
+import ReplyNotification from '../../modals/ReplyNotification.js';
 import commonService from '../../services/common.service';
 import {NetworkContext} from '../../context/NetworkProvider';
+import {
+    getnotifications,
+    removeNotification,
+} from '../../services/notification.service';
 
 const messageDict = {
     'lesson comment reply': [
@@ -68,6 +74,7 @@ const messageDict = {
 export default class Profile extends React.Component {
     static navigationOptions = {header: null};
     static contextType = NetworkContext;
+    page = 1;
     constructor(props) {
         super(props);
         this.state = {
@@ -78,6 +85,7 @@ export default class Profile extends React.Component {
             showReplyNotification: false,
             memberSince: '',
             isLoading: true,
+            animateLoadMore: false,
             clickedNotificationStatus: false,
             notify_on_forum_followed_thread_reply: false,
             notify_on_forum_post_like: false,
@@ -99,7 +107,7 @@ export default class Profile extends React.Component {
 
         let xp = await this.changeXP(data[0][1]);
 
-        await this.setState({
+        this.setState({
             xp,
             rank: data[1][1],
             profileImage: data[2][1],
@@ -108,69 +116,70 @@ export default class Profile extends React.Component {
         });
     };
 
-    componentDidMount = async () => {
+    async componentDidMount() {
+        let userData = await getUserData();
+        this.setState({
+            notifications_summary_frequency_minutes:
+                userData.notifications_summary_frequency_minutes,
+            notify_on_forum_followed_thread_reply:
+                userData.notify_on_forum_followed_thread_reply,
+            notify_on_forum_post_like: userData.notify_on_forum_post_like,
+            notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
+            notify_on_lesson_comment_like:
+                userData.notify_on_lesson_comment_like,
+            notify_on_lesson_comment_reply:
+                userData.notify_on_lesson_comment_reply,
+            notify_weekly_update: userData.notify_weekly_update,
+        });
+        this.getNotifications(false);
+    }
+
+    async getNotifications(loadMore) {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
-        let userData = await getUserData();
 
-        try {
-            let notifications = await commonService.tryCall(
-                `${commonService.rootUrl}/api/railnotifications/notifications`,
-                'GET',
-            );
+        if (loadMore) this.page++;
+        else this.page = 1;
+        let notifications = await getnotifications(this.page);
+        for (i in notifications.data) {
+            let timeCreated =
+                notifications.data[i].created_at?.slice(0, 10) +
+                'T' +
+                notifications.data[i].created_at?.slice(11) +
+                '.000Z';
+            let dateNote = new Date(timeCreated).getTime() / 1000;
+            let dateNow = new Date().getTime() / 1000;
+            let timeDelta = dateNow - dateNote; // in seconds
 
-            for (i in notifications.data) {
-                let timeCreated =
-                    notifications.data[i].created_at?.slice(0, 10) +
-                    'T' +
-                    notifications.data[i].created_at?.slice(11) +
-                    '.000Z';
-                let dateNote = new Date(timeCreated).getTime() / 1000;
-                let dateNow = new Date().getTime() / 1000;
-                let timeDelta = dateNow - dateNote; // in seconds
-
-                if (timeDelta < 3600) {
-                    notifications.data[i].created_at = `${(
-                        timeDelta / 60
-                    ).toFixed(0)} minute${
-                        timeDelta < 60 * 2 && timeDelta >= 60 ? '' : 's'
-                    } ago`;
-                } else if (timeDelta < 86400) {
-                    notifications.data[i].created_at = `${(
-                        timeDelta / 3600
-                    ).toFixed(0)} hour${timeDelta < 3600 * 2 ? '' : 's'} ago`;
-                } else if (timeDelta < 604800) {
-                    notifications.data[i].created_at = `${(
-                        timeDelta / 86400
-                    ).toFixed(0)} day${timeDelta < 86400 * 2 ? '' : 's'} ago`;
-                } else {
-                    notifications.data[i].created_at = `${(
-                        timeDelta / 604800
-                    ).toFixed(0)} week${timeDelta < 604800 * 2 ? '' : 's'} ago`;
-                }
+            if (timeDelta < 3600) {
+                notifications.data[i].created_at = `${(timeDelta / 60).toFixed(
+                    0,
+                )} minute${
+                    timeDelta < 60 * 2 && timeDelta >= 60 ? '' : 's'
+                } ago`;
+            } else if (timeDelta < 86400) {
+                notifications.data[i].created_at = `${(
+                    timeDelta / 3600
+                ).toFixed(0)} hour${timeDelta < 3600 * 2 ? '' : 's'} ago`;
+            } else if (timeDelta < 604800) {
+                notifications.data[i].created_at = `${(
+                    timeDelta / 86400
+                ).toFixed(0)} day${timeDelta < 86400 * 2 ? '' : 's'} ago`;
+            } else {
+                notifications.data[i].created_at = `${(
+                    timeDelta / 604800
+                ).toFixed(0)} week${timeDelta < 604800 * 2 ? '' : 's'} ago`;
             }
-
-            await this.setState({
-                notifications_summary_frequency_minutes:
-                    userData.notifications_summary_frequency_minutes,
-                notify_on_forum_followed_thread_reply:
-                    userData.notify_on_forum_followed_thread_reply,
-                notify_on_forum_post_like: userData.notify_on_forum_post_like,
-                notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-                notify_on_lesson_comment_like:
-                    userData.notify_on_lesson_comment_like,
-                notify_on_lesson_comment_reply:
-                    userData.notify_on_lesson_comment_reply,
-                notify_weekly_update: userData.notify_weekly_update,
-                notifications: notifications.data,
-            });
-        } catch (error) {
-            console.log('ERROR: ', error);
         }
 
-        this.setState({isLoading: false});
-    };
+        this.setState(state => ({
+            notifications: loadMore
+                ? state.notifications.concat(notifications.data)
+                : notifications.data,
+            isLoading: false,
+        }));
+    }
 
     changeXP = async num => {
         if (num !== '') {
@@ -186,70 +195,46 @@ export default class Profile extends React.Component {
         }
     };
 
-    removeNotification = async data => {
+    removeNotification = async notificationId => {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
-        let commentID = data.data.commentId;
-
-        for (i in this.state.notifications) {
-            console.log(
-                this.state.notifications[i].data.commentId,
-                commentID,
-                i,
-            );
-            if (this.state.notifications[i].data.commentId == commentID) {
-                await this.setState({
-                    notifications: [
-                        ...this.state.notifications.splice(0, i),
-                        ...this.state.notifications.splice(i + 1),
-                    ],
-                });
-            }
-        }
-
-        await this.forceUpdate();
-
-        try {
-            let response = await commonService.tryCall(
-                `${commonService.rootUrl}/api/railnotifications/notification/${commentID}`,
-                'DELETE',
-            );
-
-            console.log(response);
-        } catch (error) {
-            console.log('ERROR: ', error);
-        }
+        this.setState(state => ({
+            notifications: state.notifications.filter(
+                c => c.id !== notificationId,
+            ),
+        }));
+        removeNotification(notificationId);
     };
 
     checkNotificationTypeStatus = async item => {
         let type = messageDict[item.type][0];
         if (type == 'replied to your comment.') {
-            await this.setState({
+            this.setState({
                 clickedNotificationStatus: this.state
                     .notify_on_lesson_comment_reply,
             });
         } else if (type == 'liked your comment.') {
-            await this.setState({
+            this.setState({
                 clickedNotificationStatus: this.state
                     .notify_on_lesson_comment_like,
             });
         } else if (type == 'replied to your forum post.') {
-            await this.setState({
+            this.setState({
                 clickedNotificationStatus: this.state
                     .notify_on_forum_post_reply,
             });
         } else if (type == 'liked your forum post.') {
-            await this.setState({
+            this.setState({
                 clickedNotificationStatus: this.state.notify_on_forum_post_like,
             });
         } else if (type == 'post in followed thread.') {
-            await this.setState({
+            this.setState({
                 clickedNotificationStatus: this.state
                     .notify_on_forum_followed_thread_reply,
             });
         } else if (type == '') {
-            await this.setState({
+            this.setState({
                 clickedNotificationStatus: this.state.notify_weekly_update,
             });
         }
@@ -260,7 +245,6 @@ export default class Profile extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         this.setState(data);
-
         try {
             let response = await commonService.tryCall(
                 `${commonService.rootUrl}/usora/api/profile/update`,
@@ -298,6 +282,12 @@ export default class Profile extends React.Component {
         }
     };
 
+    loadMoreNotifications = () => {
+        this.setState({animateLoadMore: true}, () => {
+            this.getNotifications(true);
+        });
+    };
+
     render() {
         return (
             <View style={{flex: 1, backgroundColor: colors.mainBackground}}>
@@ -311,16 +301,14 @@ export default class Profile extends React.Component {
                                         ? fullHeight * 0.1
                                         : isNotch
                                         ? fullHeight * 0.12
-                                        : fullHeight * 0.1+10,
+                                        : fullHeight * 0.1 + 10,
                                 backgroundColor: colors.thirdBackground,
                             },
                         ]}
                     >
                         <TouchableOpacity
                             onPress={() => {
-                                this.props.navigation.navigate(
-                                    'SETTINGS',
-                                );
+                                this.props.navigation.navigate('SETTINGS');
                             }}
                             style={{
                                 position: 'absolute',
@@ -358,14 +346,16 @@ export default class Profile extends React.Component {
                         </View>
                         <View style={{height: 20 * factorVertical}} />
                     </View>
-                    <View style={{height: 10}}/>
+                    <View style={{height: 10}} />
                     <FlatList
                         style={{
                             flex: 1,
                             backgroundColor: colors.mainBackground,
                         }}
                         data={this.state.notifications}
-                        keyExtractor={(item, index) => index}
+                        keyExtractor={(item, index) => index.toString()}
+                        onEndReached={this.loadMoreNotifications}
+                        onEndReachedThreshold={0.01}
                         ListHeaderComponent={() => (
                             <>
                                 <View style={{height: 20 * factorVertical}} />
@@ -675,6 +665,15 @@ export default class Profile extends React.Component {
                                 </Text>
                             )
                         }
+                        ListFooterComponent={() => (
+                            <ActivityIndicator
+                                style={{marginTop: 10, marginBottom: 10}}
+                                size='small'
+                                color={colors.pianoteRed}
+                                animating={this.state.animateLoadMore}
+                                hidesWhenStopped={true}
+                            />
+                        )}
                         renderItem={({item, index}) => (
                             <TouchableOpacity
                                 style={{
@@ -890,11 +889,11 @@ export default class Profile extends React.Component {
                                             onPress={() => {
                                                 this.checkNotificationTypeStatus(
                                                     item,
-                                                ),
-                                                    this.setState({
-                                                        showReplyNotification: true,
-                                                        clickedNotification: item,
-                                                    });
+                                                );
+                                                this.setState({
+                                                    showReplyNotification: true,
+                                                    clickedNotification: item,
+                                                });
                                             }}
                                             style={{
                                                 height: 35 * factorRatio,
@@ -960,7 +959,7 @@ export default class Profile extends React.Component {
                     <ReplyNotification
                         removeNotification={data => {
                             this.setState({showReplyNotification: false}),
-                                this.removeNotification(data);
+                                this.removeNotification(data.id);
                         }}
                         turnOfffNotifications={data => {
                             this.setState({showReplyNotification: false}),
