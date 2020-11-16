@@ -51,7 +51,9 @@ export default class PathOverview extends React.Component {
             completed: false,
             showRestartCourse: false,
             nextLesson: 0,
-            isLoadingAll: true,
+            isLoadingAll: this.props.navigation.state.params.items?.length
+                ? false
+                : true,
             difficulty: 0,
         };
         greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
@@ -212,11 +214,15 @@ export default class PathOverview extends React.Component {
                                 backgroundColor: colors.mainBackground,
                             }}
                             source={{
-                                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                                    (greaterWDim >> 0) * 2
-                                },ar_16:9,c_fill,g_face/${
-                                    this.state.data.thumbnail
-                                }`,
+                                uri: this.state.data?.thumbnail?.includes(
+                                    'http',
+                                )
+                                    ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                                          (greaterWDim >> 0) * 2
+                                      },ar_16:9,c_fill,g_face/${
+                                          this.state.data.thumbnail
+                                      }`
+                                    : this.state.data.thumbnail,
                             }}
                             resizeMode={FastImage.resizeMode.cover}
                         />
