@@ -146,7 +146,6 @@ export default class VideoPlayer extends React.Component {
             content = result;
             this.allCommentsNum = result.total_comments;
         }
-        console.log(content);
         content = new ContentModel(content);
         let relatedLessons = content.post.related_lessons?.map(rl => {
             return new ContentModel(rl);
@@ -231,17 +230,33 @@ export default class VideoPlayer extends React.Component {
                 )?.getField('vimeo_video_id'),
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
-                description: content
-                    .getData('description')
-                    .replace(/(<([^>]+)>)/g, '')
-                    .replace(/&nbsp;/g, '')
-                    .replace(/&amp;/g, '&')
-                    .replace(/&#039;/g, "'")
-                    .replace(/&quot;/g, '"')
-                    .replace(/&gt;/g, '>')
-                    .replace(/&lt;/g, '<'),
+                style:
+                    content.post.type === 'song-part'
+                        ? `${new ContentModel(content.post.parent).getField(
+                              'style',
+                          )} | `
+                        : '',
+                description:
+                    content.post.type === 'song-part'
+                        ? new ContentModel(content.post.parent)
+                              .getField('instructor')
+                              ?.data?.find(d => d.key === 'biography')?.value
+                        : content
+                              .getData('description')
+                              .replace(/(<([^>]+)>)/g, '')
+                              .replace(/&nbsp;/g, '')
+                              .replace(/&amp;/g, '&')
+                              .replace(/&#039;/g, "'")
+                              .replace(/&quot;/g, '"')
+                              .replace(/&gt;/g, '>')
+                              .replace(/&lt;/g, '<'),
                 xp: content.post.total_xp,
-                artist: content.getField('artist'),
+                artist:
+                    content.post.type === 'song-part'
+                        ? new ContentModel(content.post.parent).getField(
+                              'artist',
+                          )
+                        : content.getField('artist'),
                 instructor: content.getFieldMulti('instructor'),
                 isLoadingAll: false,
                 publishedOn: content.publishedOn,
@@ -982,7 +997,7 @@ export default class VideoPlayer extends React.Component {
     };
 
     renderTagsDependingOnContentType = () => {
-        let {artist, xp, type, publishedOn, instructor} = this.state;
+        let {artist, xp, type, publishedOn, instructor, style} = this.state;
 
         let releaseDate = this.transformDate(publishedOn);
         let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
@@ -991,7 +1006,7 @@ export default class VideoPlayer extends React.Component {
         let xpTag = `${xp || 0} XP`;
         switch (type) {
             case 'song-part':
-                return artistTag + xpTag;
+                return artistTag + style + xpTag;
             case 'song':
                 return artistTag + xpTag;
             case 'course-part':
