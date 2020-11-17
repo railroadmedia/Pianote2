@@ -426,80 +426,40 @@ export default class Foundations extends React.Component {
                                 height: fullHeight * 0.06,
                                 backgroundColor: colors.mainBackground,
                                 flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
                         >
-                            <View style={{flex: 1}} />
-                            <View style={{flexDirection: 'row'}}>
-                                <View key={'profile-picture'}>
-                                    <View style={{flex: 1}} />
-                                    <View>
-                                        <View style={{flex: 1}} />
-                                        <View
-                                            style={{
-                                                height: fullHeight * 0.06,
-                                                width: fullHeight * 0.06,
-                                                borderRadius: 100,
-                                                backgroundColor:
-                                                    colors.secondBackground,
-                                                alignSelf: 'stretch',
-                                                borderWidth: 3 * factorRatio,
-                                                borderColor:
-                                                    colors.secondBackground,
-                                            }}
-                                        >
-                                            <View
-                                                style={{
-                                                    height: '100%',
-                                                    width: '100%',
-                                                    alignSelf: 'center',
-                                                }}
-                                            >
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: 100,
-                                                        backgroundColor:
-                                                            colors.secondBackground,
-                                                    }}
-                                                    source={{
-                                                        uri:
-                                                            this.state
-                                                                .profileImage ||
-                                                            'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .cover
-                                                    }
-                                                />
-                                            </View>
-                                        </View>
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <View style={{flex: 1}} />
-                                </View>
+                            <FastImage
+                                style={{
+                                    height: fullHeight * 0.06,
+                                    width: fullHeight * 0.06,
+                                    borderRadius: 100,
+                                    backgroundColor: colors.secondBackground,
+                                    alignSelf: 'stretch',
+                                    borderWidth: 3 * factorRatio,
+                                    borderColor: colors.secondBackground,
+                                    marginHorizontal: 10,
+                                }}
+                                source={{
+                                    uri:
+                                        this.state.profileImage ||
+                                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
+                            />
 
-                                <View>
-                                    <View style={{flex: 1}} />
-                                    <View>
-                                        <View style={{flex: 1}} />
-                                        <Text
-                                            style={{
-                                                color: 'white',
-                                                fontSize: 35 * factorRatio,
-                                                fontFamily:
-                                                    'OpenSans-ExtraBold',
-                                                textAlign: 'center',
-                                            }}
-                                        >
-                                            LEVEL 1
-                                        </Text>
-                                        <View style={{flex: 1}} />
-                                    </View>
-                                    <View style={{flex: 1}} />
-                                </View>
-                            </View>
-                            <View style={{flex: 1}} />
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontSize: 35 * factorRatio,
+                                    fontFamily: 'OpenSans-ExtraBold',
+                                    textAlign: 'center',
+                                    marginHorizontal: 10,
+                                }}
+                            >
+                                LEVEL 1
+                            </Text>
                         </View>
                     )}
                     {this.state.showInfo && (

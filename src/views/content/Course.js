@@ -74,34 +74,31 @@ export default class Course extends React.Component {
 
         let items = [];
         for (let i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/g, '')
-                        .replace(/&nbsp;/g, '')
-                        .replace(/&amp;/g, '&')
-                        .replace(/&#039;/g, "'")
-                        .replace(/&quot;/g, '"')
-                        .replace(/&gt;/g, '>')
-                        .replace(/&lt;/g, '<'),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].post.is_liked_by_current_user,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
-            }
+            items.push({
+                title: newContent[i].getField('title'),
+                artist: newContent[i].getField('instructor').fields[0].value,
+                thumbnail: newContent[i].getData('thumbnail_url'),
+                type: newContent[i].post.type,
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
+                xp: newContent[i].post.xp,
+                id: newContent[i].id,
+                like_count: newContent[i].likeCount,
+                duration: this.getDuration(newContent[i]),
+                isLiked: newContent[i].post.is_liked_by_current_user,
+                isAddedToList: newContent[i].isAddedToList,
+                isStarted: newContent[i].isStarted,
+                isCompleted: newContent[i].isCompleted,
+                bundle_count: newContent[i].post.bundle_count,
+                progress_percent: newContent[i].post.progress_percent,
+            });
         }
 
         this.setState({
@@ -119,48 +116,48 @@ export default class Course extends React.Component {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
-        
+
         let response = await getStartedContent('course');
         const newContent = response.data.map(data => {
-            return new ContentModel(data)}
-        );
+            return new ContentModel(data);
+        });
 
         let items = [];
         for (let i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/g, '')
-                        .replace(/&nbsp;/g, '')
-                        .replace(/&amp;/g, '&')
-                        .replace(/&#039;/g, "'")
-                        .replace(/&quot;/g, '"')
-                        .replace(/&gt;/g, '>')
-                        .replace(/&lt;/g, '<'),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].post.is_liked_by_current_user,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
-            }
+            items.push({
+                title: newContent[i].getField('title'),
+                artist: newContent[i].getField('instructor').fields[0].value,
+                thumbnail: newContent[i].getData('thumbnail_url'),
+                type: newContent[i].post.type,
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
+                xp: newContent[i].post.xp,
+                id: newContent[i].id,
+                like_count: newContent[i].likeCount,
+                duration: this.getDuration(newContent[i]),
+                isLiked: newContent[i].post.is_liked_by_current_user,
+                isAddedToList: newContent[i].isAddedToList,
+                isStarted: newContent[i].isStarted,
+                isCompleted: newContent[i].isCompleted,
+                bundle_count: newContent[i].post.bundle_count,
+                progress_percent: newContent[i].post.progress_percent,
+            });
         }
 
         await this.setState({
             progressCourses: [...this.state.progressCourses, ...items],
             isLoadingProgress: false,
-            started: this.state.progressCourses.length == 0 && items.length == 0 ? false : true,
+            started:
+                this.state.progressCourses.length == 0 && items.length == 0
+                    ? false
+                    : true,
         });
     };
 
@@ -175,34 +172,31 @@ export default class Course extends React.Component {
 
         let items = [];
         for (let i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('instructor').fields[0]
-                        .value,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/g, '')
-                        .replace(/&nbsp;/g, '')
-                        .replace(/&amp;/g, '&')
-                        .replace(/&#039;/g, "'")
-                        .replace(/&quot;/g, '"')
-                        .replace(/&gt;/g, '>')
-                        .replace(/&lt;/g, '<'),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].id,
-                    like_count: newContent[i].likeCount,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].post.is_liked_by_current_user,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
-            }
+            items.push({
+                title: newContent[i].getField('title'),
+                artist: newContent[i].getField('instructor').fields[0].value,
+                thumbnail: newContent[i].getData('thumbnail_url'),
+                type: newContent[i].post.type,
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
+                xp: newContent[i].post.xp,
+                id: newContent[i].id,
+                like_count: newContent[i].likeCount,
+                duration: this.getDuration(newContent[i]),
+                isLiked: newContent[i].post.is_liked_by_current_user,
+                isAddedToList: newContent[i].isAddedToList,
+                isStarted: newContent[i].isStarted,
+                isCompleted: newContent[i].isCompleted,
+                bundle_count: newContent[i].post.bundle_count,
+                progress_percent: newContent[i].post.progress_percent,
+            });
         }
 
         this.setState({

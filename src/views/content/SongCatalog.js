@@ -70,35 +70,33 @@ export default class SongCatalog extends React.Component {
 
         let items = [];
         for (let i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].getField('artist'),
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/g, '')
-                        .replace(/&nbsp;/g, '')
-                        .replace(/&amp;/g, '&')
-                        .replace(/&#039;/g, "'")
-                        .replace(/&quot;/g, '"')
-                        .replace(/&gt;/g, '>')
-                        .replace(/&lt;/g, '<'),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].post.id,
-                    currentLessonId: newContent[i].post?.current_lesson?.id,
-                    lesson_count: newContent[i].post.lesson_count,
-                    like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].post.is_liked_by_current_user,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
-            }
+            items.push({
+                title: newContent[i].getField('title'),
+                artist: newContent[i].getField('artist'),
+                thumbnail: newContent[i].getData('thumbnail_url'),
+                type: newContent[i].post.type,
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
+                xp: newContent[i].post.xp,
+                id: newContent[i].post.id,
+                currentLessonId: newContent[i].post?.current_lesson?.id,
+                lesson_count: newContent[i].post.lesson_count,
+                like_count: newContent[i].post.like_count,
+                duration: this.getDuration(newContent[i]),
+                isLiked: newContent[i].post.is_liked_by_current_user,
+                isAddedToList: newContent[i].isAddedToList,
+                isStarted: newContent[i].isStarted,
+                isCompleted: newContent[i].isCompleted,
+                bundle_count: newContent[i].post.bundle_count,
+                progress_percent: newContent[i].post.progress_percent,
+            });
         }
 
         await this.setState({
@@ -122,35 +120,33 @@ export default class SongCatalog extends React.Component {
 
         let items = [];
         for (let i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    title: newContent[i].getField('title'),
-                    artist: newContent[i].post.artist,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    type: newContent[i].post.type,
-                    description: newContent[i]
-                        .getData('description')
-                        .replace(/(<([^>]+)>)/g, '')
-                        .replace(/&nbsp;/g, '')
-                        .replace(/&amp;/g, '&')
-                        .replace(/&#039;/g, "'")
-                        .replace(/&quot;/g, '"')
-                        .replace(/&gt;/g, '>')
-                        .replace(/&lt;/g, '<'),
-                    xp: newContent[i].post.xp,
-                    id: newContent[i].post.id,
-                    currentLessonId: newContent[i].post?.current_lesson?.id,
-                    lesson_count: newContent[i].post.lesson_count,
-                    like_count: newContent[i].post.like_count,
-                    duration: this.getDuration(newContent[i]),
-                    isLiked: newContent[i].post.is_liked_by_current_user,
-                    isAddedToList: newContent[i].isAddedToList,
-                    isStarted: newContent[i].isStarted,
-                    isCompleted: newContent[i].isCompleted,
-                    bundle_count: newContent[i].post.bundle_count,
-                    progress_percent: newContent[i].post.progress_percent,
-                });
-            }
+            items.push({
+                title: newContent[i].getField('title'),
+                artist: newContent[i].post.artist,
+                thumbnail: newContent[i].getData('thumbnail_url'),
+                type: newContent[i].post.type,
+                description: newContent[i]
+                    .getData('description')
+                    .replace(/(<([^>]+)>)/g, '')
+                    .replace(/&nbsp;/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&#039;/g, "'")
+                    .replace(/&quot;/g, '"')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&lt;/g, '<'),
+                xp: newContent[i].post.xp,
+                id: newContent[i].post.id,
+                currentLessonId: newContent[i].post?.current_lesson?.id,
+                lesson_count: newContent[i].post.lesson_count,
+                like_count: newContent[i].post.like_count,
+                duration: this.getDuration(newContent[i]),
+                isLiked: newContent[i].post.is_liked_by_current_user,
+                isAddedToList: newContent[i].isAddedToList,
+                isStarted: newContent[i].isStarted,
+                isCompleted: newContent[i].isCompleted,
+                bundle_count: newContent[i].post.bundle_count,
+                progress_percent: newContent[i].post.progress_percent,
+            });
         }
 
         this.setState({

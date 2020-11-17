@@ -79,7 +79,7 @@ class ContentModal extends React.Component {
         // ADD IN
         // like on backend
         let res = await likeContent(contentID);
-        console.log('Like content: ', res)
+        console.log('Like content: ', res);
     };
 
     unlike = async contentID => {
@@ -96,6 +96,20 @@ class ContentModal extends React.Component {
     download = async contentID => {};
 
     render = () => {
+        const {
+            type,
+            thumbnail,
+            title,
+            artist,
+            description,
+            bundle_count,
+            lesson_count,
+            xp,
+            id,
+            isLiked,
+            like_count,
+            isAddedToList,
+        } = this.state.data;
         return (
             <View style={styles.container}>
                 <View
@@ -154,7 +168,7 @@ class ContentModal extends React.Component {
                                     style={{
                                         height: 180 * factorRatio,
                                         width:
-                                            this.state.data.type == 'song'
+                                            type == 'song'
                                                 ? 180 * factorRatio
                                                 : fullWidth * 0.8,
                                         backgroundColor: 'white',
@@ -164,7 +178,10 @@ class ContentModal extends React.Component {
                                     <FastImage
                                         style={{flex: 1, borderRadius: 10}}
                                         source={{
-                                            uri: this.state.data.thumbnail,
+                                            uri:
+                                                thumbnail && thumbnail !== 'TBD'
+                                                    ? thumbnail
+                                                    : fallbackThumb,
                                         }}
                                         resizeMode={
                                             FastImage.resizeMode.stretch
@@ -182,7 +199,7 @@ class ContentModal extends React.Component {
                                         textAlign: 'center',
                                     }}
                                 >
-                                    {this.state.data.title}
+                                    {title}
                                 </Text>
                             </View>
                             <View
@@ -202,8 +219,7 @@ class ContentModal extends React.Component {
                                         color: 'grey',
                                     }}
                                 >
-                                    {this.changeType(this.state.data.type)}
-                                    / {this.state.data.artist}
+                                    {this.changeType(type)}/ {artist}
                                 </Text>
                             </View>
                             <View style={{height: 10 * factorVertical}} />
@@ -224,7 +240,7 @@ class ContentModal extends React.Component {
                                         textAlign: 'left',
                                     }}
                                 >
-                                    {this.state.data.description}
+                                    {description}
                                 </Text>
                             </View>
                             <View
@@ -237,8 +253,7 @@ class ContentModal extends React.Component {
                                 ]}
                             >
                                 <View style={{flex: 1, alignSelf: 'stretch'}} />
-                                {(this.state.data.bundle_count > 1 ||
-                                    this.state.data.lesson_count) && (
+                                {(bundle_count > 1 || lesson_count) && (
                                     <View
                                         style={[
                                             styles.centerContent,
@@ -256,9 +271,9 @@ class ContentModal extends React.Component {
                                                 marginTop: 10 * factorVertical,
                                             }}
                                         >
-                                            {this.state.data.lesson_count > 1
-                                                ? this.state.data.lesson_count
-                                                : this.state.data.bundle_count}
+                                            {lesson_count > 1
+                                                ? lesson_count
+                                                : bundle_count}
                                         </Text>
                                         <Text
                                             style={{
@@ -272,7 +287,7 @@ class ContentModal extends React.Component {
                                         </Text>
                                     </View>
                                 )}
-                                {this.state.data.bundle_count > 1 && (
+                                {bundle_count > 1 && (
                                     <View style={{width: 15 * factorRatio}} />
                                 )}
                                 <View
@@ -292,7 +307,7 @@ class ContentModal extends React.Component {
                                             marginTop: 10 * factorVertical,
                                         }}
                                     >
-                                        {this.state.data.xp}
+                                        {xp}
                                     </Text>
                                     <Text
                                         style={{
@@ -328,19 +343,13 @@ class ContentModal extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            this.state.data.isLiked
-                                                ? this.unlike(
-                                                      this.state.data.id,
-                                                  )
-                                                : this.like(this.state.data.id);
+                                            isLiked
+                                                ? this.unlike(id)
+                                                : this.like(id);
                                         }}
                                     >
                                         <AntIcon
-                                            name={
-                                                this.state.data.isLiked
-                                                    ? 'like1'
-                                                    : 'like2'
-                                            }
+                                            name={isLiked ? 'like1' : 'like2'}
                                             size={25 * factorRatio}
                                         />
                                     </TouchableOpacity>
@@ -352,7 +361,7 @@ class ContentModal extends React.Component {
                                             marginTop: 15 * factorVertical,
                                         }}
                                     >
-                                        {this.state.data.like_count}
+                                        {like_count}
                                     </Text>
                                 </View>
                                 <View style={{width: 15 * factorRatio}} />
@@ -365,16 +374,14 @@ class ContentModal extends React.Component {
                                     ]}
                                 >
                                     <View>
-                                        {!this.state.data.isAddedToList && (
+                                        {!isAddedToList && (
                                             <TouchableOpacity
                                                 style={{
                                                     paddingTop:
                                                         5 * factorVertical,
                                                 }}
                                                 onPress={() =>
-                                                    this.addToMyList(
-                                                        this.state.data.id,
-                                                    )
+                                                    this.addToMyList(id)
                                                 }
                                             >
                                                 <AntIcon
@@ -384,16 +391,14 @@ class ContentModal extends React.Component {
                                                 />
                                             </TouchableOpacity>
                                         )}
-                                        {this.state.data.isAddedToList && (
+                                        {isAddedToList && (
                                             <TouchableOpacity
                                                 style={{
                                                     paddingTop:
                                                         5 * factorVertical,
                                                 }}
                                                 onPress={() =>
-                                                    this.removeFromMyList(
-                                                        this.state.data.id,
-                                                    )
+                                                    this.removeFromMyList(id)
                                                 }
                                             >
                                                 <AntIcon
@@ -427,10 +432,8 @@ class ContentModal extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => {
-                                            resetProgress(this.state.data.id),
-                                                this.download(
-                                                    this.state.data.id,
-                                                );
+                                            resetProgress(id);
+                                            this.download(id);
                                         }}
                                     >
                                         <MaterialIcon

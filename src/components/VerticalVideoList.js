@@ -504,66 +504,66 @@ class VerticalVideoList extends React.Component {
                                             <View style={{flex: 1}} />
                                         </View>
                                     )}
-                                    {row.thumbnail !== 'TBD' && (
-                                        <>
-                                            {Platform.OS === 'ios' ? (
-                                                <FastImage
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: this.props
-                                                            .imageRadius,
-                                                    }}
-                                                    source={{
-                                                        uri: row.thumbnail.includes(
-                                                            'http',
-                                                        )
-                                                            ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                                                  this.props
-                                                                      .imageWidth *
-                                                                      2,
-                                                              )},ar_${
-                                                                  this.props
-                                                                      .imageWidth ===
-                                                                  this.props
-                                                                      .imageHeight
-                                                                      ? '1'
-                                                                      : '16:9'
-                                                              },fl_lossy,q_auto:eco,c_fill,g_face/${
-                                                                  row.thumbnail
-                                                              }`
-                                                            : row.thumbnail,
-                                                    }}
-                                                    resizeMode={
-                                                        FastImage.resizeMode
-                                                            .cover
-                                                    }
-                                                />
-                                            ) : (
-                                                <Image
-                                                    style={{
-                                                        flex: 1,
-                                                        borderRadius: this.props
-                                                            .imageRadius,
-                                                    }}
-                                                    source={{
-                                                        uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                                            this.props
-                                                                .imageWidth * 2,
-                                                        )},ar_${
-                                                            this.props
-                                                                .imageWidth ===
-                                                            this.props
-                                                                .imageHeight
-                                                                ? '1'
-                                                                : '16:9'
-                                                        },fl_lossy,q_auto:eco,c_fill,g_face/${
-                                                            row.thumbnail
-                                                        }`,
-                                                    }}
-                                                    resizeMode='cover'
-                                                />
-                                            )}
-                                        </>
+                                    {Platform.OS === 'ios' ? (
+                                        <FastImage
+                                            style={{
+                                                flex: 1,
+                                                borderRadius: this.props
+                                                    .imageRadius,
+                                            }}
+                                            source={{
+                                                uri:
+                                                    row.thumbnail &&
+                                                    row.thumbnail !== 'TBD'
+                                                        ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                                              this.props
+                                                                  .imageWidth *
+                                                                  2,
+                                                          )},ar_${
+                                                              this.props
+                                                                  .imageWidth ===
+                                                              this.props
+                                                                  .imageHeight
+                                                                  ? '1'
+                                                                  : '16:9'
+                                                          },fl_lossy,q_auto:eco,c_fill,g_face/${
+                                                              row.thumbnail
+                                                          }`
+                                                        : fallbackThumb,
+                                            }}
+                                            resizeMode={
+                                                FastImage.resizeMode.cover
+                                            }
+                                        />
+                                    ) : (
+                                        <Image
+                                            style={{
+                                                flex: 1,
+                                                borderRadius: this.props
+                                                    .imageRadius,
+                                            }}
+                                            source={{
+                                                uri:
+                                                    row.thumbnail &&
+                                                    row.thumbnail !== 'TBD'
+                                                        ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                                              this.props
+                                                                  .imageWidth *
+                                                                  2,
+                                                          )},ar_${
+                                                              this.props
+                                                                  .imageWidth ===
+                                                              this.props
+                                                                  .imageHeight
+                                                                  ? '1'
+                                                                  : '16:9'
+                                                          },fl_lossy,q_auto:eco,c_fill,g_face/${
+                                                              row.thumbnail
+                                                          }`
+                                                        : fallbackThumb,
+                                            }}
+                                            resizeMode='cover'
+                                        />
                                     )}
                                 </View>
                             </View>

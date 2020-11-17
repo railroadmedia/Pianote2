@@ -227,9 +227,11 @@ export default class VideoPlayer extends React.Component {
                 id: content.id,
                 url: content.post.mobile_app_url,
                 type: content.type,
-                videoId: new ContentModel(
-                    content.getFieldMulti('video')[0],
-                )?.getField('vimeo_video_id'),
+                videoId: content.post.fields?.find(f => f.key === 'video')
+                    ? new ContentModel(
+                          content.getFieldMulti('video')[0],
+                      )?.getField('vimeo_video_id')
+                    : -1,
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
                 style:
@@ -265,9 +267,11 @@ export default class VideoPlayer extends React.Component {
                 relatedLessons: [...this.state.relatedLessons, ...rl],
                 likes: parseInt(content.likeCount),
                 isLiked: content.post.is_liked_by_current_user,
-                lengthInSec: new ContentModel(
-                    content.getFieldMulti('video')[0],
-                )?.getField('length_in_seconds'),
+                lengthInSec: content.post.fields?.find(f => f.key === 'video')
+                    ? new ContentModel(
+                          content.getFieldMulti('video')[0],
+                      )?.getField('length_in_seconds')
+                    : 0,
                 lastWatchedPosInSec:
                     content.post.last_watch_position_in_seconds,
                 progress:
@@ -303,6 +307,12 @@ export default class VideoPlayer extends React.Component {
             },
             () => {
                 if (this.state.resources) this.createResourcesArr();
+                if (!this.state.video_playback_endpoints) {
+                    this.alert.toggle(
+                        `We're sorry, there was an issue loading this video, try reloading the lesson.`,
+                        `If the problem persists please contact support.`,
+                    );
+                }
                 const {comment, commentId} = this.props.navigation.state.params;
                 if (comment) {
                     this.setState({
@@ -1037,87 +1047,127 @@ export default class VideoPlayer extends React.Component {
                     backgroundColor={'black'}
                     barStyle={'light-content'}
                 />
-                {!this.state.isLoadingAll &&
-                    this.state.showVideo &&
-                    this.state.video_playback_endpoints && (
-                        <Video
-                            toSupport={() => {}}
-                            onRefresh={() => {}}
-                            content={this.state}
-                            maxFontMultiplier={1}
-                            settingsMode={'bottom'}
-                            onFullscreen={() => {}}
-                            ref={r => (this.video = r)}
-                            type={false ? 'audio' : 'video'}
-                            connection={this.context.isConnected}
-                            onBack={this.props.navigation.goBack}
-                            showControls={true}
-                            paused={true}
-                            goToNextLesson={() =>
-                                this.switchLesson(
-                                    this.state.nextLesson.id,
-                                    this.state.nextLesson.post.mobile_app_url,
-                                )
-                            }
-                            goToPreviousLesson={() =>
-                                this.switchLesson(
-                                    this.state.previousLesson.id,
-                                    this.state.previousLesson.post
-                                        .mobile_app_url,
-                                )
-                            }
-                            onUpdateVideoProgress={async (
-                                videoId,
-                                id,
-                                lengthInSec,
-                                currentTime,
-                            ) => {
-                                if (this.context.isConnected) {
-                                    if (!this.sessionId)
-                                        try {
-                                            this.sessionId = (
-                                                await getMediaSessionId(
-                                                    videoId,
-                                                    id,
-                                                    lengthInSec,
-                                                    'vimeo',
-                                                )
-                                            ).session_id.id;
-                                        } catch (e) {}
-
-                                    updateUsersVideoProgress(
-                                        this.sessionId,
-                                        currentTime,
-                                        lengthInSec,
-                                    );
+                {this.state.showVideo && (
+                    <>
+                        {this.state.isLoadingAll ||
+                        !this.state.video_playback_endpoints ? (
+                            <View
+                                style={{
+                                    backgroundColor: 'black',
+                                    width: '100%',
+                                    aspectRatio: 16 / 9,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.navigation.goBack();
+                                    }}
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        padding: 15,
+                                        zIndex: 2,
+                                    }}
+                                >
+                                    <EntypoIcon
+                                        name={'chevron-thin-left'}
+                                        size={22.5 * factorRatio}
+                                        color={'white'}
+                                    />
+                                </TouchableOpacity>
+                                <ActivityIndicator
+                                    size='large'
+                                    color='#ffffff'
+                                />
+                            </View>
+                        ) : (
+                            <Video
+                                toSupport={() => {}}
+                                onRefresh={() => {}}
+                                content={this.state}
+                                maxFontMultiplier={1}
+                                settingsMode={'bottom'}
+                                onFullscreen={() => {}}
+                                ref={r => (this.video = r)}
+                                type={false ? 'audio' : 'video'}
+                                connection={this.context.isConnected}
+                                onBack={this.props.navigation.goBack}
+                                showControls={true}
+                                paused={true}
+                                goToNextLesson={() =>
+                                    this.switchLesson(
+                                        this.state.nextLesson.id,
+                                        this.state.nextLesson.post
+                                            .mobile_app_url,
+                                    )
                                 }
-                            }}
-                            styles={{
-                                timerCursorBackground: colors.pianoteRed,
-                                beforeTimerCursorBackground: colors.pianoteRed,
-                                settings: {
-                                    cancel: {
-                                        color: 'black',
+                                goToPreviousLesson={() =>
+                                    this.switchLesson(
+                                        this.state.previousLesson.id,
+                                        this.state.previousLesson.post
+                                            .mobile_app_url,
+                                    )
+                                }
+                                onUpdateVideoProgress={async (
+                                    videoId,
+                                    id,
+                                    lengthInSec,
+                                    currentTime,
+                                ) => {
+                                    if (this.context.isConnected) {
+                                        if (!this.sessionId)
+                                            try {
+                                                this.sessionId = (
+                                                    await getMediaSessionId(
+                                                        videoId,
+                                                        id,
+                                                        lengthInSec,
+                                                        'vimeo',
+                                                    )
+                                                ).session_id.id;
+                                            } catch (e) {}
+
+                                        updateUsersVideoProgress(
+                                            this.sessionId,
+                                            currentTime,
+                                            lengthInSec,
+                                        );
+                                    }
+                                }}
+                                styles={{
+                                    timerCursorBackground: colors.pianoteRed,
+                                    beforeTimerCursorBackground:
+                                        colors.pianoteRed,
+                                    settings: {
+                                        cancel: {
+                                            color: 'black',
+                                        },
+                                        separatorColor: 'rgb(230, 230, 230)',
+                                        background: 'white',
+                                        optionsBorderColor:
+                                            'rgb(230, 230, 230)',
+                                        downloadIcon: {
+                                            width: 20,
+                                            height: 20,
+                                            fill: colors.pianoteRed,
+                                        },
                                     },
-                                    separatorColor: 'rgb(230, 230, 230)',
-                                    background: 'white',
-                                    optionsBorderColor: 'rgb(230, 230, 230)',
-                                    downloadIcon: {
-                                        width: 20,
-                                        height: 20,
-                                        fill: colors.pianoteRed,
-                                    },
-                                },
-                                //   alert: {
-                                //     background: 'purple',
-                                //     titleTextColor: 'blue',
-                                //     subtitleTextColor: 'green',
-                                //     reloadLesson: {color: 'green', background: 'blue'},
-                                //     contactSupport: {color: 'green', background: 'blue'},
-                                //   },
-                            }}
-                        />
-                    )}
+                                    //   alert: {
+                                    //     background: 'purple',
+                                    //     titleTextColor: 'blue',
+                                    //     subtitleTextColor: 'green',
+                                    //     reloadLesson: {color: 'green', background: 'blue'},
+                                    //     contactSupport: {color: 'green', background: 'blue'},
+                                    //   },
+                                }}
+                            />
+                        )}
+                    </>
+                )}
+
                 {!this.state.isLoadingAll ? (
                     <View
                         key={'container2'}
@@ -2333,7 +2383,10 @@ export default class VideoPlayer extends React.Component {
                     ref={r => (this.alert = r)}
                     additionalBtn={
                         <TouchableOpacity
-                            onPress={() => {}}
+                            onPress={() => {
+                                this.refresh();
+                                this.alert.toggle();
+                            }}
                             style={{
                                 marginTop: 10,
                                 borderRadius: 50,

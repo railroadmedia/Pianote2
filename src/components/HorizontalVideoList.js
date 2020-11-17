@@ -359,19 +359,25 @@ class HorizontalVideoList extends React.Component {
                                                             7.5 * factorRatio,
                                                     }}
                                                     source={{
-                                                        uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                                            this.props
-                                                                .itemWidth * 2,
-                                                        )},ar_${
-                                                            this.props
-                                                                .itemWidth ===
-                                                            this.props
-                                                                .itemHeight
-                                                                ? '1'
-                                                                : '16:9'
-                                                        },fl_lossy,q_auto:eco,c_fill,g_face/${
-                                                            item.thumbnail
-                                                        }`,
+                                                        uri:
+                                                            item.thumbnail &&
+                                                            item.thumbnail !==
+                                                                'TBD'
+                                                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                                                      this.props
+                                                                          .itemWidth *
+                                                                          2,
+                                                                  )},ar_${
+                                                                      this.props
+                                                                          .itemWidth ===
+                                                                      this.props
+                                                                          .itemHeight
+                                                                          ? '1'
+                                                                          : '16:9'
+                                                                  },fl_lossy,q_auto:eco,c_fill,g_face/${
+                                                                      item.thumbnail
+                                                                  }`
+                                                                : fallbackThumb,
                                                     }}
                                                     resizeMode={
                                                         FastImage.resizeMode
@@ -387,19 +393,25 @@ class HorizontalVideoList extends React.Component {
                                                     }}
                                                     resizeMode='cover'
                                                     source={{
-                                                        uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                                            this.props
-                                                                .itemWidth * 2,
-                                                        )},ar_${
-                                                            this.props
-                                                                .itemWidth ===
-                                                            this.props
-                                                                .itemHeight
-                                                                ? '1'
-                                                                : '16:9'
-                                                        },fl_lossy,q_auto:eco,c_fill,g_face/${
-                                                            item.thumbnail
-                                                        }`,
+                                                        uri:
+                                                            item.thumbnail &&
+                                                            item.thumbnail !==
+                                                                'TBD'
+                                                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                                                                      this.props
+                                                                          .itemWidth *
+                                                                          2,
+                                                                  )},ar_${
+                                                                      this.props
+                                                                          .itemWidth ===
+                                                                      this.props
+                                                                          .itemHeight
+                                                                          ? '1'
+                                                                          : '16:9'
+                                                                  },fl_lossy,q_auto:eco,c_fill,g_face/${
+                                                                      item.thumbnail
+                                                                  }`
+                                                                : fallbackThumb,
                                                     }}
                                                 />
                                             )}

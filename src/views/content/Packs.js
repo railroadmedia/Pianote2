@@ -63,15 +63,13 @@ export default class Packs extends React.Component {
 
         let items = [];
         for (let i in newContent) {
-            if (newContent[i].getData('thumbnail_url') !== 'TBD') {
-                items.push({
-                    id: newContent[i].id,
-                    thumbnail: newContent[i].getData('thumbnail_url'),
-                    logo: newContent[i].getData('logo_image_url'),
-                    bundle_count: newContent[i].post.bundle_count,
-                    mobile_app_url: newContent[i].post.mobile_app_url,
-                });
-            }
+            items.push({
+                id: newContent[i].id,
+                thumbnail: newContent[i].getData('thumbnail_url'),
+                logo: newContent[i].getData('logo_image_url'),
+                bundle_count: newContent[i].post.bundle_count,
+                mobile_app_url: newContent[i].post.mobile_app_url,
+            });
         }
 
         this.setState({
