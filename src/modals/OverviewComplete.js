@@ -49,7 +49,8 @@ class OverviewComplete extends React.Component {
                         style={{
                             backgroundColor: 'white',
                             borderRadius: 10 * factorRatio,
-                            padding: 30,
+                            marginHorizontal: 30,
+                            paddingVertical: 30,
                         }}
                     >
                         <View

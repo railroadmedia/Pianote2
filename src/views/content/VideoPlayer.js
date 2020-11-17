@@ -147,6 +147,7 @@ export default class VideoPlayer extends React.Component {
             content = result;
             this.allCommentsNum = result.total_comments;
         }
+        console.log(content);
         content = new ContentModel(content);
         let relatedLessons = content.post.related_lessons?.map(rl => {
             return new ContentModel(rl);
@@ -782,8 +783,8 @@ export default class VideoPlayer extends React.Component {
                   ),
             progress: !selectedAssignment
                 ? 0
-                : res.type !== 'course'
-                ? res.user_progress[0]?.progress_percent
+                : res[0].type !== 'course'
+                ? res[0].user_progress?.[this.userId]?.progress_percent
                 : state.progress,
         }));
     }
@@ -836,9 +837,11 @@ export default class VideoPlayer extends React.Component {
         let res = await markComplete(id);
 
         if (res?.parent[0]) {
-            this.setState({
-                progress: res.parent[0].progress_percent,
-            });
+            if (res.parent[0].type !== 'course') {
+                this.setState({
+                    progress: res.parent[0].progress_percent,
+                });
+            }
         }
     }
 
@@ -2214,20 +2217,16 @@ export default class VideoPlayer extends React.Component {
                         <Modal
                             key={'restartCourse'}
                             isVisible={this.state.showRestartCourse}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    height: fullHeight,
-                                    width: fullWidth,
-                                    elevation: 5,
-                                    margin: 0,
-                                },
-                            ]}
+                            style={{
+                                height: fullHeight,
+                                width: fullWidth,
+                                margin: 0,
+                            }}
                             animation={'slideInUp'}
-                            animationInTiming={350}
-                            animationOutTiming={350}
-                            coverScreen={false}
-                            hasBackdrop={false}
+                            animationInTiming={250}
+                            animationOutTiming={250}
+                            coverScreen={true}
+                            hasBackdrop={true}
                         >
                             <RestartCourse
                                 hideRestartCourse={() => {
