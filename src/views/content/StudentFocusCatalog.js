@@ -151,7 +151,6 @@ export default class StudentFocusCatalog extends React.Component {
                         <View
                             key={'continueCourses'}
                             style={{
-                                minHeight: fullHeight * 0.305,
                                 paddingLeft: fullWidth * 0.035,
                                 backgroundColor: colors.mainBackground,
                             }}
@@ -184,7 +183,11 @@ export default class StudentFocusCatalog extends React.Component {
                             />
                         </View>
                     )}
-                    <View style={{height: 15 * factorRatio}} />
+                    <View
+                        style={{
+                            height: 20 * factorVertical,
+                        }}
+                    />
                     <View
                         key={'pack'}
                         style={{

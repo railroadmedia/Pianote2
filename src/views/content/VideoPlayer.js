@@ -236,9 +236,9 @@ export default class VideoPlayer extends React.Component {
                 lessonTitle: content.getField('title'),
                 style:
                     content.post.type === 'song-part'
-                        ? `${new ContentModel(content.post.parent).getField(
-                              'style',
-                          )} | `
+                        ? `${new ContentModel(content.post.parent)
+                              .getField('style')
+                              .toUpperCase()} | `
                         : '',
                 description:
                     content.post.type === 'song-part'
