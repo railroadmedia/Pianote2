@@ -10,19 +10,14 @@ import {
     RefreshControl,
 } from 'react-native';
 import {SafeAreaView} from 'react-navigation';
-import {
-    addToMyList,
-    likeContent,
-    removeFromMyList,
-    resetProgress,
-    unlikeContent,
-} from '../../services/UserActions';
+import {ContentModel} from '@musora/models';
 import Modal from 'react-native-modal';
 import {Download_V2} from 'RNDownload';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import StartIcon from '../../components/StartIcon';
 import ContinueIcon from '../../components/ContinueIcon';
 import ResetIcon from '../../components/ResetIcon';
@@ -31,7 +26,13 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import RestartCourse from '../../modals/RestartCourse';
 import contentService from '../../services/content.service';
 import {NetworkContext} from '../../context/NetworkProvider';
-import {ContentModel} from '@musora/models';
+import {
+    addToMyList,
+    likeContent,
+    removeFromMyList,
+    resetProgress,
+    unlikeContent,
+} from '../../services/UserActions';
 
 let greaterWDim;
 export default class PathOverview extends React.Component {
@@ -136,16 +137,20 @@ export default class PathOverview extends React.Component {
         });
     };
 
-    onRestartCourse = () => {
+    onRestartCourse = async () => {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
-        resetProgress(this.state.data.id);
-        this.setState({
-            started: false,
-            completed: false,
-            showRestartCourse: false,
-        });
+        await resetProgress(this.state.data.id);
+        this.setState(
+            {
+                started: false,
+                completed: false,
+                showRestartCourse: false,
+                isLoadingAll: true,
+            },
+            () => this.getItems(),
+        );
     };
 
     refresh = () => {

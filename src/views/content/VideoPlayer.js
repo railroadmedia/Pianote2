@@ -29,22 +29,22 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 
-import Replies from '../../components/Replies.js';
-import CommentSort from '../../modals/CommentSort.js';
-import SoundSlice from '../../components/SoundSlice.js';
-import LessonComplete from '../../modals/LessonComplete.js';
+import Replies from '../../components/Replies';
+import CommentSort from '../../modals/CommentSort';
+import SoundSlice from '../../components/SoundSlice';
+import LessonComplete from '../../modals/LessonComplete';
 import Resources from 'Pianote2/src/assets/img/svgs/resources.svg';
-import VerticalVideoList from '../../components/VerticalVideoList.js';
-import downloadService from '../../services/download.service.js';
-import commentsService from '../../services/comments.service.js';
-import contentService from '../../services/content.service.js';
-import OverviewComplete from '../../modals/OverviewComplete.js';
-import VideoPlayerSong from './VideoPlayerSong.js';
-import AssignmentComplete from '../../modals/AssignmentComplete.js';
-import RestartCourse from '../../modals/RestartCourse.js';
-import foundationsService from '../../services/foundations.service.js';
+import VerticalVideoList from '../../components/VerticalVideoList';
+import downloadService from '../../services/download.service';
+import commentsService from '../../services/comments.service';
+import contentService from '../../services/content.service';
+import OverviewComplete from '../../modals/OverviewComplete';
+import VideoPlayerSong from './VideoPlayerSong';
+import AssignmentComplete from '../../modals/AssignmentComplete';
+import RestartCourse from '../../modals/RestartCourse';
+import foundationsService from '../../services/foundations.service';
 import {NetworkContext} from '../../context/NetworkProvider';
-import CustomModal from '../../modals/CustomModal.js';
+import CustomModal from '../../modals/CustomModal';
 import {
     likeContent,
     unlikeContent,
@@ -55,7 +55,7 @@ import {
     markStarted,
     getMediaSessionId,
     updateUsersVideoProgress,
-} from '../../services/UserActions.js';
+} from '../../services/UserActions';
 
 export default class VideoPlayer extends React.Component {
     static contextType = NetworkContext;

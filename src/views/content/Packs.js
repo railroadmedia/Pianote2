@@ -14,15 +14,15 @@ import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
-import StartIcon from '../../components/StartIcon.js';
-import MoreInfoIcon from '../../components/MoreInfoIcon.js';
-import RestartCourse from '../../modals/RestartCourse.js';
-import ContinueIcon from '../../components/ContinueIcon.js';
-import NavigationBar from '../../components/NavigationBar.js';
-import NavigationMenu from '../../components/NavigationMenu.js';
-import NavMenuHeaders from '../../components/NavMenuHeaders.js';
-import GradientFeature from '../../components/GradientFeature.js';
-import {resetProgress} from '../../services/UserActions.js';
+import StartIcon from '../../components/StartIcon';
+import MoreInfoIcon from '../../components/MoreInfoIcon';
+import RestartCourse from '../../modals/RestartCourse';
+import ContinueIcon from '../../components/ContinueIcon';
+import NavigationBar from '../../components/NavigationBar';
+import NavigationMenu from '../../components/NavigationMenu';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import GradientFeature from '../../components/GradientFeature';
+import {resetProgress} from '../../services/UserActions';
 import packsService from '../../services/packs.service';
 import {NetworkContext} from '../../context/NetworkProvider';
 
@@ -93,7 +93,10 @@ export default class Packs extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         await resetProgress(this.state.id);
-        this.setState({isLoading: true}, () => this.getData());
+        this.setState(
+            {isLoading: true, packs: [], showRestartCourse: false},
+            () => this.getData(),
+        );
     };
 
     refresh = () => {

@@ -13,25 +13,26 @@ import {
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import ResetIcon from '../../components/ResetIcon';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import NextVideo from 'Pianote2/src/components/NextVideo';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import AsyncStorage from '@react-native-community/async-storage';
-import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
-import foundationsService from '../../services/foundations.service';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+
+import ResetIcon from '../../components/ResetIcon';
+import NextVideo from '../../components/NextVideo';
+import StartIcon from '../../components/StartIcon';
+import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
+import RestartCourse from '../../modals/RestartCourse';
+import ContinueIcon from '../../components/ContinueIcon';
+import foundationsService from '../../services/foundations.service';
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import GradientFeature from '../../components/GradientFeature';
+import VerticalVideoList from '../../components/VerticalVideoList';
 import {
     likeContent,
     unlikeContent,
     resetProgress,
-} from 'Pianote2/src/services/UserActions.js';
+} from '../../services/UserActions';
 import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class Foundations extends React.Component {
@@ -155,11 +156,18 @@ export default class Foundations extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         resetProgress(this.state.id);
-        this.setState({
-            isStarted: false,
-            isCompleted: false,
-            showRestartCourse: false,
-        });
+        this.setState(
+            {
+                isStarted: false,
+                isCompleted: false,
+                showRestartCourse: false,
+                isLoadingAll: true,
+                items: [],
+            },
+            () => {
+                this.getContent();
+            },
+        );
     };
 
     refresh = () => {
@@ -748,7 +756,7 @@ export default class Foundations extends React.Component {
                         onRestart={() => this.onRestartFoundation()}
                     />
                 </Modal>
-                {this.state.nextLesson && (
+                {!this.state.isLoadingAll && this.state.nextLesson && (
                     <NextVideo
                         item={this.state.nextLesson}
                         progress={this.state.progress}

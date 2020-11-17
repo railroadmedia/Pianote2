@@ -13,22 +13,24 @@ import Modal from 'react-native-modal';
 import {SafeAreaView} from 'react-navigation';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import ResetIcon from '../../components/ResetIcon';
-import RestartCourse from '../../modals/RestartCourse';
-import NextVideo from 'Pianote2/src/components/NextVideo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
+
+import ResetIcon from '../../components/ResetIcon';
+import RestartCourse from '../../modals/RestartCourse';
+import NextVideo from '../../components/NextVideo';
+import StartIcon from '../../components/StartIcon';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
+import ContinueIcon from '../../components/ContinueIcon';
 import foundationsService from '../../services/foundations.service';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import NavigationBar from '../../components/NavigationBar';
+import GradientFeature from '../../components/GradientFeature';
+import VerticalVideoList from '../../components/VerticalVideoList';
 import {
     addToMyList,
     removeFromMyList,
-} from 'Pianote2/src/services/UserActions.js';
+    resetProgress,
+} from '../../services/UserActions';
 import {NetworkContext} from '../../context/NetworkProvider';
 
 export default class FoundationsLevel extends React.Component {
@@ -128,6 +130,25 @@ export default class FoundationsLevel extends React.Component {
         this.setState({isLoadingAll: true, items: []}, () => {
             this.getContent();
         });
+    };
+
+    onRestartFoundation = async () => {
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
+        resetProgress(this.state.id);
+        this.setState(
+            {
+                isStarted: false,
+                isCompleted: false,
+                showRestartCourse: false,
+                isLoadingAll: true,
+                items: [],
+            },
+            () => {
+                this.getContent();
+            },
+        );
     };
 
     render() {

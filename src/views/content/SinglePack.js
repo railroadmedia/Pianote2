@@ -8,27 +8,29 @@ import {
     TouchableOpacity,
     ScrollView,
     RefreshControl,
+    ActivityIndicator,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import {SafeAreaView} from 'react-navigation';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import StartIcon from 'Pianote2/src/components/StartIcon.js';
-import ContinueIcon from 'Pianote2/src/components/ContinueIcon.js';
-import RestartCourse from 'Pianote2/src/modals/RestartCourse.js';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+
+import StartIcon from '../../components/StartIcon';
+import ContinueIcon from '../../components/ContinueIcon';
+import RestartCourse from '../../modals/RestartCourse';
+import NavigationBar from '../../components/NavigationBar';
+import NavigationMenu from '../../components/NavigationMenu';
+import GradientFeature from '../../components/GradientFeature';
+import VerticalVideoList from '../../components/VerticalVideoList';
 import packsService from '../../services/packs.service';
-import {ActivityIndicator} from 'react-native';
 import {
     addToMyList,
     removeFromMyList,
     resetProgress,
-} from 'Pianote2/src/services/UserActions.js';
+} from '../../services/UserActions';
 import {NetworkContext} from '../../context/NetworkProvider';
 
 let greaterWDim;
@@ -65,6 +67,7 @@ export default class SinglePack extends React.Component {
         }
         // get bundles
         const response = await packsService.getPack(this.state.url);
+        console.log(response);
         const newContent = new ContentModel(response);
         const lessons = newContent.post.lessons.map(rl => {
             return new ContentModel(rl);
@@ -119,7 +122,10 @@ export default class SinglePack extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         await resetProgress(this.state.id);
-        this.setState({isLoadingAll: true}, () => this.getBundle());
+        this.setState(
+            {showRestartCourse: false, isLoadingAll: true, videos: []},
+            () => this.getBundle(),
+        );
     }
 
     toggleMyList = () => {
@@ -156,7 +162,12 @@ export default class SinglePack extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <SafeAreaView
+                forceInset={{
+                    bottom: 'never',
+                }}
+                style={styles.container}
+            >
                 {!this.state.isLoadingAll ? (
                     <ScrollView
                         style={{backgroundColor: colors.mainBackground}}
@@ -170,13 +181,6 @@ export default class SinglePack extends React.Component {
                             />
                         }
                     >
-                        <View
-                            style={{
-                                height: isNotch
-                                    ? fullHeight * 0.05
-                                    : fullHeight * 0.03,
-                            }}
-                        />
                         <View
                             key={'imageContainer'}
                             style={{
@@ -192,9 +196,7 @@ export default class SinglePack extends React.Component {
                                     {
                                         position: 'absolute',
                                         left: 7.5 * factorHorizontal,
-                                        top: isNotch
-                                            ? 10 * factorVertical
-                                            : 10 * factorVertical,
+                                        top: 10 * factorVertical,
                                         height: 35 * factorRatio,
                                         width: 35 * factorRatio,
                                         borderRadius: 100,
@@ -820,7 +822,7 @@ export default class SinglePack extends React.Component {
                         onRestart={() => this.resetProgress()}
                     />
                 </Modal>
-            </View>
+            </SafeAreaView>
         );
     }
 }

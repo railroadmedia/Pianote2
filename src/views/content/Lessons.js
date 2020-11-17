@@ -10,10 +10,8 @@ import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import RestartCourse from '../../modals/RestartCourse';
-
 import Pianote from '../../assets/img/svgs/pianote';
-
+import RestartCourse from '../../modals/RestartCourse';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -23,9 +21,7 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-
 import {NetworkContext} from '../../context/NetworkProvider';
-
 import foundationsService from '../../services/foundations.service';
 import {getStartedContent, getAllContent} from '../../services/GetContent';
 
@@ -243,10 +239,14 @@ export default class Lessons extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         resetProgress(this.state.id);
-        this.setState({
-            foundationIsStarted: false,
-            foundationIsCompleted: false,
-        });
+        this.setState(
+            {
+                foundationIsStarted: false,
+                foundationIsCompleted: false,
+                showRestartCourse: false,
+            },
+            () => this.getFoundations(),
+        );
     };
 
     filterResults = async () => {
