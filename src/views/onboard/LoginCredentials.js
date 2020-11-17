@@ -112,9 +112,11 @@ console.log(response)
 
             // checkmembership status
             let userData = await getUserData();
+console.log(userData)      
+      
             let currentDate = new Date().getTime() / 1000;
-            let userExpDate =
-                new Date(userData.expirationDate).getTime() / 1000;
+            let userExpDate = new Date(userData.expirationDate).getTime() / 1000;
+console.log(currentDate, userExpDate)
             if (userData.isPackOlyOwner) {
                 // if pack only, make global & go to packs
                 global.isPackOnly = userData.isPackOlyOwner;
@@ -293,6 +295,7 @@ console.log(response)
                                     }
                                     autoCorrect={false}
                                     value={this.state.email}
+                                    autoCapitalize={false}
                                     keyboardAppearance={'dark'}
                                     placeholderTextColor={'grey'}
                                     placeholder={'Email Address'}
@@ -321,6 +324,7 @@ console.log(response)
                                     }}
                                 >
                                     <TextInput
+                                        autoCapitalize={false}
                                         onBlur={() =>
                                             this.setState({
                                                 scrollViewContentFlex: {
