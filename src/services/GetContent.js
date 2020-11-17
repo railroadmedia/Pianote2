@@ -27,10 +27,10 @@ export async function getAllContent(type, sort, page, filtersDict) {
         }
     }
     for (i in filtersDict.progress) {
-        if(filtersDict.progress[i] !== 'all') {
-        required_user_states =
-            required_user_states +
-            `required_user_states[]=${filtersDict.progress[i]}`;
+        if (filtersDict.progress[i] !== 'all') {
+            required_user_states =
+                required_user_states +
+                `required_user_states[]=${filtersDict.progress[i]}`;
         }
     }
 
@@ -77,10 +77,11 @@ export async function getNewContent(type) {
 export async function getStartedContent(type) {
     try {
         if (type == '') {
-            type = 'unit&included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
+            type =
+                'unit&included_types[]=unit-part&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
         }
         return commonService.tryCall(
-            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-published_on&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
+            `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-progress&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`,
         );
     } catch (error) {
         console.log('Error', error);
@@ -119,11 +120,11 @@ export async function searchContent(term, page, filtersDict) {
 export async function getMyListContent(page, filtersDict, progressState) {
     let included_types = '';
     let progress_types = ''; // completed || started
-    let sort = '-published_on'
+    let sort = '-published_on';
 
     if (progressState !== '') {
         progress_types = '&state=' + progressState;
-        sort = '-progress'
+        sort = '-progress';
     }
 
     if (filtersDict.topics.length > 0) {
@@ -161,7 +162,9 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
             }
         } else {
             // if user did not filter for types use all types except 2
-            url = url + '&included_types[]=course&included_types[]=song&included_types[]=unit&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
+            url =
+                url +
+                '&included_types[]=course&included_types[]=song&included_types[]=unit&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=pack&included_types[]=podcasts';
         }
         // if user clicked see all on started videos
         if (type == 'continue') {
@@ -179,7 +182,7 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
         //}
     }
     try {
-        let x = await commonService.tryCall(url)
+        let x = await commonService.tryCall(url);
         return x;
     } catch (error) {
         console.log('Error: ', error);

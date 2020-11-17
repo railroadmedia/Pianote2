@@ -81,8 +81,8 @@ export default class PathOverview extends React.Component {
                 started: r.started,
                 completed: r.completed,
                 nextLesson: r.next_lesson.id,
-                difficulty: r.fields.find(f => f.key === 'difficulty').value,
-                thumbnail: r.data.find(f => f.key === 'thumbnail_url').value,
+                difficulty: r.fields.find(f => f.key === 'difficulty')?.value,
+                thumbnail: r.data.find(f => f.key === 'thumbnail_url')?.value,
                 isLoadingAll: false,
                 items:
                     r?.lessons?.map(l => {
@@ -163,11 +163,13 @@ export default class PathOverview extends React.Component {
         const {difficulty} = this.state;
         try {
             let text = '';
-            difficulty < 5
-                ? (text = 'BEGINNER ' + difficulty)
-                : difficulty < 8
-                ? (text = 'INTERMEDIATE ' + difficulty)
-                : (text = 'ADVANCED ' + difficulty);
+            if (difficulty) {
+                difficulty < 5
+                    ? (text = 'BEGINNER ' + difficulty)
+                    : difficulty < 8
+                    ? (text = 'INTERMEDIATE ' + difficulty)
+                    : (text = 'ADVANCED ' + difficulty);
+            }
             return text;
         } catch (e) {
             return '';
