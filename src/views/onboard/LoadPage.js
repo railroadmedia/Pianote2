@@ -64,6 +64,7 @@ export default class LoadPage extends React.Component {
                     updateFcmToken();
                     await AsyncStorage.multiSet([['loggedIn', 'true']]);
                     let userData = await getUserData();
+                    console.log(userData)
                     let {lessonUrl, commentId} = notif;
                     if (lessonUrl && commentId) {
                         // if lesson or comment notification go to video
@@ -108,6 +109,7 @@ export default class LoadPage extends React.Component {
                     } else {
                         if (forumUrl) {
                             // if user got a forum related notification
+                            console.log('FORUM URL: ', forumUrl)
                             Linking.openURL(forumUrl);
                             await AsyncStorage.removeItem('forumUrl');
                         }

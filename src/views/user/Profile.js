@@ -278,6 +278,7 @@ export default class Profile extends React.Component {
                 url: notification.content.mobile_app_url,
             });
         } else {
+            console.log('LINKING URL: ', notification.url)
             Linking.openURL(notification.url);
         }
     };
