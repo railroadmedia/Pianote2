@@ -16,7 +16,7 @@ export async function getToken(userEmail, userPass, purchases) {
     let password = userPass || data.password;
     email = encodeURIComponent(email)
     password = encodeURIComponent(password)
-    console.log(email, password)
+
     let response = await fetch(
         `${commonService.rootUrl}/usora/api/login?email=${email}&password=${password}`,
         {
@@ -30,7 +30,6 @@ export async function getToken(userEmail, userPass, purchases) {
         return 500
     } else {
         response = await response.json()
-        console.log(response)
         if (response.success) {
             token = response.token;
             await AsyncStorage.multiSet([
@@ -44,15 +43,14 @@ export async function getToken(userEmail, userPass, purchases) {
 export async function getUserData() {
     // return profile details
     try {
-        await getToken();
+        await getToken()
         let userData = await fetch(`${commonService.rootUrl}/api/profile`, {
             method: 'GET',
             headers: {Authorization: `Bearer ${token}`},
         });
-
+        
         if (typeof userData.error == 'undefined') {
             userData = await userData.json();
-            console.log('USERDATA: ' , userData)
             // if received data, update data
             await AsyncStorage.multiSet([
                 ['totalXP', userData.totalXp.toString()],

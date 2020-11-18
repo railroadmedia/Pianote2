@@ -33,7 +33,7 @@ export default class LoadPage extends React.Component {
                 i[j[0]] = j[1] === 'undefined' ? undefined : j[1];
                 return i;
             }, {});
-            console.log(data)
+
             const {email, resetKey, password, loggedIn, forumUrl} = data;    
 
             if (!this.context.isConnected) {
