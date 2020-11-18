@@ -142,7 +142,7 @@ export default class VideoPlayer extends React.Component {
                 result = await contentService.getContent(this.state.id);
             }
             if (result.title && result.message) {
-                return this.alert.toggle(result[0].title, result[0].message);
+                return this.alert.toggle(result.title, result.message);
             }
             content = result;
             this.allCommentsNum = result.total_comments;
