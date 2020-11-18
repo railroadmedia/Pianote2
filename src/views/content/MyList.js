@@ -50,7 +50,6 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
-        console.log('PAGE: ', this.state.page)
         if (!this.context.isConnected)
             return this.context.showNoConnectionAlert();
         let response = await getMyListContent(
