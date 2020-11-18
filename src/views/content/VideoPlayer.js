@@ -142,7 +142,7 @@ export default class VideoPlayer extends React.Component {
                 result = await contentService.getContent(this.state.id);
             }
             if (result.title && result.message) {
-                return this.alert.toggle(result[0].title, result[0].message);
+                return this.alert.toggle(result.title, result.message);
             }
             content = result;
             this.allCommentsNum = result.total_comments;
@@ -235,13 +235,13 @@ export default class VideoPlayer extends React.Component {
                 lessonImage: content.getData('thumbnail_url'),
                 lessonTitle: content.getField('title'),
                 style:
-                    content.post.type === 'song-part'
+                    content.post.type === 'song-part' && content.post.parent
                         ? `${new ContentModel(content.post.parent)
                               .getField('style')
                               .toUpperCase()} | `
                         : '',
                 description:
-                    content.post.type === 'song-part'
+                    content.post.type === 'song-part' && content.post.parent
                         ? new ContentModel(content.post.parent)
                               .getField('instructor')
                               ?.data?.find(d => d.key === 'biography')?.value
@@ -256,7 +256,7 @@ export default class VideoPlayer extends React.Component {
                               .replace(/&lt;/g, '<'),
                 xp: content.post.total_xp,
                 artist:
-                    content.post.type === 'song-part'
+                    content.post.type === 'song-part' && content.post.parent
                         ? new ContentModel(content.post.parent).getField(
                               'artist',
                           )
