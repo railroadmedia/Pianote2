@@ -11,10 +11,8 @@ import NetworkProvider from './src/context/NetworkProvider';
 export default class App extends React.Component {
     componentDidMount() {
         Linking.getInitialURL()
-            .then(ev => {
-                if (ev) this.handleOpenURL({url: ev});
-            })
-            .catch(() => {});
+            .then(ev => {if(ev) this.handleOpenURL({url: ev})})
+            .catch((error) => console.log(error));
         Linking.addEventListener('url', this.handleOpenURL);
     }
 

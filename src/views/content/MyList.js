@@ -50,6 +50,7 @@ export default class MyList extends React.Component {
     };
 
     getMyList = async () => {
+        console.log('PAGE: ', this.state.page)
         if (!this.context.isConnected)
             return this.context.showNoConnectionAlert();
         let response = await getMyListContent(
@@ -57,9 +58,8 @@ export default class MyList extends React.Component {
             this.state.filters,
             '',
         );
-        const newContent = await response.data.map(data => {
-            return new ContentModel(data);
-        });
+        
+        const newContent = await response.data.map(data => {return new ContentModel(data)});
 
         let items = [];
         for (let i in newContent) {
@@ -94,8 +94,8 @@ export default class MyList extends React.Component {
         }
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos:
-                items.length == 0 || response.data.length < 20 ? true : false,
+            outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+            page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
             isPaging: false,
@@ -142,7 +142,6 @@ export default class MyList extends React.Component {
             !this.state.outVideos
         ) {
             await this.setState({
-                page: this.state.page + 1,
                 isPaging: true,
             }),
                 await this.getMyList();
