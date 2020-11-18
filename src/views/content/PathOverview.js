@@ -45,7 +45,8 @@ export default class PathOverview extends React.Component {
             items: this.props.navigation.state.params.items || [],
             isAddedToList: this.props.navigation.state.params.data
                 ?.isAddedToList,
-            thumbnail: this.props.navigation.state.params.data?.isAddedToList,
+            thumbnail: this.props.navigation.state.params.data?.thumbnail,
+            artist: this.props.navigation.state.params.data?.artist,
             showInfo: false,
             totalLength: 0,
             isLiked: false,
@@ -83,6 +84,12 @@ export default class PathOverview extends React.Component {
                 nextLesson: r.next_lesson.id,
                 difficulty: r.fields.find(f => f.key === 'difficulty')?.value,
                 thumbnail: r.data.find(f => f.key === 'thumbnail_url')?.value,
+                artist:
+                    r.type === 'song'
+                        ? r.fields.find(f => f.key === 'artist')?.value
+                        : new ContentModel(
+                              r.fields.find(f => f.key === 'instructor')?.value,
+                          )?.getField('name'),
                 isLoadingAll: false,
                 items:
                     r?.lessons?.map(l => {
@@ -320,7 +327,7 @@ export default class PathOverview extends React.Component {
                                     fontSize: 14 * factorRatio,
                                 }}
                             >
-                                {this.state.data.artist?.toUpperCase()} |{' '}
+                                {this.state.artist?.toUpperCase()} |{' '}
                                 {this.formatDifficulty()} | {this.state.data.xp}{' '}
                                 XP
                             </Text>
