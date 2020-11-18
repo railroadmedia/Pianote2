@@ -570,6 +570,7 @@ export default class PathOverview extends React.Component {
                                         <Text
                                             style={{
                                                 fontSize: 17 * factorRatio,
+                                                textAlign: 'center',
                                                 color: 'white',
                                                 fontFamily: 'OpenSans-Bold',
                                                 marginTop: 10 * factorVertical,
@@ -578,16 +579,20 @@ export default class PathOverview extends React.Component {
                                             {Math.floor(
                                                 this.state.totalLength / 60,
                                             )}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                fontSize: 13 * factorRatio,
-                                                color: 'white',
-                                                fontFamily: 'OpenSans-Regular',
-                                                marginTop: 10 * factorVertical,
-                                            }}
-                                        >
-                                            MINS
+                                            {`\n`}
+                                            <Text
+                                                style={{
+                                                    fontSize: 13 * factorRatio,
+                                                    textAlign: 'center',
+                                                    color: 'white',
+                                                    fontFamily:
+                                                        'OpenSans-Regular',
+                                                    marginTop:
+                                                        10 * factorVertical,
+                                                }}
+                                            >
+                                                MINS
+                                            </Text>
                                         </Text>
                                     </View>
                                     <View
@@ -688,7 +693,7 @@ export default class PathOverview extends React.Component {
                                                 color: '#ffffff',
                                                 fontSize: 13 * factorRatio,
                                                 fontFamily: 'OpenSans-Regular',
-                                                marginTop: 10 * factorVertical,
+                                                marginTop: 5 * factorVertical,
                                             },
                                             alert: {
                                                 alertTextMessageFontFamily:
