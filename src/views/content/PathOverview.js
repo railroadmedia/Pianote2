@@ -320,7 +320,7 @@ export default class PathOverview extends React.Component {
                                     fontSize: 14 * factorRatio,
                                 }}
                             >
-                                {this.state.data.artist.toUpperCase()} |{' '}
+                                {this.state.data.artist?.toUpperCase()} |{' '}
                                 {this.formatDifficulty()} | {this.state.data.xp}{' '}
                                 XP
                             </Text>
