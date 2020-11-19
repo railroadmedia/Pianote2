@@ -112,7 +112,7 @@ export default class CreateAccount3 extends React.Component {
     };
 
     typingDisplayName = async displayName => {
-        await this.setState({displayName});
+        this.setState({displayName});
     };
 
     chooseImage = async () => {
@@ -148,9 +148,9 @@ export default class CreateAccount3 extends React.Component {
         );
     };
 
-    clearImage = async () => {
+    clearImage = () => {
         data = new FormData();
-        await this.setState({
+        this.setState({
             imageURI: '',
             showImage: false,
             response: null,

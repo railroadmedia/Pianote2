@@ -99,7 +99,7 @@ export default class SongCatalog extends React.Component {
             });
         }
 
-        await this.setState({
+        this.setState({
             allSongs: [...this.state.allSongs, ...items],
             outVideos:
                 items.length == 0 || response.data.length < 20 ? true : false,
@@ -233,7 +233,6 @@ export default class SongCatalog extends React.Component {
         });
 
         this.getAllSongs();
-        this.forceUpdate();
     };
 
     render() {

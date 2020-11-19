@@ -18,14 +18,12 @@ export default class WelcomeBack extends React.Component {
     async changeColor(number) {
         let index = number.nativeEvent.contentOffset.x / fullWidth;
         if (index == 0) {
-            await this.setState({page: 1});
+            this.setState({page: 1});
         } else if (index == 1) {
-            await this.setState({page: 2});
+            this.setState({page: 2});
         } else if (index == 2) {
-            await this.setState({page: 3});
+            this.setState({page: 3});
         }
-
-        await this.forceUpdate();
     }
 
     render() {
