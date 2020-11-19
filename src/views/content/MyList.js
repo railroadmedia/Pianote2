@@ -57,8 +57,10 @@ export default class MyList extends React.Component {
             this.state.filters,
             '',
         );
-        
-        const newContent = await response.data.map(data => {return new ContentModel(data)});
+
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         let items = [];
         for (let i in newContent) {
@@ -80,7 +82,7 @@ export default class MyList extends React.Component {
                 id: newContent[i].id,
                 mobile_app_url: newContent[i].post.mobile_app_url,
                 lesson_count: newContent[i].post.lesson_count,
-                currentLessonId: newContent[i].post?.current_lesson?.id,
+                currentLessonId: newContent[i].post?.song_part_id,
                 like_count: newContent[i].post.like_count,
                 duration: i,
                 isLiked: newContent[i].post.is_liked_by_current_user,
@@ -93,7 +95,8 @@ export default class MyList extends React.Component {
         }
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,

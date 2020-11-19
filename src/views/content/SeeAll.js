@@ -123,7 +123,7 @@ export default class SeeAll extends React.Component {
                 like_count: newContent[i].post.like_count,
                 mobile_app_url: newContent[i].post.mobile_app_url,
                 lesson_count: newContent[i].post.lesson_count,
-                currentLessonId: newContent[i].post?.current_lesson?.id,
+                currentLessonId: newContent[i].post?.song_part_id,
                 isLiked: newContent[i].post.is_liked_by_current_user,
                 isAddedToList: newContent[i].isAddedToList,
                 isStarted: newContent[i].isStarted,
@@ -339,7 +339,9 @@ export default class SeeAll extends React.Component {
                             title={this.state.title} // title for see all page
                             type={typeDict[this.state.parent]} // the type of content on page
                             showFilter={true}
-                            hideFilterButton={this.state.parent == 'Lessons' ? false : false} // only show filter button on lessons
+                            hideFilterButton={
+                                this.state.parent == 'Lessons' ? false : false
+                            } // only show filter button on lessons
                             showType={false}
                             showArtist={true}
                             showSort={false}

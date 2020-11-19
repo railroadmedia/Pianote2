@@ -217,7 +217,7 @@ export default class Search extends React.Component {
                         id: newContent[i].id,
                         mobile_app_url: newContent[i].post.mobile_app_url,
                         lesson_count: newContent[i].post.lesson_count,
-                        currentLessonId: newContent[i].post?.current_lesson?.id,
+                        currentLessonId: newContent[i].post?.song_part_id,
                         like_count: newContent[i].post.like_count,
                         duration: this.getDuration(newContent[i]),
                         isLiked: newContent[i].post.is_liked_by_current_user,
