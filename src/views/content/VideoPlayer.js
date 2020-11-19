@@ -416,20 +416,22 @@ export default class VideoPlayer extends React.Component {
         }
     };
 
+    resetState(id, url) {
+        this.setState(
+            {
+                id,
+                url,
+                isLoadingAll: true,
+                assignmentList: [],
+                relatedLessons: [],
+                resources: null,
+                selectedAssignment: null,
+            },
+            () => this.getContent(),
+        );
+    }
+
     switchLesson(id, url) {
-        setState = () =>
-            this.setState(
-                {
-                    id,
-                    url,
-                    isLoadingAll: true,
-                    assignmentList: [],
-                    relatedLessons: [],
-                    resources: null,
-                    selectedAssignment: null,
-                },
-                () => this.getContent(),
-            );
         if (!this.context.isConnected)
             if (
                 offlineContent[id]?.lesson ||
@@ -437,9 +439,9 @@ export default class VideoPlayer extends React.Component {
                     this.props.navigation.state.params.parentId
                 ]?.overview.lessons.find(l => l.id === id)
             )
-                setState();
+                this.resetState(id, url);
             else this.context.showNoConnectionAlert();
-        else setState();
+        else this.resetState(id, url);
     }
 
     likeComment = async id => {
