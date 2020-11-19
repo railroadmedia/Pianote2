@@ -51,7 +51,7 @@ class Replies extends React.Component {
         let profileImage = await AsyncStorage.getItem('profileURI');
         let userId = JSON.parse(await AsyncStorage.getItem('userId'));
 
-        await this.setState({profileImage, userId});
+        this.setState({profileImage, userId});
 
         this.keyboardDidShowListener = Keyboard.addListener(
             showListener,

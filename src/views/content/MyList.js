@@ -2,7 +2,13 @@
  * MyList
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    RefreshControl,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {ContentModel} from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -52,13 +58,16 @@ export default class MyList extends React.Component {
     getMyList = async () => {
         if (!this.context.isConnected)
             return this.context.showNoConnectionAlert();
+        console.log(this.state.filters);
         let response = await getMyListContent(
             this.state.page,
             this.state.filters,
             '',
         );
-        
-        const newContent = await response.data.map(data => {return new ContentModel(data)});
+
+        const newContent = await response.data.map(data => {
+            return new ContentModel(data);
+        });
 
         let items = [];
         for (let i in newContent) {
@@ -80,7 +89,7 @@ export default class MyList extends React.Component {
                 id: newContent[i].id,
                 mobile_app_url: newContent[i].post.mobile_app_url,
                 lesson_count: newContent[i].post.lesson_count,
-                currentLessonId: newContent[i].post?.current_lesson?.id,
+                currentLessonId: newContent[i].post?.song_part_id,
                 like_count: newContent[i].post.like_count,
                 duration: i,
                 isLiked: newContent[i].post.is_liked_by_current_user,
@@ -93,7 +102,8 @@ export default class MyList extends React.Component {
         }
         this.setState({
             allLessons: [...this.state.allLessons, ...items],
-            outVideos: items.length == 0 || response.data.length < 20 ? true : false,
+            outVideos:
+                items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
             filtering: false,
@@ -111,7 +121,7 @@ export default class MyList extends React.Component {
                 this.state.allLessons.splice(i, 1);
             }
         }
-        await this.setState({allLessons: this.state.allLessons});
+        this.setState({allLessons: this.state.allLessons});
     };
 
     getArtist = newContent => {
@@ -140,16 +150,15 @@ export default class MyList extends React.Component {
             !this.state.isPaging &&
             !this.state.outVideos
         ) {
-            await this.setState({
+            this.setState({
                 isPaging: true,
-            }),
-                await this.getMyList();
+            });
+            await this.getMyList();
         }
     };
 
     filterResults = async () => {
         // function to be sent to filters page
-        console.log(this.state.filters);
         await this.props.navigation.navigate('FILTERS', {
             filters: this.state.filters,
             type: 'MYLIST',
@@ -159,27 +168,34 @@ export default class MyList extends React.Component {
 
     changeFilters = async filters => {
         // after leaving filter page. set filters here
-        await this.setState({
-            allLessons: [],
-            outVideos: false,
-            page: 1,
-            filters:
-                filters.instructors.length == 0 &&
-                filters.level.length == 0 &&
-                filters.progress.length == 0 &&
-                filters.topics.length == 0
-                    ? {
-                          displayTopics: [],
-                          level: [],
-                          topics: [],
-                          progress: [],
-                          instructors: [],
-                      }
-                    : filters,
-        });
+        this.setState(
+            {
+                allLessons: [],
+                outVideos: false,
+                page: 1,
+                filters:
+                    filters.instructors.length == 0 &&
+                    filters.level.length == 0 &&
+                    filters.progress.length == 0 &&
+                    filters.topics.length == 0
+                        ? {
+                              displayTopics: [],
+                              level: [],
+                              topics: [],
+                              progress: [],
+                              instructors: [],
+                          }
+                        : filters,
+            },
+            () => this.getMyList(),
+        );
+    };
 
-        this.getMyList();
-        this.forceUpdate();
+    refresh = () => {
+        this.setState(
+            {isLoadingAll: true, allLessons: [], page: 1, outVideos: false},
+            () => this.getMyList(),
+        );
     };
 
     render() {
@@ -201,6 +217,13 @@ export default class MyList extends React.Component {
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
                     onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                    refreshControl={
+                        <RefreshControl
+                            colors={[colors.pianoteRed]}
+                            refreshing={this.state.isLoadingAll}
+                            onRefresh={() => this.refresh()}
+                        />
+                    }
                     style={{
                         flex: 1,
                         backgroundColor: colors.mainBackground,

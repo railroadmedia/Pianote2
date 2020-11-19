@@ -704,9 +704,6 @@ export default class Foundations extends React.Component {
                     hasBackdrop={true}
                 >
                     <RestartCourse
-                        restartCourse={() => {
-                            resetProgress('215952');
-                        }}
                         hideRestartCourse={() => {
                             this.setState({
                                 showRestartCourse: false,

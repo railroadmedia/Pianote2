@@ -86,7 +86,7 @@ export default class SongCatalog extends React.Component {
                     .replace(/&lt;/g, '<'),
                 xp: newContent[i].post.xp,
                 id: newContent[i].post.id,
-                currentLessonId: newContent[i].post?.current_lesson?.id,
+                currentLessonId: newContent[i].post?.song_part_id,
                 lesson_count: newContent[i].post.lesson_count,
                 like_count: newContent[i].post.like_count,
                 duration: this.getDuration(newContent[i]),
@@ -99,7 +99,7 @@ export default class SongCatalog extends React.Component {
             });
         }
 
-        await this.setState({
+        this.setState({
             allSongs: [...this.state.allSongs, ...items],
             outVideos:
                 items.length == 0 || response.data.length < 20 ? true : false,
@@ -136,7 +136,7 @@ export default class SongCatalog extends React.Component {
                     .replace(/&lt;/g, '<'),
                 xp: newContent[i].post.xp,
                 id: newContent[i].post.id,
-                currentLessonId: newContent[i].post?.current_lesson?.id,
+                currentLessonId: newContent[i].post?.song_part_id,
                 lesson_count: newContent[i].post.lesson_count,
                 like_count: newContent[i].post.like_count,
                 duration: this.getDuration(newContent[i]),
@@ -233,7 +233,6 @@ export default class SongCatalog extends React.Component {
         });
 
         this.getAllSongs();
-        this.forceUpdate();
     };
 
     render() {
