@@ -1,5 +1,6 @@
 export default {
     rootUrl: 'https://staging.pianote.com',
+    //'https://www.pianote.com',
     tryCall: async function (url, method, body) {
         try {
             if (body) body = body ? JSON.stringify(body) : null;

@@ -29,7 +29,16 @@ const navigationOptions = [
         title: 'Student Focus',
         navigator: 'STUDENTFOCUSCATALOG',
     },
+    {
+        title: 'Podcasts',
+        navigator: 'STUDENTFOCUSSHOW',
+    },
+    {
+        title: 'Quick Tips',
+        navigator: 'STUDENTFOCUSSHOW',        
+    },
 ];
+
 class NavigationMenu extends React.Component {
     static contextType = NetworkContext;
     static navigationOptions = {header: null};
@@ -48,10 +57,8 @@ class NavigationMenu extends React.Component {
         ]);
 
         await this.setState({
-            foundationIsStarted:
-                typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
-            foundationIsCompleted:
-                typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false,
+            foundationIsStarted: typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
+            foundationIsCompleted: typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false,
         });
     };
 
@@ -65,8 +72,8 @@ class NavigationMenu extends React.Component {
                             styles.centerContent,
                             {
                                 height: onTablet
-                                    ? fullHeight * 0.125
-                                    : fullHeight * 0.1,
+                                    ? fullHeight * 0.1
+                                    : fullHeight * 0.09,
                             },
                         ]}
                     >
@@ -85,6 +92,10 @@ class NavigationMenu extends React.Component {
                                                 .foundationIsCompleted,
                                         },
                                     );
+                                } else if(nav.title === 'Quick Tips') {
+                                    this.props.navigation.navigate(nav.navigator, {pack: 'Quick Tips'});
+                                } else if(nav.title === 'Podcasts') {
+                                    this.props.navigation.navigate(nav.navigator, {pack: 'Podcasts'});
                                 } else {
                                     this.props.navigation.navigate(
                                         nav.navigator,
@@ -110,7 +121,7 @@ class NavigationMenu extends React.Component {
                                         nav.title.toUpperCase()
                                             ? 32.5 * factorRatio
                                             : 27.5 * factorRatio) +
-                                        (onTablet ? 27.5 : 0),
+                                        (onTablet ? 5 : 0),
                                 }}
                             >
                                 {nav.title}
@@ -118,14 +129,14 @@ class NavigationMenu extends React.Component {
                         </TouchableOpacity>
                     </View>
                 ))}
-
+                <View style={{height: 50}}/>
                 <View
                     style={[
                         styles.centerContent,
                         {
                             height: onTablet
-                                ? fullHeight * 0.125
-                                : fullHeight * 0.1,
+                                ? fullHeight * 0.05
+                                : fullHeight * 0.05,
                             alignSelf: 'center',
                         },
                     ]}

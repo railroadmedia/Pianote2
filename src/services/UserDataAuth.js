@@ -25,7 +25,7 @@ export async function getToken(userEmail, userPass, purchases) {
             body: purchases ? JSON.stringify(purchases) : {},
         },
     );
-
+    
     if(response.status == 500) { 
         return 500
     } else {
@@ -48,7 +48,6 @@ export async function getUserData() {
             method: 'GET',
             headers: {Authorization: `Bearer ${token}`},
         });
-        
         if (typeof userData.error == 'undefined') {
             userData = await userData.json();
             // if received data, update data

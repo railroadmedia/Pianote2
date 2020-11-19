@@ -275,7 +275,7 @@ export default class StudentFocusCatalog extends React.Component {
                                 borderRadius: 12.5 * factorRatio,
                                 position: 'absolute',
                                 bottom: 0,
-                                right: fullWidth * 0.035,
+                                left: fullWidth * 0.035,
                                 height: fullWidth * 0.45,
                                 width: fullWidth * 0.45,
                             }}
@@ -300,41 +300,6 @@ export default class StudentFocusCatalog extends React.Component {
                                         borderRadius: 10 * factorRatio,
                                     }}
                                     source={require('Pianote2/src/assets/img/imgs/studentReview.jpg')}
-                                    resizeMode={FastImage.resizeMode.cover}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View
-                            key={'quicktips'}
-                            style={{
-                                borderRadius: 12.5 * factorRatio,
-                                position: 'absolute',
-                                bottom: 0,
-                                left: fullWidth * 0.035,
-                                height: fullWidth * 0.45,
-                                width: fullWidth * 0.45,
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.navigate(
-                                        'STUDENTFOCUSSHOW',
-                                        {
-                                            pack: 'Quick Tips',
-                                        },
-                                    );
-                                }}
-                                style={{
-                                    height: fullWidth * 0.45,
-                                    width: fullWidth * 0.45,
-                                }}
-                            >
-                                <FastImage
-                                    style={{
-                                        flex: 1,
-                                        borderRadius: 10 * factorRatio,
-                                    }}
-                                    source={require('Pianote2/src/assets/img/imgs/quickTips.jpg')}
                                     resizeMode={FastImage.resizeMode.cover}
                                 />
                             </TouchableOpacity>

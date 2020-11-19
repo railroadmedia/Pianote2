@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:staging.pianote.com</string>
+		<string>applinks:pianote.com</string>
 		<string>applinks:www.pianote.com</string>
 	</array>
 	<key>com.apple.security.application-groups</key>

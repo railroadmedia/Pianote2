@@ -258,15 +258,12 @@ export default class Profile extends React.Component {
                     },
                 },
             );
-
-            console.log(response);
         } catch (error) {
             console.log('ERROR: ', error);
         }
     };
 
     openNotification = notification => {
-        console.log(notification);
         if (notification.type === 'new content releases') {
             this.props.navigation.navigate('VIDEOPLAYER', {
                 url: notification.content.mobile_app_url,
