@@ -306,7 +306,7 @@ class VerticalVideoList extends React.Component {
     renderMappedList = () => {
         if (this.state.items.length == 0 && this.state.outVideos) {
             return;
-        } else if (this.state.items.length == 0 || this.state.isLoading) {
+        } else if (this.state.isLoading) {
             return this.showSpinner();
         }
 

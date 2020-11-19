@@ -148,7 +148,7 @@ export default class PathOverview extends React.Component {
         if (!this.context.isConnected) {
             return this.context.showNoConnectionAlert();
         }
-        await resetProgress(this.state.data.id);
+        resetProgress(this.state.data.id);
         this.setState(
             {
                 started: false,
@@ -828,9 +828,6 @@ export default class PathOverview extends React.Component {
                     hasBackdrop={true}
                 >
                     <RestartCourse
-                        restartCourse={() => {
-                            resetProgress(this.state.data.id);
-                        }}
                         hideRestartCourse={() => {
                             this.setState({
                                 showRestartCourse: false,

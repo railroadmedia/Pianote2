@@ -160,7 +160,7 @@ export default class Lessons extends React.Component {
                 });
             }
 
-            await this.setState({
+            this.setState({
                 allLessons: [...this.state.allLessons, ...items],
                 outVideos:
                     items.length == 0 || response.data.length < 20
@@ -217,7 +217,7 @@ export default class Lessons extends React.Component {
                 });
             }
 
-            await this.setState({
+            this.setState({
                 progressLessons: [...this.state.progressLessons, ...items],
                 lessonsStarted:
                     items.length == 0 && this.state.progressLessons.length == 0
@@ -259,9 +259,8 @@ export default class Lessons extends React.Component {
                         filters.topics.length == 0
                             ? null
                             : filters,
-                }),
-                    this.getAllLessons(),
-                    this.forceUpdate();
+                });
+                this.getAllLessons();
             },
         });
     };
@@ -362,7 +361,6 @@ export default class Lessons extends React.Component {
         });
 
         this.getAllLessons();
-        this.forceUpdate();
     };
 
     render() {

@@ -219,9 +219,8 @@ export default class Course extends React.Component {
                         filters.topics.length == 0
                             ? null
                             : filters,
-                }),
-                    this.getAllCourses(),
-                    this.forceUpdate();
+                });
+                this.getAllCourses();
             },
         });
     };
@@ -310,7 +309,6 @@ export default class Course extends React.Component {
         });
 
         this.getAllCourses();
-        this.forceUpdate();
     };
 
     render() {

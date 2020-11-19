@@ -47,7 +47,7 @@ class NavigationMenu extends React.Component {
             'foundationsIsCompleted',
         ]);
 
-        await this.setState({
+        this.setState({
             foundationIsStarted:
                 typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
             foundationIsCompleted:

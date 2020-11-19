@@ -788,8 +788,7 @@ export default class SinglePack extends React.Component {
                 >
                     <NavigationMenu
                         onClose={e => {
-                            this.setState({showModalMenu: e}),
-                                this.forceUpdate();
+                            this.setState({showModalMenu: e});
                         }}
                         parentPage={this.state.parentPage}
                         menu={this.state.menu}

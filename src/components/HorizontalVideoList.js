@@ -42,7 +42,7 @@ class HorizontalVideoList extends React.Component {
 
     UNSAFE_componentWillReceiveProps = async props => {
         if (props.isLoading !== this.state.isLoading) {
-            await this.setState({
+            this.setState({
                 isLoading: props.isLoading,
                 items: props.items,
             });

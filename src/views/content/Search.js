@@ -354,7 +354,6 @@ export default class Search extends React.Component {
         });
 
         this.search();
-        this.forceUpdate();
     };
 
     render() {

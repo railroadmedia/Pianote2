@@ -53,7 +53,7 @@ export default class ProfileSettings extends React.Component {
 
     componentDidMount = async () => {
         let imageURI = await AsyncStorage.getItem('profileURI');
-        await this.setState({
+        this.setState({
             imageURI: imageURI == null ? '' : imageURI,
             currentlyView:
                 this.props.navigation.state.params?.data == 'Profile Photo'
@@ -80,7 +80,7 @@ export default class ProfileSettings extends React.Component {
 
         const {response, error} = await userForgotPassword({email});
 
-        await this.setState({showChangePassword: true});
+        this.setState({showChangePassword: true});
     };
 
     changeName = async () => {
@@ -113,18 +113,20 @@ export default class ProfileSettings extends React.Component {
     };
 
     changeImage = async () => {
-        if (!this.context.isConnected) {return this.context.showNoConnectionAlert()}
+        if (!this.context.isConnected) {
+            return this.context.showNoConnectionAlert();
+        }
 
         const data = new FormData();
 
         data.append('file', {
-            name: this.state.imageName, 
-            type: this.state.imageType, 
-            uri: this.state.imageURI
+            name: this.state.imageName,
+            type: this.state.imageType,
+            uri: this.state.imageURI,
         });
         data.append('target', this.state.imageName);
 
-        console.log(data)
+        console.log(data);
 
         try {
             if (this.state.imageURI !== '') {
@@ -136,16 +138,23 @@ export default class ProfileSettings extends React.Component {
                         body: data,
                     },
                 );
-                console.log('URL: ', response)
-                if(response.status == 413) {
-                    this.setState({showProfileImage: true})
-                    return 
+                console.log('URL: ', response);
+                if (response.status == 413) {
+                    this.setState({showProfileImage: true});
+                    return;
                 }
                 let url = await response.json();
-                
+
                 if (url.data[0].url) {
-                    await commonService.tryCall(`${commonService.rootUrl}/api/profile/update`, 'POST', {file: url == '' ? url : url.data[0].url});
-                    await AsyncStorage.setItem('profileURI', url == '' ? url : url.data[0].url);
+                    await commonService.tryCall(
+                        `${commonService.rootUrl}/api/profile/update`,
+                        'POST',
+                        {file: url == '' ? url : url.data[0].url},
+                    );
+                    await AsyncStorage.setItem(
+                        'profileURI',
+                        url == '' ? url : url.data[0].url,
+                    );
                     this.props.navigation.dispatch(resetAction);
                 }
             }
@@ -173,7 +182,6 @@ export default class ProfileSettings extends React.Component {
                         imageName: response.fileName || 'avatar',
                         imagePath: response.path,
                     });
-                    this.forceUpdate();
                 }
             },
         );
@@ -731,7 +739,7 @@ export default class ProfileSettings extends React.Component {
                             });
                         }}
                     />
-                </Modal>                
+                </Modal>
             </View>
         );
     }

@@ -2,7 +2,13 @@
  * StudentFocusShow
  */
 import React from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
 import {ContentModel} from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -44,6 +50,7 @@ export default class StudentFocusShow extends React.Component {
             currentSort: 'newest',
             page: 1,
             outVideos: false,
+            refreshing: false,
             isLoadingAll: true, // all lessons
             isPaging: false, // scrolling more
             filtering: false, // filtering
@@ -57,7 +64,7 @@ export default class StudentFocusShow extends React.Component {
         };
     }
 
-    componentDidMount = async () => {
+    componentDidMount = () => {
         this.getAllLessons();
     };
 
@@ -104,34 +111,37 @@ export default class StudentFocusShow extends React.Component {
             });
         }
 
-        await this.setState({
+        this.setState({
             allLessons: [...this.state.allLessons, ...items],
             outVideos:
                 items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
+            refreshing: false,
             filtering: false,
             isPaging: false,
         });
     };
 
     changeSort = async currentSort => {
-        await this.setState({
-            currentSort,
-            outVideos: false,
-            isPaging: false,
-            allLessons: [],
-            page: 1,
-        });
-
-        await this.getAllLessons();
+        this.setState(
+            {
+                currentSort,
+                outVideos: false,
+                isPaging: false,
+                allLessons: [],
+                page: 1,
+            },
+            () => this.getAllLessons(),
+        );
     };
 
     getVideos = async () => {
         // change page before getting more lessons if paging
         if (!this.state.outVideos) {
-            await this.setState({page: this.state.page + 1});
-            this.getAllLessons();
+            this.setState({page: this.state.page + 1}, () =>
+                this.getAllLessons(),
+            );
         }
     };
 
@@ -161,11 +171,13 @@ export default class StudentFocusShow extends React.Component {
             !this.state.isPaging &&
             !this.state.outVideos
         ) {
-            await this.setState({
-                page: this.state.page + 1,
-                isPaging: true,
-            }),
-                await this.getAllLessons();
+            this.setState(
+                {
+                    page: this.state.page + 1,
+                    isPaging: true,
+                },
+                () => this.getAllLessons(),
+            );
         }
     };
 
@@ -179,27 +191,27 @@ export default class StudentFocusShow extends React.Component {
 
     changeFilters = async filters => {
         // after leaving filter page. set filters here
-        await this.setState({
-            allLessons: [],
-            outVideos: false,
-            page: 1,
-            filters:
-                filters.instructors.length == 0 &&
-                filters.level.length == 0 &&
-                filters.progress.length == 0 &&
-                filters.topics.length == 0
-                    ? {
-                          displayTopics: [],
-                          level: [],
-                          topics: [],
-                          progress: [],
-                          instructors: [],
-                      }
-                    : filters,
-        });
-
-        this.getAllLessons();
-        this.forceUpdate();
+        this.setState(
+            {
+                allLessons: [],
+                outVideos: false,
+                page: 1,
+                filters:
+                    filters.instructors.length == 0 &&
+                    filters.level.length == 0 &&
+                    filters.progress.length == 0 &&
+                    filters.topics.length == 0
+                        ? {
+                              displayTopics: [],
+                              level: [],
+                              topics: [],
+                              progress: [],
+                              instructors: [],
+                          }
+                        : filters,
+            },
+            () => this.getAllLessons(),
+        );
     };
 
     getDuration = async newContent => {
@@ -213,6 +225,13 @@ export default class StudentFocusShow extends React.Component {
         }
     };
 
+    refresh = () => {
+        this.setState(
+            {refreshing: true, page: 1, allLessons: [], outVideos: false},
+            () => this.getAllLessons(),
+        );
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -220,6 +239,13 @@ export default class StudentFocusShow extends React.Component {
                     showsVerticalScrollIndicator={false}
                     contentInsetAdjustmentBehavior={'never'}
                     onScroll={({nativeEvent}) => this.handleScroll(nativeEvent)}
+                    refreshControl={
+                        <RefreshControl
+                            colors={[colors.pianoteRed]}
+                            refreshing={this.state.refreshing}
+                            onRefresh={() => this.refresh()}
+                        />
+                    }
                     style={{
                         flex: 1,
                         backgroundColor: colors.mainBackground,

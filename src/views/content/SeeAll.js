@@ -2,7 +2,13 @@
  * SeeAll
  */
 import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    RefreshControl,
+} from 'react-native';
 import {ContentModel} from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -40,6 +46,7 @@ export default class SeeAll extends React.Component {
             currentSort: 'newest',
             page: 1,
             outVideos: false,
+            refreshing: false,
             isLoadingAll: true, // all lessons
             isPaging: false, // scrolling more
             filtering: false, // filtering
@@ -62,7 +69,6 @@ export default class SeeAll extends React.Component {
             return this.context.showNoConnectionAlert();
         }
         let response = null;
-
         if (this.state.parent == 'My List') {
             // use my list API call when navigating to see all from my list
             response = await getMyListContent(
@@ -139,6 +145,7 @@ export default class SeeAll extends React.Component {
                 items.length == 0 || response.data.length < 20 ? true : false,
             page: this.state.page + 1,
             isLoadingAll: false,
+            refreshing: false,
             filtering: false,
             isPaging: false,
         });
@@ -158,9 +165,8 @@ export default class SeeAll extends React.Component {
                         filters.topics.length == 0
                             ? null
                             : filters,
-                }),
-                    this.getAllLessons(),
-                    this.forceUpdate();
+                });
+                this.getAllLessons();
             },
         });
     };
@@ -207,8 +213,9 @@ export default class SeeAll extends React.Component {
     getVideos = async () => {
         // change page before getting more lessons if paging
         if (!this.state.outVideos) {
-            await this.setState({page: this.state.page + 1});
-            this.getAllLessons();
+            this.setState({page: this.state.page + 1}, () =>
+                this.getAllLessons(),
+            );
         }
     };
 
@@ -218,11 +225,13 @@ export default class SeeAll extends React.Component {
             !this.state.isPaging &&
             !this.state.outVideos
         ) {
-            await this.setState({
-                page: this.state.page + 1,
-                isPaging: true,
-            }),
-                await this.getAllLessons();
+            this.setState(
+                {
+                    page: this.state.page + 1,
+                    isPaging: true,
+                },
+                () => this.getAllLessons(),
+            );
         }
     };
 
@@ -237,27 +246,34 @@ export default class SeeAll extends React.Component {
 
     changeFilters = async filters => {
         // after leaving filter page. set filters here
-        await this.setState({
-            allLessons: [],
-            outVideos: false,
-            page: 1,
-            filters:
-                filters.instructors.length == 0 &&
-                filters.level.length == 0 &&
-                filters.progress.length == 0 &&
-                filters.topics.length == 0
-                    ? {
-                          displayTopics: [],
-                          level: [],
-                          topics: [],
-                          progress: [],
-                          instructors: [],
-                      }
-                    : filters,
-        });
+        this.setState(
+            {
+                allLessons: [],
+                outVideos: false,
+                page: 1,
+                filters:
+                    filters.instructors.length == 0 &&
+                    filters.level.length == 0 &&
+                    filters.progress.length == 0 &&
+                    filters.topics.length == 0
+                        ? {
+                              displayTopics: [],
+                              level: [],
+                              topics: [],
+                              progress: [],
+                              instructors: [],
+                          }
+                        : filters,
+            },
+            () => this.getAllLessons(),
+        );
+    };
 
-        this.getAllLessons();
-        this.forceUpdate();
+    refresh = () => {
+        this.setState(
+            {refreshing: true, allLessons: [], outVideos: false, page: 1},
+            () => this.getAllLessons(),
+        );
     };
 
     render() {
@@ -323,6 +339,13 @@ export default class SeeAll extends React.Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentInsetAdjustmentBehavior={'never'}
+                        refreshControl={
+                            <RefreshControl
+                                colors={[colors.pianoteRed]}
+                                refreshing={this.state.refreshing}
+                                onRefresh={() => this.refresh()}
+                            />
+                        }
                         style={{
                             flex: 0.9,
                             backgroundColor: colors.mainBackground,

@@ -31,7 +31,7 @@ export default class NotificationSettings extends React.Component {
     UNSAFE_componentWillMount = async () => {
         let userData = await getUserData();
 
-        await this.setState({
+        this.setState({
             notifications_summary_frequency_minutes:
                 userData.notifications_summary_frequency_minutes,
             notify_on_forum_followed_thread_reply:
@@ -45,7 +45,6 @@ export default class NotificationSettings extends React.Component {
             notify_weekly_update: userData.notify_weekly_update,
             isLoading: false,
         });
-        this.forceUpdate();
     };
 
     changeNotificationStatus = async () => {
