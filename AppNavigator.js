@@ -71,7 +71,7 @@ const AppNavigator = createStackNavigator(
         VIDEOPLAYER: {
             screen: VideoPlayer,
             navigationOptions: {
-                gesturesEnabled: isiOS ? false : true,
+                gesturesEnabled: false,
             },
         },
         SINGLEPACK: {screen: SinglePack},
