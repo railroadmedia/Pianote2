@@ -28,26 +28,14 @@ export default {
         assignments.map(a => {
             let svgs = [],
                 nsvgs = [];
-            a.data.map(d => {
-                if (
-                    d.key === 'sheet_music_image_url' &&
-                    d.value.indexOf('.pdf') > -1
-                )
-                    return;
-                if (
-                    d.key === 'sheet_music_image_url' &&
-                    d.value.indexOf('.svg') > -1
-                )
-                    return svgs.push(d);
-                if (
-                    d.key === 'sheet_music_image_url' &&
-                    d.value.indexOf('.svg') < 0
-                )
-                    return nsvgs.push(d);
+            a.sheets.map(s => {
+                if (s.value.includes('.pdf')) return;
+                if (s.value.includes('.svg')) return svgs.push({...s});
+                if (!s.value.includes('.svg')) return nsvgs.push({...s});
             });
             if (svgs.length) {
                 assignPromises.push(
-                    new Promise(async (res, rej) => {
+                    new Promise(async res => {
                         let vbPromises = [];
                         svgs.map(s => vbPromises.push(fetch(s.value)));
 
@@ -66,7 +54,7 @@ export default {
                                         .split(' ');
                                 }
                                 svgs[i].whRatio = vbArr[2] / vbArr[3];
-                                i === svgs.length - 1 && res();
+                                i === svgs.length - 1 && res(svgs);
                             },
                         );
                     }),
@@ -75,16 +63,16 @@ export default {
             if (nsvgs.length) {
                 nsvgs.map((ns, i) => {
                     assignPromises.push(
-                        new Promise((res, rej) => {
+                        new Promise(res => {
                             Image.getSize(
                                 ns.value,
                                 (w, h) => {
                                     ns.whRatio = w / h;
-                                    res();
+                                    res(nsvgs);
                                 },
                                 e => {
                                     ns.whRatio = 1;
-                                    res();
+                                    res(nsvgs);
                                 },
                             );
                         }),
@@ -92,6 +80,6 @@ export default {
                 });
             }
         });
-        await Promise.all(assignPromises);
+        return (await Promise.all(assignPromises))[0];
     },
 };

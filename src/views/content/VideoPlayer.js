@@ -154,7 +154,6 @@ export default class VideoPlayer extends React.Component {
         });
         let al = [];
         if (content.post.assignments && this.context.isConnected) {
-            await downloadService.getAssignWHRatio(content.post.assignments);
             let assignments = content.post.assignments.map(assignment => {
                 return new ContentModel(assignment);
             });
