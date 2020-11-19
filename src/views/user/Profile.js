@@ -142,6 +142,7 @@ export default class Profile extends React.Component {
         if (loadMore) this.page++;
         else this.page = 1;
         let notifications = await getnotifications(this.page);
+
         for (i in notifications.data) {
             let timeCreated =
                 notifications.data[i].created_at?.slice(0, 10) +
@@ -178,6 +179,7 @@ export default class Profile extends React.Component {
                 ? state.notifications.concat(notifications.data)
                 : notifications.data,
             isLoading: false,
+            animateLoadMore: (notifications.data.length == 0) ? false : true,
         }));
     }
 
@@ -668,9 +670,9 @@ export default class Profile extends React.Component {
                         }
                         ListFooterComponent={() => (
                             <ActivityIndicator
-                                style={{marginTop: 10, marginBottom: 10}}
+                                style={{marginTop: 20, marginBottom: 10}}
                                 size='small'
-                                color={colors.pianoteRed}
+                                color={colors.secondBackground}
                                 animating={this.state.animateLoadMore}
                                 hidesWhenStopped={true}
                             />
