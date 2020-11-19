@@ -2,32 +2,53 @@
  * VideoPlayerSong
  */
 import React from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    ActivityIndicator,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import SoundSlice from '../../components/SoundSlice.js';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AssignmentResource from './AssignmentResource.js';
+import downloadService from '../../services/download.service.js';
 
 export default class VideoPlayerSong extends React.Component {
     static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
-            showSoundSlice: false,
             hideTitles: false,
+            showSheets: false,
+            showSoundSlice: false,
+            assignment: props.assignment,
         };
+    }
+
+    componentDidMount() {
+        downloadService.getAssignWHRatio([this.state.assignment]).then(sheets =>
+            this.setState({
+                assignment: {...this.state.assignment, sheets},
+                showSheets: true,
+            }),
+        );
     }
 
     render() {
         let {
-            index,
-            title,
-            sheets,
-            slug,
-            timeCodes,
-            description,
-            progress,
-        } = this.props.assignment;
+            showSheets,
+            assignment: {
+                slug,
+                index,
+                title,
+                sheets,
+                progress,
+                timeCodes,
+                description,
+            },
+        } = this.state;
         return (
             <>
                 <ScrollView
@@ -162,14 +183,23 @@ export default class VideoPlayerSong extends React.Component {
                             )}
                         </>
                     )}
-                    <AssignmentResource
-                        ref={r => (this.ptzhsvRef = r)}
-                        data={sheets}
-                        onDoubleTap={() => {
-                            this.setState({hideTitles: !this.state.hideTitles});
-                            this.props.onAssignmentFullscreen();
-                        }}
-                    />
+                    {showSheets ? (
+                        <AssignmentResource
+                            ref={r => (this.ptzhsvRef = r)}
+                            data={sheets}
+                            onDoubleTap={() => {
+                                this.setState({
+                                    hideTitles: !this.state.hideTitles,
+                                });
+                                this.props.onAssignmentFullscreen();
+                            }}
+                        />
+                    ) : (
+                        <ActivityIndicator
+                            size='large'
+                            color={colors.secondBackground}
+                        />
+                    )}
                 </ScrollView>
                 {!this.state.hideTitles && (
                     <View style={{backgroundColor: colors.mainBackground}}>
