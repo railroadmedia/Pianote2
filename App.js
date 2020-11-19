@@ -18,15 +18,9 @@ export default class App extends React.Component {
 
     handleOpenURL = async ({url}) => {
         if (url?.includes('pianote.com/reset-password')) {
-            let resetKey = url.substring(
-                url.indexOf('token=') + 6,
-                url.indexOf('&email'),
-            );
+            let resetKey = url.substring(url.indexOf('token=') + 6, url.indexOf('&email'));
             let email = url.substring(url.indexOf('email=') + 6, url.length);
-            await AsyncStorage.multiSet([
-                ['resetKey', resetKey],
-                ['email', email],
-            ]);
+            await AsyncStorage.multiSet([['resetKey', resetKey], ['email', email]]);
         }
     };
 
@@ -35,9 +29,7 @@ export default class App extends React.Component {
             <NetworkProvider>
                 <StatusBar barStyle="light-content"/>
                 <AppNavigator
-                    ref={navigatorRef =>
-                        NavigationService.setTopLevelNavigator(navigatorRef)
-                    }
+                    ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)}
                 />
             </NetworkProvider>
         );

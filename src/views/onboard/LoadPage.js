@@ -37,13 +37,13 @@ export default class LoadPage extends React.Component {
             const {email, resetKey, password, loggedIn, forumUrl} = data;    
 
             if (!this.context.isConnected) {
-                if(loggedIn) {
+                if(loggedIn && !global.loadedFromNotification) {
                     return this.props.navigation.navigate('DOWNLOADS');
                 } else {
                     return this.props.navigation.navigate('LOGINCREDENTIALS');
                 }
                 // if no connection and logged in
-            } else if (!loggedIn) {
+            } else if (!loggedIn && !global.loadedFromNotification) {
                 // if not logged in
                 return this.props.navigation.dispatch(
                     StackActions.reset({
@@ -64,8 +64,8 @@ export default class LoadPage extends React.Component {
                     updateFcmToken();
                     await AsyncStorage.multiSet([['loggedIn', 'true']]);
                     let userData = await getUserData();
-                    console.log(userData)
                     let {lessonUrl, commentId} = notif;
+
                     if (lessonUrl && commentId) {
                         // if lesson or comment notification go to video
                         this.props.navigation.dispatch(
@@ -82,6 +82,18 @@ export default class LoadPage extends React.Component {
                                 ],
                             }),
                         );
+                    } else if(global.loadedFromNotification) {
+                        // if going to profile page
+                        await this.props.navigation.dispatch(
+                            StackActions.reset({
+                                index: 0,
+                                actions: [
+                                    NavigationActions.navigate({
+                                        routeName: 'PROFILE',
+                                    }),
+                                ],
+                            }),
+                        );
                     } else if (resetKey) {
                         // go to reset pass
                         this.props.navigation.dispatch(
@@ -94,7 +106,7 @@ export default class LoadPage extends React.Component {
                                 ],
                             }),
                         );
-                    } else if (userData.isMember == false) {
+                    } else if (!userData.isMember) {
                         // go to login
                         this.props.navigation.dispatch(
                             StackActions.reset({
@@ -114,9 +126,6 @@ export default class LoadPage extends React.Component {
                             await AsyncStorage.removeItem('forumUrl');
                         }
                         // if member then check membership type
-                        let currentDate = new Date().getTime() / 1000;
-                        let userExpDate =
-                            new Date(userData.expirationDate).getTime() / 1000;
                         if (userData.isPackOlyOwner) {
                             // if pack only, set global variable to true & go to packs
                             global.isPackOnly = userData.isPackOlyOwner;
@@ -130,10 +139,7 @@ export default class LoadPage extends React.Component {
                                     ],
                                 }),
                             );
-                        } else if (
-                            userData.isLifetime ||
-                            currentDate < userExpDate
-                        ) {
+                        } else if (userData.isLifetime || userData.isMember) {
                             // is logged in with valid membership go to lessons
                             await this.props.navigation.dispatch(
                                 StackActions.reset({

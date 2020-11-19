@@ -319,73 +319,6 @@ export default class SeeAll extends React.Component {
                             <View style={{flex: 1}} />
                         </View>
                         <View style={{height: 20 * factorVertical}} />
-                        {/* <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            contentInsetAdjustmentBehavior={'never'}
-                            style={{
-                                flex: 0.9,
-                                backgroundColor: colors.mainBackground,
-                            }}
-                            onScroll={({nativeEvent}) =>
-                                this.handleScroll(nativeEvent)
-                            }
-                        >
-                            <View style={{height: 15 * factorVertical}} />
-                            <VerticalVideoList
-                                items={this.state.allLessons}
-                                isLoading={this.state.isLoadingAll}
-                                isPaging={this.state.isPaging}
-                                title={this.state.title} // title for see all page
-                                type={typeDict[this.state.parent]} // the type of content on page
-                                showType={false}
-                                showArtist={true}
-                                showSort={false}
-                                showLength={false}
-                                showFilter={true}
-                                hideFilterButton={
-                                    this.state.parent == 'Lessons'
-                                        ? false
-                                        : true
-                                } // only show filter button on lessons
-                                showLargeTitle={true}
-                                filters={this.state.filters} // show filter list
-                                imageRadius={5 * factorRatio} // radius of image shown
-                                containerBorderWidth={0} // border of box
-                                containerWidth={fullWidth} // width of list
-                                currentSort={this.state.currentSort}
-                                changeSort={sort => {
-                                    this.setState({
-                                        currentSort: sort,
-                                        allLessons: [],
-                                    }),
-                                        this.getAllLessons();
-                                }} // change sort and reload videos
-                                filterResults={() => this.filterResults()} // apply from filters page
-                                containerHeight={
-                                    onTablet
-                                        ? fullHeight * 0.15
-                                        : Platform.OS == 'android'
-                                        ? fullHeight * 0.115
-                                        : fullHeight * 0.0925
-                                } // height per row
-                                imageHeight={
-                                    onTablet
-                                        ? fullHeight * 0.12
-                                        : Platform.OS == 'android'
-                                        ? fullHeight * 0.09
-                                        : fullHeight * 0.0825
-                                } // image height
-                                imageWidth={fullWidth * 0.26} // image width
-                                outVideos={this.state.outVideos} // if paging and out of videos
-                                //getVideos={() => this.getContent()} // for paging
-                                navigator={row =>
-                                    this.props.navigation.navigate(
-                                        'VIDEOPLAYER',
-                                        {id: row.id},
-                                    )
-                                }
-                            />
-                        </ScrollView> */}
                     </View>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
@@ -406,9 +339,7 @@ export default class SeeAll extends React.Component {
                             title={this.state.title} // title for see all page
                             type={typeDict[this.state.parent]} // the type of content on page
                             showFilter={true}
-                            hideFilterButton={
-                                this.state.parent == 'Lessons' ? false : true
-                            } // only show filter button on lessons
+                            hideFilterButton={this.state.parent == 'Lessons' ? false : false} // only show filter button on lessons
                             showType={false}
                             showArtist={true}
                             showSort={false}

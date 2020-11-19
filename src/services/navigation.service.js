@@ -9,13 +9,17 @@ function setTopLevelNavigator(navigatorRef) {
 }
 
 function navigate(routeName, params) {
-    _navigator.dispatch(
-        NavigationActions.navigate({
-            type: NavigationActions.NAVIGATE,
-            routeName,
-            params,
-        }),
-    );
+    try {
+        _navigator.dispatch(
+            NavigationActions.navigate({
+                type: NavigationActions.NAVIGATE,
+                routeName,
+                params,
+            }),
+        );   
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // add other navigation functions that you need and export them

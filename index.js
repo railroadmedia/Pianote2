@@ -11,6 +11,7 @@ import {
 import App from './App';
 import {name as appName} from './app.json';
 import {configure} from '@musora/services';
+import {NavigationActions, StackActions} from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
 
@@ -45,22 +46,29 @@ PushNotification.configure({
         message,
         id,
     }) {
+        let isLoggedIn = await AsyncStorage.getItem('loggedIn')
+        
         if (type.includes('forum') && userInteraction) {
+            // if the type is forum, link to website forums
             if (foreground) {
                 Linking.openURL(uri);
             } else {
                 await AsyncStorage.setItem('forumUrl', uri);
             }
         }
-        if (token) {
-            if (
-                (isiOS || (!isiOS && userInteraction)) &&
-                !type.includes('forum')
-            ) {
-                NavigationService.navigate('VIDEOPLAYER', {
-                    commentId,
-                    url: mobile_app_url,
-                });
+
+        if (token || isLoggedIn) {
+            // if logged in with token 
+            if ((isiOS || (!isiOS && userInteraction)) && !type.includes('forum')) {
+                if(type.includes('aggregated')) {
+                    global.loadedFromNotification = true
+                    await NavigationService.navigate('PROFILE');
+                } else {
+                    NavigationService.navigate('VIDEOPLAYER', {
+                        commentId, 
+                        url: mobile_app_url
+                    });
+                }
             } else {
                 showNotification({
                     notification: {body: message, title},
@@ -72,8 +80,12 @@ PushNotification.configure({
             notif.commentId = commentId;
             notif.lessonUrl = mobile_app_url;
         }
-        if (isiOS) finish(PushNotificationIOS?.FetchResult?.NoData);
-        else finish();
+        
+        if(isiOS) {
+            finish(PushNotificationIOS?.FetchResult?.NoData);
+        } else {
+            finish();
+        }
     },
 });
 
@@ -82,6 +94,7 @@ AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;
 
 global.token = '';
+global.loadedFromNotification = false
 global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.statusBarHeight = StatusBar.statusBarHeight || 24;
