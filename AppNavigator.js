@@ -68,7 +68,12 @@ const AppNavigator = createStackNavigator(
         FOUNDATIONS: {screen: Foundations},
         PATHOVERVIEW: {screen: PathOverview},
         SONGCATALOG: {screen: SongCatalog},
-        VIDEOPLAYER: {screen: VideoPlayer},
+        VIDEOPLAYER: {
+            screen: VideoPlayer,
+            navigationOptions: {
+                gesturesEnabled: false,
+            },
+        },
         SINGLEPACK: {screen: SinglePack},
         DOWNLOADS: {screen: Downloads},
         LESSONS: {screen: Lessons},
