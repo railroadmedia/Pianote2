@@ -660,7 +660,7 @@ export default class VideoPlayer extends React.Component {
                                         width: 10 * factorHorizontal,
                                     }}
                                 />
-                                {item.replies.length > 0 && (
+                                {item.replies?.length > 0 && (
                                     <View>
                                         <View style={{flex: 1}} />
                                         <View
@@ -689,8 +689,8 @@ export default class VideoPlayer extends React.Component {
                                                     color: colors.pianoteRed,
                                                 }}
                                             >
-                                                {item.replies.length}{' '}
-                                                {item.replies.length === 1
+                                                {item.replies?.length}{' '}
+                                                {item.replies?.length === 1
                                                     ? 'REPLY'
                                                     : 'REPLIES'}
                                             </Text>
@@ -714,7 +714,7 @@ export default class VideoPlayer extends React.Component {
                         </View>
                         <View style={{flex: 1}} />
                     </View>
-                    {item.replies.length !== 0 && (
+                    {item.replies?.length !== 0 && (
                         <TouchableOpacity
                             onPress={() => {
                                 this.setState({
@@ -730,8 +730,8 @@ export default class VideoPlayer extends React.Component {
                                     color: colors.secondBackground,
                                 }}
                             >
-                                VIEW {item.replies.length}{' '}
-                                {item.replies.length === 1
+                                VIEW {item.replies?.length}{' '}
+                                {item.replies?.length === 1
                                     ? 'REPLY'
                                     : 'REPLIES'}
                             </Text>
