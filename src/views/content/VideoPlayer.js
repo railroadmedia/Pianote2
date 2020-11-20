@@ -299,7 +299,7 @@ export default class VideoPlayer extends React.Component {
               })
             : undefined
       },
-      () => {
+      async () => {
         if (this.state.resources) this.createResourcesArr();
         if (!this.state.video_playback_endpoints) {
           this.alert.toggle(
@@ -314,9 +314,10 @@ export default class VideoPlayer extends React.Component {
             selectedComment: comment
           });
         } else if (commentId) {
-          const selectedComment = this.state.comments?.find(
-            f => f.id == commentId
-          );
+          const comments = (
+            await commentsService.getComments(this.state.id, 'Mine')
+          ).data;
+          const selectedComment = comments?.find(f => f.id == commentId);
           if (selectedComment) {
             this.setState({
               showReplies: true,
@@ -328,9 +329,8 @@ export default class VideoPlayer extends React.Component {
     );
   };
 
-  showMakeReply = async () => {
-    this.setState({ showMakeReply: true });
-    this.textInputRef2.focus();
+  showMakeReply = () => {
+    this.setState({ showMakeReply: true }, () => this.textInputRef2.focus());
   };
 
   createResourcesArr() {
@@ -822,13 +822,6 @@ export default class VideoPlayer extends React.Component {
           progress: res.parent[0].progress_percent
         });
       }
-    }
-  }
-
-  async onStart() {
-    if (!this.state.isStarted) {
-      let res = await markStarted(this.state.id);
-      this.setState({ isStarted: true });
     }
   }
 

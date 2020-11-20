@@ -48,10 +48,10 @@ export default class SongCatalog extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
     this.getProgressSongs();
     this.getAllSongs();
-  };
+  }
 
   getAllSongs = async () => {
     if (!this.context.isConnected) {
@@ -158,7 +158,7 @@ export default class SongCatalog extends React.Component {
     });
   };
 
-  getDuration = async newContent => {
+  getDuration = newContent => {
     if (newContent.post.fields[0].key == 'video') {
       return newContent.post.fields[0].value.fields[1].value;
     } else if (newContent.post.fields[1].key == 'video') {
@@ -168,7 +168,7 @@ export default class SongCatalog extends React.Component {
     }
   };
 
-  changeSort = async currentSort => {
+  changeSort = currentSort => {
     this.setState(
       {
         allSongs: [],
@@ -181,13 +181,13 @@ export default class SongCatalog extends React.Component {
     );
   };
 
-  getVideos = async () => {
+  getVideos = () => {
     if (!this.state.outVideos) {
       this.setState({ page: this.state.page + 1 }, () => this.getAllSongs());
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
@@ -211,7 +211,7 @@ export default class SongCatalog extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
     this.setState(
       {

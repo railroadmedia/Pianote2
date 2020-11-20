@@ -14,6 +14,11 @@ export default {
     }
     return commonService.tryCall(reqUrl);
   },
+  getComment: async function (commendId) {
+    return commonService.tryCall(
+      `${commonService.rootUrl}/api/railcontent/comment/${commendId}`
+    );
+  },
   addComment: async function (commentText, contentId) {
     return commonService.tryCall(
       `${commonService.rootUrl}/api/railcontent/comment?comment=${commentText}&content_id=${contentId}`,

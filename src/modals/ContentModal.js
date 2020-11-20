@@ -33,7 +33,7 @@ class ContentModal extends React.Component {
     console.log('DATA: ', this.state.data);
   }
 
-  addToMyList = async contentID => {
+  addToMyList = contentID => {
     // change status of content on parent data structure
     this.props.addToMyList(contentID);
     // make added to list on current data structure
@@ -43,7 +43,7 @@ class ContentModal extends React.Component {
     addToMyList(contentID);
   };
 
-  removeFromMyList = async contentID => {
+  removeFromMyList = contentID => {
     // change status of parent data
     this.props.removeFromMyList(contentID);
     // change data on modal
@@ -70,7 +70,7 @@ class ContentModal extends React.Component {
     return string;
   };
 
-  like = async contentID => {
+  like = contentID => {
     // change data on modal
     this.state.data.isLiked = !this.state.data.isLiked;
     this.state.data.like_count = Number(this.state.data.like_count) + 1;
@@ -78,11 +78,10 @@ class ContentModal extends React.Component {
     // change data on parent data
     // ADD IN
     // like on backend
-    let res = await likeContent(contentID);
-    console.log('Like content: ', res);
+    likeContent(contentID);
   };
 
-  unlike = async contentID => {
+  unlike = contentID => {
     // change data on modal
     this.state.data.isLiked = !this.state.data.isLiked;
     this.state.data.like_count = Number(this.state.data.like_count) - 1;

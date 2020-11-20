@@ -52,11 +52,10 @@ export default class Course extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
     this.getProgressCourses();
-    this.getNewCourses();
     this.getAllCourses();
-  };
+  }
 
   getAllCourses = async () => {
     if (!this.context.isConnected) {
@@ -91,12 +90,10 @@ export default class Course extends React.Component {
         xp: newContent[i].post.xp,
         id: newContent[i].id,
         like_count: newContent[i].likeCount,
-        duration: this.getDuration(newContent[i]),
         isLiked: newContent[i].post.is_liked_by_current_user,
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
         progress_percent: newContent[i].post.progress_percent
       });
     }
@@ -140,7 +137,6 @@ export default class Course extends React.Component {
         xp: newContent[i].post.xp,
         id: newContent[i].id,
         like_count: newContent[i].likeCount,
-        duration: this.getDuration(newContent[i]),
         isLiked: newContent[i].post.is_liked_by_current_user,
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
@@ -188,7 +184,6 @@ export default class Course extends React.Component {
         xp: newContent[i].post.xp,
         id: newContent[i].id,
         like_count: newContent[i].likeCount,
-        duration: this.getDuration(newContent[i]),
         isLiked: newContent[i].post.is_liked_by_current_user,
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
@@ -204,7 +199,7 @@ export default class Course extends React.Component {
     });
   };
 
-  filterResults = async () => {
+  filterResults = () => {
     this.props.navigation.navigate('FILTERS', {
       filters: this.state.filters,
       type: 'COURSES',
@@ -224,25 +219,7 @@ export default class Course extends React.Component {
     });
   };
 
-  getDuration = newContent => {
-    var data = 0;
-    try {
-      for (i in newContent.post.current_lesson.fields) {
-        if (newContent.post.current_lesson.fields[i].key == 'video') {
-          var data = newContent.post.current_lesson.fields[i].value.fields;
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].key == 'length_in_seconds') {
-              return data[i].value;
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  changeSort = async currentSort => {
+  changeSort = currentSort => {
     this.setState(
       {
         currentSort,
@@ -262,7 +239,7 @@ export default class Course extends React.Component {
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
@@ -287,7 +264,7 @@ export default class Course extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
     this.setState(
       {

@@ -68,7 +68,7 @@ export default class Lessons extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     AsyncStorage.multiGet([
       'totalXP',
       'rank',
@@ -243,7 +243,7 @@ export default class Lessons extends React.Component {
     );
   };
 
-  filterResults = async () => {
+  filterResults = () => {
     this.props.navigation.navigate('FILTERS', {
       filters: this.state.filters,
       type: 'LESSONS',
@@ -293,7 +293,7 @@ export default class Lessons extends React.Component {
     newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;
   };
 
-  changeSort = async currentSort => {
+  changeSort = currentSort => {
     // change sort
     this.setState(
       {
@@ -307,14 +307,14 @@ export default class Lessons extends React.Component {
     );
   };
 
-  getVideos = async () => {
+  getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
       this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
@@ -339,7 +339,7 @@ export default class Lessons extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
     this.setState(
       {

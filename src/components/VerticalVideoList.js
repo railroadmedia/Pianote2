@@ -67,7 +67,7 @@ class VerticalVideoList extends React.Component {
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
-  UNSAFE_componentWillReceiveProps = async props => {
+  UNSAFE_componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
       if (!this.state.isLoading) {
         this.setState({ isPaging: props.isPaging });
@@ -108,7 +108,7 @@ class VerticalVideoList extends React.Component {
     );
   };
 
-  addToMyList = async contentID => {
+  addToMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -121,7 +121,7 @@ class VerticalVideoList extends React.Component {
     this.setState({ items: this.state.items });
   };
 
-  removeFromMyList = async contentID => {
+  removeFromMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }

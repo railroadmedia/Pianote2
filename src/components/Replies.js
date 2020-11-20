@@ -281,7 +281,7 @@ class Replies extends React.Component {
     }
   };
 
-  showMakeReply = async () => {
+  showMakeReply = () => {
     this.setState({ showMakeComment: true });
   };
 

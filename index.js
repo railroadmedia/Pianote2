@@ -46,7 +46,6 @@ PushNotification.configure({
     id
   }) {
     let isLoggedIn = await AsyncStorage.getItem('loggedIn');
-    console.log(mobile_app_url);
     if (type.includes('forum') && userInteraction) {
       // if the type is forum, link to website forums
       if (foreground) {

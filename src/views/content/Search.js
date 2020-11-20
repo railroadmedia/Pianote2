@@ -286,7 +286,7 @@ export default class Search extends React.Component {
     );
   }
 
-  clickSearchRecent = async searchTerm => {
+  clickSearchRecent = searchTerm => {
     this.setState(
       {
         searchTerm,
@@ -297,14 +297,14 @@ export default class Search extends React.Component {
     );
   };
 
-  getVideos = async () => {
+  getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
       this.setState({ page: this.state.page + 1 }, () => this.search());
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
@@ -329,7 +329,7 @@ export default class Search extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
     this.setState(
       {

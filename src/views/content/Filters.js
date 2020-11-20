@@ -609,8 +609,7 @@ export default class Filters extends React.Component {
         ['Pack Bundle Lesson', false, 'pack-bundle-lesson']
       ]
     };
-    this.setState({ displayTopics: [], topics: [] });
-
+    //  this.setState({ displayTopics: [], topics: [] });
     if (filterDict[this.props.navigation.state.params.type][num][1] == false) {
       filterDict[this.props.navigation.state.params.type][num][1] = true;
       let topics = this.state.topics;
@@ -843,7 +842,7 @@ export default class Filters extends React.Component {
         ['Pack Bundle Lesson', false, 'pack-bundle-lesson']
       ]
     };
-    this.setState({ displayTopics: [], topics: [] });
+    // this.setState({ displayTopics: [], topics: [] });
 
     if (filterDict['ARTISTS'][num][1] == false) {
       filterDict['ARTISTS'][num][1] = true;

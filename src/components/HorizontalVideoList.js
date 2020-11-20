@@ -49,7 +49,7 @@ class HorizontalVideoList extends React.Component {
     }
   };
 
-  addToMyList = async contentID => {
+  addToMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -64,7 +64,7 @@ class HorizontalVideoList extends React.Component {
     addToMyList(contentID);
   };
 
-  removeFromMyList = async contentID => {
+  removeFromMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
