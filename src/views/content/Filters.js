@@ -312,9 +312,9 @@ export default class Filters extends React.Component {
 
     for (i in filterDict[this.props.navigation.state.params.type]) {
       if (
-        (await topics.indexOf(
+        topics.indexOf(
           filterDict[this.props.navigation.state.params.type][i][0]
-        )) !== -1
+        ) !== -1
       ) {
         filterDict[this.props.navigation.state.params.type][i][1] = true;
       }
@@ -328,17 +328,17 @@ export default class Filters extends React.Component {
 
     // currently selected progress
     if (filters.progress.length > 0) {
-      if ((await filters.progress.indexOf('all')) !== -1) {
+      if (filters.progress.indexOf('all') !== -1) {
         progressAll = true;
         openProgress = true;
       }
 
-      if ((await filters.progress.indexOf('started')) !== -1) {
+      if (filters.progress.indexOf('started') !== -1) {
         progressProgress = true;
         openProgress = true;
       }
 
-      if ((await filters.progress.indexOf('completed')) !== -1) {
+      if (filters.progress.indexOf('completed') !== -1) {
         progressComplete = true;
         openProgress = true;
       }
@@ -346,41 +346,41 @@ export default class Filters extends React.Component {
 
     // currently selected instructors
     if (filters.instructors.length > 0) {
-      if ((await filters.instructors.indexOf('NATE')) !== -1) {
+      if (filters.instructors.indexOf('NATE') !== -1) {
         nate = true;
         openInstructors = true;
       }
-      if ((await filters.instructors.indexOf('JONNY')) !== -1) {
+      if (filters.instructors.indexOf('JONNY') !== -1) {
         jonny = true;
         openInstructors = true;
       }
-      if ((await filters.instructors.indexOf(197077)) !== -1) {
+      if (filters.instructors.indexOf(197077) !== -1) {
         brett = true;
         openInstructors = true;
       }
-      if ((await filters.instructors.indexOf(196994)) !== -1) {
+      if (filters.instructors.indexOf(196994) !== -1) {
         jordan = true;
         openInstructors = true;
       }
-      if ((await filters.instructors.indexOf(202588)) !== -1) {
+      if (filters.instructors.indexOf(202588) !== -1) {
         jay = true;
         openInstructors = true;
       }
-      if ((await filters.instructors.indexOf(197087)) !== -1) {
+      if (filters.instructors.indexOf(197087) !== -1) {
         cassi = true;
         openInstructors = true;
       }
-      if ((await filters.instructors.indexOf(196999)) !== -1) {
+      if (filters.instructors.indexOf(196999) !== -1) {
         lisa = true;
         openInstructors = true;
       }
-      if ((await filters.instructors.indexOf(203416)) !== -1) {
+      if (filters.instructors.indexOf(203416) !== -1) {
         kenny = true;
         openInstructors = true;
       }
     }
 
-    await this.setState({
+    this.setState({
       topics,
       displayTopics,
       level,
@@ -609,36 +609,34 @@ export default class Filters extends React.Component {
         ['Pack Bundle Lesson', false, 'pack-bundle-lesson']
       ]
     };
-    await this.setState({ displayTopics: [], topics: [] });
+    this.setState({ displayTopics: [], topics: [] });
 
     if (filterDict[this.props.navigation.state.params.type][num][1] == false) {
       filterDict[this.props.navigation.state.params.type][num][1] = true;
       let topics = this.state.topics;
       let displayTopics = this.state.displayTopics;
-      await topics.push(
-        filterDict[this.props.navigation.state.params.type][num][2]
-      );
-      await displayTopics.push(
+      topics.push(filterDict[this.props.navigation.state.params.type][num][2]);
+      displayTopics.push(
         filterDict[this.props.navigation.state.params.type][num][0]
       );
-      await this.setState({ topics, displayTopics });
+      this.setState({ topics, displayTopics });
     } else {
       filterDict[this.props.navigation.state.params.type][num][1] = false;
       let topics = this.state.topics;
       let displayTopics = this.state.displayTopics;
-      await topics.splice(
+      topics.splice(
         topics.indexOf(
           filterDict[this.props.navigation.state.params.type][num][2]
         ),
         1
       );
-      await displayTopics.splice(
+      displayTopics.splice(
         topics.indexOf(
           filterDict[this.props.navigation.state.params.type][num][0]
         ),
         1
       );
-      await this.setState({ topics, displayTopics });
+      this.setState({ topics, displayTopics });
     }
   };
 
@@ -845,25 +843,22 @@ export default class Filters extends React.Component {
         ['Pack Bundle Lesson', false, 'pack-bundle-lesson']
       ]
     };
-    await this.setState({ displayTopics: [], topics: [] });
+    this.setState({ displayTopics: [], topics: [] });
 
     if (filterDict['ARTISTS'][num][1] == false) {
       filterDict['ARTISTS'][num][1] = true;
       let topics = this.state.topics;
       let displayTopics = this.state.displayTopics;
-      await topics.push(filterDict['ARTISTS'][num][2]);
-      await displayTopics.push(filterDict['ARTISTS'][num][0]);
-      await this.setState({ topics, displayTopics });
+      topics.push(filterDict['ARTISTS'][num][2]);
+      displayTopics.push(filterDict['ARTISTS'][num][0]);
+      this.setState({ topics, displayTopics });
     } else {
       filterDict['ARTISTS'][num][1] = false;
       let topics = this.state.topics;
       let displayTopics = this.state.displayTopics;
-      await topics.splice(topics.indexOf(filterDict['ARTISTS'][num][2]), 1);
-      await displayTopics.splice(
-        topics.indexOf(filterDict['ARTISTS'][num][0]),
-        1
-      );
-      await this.setState({ topics, displayTopics });
+      topics.splice(topics.indexOf(filterDict['ARTISTS'][num][2]), 1);
+      displayTopics.splice(topics.indexOf(filterDict['ARTISTS'][num][0]), 1);
+      this.setState({ topics, displayTopics });
     }
   };
 
@@ -1070,7 +1065,7 @@ export default class Filters extends React.Component {
         ['Pack Bundle Lesson', false, 'pack-bundle-lesson']
       ]
     };
-    await this.setState({
+    this.setState({
       displayTopics: [],
       topics: [],
       level: null,
@@ -1095,50 +1090,50 @@ export default class Filters extends React.Component {
   goBack = async () => {
     var progress = [];
     if (this.state.progressAll) {
-      await progress.push('all');
+      progress.push('all');
     }
     if (this.state.progressProgress) {
-      await progress.push('started');
+      progress.push('started');
     }
     if (this.state.progressComplete) {
-      await progress.push('completed');
+      progress.push('completed');
     }
 
     var instructors = [];
     if (this.state.kenny) {
-      await instructors.push(203416);
+      instructors.push(203416);
     }
     if (this.state.lisa) {
-      await instructors.push(196999);
+      instructors.push(196999);
     }
     if (this.state.cassi) {
-      await instructors.push(197087);
+      instructors.push(197087);
     }
     if (this.state.jay) {
-      await instructors.push(202588);
+      instructors.push(202588);
     }
     if (this.state.jordan) {
-      await instructors.push(196994);
+      instructors.push(196994);
     }
     if (this.state.brett) {
-      await instructors.push(197077);
+      instructors.push(197077);
     }
     if (this.state.nate) {
-      await instructors.push('NATE');
+      instructors.push('NATE');
     }
     if (this.state.jonny) {
-      await instructors.push('JONNY');
+      instructors.push('JONNY');
     }
 
     var level = [];
     if (!this.state.allLevels) {
-      await level.push(this.state.level);
+      level.push(this.state.level);
       if (this.state.level < 4) {
-        await level.push('BEGINNER');
+        level.push('BEGINNER');
       } else if (this.state.level < 6) {
-        await level.push('INTERMEDIATE');
+        level.push('INTERMEDIATE');
       } else {
-        await level.push('ADVANCED');
+        level.push('ADVANCED');
       }
     }
 

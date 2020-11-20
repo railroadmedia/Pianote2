@@ -70,19 +70,19 @@ class VerticalVideoList extends React.Component {
   UNSAFE_componentWillReceiveProps = async props => {
     if (props.isPaging !== this.state.isPaging) {
       if (!this.state.isLoading) {
-        await this.setState({ isPaging: props.isPaging });
+        this.setState({ isPaging: props.isPaging });
       }
     }
     if (props.outVideos !== this.state.outVideos) {
-      await this.setState({ outVideos: props.outVideos });
+      this.setState({ outVideos: props.outVideos });
     }
     if (props.isLoading !== this.state.isLoading) {
-      await this.setState({
+      this.setState({
         isLoading: props.isLoading,
         items: [...this.state.items, ...props.items]
       });
     } else if (props.items !== this.state.items) {
-      await this.setState({
+      this.setState({
         items: props.items
       });
     }

@@ -150,7 +150,7 @@ export default class Course extends React.Component {
       });
     }
 
-    await this.setState({
+    this.setState({
       progressCourses: [...this.state.progressCourses, ...items],
       isLoadingProgress: false,
       started:
@@ -243,22 +243,22 @@ export default class Course extends React.Component {
   };
 
   changeSort = async currentSort => {
-    await this.setState({
-      currentSort,
-      outVideos: false,
-      isPaging: false,
-      allCourses: [],
-      page: 1
-    });
-
-    await this.getAllCourses();
+    this.setState(
+      {
+        currentSort,
+        outVideos: false,
+        isPaging: false,
+        allCourses: [],
+        page: 1
+      },
+      () => this.getAllCourses()
+    );
   };
 
   getVideos = async () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      await this.setState({ page: this.state.page + 1 });
-      this.getAllCourses();
+      this.setState({ page: this.state.page + 1 }, () => this.getAllCourses());
     }
   };
 
@@ -268,11 +268,13 @@ export default class Course extends React.Component {
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      await this.setState({
-        page: this.state.page + 1,
-        isPaging: true
-      }),
-        await this.getAllCourses();
+      this.setState(
+        {
+          page: this.state.page + 1,
+          isPaging: true
+        },
+        () => this.getAllCourses()
+      );
     }
   };
 
@@ -287,26 +289,27 @@ export default class Course extends React.Component {
 
   changeFilters = async filters => {
     // after leaving filter page. set filters here
-    await this.setState({
-      allCourses: [],
-      outVideos: false,
-      page: 1,
-      filters:
-        filters.instructors.length == 0 &&
-        filters.level.length == 0 &&
-        filters.progress.length == 0 &&
-        filters.topics.length == 0
-          ? {
-              displayTopics: [],
-              level: [],
-              topics: [],
-              progress: [],
-              instructors: []
-            }
-          : filters
-    });
-
-    this.getAllCourses();
+    this.setState(
+      {
+        allCourses: [],
+        outVideos: false,
+        page: 1,
+        filters:
+          filters.instructors.length == 0 &&
+          filters.level.length == 0 &&
+          filters.progress.length == 0 &&
+          filters.topics.length == 0
+            ? {
+                displayTopics: [],
+                level: [],
+                topics: [],
+                progress: [],
+                instructors: []
+              }
+            : filters
+      },
+      () => this.getAllCourses()
+    );
   };
 
   render() {

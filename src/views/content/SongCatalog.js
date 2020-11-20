@@ -169,21 +169,21 @@ export default class SongCatalog extends React.Component {
   };
 
   changeSort = async currentSort => {
-    await this.setState({
-      allSongs: [],
-      currentSort,
-      outVideos: false,
-      isPaging: false,
-      page: 1
-    });
-
-    await this.getAllSongs();
+    this.setState(
+      {
+        allSongs: [],
+        currentSort,
+        outVideos: false,
+        isPaging: false,
+        page: 1
+      },
+      () => this.getAllSongs()
+    );
   };
 
   getVideos = async () => {
     if (!this.state.outVideos) {
-      await this.setState({ page: this.state.page + 1 });
-      this.getAllSongs();
+      this.setState({ page: this.state.page + 1 }, () => this.getAllSongs());
     }
   };
 
@@ -193,12 +193,13 @@ export default class SongCatalog extends React.Component {
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      await this.setState({
-        page: this.state.page + 1,
-        isPaging: true
-      });
-
-      await this.getAllSongs();
+      this.setState(
+        {
+          page: this.state.page + 1,
+          isPaging: true
+        },
+        () => this.getAllSongs()
+      );
     }
   };
 
@@ -212,26 +213,27 @@ export default class SongCatalog extends React.Component {
 
   changeFilters = async filters => {
     // after leaving filter page. set filters here
-    await this.setState({
-      allSongs: [],
-      outVideos: false,
-      page: 1,
-      filters:
-        filters.instructors.length == 0 &&
-        filters.level.length == 0 &&
-        filters.progress.length == 0 &&
-        filters.topics.length == 0
-          ? {
-              displayTopics: [],
-              level: [],
-              topics: [],
-              progress: [],
-              instructors: []
-            }
-          : filters
-    });
-
-    this.getAllSongs();
+    this.setState(
+      {
+        allSongs: [],
+        outVideos: false,
+        page: 1,
+        filters:
+          filters.instructors.length == 0 &&
+          filters.level.length == 0 &&
+          filters.progress.length == 0 &&
+          filters.topics.length == 0
+            ? {
+                displayTopics: [],
+                level: [],
+                topics: [],
+                progress: [],
+                instructors: []
+              }
+            : filters
+      },
+      () => this.getAllSongs()
+    );
   };
 
   render() {

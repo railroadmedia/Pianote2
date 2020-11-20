@@ -329,8 +329,8 @@ export default class VideoPlayer extends React.Component {
   };
 
   showMakeReply = async () => {
-    await this.setState({ showMakeReply: true });
-    await this.textInputRef2.focus();
+    this.setState({ showMakeReply: true });
+    this.textInputRef2.focus();
   };
 
   createResourcesArr() {
