@@ -119,7 +119,7 @@ export default class VideoPlayer extends React.Component {
       AsyncStorage.getItem('userId'),
       AsyncStorage.getItem('profileURI')
     ]);
-    if (storage[1] !== null) this.setState({ profileImage: storage[1] });
+    if (storage[1]) this.setState({ profileImage: storage[1] });
     this.userId = JSON.parse(storage[0]);
     this.getContent();
   };
