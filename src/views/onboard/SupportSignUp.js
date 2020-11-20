@@ -2,290 +2,292 @@
  * SupportSignUp
  */
 import React from 'react';
-import {View, Text, TouchableOpacity, ScrollView, Linking} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Linking
+} from 'react-native';
 import Intercom from 'react-native-intercom';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 export default class SupportSignUp extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+  static navigationOptions = { header: null };
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    componentDidMount = async () => {
-        Intercom.registerUnidentifiedUser();
-    };
+  componentDidMount = async () => {
+    Intercom.registerUnidentifiedUser();
+  };
 
-    onIntercomPress = () => {
-        Intercom.displayMessenger();
-    };
+  onIntercomPress = () => {
+    Intercom.displayMessenger();
+  };
 
-    render() {
-        return (
-            <View style={{flex: 1, alignSelf: 'stretch'}}>
-                <View
-                    style={{
-                        height: fullHeight - navHeight,
-                        alignSelf: 'stretch',
-                        backgroundColor: colors.mainBackground,
-                    }}
-                >
-                    <View
-                        key={'buffer'}
-                        style={{
-                            height: isNotch ? 15 * factorVertical : 0,
-                        }}
-                    />
-                    <View
-                        key={'header'}
-                        style={[
-                            styles.centerContent,
-                            {
-                                flex: 0.1,
-                            },
-                        ]}
-                    >
-                        <View
-                            key={'goback'}
-                            style={[
-                                styles.centerContent,
-                                {
-                                    position: 'absolute',
-                                    left: 0,
-                                    paddingLeft: 5 * factorHorizontal,
-                                    bottom: 0 * factorRatio,
-                                    height: 50 * factorRatio,
-                                    width: 50 * factorRatio,
-                                },
-                            ]}
-                        >
-                            <TouchableOpacity
-                                onPress={() => this.props.navigation.goBack()}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: '100%',
-                                        width: '100%',
-                                    },
-                                ]}
-                            >
-                                <EntypoIcon
-                                    name={'chevron-thin-left'}
-                                    size={25 * factorRatio}
-                                    color={colors.secondBackground}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{flex: 0.66}} />
-                        <Text
-                            style={{
-                                fontSize: 22 * factorRatio,
-                                fontWeight: 'bold',
-                                fontFamily: 'OpenSans-Regular',
-                                color: colors.secondBackground,
-                            }}
-                        >
-                            Support
-                        </Text>
-                        <View style={{flex: 0.33}} />
-                    </View>
-                    <ScrollView key={'contentContainer'} style={{flex: 1}}>
-                        <View style={{height: 20 * factorVertical}} />
-                        <View
-                            key={'text'}
-                            style={{
-                                paddingLeft: fullWidth * 0.05,
-                                paddingRight: fullWidth * 0.05,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 15.5 * factorRatio,
-                                    fontFamily: 'OpenSans-Regular',
-                                    color: colors.secondBackground,
-                                }}
-                            ></Text>
-                            <View style={{height: 15 * factorVertical}} />
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 15.5 * factorRatio,
-                                    color: colors.secondBackground,
-                                }}
-                            ></Text>
-                        </View>
-                        <View style={{height: 30 * factorVertical}} />
-                        <View
-                            key={'chatSupport'}
-                            style={{
-                                height: fullHeight * 0.065,
-                                width: '100%',
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <View style={{flex: 1}} />
-                            <TouchableOpacity
-                                onPress={() => this.onIntercomPress()}
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: '100%',
-                                        width: '80%',
-                                        borderRadius: 200,
-                                        backgroundColor: '#fb1b2f',
-                                    },
-                                ]}
-                            >
-                                <Text
-                                    style={{
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        fontSize: 18 * factorRatio,
-                                        color: 'white',
-                                    }}
-                                >
-                                    LIVE CHAT SUPPORT
-                                </Text>
-                            </TouchableOpacity>
-                            <View style={{flex: 1}} />
-                        </View>
-                        <View style={{height: 10 * factorVertical}} />
-                        <View
-                            key={'emailSupport'}
-                            style={{
-                                height: fullHeight * 0.065,
-                                width: '100%',
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <View style={{flex: 1}} />
-                            <TouchableOpacity
-                                onPress={() =>
-                                    Linking.openURL('mailto:support@musora.com')
-                                }
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: '100%',
-                                        width: '80%',
-                                        borderRadius: 200,
-                                        backgroundColor: '#fb1b2f',
-                                    },
-                                ]}
-                            >
-                                <Text
-                                    style={{
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        fontSize: 18 * factorRatio,
-                                        color: 'white',
-                                    }}
-                                >
-                                    EMAIL SUPPORT
-                                </Text>
-                            </TouchableOpacity>
-                            <View style={{flex: 1}} />
-                        </View>
-                        <View style={{height: 10 * factorVertical}} />
-                        <View
-                            key={'phoneSupport'}
-                            style={{
-                                height: fullHeight * 0.065,
-                                width: '100%',
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <View style={{flex: 1}} />
-                            <TouchableOpacity
-                                onPress={() =>
-                                    Linking.openURL(`tel:${'18004398921'}`)
-                                }
-                                style={[
-                                    styles.centerContent,
-                                    {
-                                        height: '100%',
-                                        width: '80%',
-                                        borderRadius: 200,
-                                        backgroundColor: '#fb1b2f',
-                                    },
-                                ]}
-                            >
-                                <Text
-                                    style={{
-                                        fontFamily: 'RobotoCondensed-Bold',
-                                        fontSize: 18 * factorRatio,
-                                        color: 'white',
-                                    }}
-                                >
-                                    PHONE SUPPORT
-                                </Text>
-                            </TouchableOpacity>
-                            <View style={{flex: 1}} />
-                        </View>
-                        <View style={{height: 20 * factorVertical}} />
-                        <Text
-                            key={'email'}
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 14 * factorRatio,
-                                opacity: 0.8,
-                                color: colors.secondBackground,
-                                textAlign: 'center',
-                            }}
-                        >
-                            EMAIL
-                        </Text>
-                        <View style={{height: 5 * factorRatio}} />
-                        <Text
-                            key={'emailaddress'}
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 13.5 * factorRatio,
-                                textAlign: 'center',
-                                color: 'white',
-                            }}
-                        >
-                            support@musora.com
-                        </Text>
-                        <View style={{height: 20 * factorRatio}} />
-                        <Text
-                            key={'phone'}
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 14 * factorRatio,
-                                opacity: 0.8,
-                                color: colors.secondBackground,
-                                textAlign: 'center',
-                            }}
-                        >
-                            PHONE
-                        </Text>
-                        <View style={{height: 5 * factorRatio}} />
-                        <Text
-                            key={'phoneNumber'}
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 13.5 * factorRatio,
-                                textAlign: 'center',
-                                color: 'white',
-                            }}
-                        >
-                            1-800-439-8921
-                        </Text>
-                        <View style={{height: 5 * factorRatio}} />
-                        <Text
-                            key={'phoneNumber2'}
-                            style={{
-                                fontFamily: 'OpenSans-Regular',
-                                fontSize: 13.5 * factorRatio,
-                                textAlign: 'center',
-                                color: 'white',
-                            }}
-                        >
-                            1-604-921-6721
-                        </Text>
-                    </ScrollView>
-                </View>
+  render() {
+    return (
+      <View style={{ flex: 1, alignSelf: 'stretch' }}>
+        <View
+          style={{
+            height: fullHeight - navHeight,
+            alignSelf: 'stretch',
+            backgroundColor: colors.mainBackground
+          }}
+        >
+          <View
+            key={'buffer'}
+            style={{
+              height: isNotch ? 15 * factorVertical : 0
+            }}
+          />
+          <View
+            key={'header'}
+            style={[
+              styles.centerContent,
+              {
+                flex: 0.1
+              }
+            ]}
+          >
+            <View
+              key={'goback'}
+              style={[
+                styles.centerContent,
+                {
+                  position: 'absolute',
+                  left: 0,
+                  paddingLeft: 5 * factorHorizontal,
+                  bottom: 0 * factorRatio,
+                  height: 50 * factorRatio,
+                  width: 50 * factorRatio
+                }
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() => this.props.navigation.goBack()}
+                style={[
+                  styles.centerContent,
+                  {
+                    height: '100%',
+                    width: '100%'
+                  }
+                ]}
+              >
+                <EntypoIcon
+                  name={'chevron-thin-left'}
+                  size={25 * factorRatio}
+                  color={colors.secondBackground}
+                />
+              </TouchableOpacity>
             </View>
-        );
-    }
+            <View style={{ flex: 0.66 }} />
+            <Text
+              style={{
+                fontSize: 22 * factorRatio,
+                fontWeight: 'bold',
+                fontFamily: 'OpenSans-Regular',
+                color: colors.secondBackground
+              }}
+            >
+              Support
+            </Text>
+            <View style={{ flex: 0.33 }} />
+          </View>
+          <ScrollView key={'contentContainer'} style={{ flex: 1 }}>
+            <View style={{ height: 20 * factorVertical }} />
+            <View
+              key={'text'}
+              style={{
+                paddingLeft: fullWidth * 0.05,
+                paddingRight: fullWidth * 0.05
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15.5 * factorRatio,
+                  fontFamily: 'OpenSans-Regular',
+                  color: colors.secondBackground
+                }}
+              ></Text>
+              <View style={{ height: 15 * factorVertical }} />
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 15.5 * factorRatio,
+                  color: colors.secondBackground
+                }}
+              ></Text>
+            </View>
+            <View style={{ height: 30 * factorVertical }} />
+            <View
+              key={'chatSupport'}
+              style={{
+                height: fullHeight * 0.065,
+                width: '100%',
+                flexDirection: 'row'
+              }}
+            >
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity
+                onPress={() => this.onIntercomPress()}
+                style={[
+                  styles.centerContent,
+                  {
+                    height: '100%',
+                    width: '80%',
+                    borderRadius: 200,
+                    backgroundColor: '#fb1b2f'
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: 18 * factorRatio,
+                    color: 'white'
+                  }}
+                >
+                  LIVE CHAT SUPPORT
+                </Text>
+              </TouchableOpacity>
+              <View style={{ flex: 1 }} />
+            </View>
+            <View style={{ height: 10 * factorVertical }} />
+            <View
+              key={'emailSupport'}
+              style={{
+                height: fullHeight * 0.065,
+                width: '100%',
+                flexDirection: 'row'
+              }}
+            >
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity
+                onPress={() => Linking.openURL('mailto:support@musora.com')}
+                style={[
+                  styles.centerContent,
+                  {
+                    height: '100%',
+                    width: '80%',
+                    borderRadius: 200,
+                    backgroundColor: '#fb1b2f'
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: 18 * factorRatio,
+                    color: 'white'
+                  }}
+                >
+                  EMAIL SUPPORT
+                </Text>
+              </TouchableOpacity>
+              <View style={{ flex: 1 }} />
+            </View>
+            <View style={{ height: 10 * factorVertical }} />
+            <View
+              key={'phoneSupport'}
+              style={{
+                height: fullHeight * 0.065,
+                width: '100%',
+                flexDirection: 'row'
+              }}
+            >
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity
+                onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
+                style={[
+                  styles.centerContent,
+                  {
+                    height: '100%',
+                    width: '80%',
+                    borderRadius: 200,
+                    backgroundColor: '#fb1b2f'
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: 18 * factorRatio,
+                    color: 'white'
+                  }}
+                >
+                  PHONE SUPPORT
+                </Text>
+              </TouchableOpacity>
+              <View style={{ flex: 1 }} />
+            </View>
+            <View style={{ height: 20 * factorVertical }} />
+            <Text
+              key={'email'}
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 14 * factorRatio,
+                opacity: 0.8,
+                color: colors.secondBackground,
+                textAlign: 'center'
+              }}
+            >
+              EMAIL
+            </Text>
+            <View style={{ height: 5 * factorRatio }} />
+            <Text
+              key={'emailaddress'}
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 13.5 * factorRatio,
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              support@musora.com
+            </Text>
+            <View style={{ height: 20 * factorRatio }} />
+            <Text
+              key={'phone'}
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 14 * factorRatio,
+                opacity: 0.8,
+                color: colors.secondBackground,
+                textAlign: 'center'
+              }}
+            >
+              PHONE
+            </Text>
+            <View style={{ height: 5 * factorRatio }} />
+            <Text
+              key={'phoneNumber'}
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 13.5 * factorRatio,
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              1-800-439-8921
+            </Text>
+            <View style={{ height: 5 * factorRatio }} />
+            <Text
+              key={'phoneNumber2'}
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 13.5 * factorRatio,
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              1-604-921-6721
+            </Text>
+          </ScrollView>
+        </View>
+      </View>
+    );
+  }
 }

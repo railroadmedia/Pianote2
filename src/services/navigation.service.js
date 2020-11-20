@@ -1,30 +1,30 @@
 // NavigationService.js
 
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 
 let _navigator;
 
 function setTopLevelNavigator(navigatorRef) {
-    _navigator = navigatorRef;
+  _navigator = navigatorRef;
 }
 
 function navigate(routeName, params) {
-    try {
-        _navigator.dispatch(
-            NavigationActions.navigate({
-                type: NavigationActions.NAVIGATE,
-                routeName,
-                params,
-            }),
-        );   
-    } catch (error) {
-        console.log(error)
-    }
+  try {
+    _navigator.dispatch(
+      NavigationActions.navigate({
+        type: NavigationActions.NAVIGATE,
+        routeName,
+        params
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 // add other navigation functions that you need and export them
 
 export default {
-    navigate,
-    setTopLevelNavigator,
+  navigate,
+  setTopLevelNavigator
 };

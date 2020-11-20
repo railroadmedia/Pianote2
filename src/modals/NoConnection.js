@@ -2,162 +2,162 @@
  * NoConnection
  */
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {withNavigation} from 'react-navigation';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 class NoConnection extends React.Component {
-    static navigationOptions = {header: null};
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+  static navigationOptions = { header: null };
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    render = () => {
-        return (
-            <View
-                key={'container'}
+  render = () => {
+    return (
+      <View
+        key={'container'}
+        style={{
+          height: fullHeight,
+          width: fullWidth,
+          backgroundColor: 'transparent'
+        }}
+      >
+        <View key={'buffTop'} style={{ flex: 1 }}>
+          <TouchableOpacity
+            onPress={() => this.props.hideNoConnection()}
+            style={{
+              height: '100%',
+              width: '100%'
+            }}
+          />
+        </View>
+        <View
+          key={'content'}
+          style={{
+            height: fullWidth * 0.6,
+            width: '100%',
+            flexDirection: 'row'
+          }}
+        >
+          <View key={'buffLeft'} style={{ width: '5%' }}>
+            <TouchableOpacity
+              onPress={() => this.props.hideNoConnection()}
+              style={{
+                height: '100%',
+                width: '100%'
+              }}
+            />
+          </View>
+          <View
+            key={'content'}
+            style={{
+              height: '100%',
+              width: '90%',
+              backgroundColor: 'white',
+              borderRadius: 15 * factorRatio
+            }}
+          >
+            <View style={{ height: fullHeight * 0.035 }} />
+            <View key={'emailTaken'} style={styles.centerContent}>
+              <Text
                 style={{
-                    height: fullHeight,
-                    width: fullWidth,
-                    backgroundColor: 'transparent',
+                  fontSize: 22 * factorRatio,
+                  fontWeight: 'bold',
+                  textAlign: 'center'
                 }}
-            >
-                <View key={'buffTop'} style={{flex: 1}}>
-                    <TouchableOpacity
-                        onPress={() => this.props.hideNoConnection()}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    />
-                </View>
-                <View
-                    key={'content'}
-                    style={{
-                        height: fullWidth * 0.6,
-                        width: '100%',
-                        flexDirection: 'row',
-                    }}
-                >
-                    <View key={'buffLeft'} style={{width: '5%'}}>
-                        <TouchableOpacity
-                            onPress={() => this.props.hideNoConnection()}
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                            }}
-                        />
-                    </View>
-                    <View
-                        key={'content'}
-                        style={{
-                            height: '100%',
-                            width: '90%',
-                            backgroundColor: 'white',
-                            borderRadius: 15 * factorRatio,
-                        }}
-                    >
-                        <View style={{height: fullHeight * 0.035}} />
-                        <View key={'emailTaken'} style={styles.centerContent}>
-                            <Text
-                                style={{
-                                    fontSize: 22 * factorRatio,
-                                    fontWeight: 'bold',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                Sorry, our server {"\n"}is down right now.
-                            </Text>
-                        </View>
-                        <View style={{height: fullHeight * 0.035}} />
-                        <View key={'toUseThis'}>
-                            <View style={{flex: 1}} />
-                            <Text
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 18 * factorRatio,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                Please try again later!
-                            </Text>
-                            <View style={{flex: 1}} />
-                        </View>
-                        <View style={{height: fullHeight * 0.035}} />
-                        <View key={'buttons'} style={{flex: 0.45}}>
-                            <View
-                                key={'SIGNUP'}
-                                style={{
-                                    height: '100%',
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <View style={{width: '15%'}} />
-                                <View
-                                    style={{
-                                        height: '100%',
-                                        width: '70%',
-                                    }}
-                                >
-                                    <View style={{flex: 1}} />
-                                    <View
-                                        style={{
-                                            height: '80%',
-                                            width: '100%',
-                                            borderRadius: 45 * factorRatio,
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.props.hideNoConnection()
-                                            }}
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                            }}
-                                        >
-                                            <View style={{flex: 1}} />
-                                            <Text
-                                                style={{
-                                                    fontSize: 20 * factorRatio,
-                                                    fontWeight: 'bold',
-                                                    color: '#fb1b2f',
-                                                    textAlign: 'center',
-                                                }}
-                                            >
-                                                TRY AGAIN
-                                            </Text>
-                                            <View style={{flex: 1}} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={{flex: 1}} />
-                                </View>
-                                <View style={{width: '15%'}} />
-                            </View>
-                        </View>
-                    </View>
-                    <View key={'buffRight'} style={{width: '5%'}}>
-                        <TouchableOpacity
-                            onPress={() => this.props.hideNoConnection()}
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                            }}
-                        />
-                    </View>
-                </View>
-                <View key={'buffBottom'} style={{flex: 1}}>
-                    <TouchableOpacity
-                        onPress={() => this.props.hideNoConnection()}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                        }}
-                    />
-                </View>
+              >
+                Sorry, our server {'\n'}is down right now.
+              </Text>
             </View>
-        );
-    };
+            <View style={{ height: fullHeight * 0.035 }} />
+            <View key={'toUseThis'}>
+              <View style={{ flex: 1 }} />
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 18 * factorRatio,
+                  textAlign: 'center'
+                }}
+              >
+                Please try again later!
+              </Text>
+              <View style={{ flex: 1 }} />
+            </View>
+            <View style={{ height: fullHeight * 0.035 }} />
+            <View key={'buttons'} style={{ flex: 0.45 }}>
+              <View
+                key={'SIGNUP'}
+                style={{
+                  height: '100%',
+                  flexDirection: 'row'
+                }}
+              >
+                <View style={{ width: '15%' }} />
+                <View
+                  style={{
+                    height: '100%',
+                    width: '70%'
+                  }}
+                >
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={{
+                      height: '80%',
+                      width: '100%',
+                      borderRadius: 45 * factorRatio
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.props.hideNoConnection();
+                      }}
+                      style={{
+                        height: '100%',
+                        width: '100%'
+                      }}
+                    >
+                      <View style={{ flex: 1 }} />
+                      <Text
+                        style={{
+                          fontSize: 20 * factorRatio,
+                          fontWeight: 'bold',
+                          color: '#fb1b2f',
+                          textAlign: 'center'
+                        }}
+                      >
+                        TRY AGAIN
+                      </Text>
+                      <View style={{ flex: 1 }} />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View style={{ width: '15%' }} />
+              </View>
+            </View>
+          </View>
+          <View key={'buffRight'} style={{ width: '5%' }}>
+            <TouchableOpacity
+              onPress={() => this.props.hideNoConnection()}
+              style={{
+                height: '100%',
+                width: '100%'
+              }}
+            />
+          </View>
+        </View>
+        <View key={'buffBottom'} style={{ flex: 1 }}>
+          <TouchableOpacity
+            onPress={() => this.props.hideNoConnection()}
+            style={{
+              height: '100%',
+              width: '100%'
+            }}
+          />
+        </View>
+      </View>
+    );
+  };
 }
 
 export default withNavigation(NoConnection);

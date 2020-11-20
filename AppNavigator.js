@@ -1,9 +1,9 @@
 /**
  *  Router
  */
-import {Animated, Dimensions, Easing} from 'react-native';
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
+import { Animated, Dimensions, Easing } from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 // content
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';
@@ -48,94 +48,94 @@ import Support from './src/views/user/Support.js';
 import Terms from './src/views/user/Terms.js';
 
 const AppNavigator = createStackNavigator(
-    {
-        initialRoute: LoadPage,
+  {
+    initialRoute: LoadPage,
 
-        // user
-        NOTIFICATIONSETTINGS: {screen: NotificationSettings},
-        PROFILESETTINGS: {screen: ProfileSettings},
-        PRIVACYPOLICY: {screen: PrivacyPolicy},
-        SETTINGS: {screen: Settings},
-        PROFILE: {screen: Profile},
-        SUPPORT: {screen: Support},
-        TERMS: {screen: Terms},
+    // user
+    NOTIFICATIONSETTINGS: { screen: NotificationSettings },
+    PROFILESETTINGS: { screen: ProfileSettings },
+    PRIVACYPOLICY: { screen: PrivacyPolicy },
+    SETTINGS: { screen: Settings },
+    PROFILE: { screen: Profile },
+    SUPPORT: { screen: Support },
+    TERMS: { screen: Terms },
 
-        // content
-        STUDENTFOCUSCATALOG: {screen: StudentFocusCatalog},
-        STUDENTFOCUSSHOW: {screen: StudentFocusShow},
-        VIDEOPLAYERSONG: {screen: VideoPlayerSong},
-        FOUNDATIONSLEVEL: {screen: FoundationsLevel},
-        FOUNDATIONS: {screen: Foundations},
-        PATHOVERVIEW: {screen: PathOverview},
-        SONGCATALOG: {screen: SongCatalog},
-        VIDEOPLAYER: {
-            screen: VideoPlayer,
-            navigationOptions: {
-                gesturesEnabled: false,
-            },
-        },
-        SINGLEPACK: {screen: SinglePack},
-        DOWNLOADS: {screen: Downloads},
-        LESSONS: {screen: Lessons},
-        FILTERS: {screen: Filters},
-        SEEALL: {screen: SeeAll},
-        COURSE: {screen: Course},
-        MYLIST: {screen: MyList},
-        SEARCH: {screen: Search},
-        PACKS: {screen: Packs},
-
-        // onboard
-        MEMBERSHIPEXPIRED: {screen: MembershipExpired},
-        LOGINCREDENTIALS: {screen: LoginCredentials},
-        SUPPORTSIGNUP: {screen: SupportSignUp},
-        FORGOTPASSWORD: {screen: ForgotPassword},
-        CREATEACCOUNT2: {screen: CreateAccount2},
-        CREATEACCOUNT3: {screen: CreateAccount3},
-        NEWMEMBERSHIP: {screen: NewMembership},
-        CREATEACCOUNT: {screen: CreateAccount},
-        GETRESTARTED: {screen: GetRestarted},
-        WELCOMEBACK: {screen: WelcomeBack},
-        LOADPAGE: {screen: LoadPage},
-        LOGIN: {screen: Login},
-        RESETPASSWORD: {screen: ResetPassword},
+    // content
+    STUDENTFOCUSCATALOG: { screen: StudentFocusCatalog },
+    STUDENTFOCUSSHOW: { screen: StudentFocusShow },
+    VIDEOPLAYERSONG: { screen: VideoPlayerSong },
+    FOUNDATIONSLEVEL: { screen: FoundationsLevel },
+    FOUNDATIONS: { screen: Foundations },
+    PATHOVERVIEW: { screen: PathOverview },
+    SONGCATALOG: { screen: SongCatalog },
+    VIDEOPLAYER: {
+      screen: VideoPlayer,
+      navigationOptions: {
+        gesturesEnabled: false
+      }
     },
-    {
-        headerMode: 'screen',
-        mode: 'card',
-        defaultNavigationOptions: {
-            gesturesEnabled: true,
-            // if you want to change the back swipe width
-            //just put the number, e.g. 100 would be fine to get the iOS effect
-            gestureResponseDistance: {
-                horizontal: Dimensions.get('window').width,
-            },
-        },
-        transitionConfig: () => ({
-            transitionSpec: {
-                duration: 300,
-                easing: Easing.out(Easing.poly(4)),
-                timing: Animated.timing,
-                useNativeDriver: true,
-            },
-            screenInterpolator: sceneProps => {
-                const {layout, position, scene} = sceneProps;
-                const {index} = scene;
+    SINGLEPACK: { screen: SinglePack },
+    DOWNLOADS: { screen: Downloads },
+    LESSONS: { screen: Lessons },
+    FILTERS: { screen: Filters },
+    SEEALL: { screen: SeeAll },
+    COURSE: { screen: Course },
+    MYLIST: { screen: MyList },
+    SEARCH: { screen: Search },
+    PACKS: { screen: Packs },
 
-                const width = layout.initWidth;
-                const translateX = position.interpolate({
-                    inputRange: [index - 1, index, index + 1],
-                    outputRange: [width, 0, 0],
-                });
-
-                const opacity = position.interpolate({
-                    inputRange: [index - 1, index - 0.99, index],
-                    outputRange: [0, 1, 1],
-                });
-
-                return {opacity, transform: [{translateX}]};
-            },
-        }),
+    // onboard
+    MEMBERSHIPEXPIRED: { screen: MembershipExpired },
+    LOGINCREDENTIALS: { screen: LoginCredentials },
+    SUPPORTSIGNUP: { screen: SupportSignUp },
+    FORGOTPASSWORD: { screen: ForgotPassword },
+    CREATEACCOUNT2: { screen: CreateAccount2 },
+    CREATEACCOUNT3: { screen: CreateAccount3 },
+    NEWMEMBERSHIP: { screen: NewMembership },
+    CREATEACCOUNT: { screen: CreateAccount },
+    GETRESTARTED: { screen: GetRestarted },
+    WELCOMEBACK: { screen: WelcomeBack },
+    LOADPAGE: { screen: LoadPage },
+    LOGIN: { screen: Login },
+    RESETPASSWORD: { screen: ResetPassword }
+  },
+  {
+    headerMode: 'screen',
+    mode: 'card',
+    defaultNavigationOptions: {
+      gesturesEnabled: true,
+      // if you want to change the back swipe width
+      //just put the number, e.g. 100 would be fine to get the iOS effect
+      gestureResponseDistance: {
+        horizontal: Dimensions.get('window').width
+      }
     },
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 300,
+        easing: Easing.out(Easing.poly(4)),
+        timing: Animated.timing,
+        useNativeDriver: true
+      },
+      screenInterpolator: sceneProps => {
+        const { layout, position, scene } = sceneProps;
+        const { index } = scene;
+
+        const width = layout.initWidth;
+        const translateX = position.interpolate({
+          inputRange: [index - 1, index, index + 1],
+          outputRange: [width, 0, 0]
+        });
+
+        const opacity = position.interpolate({
+          inputRange: [index - 1, index - 0.99, index],
+          outputRange: [0, 1, 1]
+        });
+
+        return { opacity, transform: [{ translateX }] };
+      }
+    })
+  }
 );
 
 export default createAppContainer(AppNavigator);
