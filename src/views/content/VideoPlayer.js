@@ -72,20 +72,18 @@ export default class VideoPlayer extends React.Component {
       commentSort: 'Popular', // Newest, Oldest, Mine, Popular
       profileImage: '',
       isLoadingAll: true,
-      showReplies: false,
+      selectedComment: undefined,
       showAssignment: false,
       showCommentSort: false,
       showSoundSlice: false,
       showMakeComment: false,
       showInfo: false,
       showAssignmentComplete: false,
-      showMakeReply: false,
       showOverviewComplete: false,
       showQualitySettings: false,
       showLessonComplete: false,
       showResDownload: false,
       showVideo: true,
-      selectedComment: null,
       makeCommentVertDelta: new Animated.Value(0.01),
       comments: [],
       outComments: false,
@@ -116,12 +114,14 @@ export default class VideoPlayer extends React.Component {
 
   componentDidMount = async () => {
     // get profile image
-    let profileImage = await AsyncStorage.getItem('profileURI');
-    if (profileImage !== null) {
-      this.setState({ profileImage });
-    }
+
     this.limit = 10;
-    this.userId = JSON.parse(await AsyncStorage.getItem('userId'));
+    let storage = await Promise.all([
+      AsyncStorage.getItem('userId'),
+      AsyncStorage.getItem('profileURI')
+    ]);
+    if (storage[1] !== null) this.setState({ profileImage: storage[1] });
+    this.userId = JSON.parse(storage[0]);
     this.getContent();
   };
 
@@ -148,7 +148,6 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
-    console.log(content);
     content = new ContentModel(content);
     let relatedLessons = content.post.related_lessons?.map(rl => {
       return new ContentModel(rl);
@@ -308,29 +307,19 @@ export default class VideoPlayer extends React.Component {
           );
         }
         const { comment, commentId } = this.props.navigation.state.params;
-        if (comment) {
-          this.setState({
-            showReplies: true,
-            selectedComment: comment
-          });
-        } else if (commentId) {
+        if (comment)
+          this.replies.toggle(() =>
+            this.setState({ selectedComment: comment })
+          );
+        else if (commentId) {
           const selectedComment = this.state.comments?.find(
             f => f.id == commentId
           );
-          if (selectedComment) {
-            this.setState({
-              showReplies: true,
-              selectedComment
-            });
-          }
+          if (selectedComment)
+            this.replies.toggle(() => this.setState({ selectedComment }));
         }
       }
     );
-  };
-
-  showMakeReply = async () => {
-    await this.setState({ showMakeReply: true });
-    await this.textInputRef2.focus();
   };
 
   createResourcesArr() {
@@ -492,8 +481,7 @@ export default class VideoPlayer extends React.Component {
     let { comments } = this.state;
     this.allCommentsNum -= 1;
     this.setState({
-      comments: comments.filter(c => c.id !== id),
-      showReplies: false
+      comments: comments.filter(c => c.id !== id)
     });
     commentsService.deleteComment(id);
   };
@@ -627,12 +615,11 @@ export default class VideoPlayer extends React.Component {
               <View style={{ width: 20 * factorHorizontal }} />
               <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
-                  onPress={() => {
-                    this.setState({
-                      showReplies: true,
-                      selectedComment: item
-                    });
-                  }}
+                  onPress={() =>
+                    this.replies.toggle(() =>
+                      this.setState({ selectedComment: item })
+                    )
+                  }
                 >
                   <MaterialIcon
                     name={'comment-text-outline'}
@@ -691,12 +678,11 @@ export default class VideoPlayer extends React.Component {
           </View>
           {item.replies?.length !== 0 && (
             <TouchableOpacity
-              onPress={() => {
-                this.setState({
-                  showReplies: true,
-                  selectedComment: item
-                });
-              }}
+              onPress={() =>
+                this.replies.toggle(() =>
+                  this.setState({ selectedComment: item })
+                )
+              }
             >
               <Text
                 style={{
@@ -1863,44 +1849,123 @@ export default class VideoPlayer extends React.Component {
                 </View>
               </View>
             )}
-            {this.state.showReplies && (
-              <Modal
-                key={'replies'}
-                isVisible={this.state.showReplies}
-                style={{ margin: 0 }}
-                animation={'slideInUp'}
-                animationInTiming={350}
-                animationOutTiming={350}
-                coverScreen={false}
-                hasBackdrop={false}
-              >
-                <Replies
-                  makeReply={this.state.makeReply} // when changed to true, submit the reply
-                  replySubmitted={() => {
-                    this.loadMoreComments(),
-                      this.setState({ makeReply: false });
-                  }} // call back to identify when submitted
-                  reply={this.state.reply} // the reply written (it is written on VideoPlayer.js modal)
-                  blurReply={() => this.textInputRef2.clear()} // clear the textinput
-                  showMakeReply={() => this.showMakeReply()} // callback to open a modal to make a reply from reply modal
-                  hideMakeReply={() => {
-                    this.setState({ showMakeReply: false }),
-                      this.textInputRef2?.clear(),
-                      Keyboard.dismiss();
-                  }} // hide the make reply but keep replies open
-                  hideReplies={() => {
-                    this.setState({ showReplies: false }),
-                      this.textInputRef2?.clear(),
-                      Keyboard.dismiss();
-                  }} // hide the reply modal
-                  parentComment={this.state.selectedComment}
-                  onLikeOrDisikeParentComment={this.likeComment}
-                  onAddReply={this.fetchComments}
-                  onDeleteReply={this.fetchComments()}
-                  onDeleteComment={this.deleteComment}
-                />
-              </Modal>
-            )}
+            <Replies
+              sendReply={reply =>
+                commentsService
+                  .addReplyToComment(
+                    encodeURIComponent(reply),
+                    this.state.selectedComment.id
+                  )
+                  .then(r =>
+                    this.setState(({ comments, selectedComment }) => ({
+                      comments: comments.map(c =>
+                        c.id === selectedComment.id
+                          ? {
+                              ...c,
+                              replies: [r.data[0], ...c.replies]
+                            }
+                          : c
+                      ),
+                      selectedComment: {
+                        ...selectedComment,
+                        replies: [r.data[0], ...selectedComment.replies]
+                      }
+                    }))
+                  )
+              }
+              deleteReply={id => {
+                commentsService.deleteComment(id);
+                this.setState(({ comments, selectedComment }) => ({
+                  comments: comments.map(c => ({
+                    ...c,
+                    replies: c.replies.filter(r => r.id !== id)
+                  })),
+                  selectedComment: {
+                    ...selectedComment,
+                    replies: selectedComment.replies.filter(r => r.id !== id)
+                  }
+                }));
+              }}
+              deleteComment={id => {
+                commentsService.deleteComment(id);
+                this.setState(
+                  ({ comments }) => ({
+                    comments: comments.filter(c => c.id !== id)
+                  }),
+                  () =>
+                    this.replies.toggle(() =>
+                      this.setState({ selectedComment: undefined })
+                    )
+                );
+              }}
+              toggleCommentLike={(id, action) => {
+                commentsService[action](id);
+                this.setState(({ comments, selectedComment }) => ({
+                  comments: comments.map(c =>
+                    c.id === id
+                      ? {
+                          ...c,
+                          is_liked: !c.is_liked,
+                          like_count: c.is_liked
+                            ? c.like_count - 1
+                            : c.like_count + 1
+                        }
+                      : c
+                  ),
+                  selectedComment: {
+                    ...selectedComment,
+                    is_liked: !selectedComment.is_liked,
+                    like_count: selectedComment.is_liked
+                      ? selectedComment.like_count - 1
+                      : selectedComment.like_count + 1
+                  }
+                }));
+              }}
+              toggleReplyLike={(id, action) => {
+                commentsService[action](id);
+                this.setState(({ comments, selectedComment }) => ({
+                  comments: comments.map(c => ({
+                    ...c,
+                    replies: c.replies.map(r =>
+                      r.id === id
+                        ? {
+                            ...r,
+                            is_liked: !r.is_liked,
+                            like_count: r.is_liked
+                              ? r.like_count - 1
+                              : r.like_count + 1
+                          }
+                        : r
+                    )
+                  })),
+                  selectedComment: {
+                    ...selectedComment,
+                    replies: selectedComment.replies.map(r =>
+                      r.id === id
+                        ? {
+                            ...r,
+                            is_liked: !r.is_liked,
+                            like_count: r.is_liked
+                              ? r.like_count - 1
+                              : r.like_count + 1
+                          }
+                        : r
+                    )
+                  }
+                }));
+              }}
+              close={() =>
+                this.replies.toggle(() =>
+                  this.setState({ selectedComment: undefined })
+                )
+              }
+              onRef={r => (this.replies = r)}
+              comment={this.state.selectedComment}
+              me={{
+                userId: this.userId,
+                profileImage: this.state.profileImage
+              }}
+            />
           </View>
         ) : (
           <ActivityIndicator
@@ -2267,92 +2332,6 @@ export default class VideoPlayer extends React.Component {
                         this.makeComment();
                         this.textInputRef.clear();
                       }}
-                    >
-                      <IonIcon
-                        name={'md-send'}
-                        size={25 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </KeyboardAvoidingView>
-            </TouchableOpacity>
-          </Modal>
-        )}
-        {this.state.showMakeReply && (
-          <Modal
-            isVisible={this.state.showMakeReply}
-            style={{ margin: 0 }}
-            backdropColor={'transparent'}
-            animation={'slideInUp'}
-            animationInTiming={350}
-            animationOutTiming={350}
-            coverScreen={false}
-            hasBackdrop={true}
-            transparent={true}
-            onBackdropPress={() => this.setState({ showMakeReply: false })}
-          >
-            <TouchableOpacity
-              style={{ flex: 1 }}
-              onPress={() => this.setState({ showMakeReply: false })}
-            >
-              <KeyboardAvoidingView
-                key={'makeComment'}
-                behavior={`${isiOS ? 'padding' : ''}`}
-                style={{ flex: 1, justifyContent: 'flex-end' }}
-              >
-                <View
-                  style={{
-                    background: 'red',
-                    backgroundColor: colors.mainBackground,
-                    flexDirection: 'row',
-                    padding: 10,
-                    alignItems: 'center',
-                    borderTopWidth: 0.5 * factorRatio,
-                    borderTopColor: colors.secondBackground
-                  }}
-                >
-                  <FastImage
-                    style={{
-                      height: 40 * factorHorizontal,
-                      width: 40 * factorHorizontal,
-                      borderRadius: 100,
-                      marginRight: 15
-                    }}
-                    source={{
-                      uri:
-                        this.state.profileImage ||
-                        'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                    }}
-                    resizeMode={FastImage.resizeMode.stretch}
-                  />
-                  <TextInput
-                    multiline={true}
-                    ref={ref => {
-                      this.textInputRef2 = ref;
-                    }}
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 14 * factorRatio,
-                      width: '75%',
-                      backgroundColor: colors.mainBackground,
-                      color: colors.secondBackground,
-                      paddingVertical: 10 * factorVertical
-                    }}
-                    onChangeText={reply => this.setState({ reply })}
-                    onBlur={() => this.textInputRef2.clear()}
-                    placeholder={'Add a comment'}
-                    placeholderTextColor={colors.secondBackground}
-                  />
-
-                  <View style={styles.centerContent}>
-                    <TouchableOpacity
-                      style={{
-                        marginBottom:
-                          Platform.OS == 'android' ? 10 * factorVertical : 0
-                      }}
-                      onPress={() => this.setState({ makeReply: true })}
                     >
                       <IonIcon
                         name={'md-send'}
