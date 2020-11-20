@@ -64,7 +64,7 @@ export default class Search extends React.Component {
   async componentDidMount() {
     // get recent searches from memory
     let recentSearchResults = await AsyncStorage.getItem('recentSearches');
-    if (recentSearchResults !== null) {
+    if (recentSearchResults) {
       recentSearchResults = await JSON.parse(recentSearchResults);
       this.setState({ recentSearchResults });
     }

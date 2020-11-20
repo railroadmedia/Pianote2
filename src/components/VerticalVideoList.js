@@ -323,7 +323,7 @@ class VerticalVideoList extends React.Component {
           }}
           onPress={() => this.navigate(row, index)}
         >
-          {(index >= 0 || this.props.showNextVideo == false) && (
+          {(index >= 0 || !this.props.showNextVideo) && (
             <View
               style={{
                 height: this.props.containerHeight,
@@ -676,7 +676,7 @@ class VerticalVideoList extends React.Component {
               )}
             </View>
           )}
-          {index == 0 && this.props.showNextVideo == true && (
+          {index == 0 && this.props.showNextVideo && (
             <View
               style={{
                 height:

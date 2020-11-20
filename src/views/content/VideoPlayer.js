@@ -117,7 +117,7 @@ export default class VideoPlayer extends React.Component {
   componentDidMount = async () => {
     // get profile image
     let profileImage = await AsyncStorage.getItem('profileURI');
-    if (profileImage !== null) {
+    if (profileImage) {
       this.setState({ profileImage });
     }
     this.limit = 10;

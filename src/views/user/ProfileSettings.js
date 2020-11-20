@@ -54,7 +54,7 @@ export default class ProfileSettings extends React.Component {
   componentDidMount = async () => {
     let imageURI = await AsyncStorage.getItem('profileURI');
     this.setState({
-      imageURI: imageURI == null ? '' : imageURI,
+      imageURI: imageURI || '',
       currentlyView:
         this.props.navigation.state.params?.data == 'Profile Photo'
           ? 'Profile Photo'

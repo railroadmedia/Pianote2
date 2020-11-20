@@ -7,12 +7,9 @@ import { ContentModel } from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import {
-  getNewContent,
-  getStartedContent,
-  getAllContent
-} from '../../services/GetContent';
+import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
+import NavigationBar from '../../components/NavigationBar';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -29,8 +26,6 @@ export default class Course extends React.Component {
     super(props);
     this.state = {
       progressCourses: [],
-      newCourses: [],
-
       allCourses: [],
       currentSort: 'newest',
       page: 1,
@@ -46,7 +41,6 @@ export default class Course extends React.Component {
         instructors: []
       },
 
-      isLoadingNew: true, // new course
       isLoadingProgress: true, // progress course
       started: true // if started lesson
     };
@@ -156,49 +150,6 @@ export default class Course extends React.Component {
     });
   };
 
-  getNewCourses = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    let response = await getNewContent('course');
-    const newContent = response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('instructor').fields[0].value,
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].id,
-        like_count: newContent[i].likeCount,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
-
-    this.setState({
-      newCourses: [...this.state.newCourses, ...items],
-      isLoadingNew: false
-    });
-  };
-
   filterResults = () => {
     this.props.navigation.navigate('FILTERS', {
       filters: this.state.filters,
@@ -293,145 +244,129 @@ export default class Course extends React.Component {
     return (
       <View style={styles.container}>
         <View
-          key={'container'}
           style={{
-            height: fullHeight - navHeight,
+            height: fullHeight * 0.1,
+            width: fullWidth,
+            position: 'absolute',
+            zIndex: 2,
+            elevation: 2,
             alignSelf: 'stretch'
           }}
         >
+          <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
+        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentInsetAdjustmentBehavior={'never'}
+          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+          style={{
+            flex: 1,
+            backgroundColor: colors.mainBackground
+          }}
+        >
           <View
-            key={'contentContainer'}
+            key={'header'}
             style={{
+              height: fullHeight * 0.1,
+              backgroundColor: colors.thirdBackground
+            }}
+          />
+          <View
+            key={'backgroundColoring'}
+            style={{
+              backgroundColor: colors.thirdBackground,
+              position: 'absolute',
               height: fullHeight,
-              alignSelf: 'stretch'
+              top: -fullHeight,
+              left: 0,
+              right: 0,
+              zIndex: 10,
+              elevation: 10
+            }}
+          />
+          <View style={{ height: 25 * factorVertical }} />
+          <Text
+            style={{
+              paddingLeft: 12 * factorHorizontal,
+              fontSize: 30 * factorRatio,
+              color: 'white',
+              fontFamily: 'OpenSans-ExtraBold'
             }}
           >
+            Courses
+          </Text>
+          <View style={{ height: 15 * factorVertical }} />
+          {this.state.started && (
             <View
+              key={'continueCourses'}
               style={{
-                height: fullHeight * 0.1,
-                width: fullWidth,
-                position: 'absolute',
-                zIndex: 2,
-                elevation: 2,
-                alignSelf: 'stretch'
-              }}
-            >
-              <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
-            </View>
-
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentInsetAdjustmentBehavior={'never'}
-              style={{
-                flex: 1,
+                minHeight: fullHeight * 0.225,
+                paddingLeft: fullWidth * 0.035,
                 backgroundColor: colors.mainBackground
               }}
             >
-              <View
-                key={'header'}
-                style={{
-                  height: fullHeight * 0.1,
-                  backgroundColor: colors.thirdBackground
-                }}
-              />
-              <View
-                key={'backgroundColoring'}
-                style={{
-                  backgroundColor: colors.thirdBackground,
-                  position: 'absolute',
-                  height: fullHeight,
-                  top: -fullHeight,
-                  left: 0,
-                  right: 0,
-                  zIndex: 10,
-                  elevation: 10
-                }}
-              />
-              <View style={{ height: 25 * factorVertical }} />
-              <Text
-                style={{
-                  paddingLeft: 12 * factorHorizontal,
-                  fontSize: 30 * factorRatio,
-                  color: 'white',
-                  fontFamily: 'OpenSans-ExtraBold'
-                }}
-              >
-                Courses
-              </Text>
-              <View style={{ height: 15 * factorVertical }} />
-              {this.state.started && (
-                <View
-                  key={'continueCourses'}
-                  style={{
-                    minHeight: fullHeight * 0.225,
-                    paddingLeft: fullWidth * 0.035,
-                    backgroundColor: colors.mainBackground
-                  }}
-                >
-                  <HorizontalVideoList
-                    Title={'CONTINUE'}
-                    seeAll={() =>
-                      this.props.navigation.navigate('SEEALL', {
-                        title: 'Continue',
-                        parent: 'Courses'
-                      })
-                    }
-                    showArtist={true}
-                    items={this.state.progressCourses}
-                    isLoading={this.state.isLoadingProgress}
-                    itemWidth={
-                      isNotch
-                        ? fullWidth * 0.6
-                        : onTablet
-                        ? fullWidth * 0.425
-                        : fullWidth * 0.55
-                    }
-                    itemHeight={
-                      isNotch ? fullHeight * 0.155 : fullHeight * 0.175
-                    }
-                  />
-                </View>
-              )}
-              <VerticalVideoList
-                items={this.state.allCourses}
-                isLoading={this.state.isLoadingAll}
-                title={'COURSES'}
-                type={'COURSES'}
-                isPaging={this.state.isPaging}
-                showFilter={true}
-                showType={true}
+              <HorizontalVideoList
+                Title={'CONTINUE'}
+                seeAll={() =>
+                  this.props.navigation.navigate('SEEALL', {
+                    title: 'Continue',
+                    parent: 'Courses'
+                  })
+                }
                 showArtist={true}
-                showLength={false}
-                showSort={true}
-                filters={this.state.filters}
-                imageRadius={5 * factorRatio}
-                containerBorderWidth={0}
-                currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)}
-                filterResults={() => this.filterResults()}
-                containerWidth={fullWidth}
-                containerHeight={
-                  onTablet
-                    ? fullHeight * 0.15
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.115
-                    : fullHeight * 0.095
-                } // height per row
-                imageHeight={
-                  onTablet
-                    ? fullHeight * 0.12
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.095
-                    : fullHeight * 0.0825
-                } // image height
-                imageWidth={fullWidth * 0.26} // image width
-                outVideos={this.state.outVideos}
-                getVideos={() => this.getVideos()}
+                items={this.state.progressCourses}
+                isLoading={this.state.isLoadingProgress}
+                itemWidth={
+                  isNotch
+                    ? fullWidth * 0.6
+                    : onTablet
+                    ? fullWidth * 0.425
+                    : fullWidth * 0.55
+                }
+                itemHeight={isNotch ? fullHeight * 0.155 : fullHeight * 0.175}
               />
-              <View style={{ height: fullHeight * 0.025 }} />
-            </ScrollView>
-          </View>
-        </View>
+            </View>
+          )}
+          <VerticalVideoList
+            items={this.state.allCourses}
+            isLoading={this.state.isLoadingAll}
+            title={'COURSES'}
+            type={'COURSES'}
+            isPaging={this.state.isPaging}
+            showFilter={true}
+            showType={true}
+            showArtist={true}
+            showLength={false}
+            showSort={true}
+            filters={this.state.filters}
+            imageRadius={5 * factorRatio}
+            containerBorderWidth={0}
+            currentSort={this.state.currentSort}
+            changeSort={sort => this.changeSort(sort)}
+            filterResults={() => this.filterResults()}
+            containerWidth={fullWidth}
+            containerHeight={
+              onTablet
+                ? fullHeight * 0.15
+                : Platform.OS == 'android'
+                ? fullHeight * 0.115
+                : fullHeight * 0.095
+            } // height per row
+            imageHeight={
+              onTablet
+                ? fullHeight * 0.12
+                : Platform.OS == 'android'
+                ? fullHeight * 0.095
+                : fullHeight * 0.0825
+            } // image height
+            imageWidth={fullWidth * 0.26} // image width
+            outVideos={this.state.outVideos}
+            getVideos={() => this.getVideos()}
+          />
+          <View style={{ height: fullHeight * 0.025 }} />
+        </ScrollView>
+        <NavigationBar currentPage={''} />
       </View>
     );
   }
