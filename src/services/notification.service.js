@@ -24,7 +24,7 @@ export const showNotification = ({
         playSound: true,
         color: colors.pianoteRed,
         bigPictureUrl: data.image,
-        smallIcon: 'ic_stat_name',
+        smallIcon: 'notifications_logo',
         channelId: 'pianote-app-chanel',
         userInfo: {
             commentId: data.commentId,

@@ -110,7 +110,7 @@ export default class VideoPlayer extends React.Component {
             progress: null,
             publishedOn: '',
             reply: '',
-            makeReply: false, 
+            makeReply: false,
         };
     }
 
@@ -320,7 +320,7 @@ export default class VideoPlayer extends React.Component {
                         selectedComment: comment,
                     });
                 } else if (commentId) {
-                    const selectedComment = comments.find(
+                    const selectedComment = this.state.comments?.find(
                         f => f.id == commentId,
                     );
                     if (selectedComment) {
@@ -335,9 +335,9 @@ export default class VideoPlayer extends React.Component {
     };
 
     showMakeReply = async () => {
-        await this.setState({showMakeReply: true})
-        await this.textInputRef2.focus()
-    }
+        await this.setState({showMakeReply: true});
+        await this.textInputRef2.focus();
+    };
 
     createResourcesArr() {
         const {resources} = this.state;
@@ -2113,23 +2113,25 @@ export default class VideoPlayer extends React.Component {
                                     makeReply={this.state.makeReply} // when changed to true, submit the reply
                                     replySubmitted={() => {
                                         this.loadMoreComments(),
-                                        this.setState({makeReply: false})
+                                            this.setState({makeReply: false});
                                     }} // call back to identify when submitted
                                     reply={this.state.reply} // the reply written (it is written on VideoPlayer.js modal)
-                                    blurReply={() => this.textInputRef2.clear()} // clear the textinput 
+                                    blurReply={() => this.textInputRef2.clear()} // clear the textinput
                                     showMakeReply={() => this.showMakeReply()} // callback to open a modal to make a reply from reply modal
                                     hideMakeReply={() => {
                                         this.setState({showMakeReply: false}),
-                                        this.textInputRef2?.clear(),
-                                        Keyboard.dismiss()
+                                            this.textInputRef2?.clear(),
+                                            Keyboard.dismiss();
                                     }} // hide the make reply but keep replies open
                                     hideReplies={() => {
                                         this.setState({showReplies: false}),
-                                        this.textInputRef2?.clear(),
-                                        Keyboard.dismiss()
+                                            this.textInputRef2?.clear(),
+                                            Keyboard.dismiss();
                                     }} // hide the reply modal
                                     parentComment={this.state.selectedComment}
-                                    onLikeOrDisikeParentComment={this.likeComment}
+                                    onLikeOrDisikeParentComment={
+                                        this.likeComment
+                                    }
                                     onAddReply={this.fetchComments}
                                     onDeleteReply={this.fetchComments()}
                                     onDeleteComment={this.deleteComment}
@@ -2551,11 +2553,15 @@ export default class VideoPlayer extends React.Component {
                         coverScreen={false}
                         hasBackdrop={true}
                         transparent={true}
-                        onBackdropPress={() => this.setState({showMakeReply: false})}
+                        onBackdropPress={() =>
+                            this.setState({showMakeReply: false})
+                        }
                     >
                         <TouchableOpacity
                             style={{flex: 1}}
-                            onPress={() => this.setState({showMakeReply: false})}
+                            onPress={() =>
+                                this.setState({showMakeReply: false})
+                            }
                         >
                             <KeyboardAvoidingView
                                 key={'makeComment'}
@@ -2591,19 +2597,29 @@ export default class VideoPlayer extends React.Component {
                                     />
                                     <TextInput
                                         multiline={true}
-                                        ref={ref => {this.textInputRef2 = ref}}
+                                        ref={ref => {
+                                            this.textInputRef2 = ref;
+                                        }}
                                         style={{
                                             fontFamily: 'OpenSans-Regular',
                                             fontSize: 14 * factorRatio,
                                             width: '75%',
-                                            backgroundColor: colors.mainBackground,
+                                            backgroundColor:
+                                                colors.mainBackground,
                                             color: colors.secondBackground,
-                                            paddingVertical: 10 * factorVertical,
+                                            paddingVertical:
+                                                10 * factorVertical,
                                         }}
-                                        onChangeText={reply => this.setState({reply})}
-                                        onBlur={() => this.textInputRef2.clear()}
+                                        onChangeText={reply =>
+                                            this.setState({reply})
+                                        }
+                                        onBlur={() =>
+                                            this.textInputRef2.clear()
+                                        }
                                         placeholder={'Add a comment'}
-                                        placeholderTextColor={colors.secondBackground}
+                                        placeholderTextColor={
+                                            colors.secondBackground
+                                        }
                                     />
 
                                     <View style={styles.centerContent}>
@@ -2614,7 +2630,9 @@ export default class VideoPlayer extends React.Component {
                                                         ? 10 * factorVertical
                                                         : 0,
                                             }}
-                                            onPress={() => this.setState({makeReply: true})}
+                                            onPress={() =>
+                                                this.setState({makeReply: true})
+                                            }
                                         >
                                             <IonIcon
                                                 name={'md-send'}
@@ -2627,7 +2645,7 @@ export default class VideoPlayer extends React.Component {
                             </KeyboardAvoidingView>
                         </TouchableOpacity>
                     </Modal>
-                )}                
+                )}
             </View>
         );
     }
