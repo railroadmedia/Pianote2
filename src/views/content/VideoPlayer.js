@@ -9,6 +9,7 @@ import {
     Animated,
     StatusBar,
     TextInput,
+    Keyboard,
     TouchableOpacity,
     ActivityIndicator,
     RefreshControl,
@@ -78,18 +79,16 @@ export default class VideoPlayer extends React.Component {
             showMakeComment: false,
             showInfo: false,
             showAssignmentComplete: false,
+            showMakeReply: false,
             showOverviewComplete: false,
             showQualitySettings: false,
             showLessonComplete: false,
             showResDownload: false,
             showVideo: true,
             selectedComment: null,
-
             makeCommentVertDelta: new Animated.Value(0.01),
-
             comments: [],
             outComments: false,
-
             relatedLessons: [],
             likes: 0,
             videoId: 0,
@@ -110,6 +109,8 @@ export default class VideoPlayer extends React.Component {
             description: '',
             progress: null,
             publishedOn: '',
+            reply: '',
+            makeReply: false, 
         };
     }
 
@@ -332,6 +333,11 @@ export default class VideoPlayer extends React.Component {
             },
         );
     };
+
+    showMakeReply = async () => {
+        await this.setState({showMakeReply: true})
+        await this.textInputRef2.focus()
+    }
 
     createResourcesArr() {
         const {resources} = this.state;
@@ -2104,15 +2110,28 @@ export default class VideoPlayer extends React.Component {
                                 hasBackdrop={false}
                             >
                                 <Replies
+                                    makeReply={this.state.makeReply} // when changed to true, submit the reply
+                                    replySubmitted={() => {
+                                        this.loadMoreComments(),
+                                        this.setState({makeReply: false})
+                                    }} // call back to identify when submitted
+                                    reply={this.state.reply} // the reply written (it is written on VideoPlayer.js modal)
+                                    blurReply={() => this.textInputRef2.clear()} // clear the textinput 
+                                    showMakeReply={() => this.showMakeReply()} // callback to open a modal to make a reply from reply modal
+                                    hideMakeReply={() => {
+                                        this.setState({showMakeReply: false}),
+                                        this.textInputRef2?.clear(),
+                                        Keyboard.dismiss()
+                                    }} // hide the make reply but keep replies open
                                     hideReplies={() => {
-                                        this.setState({showReplies: false});
-                                    }}
+                                        this.setState({showReplies: false}),
+                                        this.textInputRef2?.clear(),
+                                        Keyboard.dismiss()
+                                    }} // hide the reply modal
                                     parentComment={this.state.selectedComment}
-                                    onLikeOrDisikeParentComment={
-                                        this.likeComment
-                                    }
+                                    onLikeOrDisikeParentComment={this.likeComment}
                                     onAddReply={this.fetchComments}
-                                    onDeleteReply={this.fetchComments}
+                                    onDeleteReply={this.fetchComments()}
                                     onDeleteComment={this.deleteComment}
                                 />
                             </Modal>
@@ -2521,6 +2540,94 @@ export default class VideoPlayer extends React.Component {
                         </TouchableOpacity>
                     </Modal>
                 )}
+                {this.state.showMakeReply && (
+                    <Modal
+                        isVisible={this.state.showMakeReply}
+                        style={{margin: 0}}
+                        backdropColor={'transparent'}
+                        animation={'slideInUp'}
+                        animationInTiming={350}
+                        animationOutTiming={350}
+                        coverScreen={false}
+                        hasBackdrop={true}
+                        transparent={true}
+                        onBackdropPress={() => this.setState({showMakeReply: false})}
+                    >
+                        <TouchableOpacity
+                            style={{flex: 1}}
+                            onPress={() => this.setState({showMakeReply: false})}
+                        >
+                            <KeyboardAvoidingView
+                                key={'makeComment'}
+                                behavior={`${isiOS ? 'padding' : ''}`}
+                                style={{flex: 1, justifyContent: 'flex-end'}}
+                            >
+                                <View
+                                    style={{
+                                        background: 'red',
+                                        backgroundColor: colors.mainBackground,
+                                        flexDirection: 'row',
+                                        padding: 10,
+                                        alignItems: 'center',
+                                        borderTopWidth: 0.5 * factorRatio,
+                                        borderTopColor: colors.secondBackground,
+                                    }}
+                                >
+                                    <FastImage
+                                        style={{
+                                            height: 40 * factorHorizontal,
+                                            width: 40 * factorHorizontal,
+                                            borderRadius: 100,
+                                            marginRight: 15,
+                                        }}
+                                        source={{
+                                            uri:
+                                                this.state.profileImage ||
+                                                'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png',
+                                        }}
+                                        resizeMode={
+                                            FastImage.resizeMode.stretch
+                                        }
+                                    />
+                                    <TextInput
+                                        multiline={true}
+                                        ref={ref => {this.textInputRef2 = ref}}
+                                        style={{
+                                            fontFamily: 'OpenSans-Regular',
+                                            fontSize: 14 * factorRatio,
+                                            width: '75%',
+                                            backgroundColor: colors.mainBackground,
+                                            color: colors.secondBackground,
+                                            paddingVertical: 10 * factorVertical,
+                                        }}
+                                        onChangeText={reply => this.setState({reply})}
+                                        onBlur={() => this.textInputRef2.clear()}
+                                        placeholder={'Add a comment'}
+                                        placeholderTextColor={colors.secondBackground}
+                                    />
+
+                                    <View style={styles.centerContent}>
+                                        <TouchableOpacity
+                                            style={{
+                                                marginBottom:
+                                                    Platform.OS == 'android'
+                                                        ? 10 * factorVertical
+                                                        : 0,
+                                            }}
+                                            onPress={() => this.setState({makeReply: true})}
+                                        >
+                                            <IonIcon
+                                                name={'md-send'}
+                                                size={25 * factorRatio}
+                                                color={colors.pianoteRed}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </KeyboardAvoidingView>
+                        </TouchableOpacity>
+                    </Modal>
+                )}                
             </View>
         );
     }

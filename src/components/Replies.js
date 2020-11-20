@@ -5,30 +5,20 @@ import React from 'react';
 import {
     View,
     Text,
-    ActivityIndicator,
-    ScrollView,
-    Keyboard,
-    Animated,
-    TextInput,
     TouchableOpacity,
     Platform,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
+import Loading from 'Pianote2/src/components/Loading';
 import FastImage from 'react-native-fast-image';
 import {withNavigation} from 'react-navigation';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import commentsService from '../services/comments.service';
 import {NetworkContext} from '../context/NetworkProvider';
-
-var showListener =
-    Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-var hideListener =
-    Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
 class Replies extends React.Component {
     static navigationOptions = {header: null};
@@ -37,71 +27,43 @@ class Replies extends React.Component {
         super(props);
         this.state = {
             replies: props.parentComment.replies, // video's comments
+            isLoading: false,
             profileImage: '',
             parentComment: props.parentComment,
-            makeCommentVertDelta: new Animated.Value(0.01),
             showMakeComment: false,
-            comment: '',
+            reply: '', 
             userId: null,
         };
     }
+
+    UNSAFE_componentWillReceiveProps = async props => {
+        if(props.reply !== this.state.reply) {
+            this.setState({comment: props.reply})
+        } 
+        if(props.makeReply && !this.state.isLoading) {
+            this.makeReply()
+        }
+    };
 
     componentDidMount = async () => {
         // get profile image
         let profileImage = await AsyncStorage.getItem('profileURI');
         let userId = JSON.parse(await AsyncStorage.getItem('userId'));
-
         this.setState({profileImage, userId});
-
-        this.keyboardDidShowListener = Keyboard.addListener(
-            showListener,
-            this._keyboardDidShow,
-        );
-        this.keyboardDidHideListener = Keyboard.addListener(
-            hideListener,
-            this._keyboardDidHide,
-        );
-    };
-
-    componentWillUnmount() {
-        this.keyboardDidShowListener?.remove();
-        this.keyboardDidHideListener?.remove();
-    }
-
-    _keyboardDidShow = async e => {
-        const {height, screenX, screenY, width} = e.endCoordinates;
-
-        if (Platform.OS == 'ios') {
-            Animated.timing(this.state.makeCommentVertDelta, {
-                toValue: height,
-                duration: 275,
-            }).start();
-        } else {
-            Animated.timing(this.state.makeCommentVertDelta, {
-                toValue: height,
-                duration: 0,
-            }).start();
-        }
-    };
-
-    _keyboardDidHide = async () => {
-        this.setState({showMakeComment: false});
-        Animated.timing(this.state.makeCommentVertDelta, {
-            toValue: -250,
-            duration: 275,
-        }).start();
     };
 
     makeReply = async () => {
-        if (!this.context.isConnected) {
-            return this.context.showNoConnectionAlert();
-        }
+        this.setState({isLoading: true}) // ensure same comment cant be sent twice
+        if (!this.context.isConnected) {return this.context.showNoConnectionAlert();}
+
         if (this.state.comment.length > 0) {
             let encodedReply = encodeURIComponent(this.state.comment);
+            
             let res = await commentsService.addReplyToComment(
                 encodedReply,
                 this.state.parentComment.id,
             );
+            
             let replies = [...this.state.replies];
             let parentComment = {...this.state.parentComment};
             replies.push(res.data[0]);
@@ -113,8 +75,9 @@ class Replies extends React.Component {
                 parentComment,
             });
         }
-
-        this.textInputRef.blur();
+        this.props.replySubmitted(); // tell parent reply has been made
+        this.props.hideMakeReply() // dismiss keyboard, clear text input, hide make modal
+        this.setState({isLoading: false}) 
     };
 
     deleteReply = id => {
@@ -129,7 +92,6 @@ class Replies extends React.Component {
             parentComment,
         });
         commentsService.deleteComment(id);
-        this.props.onDeleteReply();
     };
 
     mapReplies() {
@@ -347,6 +309,10 @@ class Replies extends React.Component {
             this.setState({replies});
         }
     };
+
+    showMakeReply = async () => {
+        await this.setState({showMakeComment: true})
+    }
 
     render = () => {
         return (
@@ -749,20 +715,10 @@ class Replies extends React.Component {
                                     />
                                     <View style={{flex: 1}} />
                                 </View>
-                                <View
-                                    style={{width: 12.5 * factorHorizontal}}
-                                />
+                                <View style={{width: 12.5 * factorHorizontal}}/>
                                 <TouchableOpacity
                                     key={'makeReply'}
-                                    onPress={() => {
-                                        this.setState({
-                                            showMakeComment: true,
-                                        });
-                                        setTimeout(
-                                            () => this.textInputRef.focus(),
-                                            100,
-                                        );
-                                    }}
+                                    onPress={() => this.props.showMakeReply()}
                                     style={{
                                         height: 85 * factorHorizontal,
                                         width: fullWidth,
@@ -785,103 +741,10 @@ class Replies extends React.Component {
                             </View>
                             <View style={{flex: 1}} />
                         </View>
-
                         <View>{this.mapReplies()}</View>
                     </View>
-                    <View
-                        style={{
-                            height: isNotch
-                                ? 90 * factorVertical
-                                : 60 * factorVertical,
-                        }}
-                    />
+                    <View style={{height: isNotch ? 90 * factorVertical : 60 * factorVertical}}/>
                 </KeyboardAwareScrollView>
-                {this.state.showMakeComment && (
-                    <Animated.View
-                        key={'makeComment'}
-                        style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            zIndex: 10,
-                            minHeight: fullHeight * 0.125,
-                            maxHeight: fullHeight * 0.175,
-                            width: fullWidth,
-                            backgroundColor: colors.mainBackground,
-                            flexDirection: 'row',
-                        }}
-                    >
-                        <View
-                            style={{
-                                flex: 1,
-                                borderTopWidth: 0.5 * factorRatio,
-                                borderTopColor: colors.secondBackground,
-                            }}
-                        />
-                        <View
-                            stlye={{
-                                borderTopWidth: 0.5 * factorRatio,
-                                borderTopColor: colors.secondBackground,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    height: 10 * factorVertical,
-                                    borderTopWidth: 0.5 * factorRatio,
-                                    borderTopColor: colors.secondBackground,
-                                }}
-                            />
-                            <TextInput
-                                multiline={true}
-                                ref={ref => {
-                                    this.textInputRef = ref;
-                                }}
-                                style={{
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 14 * factorRatio,
-                                    width: fullWidth * 0.6,
-                                    backgroundColor: colors.mainBackground,
-                                    color: colors.secondBackground,
-                                }}
-                                onSubmitEditing={() => {
-                                    this.makeReply(), this.textInputRef.clear();
-                                }}
-                                returnKeyType={'go'}
-                                onChangeText={comment =>
-                                    this.setState({comment})
-                                }
-                                onBlur={() => this.textInputRef.clear()}
-                                placeholder={'Add a reply'}
-                                placeholderTextColor={colors.secondBackground}
-                            />
-                            <View style={{height: 10 * factorVertical}} />
-                        </View>
-                        <View
-                            style={[
-                                styles.centerContent,
-                                {
-                                    flex: 1,
-                                    borderTopWidth: 0.5 * factorRatio,
-                                    borderTopColor: colors.secondBackground,
-                                },
-                            ]}
-                        >
-                            <View style={{flex: 1}} />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.makeReply(), this.textInputRef.clear();
-                                }}
-                            >
-                                <IonIcon
-                                    name={'md-send'}
-                                    size={25 * factorRatio}
-                                    color={colors.pianoteRed}
-                                />
-                            </TouchableOpacity>
-                            <View style={{flex: 0.2}} />
-                        </View>
-                    </Animated.View>
-                )}
             </View>
         );
     };
