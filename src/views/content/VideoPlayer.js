@@ -114,7 +114,6 @@ export default class VideoPlayer extends React.Component {
 
   componentDidMount = async () => {
     // get profile image
-
     this.limit = 10;
     let storage = await Promise.all([
       AsyncStorage.getItem('userId'),
@@ -298,7 +297,7 @@ export default class VideoPlayer extends React.Component {
               })
             : undefined
       },
-      () => {
+      async () => {
         if (this.state.resources) this.createResourcesArr();
         if (!this.state.video_playback_endpoints) {
           this.alert.toggle(
@@ -312,9 +311,10 @@ export default class VideoPlayer extends React.Component {
             this.setState({ selectedComment: comment })
           );
         else if (commentId) {
-          const selectedComment = this.state.comments?.find(
-            f => f.id == commentId
-          );
+          const comments = (
+            await commentsService.getComments(this.state.id, 'Mine')
+          ).data;
+          const selectedComment = comments?.find(f => f.id == commentId);
           if (selectedComment)
             this.replies.toggle(() => this.setState({ selectedComment }));
         }
@@ -808,13 +808,6 @@ export default class VideoPlayer extends React.Component {
           progress: res.parent[0].progress_percent
         });
       }
-    }
-  }
-
-  async onStart() {
-    if (!this.state.isStarted) {
-      let res = await markStarted(this.state.id);
-      this.setState({ isStarted: true });
     }
   }
 

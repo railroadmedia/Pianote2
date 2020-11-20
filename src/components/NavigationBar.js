@@ -30,7 +30,7 @@ class NavigationBar extends React.Component {
   componentDidMount = async () => {
     let profileImage = await AsyncStorage.getItem('profileURI');
     this.setState({
-      profileImage: profileImage !== null ? profileImage : '',
+      profileImage: profileImage || '',
       onMain:
         this.props.currentPage == 'LESSONS' ||
         this.props.currentPage == 'SEARCH' ||

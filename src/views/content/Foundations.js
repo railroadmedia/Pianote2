@@ -66,7 +66,7 @@ export default class Foundations extends React.Component {
 
   async componentDidMount() {
     let profileImage = await AsyncStorage.getItem('profileURI');
-    if (profileImage !== null) {
+    if (profileImage) {
       this.setState({ profileImage });
     }
 

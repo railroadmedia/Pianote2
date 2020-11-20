@@ -64,9 +64,9 @@ export default class Search extends React.Component {
   async componentDidMount() {
     // get recent searches from memory
     let recentSearchResults = await AsyncStorage.getItem('recentSearches');
-    if (recentSearchResults !== null) {
+    if (recentSearchResults) {
       recentSearchResults = await JSON.parse(recentSearchResults);
-      await this.setState({ recentSearchResults });
+      this.setState({ recentSearchResults });
     }
   }
 
@@ -151,7 +151,7 @@ export default class Search extends React.Component {
       var isNewTerm = true;
 
       if (this.state.searchResults == 0) {
-        await this.setState({ isLoadingAll: true });
+        this.setState({ isLoadingAll: true });
       }
 
       for (i in this.state.recentSearchResults) {
@@ -171,7 +171,7 @@ export default class Search extends React.Component {
           'recentSearches',
           JSON.stringify(this.state.recentSearchResults)
         );
-        await this.setState({
+        this.setState({
           recentSearchResults: this.state.recentSearchResults
         });
       }
@@ -279,41 +279,44 @@ export default class Search extends React.Component {
   };
 
   async clearRecent() {
-    await this.setState({ recentSearchResults: [] });
+    this.setState({ recentSearchResults: [] });
     await AsyncStorage.setItem(
       'recentSearches',
       JSON.stringify(this.state.recentSearchResults)
     );
   }
 
-  clickSearchRecent = async searchTerm => {
-    await this.setState({
-      searchTerm,
-      showCancel: true,
-      searchResults: []
-    });
-    await this.search();
+  clickSearchRecent = searchTerm => {
+    this.setState(
+      {
+        searchTerm,
+        showCancel: true,
+        searchResults: []
+      },
+      () => this.search()
+    );
   };
 
-  getVideos = async () => {
+  getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      await this.setState({ page: this.state.page + 1 });
-      this.search();
+      this.setState({ page: this.state.page + 1 }, () => this.search());
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      await this.setState({
-        page: this.state.page + 1,
-        isPaging: true
-      }),
-        await this.search();
+      this.setState(
+        {
+          page: this.state.page + 1,
+          isPaging: true
+        },
+        () => this.search()
+      );
     }
   };
 
@@ -326,29 +329,30 @@ export default class Search extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
-    await this.setState({
-      searchResults: [],
-      outVideos: false,
-      page: 1,
-      filters:
-        filters.type == 0 &&
-        filters.instructors.length == 0 &&
-        filters.level.length == 0 &&
-        filters.progress.length == 0 &&
-        filters.topics.length == 0
-          ? {
-              displayTopics: [],
-              level: [],
-              topics: [],
-              progress: [],
-              instructors: []
-            }
-          : filters
-    });
-
-    this.search();
+    this.setState(
+      {
+        searchResults: [],
+        outVideos: false,
+        page: 1,
+        filters:
+          filters.type == 0 &&
+          filters.instructors.length == 0 &&
+          filters.level.length == 0 &&
+          filters.progress.length == 0 &&
+          filters.topics.length == 0
+            ? {
+                displayTopics: [],
+                level: [],
+                topics: [],
+                progress: [],
+                instructors: []
+              }
+            : filters
+      },
+      () => this.search()
+    );
   };
 
   render() {

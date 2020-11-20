@@ -67,22 +67,22 @@ class VerticalVideoList extends React.Component {
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
-  UNSAFE_componentWillReceiveProps = async props => {
+  UNSAFE_componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
       if (!this.state.isLoading) {
-        await this.setState({ isPaging: props.isPaging });
+        this.setState({ isPaging: props.isPaging });
       }
     }
     if (props.outVideos !== this.state.outVideos) {
-      await this.setState({ outVideos: props.outVideos });
+      this.setState({ outVideos: props.outVideos });
     }
     if (props.isLoading !== this.state.isLoading) {
-      await this.setState({
+      this.setState({
         isLoading: props.isLoading,
         items: [...this.state.items, ...props.items]
       });
     } else if (props.items !== this.state.items) {
-      await this.setState({
+      this.setState({
         items: props.items
       });
     }
@@ -108,7 +108,7 @@ class VerticalVideoList extends React.Component {
     );
   };
 
-  addToMyList = async contentID => {
+  addToMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -121,7 +121,7 @@ class VerticalVideoList extends React.Component {
     this.setState({ items: this.state.items });
   };
 
-  removeFromMyList = async contentID => {
+  removeFromMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -323,7 +323,7 @@ class VerticalVideoList extends React.Component {
           }}
           onPress={() => this.navigate(row, index)}
         >
-          {(index >= 0 || this.props.showNextVideo == false) && (
+          {(index >= 0 || !this.props.showNextVideo) && (
             <View
               style={{
                 height: this.props.containerHeight,
@@ -676,7 +676,7 @@ class VerticalVideoList extends React.Component {
               )}
             </View>
           )}
-          {index == 0 && this.props.showNextVideo == true && (
+          {index == 0 && this.props.showNextVideo && (
             <View
               style={{
                 height:

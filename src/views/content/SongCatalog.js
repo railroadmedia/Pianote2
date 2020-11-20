@@ -48,10 +48,10 @@ export default class SongCatalog extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
     this.getProgressSongs();
     this.getAllSongs();
-  };
+  }
 
   getAllSongs = async () => {
     if (!this.context.isConnected) {
@@ -158,7 +158,7 @@ export default class SongCatalog extends React.Component {
     });
   };
 
-  getDuration = async newContent => {
+  getDuration = newContent => {
     if (newContent.post.fields[0].key == 'video') {
       return newContent.post.fields[0].value.fields[1].value;
     } else if (newContent.post.fields[1].key == 'video') {
@@ -168,37 +168,38 @@ export default class SongCatalog extends React.Component {
     }
   };
 
-  changeSort = async currentSort => {
-    await this.setState({
-      allSongs: [],
-      currentSort,
-      outVideos: false,
-      isPaging: false,
-      page: 1
-    });
-
-    await this.getAllSongs();
+  changeSort = currentSort => {
+    this.setState(
+      {
+        allSongs: [],
+        currentSort,
+        outVideos: false,
+        isPaging: false,
+        page: 1
+      },
+      () => this.getAllSongs()
+    );
   };
 
-  getVideos = async () => {
+  getVideos = () => {
     if (!this.state.outVideos) {
-      await this.setState({ page: this.state.page + 1 });
-      this.getAllSongs();
+      this.setState({ page: this.state.page + 1 }, () => this.getAllSongs());
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      await this.setState({
-        page: this.state.page + 1,
-        isPaging: true
-      });
-
-      await this.getAllSongs();
+      this.setState(
+        {
+          page: this.state.page + 1,
+          isPaging: true
+        },
+        () => this.getAllSongs()
+      );
     }
   };
 
@@ -210,28 +211,29 @@ export default class SongCatalog extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
-    await this.setState({
-      allSongs: [],
-      outVideos: false,
-      page: 1,
-      filters:
-        filters.instructors.length == 0 &&
-        filters.level.length == 0 &&
-        filters.progress.length == 0 &&
-        filters.topics.length == 0
-          ? {
-              displayTopics: [],
-              level: [],
-              topics: [],
-              progress: [],
-              instructors: []
-            }
-          : filters
-    });
-
-    this.getAllSongs();
+    this.setState(
+      {
+        allSongs: [],
+        outVideos: false,
+        page: 1,
+        filters:
+          filters.instructors.length == 0 &&
+          filters.level.length == 0 &&
+          filters.progress.length == 0 &&
+          filters.topics.length == 0
+            ? {
+                displayTopics: [],
+                level: [],
+                topics: [],
+                progress: [],
+                instructors: []
+              }
+            : filters
+      },
+      () => this.getAllSongs()
+    );
   };
 
   render() {

@@ -215,7 +215,7 @@ export default class CreateAccount3 extends React.Component {
       // if there is profile image upload it
       let url;
       console.log(data);
-      if (data !== null) {
+      if (data) {
         try {
           let response = await fetch(
             `${commonService.rootUrl}/api/avatar/upload`,

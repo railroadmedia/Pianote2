@@ -112,16 +112,15 @@ export default class PathOverview extends React.Component {
     });
   };
 
-  addToMyList = async () => {
+  addToMyList = () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
     this.setState({ isAddedToList: !this.state.isAddedToList });
-    let res;
     if (this.state.isAddedToList) {
-      res = await removeFromMyList(this.state.data.id);
+      removeFromMyList(this.state.data.id);
     } else {
-      res = await addToMyList(this.state.data.id);
+      addToMyList(this.state.data.id);
     }
   };
 

@@ -68,7 +68,7 @@ export default class Lessons extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     AsyncStorage.multiGet([
       'totalXP',
       'rank',
@@ -243,7 +243,7 @@ export default class Lessons extends React.Component {
     );
   };
 
-  filterResults = async () => {
+  filterResults = () => {
     this.props.navigation.navigate('FILTERS', {
       filters: this.state.filters,
       type: 'LESSONS',
@@ -293,38 +293,40 @@ export default class Lessons extends React.Component {
     newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;
   };
 
-  changeSort = async currentSort => {
+  changeSort = currentSort => {
     // change sort
-    await this.setState({
-      currentSort,
-      outVideos: false,
-      isPaging: false,
-      allLessons: [],
-      page: 1
-    });
-
-    await this.getAllLessons();
+    this.setState(
+      {
+        currentSort,
+        outVideos: false,
+        isPaging: false,
+        allLessons: [],
+        page: 1
+      },
+      () => this.getAllLessons()
+    );
   };
 
-  getVideos = async () => {
+  getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      await this.setState({ page: this.state.page + 1 });
-      this.getAllLessons();
+      this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      await this.setState({
-        page: this.state.page + 1,
-        isPaging: true
-      }),
-        await this.getAllLessons();
+      this.setState(
+        {
+          page: this.state.page + 1,
+          isPaging: true
+        },
+        () => this.getAllLessons()
+      );
     }
   };
 
@@ -337,28 +339,29 @@ export default class Lessons extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
-    await this.setState({
-      allLessons: [],
-      outVideos: false,
-      page: 1,
-      filters:
-        filters.instructors.length == 0 &&
-        filters.level.length == 0 &&
-        filters.progress.length == 0 &&
-        filters.topics.length == 0
-          ? {
-              displayTopics: [],
-              level: [],
-              topics: [],
-              progress: [],
-              instructors: []
-            }
-          : filters
-    });
-
-    this.getAllLessons();
+    this.setState(
+      {
+        allLessons: [],
+        outVideos: false,
+        page: 1,
+        filters:
+          filters.instructors.length == 0 &&
+          filters.level.length == 0 &&
+          filters.progress.length == 0 &&
+          filters.topics.length == 0
+            ? {
+                displayTopics: [],
+                level: [],
+                topics: [],
+                progress: [],
+                instructors: []
+              }
+            : filters
+      },
+      () => this.getAllLessons()
+    );
   };
 
   render() {

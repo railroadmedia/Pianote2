@@ -1,5 +1,5 @@
 export default {
-  rootUrl: 'https://staging.pianote.com',
+  rootUrl: 'https://www.pianote.com',
   //'https://www.pianote.com',
   tryCall: async function (url, method, body) {
     try {

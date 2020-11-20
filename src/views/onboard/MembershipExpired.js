@@ -22,7 +22,7 @@ export default class MembershipExpired extends React.Component {
           style={{
             position: 'absolute',
             top:
-              (Platform.OS === 'ios' && fullHeight > 811) || onTablet == true
+              (Platform.OS === 'ios' && fullHeight > 811) || onTablet
                 ? fullHeight * 0.03
                 : fullHeight * 0.02,
             zIndex: 2,

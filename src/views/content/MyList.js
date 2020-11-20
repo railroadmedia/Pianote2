@@ -51,13 +51,12 @@ export default class MyList extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
     this.getMyList();
-  };
+  }
 
   getMyList = async () => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    console.log(this.state.filters);
     let response = await getMyListContent(
       this.state.page,
       this.state.filters,
@@ -109,7 +108,7 @@ export default class MyList extends React.Component {
     });
   };
 
-  removeFromMyList = async contentID => {
+  removeFromMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -148,10 +147,7 @@ export default class MyList extends React.Component {
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      this.setState({
-        isPaging: true
-      });
-      await this.getMyList();
+      this.setState({ isPaging: true }, () => this.getMyList());
     }
   };
 

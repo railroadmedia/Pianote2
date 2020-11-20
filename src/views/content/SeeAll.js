@@ -60,7 +60,7 @@ export default class SeeAll extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.getAllLessons();
   }
 
@@ -190,32 +190,14 @@ export default class SeeAll extends React.Component {
     }
   };
 
-  getDuration = newContent => {
-    var data = 0;
-    try {
-      for (i in newContent.post.current_lesson.fields) {
-        if (newContent.post.current_lesson.fields[i].key == 'video') {
-          var data = newContent.post.current_lesson.fields[i].value.fields;
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].key == 'length_in_seconds') {
-              return data[i].value;
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  getVideos = async () => {
+  getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
       this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
     }
   };
 
-  handleScroll = async event => {
+  handleScroll = event => {
     if (
       isCloseToBottom(event) &&
       !this.state.isPaging &&
@@ -240,7 +222,7 @@ export default class SeeAll extends React.Component {
     });
   };
 
-  changeFilters = async filters => {
+  changeFilters = filters => {
     // after leaving filter page. set filters here
     this.setState(
       {

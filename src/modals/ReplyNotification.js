@@ -76,7 +76,7 @@ class ReplyNotification extends React.Component {
     let userData = await getUserData();
     let statusChange = null;
 
-    await this.setState({
+    this.setState({
       notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
       notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
       notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
@@ -116,7 +116,7 @@ class ReplyNotification extends React.Component {
       };
     }
 
-    await this.setState({ statusChange });
+    this.setState({ statusChange });
   };
 
   render = () => {
