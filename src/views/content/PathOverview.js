@@ -636,7 +636,7 @@ export default class PathOverview extends React.Component {
                   <Download_V2
                     entity={{
                       id: this.state.data.id,
-                      overview: contentService.getContent(
+                      content: contentService.getContent(
                         this.state.data.id,
                         true
                       )

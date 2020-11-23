@@ -974,7 +974,7 @@ export default class VideoPlayer extends React.Component {
               >
                 <View style={{ aspectRatio: 16 / 9, justifyContent: 'center' }}>
                   <TouchableOpacity
-                    onPress={this.props.navigation.goBack}
+                    onPress={() => this.props.navigation.goBack()}
                     style={{
                       top: 0,
                       left: 0,
@@ -1252,7 +1252,7 @@ export default class VideoPlayer extends React.Component {
                         entity={{
                           id,
                           comments,
-                          lesson: this.props.navigation.state.params.url
+                          content: this.props.navigation.state.params.url
                             ? foundationsService.getUnitLesson(this.state.url)
                             : contentService.getContent(this.state.id)
                         }}

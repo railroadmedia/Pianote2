@@ -523,7 +523,7 @@ export default class SinglePack extends React.Component {
                     <Download_V2
                       entity={{
                         id: this.state.id,
-                        overview: packsService.getPack(this.state.url, true)
+                        content: packsService.getPack(this.state.url, true)
                       }}
                       styles={{
                         touchable: {},

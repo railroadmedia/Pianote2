@@ -360,7 +360,7 @@ class ContentModal extends React.Component {
                 <Download_V2
                   entity={{
                     id,
-                    lesson: contentService.getContent(id)
+                    content: contentService.getContent(id, true)
                   }}
                   styles={{
                     touchable: { flex: 1 },
