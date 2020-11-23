@@ -12,8 +12,9 @@ import {
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+
+import NavigationBar from '../../components/NavigationBar.js';
+import VerticalVideoList from '../../components/VerticalVideoList.js';
 import { getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
@@ -91,24 +92,10 @@ export default class StudentFocusShow extends React.Component {
         artist: this.getArtist(newContent[i]),
         thumbnail: newContent[i].getData('thumbnail_url'),
         type: newContent[i].post.type,
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
         id: newContent[i].id,
-        like_count: newContent[i].likeCount,
-        duration: this.getDuration(newContent[i]),
-        isLiked: newContent[i].post.is_liked_by_current_user,
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
         progress_percent: newContent[i].post.progress_percent
       });
     }
@@ -211,17 +198,6 @@ export default class StudentFocusShow extends React.Component {
       },
       () => this.getAllLessons()
     );
-  };
-
-  getDuration = async newContent => {
-    // iterator for get content call
-    if (newContent.post.fields[0].key == 'video') {
-      return newContent.post.fields[0].value.fields[1].value;
-    } else if (newContent.post.fields[1].key == 'video') {
-      return newContent.post.fields[1].value.fields[1].value;
-    } else if (newContent.post.fields[2].key == 'video') {
-      return newContent.post.fields[2].value.fields[1].value;
-    }
   };
 
   refresh = () => {

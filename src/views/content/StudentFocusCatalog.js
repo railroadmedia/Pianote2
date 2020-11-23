@@ -2,17 +2,32 @@
  * StudentFocusCatalog
  */
 import React from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+
 import { getStartedContent } from '../../services/GetContent';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js';
+import NavigationBar from '../../components/NavigationBar.js';
+import NavMenuHeaders from '../../components/NavMenuHeaders.js';
+import NavigationMenu from '../../components/NavigationMenu.js';
+import HorizontalVideoList from '../../components/HorizontalVideoList.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+const studentFocus = [
+  {
+    image: require('Pianote2/src/assets/img/imgs/questionAnswer.jpg'),
+    type: 'Q&A'
+  },
+  {
+    image: require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
+    type: 'Bootcamps'
+  },
+  {
+    image: require('Pianote2/src/assets/img/imgs/studentReview.jpg'),
+    type: 'Student Review'
+  }
+];
 export default class StudentFocusCatalog extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -30,7 +45,7 @@ export default class StudentFocusCatalog extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let response = await getStartedContent(
-      'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps'
+      'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
     );
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
@@ -43,24 +58,10 @@ export default class StudentFocusCatalog extends React.Component {
         artist: newContent[i].getField('instructor').fields[0].value,
         thumbnail: newContent[i].getData('thumbnail_url'),
         type: newContent[i].post.type,
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
         id: newContent[i].id,
-        like_count: newContent[i].likeCount,
-        duration: this.getDuration(newContent[i]),
-        isLiked: newContent[i].post.is_liked_by_current_user,
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
         progress_percent: newContent[i].post.progress_percent
       });
     }
@@ -75,221 +76,106 @@ export default class StudentFocusCatalog extends React.Component {
     });
   };
 
-  getDuration = async newContent => {
-    if (newContent.post.fields[0].key == 'video') {
-      return newContent.post.fields[0].value.fields[1].value;
-    } else if (newContent.post.fields[1].key == 'video') {
-      return newContent.post.fields[1].value.fields[1].value;
-    } else if (newContent.post.fields[2].key == 'video') {
-      return newContent.post.fields[2].value.fields[1].value;
-    }
+  renderFlatListItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        key={index}
+        onPress={() => {
+          this.props.navigation.navigate('STUDENTFOCUSSHOW', {
+            pack: item.type
+          });
+        }}
+        style={{
+          flex:
+            studentFocus.length % 2 === 1 && studentFocus.length - 1 === index
+              ? 0.5
+              : 1,
+          paddingRight: index % 2 === 0 ? 10 : 0,
+          paddingTop: 10
+        }}
+      >
+        <FastImage
+          style={{
+            aspectRatio: 1,
+            borderRadius: 10 * factorRatio
+          }}
+          source={item.image}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+      </TouchableOpacity>
+    );
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            width: fullWidth,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders
-            currentPage={'LESSONS'}
-            parentPage={'STUDENT FOCUS'}
-          />
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentInsetAdjustmentBehavior={'never'}
+        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'STUDENT FOCUS'} />
+
+        <FlatList
           style={{
             flex: 1,
-            backgroundColor: colors.mainBackground
+            backgroundColor: colors.mainBackground,
+            paddingHorizontal: 10
           }}
-        >
-          <View
-            key={'header'}
-            style={{
-              height: fullHeight * 0.1,
-              backgroundColor: colors.thirdBackground
-            }}
-          />
-          <View
-            key={'backgroundColoring'}
-            style={{
-              backgroundColor: colors.thirdBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              elevation: 10
-            }}
-          />
-          <View style={{ height: 20 * factorVertical }} />
-          <Text
-            style={{
-              paddingLeft: 12 * factorHorizontal,
-              fontSize: 30 * factorRatio,
-              color: 'white',
-              fontFamily: 'OpenSans-ExtraBold'
-            }}
-          >
-            Student Focus
-          </Text>
-          <View style={{ height: 15 * factorVertical }} />
-          {this.state.started && (
-            <View
-              key={'continueCourses'}
-              style={{
-                paddingLeft: fullWidth * 0.035,
-                backgroundColor: colors.mainBackground
-              }}
-            >
-              <HorizontalVideoList
-                Title={'CONTINUE'}
-                seeAll={() =>
-                  this.props.navigation.navigate('SEEALL', {
-                    title: 'Continue',
-                    parent: 'Student Focus'
-                  })
-                }
-                hideSeeAll={true}
-                showArtist={true}
-                isLoading={this.state.isLoadingProgress}
-                showType={true}
-                items={this.state.progressStudentFocus}
-                itemWidth={
-                  isNotch
-                    ? fullWidth * 0.6
-                    : onTablet
-                    ? fullWidth * 0.425
-                    : fullWidth * 0.55
-                }
-                itemHeight={isNotch ? fullHeight * 0.155 : fullHeight * 0.175}
-              />
-            </View>
+          numColumns={2}
+          removeClippedSubviews={true}
+          keyExtractor={item => item.id}
+          data={studentFocus}
+          keyboardShouldPersistTaps='handled'
+          ListHeaderComponent={() => (
+            <>
+              <Text
+                style={{
+                  paddingLeft: 12 * factorHorizontal,
+                  paddingTop: 20 * factorVertical,
+                  paddingBottom: 10 * factorVertical,
+                  fontSize: 30 * factorRatio,
+                  color: 'white',
+                  justifyContent: 'flex-start',
+                  fontFamily: 'OpenSans-ExtraBold'
+                }}
+              >
+                Student Focus
+              </Text>
+
+              {this.state.started && (
+                <View
+                  key={'continueCourses'}
+                  style={{
+                    paddingLeft: fullWidth * 0.035,
+                    backgroundColor: colors.mainBackground
+                  }}
+                >
+                  <HorizontalVideoList
+                    Title={'CONTINUE'}
+                    seeAll={() =>
+                      this.props.navigation.navigate('SEEALL', {
+                        title: 'Continue',
+                        parent: 'Student Focus'
+                      })
+                    }
+                    hideSeeAll={true}
+                    showArtist={true}
+                    isLoading={this.state.isLoadingProgress}
+                    showType={true}
+                    items={this.state.progressStudentFocus}
+                    itemWidth={
+                      isNotch
+                        ? fullWidth * 0.6
+                        : onTablet
+                        ? fullWidth * 0.425
+                        : fullWidth * 0.55
+                    }
+                    itemHeight={
+                      isNotch ? fullHeight * 0.155 : fullHeight * 0.175
+                    }
+                  />
+                </View>
+              )}
+            </>
           )}
-          <View
-            style={{
-              height: 20 * factorVertical
-            }}
-          />
-          <View
-            key={'pack'}
-            style={{
-              height: fullWidth * 0.45 * 2 + fullWidth * 0.033,
-              width: fullWidth,
-              justifyContent: 'space-around',
-              alignContent: 'space-around'
-            }}
-          >
-            <View
-              key={'Q&A'}
-              style={{
-                borderRadius: 12.5 * factorRatio,
-                position: 'absolute',
-                top: 0,
-                right: fullWidth * 0.035,
-                height: fullWidth * 0.45,
-                width: fullWidth * 0.45
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate('STUDENTFOCUSSHOW', {
-                    pack: 'Q&A'
-                  });
-                }}
-                style={{
-                  height: fullWidth * 0.45,
-                  width: fullWidth * 0.45,
-                  zIndex: 10,
-                  elevation: 10
-                }}
-              >
-                <FastImage
-                  style={{
-                    flex: 1,
-                    borderRadius: 10 * factorRatio
-                  }}
-                  source={require('Pianote2/src/assets/img/imgs/questionAnswer.jpg')}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              key={'bootcamps'}
-              style={{
-                borderRadius: 12.5 * factorRatio,
-                position: 'absolute',
-                top: 0,
-                left: fullWidth * 0.035,
-                height: fullWidth * 0.45,
-                width: fullWidth * 0.45
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate('STUDENTFOCUSSHOW', {
-                    pack: 'Bootcamps'
-                  });
-                }}
-                style={{
-                  height: fullWidth * 0.45,
-                  width: fullWidth * 0.45
-                }}
-              >
-                <FastImage
-                  style={{
-                    flex: 1,
-                    borderRadius: 10 * factorRatio
-                  }}
-                  source={require('Pianote2/src/assets/img/imgs/bootcamps.jpg')}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              key={'studentReviews'}
-              style={{
-                borderRadius: 12.5 * factorRatio,
-                position: 'absolute',
-                bottom: 0,
-                left: fullWidth * 0.035,
-                height: fullWidth * 0.45,
-                width: fullWidth * 0.45
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate('STUDENTFOCUSSHOW', {
-                    pack: 'Student Review'
-                  });
-                }}
-                style={{
-                  height: fullWidth * 0.45,
-                  width: fullWidth * 0.45
-                }}
-              >
-                <FastImage
-                  style={{
-                    flex: 1,
-                    borderRadius: 10 * factorRatio
-                  }}
-                  source={require('Pianote2/src/assets/img/imgs/studentReview.jpg')}
-                  resizeMode={FastImage.resizeMode.cover}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{ height: 15 * factorVertical }} />
-        </ScrollView>
+          renderItem={this.renderFlatListItem}
+        />
 
         <NavigationBar currentPage={''} />
         <Modal

@@ -256,7 +256,10 @@ export default class VideoPlayer extends React.Component {
           content.post.type === 'song-part' && content.post.parent
             ? new ContentModel(content.post.parent).getField('artist')
             : content.getField('artist'),
-        instructor: content.getFieldMulti('instructor'),
+        instructor:
+          content.post.type === 'course-part' && content.post.parent
+            ? new ContentModel(content.post.parent).getFieldMulti('instructor')
+            : content.getFieldMulti('instructor'),
         isLoadingAll: false,
         publishedOn: content.publishedOn,
         relatedLessons: [...this.state.relatedLessons, ...rl],
@@ -954,25 +957,31 @@ export default class VideoPlayer extends React.Component {
 
   renderTagsDependingOnContentType = () => {
     let { artist, xp, type, publishedOn, instructor, style } = this.state;
-
     let releaseDate = this.transformDate(publishedOn);
     let releaseDateTag = releaseDate ? `${releaseDate} | ` : '';
 
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
+    let instructorTag = instructor
+      ? `${instructor
+          .map(i => i.fields.find(f => f.key === 'name').value)
+          .join(', ')
+          .toUpperCase()} | `
+      : '';
+
     switch (type) {
       case 'song-part':
         return artistTag + style + xpTag;
       case 'song':
         return artistTag + xpTag;
       case 'course-part':
-        return instructor + xpTag;
+        return instructorTag + xpTag;
       case 'student-focus':
-        return instructor + artistTag + xpTag;
+        return instructorTag + artistTag + xpTag;
       case 'pack':
         return releaseDateTag + xpTag;
       default:
-        return xpTag;
+        return instructorTag + xpTag;
     }
   };
 
