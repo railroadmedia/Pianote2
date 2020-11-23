@@ -165,7 +165,7 @@ export default class SinglePack extends React.Component {
         forceInset={{
           bottom: 'never'
         }}
-        style={styles.container}
+        style={[styles.container, { backgroundColor: colors.mainBackground }]}
       >
         {!this.state.isLoadingAll ? (
           <ScrollView
