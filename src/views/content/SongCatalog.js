@@ -2,7 +2,13 @@
  * SongCatalog
  */
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  RefreshControl,
+  ActivityIndicator
+} from 'react-native';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -28,12 +34,10 @@ export default class SongCatalog extends React.Component {
     super(props);
     this.state = {
       progressSongs: [],
-
       allSongs: [],
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      isLoadingAll: true,
       isPaging: false,
       filtering: false,
       filters: {
@@ -44,13 +48,51 @@ export default class SongCatalog extends React.Component {
         instructors: []
       },
       started: true,
-      isLoadingProgress: true
+      refreshing: true
     };
   }
 
   componentDidMount() {
-    this.getProgressSongs();
-    this.getAllSongs();
+    this.getContent();
+  }
+
+  async getContent() {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+
+    let content = await Promise.all([
+      getAllContent(
+        'song',
+        this.state.currentSort,
+        this.state.page,
+        this.state.filters
+      ),
+      getStartedContent('song')
+    ]);
+    console.log(content);
+    let allVideos = this.setData(
+      content[0].data.map(data => {
+        return new ContentModel(data);
+      })
+    );
+
+    let inprogressVideos = this.setData(
+      content[1].data.map(data => {
+        return new ContentModel(data);
+      })
+    );
+
+    this.setState({
+      allSongs: [...this.state.allSongs, ...allVideos],
+      outVideos:
+        allVideos.length == 0 || content[0].data.length < 20 ? true : false,
+      filtering: false,
+      isPaging: false,
+      progressSongs: [...this.state.progressSongs, ...inprogressVideos],
+      started: inprogressVideos.length !== 0,
+      refreshing: false
+    });
   }
 
   getAllSongs = async () => {
@@ -68,55 +110,18 @@ export default class SongCatalog extends React.Component {
       return new ContentModel(data);
     });
 
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('artist'),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].post.id,
-        currentLessonId: newContent[i].post?.song_part_id,
-        lesson_count: newContent[i].post.lesson_count,
-        like_count: newContent[i].post.like_count,
-        duration: this.getDuration(newContent[i]),
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
+    let items = this.setData(newContent);
 
     this.setState({
       allSongs: [...this.state.allSongs, ...items],
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
       isPaging: false,
-      isLoadingAll: false
+      refreshing: false
     });
   };
 
-  getProgressSongs = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    let response = await getStartedContent('song');
-    const newContent = response.data.map(data => {
-      return new ContentModel(data);
-    });
-
+  setData(newContent) {
     let items = [];
     for (let i in newContent) {
       items.push({
@@ -138,35 +143,15 @@ export default class SongCatalog extends React.Component {
         currentLessonId: newContent[i].post?.song_part_id,
         lesson_count: newContent[i].post.lesson_count,
         like_count: newContent[i].post.like_count,
-        duration: this.getDuration(newContent[i]),
         isLiked: newContent[i].post.is_liked_by_current_user,
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
         progress_percent: newContent[i].post.progress_percent
       });
     }
-
-    this.setState({
-      progressSongs: [...this.state.progressSongs, ...items],
-      started:
-        items.length == 0 && this.state.progressSongs.length == 0
-          ? false
-          : true,
-      isLoadingProgress: false
-    });
-  };
-
-  getDuration = newContent => {
-    if (newContent.post.fields[0].key == 'video') {
-      return newContent.post.fields[0].value.fields[1].value;
-    } else if (newContent.post.fields[1].key == 'video') {
-      return newContent.post.fields[1].value.fields[1].value;
-    } else if (newContent.post.fields[2].key == 'video') {
-      return newContent.post.fields[2].value.fields[1].value;
-    }
-  };
+    return items;
+  }
 
   changeSort = currentSort => {
     this.setState(
@@ -236,9 +221,23 @@ export default class SongCatalog extends React.Component {
     );
   };
 
+  refresh() {
+    this.setState(
+      {
+        refreshing: true,
+        inprogressVideos: [],
+        allVideos: [],
+        page: 1
+      },
+      () => this.getContent()
+    );
+  }
+
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[styles.container, { backgroundColor: colors.thirdBackground }]}
+      >
         <View
           style={{
             height: fullHeight * 0.1,
@@ -251,117 +250,131 @@ export default class SongCatalog extends React.Component {
         >
           <NavMenuHeaders currentPage={'LESSONS'} parentPage={'SONGS'} />
         </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentInsetAdjustmentBehavior={'never'}
-          scrollEventThrottle={400}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
-        >
-          <View
-            key={'header'}
+        {!this.state.refreshing ? (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentInsetAdjustmentBehavior={'never'}
+            scrollEventThrottle={400}
+            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.pianoteRed]}
+                refreshing={this.state.refreshing}
+                onRefresh={() => this.refresh()}
+              />
+            }
             style={{
-              height: fullHeight * 0.1,
-              backgroundColor: colors.thirdBackground
-            }}
-          />
-          <View
-            key={'backgroundColoring'}
-            style={{
-              backgroundColor: colors.thirdBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              elevation: 10
-            }}
-          />
-          <View style={{ height: 25 * factorVertical }} />
-          <Text
-            style={{
-              paddingLeft: 12 * factorHorizontal,
-              fontSize: 30 * factorRatio,
-              color: 'white',
-              fontFamily: 'OpenSans-ExtraBold'
+              flex: 1,
+              backgroundColor: colors.mainBackground
             }}
           >
-            Songs
-          </Text>
-          <View style={{ height: 15 * factorVertical }} />
-          {this.state.started && (
             <View
-              key={'continueCourses'}
+              key={'header'}
               style={{
-                minHeight: fullHeight * 0.225,
-                paddingLeft: fullWidth * 0.035,
-                backgroundColor: colors.mainBackground
+                height: fullHeight * 0.1,
+                backgroundColor: colors.thirdBackground
+              }}
+            />
+            <View
+              key={'backgroundColoring'}
+              style={{
+                backgroundColor: colors.thirdBackground,
+                position: 'absolute',
+                height: fullHeight,
+                top: -fullHeight,
+                left: 0,
+                right: 0,
+                zIndex: 10,
+                elevation: 10
+              }}
+            />
+            <View style={{ height: 25 * factorVertical }} />
+            <Text
+              style={{
+                paddingLeft: 12 * factorHorizontal,
+                fontSize: 30 * factorRatio,
+                color: 'white',
+                fontFamily: 'OpenSans-ExtraBold'
               }}
             >
-              <HorizontalVideoList
-                Title={'CONTINUE'}
-                isLoading={this.state.isLoadingProgress}
-                seeAll={() =>
-                  this.props.navigation.navigate('SEEALL', {
-                    title: 'Continue',
-                    parent: 'Songs'
-                  })
-                }
-                hideSeeAll={true}
-                showArtist={true}
-                items={this.state.progressSongs}
-                itemWidth={isNotch ? fullHeight * 0.175 : fullHeight * 0.2}
-                itemHeight={isNotch ? fullHeight * 0.175 : fullHeight * 0.2}
-              />
-            </View>
-          )}
-          <VerticalVideoList
-            items={this.state.allSongs}
-            isLoading={this.state.isLoadingAll}
-            title={'ALL SONGS'} // title for see all page
-            type={'SONGS'} // the type of content on page
-            showFilter={true}
-            showType={false} // show course / song by artist name
-            showArtist={true} // show artist name
-            showLength={false}
-            showSort={true}
-            isPaging={this.state.isPaging}
-            filters={this.state.filters} // show filter list
-            imageRadius={5 * factorRatio} // radius of image shown
-            containerBorderWidth={0} // border of box
-            containerWidth={fullWidth} // width of list
-            currentSort={this.state.currentSort}
-            changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-            outVideos={this.state.outVideos} // if paging and out of videos
-            filterResults={() => this.filterResults()} // apply from filters page
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.1375
-                : fullHeight * 0.1
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.125
-                : fullHeight * 0.09
-            } // image height
-            imageWidth={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.125
-                : fullHeight * 0.09
-            } // image height
+              Songs
+            </Text>
+            <View style={{ height: 15 * factorVertical }} />
+            {this.state.started && (
+              <View
+                key={'continueCourses'}
+                style={{
+                  minHeight: fullHeight * 0.225,
+                  paddingLeft: fullWidth * 0.035,
+                  backgroundColor: colors.mainBackground
+                }}
+              >
+                <HorizontalVideoList
+                  Title={'CONTINUE'}
+                  isLoading={false}
+                  seeAll={() =>
+                    this.props.navigation.navigate('SEEALL', {
+                      title: 'Continue',
+                      parent: 'Songs'
+                    })
+                  }
+                  hideSeeAll={true}
+                  showArtist={true}
+                  items={this.state.progressSongs}
+                  itemWidth={isNotch ? fullHeight * 0.175 : fullHeight * 0.2}
+                  itemHeight={isNotch ? fullHeight * 0.175 : fullHeight * 0.2}
+                />
+              </View>
+            )}
+            <VerticalVideoList
+              items={this.state.allSongs}
+              isLoading={false}
+              title={'ALL SONGS'} // title for see all page
+              type={'SONGS'} // the type of content on page
+              showFilter={true}
+              showType={false} // show course / song by artist name
+              showArtist={true} // show artist name
+              showLength={false}
+              showSort={true}
+              isPaging={this.state.isPaging}
+              filters={this.state.filters} // show filter list
+              imageRadius={5 * factorRatio} // radius of image shown
+              containerBorderWidth={0} // border of box
+              containerWidth={fullWidth} // width of list
+              currentSort={this.state.currentSort}
+              changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+              outVideos={this.state.outVideos} // if paging and out of videos
+              filterResults={() => this.filterResults()} // apply from filters page
+              containerHeight={
+                onTablet
+                  ? fullHeight * 0.15
+                  : Platform.OS == 'android'
+                  ? fullHeight * 0.1375
+                  : fullHeight * 0.1
+              } // height per row
+              imageHeight={
+                onTablet
+                  ? fullHeight * 0.12
+                  : Platform.OS == 'android'
+                  ? fullHeight * 0.125
+                  : fullHeight * 0.09
+              } // image height
+              imageWidth={
+                onTablet
+                  ? fullHeight * 0.12
+                  : Platform.OS == 'android'
+                  ? fullHeight * 0.125
+                  : fullHeight * 0.09
+              } // image height
+            />
+          </ScrollView>
+        ) : (
+          <ActivityIndicator
+            size='large'
+            style={{ flex: 1 }}
+            color={colors.pianoteRed}
           />
-        </ScrollView>
-
+        )}
         <NavigationBar currentPage={''} />
         <Modal
           key={'navMenu'}

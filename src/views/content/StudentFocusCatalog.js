@@ -2,7 +2,14 @@
  * StudentFocusCatalog
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  RefreshControl,
+  ActivityIndicator
+} from 'react-native';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -35,12 +42,16 @@ export default class StudentFocusCatalog extends React.Component {
     super(props);
     this.state = {
       progressStudentFocus: [], // videos
-      isLoadingProgress: true,
+      refreshing: true,
       started: true
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
+    this.getData();
+  }
+
+  async getData() {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -68,13 +79,10 @@ export default class StudentFocusCatalog extends React.Component {
 
     this.setState({
       progressStudentFocus: [...this.state.progressStudentFocus, ...items],
-      isLoadingProgress: false,
-      started:
-        response.data.length == 0 && this.state.progressStudentFocus.length == 0
-          ? false
-          : true
+      refreshing: false,
+      started: items.length !== 0
     });
-  };
+  }
 
   renderFlatListItem = ({ item, index }) => {
     return (
@@ -106,77 +114,98 @@ export default class StudentFocusCatalog extends React.Component {
     );
   };
 
+  refresh() {
+    this.setState({ refreshing: true, progressStudentFocus: [] }, () =>
+      this.getData()
+    );
+  }
+
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+      >
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'STUDENT FOCUS'} />
-
-        <FlatList
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground,
-            paddingHorizontal: 10
-          }}
-          numColumns={2}
-          removeClippedSubviews={true}
-          keyExtractor={item => item.id}
-          data={studentFocus}
-          keyboardShouldPersistTaps='handled'
-          ListHeaderComponent={() => (
-            <>
-              <Text
-                style={{
-                  paddingLeft: 12 * factorHorizontal,
-                  paddingTop: 20 * factorVertical,
-                  paddingBottom: 10 * factorVertical,
-                  fontSize: 30 * factorRatio,
-                  color: 'white',
-                  justifyContent: 'flex-start',
-                  fontFamily: 'OpenSans-ExtraBold'
-                }}
-              >
-                Student Focus
-              </Text>
-
-              {this.state.started && (
-                <View
-                  key={'continueCourses'}
+        {!this.state.refreshing ? (
+          <FlatList
+            style={{
+              flex: 1,
+              backgroundColor: colors.mainBackground,
+              paddingHorizontal: 10
+            }}
+            numColumns={2}
+            removeClippedSubviews={true}
+            keyExtractor={item => item.id}
+            data={studentFocus}
+            keyboardShouldPersistTaps='handled'
+            refreshControl={
+              <RefreshControl
+                colors={[colors.pianoteRed]}
+                refreshing={this.state.refreshing}
+                onRefresh={() => this.refresh()}
+              />
+            }
+            ListHeaderComponent={() => (
+              <>
+                <Text
                   style={{
-                    paddingLeft: fullWidth * 0.035,
-                    backgroundColor: colors.mainBackground
+                    paddingLeft: 12 * factorHorizontal,
+                    paddingTop: 20 * factorVertical,
+                    paddingBottom: 10 * factorVertical,
+                    fontSize: 30 * factorRatio,
+                    color: 'white',
+                    justifyContent: 'flex-start',
+                    fontFamily: 'OpenSans-ExtraBold'
                   }}
                 >
-                  <HorizontalVideoList
-                    Title={'CONTINUE'}
-                    seeAll={() =>
-                      this.props.navigation.navigate('SEEALL', {
-                        title: 'Continue',
-                        parent: 'Student Focus'
-                      })
-                    }
-                    hideSeeAll={true}
-                    showArtist={true}
-                    isLoading={this.state.isLoadingProgress}
-                    showType={true}
-                    items={this.state.progressStudentFocus}
-                    itemWidth={
-                      isNotch
-                        ? fullWidth * 0.6
-                        : onTablet
-                        ? fullWidth * 0.425
-                        : fullWidth * 0.55
-                    }
-                    itemHeight={
-                      isNotch ? fullHeight * 0.155 : fullHeight * 0.175
-                    }
-                  />
-                </View>
-              )}
-            </>
-          )}
-          renderItem={this.renderFlatListItem}
-        />
+                  Student Focus
+                </Text>
 
+                {this.state.started && (
+                  <View
+                    key={'continueCourses'}
+                    style={{
+                      paddingLeft: fullWidth * 0.035,
+                      backgroundColor: colors.mainBackground
+                    }}
+                  >
+                    <HorizontalVideoList
+                      Title={'CONTINUE'}
+                      seeAll={() =>
+                        this.props.navigation.navigate('SEEALL', {
+                          title: 'Continue',
+                          parent: 'Student Focus'
+                        })
+                      }
+                      hideSeeAll={true}
+                      showArtist={true}
+                      isLoading={false}
+                      showType={true}
+                      items={this.state.progressStudentFocus}
+                      itemWidth={
+                        isNotch
+                          ? fullWidth * 0.6
+                          : onTablet
+                          ? fullWidth * 0.425
+                          : fullWidth * 0.55
+                      }
+                      itemHeight={
+                        isNotch ? fullHeight * 0.155 : fullHeight * 0.175
+                      }
+                    />
+                  </View>
+                )}
+              </>
+            )}
+            renderItem={this.renderFlatListItem}
+          />
+        ) : (
+          <ActivityIndicator
+            size='large'
+            style={{ flex: 1 }}
+            color={colors.pianoteRed}
+          />
+        )}
         <NavigationBar currentPage={''} />
         <Modal
           key={'navMenu'}

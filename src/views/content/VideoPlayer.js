@@ -1141,7 +1141,8 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: 'white',
-                        paddingVertical: fullHeight * 0.015
+                        paddingVertical: fullHeight * 0.015,
+                        paddingHorizontal: 15
                       }}
                     >
                       {this.state.lessonTitle}
@@ -1155,7 +1156,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: colors.secondBackground,
-                        paddingVertical: fullHeight * 0.01
+                        paddingBottom: fullHeight * 0.015
                       }}
                     >
                       {this.renderTagsDependingOnContentType()}

@@ -2,7 +2,14 @@
  * Lessons
  */
 import React from 'react';
-import { View, Text, ScrollView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Platform,
+  RefreshControl,
+  ActivityIndicator
+} from 'react-native';
 
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
@@ -45,7 +52,6 @@ export default class Lessons extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
       filtering: false, // filtering
       filters: {
@@ -64,7 +70,7 @@ export default class Lessons extends React.Component {
       foundationNextLesson: null,
       showRestartCourse: false,
       lessonsStarted: true, // for showing continue lessons horizontal list
-      isLoadingProgress: true
+      refreshing: true
     };
   }
 
@@ -87,11 +93,59 @@ export default class Lessons extends React.Component {
       });
     });
 
-    this.getFoundations();
+    this.getContent();
+
     messaging().requestPermission();
-    this.getProgressLessons();
-    this.getAllLessons();
   };
+
+  async getContent() {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    let content = await Promise.all([
+      foundationsService.getFoundation('foundations-2019'),
+      getAllContent(
+        '',
+        this.state.currentSort,
+        this.state.page,
+        this.state.filters
+      ),
+      getStartedContent('')
+    ]);
+
+    let foundation = content[0];
+
+    let allVideos = this.setData(
+      content[1].data.map(data => {
+        return new ContentModel(data);
+      })
+    );
+
+    let inprogressVideos = this.setData(
+      content[2].data.map(data => {
+        return new ContentModel(data);
+      })
+    );
+
+    this.setState({
+      foundationIsStarted: foundation.started,
+      foundationIsCompleted: foundation.completed,
+      foundationNextLesson: foundation.next_lesson,
+      allLessons: [...this.state.allLessons, ...allVideos],
+      progressLessons: [...this.state.progressLessons, ...inprogressVideos],
+      outVideos:
+        allVideos.length == 0 || content[1].data.length < 20 ? true : false,
+      filtering: false,
+      isPaging: false,
+      lessonsStarted: inprogressVideos.length !== 0,
+      refreshing: false
+    });
+
+    AsyncStorage.multiSet([
+      ['foundationsIsStarted', foundation.started.toString()],
+      ['foundationsIsCompleted', foundation.completed.toString()]
+    ]);
+  }
 
   getFoundations = async () => {
     if (!this.context.isConnected) {
@@ -128,43 +182,12 @@ export default class Lessons extends React.Component {
         return new ContentModel(data);
       });
 
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: this.getArtist(newContent[i]),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          type: newContent[i].post.type,
-          description: newContent[i]
-            .getData('description')
-            .replace(/(<([^>]+)>)/g, '')
-            .replace(/&nbsp;/g, '')
-            .replace(/&amp;/g, '&')
-            .replace(/&#039;/g, "'")
-            .replace(/&quot;/g, '"')
-            .replace(/&gt;/g, '>')
-            .replace(/&lt;/g, '<'),
-          xp: newContent[i].post.xp,
-          id: newContent[i].id,
-          mobile_app_url: newContent[i].post.mobile_app_url,
-          lesson_count: newContent[i].post.lesson_count,
-          currentLessonId: newContent[i].post.song_part_id,
-          like_count: newContent[i].post.like_count,
-          duration: this.getDuration(newContent[i]),
-          isLiked: newContent[i].post.is_liked_by_current_user,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          bundle_count: newContent[i].post.bundle_count,
-          progress_percent: newContent[i].post.progress_percent
-        });
-      }
+      let items = this.setData(newContent);
 
       this.setState({
         allLessons: [...this.state.allLessons, ...items],
         outVideos:
           items.length == 0 || response.data.length < 20 ? true : false,
-        isLoadingAll: false,
         filtering: false,
         isPaging: false
       });
@@ -173,60 +196,39 @@ export default class Lessons extends React.Component {
     }
   };
 
-  getProgressLessons = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    try {
-      let response = await getStartedContent('');
-      const newContent = response.data.map(data => {
-        return new ContentModel(data);
+  setData(newContent) {
+    let items = [];
+    for (let i in newContent) {
+      items.push({
+        title: newContent[i].getField('title'),
+        artist: this.getArtist(newContent[i]),
+        thumbnail: newContent[i].getData('thumbnail_url'),
+        type: newContent[i].post.type,
+        description: newContent[i]
+          .getData('description')
+          .replace(/(<([^>]+)>)/g, '')
+          .replace(/&nbsp;/g, '')
+          .replace(/&amp;/g, '&')
+          .replace(/&#039;/g, "'")
+          .replace(/&quot;/g, '"')
+          .replace(/&gt;/g, '>')
+          .replace(/&lt;/g, '<'),
+        xp: newContent[i].post.xp,
+        id: newContent[i].id,
+        mobile_app_url: newContent[i].post.mobile_app_url,
+        lesson_count: newContent[i].post.lesson_count,
+        currentLessonId: newContent[i].post?.song_part_id,
+        like_count: newContent[i].post.like_count,
+        duration: this.getDuration(newContent[i]),
+        isLiked: newContent[i].post.is_liked_by_current_user,
+        isAddedToList: newContent[i].isAddedToList,
+        isStarted: newContent[i].isStarted,
+        isCompleted: newContent[i].isCompleted,
+        progress_percent: newContent[i].post.progress_percent
       });
-
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: this.getArtist(newContent[i]),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          type: newContent[i].post.type,
-          description: newContent[i]
-            .getData('description')
-            .replace(/(<([^>]+)>)/g, '')
-            .replace(/&nbsp;/g, '')
-            .replace(/&amp;/g, '&')
-            .replace(/&#039;/g, "'")
-            .replace(/&quot;/g, '"')
-            .replace(/&gt;/g, '>')
-            .replace(/&lt;/g, '<'),
-          xp: newContent[i].post.xp,
-          id: newContent[i].id,
-          mobile_app_url: newContent[i].post.mobile_app_url,
-          lesson_count: newContent[i].post.lesson_count,
-          currentLessonId: newContent[i].post?.song_part_id,
-          like_count: newContent[i].post.like_count,
-          duration: this.getDuration(newContent[i]),
-          isLiked: newContent[i].post.is_liked_by_current_user,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          bundle_count: newContent[i].post.bundle_count,
-          progress_percent: newContent[i].post.progress_percent
-        });
-      }
-
-      this.setState({
-        progressLessons: [...this.state.progressLessons, ...items],
-        lessonsStarted:
-          items.length == 0 && this.state.progressLessons.length == 0
-            ? false
-            : true,
-        isLoadingProgress: false
-      });
-    } catch (error) {
-      console.log('error progress: ', error);
     }
-  };
+    return items;
+  }
 
   onRestartFoundation = async () => {
     if (!this.context.isConnected) {
@@ -364,9 +366,23 @@ export default class Lessons extends React.Component {
     );
   };
 
+  refresh() {
+    this.setState(
+      {
+        refreshing: true,
+        inprogressVideos: [],
+        allLessons: [],
+        page: 1
+      },
+      () => this.getContent()
+    );
+  }
+
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+      >
         <View
           style={{
             height: fullHeight * 0.1,
@@ -379,394 +395,411 @@ export default class Lessons extends React.Component {
         >
           <NavMenuHeaders currentPage={'LESSONS'} parentPage={'LESSONS'} />
         </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentInsetAdjustmentBehavior={'never'}
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
-          scrollEventThrottle={400}
-        >
-          <View
-            key={'backgroundColoring'}
+        {!this.state.refreshing ? (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentInsetAdjustmentBehavior={'never'}
             style={{
-              backgroundColor: colors.thirdBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              elevation: 10
+              flex: 1,
+              backgroundColor: colors.mainBackground
             }}
-          />
-          <View
-            key={'header'}
-            style={{
-              height: fullHeight * 0.1,
-              backgroundColor: colors.thirdBackground
-            }}
-          />
-          <View
-            key={'image'}
-            style={[
-              styles.centerContent,
-              {
-                height: fullHeight * 0.32
-              }
-            ]}
-          >
-            <GradientFeature
-              color={'blue'}
-              opacity={1}
-              height={'100%'}
-              borderRadius={0}
-            />
-            <FastImage
-              style={{
-                flex: 1,
-                alignSelf: 'stretch',
-                backgroundColor: colors.mainBackground
-              }}
-              source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-            <View
-              key={'pianoteSVG'}
-              style={{
-                position: 'absolute',
-                height: '100%',
-                width: fullWidth,
-                zIndex: 2,
-                elevation: 2
-              }}
-            >
-              <View style={{ flex: 0.4 }} />
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ flex: 1 }} />
-                <Pianote
-                  height={fullHeight * 0.03}
-                  width={fullWidth * 0.35}
-                  fill={'white'}
-                />
-                <View style={{ flex: 1 }} />
-              </View>
-              <Text
-                key={'foundations'}
-                style={{
-                  fontSize: 60 * factorRatio,
-                  color: 'white',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  transform: [{ scaleX: 0.7 }],
-                  textAlign: 'center'
-                }}
-              >
-                FOUNDATIONS
-              </Text>
-              <View style={{ flex: 0.6 }} />
-
-              {this.state.foundationIsCompleted ? (
-                <ResetIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.32 * 0.725
-                      : fullHeight * 0.305 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromLeft={fullWidth * 0.065}
-                  buttonWidth={fullWidth * 0.42}
-                  pressed={() =>
-                    this.setState({
-                      showRestartCourse: true
-                    })
-                  }
-                />
-              ) : !this.state.foundationIsStarted ? (
-                <StartIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.32 * 0.725
-                      : fullHeight * 0.305 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromLeft={fullWidth * 0.065}
-                  buttonWidth={fullWidth * 0.42}
-                  pressed={() => {
-                    if (this.state.foundationNextLesson)
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.foundationNextLesson.mobile_app_url
-                      });
-                  }}
-                />
-              ) : (
-                <ContinueIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.32 * 0.725
-                      : fullHeight * 0.305 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromLeft={fullWidth * 0.065}
-                  buttonWidth={fullWidth * 0.42}
-                  pressed={() => {
-                    if (this.state.foundationNextLesson)
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.foundationNextLesson.mobile_app_url
-                      });
-                  }}
-                />
-              )}
-              <MoreInfoIcon
-                pxFromTop={
-                  onTablet
-                    ? fullHeight * 0.32 * 0.725
-                    : fullHeight * 0.305 * 0.725
-                }
-                buttonHeight={
-                  onTablet
-                    ? fullHeight * 0.06
-                    : Platform.OS == 'ios'
-                    ? fullHeight * 0.05
-                    : fullHeight * 0.055
-                }
-                pxFromRight={fullWidth * 0.065}
-                buttonWidth={fullWidth * 0.42}
-                pressed={() => {
-                  this.props.navigation.navigate('FOUNDATIONS', {
-                    foundationIsStarted: this.state.foundationIsStarted,
-                    foundationIsCompleted: this.state.foundationIsCompleted
-                  });
-                }}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.pianoteRed]}
+                refreshing={this.state.refreshing}
+                onRefresh={() => this.refresh()}
               />
-            </View>
-          </View>
-          <View
-            key={'profile'}
-            style={{
-              borderTopColor: colors.secondBackground,
-              borderTopWidth: 0.25,
-              borderBottomColor: colors.secondBackground,
-              borderBottomWidth: 0.25,
-              height: fullHeight * 0.1,
-              paddingTop: 10 * factorVertical,
-              paddingBottom: 10 * factorVertical,
-              backgroundColor: colors.mainBackground,
-              flexDirection: 'row'
-            }}
+            }
+            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            scrollEventThrottle={400}
           >
             <View
-              key={'profile-picture'}
+              key={'backgroundColoring'}
+              style={{
+                backgroundColor: colors.thirdBackground,
+                position: 'absolute',
+                height: fullHeight,
+                top: -fullHeight,
+                left: 0,
+                right: 0,
+                zIndex: 10,
+                elevation: 10
+              }}
+            />
+            <View
+              key={'header'}
+              style={{
+                height: fullHeight * 0.1,
+                backgroundColor: colors.thirdBackground
+              }}
+            />
+            <View
+              key={'image'}
               style={[
                 styles.centerContent,
                 {
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignSelf: 'stretch'
+                  height: fullHeight * 0.32
                 }
               ]}
             >
-              <View style={{ flex: 1 }} />
-              <View>
-                <View style={{ flex: 1 }} />
-                <View
-                  style={{
-                    height: fullHeight * 0.075,
-                    width: fullHeight * 0.075,
-                    borderRadius: 100,
-                    backgroundColor: colors.secondBackground,
-                    alignSelf: 'stretch',
-                    borderWidth: 3 * factorRatio,
-                    borderColor: colors.secondBackground
-                  }}
-                >
-                  <View
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                      alignSelf: 'center'
-                    }}
-                  >
-                    <FastImage
-                      style={{
-                        flex: 1,
-                        borderRadius: 100,
-                        backgroundColor: colors.secondBackground
-                      }}
-                      source={{
-                        uri:
-                          this.state.profileImage ||
-                          'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                      }}
-                      resizeMode={FastImage.resizeMode.cover}
-                    />
-                  </View>
-                </View>
-                <View style={{ flex: 1 }} />
-              </View>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View
-              key={'XP-rank'}
-              style={{
-                flex: 3,
-                flexDirection: 'row',
-                alignSelf: 'stretch'
-              }}
-            >
-              <View style={{ flex: 0.5 }} />
-              <View>
-                <View style={{ flex: 1 }} />
-                <View>
-                  <Text
-                    style={{
-                      color: colors.pianoteRed,
-                      fontSize: 12 * factorRatio,
-                      fontWeight: 'bold',
-                      textAlign: 'center'
-                    }}
-                  >
-                    XP
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 24 * factorRatio,
-                      fontFamily: 'OpenSans-ExtraBold',
-                      textAlign: 'center'
-                    }}
-                  >
-                    {this.state.xp?.length > 4
-                      ? (Number(this.state.xp) / 1000).toFixed(1).toString() +
-                        'k'
-                      : this.state.xp?.toString()}
-                  </Text>
-                </View>
-                <View style={{ flex: 1 }} />
-              </View>
-              <View style={{ flex: 1 }} />
-              <View>
-                <View style={{ flex: 1 }} />
-                <View>
-                  <Text
-                    style={{
-                      color: colors.pianoteRed,
-                      fontSize: 12 * factorRatio,
-                      fontWeight: 'bold',
-                      textAlign: 'center'
-                    }}
-                  >
-                    RANK
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 24 * factorRatio,
-                      fontFamily: 'OpenSans-ExtraBold',
-                      textAlign: 'center'
-                    }}
-                  >
-                    {this.state.rank}
-                  </Text>
-                </View>
-                <View style={{ flex: 1 }} />
-              </View>
-              <View style={{ flex: 1 }} />
-            </View>
-          </View>
-          <View>
-            {this.state.lessonsStarted && (
-              <View
-                key={'progressCourses'}
+              <GradientFeature
+                color={'blue'}
+                opacity={1}
+                height={'100%'}
+                borderRadius={0}
+              />
+              <FastImage
                 style={{
-                  minHeight: fullHeight * 0.225,
-                  paddingLeft: fullWidth * 0.035,
+                  flex: 1,
+                  alignSelf: 'stretch',
                   backgroundColor: colors.mainBackground
                 }}
+                source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+              <View
+                key={'pianoteSVG'}
+                style={{
+                  position: 'absolute',
+                  height: '100%',
+                  width: fullWidth,
+                  zIndex: 2,
+                  elevation: 2
+                }}
               >
-                <HorizontalVideoList
-                  Title={'CONTINUE'}
-                  seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
-                      title: 'Continue',
-                      parent: 'Lessons'
-                    })
+                <View style={{ flex: 0.4 }} />
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flex: 1 }} />
+                  <Pianote
+                    height={fullHeight * 0.03}
+                    width={fullWidth * 0.35}
+                    fill={'white'}
+                  />
+                  <View style={{ flex: 1 }} />
+                </View>
+                <Text
+                  key={'foundations'}
+                  style={{
+                    fontSize: 60 * factorRatio,
+                    color: 'white',
+                    fontFamily: 'RobotoCondensed-Bold',
+                    transform: [{ scaleX: 0.7 }],
+                    textAlign: 'center'
+                  }}
+                >
+                  FOUNDATIONS
+                </Text>
+                <View style={{ flex: 0.6 }} />
+
+                {this.state.foundationIsCompleted ? (
+                  <ResetIcon
+                    pxFromTop={
+                      onTablet
+                        ? fullHeight * 0.32 * 0.725
+                        : fullHeight * 0.305 * 0.725
+                    }
+                    buttonHeight={
+                      onTablet
+                        ? fullHeight * 0.06
+                        : Platform.OS == 'ios'
+                        ? fullHeight * 0.05
+                        : fullHeight * 0.055
+                    }
+                    pxFromLeft={fullWidth * 0.065}
+                    buttonWidth={fullWidth * 0.42}
+                    pressed={() =>
+                      this.setState({
+                        showRestartCourse: true
+                      })
+                    }
+                  />
+                ) : !this.state.foundationIsStarted ? (
+                  <StartIcon
+                    pxFromTop={
+                      onTablet
+                        ? fullHeight * 0.32 * 0.725
+                        : fullHeight * 0.305 * 0.725
+                    }
+                    buttonHeight={
+                      onTablet
+                        ? fullHeight * 0.06
+                        : Platform.OS == 'ios'
+                        ? fullHeight * 0.05
+                        : fullHeight * 0.055
+                    }
+                    pxFromLeft={fullWidth * 0.065}
+                    buttonWidth={fullWidth * 0.42}
+                    pressed={() => {
+                      if (this.state.foundationNextLesson)
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.foundationNextLesson.mobile_app_url
+                        });
+                    }}
+                  />
+                ) : (
+                  <ContinueIcon
+                    pxFromTop={
+                      onTablet
+                        ? fullHeight * 0.32 * 0.725
+                        : fullHeight * 0.305 * 0.725
+                    }
+                    buttonHeight={
+                      onTablet
+                        ? fullHeight * 0.06
+                        : Platform.OS == 'ios'
+                        ? fullHeight * 0.05
+                        : fullHeight * 0.055
+                    }
+                    pxFromLeft={fullWidth * 0.065}
+                    buttonWidth={fullWidth * 0.42}
+                    pressed={() => {
+                      if (this.state.foundationNextLesson)
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.foundationNextLesson.mobile_app_url
+                        });
+                    }}
+                  />
+                )}
+                <MoreInfoIcon
+                  pxFromTop={
+                    onTablet
+                      ? fullHeight * 0.32 * 0.725
+                      : fullHeight * 0.305 * 0.725
                   }
-                  showArtist={true}
-                  showType={true}
-                  items={this.state.progressLessons}
-                  isLoading={this.state.isLoadingProgress}
-                  itemWidth={
-                    isNotch
-                      ? fullWidth * 0.6
-                      : onTablet
-                      ? fullWidth * 0.425
-                      : fullWidth * 0.55
+                  buttonHeight={
+                    onTablet
+                      ? fullHeight * 0.06
+                      : Platform.OS == 'ios'
+                      ? fullHeight * 0.05
+                      : fullHeight * 0.055
                   }
-                  itemHeight={isNotch ? fullHeight * 0.155 : fullHeight * 0.175}
+                  pxFromRight={fullWidth * 0.065}
+                  buttonWidth={fullWidth * 0.42}
+                  pressed={() => {
+                    this.props.navigation.navigate('FOUNDATIONS', {
+                      foundationIsStarted: this.state.foundationIsStarted,
+                      foundationIsCompleted: this.state.foundationIsCompleted
+                    });
+                  }}
                 />
               </View>
-            )}
-            <View style={{ height: 5 * factorRatio }} />
-            {!this.state.filtering && (
-              <VerticalVideoList
-                items={this.state.allLessons}
-                isLoading={this.state.isLoadingAll}
-                title={'ALL LESSONS'} // title for see all page
-                type={'LESSONS'} // the type of content on page
-                showFilter={true}
-                isPaging={this.state.isPaging}
-                showType={true} // show course / song by artist name
-                showArtist={true} // show artist name
-                showSort={true}
-                showLength={false}
-                filters={this.state.filters} // show filter list
-                imageRadius={5 * factorRatio} // radius of image shown
-                containerBorderWidth={0} // border of box
-                containerWidth={fullWidth} // width of list
-                currentSort={this.state.currentSort}
-                changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                filterResults={() => this.filterResults()} // apply from filters page
-                containerHeight={
-                  onTablet
-                    ? fullHeight * 0.15
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.115
-                    : fullHeight * 0.0925
-                } // height per row
-                imageHeight={
-                  onTablet
-                    ? fullHeight * 0.12
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.09
-                    : fullHeight * 0.0825
-                } // image height
-                imageWidth={fullWidth * 0.26} // image width
-                outVideos={this.state.outVideos} // if paging and out of videos
-                getVideos={() => this.getVideos()}
-              />
-            )}
-          </View>
-        </ScrollView>
+            </View>
+            <View
+              key={'profile'}
+              style={{
+                borderTopColor: colors.secondBackground,
+                borderTopWidth: 0.25,
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 0.25,
+                height: fullHeight * 0.1,
+                paddingTop: 10 * factorVertical,
+                paddingBottom: 10 * factorVertical,
+                backgroundColor: colors.mainBackground,
+                flexDirection: 'row'
+              }}
+            >
+              <View
+                key={'profile-picture'}
+                style={[
+                  styles.centerContent,
+                  {
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignSelf: 'stretch'
+                  }
+                ]}
+              >
+                <View style={{ flex: 1 }} />
+                <View>
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={{
+                      height: fullHeight * 0.075,
+                      width: fullHeight * 0.075,
+                      borderRadius: 100,
+                      backgroundColor: colors.secondBackground,
+                      alignSelf: 'stretch',
+                      borderWidth: 3 * factorRatio,
+                      borderColor: colors.secondBackground
+                    }}
+                  >
+                    <View
+                      style={{
+                        height: '100%',
+                        width: '100%',
+                        alignSelf: 'center'
+                      }}
+                    >
+                      <FastImage
+                        style={{
+                          flex: 1,
+                          borderRadius: 100,
+                          backgroundColor: colors.secondBackground
+                        }}
+                        source={{
+                          uri:
+                            this.state.profileImage ||
+                            'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                        }}
+                        resizeMode={FastImage.resizeMode.cover}
+                      />
+                    </View>
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View style={{ flex: 1 }} />
+              </View>
+              <View
+                key={'XP-rank'}
+                style={{
+                  flex: 3,
+                  flexDirection: 'row',
+                  alignSelf: 'stretch'
+                }}
+              >
+                <View style={{ flex: 0.5 }} />
+                <View>
+                  <View style={{ flex: 1 }} />
+                  <View>
+                    <Text
+                      style={{
+                        color: colors.pianoteRed,
+                        fontSize: 12 * factorRatio,
+                        fontWeight: 'bold',
+                        textAlign: 'center'
+                      }}
+                    >
+                      XP
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 24 * factorRatio,
+                        fontFamily: 'OpenSans-ExtraBold',
+                        textAlign: 'center'
+                      }}
+                    >
+                      {this.state.xp?.length > 4
+                        ? (Number(this.state.xp) / 1000).toFixed(1).toString() +
+                          'k'
+                        : this.state.xp?.toString()}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View style={{ flex: 1 }} />
+                <View>
+                  <View style={{ flex: 1 }} />
+                  <View>
+                    <Text
+                      style={{
+                        color: colors.pianoteRed,
+                        fontSize: 12 * factorRatio,
+                        fontWeight: 'bold',
+                        textAlign: 'center'
+                      }}
+                    >
+                      RANK
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 24 * factorRatio,
+                        fontFamily: 'OpenSans-ExtraBold',
+                        textAlign: 'center'
+                      }}
+                    >
+                      {this.state.rank}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View style={{ flex: 1 }} />
+              </View>
+            </View>
+            <View>
+              {this.state.lessonsStarted && (
+                <View
+                  key={'progressCourses'}
+                  style={{
+                    minHeight: fullHeight * 0.225,
+                    paddingLeft: fullWidth * 0.035,
+                    backgroundColor: colors.mainBackground
+                  }}
+                >
+                  <HorizontalVideoList
+                    Title={'CONTINUE'}
+                    seeAll={() =>
+                      this.props.navigation.navigate('SEEALL', {
+                        title: 'Continue',
+                        parent: 'Lessons'
+                      })
+                    }
+                    showArtist={true}
+                    showType={true}
+                    items={this.state.progressLessons}
+                    isLoading={false}
+                    itemWidth={
+                      isNotch
+                        ? fullWidth * 0.6
+                        : onTablet
+                        ? fullWidth * 0.425
+                        : fullWidth * 0.55
+                    }
+                    itemHeight={
+                      isNotch ? fullHeight * 0.155 : fullHeight * 0.175
+                    }
+                  />
+                </View>
+              )}
+              <View style={{ height: 5 * factorRatio }} />
+              {!this.state.filtering && (
+                <VerticalVideoList
+                  items={this.state.allLessons}
+                  isLoading={false}
+                  title={'ALL LESSONS'} // title for see all page
+                  type={'LESSONS'} // the type of content on page
+                  showFilter={true}
+                  isPaging={this.state.isPaging}
+                  showType={true} // show course / song by artist name
+                  showArtist={true} // show artist name
+                  showSort={true}
+                  showLength={false}
+                  filters={this.state.filters} // show filter list
+                  imageRadius={5 * factorRatio} // radius of image shown
+                  containerBorderWidth={0} // border of box
+                  containerWidth={fullWidth} // width of list
+                  currentSort={this.state.currentSort}
+                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                  filterResults={() => this.filterResults()} // apply from filters page
+                  containerHeight={
+                    onTablet
+                      ? fullHeight * 0.15
+                      : Platform.OS == 'android'
+                      ? fullHeight * 0.115
+                      : fullHeight * 0.0925
+                  } // height per row
+                  imageHeight={
+                    onTablet
+                      ? fullHeight * 0.12
+                      : Platform.OS == 'android'
+                      ? fullHeight * 0.09
+                      : fullHeight * 0.0825
+                  } // image height
+                  imageWidth={fullWidth * 0.26} // image width
+                  outVideos={this.state.outVideos} // if paging and out of videos
+                  getVideos={() => this.getVideos()}
+                />
+              )}
+            </View>
+          </ScrollView>
+        ) : (
+          <ActivityIndicator
+            size='large'
+            style={{ flex: 1 }}
+            color={colors.pianoteRed}
+          />
+        )}
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}

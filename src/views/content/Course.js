@@ -2,7 +2,14 @@
  * Course
  */
 import React from 'react';
-import { View, Text, ScrollView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Platform,
+  RefreshControl,
+  ActivityIndicator
+} from 'react-native';
 import { ContentModel } from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -30,7 +37,6 @@ export default class Course extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
       filtering: false, // filtering
       filters: {
@@ -40,15 +46,52 @@ export default class Course extends React.Component {
         progress: [],
         instructors: []
       },
-
-      isLoadingProgress: true, // progress course
-      started: true // if started lesson
+      started: true, // if started lesson
+      refreshing: true
     };
   }
 
   componentDidMount() {
-    this.getProgressCourses();
-    this.getAllCourses();
+    this.getContent();
+  }
+
+  async getContent() {
+    if (!this.context.isConnected) {
+      return this.context.showNoConnectionAlert();
+    }
+    let content = await Promise.all([
+      getAllContent(
+        'course',
+        this.state.currentSort,
+        this.state.page,
+        this.state.filters
+      ),
+      getStartedContent('course')
+    ]);
+    console.log(content);
+    let allVideos = this.setData(
+      content[0].data.map(data => {
+        return new ContentModel(data);
+      })
+    );
+
+    let inprogressVideos = this.setData(
+      content[1].data.map(data => {
+        return new ContentModel(data);
+      })
+    );
+
+    this.setState({
+      allCourses: [...this.state.allCourses, ...allVideos],
+      progressCourses: [...this.state.progressCourses, ...inprogressVideos],
+      refreshing: false,
+      outVideos:
+        allVideos.length == 0 || content[0].data.length < 20 ? true : false,
+      filtering: false,
+      isPaging: false,
+      page: this.state.page + 1,
+      started: inprogressVideos.length !== 0
+    });
   }
 
   getAllCourses = async () => {
@@ -65,53 +108,18 @@ export default class Course extends React.Component {
       return new ContentModel(data);
     });
 
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('instructor').fields[0].value,
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].id,
-        like_count: newContent[i].likeCount,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
+    let items = this.setData(newContent);
 
     this.setState({
       allCourses: [...this.state.allCourses, ...items],
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
-      isLoadingAll: false,
       filtering: false,
       isPaging: false,
       page: this.state.page + 1
     });
   };
 
-  getProgressCourses = async () => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
-    let response = await getStartedContent('course');
-    const newContent = response.data.map(data => {
-      return new ContentModel(data);
-    });
-
+  setData(newContent) {
     let items = [];
     for (let i in newContent) {
       items.push({
@@ -135,20 +143,12 @@ export default class Course extends React.Component {
         isAddedToList: newContent[i].isAddedToList,
         isStarted: newContent[i].isStarted,
         isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
         progress_percent: newContent[i].post.progress_percent
       });
     }
 
-    this.setState({
-      progressCourses: [...this.state.progressCourses, ...items],
-      isLoadingProgress: false,
-      started:
-        this.state.progressCourses.length == 0 && items.length == 0
-          ? false
-          : true
-    });
-  };
+    return items;
+  }
 
   filterResults = () => {
     this.props.navigation.navigate('FILTERS', {
@@ -240,9 +240,18 @@ export default class Course extends React.Component {
     );
   };
 
+  refresh() {
+    this.setState(
+      { refreshing: true, inprogressVideos: [], allCourses: [], page: 1 },
+      () => this.getContent()
+    );
+  }
+
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+      >
         <View
           style={{
             height: fullHeight * 0.1,
@@ -255,117 +264,131 @@ export default class Course extends React.Component {
         >
           <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
         </View>
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentInsetAdjustmentBehavior={'never'}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
-        >
-          <View
-            key={'header'}
+        {!this.state.refreshing ? (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentInsetAdjustmentBehavior={'never'}
+            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            refreshControl={
+              <RefreshControl
+                colors={[colors.pianoteRed]}
+                refreshing={this.state.refreshing}
+                onRefresh={() => this.refresh()}
+              />
+            }
             style={{
-              height: fullHeight * 0.1,
-              backgroundColor: colors.thirdBackground
-            }}
-          />
-          <View
-            key={'backgroundColoring'}
-            style={{
-              backgroundColor: colors.thirdBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              elevation: 10
-            }}
-          />
-          <View style={{ height: 25 * factorVertical }} />
-          <Text
-            style={{
-              paddingLeft: 12 * factorHorizontal,
-              fontSize: 30 * factorRatio,
-              color: 'white',
-              fontFamily: 'OpenSans-ExtraBold'
+              flex: 1,
+              backgroundColor: colors.mainBackground
             }}
           >
-            Courses
-          </Text>
-          <View style={{ height: 15 * factorVertical }} />
-          {this.state.started && (
             <View
-              key={'continueCourses'}
+              key={'header'}
               style={{
-                minHeight: fullHeight * 0.225,
-                paddingLeft: fullWidth * 0.035,
-                backgroundColor: colors.mainBackground
+                height: fullHeight * 0.1,
+                backgroundColor: colors.thirdBackground
+              }}
+            />
+            <View
+              key={'backgroundColoring'}
+              style={{
+                backgroundColor: colors.thirdBackground,
+                position: 'absolute',
+                height: fullHeight,
+                top: -fullHeight,
+                left: 0,
+                right: 0,
+                zIndex: 10,
+                elevation: 10
+              }}
+            />
+            <View style={{ height: 25 * factorVertical }} />
+            <Text
+              style={{
+                paddingLeft: 12 * factorHorizontal,
+                fontSize: 30 * factorRatio,
+                color: 'white',
+                fontFamily: 'OpenSans-ExtraBold'
               }}
             >
-              <HorizontalVideoList
-                Title={'CONTINUE'}
-                seeAll={() =>
-                  this.props.navigation.navigate('SEEALL', {
-                    title: 'Continue',
-                    parent: 'Courses'
-                  })
-                }
-                showArtist={true}
-                items={this.state.progressCourses}
-                isLoading={this.state.isLoadingProgress}
-                itemWidth={
-                  isNotch
-                    ? fullWidth * 0.6
-                    : onTablet
-                    ? fullWidth * 0.425
-                    : fullWidth * 0.55
-                }
-                itemHeight={isNotch ? fullHeight * 0.155 : fullHeight * 0.175}
-              />
-            </View>
-          )}
-          <VerticalVideoList
-            items={this.state.allCourses}
-            isLoading={this.state.isLoadingAll}
-            title={'COURSES'}
-            type={'COURSES'}
-            isPaging={this.state.isPaging}
-            showFilter={true}
-            showType={true}
-            showArtist={true}
-            showLength={false}
-            showSort={true}
-            filters={this.state.filters}
-            imageRadius={5 * factorRatio}
-            containerBorderWidth={0}
-            currentSort={this.state.currentSort}
-            changeSort={sort => this.changeSort(sort)}
-            filterResults={() => this.filterResults()}
-            containerWidth={fullWidth}
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.095
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.095
-                : fullHeight * 0.0825
-            } // image height
-            imageWidth={fullWidth * 0.26} // image width
-            outVideos={this.state.outVideos}
-            getVideos={() => this.getVideos()}
+              Courses
+            </Text>
+            <View style={{ height: 15 * factorVertical }} />
+            {this.state.started && (
+              <View
+                key={'continueCourses'}
+                style={{
+                  minHeight: fullHeight * 0.225,
+                  paddingLeft: fullWidth * 0.035,
+                  backgroundColor: colors.mainBackground
+                }}
+              >
+                <HorizontalVideoList
+                  Title={'CONTINUE'}
+                  seeAll={() =>
+                    this.props.navigation.navigate('SEEALL', {
+                      title: 'Continue',
+                      parent: 'Courses'
+                    })
+                  }
+                  showArtist={true}
+                  items={this.state.progressCourses}
+                  isLoading={false}
+                  itemWidth={
+                    isNotch
+                      ? fullWidth * 0.6
+                      : onTablet
+                      ? fullWidth * 0.425
+                      : fullWidth * 0.55
+                  }
+                  itemHeight={isNotch ? fullHeight * 0.155 : fullHeight * 0.175}
+                />
+              </View>
+            )}
+            <VerticalVideoList
+              items={this.state.allCourses}
+              isLoading={false}
+              title={'COURSES'}
+              type={'COURSES'}
+              isPaging={this.state.isPaging}
+              showFilter={true}
+              showType={true}
+              showArtist={true}
+              showLength={false}
+              showSort={true}
+              filters={this.state.filters}
+              imageRadius={5 * factorRatio}
+              containerBorderWidth={0}
+              currentSort={this.state.currentSort}
+              changeSort={sort => this.changeSort(sort)}
+              filterResults={() => this.filterResults()}
+              containerWidth={fullWidth}
+              containerHeight={
+                onTablet
+                  ? fullHeight * 0.15
+                  : Platform.OS == 'android'
+                  ? fullHeight * 0.115
+                  : fullHeight * 0.095
+              } // height per row
+              imageHeight={
+                onTablet
+                  ? fullHeight * 0.12
+                  : Platform.OS == 'android'
+                  ? fullHeight * 0.095
+                  : fullHeight * 0.0825
+              } // image height
+              imageWidth={fullWidth * 0.26} // image width
+              outVideos={this.state.outVideos}
+              getVideos={() => this.getVideos()}
+            />
+            <View style={{ height: fullHeight * 0.025 }} />
+          </ScrollView>
+        ) : (
+          <ActivityIndicator
+            size='large'
+            style={{ flex: 1 }}
+            color={colors.pianoteRed}
           />
-          <View style={{ height: fullHeight * 0.025 }} />
-        </ScrollView>
+        )}
         <NavigationBar currentPage={''} />
       </View>
     );
