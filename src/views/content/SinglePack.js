@@ -5,12 +5,13 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
 import Modal from 'react-native-modal';
+import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -20,17 +21,20 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import StartIcon from '../../components/StartIcon';
 import ContinueIcon from '../../components/ContinueIcon';
-import RestartCourse from '../../modals/RestartCourse';
 import NavigationBar from '../../components/NavigationBar';
 import NavigationMenu from '../../components/NavigationMenu';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
+
+import RestartCourse from '../../modals/RestartCourse';
+
 import packsService from '../../services/packs.service';
 import {
   addToMyList,
   removeFromMyList,
   resetProgress
 } from '../../services/UserActions';
+
 import { NetworkContext } from '../../context/NetworkProvider';
 
 let greaterWDim;
@@ -572,32 +576,36 @@ export default class SinglePack extends React.Component {
                         width: 15 * factorRatio
                       }}
                     />
-                    <TouchableOpacity
-                      style={[
-                        styles.centerContent,
-                        {
-                          width: 70 * factorRatio
-                        }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <MaterialIcon
-                        name={'arrow-collapse-down'}
-                        size={27.5 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                      <Text
-                        style={{
+                    <Download_V2
+                      entity={{
+                        id: this.state.id,
+                        overview: packsService.getPack(this.state.url, true)
+                      }}
+                      styles={{
+                        touchable: {},
+                        iconDownloadColor: colors.pianoteRed,
+                        activityIndicatorColor: colors.pianoteRed,
+                        animatedProgressBackground: colors.pianoteRed,
+                        textStatus: {
+                          color: '#ffffff',
                           fontSize: 13 * factorRatio,
-                          textAlign: 'left',
-                          color: 'white',
                           fontFamily: 'OpenSans-Regular',
                           marginTop: 10 * factorVertical
-                        }}
-                      >
-                        Download
-                      </Text>
-                    </TouchableOpacity>
+                        },
+                        alert: {
+                          alertTextMessageFontFamily: 'OpenSans-Regular',
+                          alertTouchableTextDeleteColor: 'white',
+                          alertTextTitleColor: 'black',
+                          alertTextMessageColor: 'black',
+                          alertTextTitleFontFamily: 'OpenSans-Bold',
+                          alertTouchableTextCancelColor: colors.pianoteRed,
+                          alertTouchableDeleteBackground: colors.pianoteRed,
+                          alertBackground: 'white',
+                          alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
+                          alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                        }
+                      }}
+                    />
                     <View
                       style={{
                         width: 15 * factorRatio
