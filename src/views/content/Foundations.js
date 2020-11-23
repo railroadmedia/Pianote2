@@ -576,32 +576,6 @@ export default class Foundations extends React.Component {
                       alignSelf: 'stretch'
                     }}
                   />
-                  <TouchableOpacity
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: 70 * factorRatio
-                      }
-                    ]}
-                  >
-                    <View style={{ flex: 1 }} />
-                    <MaterialIcon
-                      name={'arrow-collapse-down'}
-                      size={27.5 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 13 * factorRatio,
-                        textAlign: 'left',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
-                      }}
-                    >
-                      Download
-                    </Text>
-                  </TouchableOpacity>
                   <View style={{ width: 15 * factorRatio }} />
                   <TouchableOpacity
                     onPress={() => {
