@@ -201,8 +201,9 @@ class Replies extends React.Component {
   };
 
   sendReply = reply => {
+    if (!reply) return this.setState({ showMakeReply: false });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
-    this.setState({ showMakeReply: false, isLoading: true });
+    this.setState({ showMakeReply: false, isLoading: true, reply: '' });
     this.props.sendReply(reply).then(() => this.setState({ isLoading: false }));
   };
 
@@ -539,12 +540,11 @@ class Replies extends React.Component {
                     <View style={{ flex: 1 }} />
                   </View>
                   {this.state.isLoading && (
-                    <View style={{ padding: 10 }}>
-                      <ActivityIndicator
-                        size='small'
-                        color={colors.secondBackground}
-                      />
-                    </View>
+                    <ActivityIndicator
+                      size='small'
+                      style={{ padding: 10 }}
+                      color={colors.secondBackground}
+                    />
                   )}
                   <View>{this.mapReplies()}</View>
                 </View>
@@ -558,7 +558,9 @@ class Replies extends React.Component {
                 <TouchableOpacity
                   activeOpacity={1}
                   style={{ flex: 1, backgroundColor: 'rgba(0,0,0,.5)' }}
-                  onPress={() => this.setState({ showMakeReply: false })}
+                  onPress={() =>
+                    this.setState({ showMakeReply: false, reply: '' })
+                  }
                 >
                   <KeyboardAvoidingView
                     key={'makeComment'}
