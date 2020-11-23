@@ -157,7 +157,7 @@ export default class FoundationsLevel extends React.Component {
         forceInset={{
           bottom: 'never'
         }}
-        style={styles.container}
+        style={[styles.container, { backgroundColor: colors.mainBackground }]}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
