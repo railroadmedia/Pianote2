@@ -19,6 +19,8 @@ import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Download_V2 } from 'RNDownload';
+import contentService from '../services/content.service';
 
 class ContentModal extends React.Component {
   static navigationOptions = { header: null };
@@ -27,10 +29,6 @@ class ContentModal extends React.Component {
     this.state = {
       data: this.props.data
     };
-  }
-
-  UNSAFE_componentWillMount() {
-    console.log('DATA: ', this.state.data);
   }
 
   addToMyList = contentID => {
@@ -317,32 +315,15 @@ class ContentModal extends React.Component {
               <View style={{ height: 10 * factorVertical }} />
               <View
                 key={'buttons'}
-                style={[
-                  styles.centerContent,
-                  {
-                    flexDirection: 'row'
-                  }
-                ]}
+                style={{ flexDirection: 'row', padding: 20 }}
               >
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      width: 70 * factorRatio
-                    }
-                  ]}
+                <TouchableOpacity
+                  style={{ flex: 1, alignItems: 'center' }}
+                  onPress={() => {
+                    isLiked ? this.unlike(id) : this.like(id);
+                  }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      isLiked ? this.unlike(id) : this.like(id);
-                    }}
-                  >
-                    <AntIcon
-                      name={isLiked ? 'like1' : 'like2'}
-                      size={25 * factorRatio}
-                    />
-                  </TouchableOpacity>
+                  <AntIcon name={isLiked ? 'like1' : 'like2'} size={25} />
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
@@ -353,47 +334,18 @@ class ContentModal extends React.Component {
                   >
                     {like_count}
                   </Text>
-                </View>
-                <View style={{ width: 15 * factorRatio }} />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      width: 70 * factorRatio
-                    }
-                  ]}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ flex: 1, alignItems: 'center' }}
+                  onPress={() =>
+                    this[isAddedToList ? 'removeFromMyList' : 'addToMyList'](id)
+                  }
                 >
-                  <View>
-                    {!isAddedToList && (
-                      <TouchableOpacity
-                        style={{
-                          paddingTop: 5 * factorVertical
-                        }}
-                        onPress={() => this.addToMyList(id)}
-                      >
-                        <AntIcon
-                          name={'plus'}
-                          size={30 * factorRatio}
-                          color={'black'}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    {isAddedToList && (
-                      <TouchableOpacity
-                        style={{
-                          paddingTop: 5 * factorVertical
-                        }}
-                        onPress={() => this.removeFromMyList(id)}
-                      >
-                        <AntIcon
-                          name={'close'}
-                          size={30 * factorRatio}
-                          color={'black'}
-                        />
-                      </TouchableOpacity>
-                    )}
-                  </View>
-
+                  <AntIcon
+                    size={25}
+                    name={isAddedToList ? 'close' : 'plus'}
+                    color={'black'}
+                  />
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
@@ -404,41 +356,37 @@ class ContentModal extends React.Component {
                   >
                     My List
                   </Text>
-                </View>
-                <View style={{ width: 15 * factorRatio }} />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      width: 70 * factorRatio
-                    }
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      resetProgress(id);
-                      this.download(id);
-                    }}
-                  >
-                    <MaterialIcon
-                      name={'arrow-collapse-down'}
-                      size={30 * factorRatio}
-                    />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
+                </TouchableOpacity>
+                <Download_V2
+                  entity={{
+                    id,
+                    lesson: contentService.getContent(id)
+                  }}
+                  styles={{
+                    touchable: { flex: 1 },
+                    activityIndicatorColor: colors.pianoteRed,
+                    animatedProgressBackground: colors.pianoteRed,
+                    textStatus: {
+                      color: 'black',
                       fontSize: 12 * factorRatio,
-                      textAlign: 'left',
-                      marginTop: 10 * factorVertical
-                    }}
-                  >
-                    Download
-                  </Text>
-                </View>
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
+                      fontFamily: 'OpenSans-Regular',
+                      marginTop: 7.5 * factorVertical
+                    },
+                    alert: {
+                      alertTextMessageFontFamily: 'OpenSans-Regular',
+                      alertTouchableTextDeleteColor: 'white',
+                      alertTextTitleColor: 'black',
+                      alertTextMessageColor: 'black',
+                      alertTextTitleFontFamily: 'OpenSans-Bold',
+                      alertTouchableTextCancelColor: colors.pianoteRed,
+                      alertTouchableDeleteBackground: colors.pianoteRed,
+                      alertBackground: 'white',
+                      alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
+                      alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                    }
+                  }}
+                />
               </View>
-              <View style={{ height: 20 * factorVertical }} />
             </View>
             <TouchableWithoutFeedback
               onPress={() => this.props.hideContentModal()}

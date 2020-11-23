@@ -500,8 +500,8 @@ class VerticalVideoList extends React.Component {
                         borderRadius: this.props.imageRadius
                       }}
                       source={{
-                        uri:
-                          row.thumbnail && row.thumbnail !== 'TBD'
+                        uri: row?.thumbnail.includes('http')
+                          ? row?.thumbnail !== 'TBD'
                             ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                                 this.props.imageWidth * 2
                               )},ar_${
@@ -512,6 +512,7 @@ class VerticalVideoList extends React.Component {
                                 row.thumbnail
                               }`
                             : fallbackThumb
+                          : row.thumbnail
                       }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
@@ -522,8 +523,8 @@ class VerticalVideoList extends React.Component {
                         borderRadius: this.props.imageRadius
                       }}
                       source={{
-                        uri:
-                          row.thumbnail && row.thumbnail !== 'TBD'
+                        uri: row?.thumbnail.includes('http')
+                          ? row.thumbnail && row.thumbnail !== 'TBD'
                             ? `https://cdn.musora.com/image/fetch/w_${Math.round(
                                 this.props.imageWidth * 2
                               )},ar_${
@@ -534,6 +535,7 @@ class VerticalVideoList extends React.Component {
                                 row.thumbnail
                               }`
                             : fallbackThumb
+                          : row.thumbnail
                       }}
                       resizeMode='cover'
                     />
