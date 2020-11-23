@@ -451,131 +451,75 @@ export default class SinglePack extends React.Component {
                 >
                   {this.state.description}
                 </Text>
-                <View key={'containStats'}>
+                <View key='row1' style={{ flexDirection: 'row' }}>
                   <View
                     style={{
-                      height: 10 * factorVertical
+                      flex: 1,
+                      padding: 10,
+                      paddingRight: 20,
+                      alignItems: 'flex-end'
                     }}
-                  />
-                  <View
-                    key={'stats'}
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 0.22,
-                        flexDirection: 'row'
-                      }
-                    ]}
                   >
-                    <View
-                      style={{
-                        flex: 1,
-                        alignSelf: 'stretch'
-                      }}
-                    />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          width: 70 * factorRatio
-                        }
-                      ]}
-                    >
+                    <View style={{ alignItems: 'center' }}>
                       <Text
                         style={{
-                          fontWeight: '700',
-                          fontSize: 17 * factorRatio,
-                          textAlign: 'left',
                           color: 'white',
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
+                          fontSize: 17 * factorRatio,
+                          fontFamily: 'OpenSans-Bold'
                         }}
                       >
                         {this.state.videos.length}
                       </Text>
                       <Text
                         style={{
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'left',
                           color: 'white',
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
+                          fontSize: 13 * factorRatio,
+                          fontFamily: 'OpenSans-Regular'
                         }}
                       >
                         LESSONS
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        width: 15 * factorRatio
-                      }}
-                    />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          width: 70 * factorRatio
-                        }
-                      ]}
-                    >
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      padding: 10,
+                      paddingLeft: 20,
+                      alignItems: 'flex-start'
+                    }}
+                  >
+                    <View style={{ alignItems: 'center' }}>
                       <Text
                         style={{
-                          fontWeight: '700',
-                          fontSize: 17 * factorRatio,
-                          textAlign: 'left',
                           color: 'white',
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
+                          fontSize: 17 * factorRatio,
+                          fontFamily: 'OpenSans-Bold'
                         }}
                       >
                         {this.state.xp}
                       </Text>
                       <Text
                         style={{
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'left',
                           color: 'white',
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
+                          fontSize: 13 * factorRatio,
+                          fontFamily: 'OpenSans-Regular'
                         }}
                       >
                         XP
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        alignSelf: 'stretch'
-                      }}
-                    />
                   </View>
+                </View>
+                <View key='row2' style={{ flexDirection: 'row' }}>
                   <View
                     style={{
-                      height: 15 * factorVertical
+                      flex: 1,
+                      padding: 10,
+                      paddingRight: 20,
+                      alignItems: 'flex-end'
                     }}
-                  />
-                  <View
-                    key={'buttons'}
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 0.25,
-                        flexDirection: 'row'
-                      }
-                    ]}
                   >
-                    <View
-                      style={{
-                        flex: 1,
-                        alignSelf: 'stretch'
-                      }}
-                    />
-
-                    <View
-                      style={{
-                        width: 15 * factorRatio
-                      }}
-                    />
                     <Download_V2
                       entity={{
                         id: this.state.id,
@@ -606,35 +550,32 @@ export default class SinglePack extends React.Component {
                         }
                       }}
                     />
-                    <View
-                      style={{
-                        width: 15 * factorRatio
-                      }}
-                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      padding: 10,
+                      paddingLeft: 20,
+                      alignItems: 'flex-start'
+                    }}
+                  >
                     <TouchableOpacity
+                      style={{ alignItems: 'center' }}
                       onPress={() => {
                         this.setState({
                           showRestartCourse: true
                         });
                       }}
-                      style={[
-                        styles.centerContent,
-                        {
-                          width: 70 * factorRatio
-                        }
-                      ]}
                     >
-                      <View style={{ flex: 1 }} />
                       <MaterialIcon
+                        size={25}
                         name={'replay'}
-                        size={27.5 * factorRatio}
                         color={colors.pianoteRed}
                       />
                       <Text
                         style={{
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'left',
                           color: 'white',
+                          fontSize: 13 * factorRatio,
                           fontFamily: 'OpenSans-Regular',
                           marginTop: 10 * factorVertical
                         }}
@@ -642,18 +583,7 @@ export default class SinglePack extends React.Component {
                         Restart
                       </Text>
                     </TouchableOpacity>
-                    <View
-                      style={{
-                        flex: 1,
-                        alignSelf: 'stretch'
-                      }}
-                    />
                   </View>
-                  <View
-                    style={{
-                      height: 30 * factorVertical
-                    }}
-                  />
                 </View>
               </View>
             )}
