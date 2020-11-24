@@ -7,26 +7,26 @@ const fontsPath = path.join(__dirname, 'assets', 'fonts');
 const filenames = fs.readdirSync(fontsPath);
 
 filenames.forEach(filename => {
-    const extension = path.extname(filename);
+  const extension = path.extname(filename);
 
-    if (!fontFormats.includes(extension)) {
-        return;
-    }
+  if (!fontFormats.includes(extension)) {
+    return;
+  }
 
-    const fontPath = path.join(fontsPath, filename);
-    const font = opentype.loadSync(fontPath);
+  const fontPath = path.join(fontsPath, filename);
+  const font = opentype.loadSync(fontPath);
 
-    const newFilename = font.names.postScriptName.en + extension;
-    const newFontPath = path.join(fontsPath, newFilename);
+  const newFilename = font.names.postScriptName.en + extension;
+  const newFontPath = path.join(fontsPath, newFilename);
 
-    const relativeFontPath = path.relative(__dirname, fontPath);
-    const relativeNewFontPath = path.relative(__dirname, newFontPath);
+  const relativeFontPath = path.relative(__dirname, fontPath);
+  const relativeNewFontPath = path.relative(__dirname, newFontPath);
 
-    if (filename === newFilename) {
-        console.log(`${relativeFontPath} is already named correctly.`);
-    } else {
-        fs.renameSync(fontPath, newFontPath);
+  if (filename === newFilename) {
+    console.log(`${relativeFontPath} is already named correctly.`);
+  } else {
+    fs.renameSync(fontPath, newFontPath);
 
-        console.log(`Renamed ${relativeFontPath} to ${relativeNewFontPath}.`);
-    }
+    console.log(`Renamed ${relativeFontPath} to ${relativeNewFontPath}.`);
+  }
 });
