@@ -50,6 +50,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Allow Pianote access to your calendar to schedule reminders for new videos.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Pianote would like to use your camera to upload a profile picture.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
