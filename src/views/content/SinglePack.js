@@ -71,7 +71,6 @@ export default class SinglePack extends React.Component {
     }
     // get bundles
     const response = await packsService.getPack(this.state.url);
-    console.log(response);
     const newContent = new ContentModel(response);
     const lessons = newContent.post.lessons.map(rl => {
       return new ContentModel(rl);
@@ -514,12 +513,13 @@ export default class SinglePack extends React.Component {
                 <View key='row2' style={{ flexDirection: 'row' }}>
                   <View
                     style={{
-                      flex: 1,
+                      flex: (this.state.id == 262875 ? 0.5 : 1),
                       padding: 10,
                       paddingRight: 20,
                       alignItems: 'flex-end'
                     }}
                   >
+                    {(this.state.id == 262875 ? false : true) && (
                     <Download_V2
                       entity={{
                         id: this.state.id,
@@ -550,6 +550,7 @@ export default class SinglePack extends React.Component {
                         }
                       }}
                     />
+                    )}
                   </View>
                   <View
                     style={{
