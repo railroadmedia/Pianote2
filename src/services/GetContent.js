@@ -198,3 +198,9 @@ export async function getContentById(contentID) {
     return new Error(error);
   }
 }
+
+export async function getStudentFocusTypes() {
+  return commonService.tryCall(
+    `${commonService.rootUrl}/api/railcontent/shows`
+  );
+}
