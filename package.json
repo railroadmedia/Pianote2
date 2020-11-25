@@ -30,6 +30,7 @@
     "opentype.js": "^1.1.0",
     "react": "16.9.0",
     "react-native": "^0.61.4",
+    "react-native-add-calendar-event": "^4.0.0",
     "react-native-axios": "^0.17.1",
     "react-native-carousel-view": "^0.5.1",
     "react-native-clean-project": "^3.4.0",

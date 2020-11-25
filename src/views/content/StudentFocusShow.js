@@ -18,22 +18,6 @@ import VerticalVideoList from '../../components/VerticalVideoList.js';
 import { getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-const packDict = {
-  Podcasts: require('Pianote2/src/assets/img/imgs/podcasts.png'),
-  Bootcamps: require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
-  'Q&A': require('Pianote2/src/assets/img/imgs/questionAnswer.jpg'),
-  'Quick Tips': require('Pianote2/src/assets/img/imgs/quickTips.jpg'),
-  'Student Review': require('Pianote2/src/assets/img/imgs/studentReview.jpg')
-};
-
-const typeDict = {
-  Bootcamps: 'boot-camps',
-  Podcasts: 'podcasts',
-  'Q&A': 'question-and-answer',
-  'Quick Tips': 'quick-tips',
-  'Student Review': 'student-review'
-};
-
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -48,7 +32,8 @@ export default class StudentFocusShow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pack: this.props.navigation.state.params.pack,
+      type: this.props.navigation.state.params.type,
+      thumbnailUrl: this.props.navigation.state.params.thumbnailUrl,
       allLessons: [],
       currentSort: 'newest',
       page: 1,
@@ -76,7 +61,7 @@ export default class StudentFocusShow extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let response = await getAllContent(
-      typeDict[this.state.pack],
+      this.state.type,
       this.state.currentSort,
       this.state.page,
       this.state.filters
@@ -91,6 +76,10 @@ export default class StudentFocusShow extends React.Component {
         title: newContent[i].getField('title'),
         artist: this.getArtist(newContent[i]),
         thumbnail: newContent[i].getData('thumbnail_url'),
+        publishedOn:
+          newContent[i].publishedOn.slice(0, 10) +
+          'T' +
+          newContent[i].publishedOn.slice(11, 16),
         type: newContent[i].post.type,
         id: newContent[i].id,
         isAddedToList: newContent[i].isAddedToList,
@@ -327,7 +316,7 @@ export default class StudentFocusShow extends React.Component {
                   borderColor: colors.thirdBackground,
                   borderWidth: 5
                 }}
-                source={packDict[this.state.pack]}
+                source={{ uri: this.state.thumbnailUrl }}
                 resizeMode={FastImage.resizeMode.stretch}
               />
             </View>
@@ -342,8 +331,8 @@ export default class StudentFocusShow extends React.Component {
             showType={true}
             showArtist={true}
             showLength={false}
-            showFilter={this.state.pack == 'Quick Tips' ? true : false}
-            showSort={this.state.pack == 'Quick Tips' ? true : false}
+            showFilter={this.state.type == 'quick-tips' ? true : false}
+            showSort={this.state.type == 'quick-tips' ? true : false}
             filters={this.state.filters}
             containerWidth={fullWidth}
             imageRadius={5 * factorRatio}

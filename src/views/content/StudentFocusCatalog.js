@@ -14,27 +14,16 @@ import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
-import { getStartedContent } from '../../services/GetContent';
+import {
+  getStartedContent,
+  getStudentFocusTypes
+} from '../../services/GetContent';
 import NavigationBar from '../../components/NavigationBar.js';
 import NavMenuHeaders from '../../components/NavMenuHeaders.js';
 import NavigationMenu from '../../components/NavigationMenu.js';
 import HorizontalVideoList from '../../components/HorizontalVideoList.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-const studentFocus = [
-  {
-    image: require('Pianote2/src/assets/img/imgs/questionAnswer.jpg'),
-    type: 'Q&A'
-  },
-  {
-    image: require('Pianote2/src/assets/img/imgs/bootcamps.jpg'),
-    type: 'Bootcamps'
-  },
-  {
-    image: require('Pianote2/src/assets/img/imgs/studentReview.jpg'),
-    type: 'Student Review'
-  }
-];
 export default class StudentFocusCatalog extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -42,6 +31,7 @@ export default class StudentFocusCatalog extends React.Component {
     super(props);
     this.state = {
       progressStudentFocus: [], // videos
+      studentFocus: [],
       refreshing: true,
       started: true
     };
@@ -55,13 +45,22 @@ export default class StudentFocusCatalog extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    let response = await getStartedContent(
-      'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
-    );
-    const newContent = await response.data.map(data => {
+    let response = await Promise.all([
+      getStartedContent(
+        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
+      ),
+      getStudentFocusTypes()
+    ]);
+    console.log(response);
+    const newContent = await response[0].data.map(data => {
       return new ContentModel(data);
     });
-
+    let shows = response[1];
+    shows = Object.keys(shows).map(key => {
+      shows[key].type = key;
+      return shows[key];
+    });
+    console.log(shows);
     let items = [];
     for (let i in newContent) {
       items.push({
@@ -79,23 +78,27 @@ export default class StudentFocusCatalog extends React.Component {
 
     this.setState({
       progressStudentFocus: [...this.state.progressStudentFocus, ...items],
+      studentFocus: shows,
       refreshing: false,
       started: items.length !== 0
     });
   }
 
   renderFlatListItem = ({ item, index }) => {
+    console.log(item);
     return (
       <TouchableOpacity
         key={index}
         onPress={() => {
           this.props.navigation.navigate('STUDENTFOCUSSHOW', {
-            pack: item.type
+            type: item.type,
+            thumbnailUrl: item.thumbnailUrl
           });
         }}
         style={{
           flex:
-            studentFocus.length % 2 === 1 && studentFocus.length - 1 === index
+            this.state.studentFocus.length % 2 === 1 &&
+            this.state.studentFocus.length - 1 === index
               ? 0.5
               : 1,
           paddingRight: index % 2 === 0 ? 10 : 0,
@@ -107,7 +110,7 @@ export default class StudentFocusCatalog extends React.Component {
             aspectRatio: 1,
             borderRadius: 10 * factorRatio
           }}
-          source={item.image}
+          source={{ uri: item.thumbnailUrl }}
           resizeMode={FastImage.resizeMode.cover}
         />
       </TouchableOpacity>
@@ -135,8 +138,8 @@ export default class StudentFocusCatalog extends React.Component {
             }}
             numColumns={2}
             removeClippedSubviews={true}
-            keyExtractor={item => item.id}
-            data={studentFocus}
+            keyExtractor={item => item.name}
+            data={this.state.studentFocus}
             keyboardShouldPersistTaps='handled'
             refreshControl={
               <RefreshControl
