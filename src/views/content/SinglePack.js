@@ -86,6 +86,10 @@ export default class SinglePack extends React.Component {
           type: lessons[i].post.type,
           thumbnail: lessons[i].getData('thumbnail_url'),
           id: lessons[i].id,
+          publishedOn:
+            newContent[i].publishedOn.slice(0, 10) +
+            'T' +
+            newContent[i].publishedOn.slice(11, 16),
           duration:
             newContent.post.bundle_count > 1
               ? 0
@@ -513,43 +517,43 @@ export default class SinglePack extends React.Component {
                 <View key='row2' style={{ flexDirection: 'row' }}>
                   <View
                     style={{
-                      flex: (this.state.id == 262875 ? 0.5 : 1),
+                      flex: this.state.id == 262875 ? 0.5 : 1,
                       padding: 10,
                       paddingRight: 20,
                       alignItems: 'flex-end'
                     }}
                   >
                     {(this.state.id == 262875 ? false : true) && (
-                    <Download_V2
-                      entity={{
-                        id: this.state.id,
-                        content: packsService.getPack(this.state.url, true)
-                      }}
-                      styles={{
-                        touchable: {},
-                        iconDownloadColor: colors.pianoteRed,
-                        activityIndicatorColor: colors.pianoteRed,
-                        animatedProgressBackground: colors.pianoteRed,
-                        textStatus: {
-                          color: '#ffffff',
-                          fontSize: 13 * factorRatio,
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
-                        },
-                        alert: {
-                          alertTextMessageFontFamily: 'OpenSans-Regular',
-                          alertTouchableTextDeleteColor: 'white',
-                          alertTextTitleColor: 'black',
-                          alertTextMessageColor: 'black',
-                          alertTextTitleFontFamily: 'OpenSans-Bold',
-                          alertTouchableTextCancelColor: colors.pianoteRed,
-                          alertTouchableDeleteBackground: colors.pianoteRed,
-                          alertBackground: 'white',
-                          alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                          alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
-                        }
-                      }}
-                    />
+                      <Download_V2
+                        entity={{
+                          id: this.state.id,
+                          content: packsService.getPack(this.state.url, true)
+                        }}
+                        styles={{
+                          touchable: {},
+                          iconDownloadColor: colors.pianoteRed,
+                          activityIndicatorColor: colors.pianoteRed,
+                          animatedProgressBackground: colors.pianoteRed,
+                          textStatus: {
+                            color: '#ffffff',
+                            fontSize: 13 * factorRatio,
+                            fontFamily: 'OpenSans-Regular',
+                            marginTop: 10 * factorVertical
+                          },
+                          alert: {
+                            alertTextMessageFontFamily: 'OpenSans-Regular',
+                            alertTouchableTextDeleteColor: 'white',
+                            alertTextTitleColor: 'black',
+                            alertTextMessageColor: 'black',
+                            alertTextTitleFontFamily: 'OpenSans-Bold',
+                            alertTouchableTextCancelColor: colors.pianoteRed,
+                            alertTouchableDeleteBackground: colors.pianoteRed,
+                            alertBackground: 'white',
+                            alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
+                            alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                          }
+                        }}
+                      />
                     )}
                   </View>
                   <View

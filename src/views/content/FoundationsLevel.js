@@ -78,6 +78,10 @@ export default class FoundationsLevel extends React.Component {
           title: newContent[i].getField('title'),
           thumbnail: newContent[i].getData('thumbnail_url'),
           type: newContent[i].type,
+          publishedOn:
+            newContent[i].publishedOn.slice(0, 10) +
+            'T' +
+            newContent[i].publishedOn.slice(11, 16),
           id: newContent[i].id,
           isAddedToList: newContent[i].isAddedToList,
           isStarted: newContent[i].isStarted,

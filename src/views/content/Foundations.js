@@ -95,6 +95,10 @@ export default class Foundations extends React.Component {
           .reduce((r, obj) => r.concat(obj.value, '  '), []),
         thumbnail: newContent[i].getData('thumbnail_url'),
         type: newContent[i].post.type,
+        publishedOn:
+          newContent[i].publishedOn.slice(0, 10) +
+          'T' +
+          newContent[i].publishedOn.slice(11, 16),
         description: newContent[i]
           .getData('description')
           .replace(/(<([^>]+)>)/g, '')

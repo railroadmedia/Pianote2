@@ -91,6 +91,10 @@ export default class StudentFocusShow extends React.Component {
         title: newContent[i].getField('title'),
         artist: this.getArtist(newContent[i]),
         thumbnail: newContent[i].getData('thumbnail_url'),
+        publishedOn:
+          newContent[i].publishedOn.slice(0, 10) +
+          'T' +
+          newContent[i].publishedOn.slice(11, 16),
         type: newContent[i].post.type,
         id: newContent[i].id,
         isAddedToList: newContent[i].isAddedToList,
