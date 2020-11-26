@@ -261,7 +261,9 @@ export default class VideoPlayer extends React.Component {
             ? new ContentModel(content.post.parent).getField('artist')
             : content.getField('artist'),
         instructor:
-          content.post.type === 'course-part' && content.post.parent
+          content.post.type === 'unit-part'
+            ? content.post.instructors
+            : content.post.type === 'course-part' && content.post.parent
             ? new ContentModel(content.post.parent).getFieldMulti('instructor')
             : content.getFieldMulti('instructor'),
         isLoadingAll: false,
