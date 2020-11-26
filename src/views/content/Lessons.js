@@ -5,8 +5,8 @@ import React from 'react';
 import {
   View,
   Text,
-  ScrollView,
   Platform,
+  ScrollView,
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
@@ -17,8 +17,6 @@ import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import Pianote from '../../assets/img/svgs/pianote';
-import RestartCourse from '../../modals/RestartCourse';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -28,9 +26,16 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-import { NetworkContext } from '../../context/NetworkProvider';
+
+import commonService from '../../services/common.service';
 import foundationsService from '../../services/foundations.service';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
+
+import Pianote from '../../assets/img/svgs/pianote';
+
+import RestartCourse from '../../modals/RestartCourse';
+
+import { NetworkContext } from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -70,7 +75,8 @@ export default class Lessons extends React.Component {
       foundationNextLesson: null,
       showRestartCourse: false,
       lessonsStarted: true, // for showing continue lessons horizontal list
-      refreshing: true
+      refreshing: true,
+      refreshControl: true
     };
   }
 
@@ -102,49 +108,60 @@ export default class Lessons extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    let content = await Promise.all([
-      foundationsService.getFoundation('foundations-2019'),
-      getAllContent(
-        '',
-        this.state.currentSort,
-        this.state.page,
-        this.state.filters
-      ),
-      getStartedContent('')
-    ]);
+    commonService.cacheSystem(
+      'lessons',
+      [
+        foundationsService.getFoundation('foundations-2019'),
+        getAllContent(
+          '',
+          this.state.currentSort,
+          this.state.page,
+          this.state.filters
+        ),
+        getStartedContent('')
+      ],
+      (content, fromCache) => {
+        let foundation = content[0];
 
-    let foundation = content[0];
+        let allVideos = this.setData(
+          content[1].data.map(data => {
+            return new ContentModel(data);
+          })
+        );
 
-    let allVideos = this.setData(
-      content[1].data.map(data => {
-        return new ContentModel(data);
-      })
+        let inprogressVideos = this.setData(
+          content[2].data.map(data => {
+            return new ContentModel(data);
+          })
+        );
+        console.log('in', inprogressVideos);
+
+        this.setState(
+          {
+            foundationIsStarted: foundation.started,
+            foundationIsCompleted: foundation.completed,
+            foundationNextLesson: foundation.next_lesson,
+            allLessons: allVideos,
+            progressLessons: inprogressVideos,
+            outVideos:
+              allVideos.length == 0 || content[1].data.length < 20
+                ? true
+                : false,
+            filtering: false,
+            isPaging: false,
+            lessonsStarted: inprogressVideos.length !== 0,
+            refreshing: false,
+            refreshControl: fromCache
+          },
+          () => console.log('ass', this.state.progressLessons)
+        );
+
+        AsyncStorage.multiSet([
+          ['foundationsIsStarted', foundation.started.toString()],
+          ['foundationsIsCompleted', foundation.completed.toString()]
+        ]);
+      }
     );
-
-    let inprogressVideos = this.setData(
-      content[2].data.map(data => {
-        return new ContentModel(data);
-      })
-    );
-
-    this.setState({
-      foundationIsStarted: foundation.started,
-      foundationIsCompleted: foundation.completed,
-      foundationNextLesson: foundation.next_lesson,
-      allLessons: [...this.state.allLessons, ...allVideos],
-      progressLessons: [...this.state.progressLessons, ...inprogressVideos],
-      outVideos:
-        allVideos.length == 0 || content[1].data.length < 20 ? true : false,
-      filtering: false,
-      isPaging: false,
-      lessonsStarted: inprogressVideos.length !== 0,
-      refreshing: false
-    });
-
-    AsyncStorage.multiSet([
-      ['foundationsIsStarted', foundation.started.toString()],
-      ['foundationsIsCompleted', foundation.completed.toString()]
-    ]);
   }
 
   getFoundations = async () => {
@@ -373,7 +390,7 @@ export default class Lessons extends React.Component {
   refresh() {
     this.setState(
       {
-        refreshing: true,
+        refreshControl: true,
         inprogressVideos: [],
         allLessons: [],
         page: 1
@@ -383,22 +400,12 @@ export default class Lessons extends React.Component {
   }
 
   render() {
+    console.log('rend', this.state.progressLessons);
     return (
       <View
         style={[styles.container, { backgroundColor: colors.mainBackground }]}
       >
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            width: fullWidth,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'LESSONS'} parentPage={'LESSONS'} />
-        </View>
+        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'LESSONS'} />
         {!this.state.refreshing ? (
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -410,33 +417,14 @@ export default class Lessons extends React.Component {
             refreshControl={
               <RefreshControl
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshing}
+                tintColor={colors.pianoteRed}
+                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />
             }
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             scrollEventThrottle={400}
           >
-            <View
-              key={'backgroundColoring'}
-              style={{
-                backgroundColor: colors.thirdBackground,
-                position: 'absolute',
-                height: fullHeight,
-                top: -fullHeight,
-                left: 0,
-                right: 0,
-                zIndex: 10,
-                elevation: 10
-              }}
-            />
-            <View
-              key={'header'}
-              style={{
-                height: fullHeight * 0.1,
-                backgroundColor: colors.thirdBackground
-              }}
-            />
             <View
               key={'image'}
               style={[

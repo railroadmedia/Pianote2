@@ -40,14 +40,22 @@ class HorizontalVideoList extends React.Component {
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
-  UNSAFE_componentWillReceiveProps = async props => {
-    if (props.isLoading !== this.state.isLoading) {
-      this.setState({
-        isLoading: props.isLoading,
-        items: props.items
-      });
-    }
-  };
+  componentDidUpdate(prevProps) {
+    let { items: pItems } = prevProps;
+    let myListStatusChanged, progressChanged;
+    if (this.props.items.length !== pItems.length) progressChanged = true;
+    else if (
+      this.props.items.some(item =>
+        pItems.some(
+          pItem =>
+            item.id === pItem.id && item.isAddedToList !== pItem.isAddedToList
+        )
+      )
+    )
+      myListStatusChanged = true;
+    if (progressChanged || myListStatusChanged)
+      this.setState({ items: this.props.items });
+  }
 
   addToMyList = contentID => {
     if (!this.context.isConnected) {

@@ -43,9 +43,7 @@ export async function getAllContent(type, sort, page, filtersDict) {
       `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
       filters +
       required_user_states;
-    let x = await commonService.tryCall(url);
-    console.log(' X ', x)
-    return x;
+    return await commonService.tryCall(url);
   } catch (error) {
     console.log('Error: ', error);
     return new Error(error);

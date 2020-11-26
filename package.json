@@ -23,8 +23,8 @@
     "@react-native-firebase/app": "^8.4.7",
     "@react-native-firebase/crashlytics": "^8.4.12",
     "@react-native-firebase/messaging": "^7.9.2",
-    "RNDownload": "https://github.com/railroadmedia/RNDownload.git",
-    "RNVideoEnhanced": "https://github.com/railroadmedia/RNVideoEnhanced.git",
+    "RNDownload": "git+https://github.com/railroadmedia/RNDownload.git",
+    "RNVideoEnhanced": "git+https://github.com/railroadmedia/RNVideoEnhanced.git",
     "link": "^0.1.5",
     "moment": "^2.27.0",
     "opentype.js": "^1.1.0",
@@ -59,7 +59,8 @@
     "react-native-view-pdf": "^0.11.0",
     "react-native-webview": "^10.4.0",
     "react-navigation": "^4.0.10",
-    "react-navigation-stack": "^1.10.3"
+    "react-navigation-stack": "^1.10.3",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
