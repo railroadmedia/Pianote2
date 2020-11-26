@@ -87,9 +87,9 @@ export default class SinglePack extends React.Component {
           thumbnail: lessons[i].getData('thumbnail_url'),
           id: lessons[i].id,
           publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
+            lessons[i].publishedOn.slice(0, 10) +
             'T' +
-            newContent[i].publishedOn.slice(11, 16),
+            lessons[i].publishedOn.slice(11, 16),
           duration:
             newContent.post.bundle_count > 1
               ? 0
