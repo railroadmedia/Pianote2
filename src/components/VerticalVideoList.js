@@ -276,6 +276,9 @@ class VerticalVideoList extends React.Component {
       this.props.title !== 'Foundations'
     )
       return this.context.showNoConnectionAlert();
+    if (new Date(content.publishedOn) > new Date()) {
+      return;
+    }
     if (this.props.navigator) return this.props.navigator(content, index);
     switch (content.type) {
       case 'course':
@@ -1167,7 +1170,7 @@ class VerticalVideoList extends React.Component {
           style={{
             margin: 0,
             height: fullHeight,
-            width: fullWidth,
+            width: fullWidth
           }}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -1176,7 +1179,9 @@ class VerticalVideoList extends React.Component {
           hasBackdrop={true}
         >
           <AddToCalendar
-            hideAddToCalendar={() => this.setState({addToCalendarModal: false})}
+            hideAddToCalendar={() =>
+              this.setState({ addToCalendarModal: false })
+            }
             addEventToCalendar={() => this.addEventToCalendar()}
           />
         </Modal>
