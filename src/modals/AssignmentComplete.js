@@ -51,9 +51,8 @@ class AssignmentComplete extends React.Component {
             >
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: 25 * factorRatio,
-                  fontWeight: '700',
                   textAlign: 'center'
                 }}
               >
@@ -66,7 +65,6 @@ class AssignmentComplete extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   fontSize: 16 * factorRatio,
-                  fontWeight: '300',
                   textAlign: 'center'
                 }}
               >
@@ -75,9 +73,8 @@ class AssignmentComplete extends React.Component {
               <View style={{ height: 5 * factorRatio }} />
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: 16 * factorRatio,
-                  fontWeight: '700',
                   textAlign: 'center'
                 }}
               >
@@ -86,9 +83,8 @@ class AssignmentComplete extends React.Component {
               <View style={{ height: 5 * factorRatio }} />
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: 16 * factorRatio,
-                  fontWeight: '800',
                   textAlign: 'center',
                   color: '#fb1b2f'
                 }}

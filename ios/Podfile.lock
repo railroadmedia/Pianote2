@@ -269,6 +269,8 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
+  - react-native-add-calendar-event (4.0.0):
+    - React-Core
   - react-native-background-downloader (2.3.4):
     - React
   - react-native-blur (0.8.0):
@@ -404,6 +406,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-add-calendar-event (from `../node_modules/react-native-add-calendar-event`)
   - react-native-background-downloader (from `../node_modules/react-native-background-downloader`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-google-cast/NoBluetooth (from `../node_modules/react-native-google-cast/ios/`)
@@ -499,6 +502,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-add-calendar-event:
+    :path: "../node_modules/react-native-add-calendar-event"
   react-native-background-downloader:
     :path: "../node_modules/react-native-background-downloader"
   react-native-blur:
@@ -593,8 +598,8 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
-  Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
-  glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  Folly: 183c8dae43723c50ebd669140abc6258bbb6e95a
+  glog: 0af464288b7fbaf913986b419dc492c787bfdffe
   google-cast-sdk-no-bluetooth: 73ac8e9edbee16f52c2a445e391bd531e116bb31
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
@@ -613,6 +618,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
+  react-native-add-calendar-event: e501cea7d393396ff1e798c462983c9e6d8dfc02
   react-native-background-downloader: f33bf10a731164e272c9101254f63c74b8dc09f9
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-google-cast: e19d00c9ec8909f3e842a7175ba35294b57c627d

@@ -27,6 +27,7 @@ import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import { NetworkContext } from '../context/NetworkProvider';
+import AddToCalendar from '../modals/AddToCalendar';
 
 const sortDict = {
   newest: 'NEWEST',
@@ -1166,7 +1167,7 @@ class VerticalVideoList extends React.Component {
           style={{
             margin: 0,
             height: fullHeight,
-            width: fullWidth
+            width: fullWidth,
           }}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -1174,69 +1175,10 @@ class VerticalVideoList extends React.Component {
           coverScreen={true}
           hasBackdrop={true}
         >
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-            onPress={() => this.setState({ addToCalendarModal: false })}
-          >
-            <View
-              style={{
-                backgroundColor: colors.thirdBackground,
-                maxWidth: 300,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <FontIcon
-                size={60 * factorRatio}
-                name={'calendar-plus'}
-                color={colors.pianoteRed}
-                style={{ padding: 10 }}
-              />
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontFamily: 'OpenSans',
-                  textAlign: 'center',
-                  paddingVertical: 10,
-                  paddingHorizontal: 20,
-                  color: '#ffffff'
-                }}
-              >
-                Add this lesson to your calendar so you're notified when it's
-                available
-              </Text>
-              <TouchableOpacity
-                style={{
-                  borderColor: colors.pianoteRed,
-                  width: 245,
-                  marginHorizontal: 25,
-                  marginBottom: 20,
-                  backgroundColor: colors.pianoteRed,
-                  borderWidth: 2,
-                  borderRadius: 25,
-                  minHeight: 46,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-                onPress={() => this.addEventToCalendar()}
-              >
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: 15,
-                    color: '#ffffff'
-                  }}
-                >
-                  ADD TO CALENDAR
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
+          <AddToCalendar
+            hideAddToCalendar={() => this.setState({addToCalendarModal: false})}
+            addEventToCalendar={() => this.addEventToCalendar()}
+          />
         </Modal>
       </View>
     );

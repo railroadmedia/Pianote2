@@ -1,11 +1,12 @@
 /**
- * ChangeEmail
+ * AddToCalendar
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import FontIcon from 'react-native-vector-icons/FontAwesome5';
 
-class ChangeEmail extends React.Component {
+class AddToCalendar extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
     super(props);
@@ -27,16 +28,16 @@ class ChangeEmail extends React.Component {
         <View
           key={'buffTop'}
           style={{
-            height: '8%'
+            height: '29%',
           }}
         >
           <TouchableOpacity
-            onPress={() => this.props.hideChangeEmail()}
+            onPress={() => this.props.hideAddToCalendar()}
             style={{
               height: '100%',
               width: '100%'
             }}
-          ></TouchableOpacity>
+          />
         </View>
         <View
           key={'content'}
@@ -48,12 +49,12 @@ class ChangeEmail extends React.Component {
         >
           <View key={'buffLeft'} style={{ width: '7%' }}>
             <TouchableOpacity
-              onPress={() => this.props.hideChangeEmail()}
+              onPress={() => this.props.hideAddToCalendar()}
               style={{
                 height: '100%',
                 width: '100%'
               }}
-            ></TouchableOpacity>
+            />
           </View>
           <View
             key={'content'}
@@ -75,7 +76,7 @@ class ChangeEmail extends React.Component {
                 textAlign: 'center'
               }}
             >
-              Confirm change of email.
+              ADD TO CALENDAR
             </Text>
             <View style={{ flex: 0.075 }} />
             <View key={'enterPassword'}>
@@ -84,11 +85,11 @@ class ChangeEmail extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   fontSize: 15 * factorRatio,
+                  fontWeight: '300',
                   textAlign: 'center'
                 }}
               >
-                Enter your account password to confirm the change of email
-                address.
+                Add this lesson to your calendar to be notified when it's available
               </Text>
               <View style={{ flex: 1 }} />
             </View>
@@ -97,48 +98,17 @@ class ChangeEmail extends React.Component {
               <View style={{ height: '100%' }}>
                 <View
                   key={'passwords'}
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: '30%'
-                    }
-                  ]}
+                  style={styles.centerContent}
                 >
-                  <View
-                    style={{
-                      height: '80%',
-                      width: '90%',
-                      borderRadius: 100 * factorRatio,
-                      backgroundColor: '#ececec'
-                    }}
-                  >
-                    <TextInput
-                      ref={txt => {
-                        this.txt = txt;
-                      }}
-                      placeholder={'Enter your password...'}
-                      value={this.state.password}
-                      secureTextEntry={true}
-                      placeholderTextColor={'#9b9b9b'}
-                      onChangeText={password => this.setState({ password })}
-                      onSubmitEditing={() => {}}
-                      returnKeyType={'go'}
-                      style={{
-                        color: 'black',
-                        fontFamily: 'OpenSans-Regular',
-                        height: fullHeight * 0.06,
-                        paddingLeft: fullWidth * 0.075,
-                        width: fullWidth,
-                        justifyContent: 'center',
-                        fontSize: 15 * factorRatio,
-                        borderBottomColor: '#ececec',
-                        borderBottomWidth: 1.5 * factorRatio
-                      }}
+                    <FontIcon
+                        size={60 * factorRatio}
+                        name={'calendar-plus'}
+                        color={colors.pianoteRed}
+                        style={{ padding: 10 }}
                     />
-                  </View>
                 </View>
+                <View style={{height: 5}}/>
                 <View
-                  key={'confirmEmail'}
                   style={[
                     styles.centerContent,
                     {
@@ -155,7 +125,9 @@ class ChangeEmail extends React.Component {
                     }}
                   >
                     <TouchableOpacity
-                      onPress={() => {}}
+                      onPress={() => {
+                        this.props.addEventToCalendar()
+                      }}
                       style={{
                         height: '100%',
                         width: '100%'
@@ -164,13 +136,14 @@ class ChangeEmail extends React.Component {
                       <View style={{ flex: 1 }} />
                       <Text
                         style={{
-                          fontFamily: 'OpenSans-Bold',
+                          fontFamily: 'OpenSans-Regular',
                           fontSize: 15 * factorRatio,
+                          fontWeight: '700',
                           textAlign: 'center',
                           color: 'white'
                         }}
                       >
-                        CONFIRM EMAIL CHANGE
+                        CONFIRM ADDITION
                       </Text>
                       <View style={{ flex: 1 }} />
                     </TouchableOpacity>
@@ -178,7 +151,7 @@ class ChangeEmail extends React.Component {
                 </View>
                 <View
                   onPress={() => {
-                    this.props.hideChangeEmail();
+                    this.props.hideAddToCalendar();
                   }}
                   style={[
                     styles.centerContent,
@@ -188,48 +161,32 @@ class ChangeEmail extends React.Component {
                     }
                   ]}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.hideChangeEmail();
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-BOld',
-                        fontSize: 15 * factorRatio,
-                        color: 'grey',
-                        textAlign: 'center'
-                      }}
-                    >
-                      CANCEL
-                    </Text>
-                  </TouchableOpacity>
                 </View>
               </View>
             </View>
           </View>
           <View key={'buffRight'} style={{ width: '7%' }}>
             <TouchableOpacity
-              onPress={() => this.props.hideChangeEmail()}
+              onPress={() => this.props.hideAddToCalendar()}
               style={{
                 height: '100%',
                 width: '100%'
               }}
-            ></TouchableOpacity>
+            />
           </View>
         </View>
-        <View key={'buffBottom'} style={{ height: '27.5%' }}>
+        <View key={'buffBottom'} style={{ height: '29%' }}>
           <TouchableOpacity
-            onPress={() => this.props.hideChangeEmail()}
+            onPress={() => this.props.hideAddToCalendar()}
             style={{
               height: '100%',
               width: '100%'
             }}
-          ></TouchableOpacity>
+          />
         </View>
       </View>
     );
   };
 }
 
-export default withNavigation(ChangeEmail);
+export default withNavigation(AddToCalendar);

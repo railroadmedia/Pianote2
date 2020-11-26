@@ -799,7 +799,7 @@ export default class Lessons extends React.Component {
           </ScrollView>
         ) : (
           <ActivityIndicator
-            size='large'
+            size='small'
             style={{ flex: 1 }}
             color={colors.secondBackground}
           />
