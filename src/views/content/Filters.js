@@ -1160,11 +1160,7 @@ export default class Filters extends React.Component {
               styles.centerContent,
               {
                 height:
-                  Platform.OS == 'android'
-                    ? fullHeight * 0.1
-                    : isNotch
-                    ? fullHeight * 0.12
-                    : fullHeight * 0.1,
+                  Platform.OS == 'android' ? fullHeight * 0.1 : isNotch ? fullHeight * 0.12 : fullHeight * 0.1 + 15 * factorVertical,
                 backgroundColor: colors.thirdBackground
               }
             ]}
@@ -1187,7 +1183,7 @@ export default class Filters extends React.Component {
                     onPress={() => this.props.navigation.goBack()}
                     style={{
                       paddingLeft: 10 * factorRatio,
-                      paddingRight: 10 * factorRatio
+                      paddingRight: 10 * factorRatio,
                     }}
                   >
                     <EntypoIcon
