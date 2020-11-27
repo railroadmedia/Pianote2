@@ -156,6 +156,7 @@ export default class VideoPlayer extends React.Component {
       return new ContentModel(rl);
     });
     let al = [];
+
     if (content.post.assignments && this.context.isConnected) {
       let assignments = content.post.assignments.map(assignment => {
         return new ContentModel(assignment);
@@ -187,13 +188,14 @@ export default class VideoPlayer extends React.Component {
           timeCodes: assignments[a].post.data
             .filter(d => d.key === 'timecode')
             .map(tc => ({ value: tc.value })),
-          sheets: assignments[a].post.data
-            .filter(d => d.key === 'sheet_music_image_url')
-            .map(s => ({
-              value: s.value,
-              id: s.id,
-              whRatio: s.whRatio
-            }))
+          sheets:
+            assignments[a].post.data
+              .filter(d => d.key === 'sheet_music_image_url')
+              .map(s => ({
+                value: s.value,
+                id: s.id,
+                whRatio: s.whRatio
+              })) || []
         });
       }
     }
