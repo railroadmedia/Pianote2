@@ -134,27 +134,20 @@ export default class Lessons extends React.Component {
             return new ContentModel(data);
           })
         );
-        console.log('in', inprogressVideos);
-
-        this.setState(
-          {
-            foundationIsStarted: foundation.started,
-            foundationIsCompleted: foundation.completed,
-            foundationNextLesson: foundation.next_lesson,
-            allLessons: allVideos,
-            progressLessons: inprogressVideos,
-            outVideos:
-              allVideos.length == 0 || content[1].data.length < 20
-                ? true
-                : false,
-            filtering: false,
-            isPaging: false,
-            lessonsStarted: inprogressVideos.length !== 0,
-            refreshing: false,
-            refreshControl: fromCache
-          },
-          () => console.log('ass', this.state.progressLessons)
-        );
+        this.setState({
+          foundationIsStarted: foundation.started,
+          foundationIsCompleted: foundation.completed,
+          foundationNextLesson: foundation.next_lesson,
+          allLessons: allVideos,
+          progressLessons: inprogressVideos,
+          outVideos:
+            allVideos.length == 0 || content[1].data.length < 20 ? true : false,
+          filtering: false,
+          isPaging: false,
+          lessonsStarted: inprogressVideos.length !== 0,
+          refreshing: false,
+          refreshControl: fromCache
+        });
 
         AsyncStorage.multiSet([
           ['foundationsIsStarted', foundation.started.toString()],
@@ -208,9 +201,7 @@ export default class Lessons extends React.Component {
         filtering: false,
         isPaging: false
       });
-    } catch (error) {
-      console.log('all lessons error: ', error);
-    }
+    } catch (error) {}
   };
 
   setData(newContent) {
@@ -400,7 +391,6 @@ export default class Lessons extends React.Component {
   }
 
   render() {
-    console.log('rend', this.state.progressLessons);
     return (
       <View
         style={[styles.container, { backgroundColor: colors.mainBackground }]}

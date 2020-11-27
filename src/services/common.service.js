@@ -55,7 +55,6 @@ export default {
           } catch (e) {}
         });
     Promise.all(calls).then(response => {
-      console.log('calls', response);
       setStateCallback(response);
       cache[page] = response;
       RNFetchBlo.fs.writeFile(
