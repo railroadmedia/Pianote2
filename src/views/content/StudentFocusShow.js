@@ -15,7 +15,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
-import { getAllContent } from '../../services/GetContent';
+import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
@@ -54,7 +54,15 @@ export default class StudentFocusShow extends React.Component {
 
   componentDidMount = () => {
     this.getAllLessons();
+    if (!this.state.thumbnailUrl) {
+      this.getStudentFocus();
+    }
   };
+
+  async getStudentFocus() {
+    let studentFocus = await getStudentFocusTypes();
+    this.setState({ thumbnailUrl: studentFocus[this.state.type].thumbnailUrl });
+  }
 
   getAllLessons = async isLoadingMore => {
     if (!this.context.isConnected) {

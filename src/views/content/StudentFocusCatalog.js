@@ -52,7 +52,6 @@ export default class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
-    console.log(response);
     const newContent = await response[0].data.map(data => {
       return new ContentModel(data);
     });
@@ -86,7 +85,6 @@ export default class StudentFocusCatalog extends React.Component {
   }
 
   renderFlatListItem = ({ item, index }) => {
-    console.log(item);
     return (
       <TouchableOpacity
         key={index}
