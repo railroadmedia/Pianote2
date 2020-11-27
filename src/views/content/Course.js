@@ -47,7 +47,8 @@ export default class Course extends React.Component {
         instructors: []
       },
       started: true, // if started lesson
-      refreshing: true
+      refreshing: true,
+      refreshControl: true
     };
   }
 
@@ -68,7 +69,6 @@ export default class Course extends React.Component {
       ),
       getStartedContent('course')
     ]);
-    console.log(content);
     let allVideos = this.setData(
       content[0].data.map(data => {
         return new ContentModel(data);
@@ -82,9 +82,10 @@ export default class Course extends React.Component {
     );
 
     this.setState({
-      allCourses: [...this.state.allCourses, ...allVideos],
-      progressCourses: [...this.state.progressCourses, ...inprogressVideos],
+      allCourses: allVideos,
+      progressCourses: inprogressVideos,
       refreshing: false,
+      refreshControl: false,
       outVideos:
         allVideos.length == 0 || content[0].data.length < 20 ? true : false,
       filtering: false,
@@ -94,7 +95,7 @@ export default class Course extends React.Component {
     });
   }
 
-  getAllCourses = async () => {
+  getAllCourses = async loadMore => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -110,13 +111,14 @@ export default class Course extends React.Component {
 
     let items = this.setData(newContent);
 
-    this.setState({
-      allCourses: [...this.state.allCourses, ...items],
+    this.setState(state => ({
+      allCourses: loadMore ? state.allCourses.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
       isPaging: false,
+      refreshControl: false,
       page: this.state.page + 1
-    });
+    }));
   };
 
   setData(newContent) {
@@ -190,7 +192,9 @@ export default class Course extends React.Component {
   getVideos = async () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.getAllCourses());
+      this.setState({ page: this.state.page + 1 }, () =>
+        this.getAllCourses(true)
+      );
     }
   };
 
@@ -205,7 +209,7 @@ export default class Course extends React.Component {
           page: this.state.page + 1,
           isPaging: true
         },
-        () => this.getAllCourses()
+        () => this.getAllCourses(true)
       );
     }
   };
@@ -245,10 +249,7 @@ export default class Course extends React.Component {
   };
 
   refresh() {
-    this.setState(
-      { refreshing: true, inprogressVideos: [], allCourses: [], page: 1 },
-      () => this.getContent()
-    );
+    this.setState({ refreshControl: true, page: 1 }, () => this.getContent());
   }
 
   render() {
@@ -276,7 +277,7 @@ export default class Course extends React.Component {
             refreshControl={
               <RefreshControl
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshing}
+                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />
             }

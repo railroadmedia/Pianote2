@@ -48,7 +48,8 @@ export default class SongCatalog extends React.Component {
         instructors: []
       },
       started: true,
-      refreshing: true
+      refreshing: true,
+      refreshControl: true
     };
   }
 
@@ -70,7 +71,7 @@ export default class SongCatalog extends React.Component {
       ),
       getStartedContent('song')
     ]);
-    console.log(content);
+
     let allVideos = this.setData(
       content[0].data.map(data => {
         return new ContentModel(data);
@@ -84,18 +85,19 @@ export default class SongCatalog extends React.Component {
     );
 
     this.setState({
-      allSongs: [...this.state.allSongs, ...allVideos],
+      allSongs: allVideos,
       outVideos:
         allVideos.length == 0 || content[0].data.length < 20 ? true : false,
       filtering: false,
       isPaging: false,
-      progressSongs: [...this.state.progressSongs, ...inprogressVideos],
+      progressSongs: inprogressVideos,
       started: inprogressVideos.length !== 0,
-      refreshing: false
+      refreshing: false,
+      refreshControl: false
     });
   }
 
-  getAllSongs = async () => {
+  getAllSongs = async loadMore => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -112,13 +114,14 @@ export default class SongCatalog extends React.Component {
 
     let items = this.setData(newContent);
 
-    this.setState({
-      allSongs: [...this.state.allSongs, ...items],
+    this.setState(state => ({
+      allSongs: loadMore ? state.allSongs.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
+      refreshControl: false,
       isPaging: false,
       refreshing: false
-    });
+    }));
   };
 
   setData(newContent) {
@@ -172,7 +175,9 @@ export default class SongCatalog extends React.Component {
 
   getVideos = () => {
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.getAllSongs());
+      this.setState({ page: this.state.page + 1 }, () =>
+        this.getAllSongs(true)
+      );
     }
   };
 
@@ -187,7 +192,7 @@ export default class SongCatalog extends React.Component {
           page: this.state.page + 1,
           isPaging: true
         },
-        () => this.getAllSongs()
+        () => this.getAllSongs(true)
       );
     }
   };
@@ -228,9 +233,7 @@ export default class SongCatalog extends React.Component {
   refresh() {
     this.setState(
       {
-        refreshing: true,
-        inprogressVideos: [],
-        allVideos: [],
+        refreshControl: true,
         page: 1
       },
       () => this.getContent()
@@ -263,7 +266,7 @@ export default class SongCatalog extends React.Component {
             refreshControl={
               <RefreshControl
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshing}
+                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />
             }

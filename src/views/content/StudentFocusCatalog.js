@@ -33,6 +33,7 @@ export default class StudentFocusCatalog extends React.Component {
       progressStudentFocus: [], // videos
       studentFocus: [],
       refreshing: true,
+      refreshControl: true,
       started: true
     };
   }
@@ -60,7 +61,6 @@ export default class StudentFocusCatalog extends React.Component {
       shows[key].type = key;
       return shows[key];
     });
-    console.log(shows);
     let items = [];
     for (let i in newContent) {
       items.push({
@@ -77,9 +77,10 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     this.setState({
-      progressStudentFocus: [...this.state.progressStudentFocus, ...items],
+      progressStudentFocus: items,
       studentFocus: shows,
       refreshing: false,
+      refreshControl: false,
       started: items.length !== 0
     });
   }
@@ -118,9 +119,7 @@ export default class StudentFocusCatalog extends React.Component {
   };
 
   refresh() {
-    this.setState({ refreshing: true, progressStudentFocus: [] }, () =>
-      this.getData()
-    );
+    this.setState({ refreshControl: true }, () => this.getData());
   }
 
   render() {
@@ -144,7 +143,7 @@ export default class StudentFocusCatalog extends React.Component {
             refreshControl={
               <RefreshControl
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshing}
+                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />
             }
