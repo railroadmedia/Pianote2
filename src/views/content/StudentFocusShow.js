@@ -56,7 +56,7 @@ export default class StudentFocusShow extends React.Component {
     this.getAllLessons();
   };
 
-  getAllLessons = async () => {
+  getAllLessons = async isLoadingMore => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -89,15 +89,15 @@ export default class StudentFocusShow extends React.Component {
       });
     }
 
-    this.setState({
-      allLessons: [...this.state.allLessons, ...items],
+    this.setState(state => ({
+      allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
       isPaging: false
-    });
+    }));
   };
 
   changeSort = async currentSort => {
@@ -116,7 +116,9 @@ export default class StudentFocusShow extends React.Component {
   getVideos = async () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
+      this.setState({ page: this.state.page + 1 }, () =>
+        this.getAllLessons(true)
+      );
     }
   };
 
@@ -151,7 +153,7 @@ export default class StudentFocusShow extends React.Component {
           page: this.state.page + 1,
           isPaging: true
         },
-        () => this.getAllLessons()
+        () => this.getAllLessons(true)
       );
     }
   };
@@ -190,9 +192,8 @@ export default class StudentFocusShow extends React.Component {
   };
 
   refresh = () => {
-    this.setState(
-      { refreshing: true, page: 1, allLessons: [], outVideos: false },
-      () => this.getAllLessons()
+    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
+      this.getAllLessons()
     );
   };
 

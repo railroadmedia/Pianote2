@@ -48,7 +48,7 @@ export default class MyList extends React.Component {
         instructors: []
       },
       showModalMenu: false,
-      refreshing: true
+      refreshing: false
     };
   }
 
@@ -171,7 +171,6 @@ export default class MyList extends React.Component {
     // after leaving filter page. set filters here
     this.setState(
       {
-        allLessons: [],
         outVideos: false,
         page: 1,
         filters:

@@ -42,6 +42,7 @@ export default class Packs extends React.Component {
       headerPackCompleted: false,
       headerPackStarted: false,
       isLoading: true,
+      refreshing: false,
       showRestartCourse: false
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
@@ -73,8 +74,9 @@ export default class Packs extends React.Component {
     }
 
     this.setState({
-      packs: [...this.state.packs, ...items],
+      packs: items,
       isLoading: false,
+      refreshing: false,
       showRestartCourse: false,
       headerPackImg: topHeaderPack.getData('thumbnail_url'),
       headerPackLogo: topHeaderPack.getData('logo_image_url'),
@@ -90,14 +92,13 @@ export default class Packs extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     await resetProgress(this.state.id);
-    this.setState(
-      { isLoading: true, packs: [], showRestartCourse: false },
-      () => this.getData()
+    this.setState({ refreshing: true, showRestartCourse: false }, () =>
+      this.getData()
     );
   };
 
   refresh = () => {
-    this.setState({ isLoading: true, packs: [] }, () => {
+    this.setState({ refreshing: true }, () => {
       this.getData();
     });
   };
@@ -133,7 +134,7 @@ export default class Packs extends React.Component {
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.isLoading}
+              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
             />
           }

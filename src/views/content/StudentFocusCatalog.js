@@ -33,7 +33,7 @@ export default class StudentFocusCatalog extends React.Component {
       progressStudentFocus: [], // videos
       studentFocus: [],
       refreshing: true,
-      refreshControl: true,
+      refreshControl: false,
       started: true
     };
   }

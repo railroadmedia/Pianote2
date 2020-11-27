@@ -48,7 +48,7 @@ export default class Course extends React.Component {
       },
       started: true, // if started lesson
       refreshing: true,
-      refreshControl: true
+      refreshControl: false
     };
   }
 
@@ -162,7 +162,6 @@ export default class Course extends React.Component {
       type: 'COURSES',
       onGoBack: filters => {
         this.setState({
-          allCourses: [],
           filters:
             filters.instructors.length == 0 &&
             filters.level.length == 0 &&
@@ -182,7 +181,6 @@ export default class Course extends React.Component {
         currentSort,
         outVideos: false,
         isPaging: false,
-        allCourses: [],
         page: 1
       },
       () => this.getAllCourses()
@@ -227,7 +225,6 @@ export default class Course extends React.Component {
     // after leaving filter page. set filters here
     this.setState(
       {
-        allCourses: [],
         outVideos: false,
         page: 1,
         filters:

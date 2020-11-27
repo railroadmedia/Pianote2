@@ -49,7 +49,7 @@ export default class SongCatalog extends React.Component {
       },
       started: true,
       refreshing: true,
-      refreshControl: true
+      refreshControl: false
     };
   }
 

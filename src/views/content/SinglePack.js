@@ -56,7 +56,8 @@ export default class SinglePack extends React.Component {
       isStarted: false,
       isCompleted: false,
       nextLessonUrl: '',
-      isLoadingAll: true
+      isLoadingAll: true,
+      refreshing: false
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -117,9 +118,10 @@ export default class SinglePack extends React.Component {
       isStarted: newContent.isStarted,
       isCompleted: newContent.isCompleted,
       xp: newContent.xp,
-      videos: [...this.state.videos, ...items],
+      videos: items,
       nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
-      isLoadingAll: false
+      isLoadingAll: false,
+      refreshing: false
     });
   };
 
@@ -128,9 +130,8 @@ export default class SinglePack extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     await resetProgress(this.state.id);
-    this.setState(
-      { showRestartCourse: false, isLoadingAll: true, videos: [] },
-      () => this.getBundle()
+    this.setState({ showRestartCourse: false, refreshing: true }, () =>
+      this.getBundle()
     );
   }
 
@@ -161,7 +162,7 @@ export default class SinglePack extends React.Component {
   };
 
   refresh = () => {
-    this.setState({ isLoadingAll: true, videos: [] }, () => {
+    this.setState({ refreshing: true }, () => {
       this.getBundle();
     });
   };
@@ -182,7 +183,7 @@ export default class SinglePack extends React.Component {
             refreshControl={
               <RefreshControl
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.isLoadingAll}
+                refreshing={this.state.refreshing}
                 onRefresh={() => this.refresh()}
               />
             }

@@ -268,7 +268,7 @@ export default class VideoPlayer extends React.Component {
             : content.getFieldMulti('instructor'),
         isLoadingAll: false,
         publishedOn: content.publishedOn,
-        relatedLessons: [...this.state.relatedLessons, ...rl],
+        relatedLessons: rl,
         likes: parseInt(content.likeCount),
         isLiked: content.post.is_liked_by_current_user,
         lengthInSec: content.post.fields?.find(f => f.key === 'video')
@@ -283,7 +283,7 @@ export default class VideoPlayer extends React.Component {
           ) || 0,
         isAddedToMyList: content.isAddedToList,
         isStarted: content.isStarted,
-        assignmentList: [...this.state.assignmentList, ...al],
+        assignmentList: al,
         nextUnit: content.post.next_unit
           ? new ContentModel(content.post.next_unit)
           : null,
@@ -415,8 +415,6 @@ export default class VideoPlayer extends React.Component {
         id,
         url,
         isLoadingAll: true,
-        assignmentList: [],
-        relatedLessons: [],
         resources: null,
         selectedAssignment: null
       },
@@ -696,12 +694,9 @@ export default class VideoPlayer extends React.Component {
   };
 
   refresh = () => {
-    this.setState(
-      { isLoadingAll: true, relatedLessons: [], assignmentList: [] },
-      () => {
-        this.getContent();
-      }
-    );
+    this.setState({ isLoadingAll: true }, () => {
+      this.getContent();
+    });
   };
 
   async onResetProgress() {
