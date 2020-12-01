@@ -203,7 +203,7 @@ export default class StudentFocusCatalog extends React.Component {
           <ActivityIndicator
             size='large'
             style={{ flex: 1 }}
-            color={colors.pianoteRed}
+            color={colors.secondBackground}
           />
         )}
         <NavigationBar currentPage={''} />
