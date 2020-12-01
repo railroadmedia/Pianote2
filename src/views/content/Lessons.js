@@ -134,7 +134,7 @@ export default class Lessons extends React.Component {
             return new ContentModel(data);
           })
         );
-        console.log('in', inprogressVideos);
+        console.log('in progress videos', inprogressVideos);
 
         this.setState(
           {
@@ -153,7 +153,7 @@ export default class Lessons extends React.Component {
             refreshing: false,
             refreshControl: fromCache
           },
-          () => console.log('ass', this.state.progressLessons)
+          () => console.log('in progress lessons', this.state.progressLessons)
         );
 
         AsyncStorage.multiSet([
@@ -416,8 +416,8 @@ export default class Lessons extends React.Component {
             }}
             refreshControl={
               <RefreshControl
-                colors={[colors.pianoteRed]}
-                tintColor={colors.pianoteRed}
+                colors={[colors.secondBackground]}
+                tintColor={colors.secondBackground}
                 refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />
