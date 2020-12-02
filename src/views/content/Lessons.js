@@ -16,6 +16,8 @@ import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
+import DeviceInfo from 'react-native-device-info';
+import Orientation from 'react-native-orientation-locker';
 
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
@@ -76,11 +78,14 @@ export default class Lessons extends React.Component {
       showRestartCourse: false,
       lessonsStarted: true, // for showing continue lessons horizontal list
       refreshing: true,
-      refreshControl: true
+      refreshControl: true,
+      isLandscape: fullHeight < fullWidth
     };
   }
 
   componentDidMount = () => {
+    Orientation.addDeviceOrientationListener(this.orientationListener);
+
     AsyncStorage.multiGet([
       'totalXP',
       'rank',
@@ -103,6 +108,10 @@ export default class Lessons extends React.Component {
 
     messaging().requestPermission();
   };
+
+  componentWillUnmount() {
+    Orientation.removeDeviceOrientationListener(this.orientationListener);
+  }
 
   async getContent() {
     if (!this.context.isConnected) {
@@ -399,8 +408,27 @@ export default class Lessons extends React.Component {
     );
   }
 
+  orientationListener = o => {
+    if (o === 'UNKNOWN') return;
+    let isLandscape = o.indexOf('LAND') >= 0;
+
+    if (Platform.OS === 'ios') {
+      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+    } else {
+      Orientation.getAutoRotateState(isAutoRotateOn => {
+        if (isAutoRotateOn && DeviceInfo.isTablet())
+          this.setState({ isLandscape });
+      });
+    }
+  };
+
+  getAspectRatio() {
+    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
+    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    return 1.8;
+  }
+
   render() {
-    console.log('rend', this.state.progressLessons);
     return (
       <View
         style={[styles.container, { backgroundColor: colors.mainBackground }]}
@@ -430,7 +458,8 @@ export default class Lessons extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  height: fullHeight * 0.32
+                  width: '100%',
+                  aspectRatio: this.getAspectRatio()
                 }
               ]}
             >
@@ -454,25 +483,23 @@ export default class Lessons extends React.Component {
                 style={{
                   position: 'absolute',
                   height: '100%',
-                  width: fullWidth,
+                  width: '100%',
                   zIndex: 2,
                   elevation: 2
                 }}
               >
                 <View style={{ flex: 0.4 }} />
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ flex: 1 }} />
+                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <Pianote
                     height={fullHeight * 0.03}
                     width={fullWidth * 0.35}
                     fill={'white'}
                   />
-                  <View style={{ flex: 1 }} />
                 </View>
                 <Text
                   key={'foundations'}
                   style={{
-                    fontSize: 60 * factorRatio,
+                    fontSize: 50 * factorRatio,
                     color: 'white',
                     fontFamily: 'RobotoCondensed-Bold',
                     transform: [{ scaleX: 0.7 }],
@@ -481,99 +508,53 @@ export default class Lessons extends React.Component {
                 >
                   FOUNDATIONS
                 </Text>
-                <View style={{ flex: 0.6 }} />
+                <View style={{ flex: 0.4 }} />
 
-                {this.state.foundationIsCompleted ? (
-                  <ResetIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.32 * 0.725
-                        : fullHeight * 0.305 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : !this.state.foundationIsStarted ? (
-                  <StartIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.32 * 0.725
-                        : fullHeight * 0.305 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() => {
-                      if (this.state.foundationNextLesson)
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.foundationNextLesson.mobile_app_url
-                        });
-                    }}
-                  />
-                ) : (
-                  <ContinueIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.32 * 0.725
-                        : fullHeight * 0.305 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() => {
-                      if (this.state.foundationNextLesson)
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.foundationNextLesson.mobile_app_url
-                        });
-                    }}
-                  />
-                )}
-                <MoreInfoIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.32 * 0.725
-                      : fullHeight * 0.305 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromRight={fullWidth * 0.065}
-                  buttonWidth={fullWidth * 0.42}
-                  pressed={() => {
-                    this.props.navigation.navigate('FOUNDATIONS', {
-                      foundationIsStarted: this.state.foundationIsStarted,
-                      foundationIsCompleted: this.state.foundationIsCompleted
-                    });
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    paddingHorizontal: 15
                   }}
-                />
+                >
+                  {this.state.foundationIsCompleted ? (
+                    <ResetIcon
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : !this.state.foundationIsStarted ? (
+                    <StartIcon
+                      pressed={() => {
+                        if (this.state.foundationNextLesson)
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.foundationNextLesson.mobile_app_url
+                          });
+                      }}
+                    />
+                  ) : (
+                    <ContinueIcon
+                      pressed={() => {
+                        if (this.state.foundationNextLesson)
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.foundationNextLesson.mobile_app_url
+                          });
+                      }}
+                    />
+                  )}
+                  <View style={{ flex: 0.1 }} />
+                  <MoreInfoIcon
+                    pressed={() => {
+                      this.props.navigation.navigate('FOUNDATIONS', {
+                        foundationIsStarted: this.state.foundationIsStarted,
+                        foundationIsCompleted: this.state.foundationIsCompleted
+                      });
+                    }}
+                  />
+                </View>
               </View>
             </View>
             <View
@@ -583,132 +564,75 @@ export default class Lessons extends React.Component {
                 borderTopWidth: 0.25,
                 borderBottomColor: colors.secondBackground,
                 borderBottomWidth: 0.25,
-                height: fullHeight * 0.1,
-                paddingTop: 10 * factorVertical,
-                paddingBottom: 10 * factorVertical,
                 backgroundColor: colors.mainBackground,
-                flexDirection: 'row'
+                marginVertical: 15,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly'
               }}
             >
-              <View
-                key={'profile-picture'}
-                style={[
-                  styles.centerContent,
-                  {
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignSelf: 'stretch'
-                  }
-                ]}
-              >
-                <View style={{ flex: 1 }} />
-                <View>
-                  <View style={{ flex: 1 }} />
-                  <View
-                    style={{
-                      height: fullHeight * 0.075,
-                      width: fullHeight * 0.075,
-                      borderRadius: 100,
-                      backgroundColor: colors.secondBackground,
-                      alignSelf: 'stretch',
-                      borderWidth: 3 * factorRatio,
-                      borderColor: colors.secondBackground
-                    }}
-                  >
-                    <View
-                      style={{
-                        height: '100%',
-                        width: '100%',
-                        alignSelf: 'center'
-                      }}
-                    >
-                      <FastImage
-                        style={{
-                          flex: 1,
-                          borderRadius: 100,
-                          backgroundColor: colors.secondBackground
-                        }}
-                        source={{
-                          uri:
-                            this.state.profileImage ||
-                            'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                        }}
-                        resizeMode={FastImage.resizeMode.cover}
-                      />
-                    </View>
-                  </View>
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View style={{ flex: 1 }} />
-              </View>
-              <View
-                key={'XP-rank'}
+              <FastImage
                 style={{
-                  flex: 3,
-                  flexDirection: 'row',
-                  alignSelf: 'stretch'
+                  height: 80,
+                  aspectRatio: 1,
+                  borderRadius: 100,
+                  backgroundColor: colors.secondBackground
                 }}
-              >
-                <View style={{ flex: 0.5 }} />
-                <View>
-                  <View style={{ flex: 1 }} />
-                  <View>
-                    <Text
-                      style={{
-                        color: colors.pianoteRed,
-                        fontSize: 12 * factorRatio,
-                        fontWeight: 'bold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      XP
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 24 * factorRatio,
-                        fontFamily: 'OpenSans-ExtraBold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      {this.state.xp?.length > 4
-                        ? (Number(this.state.xp) / 1000).toFixed(1).toString() +
-                          'k'
-                        : this.state.xp?.toString()}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View style={{ flex: 1 }} />
-                <View>
-                  <View style={{ flex: 1 }} />
-                  <View>
-                    <Text
-                      style={{
-                        color: colors.pianoteRed,
-                        fontSize: 12 * factorRatio,
-                        fontWeight: 'bold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      RANK
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 24 * factorRatio,
-                        fontFamily: 'OpenSans-ExtraBold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      {this.state.rank}
-                    </Text>
-                  </View>
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View style={{ flex: 1 }} />
+                source={{
+                  uri:
+                    this.state.profileImage ||
+                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                }}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+              <View>
+                <Text
+                  style={{
+                    color: colors.pianoteRed,
+                    fontSize: 12 * factorRatio,
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                  }}
+                >
+                  XP
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 24 * factorRatio,
+                    fontFamily: 'OpenSans-ExtraBold',
+                    textAlign: 'center'
+                  }}
+                >
+                  {this.state.xp?.length > 4
+                    ? (Number(this.state.xp) / 1000).toFixed(1).toString() + 'k'
+                    : this.state.xp?.toString()}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    color: colors.pianoteRed,
+                    fontSize: 12 * factorRatio,
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                  }}
+                >
+                  RANK
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 24 * factorRatio,
+                    fontFamily: 'OpenSans-ExtraBold',
+                    textAlign: 'center'
+                  }}
+                >
+                  {this.state.rank}
+                </Text>
               </View>
             </View>
+
             <View>
               {this.state.lessonsStarted && (
                 <View

@@ -204,7 +204,7 @@ export default class MyList extends React.Component {
         <View
           style={{
             height: fullHeight * 0.1,
-            width: fullWidth,
+            flex: 1,
             position: 'absolute',
             zIndex: 2,
             elevation: 2,
@@ -271,7 +271,7 @@ export default class MyList extends React.Component {
             }}
             style={{
               height: fullHeight * 0.075,
-              width: fullWidth,
+              width: '100%',
               borderTopWidth: 0.25 * factorRatio,
               borderTopColor: colors.secondBackground,
               borderBottomWidth: 0.25 * factorRatio,
@@ -320,7 +320,7 @@ export default class MyList extends React.Component {
             }}
             style={{
               height: fullHeight * 0.075,
-              width: fullWidth,
+              width: '100%',
               borderBottomWidth: 0.25 * factorRatio,
               borderBottomColor: colors.secondBackground,
               flexDirection: 'row'

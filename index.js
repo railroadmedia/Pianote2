@@ -12,7 +12,6 @@ import App from './App';
 import { name as appName } from './app.json';
 import { configure } from '@musora/services';
 import DeviceInfo from 'react-native-device-info';
-import Orientation from 'react-native-orientation-locker';
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 var PushNotification = require('react-native-push-notification');
@@ -87,7 +86,6 @@ PushNotification.configure({
   }
 });
 
-Orientation.lockToPortrait();
 AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;
 

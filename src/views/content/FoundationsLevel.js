@@ -15,6 +15,8 @@ import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import DeviceInfo from 'react-native-device-info';
+import Orientation from 'react-native-orientation-locker';
 
 import ResetIcon from '../../components/ResetIcon';
 import RestartCourse from '../../modals/RestartCourse';
@@ -53,13 +55,19 @@ export default class FoundationsLevel extends React.Component {
       totalLength: 0,
       isAddedToList: false,
       progress: 0,
-      refreshing: false
+      refreshing: false,
+      isLandscape: fullHeight < fullWidth
     };
   }
 
   componentDidMount = async () => {
     this.getContent();
+    Orientation.addDeviceOrientationListener(this.orientationListener);
   };
+
+  componentWillUnmount() {
+    Orientation.removeDeviceOrientationListener(this.orientationListener);
+  }
 
   getContent = async () => {
     if (!this.context.isConnected) {
@@ -156,6 +164,26 @@ export default class FoundationsLevel extends React.Component {
     );
   };
 
+  getAspectRatio() {
+    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
+    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    return 1.8;
+  }
+
+  orientationListener = o => {
+    if (o === 'UNKNOWN') return;
+    let isLandscape = o.indexOf('LAND') >= 0;
+
+    if (Platform.OS === 'ios') {
+      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+    } else {
+      Orientation.getAutoRotateState(isAutoRotateOn => {
+        if (isAutoRotateOn && DeviceInfo.isTablet())
+          this.setState({ isLandscape });
+      });
+    }
+  };
+
   render() {
     return (
       <SafeAreaView
@@ -184,7 +212,8 @@ export default class FoundationsLevel extends React.Component {
             style={[
               styles.centerContent,
               {
-                height: fullHeight * 0.33
+                width: '100%',
+                aspectRatio: this.getAspectRatio()
               }
             ]}
           >
@@ -268,25 +297,23 @@ export default class FoundationsLevel extends React.Component {
               style={{
                 position: 'absolute',
                 height: '100%',
-                width: fullWidth,
+                width: '100%',
                 zIndex: 2,
                 elevation: 2
               }}
             >
               <View style={{ flex: 0.7 }} />
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ flex: 1 }} />
+              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <Pianote
                   height={fullHeight * 0.03}
                   width={fullWidth * 0.35}
                   fill={'white'}
                 />
-                <View style={{ flex: 1 }} />
               </View>
               <Text
                 key={'foundations'}
                 style={{
-                  fontSize: 30 * factorRatio,
+                  fontSize: 20 * factorRatio,
                   fontWeight: '700',
                   color: 'white',
                   fontFamily: 'RobotoCondensed-Regular',
@@ -300,7 +327,7 @@ export default class FoundationsLevel extends React.Component {
               <Text
                 key={'level'}
                 style={{
-                  fontSize: 60 * factorRatio,
+                  fontSize: 40 * factorRatio,
                   fontWeight: 'bold',
                   color: 'white',
                   fontFamily: 'RobotoCondensed-Regular',
@@ -313,69 +340,46 @@ export default class FoundationsLevel extends React.Component {
               <View
                 key={'startIcon'}
                 style={{
-                  height: onTablet ? fullHeight * 0.065 : fullHeight * 0.05
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly'
                 }}
               >
-                <View
-                  key={'mylist'}
-                  style={[
-                    styles.centerContent,
-                    {
-                      position: 'absolute',
-                      left: 0,
-                      top: 0,
-                      width: fullWidth * 0.25,
-                      height: onTablet
-                        ? fullHeight * 0.065
-                        : fullHeight * 0.053,
-                      zIndex: 3,
-                      elevation: 3
-                    }
-                  ]}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.toggleMyList();
+                  }}
+                  style={{
+                    flex: 1,
+                    alignItems: 'center'
+                  }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.toggleMyList();
-                    }}
+                  {!this.state.isAddedToList ? (
+                    <AntIcon
+                      name={'plus'}
+                      size={27.5 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                  ) : (
+                    <AntIcon
+                      name={'close'}
+                      size={27.5 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                  )}
+                  <Text
                     style={{
-                      flex: 1,
-                      alignItems: 'center'
+                      fontFamily: 'OpenSans-Regular',
+                      color: 'white',
+                      fontSize: 12 * factorRatio
                     }}
                   >
-                    {!this.state.isAddedToList && (
-                      <AntIcon
-                        name={'plus'}
-                        size={27.5 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                    )}
-                    {this.state.isAddedToList && (
-                      <AntIcon
-                        name={'close'}
-                        size={27.5 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                    )}
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        fontSize: 12 * factorRatio
-                      }}
-                    >
-                      {this.state.isAddedToList ? 'Added' : 'My List'}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                    {this.state.isAddedToList ? 'Added' : 'My List'}
+                  </Text>
+                </TouchableOpacity>
 
                 {this.state.isCompleted ? (
                   <ResetIcon
-                    pxFromTop={0}
-                    buttonHeight={
-                      onTablet ? fullHeight * 0.065 : fullHeight * 0.05
-                    }
-                    pxFromLeft={(fullWidth * 0.5) / 2}
-                    buttonWidth={fullWidth * 0.5}
                     pressed={() =>
                       this.setState({
                         showRestartCourse: true
@@ -384,12 +388,6 @@ export default class FoundationsLevel extends React.Component {
                   />
                 ) : this.state.isStarted ? (
                   <ContinueIcon
-                    pxFromTop={0}
-                    buttonHeight={
-                      onTablet ? fullHeight * 0.065 : fullHeight * 0.05
-                    }
-                    pxFromLeft={(fullWidth * 0.5) / 2}
-                    buttonWidth={fullWidth * 0.5}
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
                         url: this.state.nextLesson.post.mobile_app_url
@@ -398,12 +396,6 @@ export default class FoundationsLevel extends React.Component {
                   />
                 ) : !this.state.isStarted ? (
                   <StartIcon
-                    pxFromTop={0}
-                    buttonHeight={
-                      onTablet ? fullHeight * 0.065 : fullHeight * 0.05
-                    }
-                    pxFromLeft={(fullWidth * 0.5) / 2}
-                    buttonWidth={fullWidth * 0.5}
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
                         url: this.state.nextLesson.post.mobile_app_url
@@ -411,64 +403,40 @@ export default class FoundationsLevel extends React.Component {
                     }
                   />
                 ) : null}
-                <View
-                  key={'info'}
-                  style={[
-                    styles.centerContent,
-                    {
-                      position: 'absolute',
-                      right: 0,
-                      top: 0,
-                      width: fullWidth * 0.25,
-                      height: onTablet
-                        ? fullHeight * 0.065
-                        : fullHeight * 0.053,
-                      zIndex: 3,
-                      elevation: 3
-                    }
-                  ]}
+
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({
+                      showInfo: !this.state.showInfo
+                    });
+                  }}
+                  style={{
+                    flex: 1,
+                    alignItems: 'center'
+                  }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
+                  <AntIcon
+                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                    size={22 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                  <Text
                     style={{
-                      flex: 1,
-                      alignItems: 'center'
+                      fontFamily: 'OpenSans-Regular',
+                      color: 'white',
+                      marginTop: 3 * factorRatio,
+                      fontSize: 13 * factorRatio
                     }}
                   >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={22 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factorRatio,
-                        fontSize: 13 * factorRatio
-                      }}
-                    >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                    Info
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View style={{ height: 20 * factorVertical }} />
             </View>
           </View>
           {this.state.showInfo && (
-            <View
-              key={'info'}
-              style={{
-                width: fullWidth,
-                paddingLeft: fullWidth * 0.05,
-                paddingRight: fullWidth * 0.05
-              }}
-            >
+            <View key={'info'} style={{ width: '100%' }}>
               <View style={{ height: 20 * factorVertical }} />
               <Text
                 style={{

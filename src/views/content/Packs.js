@@ -189,17 +189,18 @@ export default class Packs extends React.Component {
                 style={{
                   position: 'absolute',
                   height: '100%',
-                  width: fullWidth,
+                  width: '100%',
                   zIndex: 2,
-                  elevation: 2
+                  elevation: 2,
+                  alignItems: 'center',
+                  justifyContent: 'flex-end'
                 }}
               >
                 <FastImage
                   style={{
-                    width: '80%',
-                    height: '100%',
-                    borderRadius: 7.5 * factorRatio,
-                    alignSelf: 'center'
+                    height: greaterWDim / 10,
+                    width: '100%',
+                    borderRadius: 7.5 * factorRatio
                   }}
                   source={{
                     uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
@@ -208,95 +209,48 @@ export default class Packs extends React.Component {
                   }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-
-                {this.state.headerPackCompleted ? (
-                  <ResetIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.5 * 0.725
-                        : fullHeight * 0.5 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : !this.state.headerPackStarted ? (
-                  <StartIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.5 * 0.725
-                        : fullHeight * 0.5 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.headerPackNextLessonUrl
-                      })
-                    }
-                  />
-                ) : (
-                  <ContinueIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.5 * 0.725
-                        : fullHeight * 0.5 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.headerPackNextLessonUrl
-                      })
-                    }
-                  />
-                )}
-                <MoreInfoIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.5 * 0.725
-                      : fullHeight * 0.5 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromRight={fullWidth * 0.065}
-                  buttonWidth={fullWidth * 0.42}
-                  pressed={() => {
-                    this.props.navigation.push('SINGLEPACK', {
-                      url: this.state.headerPackUrl
-                    });
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    marginVertical: 15
                   }}
-                />
+                >
+                  {this.state.headerPackCompleted ? (
+                    <ResetIcon
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : !this.state.headerPackStarted ? (
+                    <StartIcon
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.headerPackNextLessonUrl
+                        })
+                      }
+                    />
+                  ) : (
+                    <ContinueIcon
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.headerPackNextLessonUrl
+                        })
+                      }
+                    />
+                  )}
+                  <View style={{ flex: 0.1 }} />
+                  <MoreInfoIcon
+                    pressed={() => {
+                      this.props.navigation.push('SINGLEPACK', {
+                        url: this.state.headerPackUrl
+                      });
+                    }}
+                  />
+                </View>
               </View>
             </View>
           )}

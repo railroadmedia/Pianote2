@@ -46,7 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           packages.add(new GoogleCastPackage());
           packages.add(new RNBackgroundDownloaderPackage());
-          packages.add(new RNFetchBlobPackage());
           packages.add(new ReactVideoPackage());
           // packages.add(new MyReactNativePackage());
           return packages;

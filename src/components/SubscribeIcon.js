@@ -19,9 +19,6 @@ class SubscribeIcon extends React.Component {
         style={[
           styles.centerContent,
           {
-            position: 'absolute',
-            top: this.props.pxFromTop,
-            left: this.props.pxFromLeft,
             borderRadius: fullWidth * 0.1,
             width: this.props.buttonWidth,
             height: this.props.buttonHeight,

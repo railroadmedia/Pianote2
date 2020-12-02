@@ -16,6 +16,8 @@ import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import DeviceInfo from 'react-native-device-info';
+import Orientation from 'react-native-orientation-locker';
 
 import ResetIcon from '../../components/ResetIcon';
 import NextVideo from '../../components/NextVideo';
@@ -40,6 +42,7 @@ export default class Foundations extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+
     this.state = {
       items: [],
       foundationIsStarted: this.props.navigation.state.params
@@ -61,11 +64,14 @@ export default class Foundations extends React.Component {
       description: '',
       nextLesson: null,
       progress: 0,
-      refreshing: false
+      refreshing: false,
+      isLandscape: fullHeight < fullWidth
     };
   }
 
   async componentDidMount() {
+    Orientation.addDeviceOrientationListener(this.orientationListener);
+
     let profileImage = await AsyncStorage.getItem('profileURI');
     if (profileImage) {
       this.setState({ profileImage });
@@ -73,6 +79,24 @@ export default class Foundations extends React.Component {
 
     this.getContent();
   }
+
+  componentWillUnmount() {
+    Orientation.removeDeviceOrientationListener(this.orientationListener);
+  }
+
+  orientationListener = o => {
+    if (o === 'UNKNOWN') return;
+    let isLandscape = o.indexOf('LAND') >= 0;
+
+    if (Platform.OS === 'ios') {
+      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+    } else {
+      Orientation.getAutoRotateState(isAutoRotateOn => {
+        if (isAutoRotateOn && DeviceInfo.isTablet())
+          this.setState({ isLandscape });
+      });
+    }
+  };
 
   getContent = async () => {
     if (!this.context.isConnected) {
@@ -182,13 +206,18 @@ export default class Foundations extends React.Component {
     });
   };
 
+  getAspectRatio() {
+    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
+    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    return 1.8;
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <View
           style={{
             height: fullHeight * 0.1,
-            width: fullWidth,
             position: 'absolute',
             zIndex: 2,
             elevation: 2,
@@ -238,7 +267,8 @@ export default class Foundations extends React.Component {
             style={[
               styles.centerContent,
               {
-                height: fullHeight * 0.32
+                width: '100%',
+                aspectRatio: this.getAspectRatio()
               }
             ]}
           >
@@ -262,25 +292,23 @@ export default class Foundations extends React.Component {
               style={{
                 position: 'absolute',
                 height: '100%',
-                width: fullWidth,
+                width: '100%',
                 zIndex: 2,
                 elevation: 2
               }}
             >
               <View style={{ flex: 0.4 }} />
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ flex: 1 }} />
+              <View style={{ alignItems: 'center' }}>
                 <Pianote
                   height={fullHeight * 0.03}
                   width={fullWidth * 0.35}
                   fill={'white'}
                 />
-                <View style={{ flex: 1 }} />
               </View>
               <Text
                 key={'foundations'}
                 style={{
-                  fontSize: 60 * factorRatio,
+                  fontSize: 40 * factorRatio,
                   color: 'white',
                   fontFamily: 'RobotoCondensed-Bold',
                   transform: [{ scaleX: 0.7 }],
@@ -289,97 +317,43 @@ export default class Foundations extends React.Component {
               >
                 FOUNDATIONS
               </Text>
-              <View style={{ flex: 0.6 }} />
-              {this.state.foundationIsCompleted ? (
-                <ResetIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.32 * 0.725
-                      : fullHeight * 0.305 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromLeft={(fullWidth * 0.5) / 2}
-                  buttonWidth={fullWidth * 0.5}
-                  pressed={() =>
-                    this.setState({
-                      showRestartCourse: true
-                    })
-                  }
-                />
-              ) : this.state.foundationIsStarted ? (
-                <ContinueIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.32 * 0.725
-                      : fullHeight * 0.305 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromLeft={(fullWidth * 0.5) / 2}
-                  buttonWidth={fullWidth * 0.5}
-                  pressed={() =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      url: this.state.nextLesson.post.mobile_app_url
-                    })
-                  }
-                />
-              ) : (
-                !this.state.foundationIsStarted && (
-                  <StartIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.32 * 0.725
-                        : fullHeight * 0.305 * 0.725
+              <View style={{ flex: 0.4 }} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly'
+                }}
+              >
+                <View key='placeholder' style={{ flex: 1 }} />
+                {this.state.foundationIsCompleted ? (
+                  <ResetIcon
+                    pressed={() =>
+                      this.setState({
+                        showRestartCourse: true
+                      })
                     }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={(fullWidth * 0.5) / 2}
-                    buttonWidth={fullWidth * 0.5}
+                  />
+                ) : this.state.foundationIsStarted ? (
+                  <ContinueIcon
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
                         url: this.state.nextLesson.post.mobile_app_url
                       })
                     }
                   />
-                )
-              )}
-              <View
-                key={'info'}
-                style={[
-                  styles.centerContent,
-                  {
-                    position: 'absolute',
-                    right: 0,
-                    top: onTablet
-                      ? fullHeight * 0.32 * 0.725
-                      : fullHeight * 0.305 * 0.725,
-                    width: fullWidth * 0.25,
-                    height: onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055,
-                    zIndex: 3,
-                    elevation: 3
-                  }
-                ]}
-              >
+                ) : (
+                  !this.state.foundationIsStarted && (
+                    <StartIcon
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.nextLesson.post.mobile_app_url
+                        })
+                      }
+                    />
+                  )
+                )}
+
                 <TouchableOpacity
                   onPress={() => {
                     this.setState({
@@ -414,7 +388,7 @@ export default class Foundations extends React.Component {
             <View
               key={'profile'}
               style={{
-                height: fullHeight * 0.06,
+                marginHorizontal: 10,
                 backgroundColor: colors.mainBackground,
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -423,14 +397,12 @@ export default class Foundations extends React.Component {
             >
               <FastImage
                 style={{
-                  height: fullHeight * 0.06,
-                  width: fullHeight * 0.06,
+                  height: 35 * factorRatio,
+                  width: 35 * factorRatio,
                   borderRadius: 100,
                   backgroundColor: colors.secondBackground,
-                  alignSelf: 'stretch',
                   borderWidth: 3 * factorRatio,
-                  borderColor: colors.secondBackground,
-                  marginHorizontal: 10
+                  borderColor: colors.secondBackground
                 }}
                 source={{
                   uri:
@@ -445,8 +417,7 @@ export default class Foundations extends React.Component {
                   color: 'white',
                   fontSize: 35 * factorRatio,
                   fontFamily: 'OpenSans-ExtraBold',
-                  textAlign: 'center',
-                  marginHorizontal: 10
+                  textAlign: 'center'
                 }}
               >
                 LEVEL 1
@@ -457,9 +428,8 @@ export default class Foundations extends React.Component {
             <View
               key={'info'}
               style={{
-                width: fullWidth,
-                paddingLeft: fullWidth * 0.05,
-                paddingRight: fullWidth * 0.05
+                width: '100%',
+                paddingVertical: 15
               }}
             >
               <View style={{ height: 20 * factorVertical }} />

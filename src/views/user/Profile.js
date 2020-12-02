@@ -490,7 +490,6 @@ export default class Profile extends React.Component {
                     borderTopWidth: 0.25,
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 0.25,
-                    height: fullHeight * 0.1,
                     paddingTop: 10 * factorVertical,
                     paddingBottom: 10 * factorVertical,
                     backgroundColor: colors.mainBackground,

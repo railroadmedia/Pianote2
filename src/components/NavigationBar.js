@@ -75,7 +75,6 @@ class NavigationBar extends React.Component {
       <View
         style={{
           backgroundColor: colors.mainBackground,
-          height: fullHeight * 0.09375,
           borderTopColor: colors.mainBackground,
           borderTopWidth: 2 * factorRatio
         }}

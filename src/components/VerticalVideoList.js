@@ -365,7 +365,7 @@ class VerticalVideoList extends React.Component {
             <View
               style={{
                 height: this.props.containerHeight,
-                width: this.props.containerWidth,
+                flex: 1,
                 borderTopWidth: this.props.containerBorderWidth,
                 paddingLeft: 10 * factorHorizontal,
                 flexDirection: 'row',
@@ -1082,14 +1082,7 @@ class VerticalVideoList extends React.Component {
             )}
           <View style={{ height: 5 * factorVertical }} />
         </View>
-        <View
-          style={[
-            styles.centerContent,
-            {
-              flex: 1
-            }
-          ]}
-        >
+        <View style={{ flex: 1 }}>
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
             <View

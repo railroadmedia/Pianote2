@@ -328,64 +328,46 @@ export default class PathOverview extends React.Component {
             <View
               key={'thumb/Start/Info'}
               style={{
-                height: onTablet ? fullHeight * 0.065 : fullHeight * 0.053
+                height: onTablet ? fullHeight * 0.065 : fullHeight * 0.053,
+                width: '100%',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+                flexDirection: 'row'
               }}
             >
-              <View
-                key={'thumbs'}
-                style={[
-                  styles.centerContent,
-                  {
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    width: fullWidth * 0.25,
-                    height: onTablet ? fullHeight * 0.065 : fullHeight * 0.053,
-                    zIndex: 3,
-                    elevation: 3
-                  }
-                ]}
+              <TouchableOpacity
+                onPress={() => this.addToMyList()}
+                style={{
+                  alignItems: 'center',
+                  flex: 1
+                }}
               >
-                <TouchableOpacity
-                  onPress={() => this.addToMyList()}
+                {!this.state.isAddedToList ? (
+                  <AntIcon
+                    name={'plus'}
+                    size={27.5 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                ) : (
+                  <AntIcon
+                    name={'close'}
+                    size={27.5 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                )}
+                <Text
                   style={{
-                    flex: 1,
-                    alignItems: 'center'
+                    fontFamily: 'OpenSans-Regular',
+                    color: 'white',
+                    fontSize: 12 * factorRatio
                   }}
                 >
-                  {!this.state.isAddedToList && (
-                    <AntIcon
-                      name={'plus'}
-                      size={27.5 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                  )}
-                  {this.state.isAddedToList && (
-                    <AntIcon
-                      name={'close'}
-                      size={27.5 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                  )}
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      fontSize: 12 * factorRatio
-                    }}
-                  >
-                    My List
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                  My List
+                </Text>
+              </TouchableOpacity>
+
               {this.state.completed ? (
                 <ResetIcon
-                  pxFromTop={0}
-                  buttonHeight={
-                    onTablet ? fullHeight * 0.065 : fullHeight * 0.053
-                  }
-                  pxFromLeft={(fullWidth * 0.5) / 2}
-                  buttonWidth={fullWidth * 0.5}
                   pressed={() =>
                     this.props.navigation.navigate('VIDEOPLAYER', {
                       id: this.state.data.id
@@ -394,12 +376,6 @@ export default class PathOverview extends React.Component {
                 />
               ) : this.state.started ? (
                 <ContinueIcon
-                  pxFromTop={0}
-                  buttonHeight={
-                    onTablet ? fullHeight * 0.065 : fullHeight * 0.053
-                  }
-                  pxFromLeft={(fullWidth * 0.5) / 2}
-                  buttonWidth={fullWidth * 0.5}
                   pressed={() =>
                     this.props.navigation.navigate('VIDEOPLAYER', {
                       id: this.state.nextLesson
@@ -408,12 +384,6 @@ export default class PathOverview extends React.Component {
                 />
               ) : (
                 <StartIcon
-                  pxFromTop={0}
-                  buttonHeight={
-                    onTablet ? fullHeight * 0.065 : fullHeight * 0.053
-                  }
-                  pxFromLeft={(fullWidth * 0.5) / 2}
-                  buttonWidth={fullWidth * 0.5}
                   pressed={() =>
                     this.props.navigation.navigate('VIDEOPLAYER', {
                       id: this.state.nextLesson
@@ -421,58 +391,42 @@ export default class PathOverview extends React.Component {
                   }
                 />
               )}
-              <View
-                key={'info'}
-                style={[
-                  styles.centerContent,
-                  {
-                    position: 'absolute',
-                    right: 0,
-                    top: 0,
-                    width: fullWidth * 0.25,
-                    height: onTablet ? fullHeight * 0.065 : fullHeight * 0.053,
-                    zIndex: 3,
-                    elevation: 3
-                  }
-                ]}
+
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({
+                    showInfo: !this.state.showInfo
+                  })
+                }
+                style={{
+                  alignItems: 'center',
+                  flex: 1
+                }}
               >
-                <TouchableOpacity
-                  onPress={() =>
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    })
-                  }
+                <AntIcon
+                  name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                  size={22 * factorRatio}
+                  color={colors.pianoteRed}
+                />
+                <Text
                   style={{
-                    flex: 1,
-                    alignItems: 'center'
+                    fontFamily: 'OpenSans-Regular',
+                    color: 'white',
+                    marginTop: 3 * factorRatio,
+                    fontSize: 13 * factorRatio
                   }}
                 >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
-                    }}
-                  >
-                    Info
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                  Info
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           {this.state.showInfo && (
             <View
               key={'info'}
               style={{
-                width: fullWidth,
-                paddingLeft: fullWidth * 0.05,
-                paddingRight: fullWidth * 0.05
+                width: '100%',
+                paddingHorizontal: 15
               }}
             >
               <View style={{ height: 20 * factorVertical }} />
