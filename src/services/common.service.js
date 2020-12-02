@@ -43,25 +43,5 @@ export default {
         message: `Pianote is down, we are working on a fix and it should be back shortly, thank you for your patience.`
       };
     }
-  },
-  cacheSystem: function (page, calls, setStateCallback) {
-    if (cache[page]) setStateCallback(cache[page], true);
-    else
-      RNFetchBlo.fs
-        .readFile(`${RNFetchBlo.fs.dirs.DocumentDir}/cache`)
-        .then(response => {
-          try {
-            setStateCallback(JSON.parse(response)[page], true);
-          } catch (e) {}
-        });
-    Promise.all(calls).then(response => {
-      setStateCallback(response);
-      cache[page] = response;
-      RNFetchBlo.fs.writeFile(
-        `${RNFetchBlo.fs.dirs.DocumentDir}/cache`,
-        JSON.stringify(cache),
-        'utf8'
-      );
-    });
   }
 };

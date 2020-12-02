@@ -1,4 +1,7 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { combineReducers } from 'redux';
 import { Linking, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -8,6 +11,12 @@ import NavigationService from './src/services/navigation.service';
 
 import NetworkProvider from './src/context/NetworkProvider';
 
+import myListReducer from './src/redux/MyListCacheReducer';
+import lessonsReducer from './src/redux/LessonsCacheReducer';
+
+const store = createStore(
+  combineReducers({ ...myListReducer, ...lessonsReducer })
+);
 export default class App extends React.Component {
   componentDidMount() {
     Linking.getInitialURL()
@@ -34,14 +43,16 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <NetworkProvider>
-        <StatusBar barStyle='light-content' />
-        <AppNavigator
-          ref={navigatorRef =>
-            NavigationService.setTopLevelNavigator(navigatorRef)
-          }
-        />
-      </NetworkProvider>
+      <Provider store={store}>
+        <NetworkProvider>
+          <StatusBar barStyle='light-content' />
+          <AppNavigator
+            ref={navigatorRef =>
+              NavigationService.setTopLevelNavigator(navigatorRef)
+            }
+          />
+        </NetworkProvider>
+      </Provider>
     );
   }
 }
