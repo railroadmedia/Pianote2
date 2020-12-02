@@ -109,9 +109,7 @@ class Lessons extends React.Component {
     this.willFocusSubscription = this.props.navigation.addListener(
       'willFocus',
       () =>
-        !this.firstTimeFocused
-          ? (this.firstTimeFocused = true)
-          : setTimeout(this.refresh, 1000)
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
     );
   };
 

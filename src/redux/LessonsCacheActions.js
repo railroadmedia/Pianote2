@@ -1,6 +1,6 @@
 import RNFetchBlob from 'rn-fetch-blob';
 
-export const cacheLessons = (lessons, id, action) => {
+export const cacheLessons = lessons => {
   RNFetchBlob.fs.writeFile(
     `${RNFetchBlob.fs.dirs.DocumentDir}/cacheLessons`,
     JSON.stringify(lessons),

@@ -6,46 +6,46 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 // content
-import StudentFocusCatalog from './src/views/content/StudentFocusCatalog.js';
-import StudentFocusShow from './src/views/content/StudentFocusShow.js';
-import VideoPlayerSong from './src/views/content/VideoPlayerSong.js';
-import FoundationsLevel from './src/views/content/FoundationsLevel.js';
+import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
+import StudentFocusShow from './src/views/content/StudentFocusShow';
+import VideoPlayerSong from './src/views/content/VideoPlayerSong';
+import FoundationsLevel from './src/views/content/FoundationsLevel';
 import Foundations from './src/views/content/Foundations';
-import VideoPlayer from './src/views/content/VideoPlayer.js';
-import SongCatalog from './src/views/content/SongCatalog.js';
+import VideoPlayer from './src/views/content/VideoPlayer';
+import SongCatalog from './src/views/content/SongCatalog';
 import PathOverview from './src/views/content/PathOverview';
-import SinglePack from './src/views/content/SinglePack.js';
-import Downloads from './src/views/content/Downloads.js';
-import Lessons from './src/views/content/Lessons.js';
-import Filters from './src/views/content/Filters.js';
-import SeeAll from './src/views/content/SeeAll.js';
-import Course from './src/views/content/Course.js';
-import MyList from './src/views/content/MyList.js';
-import Search from './src/views/content/Search.js';
-import Packs from './src/views/content/Packs.js';
+import SinglePack from './src/views/content/SinglePack';
+import Downloads from './src/views/content/Downloads';
+import Lessons from './src/views/content/Lessons';
+import Filters from './src/views/content/Filters';
+import SeeAll from './src/views/content/SeeAll';
+import Course from './src/views/content/Course';
+import MyList from './src/views/content/MyList';
+import Search from './src/views/content/Search';
+import Packs from './src/views/content/Packs';
 
 // onboard
-import MembershipExpired from './src/views/onboard/MembershipExpired.js';
-import LoginCredentials from './src/views/onboard/LoginCredentials.js';
-import CreateAccount2 from './src/views/onboard/CreateAccount2.js';
-import CreateAccount3 from './src/views/onboard/CreateAccount3.js';
-import ForgotPassword from './src/views/onboard/ForgotPassword.js';
-import NewMembership from './src/views/onboard/NewMembership.js';
-import CreateAccount from './src/views/onboard/CreateAccount.js';
-import SupportSignUp from './src/views/onboard/SupportSignUp.js';
-import WelcomeBack from './src/views/onboard/WelcomeBack.js';
+import MembershipExpired from './src/views/onboard/MembershipExpired';
+import LoginCredentials from './src/views/onboard/LoginCredentials';
+import CreateAccount2 from './src/views/onboard/CreateAccount2';
+import CreateAccount3 from './src/views/onboard/CreateAccount3';
+import ForgotPassword from './src/views/onboard/ForgotPassword';
+import NewMembership from './src/views/onboard/NewMembership';
+import CreateAccount from './src/views/onboard/CreateAccount';
+import SupportSignUp from './src/views/onboard/SupportSignUp';
+import WelcomeBack from './src/views/onboard/WelcomeBack';
 import GetRestarted from './src/views/onboard/GetRestarted';
-import LoadPage from './src/views/onboard/LoadPage.js';
-import Login from './src/views/onboard/Login.js';
+import LoadPage from './src/views/onboard/LoadPage';
+import Login from './src/views/onboard/Login';
 import ResetPassword from './src/views/onboard/ResetPassword';
 // user
-import NotificationSettings from './src/views/user/NotificationSettings.js';
+import NotificationSettings from './src/views/user/NotificationSettings';
 import ProfileSettings from './src/views/user/ProfileSettings';
-import PrivacyPolicy from './src/views/user/PrivacyPolicy.js';
-import Settings from './src/views/user/Settings.js';
-import Profile from './src/views/user/Profile.js';
-import Support from './src/views/user/Support.js';
-import Terms from './src/views/user/Terms.js';
+import PrivacyPolicy from './src/views/user/PrivacyPolicy';
+import Settings from './src/views/user/Settings';
+import Profile from './src/views/user/Profile';
+import Support from './src/views/user/Support';
+import Terms from './src/views/user/Terms';
 
 const AppNavigator = createStackNavigator(
   {
