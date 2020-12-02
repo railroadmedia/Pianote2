@@ -47,7 +47,8 @@ export default class MyList extends React.Component {
         progress: [],
         instructors: []
       },
-      showModalMenu: false
+      showModalMenu: false,
+      refreshing: false
     };
   }
 
@@ -55,7 +56,7 @@ export default class MyList extends React.Component {
     this.getMyList();
   }
 
-  getMyList = async () => {
+  getMyList = async loadMore => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getMyListContent(
       this.state.page,
@@ -102,14 +103,16 @@ export default class MyList extends React.Component {
         progress_percent: newContent[i].post.progress_percent
       });
     }
-    this.setState({
-      allLessons: [...this.state.allLessons, ...items],
+    console.log('setstate');
+    this.setState(state => ({
+      allLessons: loadMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
       isLoadingAll: false,
       filtering: false,
-      isPaging: false
-    });
+      isPaging: false,
+      refreshing: false
+    }));
   };
 
   removeFromMyList = contentID => {
@@ -151,7 +154,7 @@ export default class MyList extends React.Component {
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      this.setState({ isPaging: true }, () => this.getMyList());
+      this.setState({ isPaging: true }, () => this.getMyList(true));
     }
   };
 
@@ -168,7 +171,6 @@ export default class MyList extends React.Component {
     // after leaving filter page. set filters here
     this.setState(
       {
-        allLessons: [],
         outVideos: false,
         page: 1,
         filters:
@@ -190,13 +192,13 @@ export default class MyList extends React.Component {
   };
 
   refresh = () => {
-    this.setState(
-      { isLoadingAll: true, allLessons: [], page: 1, outVideos: false },
-      () => this.getMyList()
+    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
+      this.getMyList()
     );
   };
 
   render() {
+    console.log(this.state.allLessons, this.state.refreshing);
     return (
       <View style={styles.container}>
         <View
@@ -218,7 +220,7 @@ export default class MyList extends React.Component {
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.isLoadingAll}
+              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
             />
           }

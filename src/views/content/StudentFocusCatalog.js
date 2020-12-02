@@ -33,6 +33,7 @@ export default class StudentFocusCatalog extends React.Component {
       progressStudentFocus: [], // videos
       studentFocus: [],
       refreshing: true,
+      refreshControl: false,
       started: true
     };
   }
@@ -51,7 +52,6 @@ export default class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
-    console.log(response);
     const newContent = await response[0].data.map(data => {
       return new ContentModel(data);
     });
@@ -60,7 +60,6 @@ export default class StudentFocusCatalog extends React.Component {
       shows[key].type = key;
       return shows[key];
     });
-    console.log(shows);
     let items = [];
     for (let i in newContent) {
       items.push({
@@ -77,15 +76,15 @@ export default class StudentFocusCatalog extends React.Component {
     }
 
     this.setState({
-      progressStudentFocus: [...this.state.progressStudentFocus, ...items],
+      progressStudentFocus: items,
       studentFocus: shows,
       refreshing: false,
+      refreshControl: false,
       started: items.length !== 0
     });
   }
 
   renderFlatListItem = ({ item, index }) => {
-    console.log(item);
     return (
       <TouchableOpacity
         key={index}
@@ -118,9 +117,7 @@ export default class StudentFocusCatalog extends React.Component {
   };
 
   refresh() {
-    this.setState({ refreshing: true, progressStudentFocus: [] }, () =>
-      this.getData()
-    );
+    this.setState({ refreshControl: true }, () => this.getData());
   }
 
   render() {
@@ -144,7 +141,7 @@ export default class StudentFocusCatalog extends React.Component {
             refreshControl={
               <RefreshControl
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshing}
+                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />
             }
@@ -206,7 +203,7 @@ export default class StudentFocusCatalog extends React.Component {
           <ActivityIndicator
             size='large'
             style={{ flex: 1 }}
-            color={colors.pianoteRed}
+            color={colors.secondBackground}
           />
         )}
         <NavigationBar currentPage={''} />

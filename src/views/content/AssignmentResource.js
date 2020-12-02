@@ -108,7 +108,7 @@ export default class AssignmentResource extends React.Component {
           marginBottom: 10
         }}
       >
-        {this.props.data.map((dot, index) => (
+        {this.props.data?.map((dot, index) => (
           <View
             key={index}
             style={[
@@ -151,11 +151,11 @@ export default class AssignmentResource extends React.Component {
           activeOpacity={1}
           {...this.panResponder.panHandlers}
           style={{
-            width: width * this.props.data.length,
+            width: width * this.props.data?.length || 0,
             flexDirection: 'row'
           }}
         >
-          {this.props.data.map((sheet, i) => {
+          {this.props.data?.map((sheet, i) => {
             let sourceUri = dldService.manageOfflinePath(sheet.value);
             if (sheet.value.indexOf('.pdf') < 0) {
               return (
@@ -185,7 +185,7 @@ export default class AssignmentResource extends React.Component {
                       }}
                     />
                   </View>
-                  {this.props.data.length !== 1 && this.renderDots(i)}
+                  {this.props.data?.length !== 1 && this.renderDots(i)}
                 </View>
               );
             } else {
@@ -229,7 +229,7 @@ export default class AssignmentResource extends React.Component {
                         }}
                       />
                     </View>
-                    {this.props.data.length !== 1 && this.renderDots(i)}
+                    {this.props.data?.length !== 1 && this.renderDots(i)}
                   </View>
                 );
               else
@@ -273,7 +273,7 @@ export default class AssignmentResource extends React.Component {
                         }}
                       />
                     </View>
-                    {this.props.data.length !== 1 && this.renderDots(i)}
+                    {this.props.data?.length !== 1 && this.renderDots(i)}
                   </View>
                 );
             }

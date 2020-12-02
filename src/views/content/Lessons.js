@@ -406,8 +406,8 @@ export default class Lessons extends React.Component {
             }}
             refreshControl={
               <RefreshControl
-                colors={[colors.pianoteRed]}
-                tintColor={colors.pianoteRed}
+                colors={[colors.secondBackground]}
+                tintColor={colors.secondBackground}
                 refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />

@@ -326,6 +326,9 @@ class VerticalVideoList extends React.Component {
   };
 
   getImageUrl(thumbnail, publishDate) {
+    if (new Date(publishDate) > new Date()) {
+      return `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`;
+    }
     if (thumbnail.includes('http') && thumbnail !== 'TBD') {
       return `https://cdn.musora.com/image/fetch/w_${Math.round(
         this.props.imageWidth * 2
@@ -333,9 +336,7 @@ class VerticalVideoList extends React.Component {
         this.props.imageWidth === this.props.imageHeight ? '1' : '16:9'
       },fl_lossy,q_auto:eco,c_fill,g_face/${thumbnail}`;
     }
-    if (new Date(publishDate) > new Date()) {
-      return `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`;
-    }
+
     return fallbackThumb;
   }
 

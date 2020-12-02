@@ -57,7 +57,8 @@ export default class PathOverview extends React.Component {
       isLoadingAll: this.props.navigation.state.params.items?.length
         ? false
         : true,
-      difficulty: 0
+      difficulty: 0,
+      refreshing: false
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -89,6 +90,7 @@ export default class PathOverview extends React.Component {
                 r.fields.find(f => f.key === 'instructor')?.value
               )?.getField('name'),
         isLoadingAll: false,
+        refreshing: false,
         items:
           r?.lessons?.map(l => {
             l = new ContentModel(l);
@@ -151,14 +153,14 @@ export default class PathOverview extends React.Component {
         started: false,
         completed: false,
         showRestartCourse: false,
-        isLoadingAll: true
+        refreshing: true
       },
       () => this.getItems()
     );
   };
 
   refresh = () => {
-    this.setState({ isLoadingAll: true }, () => {
+    this.setState({ refreshing: true }, () => {
       this.getItems();
     });
   };
@@ -204,7 +206,7 @@ export default class PathOverview extends React.Component {
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.isLoadingAll}
+              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
             />
           }
