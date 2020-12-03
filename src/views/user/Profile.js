@@ -490,7 +490,6 @@ export default class Profile extends React.Component {
                     borderTopWidth: 0.25,
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 0.25,
-                    height: fullHeight * 0.1,
                     paddingTop: 10 * factorVertical,
                     paddingBottom: 10 * factorVertical,
                     backgroundColor: colors.mainBackground,
@@ -843,8 +842,8 @@ export default class Profile extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: fullHeight,
-              width: fullWidth
+              height: '100%',
+              width: '100%'
             }
           ]}
           animation={'slideInUp'}
@@ -868,8 +867,8 @@ export default class Profile extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: fullHeight,
-              width: fullWidth
+              height: '100%',
+              width: '100%'
             }
           ]}
           animation={'slideInUp'}

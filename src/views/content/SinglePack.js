@@ -18,6 +18,8 @@ import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DeviceInfo from 'react-native-device-info';
+import Orientation from 'react-native-orientation-locker';
 
 import StartIcon from '../../components/StartIcon';
 import ContinueIcon from '../../components/ContinueIcon';
@@ -57,14 +59,20 @@ export default class SinglePack extends React.Component {
       isCompleted: false,
       nextLessonUrl: '',
       isLoadingAll: true,
-      refreshing: false
+      refreshing: false,
+      isLandscape: fullHeight < fullWidth
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
   componentDidMount = () => {
     this.getBundle();
+    Orientation.addDeviceOrientationListener(this.orientationListener);
   };
+
+  componentWillUnmount() {
+    Orientation.removeDeviceOrientationListener(this.orientationListener);
+  }
 
   getBundle = async () => {
     if (!this.context.isConnected) {
@@ -167,6 +175,33 @@ export default class SinglePack extends React.Component {
     });
   };
 
+  getAspectRatio() {
+    if (DeviceInfo.isTablet() && this.state.isLandscape) {
+      console.log(3);
+      return 3;
+    }
+    if (DeviceInfo.isTablet() && !this.state.isLandscape) {
+      console.log(2);
+      return 2;
+    }
+    console.log(1.8);
+    return 1.8;
+  }
+
+  orientationListener = o => {
+    if (o === 'UNKNOWN') return;
+    let isLandscape = o.indexOf('LAND') >= 0;
+    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
+    if (Platform.OS === 'ios') {
+      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+    } else {
+      Orientation.getAutoRotateState(isAutoRotateOn => {
+        if (isAutoRotateOn && DeviceInfo.isTablet())
+          this.setState({ isLandscape });
+      });
+    }
+  };
+
   render() {
     return (
       <SafeAreaView
@@ -191,7 +226,8 @@ export default class SinglePack extends React.Component {
             <View
               key={'imageContainer'}
               style={{
-                height: fullHeight * 0.5,
+                width: '100%',
+                aspectRatio: this.getAspectRatio(),
                 zIndex: 3
               }}
             >
@@ -244,22 +280,21 @@ export default class SinglePack extends React.Component {
                     30 * factorRatio +
                     (onTablet ? fullHeight * 0.065 : fullHeight * 0.053),
                   left: 0,
-                  width: fullWidth,
+                  width: '100%',
                   zIndex: 10,
                   elevation: 10,
-                  flexDirection: 'row'
+                  flexDirection: 'row',
+                  justifyContent: 'center'
                 }}
               >
-                <View style={{ flex: 1 }} />
                 <FastImage
                   style={{
-                    height: 100 * factorRatio,
-                    width: '80%'
+                    height: greaterWDim / 10,
+                    width: '100%'
                   }}
                   source={{ uri: this.state.logo }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-                <View style={{ flex: 1 }} />
               </View>
               <View
                 key={'buttons'}
@@ -267,37 +302,33 @@ export default class SinglePack extends React.Component {
                   position: 'absolute',
                   bottom: 10 * factorRatio,
                   left: 0,
-                  width: fullWidth,
+                  width: '100%',
                   zIndex: 10,
                   elevation: 10
                 }}
               >
-                <View key={'buttonRow'} style={{ flexDirection: 'row' }}>
-                  <View
-                    key={'plusButton'}
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1
-                      }
-                    ]}
+                <View
+                  key={'buttonRow'}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly'
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.toggleMyList();
+                    }}
+                    style={{
+                      alignItems: 'center',
+                      flex: 1
+                    }}
                   >
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.toggleMyList();
-                      }}
-                      style={{
-                        alignItems: 'center',
-                        flex: 1
-                      }}
-                    >
-                      <AntIcon
-                        name={this.state.isAddedToList ? 'close' : 'plus'}
-                        size={30 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                    </TouchableOpacity>
-
+                    <AntIcon
+                      name={this.state.isAddedToList ? 'close' : 'plus'}
+                      size={30 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
@@ -308,95 +339,63 @@ export default class SinglePack extends React.Component {
                     >
                       {this.state.isAddedToList ? 'Added' : 'My List'}
                     </Text>
-                  </View>
-                  <View key={'start'} style={{ width: fullWidth * 0.5 }}>
-                    <View style={{ flex: 1 }} />
-                    {this.state.isCompleted ? (
-                      <ResetIcon
-                        pxFromTop={0}
-                        pxFromLeft={0}
-                        buttonWidth={fullWidth * 0.5}
-                        buttonHeight={
-                          onTablet ? fullHeight * 0.065 : fullHeight * 0.053
-                        }
+                  </TouchableOpacity>
+
+                  {this.state.isCompleted ? (
+                    <ResetIcon
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : !this.state.isStarted ? (
+                    <StartIcon
+                      pressed={() => {
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.nextLessonUrl
+                        });
+                      }}
+                    />
+                  ) : (
+                    this.state.isStarted && (
+                      <ContinueIcon
                         pressed={() =>
-                          this.setState({
-                            showRestartCourse: true
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.nextLessonUrl
                           })
                         }
                       />
-                    ) : !this.state.isStarted ? (
-                      <StartIcon
-                        pxFromTop={0}
-                        pxFromLeft={0}
-                        buttonWidth={fullWidth * 0.5}
-                        buttonHeight={
-                          onTablet ? fullHeight * 0.065 : fullHeight * 0.053
-                        }
-                        pressed={() => {
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.nextLessonUrl
-                          });
-                        }}
-                      />
-                    ) : (
-                      this.state.isStarted && (
-                        <ContinueIcon
-                          pxFromTop={0}
-                          pxFromLeft={0}
-                          buttonWidth={fullWidth * 0.5}
-                          buttonHeight={
-                            onTablet ? fullHeight * 0.065 : fullHeight * 0.053
-                          }
-                          pressed={() =>
-                            this.props.navigation.navigate('VIDEOPLAYER', {
-                              url: this.state.nextLessonUrl
-                            })
-                          }
-                        />
-                      )
-                    )}
-                    <View style={{ flex: 1 }} />
-                  </View>
-                  <View
-                    key={'infoButton'}
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1
-                      }
-                    ]}
+                    )
+                  )}
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
+                    }}
+                    style={{
+                      flex: 1,
+                      alignItems: 'center'
+                    }}
                   >
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({
-                          showInfo: !this.state.showInfo
-                        });
-                      }}
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={22 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
                       style={{
-                        flex: 1,
-                        alignItems: 'center'
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 3 * factorRatio,
+                        fontSize: 13 * factorRatio
                       }}
                     >
-                      <AntIcon
-                        name={
-                          this.state.showInfo ? 'infocirlce' : 'infocirlceo'
-                        }
-                        size={22 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          color: 'white',
-                          marginTop: 3 * factorRatio,
-                          fontSize: 13 * factorRatio
-                        }}
-                      >
-                        Info
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                      Info
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -404,10 +403,9 @@ export default class SinglePack extends React.Component {
               <View
                 key={'info'}
                 style={{
-                  width: fullWidth,
-                  backgroundColor: colors.mainBackground,
-                  paddingLeft: fullWidth * 0.05,
-                  paddingRight: fullWidth * 0.05
+                  width: '100%',
+                  alignSelf: 'center',
+                  backgroundColor: colors.mainBackground
                 }}
               >
                 <Text
@@ -497,7 +495,7 @@ export default class SinglePack extends React.Component {
                           content: packsService.getPack(this.state.url, true)
                         }}
                         styles={{
-                          touchable: {},
+                          touchable: { height: 27.5 * factorRatio },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
@@ -540,7 +538,7 @@ export default class SinglePack extends React.Component {
                       }}
                     >
                       <MaterialIcon
-                        size={25}
+                        size={27.5 * factorRatio}
                         name={'replay'}
                         color={colors.pianoteRed}
                       />
@@ -630,8 +628,8 @@ export default class SinglePack extends React.Component {
           isVisible={this.state.showModalMenu}
           style={{
             margin: 0,
-            height: fullHeight,
-            width: fullWidth
+            height: '100%',
+            width: '100%'
           }}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -654,8 +652,8 @@ export default class SinglePack extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: fullHeight,
-              width: fullWidth
+              height: '100%',
+              width: '100%'
             }
           ]}
           animation={'slideInUp'}
