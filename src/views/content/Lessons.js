@@ -184,6 +184,7 @@ export default class Lessons extends React.Component {
   };
 
   getAllLessons = async () => {
+    console.log('get all lessons')
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -203,12 +204,16 @@ export default class Lessons extends React.Component {
       let items = this.setData(newContent);
 
       this.setState({
+        filtersAvailable: response.meta.filterOptions,
         allLessons: [...this.state.allLessons, ...items],
         outVideos:
           items.length == 0 || response.data.length < 20 ? true : false,
         filtering: false,
         isPaging: false
       });
+
+      console.log('response: ', this.state.filtersAvailable)
+
     } catch (error) {}
   };
 
@@ -270,6 +275,7 @@ export default class Lessons extends React.Component {
       filters: this.state.filters,
       type: 'LESSONS',
       onGoBack: filters => {
+        console.log(filters),
         this.setState({
           allLessons: [],
           filters:
@@ -364,6 +370,7 @@ export default class Lessons extends React.Component {
 
   changeFilters = filters => {
     // after leaving filter page. set filters here
+    console.log('FILTERS: ', filters)
     this.setState(
       {
         allLessons: [],

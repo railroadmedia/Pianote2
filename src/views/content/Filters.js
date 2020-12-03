@@ -260,14 +260,9 @@ export default class Filters extends React.Component {
     this.state = {
       type: this.props.navigation.state.params.type,
       maxLevel: Number(this.props.navigation.state.params.filtersAvailable.difficulty[this.props.navigation.state.params.filtersAvailable.difficulty.length - 1]),
-      level:
-        this.props.navigation.state.params.filters.level.length > 1
-          ? this.props.navigation.state.params.filters.level[0]
-          : null,
-      allLevels:
-        this.props.navigation.state.params.filters.level.length > 1
-          ? false
-          : false,
+      level: this.props.navigation.state.params.filters.level.length > 1 ? this.props.navigation.state.params.filters.level[0] : null,
+      allLevels: this.props.navigation.state.params.filters.level.length > 1 ? false : true,
+      filtersAvailable: this.props.navigation.state.params.filtersAvailable,
       displayTopics: [],
       topics: [],
       progressProgress: false,
@@ -282,7 +277,6 @@ export default class Filters extends React.Component {
       jonny: false,
       brett: false,
       nate: false,
-      filtersAvailable: this.props.navigation.state.params.filtersAvailable,
       onlyType:
         this.props.navigation.state.params.type == 'MYLIST' ||
         this.props.navigation.state.params.type == 'SEARCH' ||
@@ -293,7 +287,7 @@ export default class Filters extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(this.state.filtersAvailable)
+    console.log('Filters page: ', this.state.filtersAvailable)
   }
 
   updateFilters = async () => {
@@ -1268,8 +1262,10 @@ export default class Filters extends React.Component {
                           {(this.state.maxLevel > 0) && (
                           <TouchableOpacity 
                             onPress={() => {
-                              if(this.state.level == 1) this.setState({allLevels: true})
-                              else this.setState({level: 1, allLevels: false})
+                              this.setState({
+                                level: 1, 
+                                allLevels: false
+                              })
                             }}
                             style={{
                               flex: 1,
@@ -1288,6 +1284,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 2 ? 1 : 2,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1307,6 +1304,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 3 ? 2 : 3,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1326,6 +1324,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 4 ? 3 : 4,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1345,6 +1344,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 5 ? 4 : 5,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1364,6 +1364,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 6 ? 5 : 6,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1383,6 +1384,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 7 ? 6 : 7,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1402,6 +1404,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 8 ? 7 : 8,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1421,6 +1424,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 9 ? 8 : 9,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1440,6 +1444,7 @@ export default class Filters extends React.Component {
                             onPress={() => {
                               this.setState({
                                 level: this.state.level == 10 ? 9 : 10,
+                                allLevels: false,
                               })
                             }}
                             style={{
@@ -1508,8 +1513,7 @@ export default class Filters extends React.Component {
                         onPress={() => {
                           this.setState({
                             allLevels: !this.state.allLevels,
-                            level:
-                              levelDict[this.props.navigation.state.params.type]
+                            level: this.state.maxLevel,
                           });
                         }}
                         style={[
