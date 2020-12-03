@@ -567,12 +567,14 @@ export default class Lessons extends React.Component {
             <View
               key={'profile'}
               style={{
-                borderTopColor: colors.secondBackground,
                 borderTopWidth: 0.25,
-                borderBottomColor: colors.secondBackground,
                 borderBottomWidth: 0.25,
+                borderTopColor: colors.secondBackground,
+                borderBottomColor: colors.secondBackground,
                 backgroundColor: colors.mainBackground,
-                marginVertical: 15,
+                paddingTop: 10,
+                paddingBottom: 10,
+                marginVertical: 10*factorVertical,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly'
@@ -580,7 +582,7 @@ export default class Lessons extends React.Component {
             >
               <FastImage
                 style={{
-                  height: 80,
+                  height: 60*factorRatio,
                   aspectRatio: 1,
                   borderRadius: 100,
                   backgroundColor: colors.secondBackground
