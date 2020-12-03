@@ -114,7 +114,7 @@ class NavigationMenu extends React.Component {
         ))}
         <View
           style={{
-            flex: 1,
+            flex: 2,
             alignSelf: 'center'
           }}
         >
@@ -122,9 +122,9 @@ class NavigationMenu extends React.Component {
             onPress={() => {
               this.props.onClose(false);
             }}
-            style={[styles.redButton]}
+            style={[styles.centerContent, styles.redButton]}
           >
-            <FeatherIcon size={40 * factorRatio} name={'x'} color={'white'} />
+            <FeatherIcon size={50 * factorRatio} name={'x'} color={'white'} />
           </TouchableOpacity>
         </View>
       </View>

@@ -585,7 +585,7 @@ export default class Lessons extends React.Component {
                   height: 60*factorRatio,
                   aspectRatio: 1,
                   borderRadius: 100,
-                  backgroundColor: colors.secondBackground
+                  backgroundColor: colors.secondBackground,
                 }}
                 source={{
                   uri:
