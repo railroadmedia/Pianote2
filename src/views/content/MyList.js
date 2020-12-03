@@ -270,7 +270,7 @@ class MyList extends React.Component {
             }}
             style={{
               height: fullHeight * 0.075,
-              width: fullWidth,
+              width: '100%',
               borderTopWidth: 0.25 * factorRatio,
               borderTopColor: colors.secondBackground,
               borderBottomWidth: 0.25 * factorRatio,
@@ -315,7 +315,7 @@ class MyList extends React.Component {
             }}
             style={{
               height: fullHeight * 0.075,
-              width: fullWidth,
+              width: '100%',
               borderBottomWidth: 0.25 * factorRatio,
               borderBottomColor: colors.secondBackground,
               flexDirection: 'row'
@@ -392,7 +392,11 @@ class MyList extends React.Component {
         <Modal
           key={'navMenu'}
           isVisible={this.state.showModalMenu}
-          style={{ margin: 0, height: fullHeight, width: fullWidth }}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

@@ -164,8 +164,16 @@ class Packs extends React.Component {
                 />
               )}
               <View
-                key={'image'}
-                style={[styles.centerContent, { height: fullHeight * 0.5 }]}
+                key={'pianoteSVG'}
+                style={{
+                  position: 'absolute',
+                  height: '100%',
+                  width: '100%',
+                  zIndex: 2,
+                  elevation: 2,
+                  alignItems: 'center',
+                  justifyContent: 'flex-end'
+                }}
               >
                 <GradientFeature
                   color={'blue'}
@@ -175,9 +183,9 @@ class Packs extends React.Component {
                 />
                 <FastImage
                   style={{
-                    flex: 1,
-                    alignSelf: 'stretch',
-                    backgroundColor: colors.mainBackground
+                    height: greaterWDim / 10,
+                    width: '100%',
+                    borderRadius: 7.5 * factorRatio
                   }}
                   source={{
                     uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
@@ -187,46 +195,15 @@ class Packs extends React.Component {
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View
-                  key={'pianoteSVG'}
                   style={{
-                    position: 'absolute',
-                    height: '100%',
-                    width: fullWidth,
-                    zIndex: 2,
-                    elevation: 2
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    margin: 15
                   }}
                 >
-                  <FastImage
-                    style={{
-                      width: '80%',
-                      height: '100%',
-                      borderRadius: 7.5 * factorRatio,
-                      alignSelf: 'center'
-                    }}
-                    source={{
-                      uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
-                        fullWidth * 2
-                      )}/${this.state.headerPackLogo}`
-                    }}
-                    resizeMode={FastImage.resizeMode.contain}
-                  />
-
                   {this.state.headerPackCompleted ? (
                     <ResetIcon
-                      pxFromTop={
-                        onTablet
-                          ? fullHeight * 0.5 * 0.725
-                          : fullHeight * 0.5 * 0.725
-                      }
-                      buttonHeight={
-                        onTablet
-                          ? fullHeight * 0.06
-                          : Platform.OS == 'ios'
-                          ? fullHeight * 0.05
-                          : fullHeight * 0.055
-                      }
-                      pxFromLeft={fullWidth * 0.065}
-                      buttonWidth={fullWidth * 0.42}
                       pressed={() =>
                         this.setState({
                           showRestartCourse: true
@@ -235,20 +212,6 @@ class Packs extends React.Component {
                     />
                   ) : !this.state.headerPackStarted ? (
                     <StartIcon
-                      pxFromTop={
-                        onTablet
-                          ? fullHeight * 0.5 * 0.725
-                          : fullHeight * 0.5 * 0.725
-                      }
-                      buttonHeight={
-                        onTablet
-                          ? fullHeight * 0.06
-                          : Platform.OS == 'ios'
-                          ? fullHeight * 0.05
-                          : fullHeight * 0.055
-                      }
-                      pxFromLeft={fullWidth * 0.065}
-                      buttonWidth={fullWidth * 0.42}
                       pressed={() =>
                         this.props.navigation.navigate('VIDEOPLAYER', {
                           url: this.state.headerPackNextLessonUrl
@@ -257,20 +220,6 @@ class Packs extends React.Component {
                     />
                   ) : (
                     <ContinueIcon
-                      pxFromTop={
-                        onTablet
-                          ? fullHeight * 0.5 * 0.725
-                          : fullHeight * 0.5 * 0.725
-                      }
-                      buttonHeight={
-                        onTablet
-                          ? fullHeight * 0.06
-                          : Platform.OS == 'ios'
-                          ? fullHeight * 0.05
-                          : fullHeight * 0.055
-                      }
-                      pxFromLeft={fullWidth * 0.065}
-                      buttonWidth={fullWidth * 0.42}
                       pressed={() =>
                         this.props.navigation.navigate('VIDEOPLAYER', {
                           url: this.state.headerPackNextLessonUrl
@@ -278,21 +227,8 @@ class Packs extends React.Component {
                       }
                     />
                   )}
+                  <View style={{ flex: 0.1 }} />
                   <MoreInfoIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.5 * 0.725
-                        : fullHeight * 0.5 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromRight={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
                     pressed={() => {
                       this.props.navigation.push('SINGLEPACK', {
                         url: this.state.headerPackUrl
@@ -383,7 +319,11 @@ class Packs extends React.Component {
         <Modal
           key={'navMenu'}
           isVisible={this.state.showModalMenu}
-          style={{ margin: 0, height: fullHeight, width: fullWidth }}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -401,7 +341,11 @@ class Packs extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={[
             styles.centerContent,
-            { margin: 0, height: fullHeight, width: fullWidth }
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
           ]}
           animation={'slideInUp'}
           animationInTiming={250}

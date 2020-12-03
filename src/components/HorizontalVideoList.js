@@ -199,15 +199,7 @@ class HorizontalVideoList extends React.Component {
             }
           ]}
         >
-          <View
-            key={'title'}
-            style={[
-              styles.centerContent,
-              {
-                width: fullWidth - 20 * factorHorizontal
-              }
-            ]}
-          >
+          <View key={'title'} style={[styles.centerContent]}>
             <View style={{ height: 10 * factorVertical }} />
             <View
               key={'title'}
@@ -513,8 +505,8 @@ class HorizontalVideoList extends React.Component {
               styles.centerContent,
               {
                 margin: 0,
-                height: fullHeight,
-                width: fullWidth
+                height: '100%',
+                width: '100%'
               }
             ]}
             animation={'slideInUp'}

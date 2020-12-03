@@ -467,8 +467,8 @@ export default class LoginCredentials extends React.Component {
           isVisible={this.state.showPasswordEmailMatch}
           style={{
             margin: 0,
-            height: fullHeight,
-            width: fullWidth
+            height: '100%',
+            width: '100%'
           }}
           animation={'slideInUp'}
           animationInTiming={250}
