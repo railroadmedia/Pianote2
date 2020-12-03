@@ -212,8 +212,8 @@ export default class StudentFocusCatalog extends React.Component {
           isVisible={this.state.showModalMenu}
           style={{
             margin: 0,
-            height: fullHeight,
-            width: fullWidth
+            height: '100%',
+            width: '100%'
           }}
           animation={'slideInUp'}
           animationInTiming={250}

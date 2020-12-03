@@ -85,8 +85,7 @@ class NavigationBar extends React.Component {
           style={{
             alignSelf: 'stretch',
             flexDirection: 'row',
-            paddingRight: 10,
-            paddingLeft: 10,
+            padding: 10,
             justifyContent: 'space-around',
             alignContent: 'space-around'
           }}

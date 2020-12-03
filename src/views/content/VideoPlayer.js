@@ -489,9 +489,8 @@ export default class VideoPlayer extends React.Component {
         key={index}
         style={{
           backgroundColor: colors.mainBackground,
-          paddingTop: fullHeight * 0.025,
-          paddingLeft: fullWidth * 0.05,
-          paddingRight: fullWidth * 0.03,
+          paddingTop: 15,
+          paddingHorizontal: 15,
           flex: 1,
           borderTopColor: colors.secondBackground,
           borderTopWidth: 0.25,
@@ -826,71 +825,39 @@ export default class VideoPlayer extends React.Component {
             this.setState({ selectedAssignment: assignment });
           }}
           style={{
-            height: 55 * factorVertical,
-            paddingLeft: fullWidth * 0.035,
+            // height: 55 * factorVertical,
+            paddingHorizontal: 15,
             borderBottomColor: colors.secondBackground,
             borderBottomWidth: 1,
-            justifyContent: 'center',
-            alignContent: 'center',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             flexDirection: 'row'
           }}
         >
-          <View>
-            <View style={{ flex: 1 }} />
-            <Text
-              style={{
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground,
-                fontFamily: 'RobotoCondensed-Bold'
-              }}
-            >
-              {index + 1}. {row.title}
-            </Text>
-            <View style={{ flex: 1 }} />
-          </View>
-          <View style={{ flex: 1 }} />
-          <View
-            style={[
-              styles.centerContent,
-              {
-                height: '100%',
-                width: 40 * factorHorizontal,
-                flexDirection: 'row'
-              }
-            ]}
+          <Text
+            style={{
+              fontSize: 18 * factorRatio,
+              color: colors.secondBackground,
+              fontFamily: 'RobotoCondensed-Bold',
+              paddingVertical: 10
+            }}
           >
-            {row.progress === 100 ? (
-              <View style={styles.centerContent}>
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: 22.5 * factorRatio,
-                      width: 22.5 * factorRatio,
-                      borderRadius: 100,
-                      backgroundColor: '#fb1b2f'
-                    }
-                  ]}
-                >
-                  <EntypoIcon
-                    name={'check'}
-                    size={17.5 * factorRatio}
-                    color={colors.mainBackground}
-                  />
-                </View>
-              </View>
-            ) : (
-              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
-                <View style={{ flex: 0.25 }} />
-                <EntypoIcon
-                  name={'chevron-thin-right'}
-                  size={20 * factorRatio}
-                  color={colors.secondBackground}
-                />
-                <View style={{ flex: 1 }} />
-              </View>
-            )}
-          </View>
+            {index + 1}. {row.title}
+          </Text>
+
+          {row.progress === 100 ? (
+            <AntIcon
+              name={'checkcircle'}
+              size={18 * factorRatio}
+              color={colors.pianoteRed}
+            />
+          ) : (
+            <EntypoIcon
+              name={'chevron-thin-right'}
+              size={20 * factorRatio}
+              color={colors.secondBackground}
+            />
+          )}
         </TouchableOpacity>
       );
     });
@@ -961,7 +928,13 @@ export default class VideoPlayer extends React.Component {
     let { id, comments } = this.state;
     return (
       <View
-        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+        style={[
+          {
+            backgroundColor: colors.mainBackground,
+            width: '100%',
+            height: '100%'
+          }
+        ]}
       >
         <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
         {this.state.showVideo && (
@@ -1140,8 +1113,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: 'white',
-                        paddingVertical: fullHeight * 0.015,
-                        paddingHorizontal: 15
+                        padding: 15
                       }}
                     >
                       {this.state.lessonTitle}
@@ -1155,7 +1127,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: colors.secondBackground,
-                        paddingBottom: fullHeight * 0.015
+                        paddingBottom: 15
                       }}
                     >
                       {this.renderTagsDependingOnContentType()}
@@ -1164,8 +1136,7 @@ export default class VideoPlayer extends React.Component {
                   <View
                     key={'icons'}
                     style={{
-                      paddingLeft: fullWidth * 0.015,
-                      paddingRight: fullWidth * 0.015
+                      paddingHorizontal: 15
                     }}
                   >
                     <View style={{ flex: 1 }} />
@@ -1312,21 +1283,18 @@ export default class VideoPlayer extends React.Component {
                   </View>
                   <View key={'infoExpanded'}>
                     {this.state.showInfo && (
-                      <View>
-                        <View style={{ height: fullHeight * 0.03 }} />
-                        <Text
-                          style={{
-                            paddingLeft: '5%',
-                            paddingRight: '5%',
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 14 * factorRatio,
-                            textAlign: 'center',
-                            color: 'white'
-                          }}
-                        >
-                          {this.state.description}
-                        </Text>
-                      </View>
+                      <Text
+                        style={{
+                          paddingLeft: '5%',
+                          paddingRight: '5%',
+                          fontFamily: 'OpenSans-Regular',
+                          fontSize: 14 * factorRatio,
+                          textAlign: 'center',
+                          color: 'white'
+                        }}
+                      >
+                        {this.state.description}
+                      </Text>
                     )}
                   </View>
                   <View
@@ -1342,7 +1310,7 @@ export default class VideoPlayer extends React.Component {
                     <>
                       <View
                         key={'assingmentsHeader'}
-                        style={{ paddingLeft: fullWidth * 0.035 }}
+                        style={{ paddingLeft: 15 }}
                       >
                         <Text
                           style={{
@@ -1359,7 +1327,7 @@ export default class VideoPlayer extends React.Component {
                       <View
                         key={'assignments'}
                         style={{
-                          width: fullWidth,
+                          width: '100%',
                           borderTopColor: colors.secondBackground,
                           borderTopWidth: 1
                         }}
@@ -1368,6 +1336,7 @@ export default class VideoPlayer extends React.Component {
                       </View>
                     </>
                   )}
+                  <View style={{ height: 20 * factorVertical }} />
                   {this.state.relatedLessons.length > 0 && (
                     <VerticalVideoList
                       title={'RELATED LESSONS'}
@@ -1411,293 +1380,124 @@ export default class VideoPlayer extends React.Component {
                       }
                     />
                   )}
-                  <View key={'commentList'} style={{ flex: 1 }}>
-                    <View
-                      key={'commentContainer'}
-                      style={[
-                        styles.centerContent,
-                        { flex: 1, width: fullWidth, zIndex: 10 }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }}>
+
+                  <View
+                    key={'commentContainer'}
+                    style={[
+                      styles.centerContent,
+                      {
+                        flex: 1,
+                        width: '100%',
+                        zIndex: 10
+                      }
+                    ]}
+                  >
+                    <View style={{ flex: 1 }}>
+                      <View
+                        style={{
+                          width: '100%',
+                          backgroundColor: colors.mainBackground,
+                          zIndex: 5
+                        }}
+                      >
                         <View
+                          key={'commentHeader'}
                           style={{
-                            width: fullWidth,
-                            backgroundColor: colors.mainBackground,
-                            zIndex: 5
+                            flexDirection: 'row',
+                            flex: 1,
+                            justifyContent: 'space-between',
+                            paddingHorizontal: 15
                           }}
                         >
-                          <View style={{ height: fullHeight * 0.025 }} />
-                          <View
-                            key={'commentHeader'}
+                          <Text
                             style={{
-                              width: fullWidth,
-                              flexDirection: 'row',
-                              paddingLeft: fullWidth * 0.05,
-                              paddingRight: fullWidth * 0.01
+                              fontSize: 18 * factorRatio,
+                              fontFamily: 'RobotoCondensed-Bold',
+                              color: colors.secondBackground
                             }}
                           >
-                            <View>
-                              <View style={{ flex: 1 }} />
+                            {this.allCommentsNum + ' COMMENTS'}
+                          </Text>
+
+                          <TouchableOpacity
+                            style={{ marginLeft: factorHorizontal * 10 }}
+                            onPress={() =>
+                              this.setState({ showCommentSort: true })
+                            }
+                          >
+                            <FontIcon
+                              size={20 * factorRatio}
+                              name={'sort-amount-down'}
+                              color={colors.pianoteRed}
+                            />
+                          </TouchableOpacity>
+                        </View>
+
+                        <View
+                          key={'addComment'}
+                          style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            padding: 15
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.setState({ showMakeComment: true })
+                            }
+                            style={{ flexDirection: 'row', flex: 1 }}
+                          >
+                            <FastImage
+                              style={{
+                                height: 40 * factorHorizontal,
+                                width: 40 * factorHorizontal,
+                                borderRadius: 100
+                              }}
+                              source={{
+                                uri:
+                                  this.state.profileImage ||
+                                  'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                              }}
+                              resizeMode={FastImage.resizeMode.stretch}
+                            />
+
+                            <View
+                              key={'addComment'}
+                              style={{
+                                flex: 1,
+                                justifyContent: 'center'
+                              }}
+                            >
                               <Text
                                 style={{
-                                  fontSize: 18 * factorRatio,
-                                  fontFamily: 'RobotoCondensed-Bold',
-                                  color: colors.secondBackground
+                                  textAlign: 'left',
+                                  fontFamily: 'OpenSans-Regular',
+                                  fontSize: 13 * factorRatio,
+                                  color: 'white',
+                                  paddingLeft: 10 * factorHorizontal
                                 }}
                               >
-                                {this.allCommentsNum + ' COMMENTS'}
+                                Add a comment...
                               </Text>
-                              <View style={{ flex: 1 }} />
                             </View>
-                            <View style={{ flex: 1 }} />
-
-                            <TouchableOpacity
-                              style={{ marginLeft: factorHorizontal * 10 }}
-                              onPress={() =>
-                                this.setState({ showCommentSort: true })
-                              }
-                            >
-                              <FontIcon
-                                size={20 * factorRatio}
-                                name={'sort-amount-down'}
-                                color={colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                            <View style={{ flex: 0.1 }} />
-                          </View>
-                          <View style={{ flex: 1.25 }} />
-                          <View
-                            key={'addComment'}
-                            style={{
-                              width: fullWidth,
-                              height: fullHeight * 0.1,
-                              flexDirection: 'row',
-                              paddingLeft: fullWidth * 0.05
-                            }}
-                          >
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.setState({ showMakeComment: true })
-                              }
-                              style={{ flexDirection: 'row' }}
-                            >
-                              <View
-                                key={'profileImage'}
-                                style={{
-                                  height: '100%',
-                                  width: 40 * factorHorizontal
-                                }}
-                              >
-                                <View style={{ flex: 1 }} />
-                                <FastImage
-                                  style={{
-                                    height: 40 * factorHorizontal,
-                                    width: 40 * factorHorizontal,
-                                    borderRadius: 100
-                                  }}
-                                  source={{
-                                    uri:
-                                      this.state.profileImage ||
-                                      'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                                  }}
-                                  resizeMode={FastImage.resizeMode.stretch}
-                                />
-                                <View style={{ flex: 1 }} />
-                              </View>
-                              <View
-                                key={'addComment'}
-                                style={{
-                                  height: '100%',
-                                  width:
-                                    fullWidth * 0.95 - 40 * factorHorizontal,
-                                  justifyContent: 'center'
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    textAlign: 'left',
-                                    fontFamily: 'OpenSans-Regular',
-                                    fontSize: 13 * factorRatio,
-                                    color: 'white',
-                                    paddingLeft: 10 * factorHorizontal
-                                  }}
-                                >
-                                  Add a comment...
-                                </Text>
-                              </View>
-                            </TouchableOpacity>
-                          </View>
-                          <View style={{ flex: 1 }} />
+                          </TouchableOpacity>
                         </View>
-                        {this.state.isLoadingComm && (
-                          <ActivityIndicator
-                            size='small'
-                            style={{ padding: 10 }}
-                            color={colors.secondBackground}
-                          />
-                        )}
-                        {this.state.comments.length > 0 && this.mapComments()}
                       </View>
-                      <View style={{ height: fullHeight * 0.035 }} />
+                      {this.state.isLoadingComm && (
+                        <ActivityIndicator
+                          size='small'
+                          style={{ padding: 10 }}
+                          color={colors.secondBackground}
+                        />
+                      )}
+                      {this.state.comments.length > 0 && this.mapComments()}
                     </View>
+                    <View style={{ height: fullHeight * 0.035 }} />
                   </View>
                 </KeyboardAwareScrollView>
               )}
             </View>
-            {!this.state.selectedAssignment && !this.state.showMakeComment && (
-              <SafeAreaView
-                key={'completeLesson'}
-                forceInset={{ bottom: 'always' }}
-                style={[
-                  styles.centerContent,
-                  {
-                    width: fullWidth,
-                    backgroundColor: colors.mainBackground,
-                    zIndex: 2,
-                    justifyContent: 'flex-end'
-                  }
-                ]}
-              >
-                <View style={{ flexDirection: 'row' }}>
-                  <View
-                    style={{
-                      width: (fullWidth * this.state.progress) / 100,
-                      height: 2 * factorRatio,
-                      backgroundColor: colors.pianoteRed
-                    }}
-                  />
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View
-                  style={{ width: fullWidth, height: 15 * factorVertical }}
-                />
-                <View style={{ flexDirection: 'row' }}>
-                  <View
-                    key={'last'}
-                    style={[
-                      styles.centerContent,
-                      { flex: 0.2, alignSelf: 'stretch' }
-                    ]}
-                  >
-                    <View
-                      style={{
-                        height: fullWidth * 0.1,
-                        width: fullWidth * 0.1,
-                        borderRadius: 100,
-                        borderWidth: 2 * factorRatio,
-                        borderColor: this.state.previousLesson
-                          ? colors.pianoteRed
-                          : colors.secondBackground
-                      }}
-                    >
-                      <TouchableOpacity
-                        disabled={!this.state.previousLesson?.id}
-                        onPress={() =>
-                          this.switchLesson(
-                            this.state.previousLesson.id,
-                            this.state.previousLesson.post.mobile_app_url
-                          )
-                        }
-                        style={[
-                          styles.centerContent,
-                          { height: '100%', width: '100%' }
-                        ]}
-                      >
-                        <EntypoIcon
-                          name={'chevron-thin-left'}
-                          size={22.5 * factorRatio}
-                          color={
-                            this.state.previousLesson
-                              ? colors.pianoteRed
-                              : colors.secondBackground
-                          }
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View
-                    key={'complete'}
-                    style={[
-                      styles.centerContent,
-                      { flex: 0.6, alignSelf: 'stretch' }
-                    ]}
-                  >
-                    <TouchableOpacity
-                      onPress={() =>
-                        this.state.progress === 100
-                          ? this.setState({ showRestartCourse: true })
-                          : this.onComplete(this.state.id)
-                      }
-                      style={[
-                        styles.centerContent,
-                        {
-                          height: fullWidth * 0.1,
-                          width: fullWidth * 0.6,
-                          borderRadius: 100,
-                          backgroundColor: colors.pianoteRed
-                        }
-                      ]}
-                    >
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'RobotoCondensed-Bold',
-                          fontSize: 14 * factorRatio
-                        }}
-                      >
-                        {this.state.progress === 100
-                          ? 'COMPLETED'
-                          : 'COMPLETE LESSON'}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View
-                    key={'next'}
-                    style={[
-                      styles.centerContent,
-                      { flex: 0.2, alignSelf: 'stretch' }
-                    ]}
-                  >
-                    <View
-                      style={{
-                        height: fullWidth * 0.1,
-                        width: fullWidth * 0.1,
-                        borderRadius: 100,
-                        borderWidth: 2 * factorRatio,
-                        borderColor: this.state.nextLesson
-                          ? colors.pianoteRed
-                          : colors.secondBackground
-                      }}
-                    >
-                      <TouchableOpacity
-                        disabled={!this.state.nextLesson?.id}
-                        onPress={() =>
-                          this.switchLesson(
-                            this.state.nextLesson.id,
-                            this.state.nextLesson.post.mobile_app_url
-                          )
-                        }
-                        style={[
-                          styles.centerContent,
-                          { height: '100%', width: '100%' }
-                        ]}
-                      >
-                        <EntypoIcon
-                          name={'chevron-thin-right'}
-                          size={22.5 * factorRatio}
-                          color={
-                            this.state.nextLesson
-                              ? colors.pianoteRed
-                              : colors.secondBackground
-                          }
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              </SafeAreaView>
-            )}
+
             <Replies
               sendReply={reply =>
                 commentsService
@@ -1823,12 +1623,147 @@ export default class VideoPlayer extends React.Component {
             color={colors.secondBackground}
           />
         )}
+        {!this.state.selectedAssignment && !this.state.showMakeComment && (
+          <SafeAreaView
+            key={'completeLesson'}
+            forceInset={{ bottom: 'always' }}
+            style={[
+              {
+                backgroundColor: colors.mainBackground
+              }
+            ]}
+          >
+            <View
+              style={{
+                backgroundColor: colors.mainBackground,
+                height: 3,
+                width: '100%'
+              }}
+            >
+              {!!this.state.progress && (
+                <View
+                  testID='progress'
+                  style={[
+                    styles.progressBarCompleted,
+                    {
+                      backgroundColor: colors.pianoteRed,
+                      height: 3,
+                      alignItems: 'flex-end',
+                      justifyContent: 'center',
+                      position: 'relative',
+                      width: this.state.progress + '%'
+                    }
+                  ]}
+                />
+              )}
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                paddingVertical: 10
+              }}
+            >
+              <TouchableOpacity
+                testID='prevBtn'
+                style={{
+                  borderRadius: 100,
+                  borderWidth: 2,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: 10,
+                  borderColor: this.state.previousLesson
+                    ? colors.pianoteRed
+                    : colors.secondBackground
+                }}
+                disabled={!this.state.previousLesson?.id}
+                onPress={() =>
+                  this.switchLesson(
+                    this.state.previousLesson.id,
+                    this.state.previousLesson.post.mobile_app_url
+                  )
+                }
+              >
+                <EntypoIcon
+                  name={'chevron-thin-left'}
+                  size={22.5 * factorRatio}
+                  style={{ padding: 10 }}
+                  color={
+                    this.state.previousLesson
+                      ? colors.pianoteRed
+                      : colors.secondBackground
+                  }
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: colors.pianoteRed,
+                  borderRadius: 25,
+                  minHeight: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1
+                }}
+                onPress={() =>
+                  this.state.progress === 100
+                    ? this.setState({ showRestartCourse: true })
+                    : this.onComplete(this.state.id)
+                }
+              >
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: 14 * factorRatio,
+                    paddingVertical: 10
+                  }}
+                >
+                  {this.state.progress === 100
+                    ? 'COMPLETED'
+                    : 'COMPLETE LESSON'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID='prevBtn'
+                style={{
+                  borderRadius: 100,
+                  borderWidth: 2,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: 10,
+                  borderColor: this.state.nextLesson
+                    ? colors.pianoteRed
+                    : colors.secondBackground
+                }}
+                disabled={!this.state.nextLesson?.id}
+                onPress={() =>
+                  this.switchLesson(
+                    this.state.nextLesson.id,
+                    this.state.nextLesson.post.mobile_app_url
+                  )
+                }
+              >
+                <EntypoIcon
+                  name={'chevron-thin-right'}
+                  size={22.5 * factorRatio}
+                  style={{ padding: 10 }}
+                  color={
+                    this.state.nextLesson
+                      ? colors.pianoteRed
+                      : colors.secondBackground
+                  }
+                />
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        )}
 
         {this.state.selectedAssignment && (
           <Modal
             key={'assignmentComplete'}
             isVisible={this.state.showAssignmentComplete}
-            style={{ margin: 0, height: fullHeight, width: fullWidth }}
+            style={{ margin: 0, height: '100%', width: '100%' }}
             animation={'slideInUp'}
             animationInTiming={250}
             animationOutTiming={250}
@@ -1851,8 +1786,8 @@ export default class VideoPlayer extends React.Component {
           style={[
             {
               margin: 0,
-              height: fullHeight,
-              width: fullWidth,
+              height: '100%',
+              width: '100%',
               justifyContent: 'flex-end'
             }
           ]}
@@ -1866,7 +1801,7 @@ export default class VideoPlayer extends React.Component {
             styles={{
               container: {
                 backgroundColor: colors.mainBackground,
-                width: fullWidth
+                width: '100%'
               },
               touchableTextResourceNameFontFamily: 'OpenSans',
               touchableTextResourceExtensionFontFamily: 'OpenSans',
@@ -1897,7 +1832,7 @@ export default class VideoPlayer extends React.Component {
               isVisible={this.state.showLessonComplete}
               style={[
                 styles.centerContent,
-                { margin: 0, height: fullHeight, width: fullWidth }
+                { margin: 0, height: '100%', width: '100%' }
               ]}
               animation={'slideInUp'}
               animationInTiming={250}
@@ -1943,7 +1878,11 @@ export default class VideoPlayer extends React.Component {
             <Modal
               key={'restartCourse'}
               isVisible={this.state.showRestartCourse}
-              style={{ height: fullHeight, width: fullWidth, margin: 0 }}
+              style={{
+                height: '100%',
+                width: '100%',
+                margin: 0
+              }}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1965,7 +1904,7 @@ export default class VideoPlayer extends React.Component {
             <Modal
               key={'overviewComplete'}
               isVisible={this.state.showOverviewComplete}
-              style={{ margin: 0, height: fullHeight, width: fullWidth }}
+              style={{ margin: 0, height: '100%', width: '100%' }}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1992,7 +1931,7 @@ export default class VideoPlayer extends React.Component {
           isVisible={this.state.showCommentSort}
           style={[
             styles.centerContent,
-            { margin: 0, height: fullHeight, width: fullWidth }
+            { margin: 0, height: '100%', width: '100%' }
           ]}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -2020,7 +1959,7 @@ export default class VideoPlayer extends React.Component {
           isVisible={this.state.showSoundSlice}
           style={[
             styles.centerContent,
-            { margin: 0, height: fullHeight, width: fullWidth }
+            { margin: 0, height: '100%', width: '100%' }
           ]}
           animation={'slideInUp'}
           animationInTiming={350}

@@ -723,8 +723,8 @@ export default class Lessons extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: fullHeight,
-              width: fullWidth
+              height: '100%',
+              width: '100%'
             }
           ]}
           animation={'slideInUp'}

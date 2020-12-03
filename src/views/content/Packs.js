@@ -214,7 +214,7 @@ export default class Packs extends React.Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    marginVertical: 15
+                    margin: 15
                   }}
                 >
                   {this.state.headerPackCompleted ? (
@@ -344,8 +344,8 @@ export default class Packs extends React.Component {
           isVisible={this.state.showModalMenu}
           style={{
             margin: 0,
-            height: fullHeight,
-            width: fullWidth
+            height: '100%',
+            width: '100%'
           }}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -366,8 +366,8 @@ export default class Packs extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: fullHeight,
-              width: fullWidth
+              height: '100%',
+              width: '100%'
             }
           ]}
           animation={'slideInUp'}
