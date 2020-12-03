@@ -66,83 +66,65 @@ class NavigationMenu extends React.Component {
 
   lessonNav() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         {navigationOptions.map((nav, index) => (
-          <View
-            key={index}
-            style={[
-              styles.centerContent,
-              {
-                height: onTablet ? fullHeight * 0.1 : fullHeight * 0.09
+          <TouchableOpacity
+            onPress={() => {
+              if (!this.context.isConnected)
+                return this.context.showNoConnectionAlert();
+              this.props.onClose(false);
+              if (nav.title === 'Foundations') {
+                this.props.navigation.navigate('FOUNDATIONS', {
+                  foundationIsStarted: this.state.foundationIsStarted,
+                  foundationIsCompleted: this.state.foundationIsCompleted
+                });
+              } else if (nav.title === 'Quick Tips') {
+                this.props.navigation.navigate(nav.navigator, {
+                  type: 'quick-tips'
+                });
+              } else if (nav.title === 'Podcasts') {
+                this.props.navigation.navigate(nav.navigator, {
+                  type: 'podcasts'
+                });
+              } else {
+                this.props.navigation.navigate(nav.navigator);
               }
-            ]}
+            }}
+            style={{ flex: 1, alignSelf: 'center' }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                if (!this.context.isConnected)
-                  return this.context.showNoConnectionAlert();
-                this.props.onClose(false);
-                if (nav.title === 'Foundations') {
-                  this.props.navigation.navigate('FOUNDATIONS', {
-                    foundationIsStarted: this.state.foundationIsStarted,
-                    foundationIsCompleted: this.state.foundationIsCompleted
-                  });
-                } else if (nav.title === 'Quick Tips') {
-                  this.props.navigation.navigate(nav.navigator, {
-                    type: 'quick-tips'
-                  });
-                } else if (nav.title === 'Podcasts') {
-                  this.props.navigation.navigate(nav.navigator, {
-                    type: 'podcasts'
-                  });
-                } else {
-                  this.props.navigation.navigate(nav.navigator);
-                }
+            <Text
+              style={{
+                fontFamily:
+                  this.props.parentPage == nav.title.toUpperCase()
+                    ? 'OpenSans-ExtraBold'
+                    : 'OpenSans-Bold',
+                color:
+                  this.props.parentPage == nav.title.toUpperCase()
+                    ? 'white'
+                    : colors.secondBackground,
+                fontSize:
+                  (this.props.parentPage == nav.title.toUpperCase()
+                    ? 32.5 * factorRatio
+                    : 27.5 * factorRatio) + (onTablet ? 5 : 0)
               }}
-              style={{ flex: 1 }}
             >
-              <Text
-                style={{
-                  fontFamily:
-                    this.props.parentPage == nav.title.toUpperCase()
-                      ? 'OpenSans-ExtraBold'
-                      : 'OpenSans-Bold',
-                  color:
-                    this.props.parentPage == nav.title.toUpperCase()
-                      ? 'white'
-                      : colors.secondBackground,
-                  fontSize:
-                    (this.props.parentPage == nav.title.toUpperCase()
-                      ? 32.5 * factorRatio
-                      : 27.5 * factorRatio) + (onTablet ? 5 : 0)
-                }}
-              >
-                {nav.title}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              {nav.title}
+            </Text>
+          </TouchableOpacity>
         ))}
-        <View style={{ height: 50 }} />
         <View
-          style={[
-            styles.centerContent,
-            {
-              height: onTablet ? fullHeight * 0.05 : fullHeight * 0.05,
-              alignSelf: 'center'
-            }
-          ]}
+          style={{
+            flex: 1,
+            alignSelf: 'center'
+          }}
         >
           <TouchableOpacity
             onPress={() => {
               this.props.onClose(false);
             }}
-            style={[
-              styles.centerContent,
-              styles.innerRedButton,
-              styles.redButton
-            ]}
+            style={[styles.redButton]}
           >
-            <FeatherIcon size={50 * factorRatio} name={'x'} color={'white'} />
+            <FeatherIcon size={40 * factorRatio} name={'x'} color={'white'} />
           </TouchableOpacity>
         </View>
       </View>
@@ -154,7 +136,8 @@ class NavigationMenu extends React.Component {
       <View
         key={'componentContainer'}
         style={{
-          flex: 1,
+          width: '100%',
+          height: '100%',
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: colors.mainBackground

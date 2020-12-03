@@ -19,11 +19,7 @@ class StartIcon extends React.Component {
         style={[
           styles.centerContent,
           {
-            top: this.props.pxFromTop,
-            left: this.props.pxFromLeft,
-            width: this.props.buttonWidth,
-            height: this.props.buttonHeight,
-            position: 'absolute',
+            flex: 1,
             borderRadius: fullWidth * 0.1,
             backgroundColor: '#fb1b2f',
             flexDirection: 'row',
@@ -38,11 +34,11 @@ class StartIcon extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              flexDirection: 'row'
+              flexDirection: 'row',
+              paddingVertical: 10
             }
           ]}
         >
-          <View style={{ flex: 1 }} />
           <Icon
             name={'controller-play'}
             size={25 * factorRatio}
@@ -58,7 +54,6 @@ class StartIcon extends React.Component {
           >
             START
           </Text>
-          <View style={{ flex: 1 }} />
         </TouchableOpacity>
       </View>
     );

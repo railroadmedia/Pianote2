@@ -19,11 +19,7 @@ class MoreInfoIcon extends React.Component {
         style={[
           styles.centerContent,
           {
-            position: 'absolute',
-            top: this.props.pxFromTop,
-            right: this.props.pxFromRight,
-            width: this.props.buttonWidth,
-            height: this.props.buttonHeight,
+            flex: 1,
             borderRadius: fullWidth * 0.1,
             backgroundColor: 'transparent',
             borderColor: 'white',
@@ -39,11 +35,11 @@ class MoreInfoIcon extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              flexDirection: 'row'
+              flexDirection: 'row',
+              paddingVertical: 10
             }
           ]}
         >
-          <View style={{ flex: 1 }} />
           <Icon name={'arrowright'} size={23 * factorRatio} color={'white'} />
           <View style={{ flex: 0.2 }} />
           <Text
@@ -55,7 +51,6 @@ class MoreInfoIcon extends React.Component {
           >
             MORE INFO
           </Text>
-          <View style={{ flex: 1 }} />
         </TouchableOpacity>
       </View>
     );

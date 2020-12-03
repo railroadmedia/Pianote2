@@ -185,7 +185,7 @@ export default class Search extends React.Component {
       if (response.data.length == 0) {
         this.setState({
           searchEntered: false,
-          All: false,
+          isLoadingAll: false,
           noResults: true,
           showCancel: true
         });
@@ -423,12 +423,7 @@ export default class Search extends React.Component {
             >
               <View
                 style={{
-                  width:
-                    this.state.searchTerm.length > 0 ||
-                    this.state.searchResults.length > 0 ||
-                    this.state.showCancel
-                      ? fullWidth * 0.765
-                      : fullWidth * 0.93,
+                  flex: 1,
                   backgroundColor: '#f3f6f6',
                   borderRadius: 60 * factorHorizontal,
                   flexDirection: 'row',
@@ -489,15 +484,15 @@ export default class Search extends React.Component {
                   <TouchableOpacity
                     style={[styles.centerContent, { flex: 1 }]}
                     onPress={() => {
-                      this.searchTerm.clear(),
-                        this.setState({
-                          searchTerm: '',
-                          searchResults: [],
-                          searchEntered: false,
-                          showCancel: false,
-                          noResults: false,
-                          isLoadingAll: false
-                        });
+                      this.searchTerm.clear();
+                      this.setState({
+                        searchTerm: '',
+                        searchResults: [],
+                        searchEntered: false,
+                        showCancel: false,
+                        noResults: false,
+                        isLoadingAll: false
+                      });
                     }}
                   >
                     <View style={{ flex: 1 }} />
@@ -646,7 +641,7 @@ export default class Search extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      height: fullHeight * 0.415,
+                      // height: fullHeight * 0.415,
                       marginTop: 15 * factorRatio
                     }
                   ]}

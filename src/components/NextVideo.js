@@ -6,6 +6,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { ContentModel } from '@musora/models';
 
 class NextVideo extends React.Component {
   static navigationOptions = { header: null };
@@ -16,9 +17,8 @@ class NextVideo extends React.Component {
     };
   }
 
-  componentDidMount = async () => {};
-
   render = () => {
+    console.log(this.props.item);
     return (
       <TouchableOpacity
         onPress={this.props.onNextLesson}
@@ -28,7 +28,7 @@ class NextVideo extends React.Component {
           borderBottomWidth: 0.25 * factorRatio
         }}
       >
-        <View style={{ width: fullWidth }}>
+        <View style={{ width: '100%' }}>
           <View
             key={'progress'}
             style={{
@@ -54,47 +54,37 @@ class NextVideo extends React.Component {
             key={'nextLesson'}
             style={{
               flexDirection: 'row',
-              paddingLeft: fullWidth * 0.035,
-              paddingRight: fullWidth * 0.035
+              justifyContent: 'space-between',
+              paddingHorizontal: 15
             }}
           >
-            <View>
-              <View style={{ flex: 1 }} />
-              <Text
-                style={{
-                  fontSize: 16 * factorRatio,
-                  textAlign: 'left',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  color: colors.secondBackground
-                }}
-              >
-                YOUR NEXT LESSON
-              </Text>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={{ flex: 1 }} />
-            <View>
-              <View style={{ flex: 1 }} />
-              <Text
-                style={{
-                  fontSize: 12 * factorRatio,
-                  fontFamily: 'OpenSans-Regular',
-                  color: colors.secondBackground,
-                  textAlign: 'right'
-                }}
-              >
-                {this.props.type} - {this.props.progress}% COMPLETE
-              </Text>
-              <View style={{ flex: 1 }} />
-            </View>
+            <Text
+              style={{
+                fontSize: 16 * factorRatio,
+                textAlign: 'left',
+                fontFamily: 'RobotoCondensed-Bold',
+                color: colors.secondBackground
+              }}
+            >
+              YOUR NEXT LESSON
+            </Text>
+
+            <Text
+              style={{
+                fontSize: 12 * factorRatio,
+                fontFamily: 'OpenSans-Regular',
+                color: colors.secondBackground,
+                textAlign: 'right'
+              }}
+            >
+              {this.props.type} - {this.props.progress}% COMPLETE
+            </Text>
           </View>
-          <View style={{ height: 5 * factorVertical }} />
           <View
             key={'video'}
             style={{
               flexDirection: 'row',
-              paddingLeft: fullWidth * 0.035,
-              paddingRight: fullWidth * 0.035
+              paddingHorizontal: 15
             }}
           >
             <View
@@ -102,11 +92,10 @@ class NextVideo extends React.Component {
               style={{ justifyContent: 'center' }}
               underlayColor={'transparent'}
             >
-              <View style={{ flex: 2 }} />
               <View
                 style={{
                   width: fullWidth * 0.24,
-                  height: onTablet ? fullWidth * 0.14 : fullWidth * 0.14,
+                  height: fullWidth * 0.14,
                   borderRadius: 7 * factorRatio
                 }}
               >
@@ -125,41 +114,44 @@ class NextVideo extends React.Component {
                   resizeMode={FastImage.resizeMode.cover}
                 />
               </View>
-              <View style={{ flex: 1 }} />
             </View>
             <View
               key={'titles'}
               style={{
-                paddingLeft: fullWidth * 0.035
+                paddingLeft: 15,
+                alignSelf: 'center'
               }}
             >
-              <View style={{ flex: 1 }} />
-              <View>
-                <Text
-                  style={{
-                    fontSize: 15 * factorRatio,
-                    textAlign: 'left',
-                    fontWeight: 'bold',
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'white'
-                  }}
-                >
-                  {this.props.item.getField('title')}
-                </Text>
-                <View style={{ height: 2 * factorVertical }} />
-                <Text
-                  numberOfLines={2}
-                  style={{
-                    fontSize: 12 * factorRatio,
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'left',
-                    color: colors.secondBackground
-                  }}
-                >
-                  2 mins
-                </Text>
-              </View>
-              <View style={{ flex: 1 }} />
+              <Text
+                style={{
+                  fontSize: 15 * factorRatio,
+                  textAlign: 'left',
+                  fontWeight: 'bold',
+                  fontFamily: 'OpenSans-Regular',
+                  color: 'white'
+                }}
+              >
+                {this.props.item.getField('title')}
+              </Text>
+
+              <Text
+                numberOfLines={2}
+                style={{
+                  fontSize: 12 * factorRatio,
+                  fontFamily: 'OpenSans-Regular',
+                  textAlign: 'left',
+                  color: colors.secondBackground
+                }}
+              >
+                {this.props.item.post.fields?.find(f => f.key === 'video')
+                  ? Math.round(
+                      new ContentModel(
+                        this.props.item.getFieldMulti('video')[0]
+                      )?.getField('length_in_seconds') / 60
+                    )
+                  : 0}{' '}
+                MINS
+              </Text>
             </View>
             <View
               key={'play'}
