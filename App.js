@@ -11,11 +11,12 @@ import NavigationService from './src/services/navigation.service';
 
 import NetworkProvider from './src/context/NetworkProvider';
 
+import packsReducer from './src/redux/PacksCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
 import lessonsReducer from './src/redux/LessonsCacheReducer';
 
 const store = createStore(
-  combineReducers({ ...myListReducer, ...lessonsReducer })
+  combineReducers({ ...packsReducer, ...myListReducer, ...lessonsReducer })
 );
 export default class App extends React.Component {
   componentDidMount() {

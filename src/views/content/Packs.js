@@ -10,7 +10,9 @@ import {
   FlatList,
   RefreshControl
 } from 'react-native';
+import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
@@ -26,12 +28,15 @@ import { resetProgress } from '../../services/UserActions';
 import packsService from '../../services/packs.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+import { cachePacks } from '../../redux/PacksCacheActions';
+
 let greaterWDim;
-export default class Packs extends React.Component {
+class Packs extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { packsCache } = props;
     this.state = {
       showModalMenu: false,
       packs: [],
@@ -43,7 +48,8 @@ export default class Packs extends React.Component {
       headerPackStarted: false,
       isLoading: true,
       refreshing: false,
-      showRestartCourse: false
+      showRestartCourse: false,
+      ...this.initialValidData(packsCache, true)
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -53,39 +59,46 @@ export default class Packs extends React.Component {
   };
 
   async getData() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await packsService.allPacks();
-    const newContent = response.myPacks.map(data => {
-      return new ContentModel(data);
-    });
-    const topHeaderPack = new ContentModel(response.topHeaderPack);
-
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        id: newContent[i].id,
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        logo: newContent[i].getData('logo_image_url'),
-        bundle_count: newContent[i].post.bundle_count,
-        mobile_app_url: newContent[i].post.mobile_app_url
-      });
-    }
-
-    this.setState({
-      packs: items,
-      isLoading: false,
-      refreshing: false,
-      showRestartCourse: false,
-      headerPackImg: topHeaderPack.getData('thumbnail_url'),
-      headerPackLogo: topHeaderPack.getData('logo_image_url'),
-      headerPackUrl: topHeaderPack.post.mobile_app_url,
-      headerPackCompleted: topHeaderPack.isCompleted,
-      headerPackStarted: topHeaderPack.isStarted,
-      headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url
-    });
+    this.props.cachePacks(response);
+    this.setState(this.initialValidData(response));
   }
+
+  initialValidData = (content, fromCache) => {
+    try {
+      const newContent = content.myPacks.map(data => {
+        return new ContentModel(data);
+      });
+      const topHeaderPack = new ContentModel(content.topHeaderPack);
+
+      let items = [];
+      for (let i in newContent) {
+        items.push({
+          id: newContent[i].id,
+          thumbnail: newContent[i].getData('thumbnail_url'),
+          logo: newContent[i].getData('logo_image_url'),
+          bundle_count: newContent[i].post.bundle_count,
+          mobile_app_url: newContent[i].post.mobile_app_url
+        });
+      }
+
+      return {
+        packs: items,
+        isLoading: false,
+        refreshing: fromCache,
+        showRestartCourse: false,
+        headerPackImg: topHeaderPack.getData('thumbnail_url'),
+        headerPackLogo: topHeaderPack.getData('logo_image_url'),
+        headerPackUrl: topHeaderPack.post.mobile_app_url,
+        headerPackCompleted: topHeaderPack.isCompleted,
+        headerPackStarted: topHeaderPack.isStarted,
+        headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url
+      };
+    } catch (e) {
+      return {};
+    }
+  };
 
   onRestartPack = async () => {
     if (!this.context.isConnected) {
@@ -108,19 +121,7 @@ export default class Packs extends React.Component {
       <View
         style={[styles.container, { backgroundColor: colors.mainBackground }]}
       >
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            width: fullWidth,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'PACKS'} />
-        </View>
-
+        <NavMenuHeaders currentPage={'PACKS'} />
         <FlatList
           windowSize={10}
           style={{ flex: 1 }}
@@ -142,10 +143,7 @@ export default class Packs extends React.Component {
             <View
               style={[
                 styles.centerContent,
-                {
-                  height: fullHeight * 0.4,
-                  width: '100%'
-                }
+                { height: fullHeight * 0.4, width: '100%' }
               ]}
             >
               <ActivityIndicator
@@ -158,12 +156,7 @@ export default class Packs extends React.Component {
           ListHeaderComponent={() => (
             <View
               key={'image'}
-              style={[
-                styles.centerContent,
-                {
-                  height: fullHeight * 0.5
-                }
-              ]}
+              style={[styles.centerContent, { height: fullHeight * 0.5 }]}
             >
               <GradientFeature
                 color={'blue'}
@@ -337,11 +330,7 @@ export default class Packs extends React.Component {
               >
                 <View style={{ flex: 1 }} />
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    width: '100%',
-                    height: '25%'
-                  }}
+                  style={{ flexDirection: 'row', width: '100%', height: '25%' }}
                 >
                   <View style={{ flex: 1 }} />
                   <FastImage
@@ -360,11 +349,7 @@ export default class Packs extends React.Component {
                   />
                   <View style={{ flex: 1 }} />
                 </View>
-                <View
-                  style={{
-                    height: 5 * factorVertical
-                  }}
-                />
+                <View style={{ height: 5 * factorVertical }} />
               </View>
               <FastImage
                 style={{
@@ -388,11 +373,7 @@ export default class Packs extends React.Component {
         <Modal
           key={'navMenu'}
           isVisible={this.state.showModalMenu}
-          style={{
-            margin: 0,
-            height: fullHeight,
-            width: fullWidth
-          }}
+          style={{ margin: 0, height: fullHeight, width: fullWidth }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -410,11 +391,7 @@ export default class Packs extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={[
             styles.centerContent,
-            {
-              margin: 0,
-              height: fullHeight,
-              width: fullWidth
-            }
+            { margin: 0, height: fullHeight, width: fullWidth }
           ]}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -436,3 +413,8 @@ export default class Packs extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ packsCache: state.packsCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cachePacks }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Packs);

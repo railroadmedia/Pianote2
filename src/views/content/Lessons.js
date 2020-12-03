@@ -431,10 +431,7 @@ class Lessons extends React.Component {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
-            style={{
-              flex: 1,
-              backgroundColor: colors.mainBackground
-            }}
+            style={{ flex: 1, backgroundColor: colors.mainBackground }}
             refreshControl={
               <RefreshControl
                 colors={[colors.secondBackground]}
@@ -448,12 +445,7 @@ class Lessons extends React.Component {
           >
             <View
               key={'image'}
-              style={[
-                styles.centerContent,
-                {
-                  height: fullHeight * 0.32
-                }
-              ]}
+              style={[styles.centerContent, { height: fullHeight * 0.32 }]}
             >
               <GradientFeature
                 color={'blue'}

@@ -15,6 +15,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { getToken, getUserData } from '../../services/UserDataAuth';
 import { notif, updateFcmToken } from '../../services/notification.service';
 
+import { cachePacks } from '../../redux/PacksCacheActions';
 import { cacheMyList } from '../../redux/MyListCacheActions';
 import { cacheLessons } from '../../redux/LessonsCacheActions';
 
@@ -25,7 +26,7 @@ import NoConnection from '../../modals/NoConnection';
 import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 
-const cache = ['cacheMyList', 'cacheLessons'];
+const cache = ['cacheMyList', 'cacheLessons', 'cachePacks'];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
   static navigationOptions = { header: null };
@@ -287,6 +288,6 @@ class LoadPage extends React.Component {
   }
 }
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheMyList, cacheLessons }, dispatch);
+  bindActionCreators({ cacheMyList, cacheLessons, cachePacks }, dispatch);
 
 export default connect(null, mapDispatchToProps)(LoadPage);

@@ -232,6 +232,7 @@ class MyList extends React.Component {
           ref={r => (this.sv = r)}
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
+          style={{ flex: 1, backgroundColor: colors.mainBackground }}
           onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
@@ -240,10 +241,6 @@ class MyList extends React.Component {
               onRefresh={() => this.refresh()}
             />
           }
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
         >
           <Text
             style={{
@@ -292,11 +289,7 @@ class MyList extends React.Component {
               <View style={{ flex: 1 }} />
             </View>
             <View style={{ flex: 1 }} />
-            <View
-              style={{
-                paddingRight: 12 * factorHorizontal
-              }}
-            >
+            <View style={{ paddingRight: 12 * factorHorizontal }}>
               <View style={{ flex: 1 }} />
               <EntypoIcon
                 name={'chevron-thin-right'}
@@ -392,11 +385,7 @@ class MyList extends React.Component {
         <Modal
           key={'navMenu'}
           isVisible={this.state.showModalMenu}
-          style={{
-            margin: 0,
-            height: fullHeight,
-            width: fullWidth
-          }}
+          style={{ margin: 0, height: fullHeight, width: fullWidth }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
