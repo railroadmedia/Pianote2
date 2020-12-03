@@ -59,6 +59,7 @@ export default class Lessons extends React.Component {
       outVideos: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
+      filtersAvailable: null,
       filters: {
         displayTopics: [],
         topics: [],
@@ -76,7 +77,7 @@ export default class Lessons extends React.Component {
       showRestartCourse: false,
       lessonsStarted: true, // for showing continue lessons horizontal list
       refreshing: true,
-      refreshControl: true
+      refreshControl: true,
     };
   }
 
@@ -122,7 +123,6 @@ export default class Lessons extends React.Component {
       ],
       (content, fromCache) => {
         let foundation = content[0];
-
         let allVideos = this.setData(
           content[1].data.map(data => {
             return new ContentModel(data);
@@ -134,13 +134,13 @@ export default class Lessons extends React.Component {
             return new ContentModel(data);
           })
         );
-        console.log('in progress videos', inprogressVideos);
 
         this.setState(
           {
             foundationIsStarted: foundation.started,
             foundationIsCompleted: foundation.completed,
             foundationNextLesson: foundation.next_lesson,
+            filtersAvailable: content[1].meta.filterOptions,
             allLessons: allVideos,
             progressLessons: inprogressVideos,
             outVideos:
@@ -153,7 +153,7 @@ export default class Lessons extends React.Component {
             refreshing: false,
             refreshControl: fromCache
           },
-          () => console.log('in progress lessons', this.state.progressLessons)
+          () => console.log(this.state.filtersAvailable)
         );
 
         AsyncStorage.multiSet([
@@ -195,6 +195,7 @@ export default class Lessons extends React.Component {
         this.state.page,
         this.state.filters
       );
+
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
@@ -357,6 +358,7 @@ export default class Lessons extends React.Component {
     // function to be sent to filters page
     await this.props.navigation.navigate('FILTERS', {
       filters: this.state.filters,
+      filtersAvailable: this.state.filtersAvailable,
       type: 'LESSONS',
       onGoBack: filters => this.changeFilters(filters)
     });
