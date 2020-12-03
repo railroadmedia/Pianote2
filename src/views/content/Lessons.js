@@ -209,9 +209,7 @@ export default class Lessons extends React.Component {
         filtering: false,
         isPaging: false
       });
-    } catch (error) {
-      console.log('all lessons error: ', error);
-    }
+    } catch (error) {}
   };
 
   setData(newContent) {
@@ -402,7 +400,6 @@ export default class Lessons extends React.Component {
   }
 
   render() {
-    console.log('rend', this.state.progressLessons);
     return (
       <View
         style={[styles.container, { backgroundColor: colors.mainBackground }]}
