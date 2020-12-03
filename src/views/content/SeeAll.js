@@ -64,7 +64,7 @@ export default class SeeAll extends React.Component {
     this.getAllLessons();
   }
 
-  async getAllLessons() {
+  async getAllLessons(loadMore) {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -143,15 +143,15 @@ export default class SeeAll extends React.Component {
       });
     }
 
-    this.setState({
-      allLessons: [...this.state.allLessons, ...items],
+    this.setState(state => ({
+      allLessons: loadMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
       isLoadingAll: false,
       refreshing: false,
       filtering: false,
       isPaging: false
-    });
+    }));
   }
 
   filterResults = async () => {
@@ -160,7 +160,6 @@ export default class SeeAll extends React.Component {
       type: typeDict[this.state.parent],
       onGoBack: filters => {
         this.setState({
-          allLessons: [],
           filters:
             filters.instructors.length == 0 &&
             filters.level.length == 0 &&
@@ -197,7 +196,9 @@ export default class SeeAll extends React.Component {
   getVideos = () => {
     // change page before getting more lessons if paging
     if (!this.state.outVideos) {
-      this.setState({ page: this.state.page + 1 }, () => this.getAllLessons());
+      this.setState({ page: this.state.page + 1 }, () =>
+        this.getAllLessons(true)
+      );
     }
   };
 
@@ -212,7 +213,7 @@ export default class SeeAll extends React.Component {
           page: this.state.page + 1,
           isPaging: true
         },
-        () => this.getAllLessons()
+        () => this.getAllLessons(true)
       );
     }
   };
@@ -230,7 +231,6 @@ export default class SeeAll extends React.Component {
     // after leaving filter page. set filters here
     this.setState(
       {
-        allLessons: [],
         outVideos: false,
         page: 1,
         filters:
@@ -252,9 +252,8 @@ export default class SeeAll extends React.Component {
   };
 
   refresh = () => {
-    this.setState(
-      { refreshing: true, allLessons: [], outVideos: false, page: 1 },
-      () => this.getAllLessons()
+    this.setState({ refreshing: true, outVideos: false, page: 1 }, () =>
+      this.getAllLessons()
     );
   };
 

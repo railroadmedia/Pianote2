@@ -56,7 +56,8 @@ export default class SinglePack extends React.Component {
       isStarted: false,
       isCompleted: false,
       nextLessonUrl: '',
-      isLoadingAll: true
+      isLoadingAll: true,
+      refreshing: false
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -117,9 +118,10 @@ export default class SinglePack extends React.Component {
       isStarted: newContent.isStarted,
       isCompleted: newContent.isCompleted,
       xp: newContent.xp,
-      videos: [...this.state.videos, ...items],
+      videos: items,
       nextLessonUrl: newContent.post.next_lesson_mobile_app_url,
-      isLoadingAll: false
+      isLoadingAll: false,
+      refreshing: false
     });
   };
 
@@ -128,9 +130,8 @@ export default class SinglePack extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     await resetProgress(this.state.id);
-    this.setState(
-      { showRestartCourse: false, isLoadingAll: true, videos: [] },
-      () => this.getBundle()
+    this.setState({ showRestartCourse: false, refreshing: true }, () =>
+      this.getBundle()
     );
   }
 
@@ -161,7 +162,7 @@ export default class SinglePack extends React.Component {
   };
 
   refresh = () => {
-    this.setState({ isLoadingAll: true, videos: [] }, () => {
+    this.setState({ refreshing: true }, () => {
       this.getBundle();
     });
   };
@@ -182,7 +183,7 @@ export default class SinglePack extends React.Component {
             refreshControl={
               <RefreshControl
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.isLoadingAll}
+                refreshing={this.state.refreshing}
                 onRefresh={() => this.refresh()}
               />
             }
@@ -191,69 +192,35 @@ export default class SinglePack extends React.Component {
               key={'imageContainer'}
               style={{
                 height: fullHeight * 0.5,
-                zIndex: 3,
-                elevation: 3
+                zIndex: 3
               }}
             >
-              <View
-                key={'goBackIcon'}
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.goBack();
+                }}
                 style={[
                   styles.centerContent,
                   {
                     position: 'absolute',
-                    left: 7.5 * factorHorizontal,
-                    top: 10 * factorVertical,
                     height: 35 * factorRatio,
                     width: 35 * factorRatio,
                     borderRadius: 100,
-                    zIndex: 5
+                    position: 'absolute',
+                    left: 7.5 * factorHorizontal,
+                    top: 10 * factorVertical,
+                    backgroundColor: 'black',
+                    zIndex: 4
                   }
                 ]}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.goBack();
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: '100%',
-                      width: '100%',
-                      borderRadius: 100,
-                      backgroundColor: 'black',
-                      opacity: 0.4
-                    }
-                  ]}
-                >
-                  <EntypoIcon
-                    name={'chevron-thin-left'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.goBack();
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: '100%',
-                      width: '100%',
-                      borderRadius: 100,
-                      position: 'absolute',
-                      top: 0,
-                      left: 0
-                    }
-                  ]}
-                >
-                  <EntypoIcon
-                    name={'chevron-thin-left'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
-                </TouchableOpacity>
-              </View>
+                <EntypoIcon
+                  name={'chevron-thin-left'}
+                  size={22.5 * factorRatio}
+                  color={'white'}
+                />
+              </TouchableOpacity>
+
               <GradientFeature
                 color={'blue'}
                 opacity={1}
@@ -263,9 +230,9 @@ export default class SinglePack extends React.Component {
               <FastImage
                 style={{ flex: 1 }}
                 source={{
-                  uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                    (greaterWDim >> 0) * 2
-                  },ar_16:9,c_fill,g_face/${this.state.thumbnail}`
+                  uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+                    greaterWDim * 2
+                  )},ar_16:9,c_fill,g_face/${this.state.thumbnail}`
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />

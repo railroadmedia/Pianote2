@@ -63,6 +63,7 @@ class Lessons extends React.Component {
       outVideos: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
+      filtersAvailable: null,
       filters: {
         displayTopics: [],
         topics: [],
@@ -216,6 +217,7 @@ class Lessons extends React.Component {
         this.state.page,
         this.state.filters
       );
+
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
@@ -376,6 +378,7 @@ class Lessons extends React.Component {
     // function to be sent to filters page
     await this.props.navigation.navigate('FILTERS', {
       filters: this.state.filters,
+      filtersAvailable: this.state.filtersAvailable,
       type: 'LESSONS',
       onGoBack: filters => this.changeFilters(filters)
     });
@@ -434,8 +437,8 @@ class Lessons extends React.Component {
             }}
             refreshControl={
               <RefreshControl
-                colors={[colors.pianoteRed]}
-                tintColor={colors.pianoteRed}
+                colors={[colors.secondBackground]}
+                tintColor={colors.secondBackground}
                 refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />

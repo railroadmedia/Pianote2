@@ -55,7 +55,8 @@ class MyList extends React.Component {
         instructors: []
       },
       showModalMenu: false,
-      ...this.initialValidData(myListCache, true)
+      refreshing: false,
+      ...this.initialValidData(myListCache, false, true)
     };
   }
 
@@ -63,8 +64,11 @@ class MyList extends React.Component {
     this.getMyList();
     this.willFocusSubscription = this.props.navigation.addListener(
       'willFocus',
-      () =>
-        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
+      () => {
+        if (!this.firstTimeFocused) return (this.firstTimeFocused = true);
+        this.refresh();
+        if (isiOS) setTimeout(() => this.sv.scrollTo({ y: -500 }), 300); //for iOS: force ref ctrl to show
+      }
     );
   }
 
@@ -72,7 +76,7 @@ class MyList extends React.Component {
     this.willFocusSubscription.remove();
   }
 
-  getMyList = async () => {
+  getMyList = async loadMore => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getMyListContent(
       this.state.page,
@@ -80,11 +84,10 @@ class MyList extends React.Component {
       ''
     );
     this.props.cacheMyList(response);
-
-    this.setState(this.initialValidData(response));
+    this.setState(this.initialValidData(response, loadMore));
   };
 
-  initialValidData = (content, fromCache) => {
+  initialValidData = (content, loadMore, fromCache) => {
     try {
       const newContent = content.data.map(data => {
         return new ContentModel(data);
@@ -126,12 +129,13 @@ class MyList extends React.Component {
         });
       }
       return {
-        allLessons: [...(this.state?.allLessons || []), ...items],
+        allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
         outVideos: items.length == 0 || content.data.length < 20 ? true : false,
-        page: this.state ? this.state.page + 1 : 1,
+        page: this.state?.page + 1 || 1,
         isLoadingAll: false,
         filtering: false,
-        isPaging: false
+        isPaging: false,
+        refreshing: fromCache
       };
     } catch (e) {
       return {};
@@ -177,7 +181,7 @@ class MyList extends React.Component {
       !this.state.isPaging &&
       !this.state.outVideos
     ) {
-      this.setState({ isPaging: true }, () => this.getMyList());
+      this.setState({ isPaging: true }, () => this.getMyList(true));
     }
   };
 
@@ -194,7 +198,6 @@ class MyList extends React.Component {
     // after leaving filter page. set filters here
     this.setState(
       {
-        allLessons: [],
         outVideos: false,
         page: 1,
         filters:
@@ -215,36 +218,25 @@ class MyList extends React.Component {
     );
   };
 
-  refresh = () => {
+  refresh = () =>
     this.setState(
-      { isLoadingAll: true, allLessons: [], page: 1, outVideos: false },
-      () => this.getMyList()
+      { refreshing: true, page: 1, outVideos: false },
+      this.getMyList
     );
-  };
 
   render() {
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            width: fullWidth,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'MYLIST'} />
-        </View>
+        <NavMenuHeaders currentPage={'MYLIST'} />
         <ScrollView
+          ref={r => (this.sv = r)}
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
           onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.isLoadingAll}
+              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
             />
           }
@@ -253,27 +245,6 @@ class MyList extends React.Component {
             backgroundColor: colors.mainBackground
           }}
         >
-          <View
-            key={'header'}
-            style={{
-              height: fullHeight * 0.1,
-              backgroundColor: colors.thirdBackground
-            }}
-          />
-          <View
-            key={'backgroundColoring'}
-            style={{
-              backgroundColor: colors.thirdBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              elevation: 10
-            }}
-          ></View>
-          <View style={{ height: 30 * factorVertical }} />
           <Text
             style={{
               paddingLeft: 12 * factorHorizontal,

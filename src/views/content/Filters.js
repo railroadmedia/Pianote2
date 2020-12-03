@@ -259,6 +259,7 @@ export default class Filters extends React.Component {
     });
     this.state = {
       type: this.props.navigation.state.params.type,
+      maxLevel: Number(this.props.navigation.state.params.filtersAvailable.difficulty[this.props.navigation.state.params.filtersAvailable.difficulty.length - 1]),
       level:
         this.props.navigation.state.params.filters.level.length > 1
           ? this.props.navigation.state.params.filters.level[0]
@@ -266,7 +267,7 @@ export default class Filters extends React.Component {
       allLevels:
         this.props.navigation.state.params.filters.level.length > 1
           ? false
-          : true,
+          : false,
       displayTopics: [],
       topics: [],
       progressProgress: false,
@@ -281,6 +282,7 @@ export default class Filters extends React.Component {
       jonny: false,
       brett: false,
       nate: false,
+      filtersAvailable: this.props.navigation.state.params.filtersAvailable,
       onlyType:
         this.props.navigation.state.params.type == 'MYLIST' ||
         this.props.navigation.state.params.type == 'SEARCH' ||
@@ -288,6 +290,10 @@ export default class Filters extends React.Component {
           ? false
           : true
     };
+  }
+
+  componentDidMount = () => {
+    console.log(this.state.filtersAvailable)
   }
 
   updateFilters = async () => {
@@ -1239,43 +1245,217 @@ export default class Filters extends React.Component {
                       styles.centerContent,
                       {
                         paddingLeft: fullWidth * 0.035,
-                        paddingRight: fullWidth * 0.035
+                        paddingRight: fullWidth * 0.035,
                       }
                     ]}
                   >
-                    <MultiSlider
-                      min={1}
-                      max={levelDict[this.props.navigation.state.params.type]}
-                      step={1}
-                      snapped={true}
-                      values={[
-                        this.state.allLevels
-                          ? levelDict[this.props.navigation.state.params.type]
-                          : this.state.level
-                      ]}
-                      onValuesChangeFinish={e => {
-                        this.setState({
-                          level: e[0],
-                          allLevels: false
-                        });
-                      }}
-                      sliderLength={fullWidth * 0.9}
-                      trackStyle={{
-                        height: 5 * factorHorizontal,
-                        backgroundColor: colors.secondBackground
-                      }}
-                      selectedStyle={{
-                        backgroundColor: colors.pianoteRed,
-                        height: 5 * factorHorizontal
-                      }}
-                      markerStyle={{
-                        height: 17.5 * factorRatio,
-                        width: 17.5 * factorRatio,
-                        borderRadius: 40,
-                        backgroundColor: colors.pianoteRed,
-                        borderColor: colors.pianoteRed
-                      }}
-                    />
+                    <View 
+                      style={[
+                        styles.centerContent, {
+                        height: 50*factorVertical, 
+                        width: `${10*this.state.maxLevel.toString()}%`,
+                        paddingTop: 20*factorVertical,
+                        paddingBottom: 20*factorVertical,
+                      }]}
+                    >
+                        <View 
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                            flexDirection: 'row',
+                          }}
+                        >
+                          {(this.state.maxLevel > 0) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              if(this.state.level == 1) this.setState({allLevels: true})
+                              else this.setState({level: 1, allLevels: false})
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 0 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />  
+                          )}
+                          {(this.state.maxLevel > 0) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 1) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 2 ? 1 : 2,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 1 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 1) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 2) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 3 ? 2 : 3,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 2 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 2) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 3) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 4 ? 3 : 4,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 3 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 3) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 4) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 5 ? 4 : 5,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 4 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 4) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 5) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 6 ? 5 : 6,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 5 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 5) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 6) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 7 ? 6 : 7,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 6 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 6) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 7) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 8 ? 7 : 8,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 7 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 7) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 8) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 9 ? 8 : 9,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 8 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 8) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                          {(this.state.maxLevel > 9) && (
+                          <TouchableOpacity 
+                            onPress={() => {
+                              this.setState({
+                                level: this.state.level == 10 ? 9 : 10,
+                              })
+                            }}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (this.state.level > 9 || this.state.allLevels) ? colors.pianoteRed : null,
+                              borderColor: colors.pianoteRed,
+                              borderWidth: 1.25,
+                              borderRadius: 5*factorRatio,
+                            }}
+                          />
+                          )}
+                          {(this.state.maxLevel > 9) && (
+                          <View style={{width: 2.5*factorHorizontal}}/>
+                          )}
+                        </View>
+                    </View>
                   </View>
                   <View style={{ height: 10 * factorRatio }} />
                   <Text

@@ -89,11 +89,11 @@ class NavigationMenu extends React.Component {
                   });
                 } else if (nav.title === 'Quick Tips') {
                   this.props.navigation.navigate(nav.navigator, {
-                    pack: 'Quick Tips'
+                    type: 'quick-tips'
                   });
                 } else if (nav.title === 'Podcasts') {
                   this.props.navigation.navigate(nav.navigator, {
-                    pack: 'Podcasts'
+                    type: 'podcasts'
                   });
                 } else {
                   this.props.navigation.navigate(nav.navigator);

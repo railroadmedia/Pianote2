@@ -52,7 +52,8 @@ export default class FoundationsLevel extends React.Component {
       showInfo: false,
       totalLength: 0,
       isAddedToList: false,
-      progress: 0
+      progress: 0,
+      refreshing: false
     };
   }
 
@@ -92,7 +93,7 @@ export default class FoundationsLevel extends React.Component {
       }
 
       this.setState({
-        items: [...this.state.items, ...items],
+        items: items,
         nextLesson: response.post.current_lesson
           ? new ContentModel(response.post.current_lesson)
           : null,
@@ -111,7 +112,8 @@ export default class FoundationsLevel extends React.Component {
           .replace(/&gt;/g, '>')
           .replace(/&lt;/g, '<'),
         isAddedToList: response.isAddedToList,
-        progress: response.post.progress_percent
+        progress: response.post.progress_percent,
+        refreshing: false
       });
     } catch (error) {
       console.log(error);
@@ -131,7 +133,7 @@ export default class FoundationsLevel extends React.Component {
   };
 
   refresh = () => {
-    this.setState({ isLoadingAll: true, items: [] }, () => {
+    this.setState({ refreshing: true }, () => {
       this.getContent();
     });
   };
@@ -146,8 +148,7 @@ export default class FoundationsLevel extends React.Component {
         isStarted: false,
         isCompleted: false,
         showRestartCourse: false,
-        isLoadingAll: true,
-        items: []
+        isLoadingAll: true
       },
       () => {
         this.getContent();
@@ -173,7 +174,7 @@ export default class FoundationsLevel extends React.Component {
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.isLoadingAll}
+              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
             />
           }

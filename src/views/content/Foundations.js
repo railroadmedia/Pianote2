@@ -60,7 +60,8 @@ export default class Foundations extends React.Component {
       xp: 0,
       description: '',
       nextLesson: null,
-      progress: 0
+      progress: 0,
+      refreshing: false
     };
   }
 
@@ -115,7 +116,7 @@ export default class Foundations extends React.Component {
     }
 
     this.setState({
-      items: [...this.state.items, ...items],
+      items: items,
       id: response.id,
       isStarted: response.isStarted,
       isCompleted: response.isCompleted,
@@ -134,7 +135,8 @@ export default class Foundations extends React.Component {
         .replace(/&gt;/g, '>')
         .replace(/&lt;/g, '<'),
       progress: response.post.progress_percent,
-      nextLesson: new ContentModel(response.post.current_lesson)
+      nextLesson: new ContentModel(response.post.current_lesson),
+      refreshing: false
     });
   };
 
@@ -166,7 +168,7 @@ export default class Foundations extends React.Component {
         isCompleted: false,
         showRestartCourse: false,
         isLoadingAll: true,
-        items: []
+        refreshing: true
       },
       () => {
         this.getContent();
@@ -175,7 +177,7 @@ export default class Foundations extends React.Component {
   };
 
   refresh = () => {
-    this.setState({ isLoadingAll: true, items: [] }, () => {
+    this.setState({ refreshing: true }, () => {
       this.getContent();
     });
   };
@@ -206,7 +208,7 @@ export default class Foundations extends React.Component {
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.isLoadingAll}
+              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
             />
           }
