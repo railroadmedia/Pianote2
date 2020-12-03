@@ -24,6 +24,7 @@ import { getMyListContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheMyList } from '../../redux/MyListCacheActions';
+import { ActivityIndicator } from 'react-native';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -64,11 +65,8 @@ class MyList extends React.Component {
     this.getMyList();
     this.willFocusSubscription = this.props.navigation.addListener(
       'willFocus',
-      () => {
-        if (!this.firstTimeFocused) return (this.firstTimeFocused = true);
-        this.refresh();
-        if (isiOS) setTimeout(() => this.sv.scrollTo({ y: -500 }), 300); //for iOS: force ref ctrl to show
-      }
+      () =>
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
     );
   }
 
@@ -226,22 +224,31 @@ class MyList extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+      >
         <NavMenuHeaders currentPage={'MYLIST'} />
         <ScrollView
-          ref={r => (this.sv = r)}
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={{ flex: 1, backgroundColor: colors.mainBackground }}
+          style={{ flex: 1 }}
           onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
+              tintColor={'transparent'}
               colors={[colors.pianoteRed]}
-              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
+              refreshing={isiOS ? false : this.state.refreshing}
             />
           }
         >
+          {isiOS && this.state.refreshing && (
+            <ActivityIndicator
+              size='large'
+              style={{ padding: 10 }}
+              color={colors.pianoteRed}
+            />
+          )}
           <Text
             style={{
               paddingLeft: 12 * factorHorizontal,

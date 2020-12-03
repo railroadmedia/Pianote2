@@ -417,7 +417,7 @@ class Lessons extends React.Component {
         allLessons: [],
         page: 1
       },
-      () => this.getContent()
+      this.getContent
     );
   };
 
@@ -434,15 +434,22 @@ class Lessons extends React.Component {
             style={{ flex: 1, backgroundColor: colors.mainBackground }}
             refreshControl={
               <RefreshControl
-                colors={[colors.secondBackground]}
-                tintColor={colors.secondBackground}
-                refreshing={this.state.refreshControl}
+                tintColor={'transparent'}
                 onRefresh={() => this.refresh()}
+                colors={[colors.secondBackground]}
+                refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             scrollEventThrottle={400}
           >
+            {isiOS && this.state.refreshControl && (
+              <ActivityIndicator
+                size='large'
+                style={{ padding: 10 }}
+                color={colors.pianoteRed}
+              />
+            )}
             <View
               key={'image'}
               style={[styles.centerContent, { height: fullHeight * 0.32 }]}

@@ -134,9 +134,10 @@ class Packs extends React.Component {
           keyboardShouldPersistTaps='handled'
           refreshControl={
             <RefreshControl
+              tintColor={'transparent'}
               colors={[colors.pianoteRed]}
-              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
+              refreshing={isiOS ? false : this.state.refreshing}
             />
           }
           ListEmptyComponent={() => (
@@ -154,144 +155,153 @@ class Packs extends React.Component {
             </View>
           )}
           ListHeaderComponent={() => (
-            <View
-              key={'image'}
-              style={[styles.centerContent, { height: fullHeight * 0.5 }]}
-            >
-              <GradientFeature
-                color={'blue'}
-                opacity={1}
-                height={'100%'}
-                borderRadius={0}
-              />
-              <FastImage
-                style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  backgroundColor: colors.mainBackground
-                }}
-                source={{
-                  uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                    fullWidth * 2
-                  )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-              />
+            <>
+              {isiOS && this.state.refreshing && (
+                <ActivityIndicator
+                  size='large'
+                  style={{ padding: 10 }}
+                  color={colors.pianoteRed}
+                />
+              )}
               <View
-                key={'pianoteSVG'}
-                style={{
-                  position: 'absolute',
-                  height: '100%',
-                  width: fullWidth,
-                  zIndex: 2,
-                  elevation: 2
-                }}
+                key={'image'}
+                style={[styles.centerContent, { height: fullHeight * 0.5 }]}
               >
+                <GradientFeature
+                  color={'blue'}
+                  opacity={1}
+                  height={'100%'}
+                  borderRadius={0}
+                />
                 <FastImage
                   style={{
-                    width: '80%',
-                    height: '100%',
-                    borderRadius: 7.5 * factorRatio,
-                    alignSelf: 'center'
+                    flex: 1,
+                    alignSelf: 'stretch',
+                    backgroundColor: colors.mainBackground
                   }}
                   source={{
-                    uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
+                    uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
                       fullWidth * 2
-                    )}/${this.state.headerPackLogo}`
+                    )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
                   }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-
-                {this.state.headerPackCompleted ? (
-                  <ResetIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.5 * 0.725
-                        : fullHeight * 0.5 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : !this.state.headerPackStarted ? (
-                  <StartIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.5 * 0.725
-                        : fullHeight * 0.5 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.headerPackNextLessonUrl
-                      })
-                    }
-                  />
-                ) : (
-                  <ContinueIcon
-                    pxFromTop={
-                      onTablet
-                        ? fullHeight * 0.5 * 0.725
-                        : fullHeight * 0.5 * 0.725
-                    }
-                    buttonHeight={
-                      onTablet
-                        ? fullHeight * 0.06
-                        : Platform.OS == 'ios'
-                        ? fullHeight * 0.05
-                        : fullHeight * 0.055
-                    }
-                    pxFromLeft={fullWidth * 0.065}
-                    buttonWidth={fullWidth * 0.42}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.headerPackNextLessonUrl
-                      })
-                    }
-                  />
-                )}
-                <MoreInfoIcon
-                  pxFromTop={
-                    onTablet
-                      ? fullHeight * 0.5 * 0.725
-                      : fullHeight * 0.5 * 0.725
-                  }
-                  buttonHeight={
-                    onTablet
-                      ? fullHeight * 0.06
-                      : Platform.OS == 'ios'
-                      ? fullHeight * 0.05
-                      : fullHeight * 0.055
-                  }
-                  pxFromRight={fullWidth * 0.065}
-                  buttonWidth={fullWidth * 0.42}
-                  pressed={() => {
-                    this.props.navigation.push('SINGLEPACK', {
-                      url: this.state.headerPackUrl
-                    });
+                <View
+                  key={'pianoteSVG'}
+                  style={{
+                    position: 'absolute',
+                    height: '100%',
+                    width: fullWidth,
+                    zIndex: 2,
+                    elevation: 2
                   }}
-                />
+                >
+                  <FastImage
+                    style={{
+                      width: '80%',
+                      height: '100%',
+                      borderRadius: 7.5 * factorRatio,
+                      alignSelf: 'center'
+                    }}
+                    source={{
+                      uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
+                        fullWidth * 2
+                      )}/${this.state.headerPackLogo}`
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                  />
+
+                  {this.state.headerPackCompleted ? (
+                    <ResetIcon
+                      pxFromTop={
+                        onTablet
+                          ? fullHeight * 0.5 * 0.725
+                          : fullHeight * 0.5 * 0.725
+                      }
+                      buttonHeight={
+                        onTablet
+                          ? fullHeight * 0.06
+                          : Platform.OS == 'ios'
+                          ? fullHeight * 0.05
+                          : fullHeight * 0.055
+                      }
+                      pxFromLeft={fullWidth * 0.065}
+                      buttonWidth={fullWidth * 0.42}
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : !this.state.headerPackStarted ? (
+                    <StartIcon
+                      pxFromTop={
+                        onTablet
+                          ? fullHeight * 0.5 * 0.725
+                          : fullHeight * 0.5 * 0.725
+                      }
+                      buttonHeight={
+                        onTablet
+                          ? fullHeight * 0.06
+                          : Platform.OS == 'ios'
+                          ? fullHeight * 0.05
+                          : fullHeight * 0.055
+                      }
+                      pxFromLeft={fullWidth * 0.065}
+                      buttonWidth={fullWidth * 0.42}
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.headerPackNextLessonUrl
+                        })
+                      }
+                    />
+                  ) : (
+                    <ContinueIcon
+                      pxFromTop={
+                        onTablet
+                          ? fullHeight * 0.5 * 0.725
+                          : fullHeight * 0.5 * 0.725
+                      }
+                      buttonHeight={
+                        onTablet
+                          ? fullHeight * 0.06
+                          : Platform.OS == 'ios'
+                          ? fullHeight * 0.05
+                          : fullHeight * 0.055
+                      }
+                      pxFromLeft={fullWidth * 0.065}
+                      buttonWidth={fullWidth * 0.42}
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.headerPackNextLessonUrl
+                        })
+                      }
+                    />
+                  )}
+                  <MoreInfoIcon
+                    pxFromTop={
+                      onTablet
+                        ? fullHeight * 0.5 * 0.725
+                        : fullHeight * 0.5 * 0.725
+                    }
+                    buttonHeight={
+                      onTablet
+                        ? fullHeight * 0.06
+                        : Platform.OS == 'ios'
+                        ? fullHeight * 0.05
+                        : fullHeight * 0.055
+                    }
+                    pxFromRight={fullWidth * 0.065}
+                    buttonWidth={fullWidth * 0.42}
+                    pressed={() => {
+                      this.props.navigation.push('SINGLEPACK', {
+                        url: this.state.headerPackUrl
+                      });
+                    }}
+                  />
+                </View>
               </View>
-            </View>
+            </>
           )}
           renderItem={({ item }) => (
             <TouchableOpacity

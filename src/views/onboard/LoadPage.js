@@ -17,6 +17,7 @@ import { notif, updateFcmToken } from '../../services/notification.service';
 
 import { cachePacks } from '../../redux/PacksCacheActions';
 import { cacheMyList } from '../../redux/MyListCacheActions';
+import { cacheCourses } from '../../redux/CoursesCacheActions';
 import { cacheLessons } from '../../redux/LessonsCacheActions';
 
 import Pianote from '../../assets/img/svgs/pianote';
@@ -26,7 +27,7 @@ import NoConnection from '../../modals/NoConnection';
 import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 
-const cache = ['cacheMyList', 'cacheLessons', 'cachePacks'];
+const cache = ['cacheMyList', 'cacheLessons', 'cachePacks', 'cacheCourses'];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
   static navigationOptions = { header: null };
@@ -288,6 +289,9 @@ class LoadPage extends React.Component {
   }
 }
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheMyList, cacheLessons, cachePacks }, dispatch);
+  bindActionCreators(
+    { cacheMyList, cacheLessons, cachePacks, cacheCourses },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(LoadPage);

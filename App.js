@@ -13,10 +13,16 @@ import NetworkProvider from './src/context/NetworkProvider';
 
 import packsReducer from './src/redux/PacksCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
+import coursesReducer from './src/redux/CoursesCacheReducer';
 import lessonsReducer from './src/redux/LessonsCacheReducer';
 
 const store = createStore(
-  combineReducers({ ...packsReducer, ...myListReducer, ...lessonsReducer })
+  combineReducers({
+    ...packsReducer,
+    ...myListReducer,
+    ...lessonsReducer,
+    ...coursesReducer
+  })
 );
 export default class App extends React.Component {
   componentDidMount() {
