@@ -61,8 +61,9 @@ export default class Lessons extends React.Component {
       outVideos: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null,
-      filters: {
+      filtersAvailable: null, // filters to show on filters page
+      filtersParent: null, // filters to reset to on filters page
+      filters: {  // filters selected
         displayTopics: [],
         topics: [],
         level: [],
@@ -205,7 +206,7 @@ export default class Lessons extends React.Component {
         this.state.page,
         this.state.filters
       );
-
+        console.log(response)
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
