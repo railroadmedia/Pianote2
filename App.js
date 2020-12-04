@@ -26,28 +26,7 @@ export default class App extends React.Component {
       })
       .catch(error => console.log(error));
     Linking.addEventListener('url', this.handleOpenURL);
-    Orientation.addDeviceOrientationListener(this.orientationListener);
   }
-
-  componentWillUnmount() {
-    Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
-
-  orientationListener = o => {
-    if (o === 'UNKNOWN') return;
-    fullWidth = Dimensions.get('window').width;
-    fullHeight = Dimensions.get('window').height;
-    console.log(fullWidth, fullHeight);
-    fullScreen = Dimensions.get('screen').height;
-    navHeight =
-      Platform.OS == 'android' ? fullScreen - fullHeight - statusBarHeight : 0;
-    factorHorizontal = Dimensions.get('window').width / 375;
-    factorVertical = Dimensions.get('window').height / 812;
-    factorRatio =
-      (Dimensions.get('window').height / 812 +
-        Dimensions.get('window').width / 375) /
-      2;
-  };
 
   handleOpenURL = async ({ url }) => {
     if (url?.includes('pianote.com/reset-password')) {

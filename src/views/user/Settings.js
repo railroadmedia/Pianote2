@@ -247,13 +247,13 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     borderTopWidth: 0.5 * factorRatio,
                     borderTopColor: colors.secondBackground,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
@@ -294,11 +294,11 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
@@ -337,11 +337,11 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
@@ -381,11 +381,11 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
@@ -427,11 +427,11 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
@@ -472,11 +472,11 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
@@ -517,11 +517,11 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
@@ -562,11 +562,11 @@ export default class Settings extends React.Component {
                   styles.centerContent,
                   {
                     height: 50 * factorRatio,
-                    width: fullWidth,
+                    width: '100%',
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: 1 * factorRatio,
                     flexDirection: 'row',
-                    paddingRight: fullWidth * 0.025
+                    paddingRight: 15
                   }
                 ]}
               >
