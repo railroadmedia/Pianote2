@@ -598,8 +598,8 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
-  Folly: 183c8dae43723c50ebd669140abc6258bbb6e95a
-  glog: 0af464288b7fbaf913986b419dc492c787bfdffe
+  Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
+  glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   google-cast-sdk-no-bluetooth: 73ac8e9edbee16f52c2a445e391bd531e116bb31
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
@@ -664,4 +664,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9431848d3f1ff285de23146d3a0ef2f7c7ecd31f
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1
