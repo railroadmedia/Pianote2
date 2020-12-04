@@ -115,7 +115,7 @@ class NavigationMenu extends React.Component {
         ))}
         <View
           style={{
-            flex: 1,
+            flex: 2,
             alignSelf: 'center'
           }}
         >

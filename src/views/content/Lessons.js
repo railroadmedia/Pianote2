@@ -62,8 +62,10 @@ export default class Lessons extends React.Component {
       outVideos: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null,
+      filtersAvailable: null, // filters to show on filters page
+      filtersParent: null, // filters to reset to on filters page
       filters: {
+        // filters selected
         displayTopics: [],
         topics: [],
         level: [],
@@ -195,6 +197,7 @@ export default class Lessons extends React.Component {
   };
 
   getAllLessons = async () => {
+    console.log('get all lessons');
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -206,7 +209,7 @@ export default class Lessons extends React.Component {
         this.state.page,
         this.state.filters
       );
-
+      console.log(response);
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
@@ -214,12 +217,15 @@ export default class Lessons extends React.Component {
       let items = this.setData(newContent);
 
       this.setState({
+        filtersAvailable: response.meta.filterOptions,
         allLessons: [...this.state.allLessons, ...items],
         outVideos:
           items.length == 0 || response.data.length < 20 ? true : false,
         filtering: false,
         isPaging: false
       });
+
+      console.log('response: ', this.state.filtersAvailable);
     } catch (error) {}
   };
 
@@ -281,16 +287,17 @@ export default class Lessons extends React.Component {
       filters: this.state.filters,
       type: 'LESSONS',
       onGoBack: filters => {
-        this.setState({
-          allLessons: [],
-          filters:
-            filters.instructors.length == 0 &&
-            filters.level.length == 0 &&
-            filters.progress.length == 0 &&
-            filters.topics.length == 0
-              ? null
-              : filters
-        });
+        console.log(filters),
+          this.setState({
+            allLessons: [],
+            filters:
+              filters.instructors.length == 0 &&
+              filters.level.length == 0 &&
+              filters.progress.length == 0 &&
+              filters.topics.length == 0
+                ? null
+                : filters
+          });
         this.getAllLessons();
       }
     });
@@ -375,6 +382,7 @@ export default class Lessons extends React.Component {
 
   changeFilters = filters => {
     // after leaving filter page. set filters here
+    console.log('FILTERS: ', filters);
     this.setState(
       {
         allLessons: [],
@@ -562,11 +570,12 @@ export default class Lessons extends React.Component {
             <View
               key={'profile'}
               style={{
-                borderTopColor: colors.secondBackground,
                 borderTopWidth: 0.25,
-                borderBottomColor: colors.secondBackground,
                 borderBottomWidth: 0.25,
+                borderTopColor: colors.secondBackground,
+                borderBottomColor: colors.secondBackground,
                 backgroundColor: colors.mainBackground,
+                marginVertical: 10 * factorVertical,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly'

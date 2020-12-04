@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, Platform, StatusBar, Dimensions } from 'react-native';
+import { Text, Linking, Platform, StatusBar, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
@@ -12,6 +12,8 @@ import NetworkProvider from './src/context/NetworkProvider';
 
 export default class App extends React.Component {
   constructor(props) {
+    Text.defaultProps = {};
+    Text.defaultProps.maxFontSizeMultiplier = 1;
     super(props);
     if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
