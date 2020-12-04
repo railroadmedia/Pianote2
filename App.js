@@ -18,6 +18,8 @@ import songsReducer from './src/redux/SongsCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
 import coursesReducer from './src/redux/CoursesCacheReducer';
 import lessonsReducer from './src/redux/LessonsCacheReducer';
+import podcastsReducer from './src/redux/PodcastsCacheReducer';
+import quickTipsReducer from './src/redux/QuickTipsCacheReducer';
 import studentFocusReducer from './src/redux/StudentFocusCacheReducer';
 
 const store = createStore(
@@ -27,6 +29,8 @@ const store = createStore(
     ...myListReducer,
     ...lessonsReducer,
     ...coursesReducer,
+    ...podcastsReducer,
+    ...quickTipsReducer,
     ...studentFocusReducer
   })
 );

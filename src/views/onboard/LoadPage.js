@@ -20,6 +20,8 @@ import { cacheSongs } from '../../redux/SongsCacheActions';
 import { cacheMyList } from '../../redux/MyListCacheActions';
 import { cacheCourses } from '../../redux/CoursesCacheActions';
 import { cacheLessons } from '../../redux/LessonsCacheActions';
+import { cachePodcasts } from '../../redux/PodcastsCacheActions';
+import { cacheQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
 
 import Pianote from '../../assets/img/svgs/pianote';
@@ -35,6 +37,8 @@ const cache = [
   'cacheMyList',
   'cacheLessons',
   'cacheCourses',
+  'cachePodcasts',
+  'cacheQuickTips',
   'cacheStudentFocus'
 ];
 class LoadPage extends React.Component {
@@ -305,6 +309,8 @@ const mapDispatchToProps = dispatch =>
       cacheMyList,
       cacheLessons,
       cacheCourses,
+      cachePodcasts,
+      cacheQuickTips,
       cacheStudentFocus
     },
     dispatch
