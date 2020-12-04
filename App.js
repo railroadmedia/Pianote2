@@ -18,6 +18,7 @@ import songsReducer from './src/redux/SongsCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
 import coursesReducer from './src/redux/CoursesCacheReducer';
 import lessonsReducer from './src/redux/LessonsCacheReducer';
+import studentFocusReducer from './src/redux/StudentFocusCacheReducer';
 
 const store = createStore(
   combineReducers({
@@ -25,7 +26,8 @@ const store = createStore(
     ...songsReducer,
     ...myListReducer,
     ...lessonsReducer,
-    ...coursesReducer
+    ...coursesReducer,
+    ...studentFocusReducer
   })
 );
 export default class App extends React.Component {

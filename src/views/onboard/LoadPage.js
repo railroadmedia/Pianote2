@@ -20,6 +20,7 @@ import { cacheSongs } from '../../redux/SongsCacheActions';
 import { cacheMyList } from '../../redux/MyListCacheActions';
 import { cacheCourses } from '../../redux/CoursesCacheActions';
 import { cacheLessons } from '../../redux/LessonsCacheActions';
+import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
 
 import Pianote from '../../assets/img/svgs/pianote';
 
@@ -33,7 +34,8 @@ const cache = [
   'cacheSongs',
   'cacheMyList',
   'cacheLessons',
-  'cacheCourses'
+  'cacheCourses',
+  'cacheStudentFocus'
 ];
 class LoadPage extends React.Component {
   static contextType = NetworkContext;
@@ -297,7 +299,14 @@ class LoadPage extends React.Component {
 }
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { cacheMyList, cacheLessons, cachePacks, cacheCourses, cacheSongs },
+    {
+      cachePacks,
+      cacheSongs,
+      cacheMyList,
+      cacheLessons,
+      cacheCourses,
+      cacheStudentFocus
+    },
     dispatch
   );
 

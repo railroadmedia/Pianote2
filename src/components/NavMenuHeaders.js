@@ -3,15 +3,19 @@
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
-import {
-  withNavigation,
-  NavigationActions,
-  StackActions
-} from 'react-navigation';
+
 import Modal from 'react-native-modal';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
+import {
+  StackActions,
+  withNavigation,
+  NavigationActions
+} from 'react-navigation';
+
+import NavigationMenu from './NavigationMenu';
+
+import Pianote from '../assets/img/svgs/pianote';
+
 import { NetworkContext } from '../context/NetworkProvider';
 
 class NavMenuHeaders extends React.Component {
