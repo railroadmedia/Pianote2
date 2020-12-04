@@ -124,18 +124,17 @@ class StudentFocusCatalog extends React.Component {
           });
         }}
         style={{
-          flex:
-            this.state.studentFocus.length % 2 === 1 &&
-            this.state.studentFocus.length - 1 === index
-              ? 0.5
-              : 1,
-          paddingRight: index % 2 === 0 ? 10 : 0,
-          paddingTop: 10
+          width: '50%',
+          paddingTop: 10,
+          paddingLeft: (12 * factorHorizontal) / (index % 2 === 0 ? 1 : 2),
+          paddingRight: (12 * factorHorizontal) / (index % 2 === 0 ? 2 : 1)
         }}
       >
         <FastImage
           style={{
             aspectRatio: 1,
+            borderWidth: 0.3,
+            borderColor: colors.pianoteRed,
             borderRadius: 10 * factorRatio
           }}
           source={{ uri: item.thumbnailUrl }}
@@ -159,8 +158,7 @@ class StudentFocusCatalog extends React.Component {
           <FlatList
             style={{
               flex: 1,
-              backgroundColor: colors.mainBackground,
-              paddingHorizontal: 10
+              backgroundColor: colors.mainBackground
             }}
             numColumns={2}
             removeClippedSubviews={true}
@@ -169,13 +167,21 @@ class StudentFocusCatalog extends React.Component {
             keyboardShouldPersistTaps='handled'
             refreshControl={
               <RefreshControl
+                tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
+                refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
             ListHeaderComponent={() => (
               <>
+                {isiOS && this.state.refreshControl && (
+                  <ActivityIndicator
+                    size='large'
+                    style={{ padding: 10 }}
+                    color={colors.pianoteRed}
+                  />
+                )}
                 <Text
                   style={{
                     paddingLeft: 12 * factorHorizontal,
@@ -194,7 +200,6 @@ class StudentFocusCatalog extends React.Component {
                   <View
                     key={'continueCourses'}
                     style={{
-                      paddingLeft: fullWidth * 0.035,
                       backgroundColor: colors.mainBackground
                     }}
                   >
