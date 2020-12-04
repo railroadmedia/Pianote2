@@ -69,6 +69,7 @@ class NavigationMenu extends React.Component {
       <View style={{ flex: 1 }}>
         {navigationOptions.map((nav, index) => (
           <TouchableOpacity
+            key={index}
             onPress={() => {
               if (!this.context.isConnected)
                 return this.context.showNoConnectionAlert();
@@ -122,9 +123,14 @@ class NavigationMenu extends React.Component {
             onPress={() => {
               this.props.onClose(false);
             }}
-            style={[styles.redButton]}
+            style={styles.redButton}
           >
-            <FeatherIcon size={40 * factorRatio} name={'x'} color={'white'} />
+            <FeatherIcon
+              size={40 * factorRatio}
+              name={'x'}
+              color={'white'}
+              style={{ padding: 10 }}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -140,7 +146,8 @@ class NavigationMenu extends React.Component {
           height: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: colors.mainBackground
+          backgroundColor: colors.mainBackground,
+          paddingVertical: 30 * factorRatio
         }}
       >
         {this.lessonNav()}

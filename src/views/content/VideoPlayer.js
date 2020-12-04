@@ -825,7 +825,6 @@ export default class VideoPlayer extends React.Component {
             this.setState({ selectedAssignment: assignment });
           }}
           style={{
-            // height: 55 * factorVertical,
             paddingHorizontal: 15,
             borderBottomColor: colors.secondBackground,
             borderBottomWidth: 1,
@@ -848,7 +847,7 @@ export default class VideoPlayer extends React.Component {
           {row.progress === 100 ? (
             <AntIcon
               name={'checkcircle'}
-              size={18 * factorRatio}
+              size={25 * factorRatio}
               color={colors.pianoteRed}
             />
           ) : (
@@ -1113,7 +1112,8 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: 'white',
-                        padding: 15
+                        paddingHorizontal: 15,
+                        paddingVertical: 10
                       }}
                     >
                       {this.state.lessonTitle}
