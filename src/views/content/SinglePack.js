@@ -8,7 +8,8 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
@@ -60,7 +61,8 @@ export default class SinglePack extends React.Component {
       nextLessonUrl: '',
       isLoadingAll: true,
       refreshing: false,
-      isLandscape: fullHeight < fullWidth
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }

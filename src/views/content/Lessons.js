@@ -8,7 +8,8 @@ import {
   Platform,
   ScrollView,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -65,8 +66,10 @@ class Lessons extends React.Component {
       outVideos: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null,
+      filtersAvailable: null, // filters to show on filters page
+      filtersParent: null, // filters to reset to on filters page
       filters: {
+        // filters selected
         displayTopics: [],
         topics: [],
         level: [],
@@ -84,7 +87,8 @@ class Lessons extends React.Component {
       lessonsStarted: true, // for showing continue lessons horizontal list
       refreshing: !lessonsCache,
       refreshControl: true,
-      isLandscape: fullHeight < fullWidth,
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width,
       ...this.initialValidData(lessonsCache, true)
     };
   }
@@ -212,6 +216,7 @@ class Lessons extends React.Component {
   };
 
   getAllLessons = async () => {
+    console.log('get all lessons');
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -223,7 +228,7 @@ class Lessons extends React.Component {
         this.state.page,
         this.state.filters
       );
-
+      console.log(response);
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
@@ -231,12 +236,15 @@ class Lessons extends React.Component {
       let items = this.setData(newContent);
 
       this.setState({
+        filtersAvailable: response.meta.filterOptions,
         allLessons: [...this.state.allLessons, ...items],
         outVideos:
           items.length == 0 || response.data.length < 20 ? true : false,
         filtering: false,
         isPaging: false
       });
+
+      console.log('response: ', this.state.filtersAvailable);
     } catch (error) {}
   };
 
@@ -298,16 +306,17 @@ class Lessons extends React.Component {
       filters: this.state.filters,
       type: 'LESSONS',
       onGoBack: filters => {
-        this.setState({
-          allLessons: [],
-          filters:
-            filters.instructors.length == 0 &&
-            filters.level.length == 0 &&
-            filters.progress.length == 0 &&
-            filters.topics.length == 0
-              ? null
-              : filters
-        });
+        console.log(filters),
+          this.setState({
+            allLessons: [],
+            filters:
+              filters.instructors.length == 0 &&
+              filters.level.length == 0 &&
+              filters.progress.length == 0 &&
+              filters.topics.length == 0
+                ? null
+                : filters
+          });
         this.getAllLessons();
       }
     });
@@ -392,6 +401,7 @@ class Lessons extends React.Component {
 
   changeFilters = filters => {
     // after leaving filter page. set filters here
+    console.log('FILTERS: ', filters);
     this.setState(
       {
         allLessons: [],
@@ -583,12 +593,12 @@ class Lessons extends React.Component {
             <View
               key={'profile'}
               style={{
-                borderTopColor: colors.secondBackground,
                 borderTopWidth: 0.25,
-                borderBottomColor: colors.secondBackground,
                 borderBottomWidth: 0.25,
+                borderTopColor: colors.secondBackground,
+                borderBottomColor: colors.secondBackground,
                 backgroundColor: colors.mainBackground,
-                marginVertical: 15,
+                marginVertical: 10 * factorVertical,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly'
@@ -596,7 +606,7 @@ class Lessons extends React.Component {
             >
               <FastImage
                 style={{
-                  height: 80,
+                  height: 40 * factorRatio,
                   aspectRatio: 1,
                   borderRadius: 100,
                   backgroundColor: colors.secondBackground
@@ -608,7 +618,7 @@ class Lessons extends React.Component {
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
-              <View>
+              <View style={{ paddingVertical: 10 }}>
                 <Text
                   style={{
                     color: colors.pianoteRed,

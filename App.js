@@ -2,7 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { combineReducers } from 'redux';
-import { Linking, Platform, StatusBar, Dimensions } from 'react-native';
+import { Text, Linking, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
@@ -36,6 +36,8 @@ const store = createStore(
 );
 export default class App extends React.Component {
   constructor(props) {
+    Text.defaultProps = {};
+    Text.defaultProps.maxFontSizeMultiplier = 1;
     super(props);
     if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
@@ -48,28 +50,7 @@ export default class App extends React.Component {
       })
       .catch(error => console.log(error));
     Linking.addEventListener('url', this.handleOpenURL);
-    Orientation.addDeviceOrientationListener(this.orientationListener);
   }
-
-  componentWillUnmount() {
-    Orientation.removeDeviceOrientationListener(this.orientationListener);
-  }
-
-  orientationListener = o => {
-    if (o === 'UNKNOWN') return;
-    fullWidth = Dimensions.get('window').width;
-    fullHeight = Dimensions.get('window').height;
-    console.log(fullWidth, fullHeight);
-    fullScreen = Dimensions.get('screen').height;
-    navHeight =
-      Platform.OS == 'android' ? fullScreen - fullHeight - statusBarHeight : 0;
-    factorHorizontal = Dimensions.get('window').width / 375;
-    factorVertical = Dimensions.get('window').height / 812;
-    factorRatio =
-      (Dimensions.get('window').height / 812 +
-        Dimensions.get('window').width / 375) /
-      2;
-  };
 
   handleOpenURL = async ({ url }) => {
     if (url?.includes('pianote.com/reset-password')) {

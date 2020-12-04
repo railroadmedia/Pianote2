@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ContentModel } from '@musora/models';
@@ -17,6 +18,8 @@ import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DeviceInfo from 'react-native-device-info';
+import Orientation from 'react-native-orientation-locker';
 
 import StartIcon from '../../components/StartIcon';
 import ContinueIcon from '../../components/ContinueIcon';
@@ -58,14 +61,35 @@ export default class PathOverview extends React.Component {
         ? false
         : true,
       difficulty: 0,
-      refreshing: false
+      refreshing: false,
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
-    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
+    greaterWDim = fullWidth < fullHeight ? fullHeight : fullWidth;
   }
 
   componentDidMount() {
+    Orientation.addDeviceOrientationListener(this.orientationListener);
     if (!this.state.items.length && this.context.isConnected) this.getItems();
   }
+
+  componentWillUnmount() {
+    Orientation.removeDeviceOrientationListener(this.orientationListener);
+  }
+
+  orientationListener = o => {
+    if (o === 'UNKNOWN') return;
+    let isLandscape = o.indexOf('LAND') >= 0;
+
+    if (Platform.OS === 'ios') {
+      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+    } else {
+      Orientation.getAutoRotateState(isAutoRotateOn => {
+        if (isAutoRotateOn && DeviceInfo.isTablet())
+          this.setState({ isLandscape });
+      });
+    }
+  };
 
   getItems = async () => {
     if (!this.context.isConnected) {
@@ -182,6 +206,12 @@ export default class PathOverview extends React.Component {
     }
   }
 
+  getAspectRatio() {
+    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
+    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    return 1.8;
+  }
+
   render() {
     return (
       <SafeAreaView
@@ -216,20 +246,24 @@ export default class PathOverview extends React.Component {
             style={[
               styles.centerContent,
               {
-                height: fullHeight * 0.31 + (isNotch ? fullHeight * 0.035 : 0)
+                width: '100%',
+                aspectRatio: this.getAspectRatio(),
+                borderWidth: 1,
+                borderColor: 'green'
               }
             ]}
           >
             <FastImage
               style={{
-                flex: 1,
-                alignSelf: 'stretch',
-                backgroundColor: colors.mainBackground
+                width: '100%',
+                aspectRatio: this.getAspectRatio()
               }}
               source={{
                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
                   (greaterWDim >> 0) * 2
-                },ar_16:9,c_fill,g_face/${this.state.thumbnail}`
+                },ar_${this.getAspectRatio()},c_fill,g_face/${
+                  this.state.thumbnail
+                }`
               }}
               resizeMode={FastImage.resizeMode.cover}
             />

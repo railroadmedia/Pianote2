@@ -818,7 +818,9 @@ export default class Profile extends React.Component {
                       }}
                       style={{
                         height: 35 * factorRatio,
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        borderWidth: 3,
+                        borderColor: 'green'
                       }}
                     >
                       <EntypoIcon
@@ -889,7 +891,7 @@ export default class Profile extends React.Component {
             hideReplyNotification={() => {
               this.setState({ showReplyNotification: false });
             }}
-            data={this.state.clickedNotification}
+            data={{}}
             notificationStatus={this.state.clickedNotificationStatus}
           />
         </Modal>

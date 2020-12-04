@@ -27,8 +27,6 @@ module.exports = StyleSheet.create({
   },
   redButton: {
     zIndex: 5,
-    width: DeviceInfo.isTablet() ? fullWidth * 0.15 : fullWidth * 0.225,
-    height: DeviceInfo.isTablet() ? fullWidth * 0.15 : fullWidth * 0.225,
     backgroundColor: '#fb1b2f',
     borderRadius: 200
   },

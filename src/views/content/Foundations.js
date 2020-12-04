@@ -8,7 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
@@ -65,7 +66,8 @@ export default class Foundations extends React.Component {
       nextLesson: null,
       progress: 0,
       refreshing: false,
-      isLandscape: fullHeight < fullWidth
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
   }
 
@@ -388,7 +390,6 @@ export default class Foundations extends React.Component {
             <View
               key={'profile'}
               style={{
-                marginHorizontal: 10,
                 backgroundColor: colors.mainBackground,
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -397,12 +398,13 @@ export default class Foundations extends React.Component {
             >
               <FastImage
                 style={{
-                  height: 35 * factorRatio,
-                  width: 35 * factorRatio,
+                  height: 40 * factorRatio,
+                  aspectRatio: 1,
                   borderRadius: 100,
                   backgroundColor: colors.secondBackground,
                   borderWidth: 3 * factorRatio,
-                  borderColor: colors.secondBackground
+                  borderColor: colors.secondBackground,
+                  marginRight: 5
                 }}
                 source={{
                   uri:
@@ -417,7 +419,8 @@ export default class Foundations extends React.Component {
                   color: 'white',
                   fontSize: 35 * factorRatio,
                   fontFamily: 'OpenSans-ExtraBold',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  marginLeft: 5
                 }}
               >
                 LEVEL 1
