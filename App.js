@@ -14,6 +14,7 @@ import NavigationService from './src/services/navigation.service';
 import NetworkProvider from './src/context/NetworkProvider';
 
 import packsReducer from './src/redux/PacksCacheReducer';
+import songsReducer from './src/redux/SongsCacheReducer';
 import myListReducer from './src/redux/MyListCacheReducer';
 import coursesReducer from './src/redux/CoursesCacheReducer';
 import lessonsReducer from './src/redux/LessonsCacheReducer';
@@ -21,6 +22,7 @@ import lessonsReducer from './src/redux/LessonsCacheReducer';
 const store = createStore(
   combineReducers({
     ...packsReducer,
+    ...songsReducer,
     ...myListReducer,
     ...lessonsReducer,
     ...coursesReducer
