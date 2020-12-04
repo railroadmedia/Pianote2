@@ -302,6 +302,7 @@ class StudentFocusShow extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
+          style={{ flex: 1, backgroundColor: colors.mainBackground }}
           onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
@@ -311,10 +312,6 @@ class StudentFocusShow extends React.Component {
               refreshing={isiOS ? false : this.state.refreshing}
             />
           }
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
         >
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
@@ -323,12 +320,7 @@ class StudentFocusShow extends React.Component {
               color={colors.pianoteRed}
             />
           )}
-          <View
-            key={'imageContainer'}
-            style={{
-              width: fullWidth
-            }}
-          >
+          <View key={'imageContainer'} style={{ width: fullWidth }}>
             <View
               key={'goBackIcon'}
               style={[
@@ -342,14 +334,7 @@ class StudentFocusShow extends React.Component {
               ]}
             >
               <View style={{ flex: 1 }} />
-              <View
-                style={[
-                  styles.centerContent,
-                  {
-                    flexDirection: 'row'
-                  }
-                ]}
-              >
+              <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                   <View style={{ flex: 0.1 }} />
                   <View>
