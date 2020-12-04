@@ -1,6 +1,6 @@
 import RNFetchBlob from 'rn-fetch-blob';
 
-export const cachePacks = packs => {
+export const cacheAndWritePacks = packs => {
   RNFetchBlob.fs.writeFile(
     `${RNFetchBlob.fs.dirs.DocumentDir}/cachePacks`,
     JSON.stringify(packs),
@@ -8,3 +8,5 @@ export const cachePacks = packs => {
   );
   return { packs, type: 'PACKS' };
 };
+
+export const cachePacks = packs => ({ packs, type: 'PACKS' });

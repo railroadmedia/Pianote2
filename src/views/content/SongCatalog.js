@@ -21,7 +21,7 @@ import HorizontalVideoList from 'Pianote2/src/components/HorizontalVideoList.js'
 import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cacheSongs } from '../../redux/SongsCacheActions';
+import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -83,7 +83,7 @@ class SongCatalog extends React.Component {
       ),
       getStartedContent('song')
     ]);
-    this.props.cacheSongs({
+    this.props.cacheAndWriteSongs({
       all: content[0],
       inProgress: content[1]
     });
@@ -412,6 +412,6 @@ class SongCatalog extends React.Component {
 }
 const mapStateToProps = state => ({ songsCache: state.songsCache });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheSongs }, dispatch);
+  bindActionCreators({ cacheAndWriteSongs }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongCatalog);

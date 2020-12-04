@@ -1,6 +1,6 @@
 import RNFetchBlob from 'rn-fetch-blob';
 
-export const cachePodcasts = podcasts => {
+export const cacheAndWritePodcasts = podcasts => {
   RNFetchBlob.fs.writeFile(
     `${RNFetchBlob.fs.dirs.DocumentDir}/cachePodcasts`,
     JSON.stringify(podcasts),
@@ -8,3 +8,5 @@ export const cachePodcasts = podcasts => {
   );
   return { podcasts, type: 'PODCASTS' };
 };
+
+export const cachePodcasts = podcasts => ({ podcasts, type: 'PODCASTS' });

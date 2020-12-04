@@ -26,7 +26,7 @@ import NavigationMenu from '../../components/NavigationMenu';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
+import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 
 class StudentFocusCatalog extends React.Component {
   static navigationOptions = { header: null };
@@ -65,7 +65,7 @@ class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
-    this.props.cacheStudentFocus({
+    this.props.cacheAndWriteStudentFocus({
       types: content[1],
       inProgress: content[0]
     });
@@ -264,7 +264,7 @@ const mapStateToProps = state => ({
   studentFocusCache: state.studentFocusCache
 });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheStudentFocus }, dispatch);
+  bindActionCreators({ cacheAndWriteStudentFocus }, dispatch);
 
 export default connect(
   mapStateToProps,

@@ -23,8 +23,8 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 
 import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
 
-import { cachePodcasts } from '../../redux/PodcastsCacheActions';
-import { cacheQuickTips } from '../../redux/QuickTipsCacheActions';
+import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
+import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -91,8 +91,8 @@ class StudentFocusShow extends React.Component {
     ]);
     this.props[
       this.props.navigation.state.params.type == 'quick-tips'
-        ? 'cacheQuickTips'
-        : 'cachePodcasts'
+        ? 'cacheAndWriteQuickTips'
+        : 'cacheAndWritePodcasts'
     ]({
       all: content[1],
       thumbnail: content[0]
@@ -458,6 +458,9 @@ const mapStateToProps = state => ({
   quickTipsCache: state.quickTipsCache
 });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheQuickTips, cachePodcasts }, dispatch);
+  bindActionCreators(
+    { cacheAndWriteQuickTips, cacheAndWritePodcasts },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentFocusShow);

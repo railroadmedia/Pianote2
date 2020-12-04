@@ -28,7 +28,7 @@ import { resetProgress } from '../../services/UserActions';
 import packsService from '../../services/packs.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cachePacks } from '../../redux/PacksCacheActions';
+import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
 
 let greaterWDim;
 class Packs extends React.Component {
@@ -61,7 +61,7 @@ class Packs extends React.Component {
   async getData() {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await packsService.allPacks();
-    this.props.cachePacks(response);
+    this.props.cacheAndWritePacks(response);
     this.setState(this.initialValidData(response));
   }
 
@@ -369,6 +369,6 @@ class Packs extends React.Component {
 }
 const mapStateToProps = state => ({ packsCache: state.packsCache });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cachePacks }, dispatch);
+  bindActionCreators({ cacheAndWritePacks }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Packs);

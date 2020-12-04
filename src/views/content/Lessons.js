@@ -38,7 +38,7 @@ import Pianote from '../../assets/img/svgs/pianote';
 
 import RestartCourse from '../../modals/RestartCourse';
 
-import { cacheLessons } from '../../redux/LessonsCacheActions';
+import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 
@@ -138,7 +138,7 @@ class Lessons extends React.Component {
       ),
       getStartedContent('')
     ]);
-    this.props.cacheLessons({
+    this.props.cacheAndWriteLessons({
       all: content[1],
       foundation: content[0],
       inProgress: content[2]
@@ -773,6 +773,6 @@ class Lessons extends React.Component {
 }
 const mapStateToProps = state => ({ lessonsCache: state.lessonsCache });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheLessons }, dispatch);
+  bindActionCreators({ cacheAndWriteLessons }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lessons);

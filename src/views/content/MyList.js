@@ -23,7 +23,7 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import { getMyListContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-import { cacheMyList } from '../../redux/MyListCacheActions';
+import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { ActivityIndicator } from 'react-native';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
@@ -81,7 +81,7 @@ class MyList extends React.Component {
       this.state.filters,
       ''
     );
-    this.props.cacheMyList(response);
+    this.props.cacheAndWriteMyList(response);
     this.setState(this.initialValidData(response, loadMore));
   };
 
@@ -415,6 +415,6 @@ class MyList extends React.Component {
 }
 const mapStateToProps = state => ({ myListCache: state.myListCache });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheMyList }, dispatch);
+  bindActionCreators({ cacheAndWriteMyList }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyList);

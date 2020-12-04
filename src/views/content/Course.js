@@ -20,7 +20,7 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
 
-import { cacheCourses } from '../../redux/CoursesCacheActions';
+import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -84,7 +84,7 @@ class Course extends React.Component {
       ),
       getStartedContent('course')
     ]);
-    this.props.cacheCourses({
+    this.props.cacheAndWriteCourses({
       all: content[0],
       inProgress: content[1]
     });
@@ -406,6 +406,6 @@ class Course extends React.Component {
 }
 const mapStateToProps = state => ({ coursesCache: state.coursesCache });
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ cacheCourses }, dispatch);
+  bindActionCreators({ cacheAndWriteCourses }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Course);

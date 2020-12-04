@@ -1,6 +1,6 @@
 import RNFetchBlob from 'rn-fetch-blob';
 
-export const cacheQuickTips = quickTips => {
+export const cacheAndWriteQuickTips = quickTips => {
   RNFetchBlob.fs.writeFile(
     `${RNFetchBlob.fs.dirs.DocumentDir}/cacheQuickTips`,
     JSON.stringify(quickTips),
@@ -8,3 +8,5 @@ export const cacheQuickTips = quickTips => {
   );
   return { quickTips, type: 'QUICKTIPS' };
 };
+
+export const cacheQuickTips = quickTips => ({ quickTips, type: 'QUICKTIPS' });
