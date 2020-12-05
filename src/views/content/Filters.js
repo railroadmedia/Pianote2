@@ -5,7 +5,6 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 /*
  * const instructorDict = {
@@ -218,13 +217,6 @@ var filterDict = {
   ]
 };
 
-const levelDict = {
-  LESSONS: 5,
-  COURSES: 6,
-  SONGS: 7,
-  STUDENTFOCUSSHOW: 5
-};
-
 const titleDict = {
   LESSONS: 'Lessons',
   COURSES: 'Courses',
@@ -287,7 +279,7 @@ export default class Filters extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log('Filters page: ', this.state.filtersAvailable)
+    console.log('Filters page: ', this.state.filters, this.state.filtersAvailable)
   }
 
   updateFilters = async () => {
@@ -1143,7 +1135,7 @@ export default class Filters extends React.Component {
       progress: progress,
       level: level
     });
-    await this.props.navigation.goBack();
+   // await this.props.navigation.goBack();
   };
 
   render() {

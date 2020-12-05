@@ -18,7 +18,7 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
-
+import Filters from '../../components/FIlters.js';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -59,11 +59,11 @@ export default class Lessons extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
+      showFilters: false, 
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null, // filters to show on filters page
-      filtersParent: null, // filters to reset to on filters page
-      filters: {  // filters selected
+      filtersAvailable: null, 
+      filters: {
         displayTopics: [],
         topics: [],
         level: [],
@@ -162,8 +162,7 @@ export default class Lessons extends React.Component {
             lessonsStarted: inprogressVideos.length !== 0,
             refreshing: false,
             refreshControl: fromCache
-          },
-          () => console.log(this.state.filtersAvailable)
+          }
         );
 
         AsyncStorage.multiSet([
@@ -194,7 +193,6 @@ export default class Lessons extends React.Component {
   };
 
   getAllLessons = async () => {
-    console.log('get all lessons')
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -206,7 +204,6 @@ export default class Lessons extends React.Component {
         this.state.page,
         this.state.filters
       );
-        console.log(response)
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
@@ -221,9 +218,6 @@ export default class Lessons extends React.Component {
         filtering: false,
         isPaging: false
       });
-
-      console.log('response: ', this.state.filtersAvailable)
-
     } catch (error) {}
   };
 
@@ -278,27 +272,6 @@ export default class Lessons extends React.Component {
       },
       () => this.getFoundations()
     );
-  };
-
-  filterResults = () => {
-    this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: 'LESSONS',
-      onGoBack: filters => {
-        console.log(filters),
-        this.setState({
-          allLessons: [],
-          filters:
-            filters.instructors.length == 0 &&
-            filters.level.length == 0 &&
-            filters.progress.length == 0 &&
-            filters.topics.length == 0
-              ? null
-              : filters
-        });
-        this.getAllLessons();
-      }
-    });
   };
 
   getDurationFoundations = newContent => {
@@ -368,19 +341,8 @@ export default class Lessons extends React.Component {
     }
   };
 
-  filterResults = async () => {
-    // function to be sent to filters page
-    await this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      filtersAvailable: this.state.filtersAvailable,
-      type: 'LESSONS',
-      onGoBack: filters => this.changeFilters(filters)
-    });
-  };
-
   changeFilters = filters => {
     // after leaving filter page. set filters here
-    console.log('FILTERS: ', filters)
     this.setState(
       {
         allLessons: [],
@@ -697,7 +659,7 @@ export default class Lessons extends React.Component {
                   containerWidth={fullWidth} // width of list
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                  filterResults={() => this.filterResults()} // apply from filters page
+                  filterResults={() => this.setState({showFilters: true})} // apply from filters page
                   containerHeight={
                     onTablet
                       ? fullHeight * 0.15
@@ -753,6 +715,48 @@ export default class Lessons extends React.Component {
             onRestart={() => this.onRestartFoundation()}
           />
         </Modal>
+        <Modal
+          isVisible={this.state.showFilters}
+          style={[
+            styles.centerContent,
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={10}
+          animationOutTiming={10}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <Filters
+            hideFilters={() => this.setState({showFilters: false})}
+            filtersAvailable={this.state.filtersAvailable}
+            filters={this.state.filters}
+            type={'Lessons'}
+            reset={(filters) => {
+              this.setState({
+                  allLessons: [],
+                  filters,
+              }, () => this.getAllLessons())
+            }}
+            onGoBack={(filters) => {
+              this.setState({
+                allLessons: [],
+                filters:
+                  filters.instructors.length == 0 &&
+                  filters.level.length == 0 &&
+                  filters.progress.length == 0 &&
+                  filters.topics.length == 0
+                    ? null
+                    : filters
+              }, () => this.getAllLessons())
+            }}
+          />
+        </Modal>
+        
         <NavigationBar currentPage={'LESSONS'} />
       </View>
     );
