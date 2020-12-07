@@ -59,7 +59,7 @@ class ReplyNotification extends React.Component {
         this.props.data.type == 'new content releases'
           ? this.props.data.content?.thumbnail_url
           : this.props.data.sender?.profile_image_url,
-      type: messageDict[this.props.data.type][0],
+      type: messageDict[this.props.data.type]?.[0],
       notificationStatus: this.props.notificationStatus,
       notify_on_forum_followed_thread_reply: false,
       notify_on_forum_post_like: false,
@@ -124,8 +124,8 @@ class ReplyNotification extends React.Component {
       <View
         key={'container'}
         style={{
-          height: fullHeight,
-          width: fullWidth,
+          height: '100%',
+          width: '100%',
           backgroundColor: 'transparent'
         }}
       >
