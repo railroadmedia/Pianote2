@@ -108,178 +108,104 @@ class ContentModal extends React.Component {
       isAddedToList
     } = this.state.data;
     return (
-      <View style={styles.container}>
+      <TouchableWithoutFeedback
+        onPress={() => this.props.hideContentModal()}
+        style={{
+          height: '100%',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'transparent'
+        }}
+      >
         <View
           style={{
-            position: 'absolute',
-            zIndex: 5,
-            elevation: 5,
             height: '100%',
-            width: '100%'
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'transparent'
           }}
         >
-          <View style={{ flex: 0.9, alignSelf: 'stretch' }}>
-            <TouchableWithoutFeedback
-              onPress={() => this.props.hideContentModal()}
-              style={{
-                height: '100%',
-                width: '100%',
-                alignSelf: 'stretch'
-              }}
-            >
-              <View style={{ flex: 1, alignSelf: 'stretch' }} />
-            </TouchableWithoutFeedback>
-          </View>
           <View
-            key={'contentContainer'}
             style={{
-              flexDirection: 'row',
-              borderRadius: 10 * factorRatio
+              margin: 40 * factorRatio,
+              paddingHorizontal: 15,
+              borderRadius: 10 * factorRatio,
+              shadowOffset: {
+                width: 5 * factorRatio,
+                height: 10 * factorRatio
+              },
+              shadowColor: 'black',
+              shadowOpacity: 0.1,
+              elevation: 3,
+              backgroundColor: 'white'
             }}
           >
-            <TouchableWithoutFeedback
-              onPress={() => this.props.hideContentModal()}
-              style={{ width: fullWidth * 0.05 }}
-            >
-              <View style={{ flex: 1, alignSelf: 'stretch' }} />
-            </TouchableWithoutFeedback>
-            <View
+            <View key={'image'} style={styles.centerContent}>
+              <View
+                style={{
+                  height: 180 * factorRatio,
+                  aspectRatio: type == 'song' ? 1 : 16 / 9,
+                  backgroundColor: 'white',
+                  zIndex: 10,
+                  marginTop: 10 * factorRatio
+                }}
+              >
+                <FastImage
+                  style={{ flex: 1, borderRadius: 10 }}
+                  source={{
+                    uri:
+                      thumbnail && thumbnail !== 'TBD'
+                        ? thumbnail
+                        : fallbackThumb
+                  }}
+                  resizeMode={FastImage.resizeMode.stretch}
+                />
+              </View>
+            </View>
+
+            <Text
               style={{
-                width: fullWidth * 0.9,
-                paddingLeft: 10 * factorHorizontal,
-                paddingRight: 10 * factorHorizontal,
-                borderRadius: 10 * factorRatio,
-                shadowOffset: {
-                  width: 5 * factorRatio,
-                  height: 10 * factorRatio
-                },
-                shadowColor: 'black',
-                shadowOpacity: 0.1,
-                elevation: 3,
-                backgroundColor: 'white'
+                fontFamily: 'OpenSans-Regular',
+                fontWeight: 'bold',
+                fontSize: 22 * factorRatio,
+                textAlign: 'center'
               }}
             >
-              <View style={{ height: fullHeight * 0.0225 }} />
-              <View key={'image'} style={styles.centerContent}>
-                <View
-                  style={{
-                    height: 180 * factorRatio,
-                    width: type == 'song' ? 180 * factorRatio : fullWidth * 0.8,
-                    backgroundColor: 'white',
-                    zIndex: 10
-                  }}
-                >
-                  <FastImage
-                    style={{ flex: 1, borderRadius: 10 }}
-                    source={{
-                      uri:
-                        thumbnail && thumbnail !== 'TBD'
-                          ? thumbnail
-                          : fallbackThumb
-                    }}
-                    resizeMode={FastImage.resizeMode.stretch}
-                  />
-                </View>
-              </View>
-              <View style={{ height: 10 * factorVertical }} />
-              <View key={'title'} style={styles.centerContent}>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontWeight: 'bold',
-                    fontSize: 22 * factorRatio,
-                    textAlign: 'center'
-                  }}
-                >
-                  {title}
-                </Text>
-              </View>
-              <View
-                key={'artist'}
-                style={[
-                  styles.centerContent,
-                  {
-                    marginTop: 5 * factorRatio
-                  }
-                ]}
-              >
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    fontSize: 12 * factorRatio,
-                    color: 'grey'
-                  }}
-                >
-                  {this.changeType(type)}/ {artist}
-                </Text>
-              </View>
-              <View style={{ height: 10 * factorVertical }} />
-              <View
-                key={'description'}
-                style={[
-                  styles.centerContent,
-                  {
-                    paddingLeft: fullWidth * 0.05,
-                    paddingRight: fullWidth * 0.05
-                  }
-                ]}
-              >
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 14 * factorRatio,
-                    textAlign: 'left'
-                  }}
-                >
-                  {description}
-                </Text>
-              </View>
-              <View
-                key={'stats'}
-                style={[
-                  styles.centerContent,
-                  {
-                    flexDirection: 'row'
-                  }
-                ]}
-              >
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
-                {(bundle_count > 1 || lesson_count) && (
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: 70 * factorRatio
-                      }
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontWeight: 'bold',
-                        fontSize: 18 * factorRatio,
-                        textAlign: 'left',
-                        marginTop: 10 * factorVertical
-                      }}
-                    >
-                      {lesson_count > 1 ? lesson_count : bundle_count}
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 12 * factorRatio,
-                        textAlign: 'left',
-                        marginTop: 5 * factorVertical
-                      }}
-                    >
-                      LESSONS
-                    </Text>
-                  </View>
-                )}
-                {bundle_count > 1 && (
-                  <View style={{ width: 15 * factorRatio }} />
-                )}
+              {title}
+            </Text>
+
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                textAlign: 'center',
+                fontSize: 12 * factorRatio,
+                color: 'grey'
+              }}
+            >
+              {this.changeType(type)}/ {artist}
+            </Text>
+
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 14 * factorRatio,
+                textAlign: 'center'
+              }}
+            >
+              {description}
+            </Text>
+            <View
+              key={'stats'}
+              style={[
+                styles.centerContent,
+                {
+                  flexDirection: 'row'
+                }
+              ]}
+            >
+              {(bundle_count > 1 || lesson_count) && (
                 <View
                   style={[
                     styles.centerContent,
@@ -297,7 +223,7 @@ class ContentModal extends React.Component {
                       marginTop: 10 * factorVertical
                     }}
                   >
-                    {xp}
+                    {lesson_count > 1 ? lesson_count : bundle_count}
                   </Text>
                   <Text
                     style={{
@@ -307,108 +233,117 @@ class ContentModal extends React.Component {
                       marginTop: 5 * factorVertical
                     }}
                   >
-                    XP
+                    LESSONS
                   </Text>
                 </View>
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
-              </View>
-              <View style={{ height: 10 * factorVertical }} />
+              )}
+              {bundle_count > 1 && <View style={{ width: 15 * factorRatio }} />}
               <View
-                key={'buttons'}
-                style={{ flexDirection: 'row', padding: 20 }}
-              >
-                <TouchableOpacity
-                  style={{ flex: 1, alignItems: 'center' }}
-                  onPress={() => {
-                    isLiked ? this.unlike(id) : this.like(id);
-                  }}
-                >
-                  <AntIcon name={isLiked ? 'like1' : 'like2'} size={25} />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 12 * factorRatio,
-                      textAlign: 'left',
-                      marginTop: 15 * factorVertical
-                    }}
-                  >
-                    {like_count}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{ flex: 1, alignItems: 'center' }}
-                  onPress={() =>
-                    this[isAddedToList ? 'removeFromMyList' : 'addToMyList'](id)
+                style={[
+                  styles.centerContent,
+                  {
+                    width: 70 * factorRatio
                   }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontWeight: 'bold',
+                    fontSize: 18 * factorRatio,
+                    textAlign: 'left',
+                    marginTop: 10 * factorVertical
+                  }}
                 >
-                  <AntIcon
-                    size={25}
-                    name={isAddedToList ? 'close' : 'plus'}
-                    color={'black'}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 12 * factorRatio,
-                      textAlign: 'left',
-                      marginTop: 10 * factorVertical
-                    }}
-                  >
-                    My List
-                  </Text>
-                </TouchableOpacity>
-                <Download_V2
-                  entity={{
-                    id,
-                    content: contentService.getContent(id, true)
+                  {xp}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: 12 * factorRatio,
+                    textAlign: 'left',
+                    marginTop: 5 * factorVertical
                   }}
-                  styles={{
-                    touchable: { flex: 1 },
-                    activityIndicatorColor: colors.pianoteRed,
-                    animatedProgressBackground: colors.pianoteRed,
-                    textStatus: {
-                      color: 'black',
-                      fontSize: 12 * factorRatio,
-                      fontFamily: 'OpenSans-Regular',
-                      marginTop: 7.5 * factorVertical
-                    },
-                    alert: {
-                      alertTextMessageFontFamily: 'OpenSans-Regular',
-                      alertTouchableTextDeleteColor: 'white',
-                      alertTextTitleColor: 'black',
-                      alertTextMessageColor: 'black',
-                      alertTextTitleFontFamily: 'OpenSans-Bold',
-                      alertTouchableTextCancelColor: colors.pianoteRed,
-                      alertTouchableDeleteBackground: colors.pianoteRed,
-                      alertBackground: 'white',
-                      alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                      alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
-                    }
-                  }}
-                />
+                >
+                  XP
+                </Text>
               </View>
             </View>
-            <TouchableWithoutFeedback
-              onPress={() => this.props.hideContentModal()}
-              style={{ width: fullWidth * 0.05 }}
-            >
-              <View style={{ flex: 1, alignSelf: 'stretch' }} />
-            </TouchableWithoutFeedback>
-          </View>
-          <View style={{ flex: 1.1, alignSelf: 'stretch' }}>
-            <TouchableWithoutFeedback
-              onPress={() => this.props.hideContentModal()}
-              style={{
-                height: '100%',
-                width: '100%',
-                alignSelf: 'stretch'
-              }}
-            >
-              <View style={{ flex: 1, alignSelf: 'stretch' }} />
-            </TouchableWithoutFeedback>
+            <View style={{ height: 10 * factorVertical }} />
+            <View key={'buttons'} style={{ flexDirection: 'row', padding: 20 }}>
+              <TouchableOpacity
+                style={{ flex: 1, alignItems: 'center' }}
+                onPress={() => {
+                  isLiked ? this.unlike(id) : this.like(id);
+                }}
+              >
+                <AntIcon name={isLiked ? 'like1' : 'like2'} size={25} />
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: 12 * factorRatio,
+                    textAlign: 'left',
+                    marginTop: 15 * factorVertical
+                  }}
+                >
+                  {like_count}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ flex: 1, alignItems: 'center' }}
+                onPress={() =>
+                  this[isAddedToList ? 'removeFromMyList' : 'addToMyList'](id)
+                }
+              >
+                <AntIcon
+                  size={25}
+                  name={isAddedToList ? 'close' : 'plus'}
+                  color={'black'}
+                />
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: 12 * factorRatio,
+                    textAlign: 'left',
+                    marginTop: 10 * factorVertical
+                  }}
+                >
+                  My List
+                </Text>
+              </TouchableOpacity>
+              <Download_V2
+                entity={{
+                  id,
+                  content: contentService.getContent(id, true)
+                }}
+                styles={{
+                  touchable: { flex: 1 },
+                  activityIndicatorColor: colors.pianoteRed,
+                  animatedProgressBackground: colors.pianoteRed,
+                  textStatus: {
+                    color: 'black',
+                    fontSize: 12 * factorRatio,
+                    fontFamily: 'OpenSans-Regular',
+                    marginTop: 7.5 * factorVertical
+                  },
+                  alert: {
+                    alertTextMessageFontFamily: 'OpenSans-Regular',
+                    alertTouchableTextDeleteColor: 'white',
+                    alertTextTitleColor: 'black',
+                    alertTextMessageColor: 'black',
+                    alertTextTitleFontFamily: 'OpenSans-Bold',
+                    alertTouchableTextCancelColor: colors.pianoteRed,
+                    alertTouchableDeleteBackground: colors.pianoteRed,
+                    alertBackground: 'white',
+                    alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
+                    alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                  }
+                }}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   };
 }

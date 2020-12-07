@@ -478,7 +478,7 @@ export default class ResetPassword extends React.Component {
         </Animated.View>
         <Modal
           key={'passwordMatch'}
-          isVisible={this.state.showPasswordMatch}
+          isVisible={true}
           style={[
             styles.centerContent,
             {

@@ -7,7 +7,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
@@ -56,7 +57,8 @@ export default class FoundationsLevel extends React.Component {
       isAddedToList: false,
       progress: 0,
       refreshing: false,
-      isLandscape: fullHeight < fullWidth
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
   }
 
@@ -185,6 +187,7 @@ export default class FoundationsLevel extends React.Component {
   };
 
   render() {
+    console.log(this.state.isLandscape);
     return (
       <SafeAreaView
         forceInset={{
@@ -217,65 +220,31 @@ export default class FoundationsLevel extends React.Component {
               }
             ]}
           >
-            <View
-              key={'goBackIcon'}
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.goBack();
+              }}
               style={[
                 styles.centerContent,
                 {
                   position: 'absolute',
-                  left: 7.5 * factorHorizontal,
-                  top: 10 * factorVertical,
                   height: 35 * factorRatio,
                   width: 35 * factorRatio,
                   borderRadius: 100,
-                  zIndex: 5
+                  position: 'absolute',
+                  left: 7.5 * factorHorizontal,
+                  top: 10 * factorVertical,
+                  backgroundColor: 'black',
+                  zIndex: 4
                 }
               ]}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.goBack();
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '100%',
-                    borderRadius: 100,
-                    backgroundColor: 'black',
-                    opacity: 0.4
-                  }
-                ]}
-              >
-                <EntypoIcon
-                  name={'chevron-thin-left'}
-                  size={22.5 * factorRatio}
-                  color={'white'}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.goBack();
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '100%',
-                    borderRadius: 100,
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                  }
-                ]}
-              >
-                <EntypoIcon
-                  name={'chevron-thin-left'}
-                  size={22.5 * factorRatio}
-                  color={'white'}
-                />
-              </TouchableOpacity>
-            </View>
+              <EntypoIcon
+                name={'chevron-thin-left'}
+                size={22.5 * factorRatio}
+                color={'white'}
+              />
+            </TouchableOpacity>
 
             <GradientFeature
               color={'blue'}

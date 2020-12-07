@@ -314,13 +314,13 @@ export default class ProfileSettings extends React.Component {
                     styles.centerContent,
                     {
                       height: 50 * factorRatio,
-                      width: fullWidth,
+                      width: '100%',
                       borderBottomColor: colors.secondBackground,
                       borderBottomWidth: 1 * factorRatio,
                       borderTopWidth: 1 * factorRatio,
                       borderTopColor: colors.secondBackground,
                       flexDirection: 'row',
-                      paddingRight: fullWidth * 0.025
+                      paddingRight: 15
                     }
                   ]}
                 >
@@ -356,11 +356,11 @@ export default class ProfileSettings extends React.Component {
                     styles.centerContent,
                     {
                       height: 50 * factorRatio,
-                      width: fullWidth,
+                      width: '100%',
                       borderBottomColor: colors.secondBackground,
                       borderBottomWidth: 1 * factorRatio,
                       flexDirection: 'row',
-                      paddingRight: fullWidth * 0.025
+                      paddingRight: 15
                     }
                   ]}
                 >
@@ -388,7 +388,7 @@ export default class ProfileSettings extends React.Component {
               </ScrollView>
             )}
             {this.state.currentlyView == 'Display Name' && (
-              <View style={{ width: fullWidth }}>
+              <View style={{ width: '100%' }}>
                 <TextInput
                   ref={txt => {
                     this.txt = txt;
@@ -405,8 +405,8 @@ export default class ProfileSettings extends React.Component {
                       Platform.OS == 'android'
                         ? fullHeight * 0.07
                         : fullHeight * 0.06,
-                    paddingLeft: fullWidth * 0.045,
-                    width: fullWidth,
+                    paddingLeft: 15,
+                    width: '100%',
                     justifyContent: 'center',
                     fontSize: 18 * factorRatio,
                     borderBottomColor: colors.secondBackground,
@@ -419,8 +419,8 @@ export default class ProfileSettings extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     fontSize: 16 * factorRatio,
-                    paddingLeft: fullWidth * 0.045,
-                    paddingRight: fullWidth * 0.045,
+                    paddingLeft: 15,
+                    paddingRight: 15,
                     color: colors.secondBackground
                   }}
                 >
@@ -430,28 +430,40 @@ export default class ProfileSettings extends React.Component {
               </View>
             )}
             {this.state.currentlyView == 'Profile Photo' && (
-              <View
-                style={{
-                  height: fullHeight,
-                  width: fullWidth
-                }}
-              >
+              <View style={{ flex: 1 }}>
                 <View style={{ height: 50 * factorVertical }} />
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ flex: 1 }} />
-                  <View
-                    key={'imageCircle'}
-                    style={[
-                      styles.centerContent,
-                      {
-                        height: fullWidth * 0.65,
-                        width: fullWidth * 0.65,
-                        borderRadius: 200 * factorRatio,
-                        backgroundColor: colors.secondBackground
-                      }
-                    ]}
-                  >
-                    {this.state.imageURI !== '' && (
+                <View
+                  key={'imageCircle'}
+                  style={
+                    {
+                      // alignSelf: 'center'
+                      // borderRadius: 200 * factorRatio,
+                      // backgroundColor: colors.secondBackground,
+                      // borderWidth: 3,
+                      // borderColor: 'red'
+                    }
+                  }
+                >
+                  {this.state.imageURI !== '' && (
+                    <View
+                      style={{
+                        alignItems: 'flex-start',
+                        justifyContent: 'center',
+                        flexDirection: 'row'
+                      }}
+                    >
+                      <FastImage
+                        style={{
+                          width: 200 * factorRatio,
+                          aspectRatio: 1,
+                          borderRadius: 200 * factorRatio,
+                          alignSelf: 'center'
+                        }}
+                        source={{
+                          uri: this.state.imageURI
+                        }}
+                        resizeMode={FastImage.resizeMode.cover}
+                      />
                       <TouchableOpacity
                         onPress={() =>
                           this.setState({
@@ -460,20 +472,18 @@ export default class ProfileSettings extends React.Component {
                             imageName: ''
                           })
                         }
-                        style={[
-                          styles.centerContent,
-                          {
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            height: 35 * factorRatio,
-                            width: 35 * factorRatio,
-                            borderRadius: 200,
-                            borderColor: colors.secondBackground,
-                            borderWidth: 2,
-                            zIndex: 5
-                          }
-                        ]}
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          position: 'absolute',
+                          minHeight: 40,
+                          minWidth: 40,
+                          right: 100 * factorRatio,
+                          borderRadius: 200,
+                          borderColor: colors.secondBackground,
+                          borderWidth: 2,
+                          zIndex: 1
+                        }}
                       >
                         <EntypoIcon
                           name={'cross'}
@@ -481,89 +491,63 @@ export default class ProfileSettings extends React.Component {
                           color={colors.secondBackground}
                         />
                       </TouchableOpacity>
-                    )}
-                    {this.state.imageURI !== '' && (
-                      <FastImage
-                        style={{
+                    </View>
+                  )}
+                  {this.state.imageURI == '' && (
+                    <TouchableOpacity
+                      onPress={() => this.chooseImage()}
+                      style={[
+                        styles.centerContent,
+                        {
                           height: '100%',
-                          width: '100%',
-                          borderRadius: 200 * factorRatio
-                        }}
-                        source={{
-                          uri: this.state.imageURI
-                        }}
-                        resizeMode={FastImage.resizeMode.cover}
+                          width: '100%'
+                        }
+                      ]}
+                    >
+                      <AntIcon
+                        name={'plus'}
+                        size={65 * factorRatio}
+                        color={'white'}
                       />
-                    )}
-                    {this.state.imageURI == '' && (
-                      <TouchableOpacity
-                        onPress={() => this.chooseImage()}
-                        style={[
-                          styles.centerContent,
-                          {
-                            height: '100%',
-                            width: '100%'
-                          }
-                        ]}
-                      >
-                        <AntIcon
-                          name={'plus'}
-                          size={65 * factorRatio}
-                          color={'white'}
-                        />
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                  <View style={{ flex: 1 }} />
+                    </TouchableOpacity>
+                  )}
                 </View>
                 <View style={{ height: 35 * factorRatio }} />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     fontSize: 15 * factorRatio,
-                    paddingLeft: fullWidth * 0.045,
-                    paddingRight: fullWidth * 0.045,
+                    paddingHorizontal: 15,
                     color: colors.secondBackground
                   }}
                 >
                   This is the image that will appear with your comments and
                   forum posts.
                 </Text>
-                <View
-                  style={{
-                    position: 'absolute',
-                    bottom: 215 * factorVertical,
-                    width: fullWidth,
-                    flexDirection: 'row',
-                    alignSelf: 'stretch'
-                  }}
+
+                <TouchableOpacity
+                  onPress={() => this.chooseImage()}
+                  style={[
+                    styles.centerContent,
+                    {
+                      alignSelf: 'center',
+                      borderRadius: 200 * factorRatio,
+                      borderColor: colors.secondBackground,
+                      borderWidth: 2 * factorRatio
+                    }
+                  ]}
                 >
-                  <View style={{ flex: 1 }} />
-                  <TouchableOpacity
-                    onPress={() => this.chooseImage()}
-                    style={[
-                      styles.centerContent,
-                      {
-                        height: fullWidth * 0.2,
-                        width: fullWidth * 0.2,
-                        borderRadius: 200 * factorRatio,
-                        borderColor: colors.secondBackground,
-                        borderWidth: 2 * factorRatio
-                      }
-                    ]}
-                  >
-                    <IonIcon
-                      size={50 * factorRatio}
-                      name={'ios-camera'}
-                      color={colors.secondBackground}
-                    />
-                  </TouchableOpacity>
-                  <View style={{ flex: 1 }} />
-                </View>
+                  <IonIcon
+                    size={50 * factorRatio}
+                    name={'ios-camera'}
+                    color={colors.secondBackground}
+                    style={{ padding: 10 * factorRatio }}
+                  />
+                </TouchableOpacity>
               </View>
             )}
             {this.state.currentlyView == 'Password' && (
-              <View style={{ width: fullWidth }}>
+              <View style={{ width: '100%' }}>
                 <TextInput
                   ref={txt => {
                     this.password = txt;
@@ -580,8 +564,8 @@ export default class ProfileSettings extends React.Component {
                       Platform.OS == 'android'
                         ? fullHeight * 0.07
                         : fullHeight * 0.06,
-                    paddingLeft: fullWidth * 0.045,
-                    width: fullWidth,
+                    paddingLeft: 15,
+                    width: '100%',
                     justifyContent: 'center',
                     fontSize: 18 * factorRatio,
                     borderBottomColor: colors.secondBackground,
@@ -605,8 +589,8 @@ export default class ProfileSettings extends React.Component {
                       Platform.OS == 'android'
                         ? fullHeight * 0.07
                         : fullHeight * 0.06,
-                    paddingLeft: fullWidth * 0.045,
-                    width: fullWidth,
+                    paddingLeft: 15,
+                    width: '100%',
                     justifyContent: 'center',
                     fontSize: 18 * factorRatio,
                     color: colors.secondBackground,
@@ -632,8 +616,8 @@ export default class ProfileSettings extends React.Component {
                       Platform.OS == 'android'
                         ? fullHeight * 0.07
                         : fullHeight * 0.06,
-                    paddingLeft: fullWidth * 0.045,
-                    width: fullWidth,
+                    paddingLeft: 15,
+                    width: '100%',
                     color: colors.secondBackground,
                     justifyContent: 'center',
                     fontSize: 18 * factorRatio,

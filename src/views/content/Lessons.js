@@ -8,7 +8,8 @@ import {
   Platform,
   ScrollView,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -81,7 +82,8 @@ export default class Lessons extends React.Component {
       lessonsStarted: true, // for showing continue lessons horizontal list
       refreshing: true,
       refreshControl: true,
-      isLandscape: fullHeight < fullWidth
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
   }
 
@@ -535,9 +537,7 @@ export default class Lessons extends React.Component {
                 borderTopColor: colors.secondBackground,
                 borderBottomColor: colors.secondBackground,
                 backgroundColor: colors.mainBackground,
-                paddingTop: 10,
-                paddingBottom: 10,
-                marginVertical: 10*factorVertical,
+                marginVertical: 10 * factorVertical,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly'
@@ -545,10 +545,10 @@ export default class Lessons extends React.Component {
             >
               <FastImage
                 style={{
-                  height: 60*factorRatio,
+                  height: 50 * factorRatio,
                   aspectRatio: 1,
                   borderRadius: 100,
-                  backgroundColor: colors.secondBackground,
+                  backgroundColor: colors.secondBackground
                 }}
                 source={{
                   uri:
@@ -557,7 +557,7 @@ export default class Lessons extends React.Component {
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
-              <View>
+              <View style={{ paddingVertical: 10 }}>
                 <Text
                   style={{
                     color: colors.pianoteRed,

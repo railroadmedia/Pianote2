@@ -2,12 +2,18 @@
  * LogOut
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { logOut } from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Intercom from 'react-native-intercom';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const resetAction = StackActions.reset({
   index: 0,
@@ -32,194 +38,106 @@ class LogOut extends React.Component {
 
   render = () => {
     return (
-      <View style={styles.container}>
-        <View style={{ flex: 1, alignSelf: 'stretch' }}>
-          <TouchableOpacity
-            onPress={() => this.props.hideLogOut()}
-            style={{
-              height: '100%',
-              width: '100%',
-              alignSelf: 'stretch'
-            }}
-          ></TouchableOpacity>
-        </View>
+      <TouchableWithoutFeedback
+        onPress={() => this.props.hideLogOut()}
+        key={'container'}
+        style={{
+          height: '100%',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'transparent'
+        }}
+      >
         <View
+          key={'content'}
           style={{
-            height:
-              fullHeight * 0.275 + (global.isTablet ? fullHeight * 0.1 : 0),
-            flexDirection: 'row',
-            borderRadius: 10 * factorRatio
+            height: '100%',
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'transparent'
           }}
         >
-          <TouchableOpacity
-            onPress={() => this.props.hideLogOut()}
-            style={{ width: fullWidth * 0.05 }}
-          />
           <View
             style={{
-              width: fullWidth * 0.9,
-              borderRadius: 10 * factorRatio,
-              backgroundColor: 'white'
+              backgroundColor: 'white',
+              borderRadius: 15 * factorRatio,
+              margin: 20 * factorRatio
             }}
           >
-            <View style={{ flex: 0.03 }} />
-            <View
-              key={'LogOut'}
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontWeight: 'bold',
+                fontSize: 19 * factorRatio,
+                marginTop: 10 * factorRatio,
+                paddingHorizontal: 40,
+                alignSelf: 'center'
+              }}
+            >
+              Log Out
+            </Text>
+
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 16 * factorRatio,
+                textAlign: 'center',
+                alignSelf: 'center',
+                paddingHorizontal: 40,
+                marginVertical: 10 * factorRatio
+              }}
+            >
+              Are you sure that you want to log out?
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                this.logOut();
+              }}
               style={[
                 styles.centerContent,
                 {
-                  flex: 0.175
+                  backgroundColor: colors.pianoteRed,
+                  borderRadius: 40,
+                  marginHorizontal: 40
                 }
               ]}
             >
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontWeight: 'bold',
-                  fontSize: 19 * factorRatio,
-                  marginTop: 10 * factorRatio
+                  color: 'white',
+                  fontFamily: 'RobotoCondensed-Bold',
+                  fontSize: 14 * factorRatio,
+                  paddingVertical: 10
                 }}
               >
-                Log Out
+                LOG OUT
               </Text>
-            </View>
-            <View
-              key={'text'}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => this.props.hideLogOut()}
               style={[
                 styles.centerContent,
-                {
-                  flex: 0.25
-                }
+                { paddingHorizontal: 40, marginVertical: 10 * factorRatio }
               ]}
             >
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  textAlign: 'justify'
+                  fontSize: 14 * factorRatio,
+                  color: 'grey',
+                  fontWeight: '700'
                 }}
               >
-                Are you sure that you want to log out?
+                CANCEL
               </Text>
-            </View>
-            <View
-              key={'ok'}
-              style={[
-                styles.centerContent,
-                {
-                  flex: 0.325,
-                  paddingLeft: fullWidth * 0.1 * factorRatio,
-                  paddingRight: fullWidth * 0.1 * factorRatio
-                }
-              ]}
-            >
-              <View style={{ flex: 0.15 }} />
-              <View
-                style={[
-                  styles.centerContent,
-                  {
-                    flex: 0.7,
-                    backgroundColor: '#fb1b2f',
-                    alignSelf: 'stretch',
-                    borderRadius: 40
-                  }
-                ]}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.logOut();
-                  }}
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1
-                    }
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontFamily: 'RobotoCondensed-Bold',
-                      fontSize: 14 * factorRatio
-                    }}
-                  >
-                    LOG OUT
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ flex: 0.15 }} />
-            </View>
-            <View
-              key={'cancel'}
-              style={[
-                styles.centerContent,
-                {
-                  flex: 0.125,
-                  paddingLeft: fullWidth * 0.1,
-                  paddingRight: fullWidth * 0.1
-                }
-              ]}
-            >
-              <View
-                style={[
-                  styles.centerContent,
-                  {
-                    flex: 0.8,
-                    alignSelf: 'stretch'
-                  }
-                ]}
-              >
-                <TouchableOpacity>
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        flexDirection: 'row'
-                      }
-                    ]}
-                  >
-                    <TouchableOpacity
-                      onPress={() => this.props.hideLogOut()}
-                      style={[
-                        styles.centerContent,
-                        {
-                          height: '100%',
-                          width: '100%'
-                        }
-                      ]}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 14 * factorRatio,
-                          color: 'grey',
-                          fontWeight: '700'
-                        }}
-                      >
-                        CANCEL
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => this.props.hideLogOut()}
-            style={{ width: fullWidth * 0.05 }}
-          />
         </View>
-        <View style={{ flex: 1, alignSelf: 'stretch' }}>
-          <TouchableOpacity
-            onPress={() => this.props.hideLogOut()}
-            style={{
-              height: '100%',
-              width: '100%',
-              alignSelf: 'stretch'
-            }}
-          ></TouchableOpacity>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   };
 }
