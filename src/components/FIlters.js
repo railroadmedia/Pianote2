@@ -260,9 +260,9 @@ export default class Filters extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps = props => {
-      console.log(props.filtersAvailable, props.filters)
+    console.log(props.filtersAvailable, props.filters)
     this.setState({
-        filtersAvailable: props.filtersAvailable
+      filtersAvailable: props.filtersAvailable
     })
   };
 
@@ -5031,7 +5031,7 @@ export default class Filters extends React.Component {
                 <View style={{ flex: 1 }} />
                 <View style={styles.centerContent}>
                 <TouchableOpacity
-                    onPress={() => this.goBack()}
+                    onPress={() => this.props.hideFilters()}
                     style={[
                     styles.centerContent,
                     {
