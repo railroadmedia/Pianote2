@@ -4,7 +4,9 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { getAllContent } from 'Pianote2/src/services/GetContent';
 
 /*
  * const instructorDict = {
@@ -266,8 +268,22 @@ export default class Filters extends React.Component {
     })
   };
 
-  componentDidMount = () => {
-
+  componentDidMount = async () => {
+    let response = await getAllContent(
+      '',
+      'new',
+      this.state.page,
+      {
+        displayTopics: [],
+        topics: [],
+        level: [],
+        progress: [],
+        instructors: []
+      }
+    )
+    
+    console.log(response)
+  
   }
 
   updateFilters = async () => {

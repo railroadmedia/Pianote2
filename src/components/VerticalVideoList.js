@@ -105,7 +105,7 @@ class VerticalVideoList extends React.Component {
         <ActivityIndicator
           size={onTablet ? 'large' : 'small'}
           animating={true}
-          color={colors.secondBackground}
+          color={this.props.isMethod ? colors.pianoteGrey : colors.secondBackground}
         />
       </View>
     );
@@ -606,7 +606,7 @@ class VerticalVideoList extends React.Component {
                       numberOfLines={2}
                       style={{
                         fontSize: 12 * factorRatio,
-                        color: colors.secondBackground,
+                        color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular'
                       }}
@@ -633,7 +633,7 @@ class VerticalVideoList extends React.Component {
                       numberOfLines={2}
                       style={{
                         fontSize: 12 * factorRatio,
-                        color: colors.secondBackground,
+                        color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular'
                       }}
@@ -646,7 +646,7 @@ class VerticalVideoList extends React.Component {
                       numberOfLines={2}
                       style={{
                         fontSize: 12 * factorRatio,
-                        color: colors.secondBackground,
+                        color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular'
                       }}
@@ -673,7 +673,7 @@ class VerticalVideoList extends React.Component {
                         <FontIcon
                           size={30 * factorRatio}
                           name={'calendar-plus'}
-                          color={colors.pianoteRed}
+                          color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
                         />
                       </TouchableOpacity>
                     ) : !row.isAddedToList ? (
@@ -686,7 +686,7 @@ class VerticalVideoList extends React.Component {
                         <AntIcon
                           name={'plus'}
                           size={30 * factorRatio}
-                          color={colors.pianoteRed}
+                          color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
                         />
                       </TouchableOpacity>
                     ) : row.isAddedToList ? (
@@ -699,7 +699,7 @@ class VerticalVideoList extends React.Component {
                         <AntIcon
                           name={'close'}
                           size={30 * factorRatio}
-                          color={colors.pianoteRed}
+                          color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
                         />
                       </TouchableOpacity>
                     ) : null}
@@ -918,7 +918,7 @@ class VerticalVideoList extends React.Component {
                       marginBottom: 5 * factorVertical,
                       textAlign: 'left',
                       fontFamily: 'RobotoCondensed-Bold',
-                      color: colors.secondBackground
+                      color: this.props.isMethod ? 'white' : colors.secondBackground
                     }}
                   >
                     {this.props.title}
@@ -1033,7 +1033,7 @@ class VerticalVideoList extends React.Component {
                         marginBottom: 5 * factorVertical,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular',
-                        color: colors.secondBackground
+                        color: this.props.isMethod ? 'white' : colors.secondBackground
                       }}
                     >
                       <Text
@@ -1042,7 +1042,7 @@ class VerticalVideoList extends React.Component {
                           marginBottom: 5 * factorVertical,
                           textAlign: 'left',
                           fontFamily: 'OpenSans-Bold',
-                          color: colors.secondBackground
+                          color: this.props.isMethod ? 'white' : colors.secondBackground
                         }}
                       >
                         FILTERS APPLIED{' '}
@@ -1066,7 +1066,7 @@ class VerticalVideoList extends React.Component {
                 <Text
                   style={{
                     fontSize: 12 * factorRatio,
-                    color: colors.secondBackground,
+                    color: this.props.isMethod ? 'white' : colors.secondBackground,
                     fontFamily: 'OpenSans-Regular',
                     textAlign: 'left'
                   }}
@@ -1097,7 +1097,7 @@ class VerticalVideoList extends React.Component {
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}
                 animating={true}
-                color={colors.secondBackground}
+                color={this.props.isMethod ? colors.pianoteGrey : colors.secondBackground}
               />
             </View>
           )}

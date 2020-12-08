@@ -36,21 +36,29 @@ class MoreInfoIcon extends React.Component {
             {
               flex: 1,
               flexDirection: 'row',
-              paddingVertical: 10
+              height: '100%'
             }
           ]}
         >
-          <Icon name={'arrowright'} size={23 * factorRatio} color={'white'} />
-          <View style={{ flex: 0.2 }} />
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 14 * factorRatio,
-              fontFamily: 'RobotoCondensed-Bold'
-            }}
-          >
-            MORE INFO
-          </Text>
+          <View style={{height: '100%'}}>
+            <View style={{flex: 1}}/>
+            <Icon name={'arrowright'} size={23 * factorRatio} color={'white'} />
+            <View style={{flex: 1}}/>
+          </View>
+          <View style={{ flex: 0.1 }} />
+          <View style={{height: '100%'}}>
+          <View style={{flex: 1}}/>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 14 * factorRatio,
+                fontFamily: 'RobotoCondensed-Bold'
+              }}
+            >
+              MORE INFO
+            </Text>
+            <View style={{flex: 1}}/>
+          </View>
         </TouchableOpacity>
       </View>
     );

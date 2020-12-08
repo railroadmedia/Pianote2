@@ -2,7 +2,7 @@ import RNFetchBlo from 'rn-fetch-blob';
 
 export let cache = {};
 export default {
-  rootUrl: 'https://staging.pianote.com',
+  rootUrl: 'https://www.pianote.com',
   tryCall: async function (url, method, body) {
     try {
       if (body) body = body ? JSON.stringify(body) : null;

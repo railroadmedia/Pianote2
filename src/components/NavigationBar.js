@@ -23,7 +23,9 @@ class NavigationBar extends React.Component {
     super(props);
     this.state = {
       profileImage: '',
-      onMain: false
+      onMain: false,
+      secondaryColor: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
+      primaryColor: this.props.isMethod ? colors.pianoteRed : 'white'
     };
   }
 
@@ -49,7 +51,7 @@ class NavigationBar extends React.Component {
           color={
             this.props.currentPage == 'PROFILE'
               ? 'white'
-              : colors.secondBackground
+              : this.state.secondaryColor
           }
           size={27.5 * factorRatio}
         />
@@ -74,9 +76,7 @@ class NavigationBar extends React.Component {
     return (
       <View
         style={{
-          backgroundColor: colors.mainBackground,
-          borderTopColor: colors.mainBackground,
-          borderTopWidth: 2 * factorRatio
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
         <View style={{ flex: 1 }} />
@@ -116,8 +116,8 @@ class NavigationBar extends React.Component {
               size={30 * factorRatio}
               color={
                 this.props.currentPage == 'LESSONS'
-                  ? 'white'
-                  : colors.secondBackground
+                  ? this.state.primaryColor
+                  : this.state.secondaryColor
               }
             />
           </TouchableOpacity>
@@ -145,8 +145,8 @@ class NavigationBar extends React.Component {
               size={40 * factorRatio}
               color={
                 this.props.currentPage == 'SEARCH'
-                  ? 'white'
-                  : colors.secondBackground
+                ? this.state.primaryColor
+                : this.state.secondaryColor
               }
             />
           </TouchableOpacity>
@@ -172,8 +172,8 @@ class NavigationBar extends React.Component {
               size={30 * factorRatio}
               color={
                 this.props.currentPage == 'DOWNLOAD'
-                  ? 'white'
-                  : colors.secondBackground
+                ? this.state.primaryColor
+                : this.state.secondaryColor
               }
             />
           </TouchableOpacity>

@@ -100,7 +100,7 @@ class HorizontalVideoList extends React.Component {
           <ActivityIndicator
             size={onTablet ? 'large' : 'small'}
             animating={true}
-            color={colors.secondBackground}
+            color={this.props.isMethod ? colors.pianoteGrey : colors.secondBackground}
           />
           <View style={{ flex: 0.66 }} />
         </View>
@@ -216,7 +216,7 @@ class HorizontalVideoList extends React.Component {
                   marginBottom: 5 * factorVertical,
                   textAlign: 'left',
                   fontFamily: 'RobotoCondensed-Bold',
-                  color: colors.secondBackground
+                  color: this.props.isMethod ? 'white' : colors.secondBackground
                 }}
               >
                 {this.props.Title}
@@ -235,7 +235,7 @@ class HorizontalVideoList extends React.Component {
                       marginRight: 3.5 * factorHorizontal,
                       fontWeight: '300',
                       marginTop: 5 * factorVertical,
-                      color: 'red'
+                      color: colors.pianoteRed
                     }}
                   >
                     See All
@@ -407,8 +407,7 @@ class HorizontalVideoList extends React.Component {
                           fontSize: 15.5 * factorRatio,
                           marginTop: 7.5 * factorRatio,
                           textAlign: 'left',
-                          fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
-                          fontFamily: 'OpenSans-Regular',
+                          fontFamily: 'OpenSans-Bold',
                           color: 'white'
                         }}
                       >
@@ -430,7 +429,7 @@ class HorizontalVideoList extends React.Component {
                             style={{
                               textAlign: 'left',
                               fontFamily: 'OpenSans-Regular',
-                              color: colors.secondBackground,
+                              color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
                               fontSize: 12 * factorRatio
                             }}
                           >
@@ -443,7 +442,7 @@ class HorizontalVideoList extends React.Component {
                             style={{
                               textAlign: 'left',
                               fontFamily: 'OpenSans-Regular',
-                              color: colors.secondBackground,
+                              color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
                               fontSize: 12 * factorRatio
                             }}
                           >
@@ -472,7 +471,7 @@ class HorizontalVideoList extends React.Component {
                               <AntIcon
                                 name={'plus'}
                                 size={30 * factorRatio}
-                                color={colors.pianoteRed}
+                                color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
                               />
                             </TouchableOpacity>
                           )}
@@ -486,7 +485,7 @@ class HorizontalVideoList extends React.Component {
                               <AntIcon
                                 name={'close'}
                                 size={30 * factorRatio}
-                                color={colors.pianoteRed}
+                                color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
                               />
                             </TouchableOpacity>
                           )}

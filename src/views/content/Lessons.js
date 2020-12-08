@@ -147,6 +147,10 @@ export default class Lessons extends React.Component {
           })
         );
 
+        if(maxLevel.lessons == null) {
+          maxLevel.lessons = Number(content[1].meta.filterOptions.difficulty.length - 1)
+        }
+
         this.setState(
           {
             foundationIsStarted: foundation.started,
@@ -403,16 +407,20 @@ export default class Lessons extends React.Component {
   render() {
     return (
       <View
-        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+        style={[styles.container, {backgroundColor: 'black'}]}
       >
-        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'LESSONS'} />
+        <NavMenuHeaders 
+          isMethod={true}
+          currentPage={'LESSONS'} 
+          parentPage={'LESSONS'} 
+        />
         {!this.state.refreshing ? (
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
             style={{
               flex: 1,
-              backgroundColor: colors.mainBackground
+              backgroundColor: 'black'
             }}
             refreshControl={
               <RefreshControl
@@ -431,23 +439,23 @@ export default class Lessons extends React.Component {
                 styles.centerContent,
                 {
                   width: '100%',
-                  aspectRatio: this.getAspectRatio()
+                  height: fullHeight*0.61
                 }
               ]}
             >
               <GradientFeature
-                color={'blue'}
+                color={'red'}
                 opacity={1}
-                height={'100%'}
+                height={'70%'}
                 borderRadius={0}
               />
               <FastImage
                 style={{
                   flex: 1,
                   alignSelf: 'stretch',
-                  backgroundColor: colors.mainBackground
+                  backgroundColor: 'black'
                 }}
-                source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
+                source={require('/Users/kp98/Pianote2/src/assets/img/imgs/lisamethod.png')}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <View
@@ -460,12 +468,12 @@ export default class Lessons extends React.Component {
                   elevation: 2
                 }}
               >
-                <View style={{ flex: 0.4 }} />
+                <View style={{ flex: 0.9 }} />
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <Pianote
                     height={fullHeight * 0.03}
                     width={fullWidth * 0.35}
-                    fill={'white'}
+                    fill={colors.pianoteRed}
                   />
                 </View>
                 <Text
@@ -480,14 +488,15 @@ export default class Lessons extends React.Component {
                 >
                   FOUNDATIONS
                 </Text>
-                <View style={{ flex: 0.4 }} />
+                <View style={{ flex: 0.035 }} />
 
                 <View
                   style={{
+                    flex: 0.12,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingHorizontal: 15
+                    paddingHorizontal: 15,
                   }}
                 >
                   {this.state.foundationIsCompleted ? (
@@ -527,84 +536,10 @@ export default class Lessons extends React.Component {
                     }}
                   />
                 </View>
+                <View style={{ flex: 0.1 }} />
               </View>
             </View>
-            <View
-              key={'profile'}
-              style={{
-                borderTopWidth: 0.25,
-                borderBottomWidth: 0.25,
-                borderTopColor: colors.secondBackground,
-                borderBottomColor: colors.secondBackground,
-                backgroundColor: colors.mainBackground,
-                marginVertical: 10 * factorVertical,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-evenly'
-              }}
-            >
-              <FastImage
-                style={{
-                  height: 50 * factorRatio,
-                  aspectRatio: 1,
-                  borderRadius: 100,
-                  backgroundColor: colors.secondBackground
-                }}
-                source={{
-                  uri:
-                    this.state.profileImage ||
-                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-              />
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    color: colors.pianoteRed,
-                    fontSize: 12 * factorRatio,
-                    fontWeight: 'bold',
-                    textAlign: 'center'
-                  }}
-                >
-                  XP
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 24 * factorRatio,
-                    fontFamily: 'OpenSans-ExtraBold',
-                    textAlign: 'center'
-                  }}
-                >
-                  {this.state.xp?.length > 4
-                    ? (Number(this.state.xp) / 1000).toFixed(1).toString() + 'k'
-                    : this.state.xp?.toString()}
-                </Text>
-              </View>
-              <View>
-                <Text
-                  style={{
-                    color: colors.pianoteRed,
-                    fontSize: 12 * factorRatio,
-                    fontWeight: 'bold',
-                    textAlign: 'center'
-                  }}
-                >
-                  RANK
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 24 * factorRatio,
-                    fontFamily: 'OpenSans-ExtraBold',
-                    textAlign: 'center'
-                  }}
-                >
-                  {this.state.rank}
-                </Text>
-              </View>
-            </View>
-
+            <View style={{height: 10*factorVertical}}/>
             <View>
               {this.state.lessonsStarted && (
                 <View
@@ -612,10 +547,11 @@ export default class Lessons extends React.Component {
                   style={{
                     minHeight: fullHeight * 0.225,
                     paddingLeft: fullWidth * 0.035,
-                    backgroundColor: colors.mainBackground
+                    backgroundColor: 'black'
                   }}
                 >
                   <HorizontalVideoList
+                    isMethod={true}
                     Title={'CONTINUE'}
                     seeAll={() =>
                       this.props.navigation.navigate('SEEALL', {
@@ -643,6 +579,7 @@ export default class Lessons extends React.Component {
               <View style={{ height: 5 * factorRatio }} />
               {!this.state.filtering && (
                 <VerticalVideoList
+                  isMethod={true}
                   items={this.state.allLessons}
                   isLoading={false}
                   title={'ALL LESSONS'} // title for see all page
@@ -685,7 +622,7 @@ export default class Lessons extends React.Component {
           <ActivityIndicator
             size='small'
             style={{ flex: 1 }}
-            color={colors.secondBackground}
+            color={colors.pianoteGrey}
           />
         )}
         <Modal
@@ -733,7 +670,7 @@ export default class Lessons extends React.Component {
         >
           <Filters
             hideFilters={() => this.setState({showFilters: false})}
-            filtersAvailable={this.state.filtersAvailable}
+            filtersAvailable={this.state.filters}
             filters={this.state.filters}
             type={'Lessons'}
             reset={(filters) => {
@@ -757,7 +694,10 @@ export default class Lessons extends React.Component {
           />
         </Modal>
         
-        <NavigationBar currentPage={'LESSONS'} />
+        <NavigationBar 
+          currentPage={'LESSONS'} 
+          isMethod={true}
+        />
       </View>
     );
   }

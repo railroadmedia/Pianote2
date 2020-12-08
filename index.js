@@ -119,9 +119,16 @@ global.colors = {
   secondBackground: '#445f73',
   thirdBackground: '#081826',
   notificationColor: '#002038',
-  pianoteRed: '#fb1b2f'
+  pianoteRed: '#fb1b2f',
+  pianoteGrey: '#4C5253',
 };
-global.serverLocation = 'https://www.pianote.com';
+global.maxLevel = {
+  lessons: null,
+  packs: null,
+  studentFocus: null, 
+
+}
+global.serverLocation = 'https://staging.pianote.com';
 global.isPackOnly = false;
 global.versionNumber = '1.0.11';
 global.fallbackThumb =

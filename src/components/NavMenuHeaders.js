@@ -31,25 +31,28 @@ class NavMenuHeaders extends React.Component {
           styles.centerContent,
           {
             top: 0,
+            position: this.props.isMethod ? 'absolute' : null,
+            zIndex: this.props.isMethod ? 20 : 0,
+            election: this.props.isMethod ? 20 : 0,
             height: fullHeight * 0.1 + (isNotch ? 10 * factorVertical : 0),
             flexDirection: 'row',
             left: 0,
-            backgroundColor: colors.mainBackground
+            //backgroundColor: this.props.isMethod ? 'transparent' : colors.mainBackground
           }
         ]}
       >
         <View
           style={{
             flex: 1,
-            backgroundColor: colors.thirdBackground,
-            alignSelf: 'stretch'
+            alignSelf: 'stretch',
+            //backgroundColor: this.props.isMethod ? 'transparent' : colors.mainBackground,
           }}
         >
           <View
             style={{
               flexDirection: 'row',
               width: fullWidth,
-              backgroundColor: colors.thirdBackground
+//              backgroundColor: this.props.isMethod ? 'transparent' : colors.mainBackground
             }}
           >
             <View
@@ -128,7 +131,7 @@ class NavMenuHeaders extends React.Component {
                     color:
                       this.props.currentPage == 'LESSONS'
                         ? 'white'
-                        : colors.secondBackground
+                        : (this.props.isMethod ? 'white' : colors.secondBackground)
                   }}
                 >
                   LESSONS{' '}
@@ -138,7 +141,7 @@ class NavMenuHeaders extends React.Component {
                   color={
                     this.props.currentPage == 'LESSONS'
                       ? 'white'
-                      : colors.secondBackground
+                      : (this.props.isMethod ? 'white': colors.secondBackground)
                   }
                   size={20 * factorRatio}
                 />
@@ -170,7 +173,7 @@ class NavMenuHeaders extends React.Component {
                     color:
                       this.props.currentPage == 'PACKS'
                         ? 'white'
-                        : colors.secondBackground
+                        : (this.props.isMethod ? 'white' : colors.secondBackground)
                   }}
                 >
                   PACKS{' '}
@@ -199,12 +202,13 @@ class NavMenuHeaders extends React.Component {
                 <Text
                   style={{
                     fontSize: 14 * factorRatio,
+                    shadowOpacity: 0.3,
                     fontFamily: 'OpenSans-Regular',
                     fontFamily: 'OpenSans-ExtraBold',
                     color:
                       this.props.currentPage == 'MYLIST'
                         ? 'white'
-                        : colors.secondBackground
+                        : (this.props.isMethod ? 'white' : colors.secondBackground)
                   }}
                 >
                   MY LIST{' '}

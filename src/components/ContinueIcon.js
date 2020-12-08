@@ -23,7 +23,8 @@ class ContinueIcon extends React.Component {
             flex: 1,
             backgroundColor: '#fb1b2f',
             flexDirection: 'row',
-            elevation: 5
+            elevation: 5,
+            
           }
         ]}
       >
@@ -34,25 +35,33 @@ class ContinueIcon extends React.Component {
             {
               flex: 1,
               flexDirection: 'row',
-              paddingVertical: 10
+              height: '100%'
             }
           ]}
         >
-          <Icon
-            name={'controller-play'}
-            size={25 * factorRatio}
-            color={'white'}
-          />
-          <View style={{ flex: 0.1 }} />
-          <Text
-            style={{
-              color: 'white',
-              fontFamily: 'RobotoCondensed-Bold',
-              fontSize: 14 * factorRatio
-            }}
-          >
-            CONTINUE
-          </Text>
+          <View style={{height: '100%'}}>
+            <View style={{flex: 1}}/>
+            <Icon
+              name={'controller-play'}
+              size={25 * factorRatio}
+              color={'white'}
+            />
+            <View style={{flex: 1}}/>
+          </View>
+          <View style={{ flex: 0.075 }} />
+          <View style={{height: '100%'}}>
+            <View style={{flex: 1}}/> 
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'RobotoCondensed-Bold',
+                fontSize: 14 * factorRatio
+              }}
+            >
+              CONTINUE
+            </Text>
+            <View style={{flex: 1}}/>
+          </View>
         </TouchableOpacity>
       </View>
     );
