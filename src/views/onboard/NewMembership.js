@@ -2,18 +2,33 @@
  * NewMembership
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Platform,
+  StatusBar,
+  Dimensions,
+  PixelRatio,
+  StyleSheet
+} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationActions, StackActions } from 'react-navigation';
+import Orientation from 'react-native-orientation-locker';
+import DeviceInfo from 'react-native-device-info';
+import { SafeAreaView } from 'react-navigation';
 import RNIap, {
   purchaseErrorListener,
   purchaseUpdatedListener
 } from 'react-native-iap';
+
 import { signUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
+import CreateAccountStepCounter from './CreateAccountStepCounter';
+
 let purchaseErrorSubscription = null;
 let purchaseUpdateSubscription = null;
 
@@ -22,12 +37,29 @@ const skus = Platform.select({
   ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership']
 });
 
+const benefits = [
+  'Pay nothing for 7 days.',
+  'Award-winning piano lessons & more.',
+  'Access to the Pianote Experience app.',
+  'Access to the Pianote Experience website.',
+  'Cancel anytime through the App Store.'
+];
+
+let isTablet = false;
+const windowDim = Dimensions.get('window');
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const fontIndex = width / 50;
+
 export default class NewMembership extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
     super(props);
+    Orientation.lockToPortrait();
+    isTablet = DeviceInfo.isTablet();
     this.state = {
-      step: 3,
       newUser: this.props.navigation.state.params.data.type,
       email: this.props.navigation.state.params.data.email,
       password: this.props.navigation.state.params.data.password,
@@ -151,39 +183,25 @@ export default class NewMembership extends React.Component {
   render() {
     return (
       <>
-        <View
-          style={[
-            styles.centerContent,
-            {
-              height: fullHeight,
-              backgroundColor: '#fb1b2e',
-              opacity: 0.98
-            }
-          ]}
+        <SafeAreaView
+          style={{ flex: 1, backgroundColor: colors.pianoteRed }}
+          forceInset={{
+            top: 'always',
+            bottom: 'always'
+          }}
         >
-          <View
-            key={'goBackIcon'}
-            style={[
-              styles.centerContent,
-              {
-                position: 'absolute',
-                left: 17.5 * factorHorizontal,
-                top: isNotch ? 50 * factorVertical : 30 * factorVertical,
-                height: 50 * factorRatio,
-                width: 50 * factorRatio,
-                zIndex: 10
-              }
-            ]}
-          >
+          <View style={{ flex: 1 }}>
+            <StatusBar
+              backgroundColor={colors.pianoteRed}
+              barStyle='light-content'
+            />
             <TouchableOpacity
+              style={{ position: 'absolute', left: 15, padding: 5 }}
               onPress={() => {
+                if (isTablet) Orientation.unlockAllOrientations();
                 this.props.navigation.state.params.type == 'SIGNUP'
                   ? this.props.navigation.goBack()
                   : this.props.navigation.navigate('LOGINCREDENTIALS');
-              }}
-              style={{
-                height: '100%',
-                width: '100%'
               }}
             >
               <EntypoIcon
@@ -192,659 +210,322 @@ export default class NewMembership extends React.Component {
                 color={'white'}
               />
             </TouchableOpacity>
-          </View>
-          <View
-            key={'redHalf'}
-            style={{
-              height: fullHeight * 0.5,
-              width: fullWidth
-            }}
-          />
-          <View
-            key={'blackHalf'}
-            style={{
-              height: fullHeight * 0.65,
-              width: fullWidth * 1.7,
-              borderTopLeftRadius: 225 * factorRatio,
-              borderTopRightRadius: 225 * factorRatio,
-              backgroundColor: '#181a1a',
-              opacity: 1
-            }}
-          />
-          <View
-            key={'content'}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: fullHeight,
-              width: fullWidth,
-              zIndex: 2
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <View
-                key={'buff0'}
-                style={{
-                  height:
-                    Platform.OS == 'ios'
-                      ? fullHeight * 0.115
-                      : fullHeight * 0.085
-                }}
-              />
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                marginTop: 5,
+                marginHorizontal: '10%',
+                zIndex: 1,
+                justifyContent: 'space-evenly'
+              }}
+            >
               <Text
-                key={'7day'}
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 26 * factorRatio,
-                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                  textAlign: 'center',
-                  color: 'white'
+                  color: 'white',
+                  fontSize: 3 * fontIndex,
+                  fontFamily: 'OpenSans-Bold',
+                  textAlign: 'center'
                 }}
               >
                 Start Your 7-Day {'\n'} FREE Trial Today
               </Text>
-              <View style={{ height: fullHeight * 0.01 }} />
               <Text
-                key={'onUs'}
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  textAlign: 'center',
                   color: 'white',
-                  paddingLeft: fullWidth * 0.1,
-                  paddingRight: fullWidth * 0.1
+                  fontSize: isTablet ? 1.5 * fontIndex : 2 * fontIndex,
+                  fontFamily: 'OpenSans',
+                  textAlign: 'center'
                 }}
               >
-                Your first 7 days are on us. Choose the plan that will start
-                after your trial ends.
+                {`Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`}
               </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-end',
+                zIndex: 1
+              }}
+            >
               <View
-                key={'programs'}
-                style={{
-                  height: fullHeight * 0.35,
-                  width: fullWidth
-                }}
+                style={[
+                  styles.planContainer,
+                  {
+                    marginLeft: isTablet ? '15%' : '3%',
+                    marginRight: 5
+                  }
+                ]}
               >
-                <View style={{ flex: 1 }} />
-                <View
-                  key={'plans'}
-                  style={{
-                    height: '85%',
-                    width: fullWidth,
-                    flexDirection: 'row'
-                  }}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View
-                    key={'plan1'}
-                    style={{
-                      width: fullWidth * 0.45,
-                      height: '100%'
-                    }}
-                  >
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={{
-                        height: '90%',
-                        width: '100%',
-                        backgroundColor: 'white',
-                        borderRadius: 10 * factorRatio,
-                        borderBottomLeftRadius: 10 * factorRatio,
-                        borderBottomRightRadius: 10 * factorRatio
-                      }}
-                    >
-                      <View style={{ flex: 0.05 }} />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 18 * factorRatio,
-                          fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
-                          textAlign: 'center'
-                        }}
-                      >
-                        MONTHLY PLAN
-                      </Text>
-                      <View style={{ flex: 0.015 }} />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 8 * factorRatio,
-                          fontWeight: '400',
-                          textAlign: 'center'
-                        }}
-                      >
-                        If you prefer flexibility
-                      </Text>
-                      <View
-                        style={{
-                          flex: 0.125,
-                          borderBottomColor: '#ececec',
-                          borderBottomWidth: 1
-                        }}
-                      />
-                      <View
-                        style={{
-                          flex: 0.125
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 28 * factorRatio,
-                          fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
-                          textAlign: 'center'
-                        }}
-                      >
-                        $29.99
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 9 * factorRatio,
-                            color: 'grey'
-                          }}
-                        >
-                          /mo
-                        </Text>
-                      </Text>
-                      <View
-                        style={{
-                          position: 'absolute',
-                          bottom: '7.5%',
-                          height: '30%',
-                          width: '100%',
-                          flexDirection: 'row'
-                        }}
-                      >
-                        <View style={{ flex: 1 }} />
-                        <TouchableOpacity
-                          onPress={() => this.startPlan(skus[0])}
-                          style={{
-                            height: '80%',
-                            width: '90%',
-                            borderRadius: 50 * factorRatio,
-                            backgroundColor: '#fb1b2f'
-                          }}
-                        >
-                          <View style={{ flex: 1 }} />
-                          <Text
-                            style={{
-                              fontFamily: 'OpenSans-Regular',
-                              textAlign: 'center',
-                              color: 'white',
-                              fontSize: 13 * factorRatio,
-                              fontWeight: Platform.OS == 'ios' ? '700' : 'bold'
-                            }}
-                          >
-                            START YOUR{'\n'}7-DAY FREE TRIAL
-                          </Text>
-                          <View style={{ flex: 1 }} />
-                        </TouchableOpacity>
-                        <View style={{ flex: 1 }} />
-                      </View>
-                    </View>
-                  </View>
-                  <View style={{ flex: 1 }} />
-                  <View
-                    key={'plan2'}
-                    style={{
-                      width: fullWidth * 0.45,
-                      height: '100%',
-                      borderRadius: 10 * factorRatio,
-                      backgroundColor: 'white'
-                    }}
-                  >
-                    <View
-                      style={{
-                        height: '10%',
-                        width: '100%',
-                        borderTopLeftRadius: 10 * factorRatio,
-                        borderTopRightRadius: 10 * factorRatio,
-                        backgroundColor: 'black'
-                      }}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 10 * factorRatio,
-                          fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
-                          textAlign: 'center',
-                          color: 'white'
-                        }}
-                      >
-                        SAVE 45% VS MONTHLY
-                      </Text>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View
-                      style={{
-                        height: '90%',
-                        width: '100%',
-                        backgroundColor: 'white',
-                        borderBottomLeftRadius: 10 * factorRatio,
-                        borderBottomRightRadius: 10 * factorRatio
-                      }}
-                    >
-                      <View style={{ flex: 0.05 }} />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 18 * factorRatio,
-                          fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
-                          textAlign: 'center'
-                        }}
-                      >
-                        ANNUAL PLAN
-                      </Text>
-                      <View style={{ flex: 0.015 }} />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 8 * factorRatio,
-                          fontWeight: '400',
-                          textAlign: 'center'
-                        }}
-                      >
-                        If you're commited to improving
-                      </Text>
-                      <View
-                        style={{
-                          flex: 0.125,
-                          borderBottomColor: '#ececec',
-                          borderBottomWidth: 1
-                        }}
-                      />
-                      <View style={{ flex: 0.125 }} />
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 28 * factorRatio,
-                          fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
-                          textAlign: 'center'
-                        }}
-                      >
-                        $199.99
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 9 * factorRatio,
-                            color: 'grey'
-                          }}
-                        >
-                          /yr
-                        </Text>
-                      </Text>
-                      <View
-                        style={{
-                          position: 'absolute',
-                          bottom: '7.5%',
-                          height: '30%',
-                          width: '100%',
-                          flexDirection: 'row'
-                        }}
-                      >
-                        <View style={{ flex: 1 }} />
-                        <TouchableOpacity
-                          onPress={() => this.startPlan(skus[1])}
-                          style={{
-                            height: '80%',
-                            width: '90%',
-                            borderRadius: 50 * factorRatio,
-                            backgroundColor: '#fb1b2f'
-                          }}
-                        >
-                          <View style={{ flex: 1 }} />
-                          <Text
-                            style={{
-                              fontFamily: 'OpenSans-Regular',
-                              textAlign: 'center',
-                              color: 'white',
-                              fontSize: 13 * factorRatio,
-                              fontWeight: Platform.OS == 'ios' ? '700' : 'bold'
-                            }}
-                          >
-                            START YOUR{'\n'}7-DAY FREE TRIAL
-                          </Text>
-                          <View style={{ flex: 1 }} />
-                        </TouchableOpacity>
-                        <View style={{ flex: 1 }} />
-                      </View>
-                    </View>
-                  </View>
-                  <View style={{ flex: 1 }} />
+                <View style={styles.planHeader}>
+                  <Text style={styles.planTitle}>MONTHLY PLAN</Text>
+                  <Text style={styles.planSubtitle}>
+                    If you prefer flexibility.
+                  </Text>
                 </View>
-                <View style={{ flex: 1 }} />
+                <View style={styles.planBody}>
+                  <View
+                    style={{
+                      paddingVertical:
+                        windowDim.height * PixelRatio.get() < 900 ? 5 : 10
+                    }}
+                  >
+                    <View
+                      style={{ flexDirection: 'row', alignItems: 'flex-end' }}
+                    >
+                      <Text style={styles.planPrice}>$29.99</Text>
+                      <Text style={styles.planSubtitle}>/mo</Text>
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.planBtn}
+                    onPress={() => this.startPlan(skus[0])}
+                  >
+                    <Text style={styles.planBtnText}>
+                      {`START YOUR \n 7-DAY FREE TRIAL`}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              {this.state.newUser == 'SIGNUP' && (
+
+              <View
+                style={[
+                  styles.planContainer,
+                  {
+                    marginLeft: 5,
+                    marginRight: isTablet ? '15%' : '3%'
+                  }
+                ]}
+              >
                 <View
-                  key={'progress'}
                   style={{
-                    height: fullHeight * 0.06,
-                    width: fullWidth,
-                    zIndex: 4,
-                    flexDirection: 'row'
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'black',
+                    height: isTablet ? 30 : 20,
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10
                   }}
                 >
-                  <View style={{ flex: 1 }} />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'OpenSans-Semibold',
+                      fontSize: isTablet ? 12 : 10,
+                      color: '#ffffff'
+                    }}
+                  >
+                    SAVE 45% VS MONTHLY.
+                  </Text>
+                </View>
+                <View style={styles.planHeader}>
+                  <Text style={styles.planTitle}>ANNUAL PLAN</Text>
+                  <Text style={styles.planSubtitle}>
+                    If you're commited to improving.
+                  </Text>
+                </View>
+                <View style={styles.planBody}>
                   <View
                     style={{
-                      height: '100%',
-                      width: '92.5%',
-                      borderRadius: 40 * factorRatio,
-                      borderWidth: 2 * factorRatio,
-                      backgroundColor: 'rgba(23, 24, 25, 0.6)',
-                      flexDirection: 'row'
+                      paddingVertical:
+                        windowDim.height * PixelRatio.get() < 900 ? 5 : 10
                     }}
                   >
                     <View
-                      key={'step1'}
                       style={{
-                        flex: 1.1,
-                        height: '100%',
-                        borderTopLeftRadius: 40 * factorRatio,
-                        borderBottomLeftRadius: 40 * factorRatio,
-                        borderTopRightRadius:
-                          this.state.step == 1 ? 40 * factorRatio : 0,
-                        borderBottomRightRadius:
-                          this.state.step == 1 ? 40 * factorRatio : 0,
-                        backgroundColor: 'black',
-                        zIndex: 2
+                        flexDirection: 'row',
+                        alignItems: 'flex-end'
                       }}
                     >
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            flex: 1,
-                            borderTopRightRadius:
-                              this.state.step == 1 ? 40 * factorRatio : 0,
-                            borderBottomRightRadius:
-                              this.state.step == 1 ? 40 * factorRatio : 0
-                          }
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 10 * factorRatio,
-                            fontWeight: '400',
-                            textAlign: 'center',
-                            color: 'white'
-                          }}
-                        >
-                          Step 1:
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 10 * factorRatio,
-                            fontWeight: '600',
-                            textAlign: 'center',
-                            color: 'white'
-                          }}
-                        >
-                          EMAIL ADDRESS
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      key={'step2'}
-                      style={{
-                        flex: 1.1,
-                        borderTopRightRadius:
-                          this.state.step == 1 ? 40 * factorRatio : 0,
-                        borderBottomRightRadius:
-                          this.state.step == 1 ? 40 * factorRatio : 0
-                      }}
-                    >
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            flex: 1,
-                            borderTopRightRadius:
-                              this.state.step == 2 ? 40 * factorRatio : 0,
-                            borderBottomRightRadius:
-                              this.state.step == 2 ? 40 * factorRatio : 0,
-                            backgroundColor:
-                              this.state.step > 1 ? 'black' : null
-                          }
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 10 * factorRatio,
-                            fontWeight: '400',
-                            textAlign: 'center',
-                            color: 'white'
-                          }}
-                        >
-                          Step 2:
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 10 * factorRatio,
-                            fontWeight: '600',
-                            textAlign: 'center',
-                            color: 'white'
-                          }}
-                        >
-                          SET A PASSWORD
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      key={'step3'}
-                      style={{
-                        flex: 1,
-                        borderTopRightRadius:
-                          this.state.step == 3 ? 40 * factorRatio : 0,
-                        borderBottomRightRadius:
-                          this.state.step == 3 ? 40 * factorRatio : 0
-                      }}
-                    >
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            flex: 1,
-                            borderTopRightRadius:
-                              this.state.step == 3 ? 40 * factorRatio : 0,
-                            borderBottomRightRadius:
-                              this.state.step == 3 ? 40 * factorRatio : 0,
-                            backgroundColor:
-                              this.state.step > 2 ? 'black' : null
-                          }
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            fontSize: 10 * factorRatio,
-                            fontWeight: '400',
-                            textAlign: 'center',
-                            color: 'white'
-                          }}
-                        >
-                          Step 3:
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 10 * factorRatio,
-                            fontWeight: '600',
-                            textAlign: 'center',
-                            color: 'white'
-                          }}
-                        >
-                          CHOOSE A PLAN
-                        </Text>
-                      </View>
+                      <Text style={styles.planPrice}>$199.99</Text>
+                      <Text style={styles.planSubtitle}>/yr</Text>
                     </View>
                   </View>
-                  <View style={{ flex: 1 }} />
+
+                  <TouchableOpacity
+                    style={styles.planBtn}
+                    onPress={() => this.startPlan(skus[1])}
+                  >
+                    <Text style={styles.planBtnText}>
+                      {`START YOUR \n 7-DAY FREE TRIAL`}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
-              )}
-              <View key={'buff2'} style={{ height: fullHeight * 0.025 }} />
+              </View>
+            </View>
+            {this.state.newUser == 'SIGNUP' && (
               <View
-                key={'words'}
                 style={{
-                  height: fullHeight * 0.15,
-                  width: fullWidth
+                  zIndex: 5,
+                  marginTop: '3%',
+                  marginHorizontal: isTablet ? '15%' : '3%'
                 }}
               >
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontSize: 14 * factorRatio,
-                    color: 'white'
-                  }}
-                >
-                  <AntIcon
-                    name={'check'}
-                    size={14 * factorVertical}
-                    color={'white'}
-                  />{' '}
-                  Pay nothing for 7 days.
-                </Text>
+                <CreateAccountStepCounter step={3} />
+              </View>
+            )}
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1,
+                marginTop: 5
+              }}
+            >
+              {benefits.map((benefit, i) => (
                 <View
+                  key={i}
                   style={{
-                    height: onTablet ? 5 : 7.5 * factorRatio
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    fontSize: 14 * factorRatio,
-                    color: 'white'
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                   }}
                 >
                   <AntIcon
                     name={'check'}
-                    size={14 * factorVertical}
+                    size={isTablet ? 1.3 * fontIndex : 2 * fontIndex}
                     color={'white'}
                   />
-                  {' Award-winning piano lessons & more.'}
-                </Text>
-                <View
-                  style={{
-                    height: onTablet ? 5 : 7.5 * factorRatio
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    fontSize: 14 * factorRatio,
-                    color: 'white'
-                  }}
-                >
-                  <AntIcon
-                    name={'check'}
-                    size={14 * factorVertical}
-                    color={'white'}
-                  />{' '}
-                  Access to the Pianote Experience app.
-                </Text>
-                <View
-                  style={{
-                    height: onTablet ? 5 : 7.5 * factorRatio
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    fontSize: 14 * factorRatio,
-                    color: 'white'
-                  }}
-                >
-                  <AntIcon
-                    name={'check'}
-                    size={14 * factorVertical}
-                    color={'white'}
-                  />{' '}
-                  Access to the Pianote Experience website.
-                </Text>
-                <View
-                  style={{
-                    height: onTablet ? 5 : 7.5 * factorRatio
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    fontSize: 14 * factorRatio,
-                    color: 'white'
-                  }}
-                >
-                  <AntIcon
-                    name={'check'}
-                    size={14 * factorVertical}
-                    color={'white'}
-                  />{' '}
-                  Cancel anytime through the App Store.
-                </Text>
-              </View>
-              <View
-                key={'buff3'}
-                style={{
-                  height:
-                    this.state.newUser == 'SIGNUP'
-                      ? fullHeight * 0.045
-                      : fullHeight * 0.12
+
+                  <Text
+                    style={{
+                      color: '#ffffff',
+                      fontFamily: 'OpenSans',
+                      fontSize: isTablet ? 1.3 * fontIndex : 1.5 * fontIndex,
+                      marginLeft: 5
+                    }}
+                  >
+                    {benefit}
+                  </Text>
+                </View>
+              ))}
+              <TouchableOpacity
+                onPress={() => {
+                  this.state.newUser == 'SIGNUP'
+                    ? this.props.navigation.navigate('LOGINCREDENTIALS')
+                    : this.restorePurchases();
                 }}
-              />
-              <View key={'alreadyMember'}>
+                style={{ paddingTop: 20 }}
+              >
                 <Text
-                  onPress={() => {
-                    this.state.newUser == 'SIGNUP'
-                      ? this.props.navigation.navigate('LOGINCREDENTIALS')
-                      : this.restorePurchases();
-                  }}
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'grey',
-                    fontSize: 14 * factorVertical,
-                    textAlign: 'center',
-                    textDecorationLine: 'underline'
-                  }}
+                  style={[
+                    styles.underlineText,
+                    { fontSize: isTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
+                  ]}
                 >
                   {this.state.newUser == 'SIGNUP'
                     ? 'Already A Member? Log In.'
                     : 'Restore purchases'}
                 </Text>
-                <View style={{ height: 2 * factorVertical }} />
-                {this.state.newUser == 'SIGNUP' && (
+              </TouchableOpacity>
+              {this.state.newUser == 'SIGNUP' && (
+                <TouchableOpacity
+                  style={{
+                    paddingTop: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                  onPress={() => {
+                    this.props.navigation.navigate('TERMS');
+                  }}
+                >
                   <Text
-                    onPress={() => {
-                      this.props.navigation.navigate('TERMS');
-                    }}
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'grey',
-                      fontSize: 14 * factorVertical,
-                      textAlign: 'center',
-                      textDecorationLine: 'underline'
-                    }}
+                    style={[
+                      styles.underlineText,
+                      { fontSize: isTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
+                    ]}
                   >
                     Terms - Privacy
                   </Text>
-                )}
-              </View>
+                </TouchableOpacity>
+              )}
             </View>
+            <View
+              style={{
+                zIndex: 0,
+                backgroundColor: '#191b1c',
+                position: 'absolute',
+                alignSelf: 'center',
+                height: height,
+                borderRadius: height / 4,
+                aspectRatio: 1,
+                top: '50%'
+              }}
+            ></View>
           </View>
-        </View>
-        <Loading
-          ref={ref => {
-            this.loadingRef = ref;
-          }}
-        />
-        <CustomModal
-          ref={ref => {
-            this.customModal = ref;
-          }}
-        />
+          <Loading
+            ref={ref => {
+              this.loadingRef = ref;
+            }}
+          />
+          <CustomModal
+            ref={ref => {
+              this.customModal = ref;
+            }}
+          />
+        </SafeAreaView>
       </>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  planContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    flex: 1
+  },
+  planHeader: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomColor: '#e5e8e8',
+    borderBottomWidth: 1,
+    padding: windowDim.height * PixelRatio.get() < 900 ? 5 : 10
+  },
+  planBody: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  planTitle: {
+    fontFamily: 'RobotoCondensed-Bold',
+    color: '#000000',
+    fontSize: 2.2 * fontIndex,
+    textAlign: 'center'
+  },
+  planSubtitle: {
+    fontFamily: 'OpenSans',
+    color: '#000000',
+    fontSize: fontIndex,
+    textAlign: 'center',
+    marginBottom: isTablet ? 15 : 5
+  },
+  planPrice: {
+    fontFamily: 'OpenSans-Bold',
+    color: '#000000',
+    fontSize: 3 * fontIndex
+  },
+  planBtn: {
+    backgroundColor: '#fb1b2f',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: isTablet ? 30 : 15,
+    marginTop: isTablet ? 30 : 0,
+    width: '80%'
+  },
+  planBtnText: {
+    color: '#ffffff',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: isTablet ? 16 : 13,
+    textAlign: 'center',
+    padding: isTablet ? 16 : 10
+  },
+  underlineText: {
+    color: 'white',
+    fontSize: 12,
+    fontFamily: 'OpenSans',
+    textAlign: 'center',
+    textDecorationLine: 'underline'
+  }
+});

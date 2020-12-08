@@ -60,10 +60,10 @@ export default class Lessons extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      showFilters: false, 
+      showFilters: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null, 
+      filtersAvailable: null,
       filters: {
         displayTopics: [],
         topics: [],
@@ -147,29 +147,27 @@ export default class Lessons extends React.Component {
           })
         );
 
-        if(maxLevel.lessons == null) {
-          maxLevel.lessons = Number(content[1].meta.filterOptions.difficulty.length - 1)
+        if (maxLevel.lessons == null) {
+          maxLevel.lessons = Number(
+            content[1].meta.filterOptions.difficulty.length - 1
+          );
         }
 
-        this.setState(
-          {
-            foundationIsStarted: foundation.started,
-            foundationIsCompleted: foundation.completed,
-            foundationNextLesson: foundation.next_lesson,
-            filtersAvailable: content[1].meta.filterOptions,
-            allLessons: allVideos,
-            progressLessons: inprogressVideos,
-            outVideos:
-              allVideos.length == 0 || content[1].data.length < 20
-                ? true
-                : false,
-            filtering: false,
-            isPaging: false,
-            lessonsStarted: inprogressVideos.length !== 0,
-            refreshing: false,
-            refreshControl: fromCache
-          }
-        );
+        this.setState({
+          foundationIsStarted: foundation.started,
+          foundationIsCompleted: foundation.completed,
+          foundationNextLesson: foundation.next_lesson,
+          filtersAvailable: content[1].meta.filterOptions,
+          allLessons: allVideos,
+          progressLessons: inprogressVideos,
+          outVideos:
+            allVideos.length == 0 || content[1].data.length < 20 ? true : false,
+          filtering: false,
+          isPaging: false,
+          lessonsStarted: inprogressVideos.length !== 0,
+          refreshing: false,
+          refreshControl: fromCache
+        });
 
         AsyncStorage.multiSet([
           ['foundationsIsStarted', foundation.started.toString()],
@@ -406,13 +404,11 @@ export default class Lessons extends React.Component {
 
   render() {
     return (
-      <View
-        style={[styles.container, {backgroundColor: 'black'}]}
-      >
-        <NavMenuHeaders 
+      <View style={[styles.container, { backgroundColor: 'black' }]}>
+        <NavMenuHeaders
           isMethod={true}
-          currentPage={'LESSONS'} 
-          parentPage={'LESSONS'} 
+          currentPage={'LESSONS'}
+          parentPage={'LESSONS'}
         />
         {!this.state.refreshing ? (
           <ScrollView
@@ -439,7 +435,7 @@ export default class Lessons extends React.Component {
                 styles.centerContent,
                 {
                   width: '100%',
-                  height: fullHeight*0.61
+                  height: fullHeight * 0.61
                 }
               ]}
             >
@@ -455,7 +451,7 @@ export default class Lessons extends React.Component {
                   alignSelf: 'stretch',
                   backgroundColor: 'black'
                 }}
-                source={require('/Users/kp98/Pianote2/src/assets/img/imgs/lisamethod.png')}
+                source={require('../../assets/img/imgs/lisamethod.png')}
                 resizeMode={FastImage.resizeMode.cover}
               />
               <View
@@ -476,17 +472,17 @@ export default class Lessons extends React.Component {
                     fill={colors.pianoteRed}
                   />
                 </View>
-                <View style={{height: 7.5*factorVertical}}/>
+                <View style={{ height: 7.5 * factorVertical }} />
                 <FastImage
                   style={{
                     width: fullWidth,
-                    height: 40*factorVertical,
-                    alignSelf: 'stretch',
+                    height: 40 * factorVertical,
+                    alignSelf: 'stretch'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-                <View style={{height: 10*factorVertical}}/>
+                <View style={{ height: 10 * factorVertical }} />
                 <View style={{ flex: 0.035 }} />
 
                 <View
@@ -495,7 +491,7 @@ export default class Lessons extends React.Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingHorizontal: 15,
+                    paddingHorizontal: 15
                   }}
                 >
                   {this.state.foundationIsCompleted ? (
@@ -538,7 +534,7 @@ export default class Lessons extends React.Component {
                 <View style={{ flex: 0.1 }} />
               </View>
             </View>
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
             <View>
               {this.state.lessonsStarted && (
                 <View
@@ -595,7 +591,7 @@ export default class Lessons extends React.Component {
                   containerWidth={fullWidth} // width of list
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                  filterResults={() => this.setState({showFilters: true})} // apply from filters page
+                  filterResults={() => this.setState({ showFilters: true })} // apply from filters page
                   containerHeight={
                     onTablet
                       ? fullHeight * 0.15
@@ -668,35 +664,38 @@ export default class Lessons extends React.Component {
           hasBackdrop={true}
         >
           <Filters
-            hideFilters={() => this.setState({showFilters: false})}
+            hideFilters={() => this.setState({ showFilters: false })}
             filtersAvailable={this.state.filters}
             filters={this.state.filters}
             type={'Lessons'}
-            reset={(filters) => {
-              this.setState({
+            reset={filters => {
+              this.setState(
+                {
                   allLessons: [],
-                  filters,
-              }, () => this.getAllLessons())
+                  filters
+                },
+                () => this.getAllLessons()
+              );
             }}
-            onGoBack={(filters) => {
-              this.setState({
-                allLessons: [],
-                filters:
-                  filters.instructors.length == 0 &&
-                  filters.level.length == 0 &&
-                  filters.progress.length == 0 &&
-                  filters.topics.length == 0
-                    ? null
-                    : filters
-              }, () => this.getAllLessons())
+            onGoBack={filters => {
+              this.setState(
+                {
+                  allLessons: [],
+                  filters:
+                    filters.instructors.length == 0 &&
+                    filters.level.length == 0 &&
+                    filters.progress.length == 0 &&
+                    filters.topics.length == 0
+                      ? null
+                      : filters
+                },
+                () => this.getAllLessons()
+              );
             }}
           />
         </Modal>
-        
-        <NavigationBar 
-          currentPage={'LESSONS'} 
-          isMethod={true}
-        />
+
+        <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>
     );
   }
