@@ -14,8 +14,8 @@ const navigationOptions = [
     navigator: 'LESSONS'
   },
   {
-    title: 'Foundations',
-    navigator: 'FOUNDATIONS'
+    title: 'Method',
+    navigator: 'METHOD'
   },
   {
     title: 'Courses',
@@ -66,7 +66,7 @@ class NavigationMenu extends React.Component {
 
   lessonNav() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 0.85 }}>
         {navigationOptions.map((nav, index) => (
           <TouchableOpacity
             key={index}
@@ -102,7 +102,7 @@ class NavigationMenu extends React.Component {
                 color:
                   this.props.parentPage == nav.title.toUpperCase()
                     ? 'white'
-                    : colors.secondBackground,
+                    : (this.props.isMethod ? colors.pianoteGrey : colors.secondBackground),
                 fontSize:
                   (this.props.parentPage == nav.title.toUpperCase()
                     ? 32.5 * factorRatio
@@ -113,9 +113,28 @@ class NavigationMenu extends React.Component {
             </Text>
           </TouchableOpacity>
         ))}
+      </View>
+    );
+  }
+
+  render = () => {
+    return (
+      <View
+        key={'componentContainer'}
+        style={{
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground,
+          paddingVertical: 30 * factorRatio
+        }}
+      >
+        <View style={{height: 30*factorVertical}}/>
+        {this.lessonNav()}
         <View
           style={{
-            flex: 2,
+            flex: 0.1,
             alignSelf: 'center'
           }}
         >
@@ -133,24 +152,7 @@ class NavigationMenu extends React.Component {
             />
           </TouchableOpacity>
         </View>
-      </View>
-    );
-  }
-
-  render = () => {
-    return (
-      <View
-        key={'componentContainer'}
-        style={{
-          width: '100%',
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: colors.mainBackground,
-          paddingVertical: 30 * factorRatio
-        }}
-      >
-        {this.lessonNav()}
+        <View style={{height: 30*factorVertical}}/>
       </View>
     );
   };

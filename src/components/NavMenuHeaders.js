@@ -234,6 +234,7 @@ class NavMenuHeaders extends React.Component {
           hasBackdrop={false}
         >
           <NavigationMenu
+            isMethod={this.props.isMethod}
             onClose={e => this.setState({ showModalMenu: e })}
             menu={this.state.menu}
             parentPage={this.props.parentPage}

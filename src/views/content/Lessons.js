@@ -476,18 +476,17 @@ export default class Lessons extends React.Component {
                     fill={colors.pianoteRed}
                   />
                 </View>
-                <Text
-                  key={'foundations'}
+                <View style={{height: 7.5*factorVertical}}/>
+                <FastImage
                   style={{
-                    fontSize: 50 * factorRatio,
-                    color: 'white',
-                    fontFamily: 'RobotoCondensed-Bold',
-                    transform: [{ scaleX: 0.7 }],
-                    textAlign: 'center'
+                    width: fullWidth,
+                    height: 40*factorVertical,
+                    alignSelf: 'stretch',
                   }}
-                >
-                  FOUNDATIONS
-                </Text>
+                  source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+                <View style={{height: 10*factorVertical}}/>
                 <View style={{ flex: 0.035 }} />
 
                 <View
@@ -552,7 +551,7 @@ export default class Lessons extends React.Component {
                 >
                   <HorizontalVideoList
                     isMethod={true}
-                    Title={'CONTINUE'}
+                    Title={'IN PROGRESS'}
                     seeAll={() =>
                       this.props.navigation.navigate('SEEALL', {
                         title: 'Continue',
