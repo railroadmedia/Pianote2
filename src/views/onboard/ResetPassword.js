@@ -22,7 +22,6 @@ import Back from '../../assets/img/svgs/back';
 import PasswordVisible from 'Pianote2/src/assets/img/svgs/passwordVisible.svg';
 import CustomModal from '../../modals/CustomModal';
 import { changePassword } from '../../services/UserDataAuth';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 export default class ResetPassword extends React.Component {

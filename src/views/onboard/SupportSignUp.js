@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { SafeAreaView } from 'react-navigation';
 
 export default class SupportSignUp extends React.Component {
   static navigationOptions = { header: null };
@@ -29,20 +30,14 @@ export default class SupportSignUp extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignSelf: 'stretch' }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <View
           style={{
-            height: fullHeight - navHeight,
+            flex: 1,
             alignSelf: 'stretch',
             backgroundColor: colors.mainBackground
           }}
         >
-          <View
-            key={'buffer'}
-            style={{
-              height: isNotch ? 15 * factorVertical : 0
-            }}
-          />
           <View
             key={'header'}
             style={[
@@ -287,7 +282,7 @@ export default class SupportSignUp extends React.Component {
             </Text>
           </ScrollView>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
