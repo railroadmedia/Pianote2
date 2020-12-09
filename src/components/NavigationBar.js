@@ -4,6 +4,8 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import { View, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
+
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -24,7 +26,9 @@ class NavigationBar extends React.Component {
     this.state = {
       profileImage: '',
       onMain: false,
-      secondaryColor: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
+      secondaryColor: this.props.isMethod
+        ? colors.pianoteGrey
+        : colors.secondBackground,
       primaryColor: this.props.isMethod ? colors.pianoteRed : 'white'
     };
   }
@@ -74,12 +78,17 @@ class NavigationBar extends React.Component {
 
   render = () => {
     return (
-      <View
+      <SafeAreaView
+        forceInset={{
+          left: 'never',
+          right: 'never',
+          top: 'never',
+          bottom: 'always'
+        }}
         style={{
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
-        <View style={{ flex: 1 }} />
         <View
           key={'icons'}
           style={{
@@ -145,8 +154,8 @@ class NavigationBar extends React.Component {
               size={40 * factorRatio}
               color={
                 this.props.currentPage == 'SEARCH'
-                ? this.state.primaryColor
-                : this.state.secondaryColor
+                  ? this.state.primaryColor
+                  : this.state.secondaryColor
               }
             />
           </TouchableOpacity>
@@ -172,8 +181,8 @@ class NavigationBar extends React.Component {
               size={30 * factorRatio}
               color={
                 this.props.currentPage == 'DOWNLOAD'
-                ? this.state.primaryColor
-                : this.state.secondaryColor
+                  ? this.state.primaryColor
+                  : this.state.secondaryColor
               }
             />
           </TouchableOpacity>
@@ -219,9 +228,7 @@ class NavigationBar extends React.Component {
             <View style={{ height: 2 * factorVertical }} />
           </TouchableOpacity>
         </View>
-        <View style={{ flex: 1 }} />
-        <View style={{ height: isNotch ? 15 : 0 }} />
-      </View>
+      </SafeAreaView>
     );
   };
 }

@@ -274,9 +274,7 @@ export default class PathOverview extends React.Component {
                 {
                   position: 'absolute',
                   left: 10 * factorHorizontal,
-                  top: isNotch
-                    ? 55 * factorVertical - fullHeight * 0.05
-                    : 45 * factorVertical - fullHeight * 0.03,
+                  top: 10,
                   height: 35 * factorRatio,
                   width: 35 * factorRatio,
                   borderRadius: 100,
@@ -362,7 +360,6 @@ export default class PathOverview extends React.Component {
             <View
               key={'thumb/Start/Info'}
               style={{
-                height: onTablet ? fullHeight * 0.065 : fullHeight * 0.053,
                 width: '100%',
                 justifyContent: 'space-evenly',
                 alignItems: 'center',
@@ -694,53 +691,41 @@ export default class PathOverview extends React.Component {
             </View>
           )}
           <View style={{ height: 15 * factorVertical }} />
-          <View
-            key={'verticalVideoList'}
-            style={[
-              styles.centerContent,
-              {
-                minHeight: fullHeight * 0.29 * 0.90625,
-                justifyContent: 'space-around',
-                alignContent: 'space-around',
-                flexDirection: 'row'
-              }
-            ]}
-          >
-            <VerticalVideoList
-              items={this.state.items}
-              isLoading={false}
-              title={'Foundations'} // title for see all page
-              showFilter={false}
-              showType={false}
-              showArtist={false}
-              showLength={true}
-              showSort={false}
-              imageRadius={5 * factorRatio} // radius of image shown
-              containerBorderWidth={0} // border of box
-              containerWidth={fullWidth} // width of list
-              containerHeight={
-                onTablet
-                  ? fullHeight * 0.15
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.115
-                  : fullHeight * 0.0925
-              } // height per row
-              imageHeight={
-                onTablet
-                  ? fullHeight * 0.12
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.09
-                  : fullHeight * 0.0825
-              } // image height
-              imageWidth={fullWidth * 0.26} // image width
-              navigator={row =>
-                this.props.navigation.navigate('VIDEOPLAYER', {
-                  id: row.id,
-                  parentId: this.state.data.id
-                })
-              }
-            />
-          </View>
+
+          <VerticalVideoList
+            items={this.state.items}
+            isLoading={false}
+            title={'Foundations'} // title for see all page
+            showFilter={false}
+            showType={false}
+            showArtist={false}
+            showLength={true}
+            showSort={false}
+            imageRadius={5 * factorRatio} // radius of image shown
+            containerBorderWidth={0} // border of box
+            containerWidth={fullWidth} // width of list
+            containerHeight={
+              onTablet
+                ? fullHeight * 0.15
+                : Platform.OS == 'android'
+                ? fullHeight * 0.115
+                : fullHeight * 0.0925
+            } // height per row
+            imageHeight={
+              onTablet
+                ? fullHeight * 0.12
+                : Platform.OS == 'android'
+                ? fullHeight * 0.09
+                : fullHeight * 0.0825
+            } // image height
+            imageWidth={fullWidth * 0.26} // image width
+            navigator={row =>
+              this.props.navigation.navigate('VIDEOPLAYER', {
+                id: row.id,
+                parentId: this.state.data.id
+              })
+            }
+          />
         </ScrollView>
 
         <Modal

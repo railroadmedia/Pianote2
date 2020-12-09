@@ -198,21 +198,10 @@ export default class MyList extends React.Component {
   };
 
   render() {
-    console.log(this.state.allLessons, this.state.refreshing);
     return (
-      <View style={styles.container}>
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            flex: 1,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'MYLIST'} />
-        </View>
+      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+        <NavMenuHeaders currentPage={'MYLIST'} />
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
@@ -229,39 +218,18 @@ export default class MyList extends React.Component {
             backgroundColor: colors.mainBackground
           }}
         >
-          <View
-            key={'header'}
-            style={{
-              height: fullHeight * 0.1,
-              backgroundColor: colors.thirdBackground
-            }}
-          />
-          <View
-            key={'backgroundColoring'}
-            style={{
-              backgroundColor: colors.thirdBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              elevation: 10
-            }}
-          ></View>
-          <View style={{ height: 30 * factorVertical }} />
           <Text
             style={{
               paddingLeft: 12 * factorHorizontal,
               fontSize: 30 * factorRatio,
               color: 'white',
               fontFamily: 'OpenSans-ExtraBold',
-              fontStyle: 'normal'
+              fontStyle: 'normal',
+              paddingBottom: 30 * factorVertical
             }}
           >
             My List
           </Text>
-          <View style={{ height: 30 * factorVertical }} />
           <TouchableOpacity
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
@@ -270,46 +238,39 @@ export default class MyList extends React.Component {
               });
             }}
             style={{
-              height: fullHeight * 0.075,
               width: '100%',
               borderTopWidth: 0.25 * factorRatio,
               borderTopColor: colors.secondBackground,
               borderBottomWidth: 0.25 * factorRatio,
               borderBottomColor: colors.secondBackground,
-              flexDirection: 'row'
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
           >
-            <View>
-              <View style={{ flex: 1 }} />
-              <Text
-                style={{
-                  paddingLeft: 12 * factorHorizontal,
-                  fontSize: 20 * factorRatio,
-                  marginBottom: 5 * factorVertical,
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  color: colors.secondBackground
-                }}
-              >
-                In Progress
-              </Text>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={{ flex: 1 }} />
-            <View
+            <Text
+              style={{
+                paddingLeft: 12 * factorHorizontal,
+                fontSize: 20 * factorRatio,
+                marginBottom: 5 * factorVertical,
+                textAlign: 'left',
+                fontWeight: 'bold',
+                fontFamily: 'RobotoCondensed-Bold',
+                color: colors.secondBackground,
+                paddingVertical: 10
+              }}
+            >
+              In Progress
+            </Text>
+
+            <EntypoIcon
+              name={'chevron-thin-right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
               style={{
                 paddingRight: 12 * factorHorizontal
               }}
-            >
-              <View style={{ flex: 1 }} />
-              <EntypoIcon
-                name={'chevron-thin-right'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
-              />
-              <View style={{ flex: 1 }} />
-            </View>
+            />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -319,40 +280,35 @@ export default class MyList extends React.Component {
               });
             }}
             style={{
-              height: fullHeight * 0.075,
               width: '100%',
               borderBottomWidth: 0.25 * factorRatio,
               borderBottomColor: colors.secondBackground,
-              flexDirection: 'row'
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
           >
-            <View>
-              <View style={{ flex: 1 }} />
-              <Text
-                style={{
-                  paddingLeft: 12 * factorHorizontal,
-                  fontSize: 20 * factorRatio,
-                  marginBottom: 5 * factorVertical,
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  color: colors.secondBackground
-                }}
-              >
-                Completed
-              </Text>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={{ flex: 1 }} />
-            <View style={{ paddingRight: 12 * factorHorizontal }}>
-              <View style={{ flex: 1 }} />
-              <EntypoIcon
-                name={'chevron-thin-right'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
-              />
-              <View style={{ flex: 1 }} />
-            </View>
+            <Text
+              style={{
+                paddingLeft: 12 * factorHorizontal,
+                fontSize: 20 * factorRatio,
+                marginBottom: 5 * factorVertical,
+                textAlign: 'left',
+                fontWeight: 'bold',
+                fontFamily: 'RobotoCondensed-Bold',
+                color: colors.secondBackground,
+                paddingVertical: 10
+              }}
+            >
+              Completed
+            </Text>
+
+            <EntypoIcon
+              name={'chevron-thin-right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+              style={{ paddingRight: 12 * factorHorizontal }}
+            />
           </TouchableOpacity>
           <View style={{ height: 15 * factorVertical }} />
           <VerticalVideoList

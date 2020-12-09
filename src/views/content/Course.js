@@ -251,21 +251,9 @@ export default class Course extends React.Component {
 
   render() {
     return (
-      <View
-        style={[styles.container, { backgroundColor: colors.mainBackground }]}
-      >
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            width: fullWidth,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
-        </View>
+      <View style={{ backgroundColor: colors.mainBackground, flex: 1 }}>
+        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
+
         {!this.state.refreshing ? (
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -283,27 +271,6 @@ export default class Course extends React.Component {
               backgroundColor: colors.mainBackground
             }}
           >
-            <View
-              key={'header'}
-              style={{
-                height: fullHeight * 0.1,
-                backgroundColor: colors.thirdBackground
-              }}
-            />
-            <View
-              key={'backgroundColoring'}
-              style={{
-                backgroundColor: colors.thirdBackground,
-                position: 'absolute',
-                height: fullHeight,
-                top: -fullHeight,
-                left: 0,
-                right: 0,
-                zIndex: 10,
-                elevation: 10
-              }}
-            />
-            <View style={{ height: 25 * factorVertical }} />
             <Text
               style={{
                 paddingLeft: 12 * factorHorizontal,
@@ -314,13 +281,11 @@ export default class Course extends React.Component {
             >
               Courses
             </Text>
-            <View style={{ height: 15 * factorVertical }} />
             {this.state.started && (
               <View
                 key={'continueCourses'}
                 style={{
-                  minHeight: fullHeight * 0.225,
-                  paddingLeft: fullWidth * 0.035,
+                  paddingLeft: 15,
                   backgroundColor: colors.mainBackground
                 }}
               >
@@ -382,7 +347,6 @@ export default class Course extends React.Component {
               outVideos={this.state.outVideos}
               getVideos={() => this.getVideos()}
             />
-            <View style={{ height: fullHeight * 0.025 }} />
           </ScrollView>
         ) : (
           <ActivityIndicator

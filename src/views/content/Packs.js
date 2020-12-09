@@ -105,21 +105,8 @@ export default class Packs extends React.Component {
 
   render() {
     return (
-      <View
-        style={[styles.container, { backgroundColor: colors.mainBackground }]}
-      >
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            width: fullWidth,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'PACKS'} />
-        </View>
+      <View style={{ flex: 1, backgroundColor: colors.thirdBackground }}>
+        <NavMenuHeaders currentPage={'PACKS'} />
 
         <FlatList
           windowSize={10}
@@ -143,8 +130,7 @@ export default class Packs extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  height: fullHeight * 0.4,
-                  width: '100%'
+                  flex: 1
                 }
               ]}
             >
@@ -156,103 +142,84 @@ export default class Packs extends React.Component {
             </View>
           )}
           ListHeaderComponent={() => (
-            <View
-              key={'image'}
-              style={[
-                styles.centerContent,
-                {
-                  height: fullHeight * 0.5
-                }
-              ]}
+            <FastImage
+              style={{
+                width: '100%',
+                aspectRatio: 16 / 9,
+                justifyContent: 'flex-end'
+              }}
+              source={{
+                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+                  fullWidth * 2
+                )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
+              }}
+              resizeMode={FastImage.resizeMode.cover}
             >
               <GradientFeature
                 color={'blue'}
                 opacity={1}
                 height={'100%'}
                 borderRadius={0}
+                zIndex={0}
+                elevation={0}
               />
               <FastImage
                 style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  backgroundColor: colors.mainBackground
+                  height: greaterWDim / 10,
+                  width: '100%',
+                  zIndex: 6
                 }}
                 source={{
-                  uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+                  uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
                     fullWidth * 2
-                  )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
+                  )}/${this.state.headerPackLogo}`
                 }}
                 resizeMode={FastImage.resizeMode.contain}
               />
               <View
-                key={'pianoteSVG'}
                 style={{
-                  position: 'absolute',
-                  height: '100%',
-                  width: '100%',
-                  zIndex: 2,
-                  elevation: 2,
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'flex-end'
+                  justifyContent: 'space-evenly',
+                  margin: 15,
+                  zIndex: 3
                 }}
               >
-                <FastImage
-                  style={{
-                    height: greaterWDim / 10,
-                    width: '100%',
-                    borderRadius: 7.5 * factorRatio
-                  }}
-                  source={{
-                    uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
-                      fullWidth * 2
-                    )}/${this.state.headerPackLogo}`
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                    margin: 15
-                  }}
-                >
-                  {this.state.headerPackCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : !this.state.headerPackStarted ? (
-                    <StartIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  ) : (
-                    <ContinueIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  )}
-                  <View style={{ flex: 0.1 }} />
-                  <MoreInfoIcon
-                    pressed={() => {
-                      this.props.navigation.push('SINGLEPACK', {
-                        url: this.state.headerPackUrl
-                      });
-                    }}
+                {this.state.headerPackCompleted ? (
+                  <ResetIcon
+                    pressed={() =>
+                      this.setState({
+                        showRestartCourse: true
+                      })
+                    }
                   />
-                </View>
+                ) : !this.state.headerPackStarted ? (
+                  <StartIcon
+                    pressed={() =>
+                      this.props.navigation.navigate('VIDEOPLAYER', {
+                        url: this.state.headerPackNextLessonUrl
+                      })
+                    }
+                  />
+                ) : (
+                  <ContinueIcon
+                    pressed={() =>
+                      this.props.navigation.navigate('VIDEOPLAYER', {
+                        url: this.state.headerPackNextLessonUrl
+                      })
+                    }
+                  />
+                )}
+                <View style={{ flex: 0.1 }} />
+                <MoreInfoIcon
+                  pressed={() => {
+                    this.props.navigation.push('SINGLEPACK', {
+                      url: this.state.headerPackUrl
+                    });
+                  }}
+                />
               </View>
-            </View>
+            </FastImage>
           )}
           renderItem={({ item }) => (
             <TouchableOpacity

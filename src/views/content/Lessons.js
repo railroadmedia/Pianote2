@@ -404,7 +404,7 @@ export default class Lessons extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, { backgroundColor: 'black' }]}>
+      <View style={{ flex: 1, backgroundColor: 'black' }}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}

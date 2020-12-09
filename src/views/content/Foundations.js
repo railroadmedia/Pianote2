@@ -216,18 +216,8 @@ export default class Foundations extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'LESSONS'} parentPage={'FOUNDATIONS'} />
-        </View>
+      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'FOUNDATIONS'} />
 
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -244,26 +234,6 @@ export default class Foundations extends React.Component {
             />
           }
         >
-          <View
-            key={'backgroundColoring'}
-            style={{
-              backgroundColor: colors.thirdBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              elevation: 10
-            }}
-          />
-          <View
-            key={'header'}
-            style={{
-              height: fullHeight * 0.1,
-              backgroundColor: colors.thirdBackground
-            }}
-          />
           <View
             key={'image'}
             style={[
@@ -435,7 +405,6 @@ export default class Foundations extends React.Component {
                 paddingVertical: 15
               }}
             >
-              <View style={{ height: 20 * factorVertical }} />
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',

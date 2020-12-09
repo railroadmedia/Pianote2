@@ -242,21 +242,9 @@ export default class SongCatalog extends React.Component {
 
   render() {
     return (
-      <View
-        style={[styles.container, { backgroundColor: colors.thirdBackground }]}
-      >
-        <View
-          style={{
-            height: fullHeight * 0.1,
-            width: fullWidth,
-            position: 'absolute',
-            zIndex: 2,
-            elevation: 2,
-            alignSelf: 'stretch'
-          }}
-        >
-          <NavMenuHeaders currentPage={'LESSONS'} parentPage={'SONGS'} />
-        </View>
+      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'SONGS'} />
+
         {!this.state.refreshing ? (
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -275,27 +263,6 @@ export default class SongCatalog extends React.Component {
               backgroundColor: colors.mainBackground
             }}
           >
-            <View
-              key={'header'}
-              style={{
-                height: fullHeight * 0.1,
-                backgroundColor: colors.thirdBackground
-              }}
-            />
-            <View
-              key={'backgroundColoring'}
-              style={{
-                backgroundColor: colors.thirdBackground,
-                position: 'absolute',
-                height: fullHeight,
-                top: -fullHeight,
-                left: 0,
-                right: 0,
-                zIndex: 10,
-                elevation: 10
-              }}
-            />
-            <View style={{ height: 25 * factorVertical }} />
             <Text
               style={{
                 paddingLeft: 12 * factorHorizontal,

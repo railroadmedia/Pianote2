@@ -52,6 +52,7 @@ export default class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
+    console.log(response);
     const newContent = await response[0].data.map(data => {
       return new ContentModel(data);
     });
@@ -122,9 +123,7 @@ export default class StudentFocusCatalog extends React.Component {
 
   render() {
     return (
-      <View
-        style={[styles.container, { backgroundColor: colors.mainBackground }]}
-      >
+      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'STUDENT FOCUS'} />
         {!this.state.refreshing ? (
           <FlatList
