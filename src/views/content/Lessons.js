@@ -617,7 +617,7 @@ export default class Lessons extends React.Component {
           <ActivityIndicator
             size='small'
             style={{ flex: 1 }}
-            color={colors.pianoteGrey}
+            color={'white'}
           />
         )}
         <Modal

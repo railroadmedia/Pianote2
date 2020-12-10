@@ -29,17 +29,21 @@ class NavMenuHeaders extends React.Component {
   render = () => {
     return (
       <SafeAreaView
-        style={{ flexDirection: 'row' }}
+        style={{ 
+          flexDirection: 'row',
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
+        }}
         forceInset={{ top: 'always' }}
       >
         <View
           style={{
             marginTop: DeviceInfo.isTablet() ? 10 : 0,
+            paddingBottom: 12.5*factorVertical,
+            paddingTop: (isNotch) ? 0 : 10*factorVertical,
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center'
-            //backgroundColor: this.props.isMethod ? 'transparent' : colors.mainBackground,
+            justifyContent: 'center',
           }}
         >
           <TouchableOpacity
@@ -60,7 +64,7 @@ class NavMenuHeaders extends React.Component {
             style={[
               styles.centerContent,
               {
-                height: fullHeight * 0.08,
+                height: fullHeight * 0.035,
                 width: DeviceInfo.isTablet()
                   ? 0.25 * fullWidth
                   : 0.3 * fullWidth
@@ -72,7 +76,6 @@ class NavMenuHeaders extends React.Component {
               fill={'#fb1b2f'}
             />
           </TouchableOpacity>
-
           <TouchableOpacity
             key={'lessons'}
             style={{
@@ -122,7 +125,6 @@ class NavMenuHeaders extends React.Component {
               style={{ marginLeft: -5 }}
             />
           </TouchableOpacity>
-
           <TouchableOpacity
             key={'packs'}
             onPress={() => {
@@ -147,7 +149,6 @@ class NavMenuHeaders extends React.Component {
               PACKS{' '}
             </Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             key={'mylist'}
             onPress={() => {

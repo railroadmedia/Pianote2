@@ -94,7 +94,8 @@ class NavigationBar extends React.Component {
           style={{
             alignSelf: 'stretch',
             flexDirection: 'row',
-            padding: 10,
+            paddingTop: (isNotch) ? 15*factorVertical : 10*factorVertical,
+            paddingBottom: (isNotch) ? 0 : 10*factorVertical,
             justifyContent: 'space-around',
             alignContent: 'space-around'
           }}

@@ -148,7 +148,7 @@ class NavigationMenu extends React.Component {
               size={40 * factorRatio}
               name={'x'}
               color={'white'}
-              style={{ padding: 10 }}
+              style={{ padding: 10*factorRatio }}
             />
           </TouchableOpacity>
         </View>

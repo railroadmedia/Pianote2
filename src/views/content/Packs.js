@@ -171,7 +171,7 @@ export default class Packs extends React.Component {
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}
                 animating={true}
-                color={colors.secondBackground}
+                color={'white'}
               />
             </View>
           )}
