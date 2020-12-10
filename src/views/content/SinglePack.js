@@ -25,19 +25,15 @@ import Orientation from 'react-native-orientation-locker';
 import StartIcon from '../../components/StartIcon';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
-import NavigationMenu from '../../components/NavigationMenu';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
-
 import RestartCourse from '../../modals/RestartCourse';
-
 import packsService from '../../services/packs.service';
 import {
   addToMyList,
   removeFromMyList,
   resetProgress
 } from '../../services/UserActions';
-
 import { NetworkContext } from '../../context/NetworkProvider';
 
 let greaterWDim;
@@ -497,7 +493,11 @@ export default class SinglePack extends React.Component {
                           content: packsService.getPack(this.state.url, true)
                         }}
                         styles={{
-                          touchable: { height: 27.5 * factorRatio },
+                          touchable: { flex: 1 },
+                          iconSize: {
+                            width: 27.5 * factorRatio,
+                            height: 27.5 * factorRatio
+                          },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
@@ -505,7 +505,7 @@ export default class SinglePack extends React.Component {
                             color: '#ffffff',
                             fontSize: 13 * factorRatio,
                             fontFamily: 'OpenSans-Regular',
-                            marginTop: 10 * factorVertical
+                            marginTop: 5
                           },
                           alert: {
                             alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -549,7 +549,7 @@ export default class SinglePack extends React.Component {
                           color: 'white',
                           fontSize: 13 * factorRatio,
                           fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
+                          marginTop: 5
                         }}
                       >
                         Restart
@@ -625,28 +625,7 @@ export default class SinglePack extends React.Component {
         )}
 
         <NavigationBar currentPage={'SINGLEPACK'} />
-        <Modal
-          key={'navMenu'}
-          isVisible={this.state.showModalMenu}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-        >
-          <NavigationMenu
-            onClose={e => {
-              this.setState({ showModalMenu: e });
-            }}
-            parentPage={this.state.parentPage}
-            menu={this.state.menu}
-          />
-        </Modal>
+
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}

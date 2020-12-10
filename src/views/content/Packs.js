@@ -8,23 +8,25 @@ import {
   ActivityIndicator,
   Platform,
   FlatList,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
+import DeviceInfo from 'react-native-device-info';
 
 import StartIcon from '../../components/StartIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
 import RestartCourse from '../../modals/RestartCourse';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
-import NavigationMenu from '../../components/NavigationMenu';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import { resetProgress } from '../../services/UserActions';
 import packsService from '../../services/packs.service';
 import { NetworkContext } from '../../context/NetworkProvider';
+import Orientation from 'react-native-orientation-locker';
 
 let greaterWDim;
 export default class Packs extends React.Component {
@@ -33,7 +35,6 @@ export default class Packs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModalMenu: false,
       packs: [],
       headerPackImg: '',
       headerPackLogo: '',
@@ -43,13 +44,35 @@ export default class Packs extends React.Component {
       headerPackStarted: false,
       isLoading: true,
       refreshing: false,
-      showRestartCourse: false
+      showRestartCourse: false,
+      isLandscape:
+        Dimensions.get('window').height < Dimensions.get('window').width
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
+    Orientation.addDeviceOrientationListener(this.orientationListener);
+
     this.getData();
+  }
+
+  componentWillUnmount() {
+    Orientation.removeDeviceOrientationListener(this.orientationListener);
+  }
+
+  orientationListener = o => {
+    if (o === 'UNKNOWN') return;
+    let isLandscape = o.indexOf('LAND') >= 0;
+
+    if (Platform.OS === 'ios') {
+      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+    } else {
+      Orientation.getAutoRotateState(isAutoRotateOn => {
+        if (isAutoRotateOn && DeviceInfo.isTablet())
+          this.setState({ isLandscape });
+      });
+    }
   };
 
   async getData() {
@@ -103,6 +126,17 @@ export default class Packs extends React.Component {
     });
   };
 
+  getAspectRatio() {
+    let { isLandscape } = this.state;
+    if (DeviceInfo.isTablet()) {
+      if (isLandscape) {
+        return 3;
+      }
+      return 2;
+    }
+    return 1.2;
+  }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.thirdBackground }}>
@@ -145,12 +179,12 @@ export default class Packs extends React.Component {
             <FastImage
               style={{
                 width: '100%',
-                aspectRatio: 16 / 9,
+                aspectRatio: this.getAspectRatio(),
                 justifyContent: 'flex-end'
               }}
               source={{
                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                  fullWidth * 2
+                  greaterWDim * 2
                 )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
               }}
               resizeMode={FastImage.resizeMode.cover}
@@ -171,7 +205,7 @@ export default class Packs extends React.Component {
                 }}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
-                    fullWidth * 2
+                    greaterWDim * 2
                   )}/${this.state.headerPackLogo}`
                 }}
                 resizeMode={FastImage.resizeMode.contain}
@@ -229,69 +263,18 @@ export default class Packs extends React.Component {
                 });
               }}
               style={{
-                marginLeft: 5 * factorHorizontal,
-                marginBottom: 5 * factorHorizontal,
-                width: (fullWidth - 3 * 5 * factorHorizontal) / 3,
-                height: fullWidth * 0.285 * (95 / 65),
-                backgroundColor: colors.secondBackground,
-                borderRadius: 7.5 * factorRatio
+                width: '33%',
+                paddingLeft: 10,
+                paddingTop: 10
               }}
             >
-              <GradientFeature
-                color={'black'}
-                opacity={0.45}
-                height={'100%'}
-                borderRadius={0}
-              />
-              <View
-                key={'logo'}
-                style={{
-                  position: 'absolute',
-                  zIndex: 10,
-                  elevation: 5000,
-                  left: 0,
-                  top: 0,
-                  height: fullWidth * 0.285 * (95 / 65),
-                  width: fullWidth * 0.285,
-                  borderRadius: 7.5 * factorRatio
-                }}
-              >
-                <View style={{ flex: 1 }} />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    width: '100%',
-                    height: '25%'
-                  }}
-                >
-                  <View style={{ flex: 1 }} />
-                  <FastImage
-                    style={{
-                      width: '80%',
-                      height: '100%',
-                      borderRadius: 7.5 * factorRatio,
-                      alignSelf: 'stretch'
-                    }}
-                    source={{
-                      uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                        (((0.9 * greaterWDim) / 3) >> 0) * 2
-                      }/${item.logo}`
-                    }}
-                    resizeMode={FastImage.resizeMode.contain}
-                  />
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View
-                  style={{
-                    height: 5 * factorVertical
-                  }}
-                />
-              </View>
               <FastImage
                 style={{
-                  flex: 1,
                   borderRadius: 7.5 * factorRatio,
-                  alignSelf: 'stretch'
+                  width: '100%',
+                  aspectRatio: 0.7,
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,c_thumb,w_${
@@ -299,33 +282,42 @@ export default class Packs extends React.Component {
                   },ar_0.7/${item.thumbnail}`
                 }}
                 resizeMode={FastImage.resizeMode.cover}
-              />
+              >
+                <View
+                  key={'logo'}
+                  style={{
+                    flex: 1,
+                    width: '100%',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    paddingBottom: 10
+                  }}
+                >
+                  <View />
+                  <View style={{ width: '100%' }}>
+                    <FastImage
+                      style={{
+                        width: '90%',
+                        alignSelf: 'center',
+                        height: 2 * (greaterWDim / 50)
+                      }}
+                      source={{
+                        uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                          (((0.9 * greaterWDim) / 3) >> 0) * 2
+                        }/${item.logo}`
+                      }}
+                      resizeMode={FastImage.resizeMode.contain}
+                    />
+                  </View>
+                </View>
+              </FastImage>
             </TouchableOpacity>
           )}
         />
 
         <NavigationBar currentPage={'PACKS'} />
 
-        <Modal
-          key={'navMenu'}
-          isVisible={this.state.showModalMenu}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-        >
-          <NavigationMenu
-            onClose={e => this.setState({ showModalMenu: e })}
-            menu={this.state.menu}
-            parentPage={this.state.parentPage}
-          />
-        </Modal>
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}

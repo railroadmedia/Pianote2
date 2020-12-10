@@ -10,7 +10,6 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
@@ -20,7 +19,6 @@ import {
 } from '../../services/GetContent';
 import NavigationBar from '../../components/NavigationBar.js';
 import NavMenuHeaders from '../../components/NavMenuHeaders.js';
-import NavigationMenu from '../../components/NavigationMenu.js';
 import HorizontalVideoList from '../../components/HorizontalVideoList.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 
@@ -164,7 +162,7 @@ export default class StudentFocusCatalog extends React.Component {
                   <View
                     key={'continueCourses'}
                     style={{
-                      paddingLeft: fullWidth * 0.035,
+                      paddingLeft: 15,
                       backgroundColor: colors.mainBackground
                     }}
                   >
@@ -206,26 +204,6 @@ export default class StudentFocusCatalog extends React.Component {
           />
         )}
         <NavigationBar currentPage={''} />
-        <Modal
-          key={'navMenu'}
-          isVisible={this.state.showModalMenu}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-        >
-          <NavigationMenu
-            onClose={e => this.setState({ showModalMenu: e })}
-            menu={this.state.menu}
-            parentPage={this.state.parentPage}
-          />
-        </Modal>
       </View>
     );
   }

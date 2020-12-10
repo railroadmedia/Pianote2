@@ -247,9 +247,7 @@ export default class PathOverview extends React.Component {
               styles.centerContent,
               {
                 width: '100%',
-                aspectRatio: this.getAspectRatio(),
-                borderWidth: 1,
-                borderColor: 'green'
+                aspectRatio: this.getAspectRatio()
               }
             ]}
           >
@@ -608,7 +606,7 @@ export default class PathOverview extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 5
                       }}
                     >
                       <AntIcon
@@ -630,6 +628,10 @@ export default class PathOverview extends React.Component {
                     }}
                     styles={{
                       touchable: { flex: 1 },
+                      iconSize: {
+                        width: 27.5 * factorRatio,
+                        height: 27.5 * factorRatio
+                      },
                       iconDownloadColor: colors.pianoteRed,
                       activityIndicatorColor: colors.pianoteRed,
                       animatedProgressBackground: colors.pianoteRed,
@@ -637,7 +639,7 @@ export default class PathOverview extends React.Component {
                         color: '#ffffff',
                         fontSize: 13 * factorRatio,
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 5 * factorVertical
+                        marginTop: 5
                       },
                       alert: {
                         alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -673,7 +675,7 @@ export default class PathOverview extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 5
                       }}
                     >
                       <MaterialIcon

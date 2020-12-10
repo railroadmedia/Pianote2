@@ -12,6 +12,7 @@ import {
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { SafeAreaView } from 'react-navigation';
 
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
@@ -207,7 +208,12 @@ export default class StudentFocusShow extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView
+        forceInset={{
+          bottom: 'never'
+        }}
+        style={{ flex: 1, backgroundColor: colors.mainBackground }}
+      >
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
@@ -219,108 +225,39 @@ export default class StudentFocusShow extends React.Component {
               onRefresh={() => this.refresh()}
             />
           }
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
+          style={{ flex: 1 }}
         >
-          <View
-            key={'backgroundColoring'}
-            style={{
-              backgroundColor: colors.mainBackground,
-              position: 'absolute',
-              height: fullHeight,
-              top: -fullHeight,
-              left: 0,
-              right: 0,
-              zIndex: 10
-            }}
-          />
-          <View
-            key={'imageContainer'}
-            style={{
-              width: fullWidth
-            }}
-          >
-            <View
-              key={'goBackIcon'}
-              style={[
-                styles.centerContent,
-                {
-                  top: isNotch ? 50 * factorVertical : 30 * factorVertical,
-                  width: fullWidth,
-                  position: 'absolute',
-                  zIndex: 5
-                }
-              ]}
+          <View key={'imageContainer'} style={{ width: '100%' }}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.goBack()}
+              style={{
+                padding: 15
+                // position: 'absolute',
+                // top: 0
+              }}
             >
-              <View style={{ flex: 1 }} />
-              <View
-                style={[
-                  styles.centerContent,
-                  {
-                    flexDirection: 'row'
-                  }
-                ]}
-              >
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <View style={{ flex: 0.1 }} />
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    <TouchableOpacity
-                      onPress={() => this.props.navigation.goBack()}
-                      style={{
-                        paddingLeft: 10 * factorRatio,
-                        paddingRight: 10 * factorRatio
-                      }}
-                    >
-                      <EntypoIcon
-                        name={'chevron-thin-left'}
-                        size={25 * factorRatio}
-                        color={'white'}
-                      />
-                    </TouchableOpacity>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                </View>
-                <Text
-                  style={{
-                    fontSize: 22 * factorRatio,
-                    fontWeight: 'bold',
-                    color: colors.mainBackground,
-                    fontFamily: 'OpenSans-Regular'
-                  }}
-                >
-                  Filter Courses
-                </Text>
-                <View style={{ flex: 1 }} />
-              </View>
-              <View style={{ height: 20 * factorVertical }} />
-            </View>
+              <EntypoIcon
+                name={'chevron-thin-left'}
+                size={25 * factorRatio}
+                color={'white'}
+              />
+            </TouchableOpacity>
+
             <View
               key={'bootcampImage'}
-              style={[
-                styles.centerContent,
-                {
-                  paddingTop: fullHeight * 0.1,
-                  width: fullWidth,
-                  zIndex: 2
-                }
-              ]}
+              style={{
+                paddingHorizontal: '20%',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
             >
               <FastImage
                 style={{
-                  height: onTablet
-                    ? fullWidth * 0.45
-                    : Platform.OS == 'ios'
-                    ? fullWidth * 0.625
-                    : fullWidth * 0.525,
-                  width: onTablet
-                    ? fullWidth * 0.45
-                    : Platform.OS == 'ios'
-                    ? fullWidth * 0.625
-                    : fullWidth * 0.525,
-                  zIndex: 2,
+                  width: '80%',
+                  maxWidth: 400,
+                  maxHeight: 400,
+                  aspectRatio: 1,
                   borderRadius: 10 * factorRatio,
                   borderColor: colors.thirdBackground,
                   borderWidth: 5
@@ -369,7 +306,7 @@ export default class StudentFocusShow extends React.Component {
           />
         </ScrollView>
         <NavigationBar currentPage={'NONE'} />
-      </View>
+      </SafeAreaView>
     );
   }
 }

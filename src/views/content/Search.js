@@ -15,11 +15,12 @@ import {
 import { ContentModel } from '@musora/models';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+import { SafeAreaView } from 'react-navigation';
+
+import NavigationBar from '../../components/NavigationBar';
+import VerticalVideoList from '../../components/VerticalVideoList';
 import { searchContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
-import { SafeAreaView } from 'react-navigation';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;

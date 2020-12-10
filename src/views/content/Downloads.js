@@ -91,22 +91,37 @@ export default class Downloads extends React.Component {
   render() {
     let { edit, items } = this.state;
     return (
-      <View style={styles.container}>
+      <SafeAreaView
+        forceInset={{
+          bottom: 'never'
+        }}
+        style={styles.container}
+      >
         <View style={{ backgroundColor: colors.mainBackground, flex: 1 }}>
           <View
-            style={[
-              styles.centerContent,
-              {
-                height:
-                  Platform.OS == 'android'
-                    ? fullHeight * 0.1
-                    : isNotch
-                    ? fullHeight * 0.12
-                    : fullHeight * 0.1 + 10,
-                backgroundColor: colors.thirdBackground
-              }
-            ]}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: colors.thirdBackground,
+              paddingHorizontal: 15
+            }}
           >
+            <View style={{ flex: 1 }} />
+            <Text
+              style={{
+                fontSize: 22 * factorRatio,
+                color: 'white',
+                fontFamily: 'OpenSans-Bold',
+                flex: 1,
+                paddingVertical: 15,
+                alignSelf: 'center',
+                textAlign: 'center'
+              }}
+            >
+              Downloads
+            </Text>
+
             <TouchableOpacity
               onPress={() =>
                 this.setState(({ edit }) => ({
@@ -114,44 +129,23 @@ export default class Downloads extends React.Component {
                 }))
               }
               style={{
-                position: 'absolute',
-                zIndex: 10,
-                elevation: 10,
-                right: 10 * factorRatio,
-                bottom: 20 * factorRatio
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'flex-end'
               }}
             >
               <Text
                 style={{
                   color: colors.pianoteRed,
-                  fontFamily: 'OpenSans-Bold'
+                  fontFamily: 'OpenSans-Bold',
+                  fontSize: 16 * factorRatio
                 }}
               >
                 EDIT
               </Text>
             </TouchableOpacity>
-            <View style={{ flex: 1 }} />
-            <View
-              style={[
-                styles.centerContent,
-                {
-                  backgroundColor: colors.thirdBackground
-                }
-              ]}
-            >
-              <Text
-                style={{
-                  fontSize: 22 * factorRatio,
-                  fontWeight: 'bold',
-                  color: 'white',
-                  fontFamily: 'OpenSans-Regular'
-                }}
-              >
-                Downloads
-              </Text>
-            </View>
-            <View style={{ height: 20 * factorVertical }} />
           </View>
+
           <FlatList
             data={items}
             keyboardShouldPersistTaps='handled'
@@ -165,7 +159,8 @@ export default class Downloads extends React.Component {
                 style={{
                   padding: 20,
                   color: 'white',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  fontSize: 18 * factorRatio
                 }}
               >
                 Any lessons you download will be available here.
@@ -278,7 +273,7 @@ export default class Downloads extends React.Component {
           />
         </View>
         <NavigationBar currentPage={'DOWNLOAD'} />
-      </View>
+      </SafeAreaView>
     );
   }
 }

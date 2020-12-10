@@ -50,45 +50,41 @@ class Replies extends React.Component {
         <View
           key={index}
           style={{
-            paddingTop: fullHeight * 0.01,
-            paddingBottom: fullHeight * 0.01,
-            paddingLeft: fullWidth * 0.05,
-            paddingRight: fullWidth * 0.03,
+            paddingVertical: 10,
+            paddingHorizontal: 15,
             minHeight: 30 * factorVertical,
             flexDirection: 'row'
           }}
         >
-          <View>
-            <View style={{ alignItems: 'center' }}>
-              <FastImage
-                style={{
-                  height: 40 * factorHorizontal,
-                  width: 40 * factorHorizontal,
-                  borderRadius: 100
-                }}
-                source={{
-                  uri: reply.user['fields.profile_picture_image_url']
-                }}
-                resizeMode={FastImage.resizeMode.stretch}
-              />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 10 * factorRatio,
-                  marginTop: 2 * factorRatio,
-                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                  color: 'grey'
-                }}
-              >
-                {reply.user.display_name}
-              </Text>
-            </View>
-            <View style={{ flex: 1 }} />
+          <View style={{ alignItems: 'center' }}>
+            <FastImage
+              style={{
+                height: 40 * factorHorizontal,
+                width: 40 * factorHorizontal,
+                borderRadius: 100
+              }}
+              source={{
+                uri: reply.user['fields.profile_picture_image_url']
+              }}
+              resizeMode={FastImage.resizeMode.stretch}
+            />
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 10 * factorRatio,
+                marginTop: 2 * factorRatio,
+                fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
+                color: 'grey'
+              }}
+            >
+              {reply.user.display_name}
+            </Text>
           </View>
+
           <View
             style={{
               flex: 1,
-              paddingLeft: 12.5 * factorHorizontal
+              paddingLeft: 15
             }}
           >
             <View style={{ height: 3 * factorVertical }} />
@@ -114,79 +110,68 @@ class Replies extends React.Component {
             </Text>
             <View
               style={{
-                height: 50 * factorVertical
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10
               }}
             >
-              <View style={{ flex: 1 }} />
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <TouchableOpacity
-                    style={{ padding: 10, paddingLeft: 0 }}
-                    onPress={() => {
-                      if (!this.context.isConnected)
-                        return this.context.showNoConnectionAlert();
-                      this.props.toggleReplyLike(
-                        reply.id,
-                        reply.is_liked ? 'dislikeComment' : 'likeComment'
-                      );
+              <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity
+                  style={{ marginRight: 10 }}
+                  onPress={() => {
+                    if (!this.context.isConnected)
+                      return this.context.showNoConnectionAlert();
+                    this.props.toggleReplyLike(
+                      reply.id,
+                      reply.is_liked ? 'dislikeComment' : 'likeComment'
+                    );
+                  }}
+                >
+                  <AntIcon
+                    name={reply.is_liked ? 'like1' : 'like2'}
+                    size={20 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                </TouchableOpacity>
+                {reply.like_count > 0 && (
+                  <View
+                    style={{
+                      borderRadius: 40,
+                      backgroundColor: colors.notificationColor,
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}
                   >
-                    <AntIcon
-                      name={reply.is_liked ? 'like1' : 'like2'}
-                      size={20 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
-                  <View style={{ width: 10 * factorHorizontal }} />
-                  {reply.like_count > 0 && (
-                    <View>
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            borderRadius: 40,
-                            paddingLeft: 8 * factorHorizontal,
-                            paddingRight: 8 * factorHorizontal,
-                            paddingTop: 4 * factorVertical,
-                            paddingBottom: 4 * factorVertical,
-                            backgroundColor: colors.notificationColor
-                          }
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 9.5 * factorRatio,
-                            color: colors.pianoteRed
-                          }}
-                        >
-                          {reply.like_count}{' '}
-                          {reply.like_count === 1 ? 'LIKE' : 'LIKES'}
-                        </Text>
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                  )}
-                </View>
-                <View style={{ width: 20 * factorHorizontal }} />
-                {this.props.me.userId === reply.user_id && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (!this.context.isConnected)
-                        return this.context.showNoConnectionAlert();
-                      this.props.deleteReply(reply.id);
-                    }}
-                  >
-                    <AntIcon
-                      name={'delete'}
-                      size={20 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                  </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 9.5 * factorRatio,
+                        color: colors.pianoteRed,
+                        paddingHorizontal: 10
+                      }}
+                    >
+                      {reply.like_count}{' '}
+                      {reply.like_count === 1 ? 'LIKE' : 'LIKES'}
+                    </Text>
+                  </View>
                 )}
               </View>
-              <View style={{ flex: 1 }} />
+              {this.props.me.userId === reply.user_id && (
+                <TouchableOpacity
+                  style={{ marginLeft: 10 }}
+                  onPress={() => {
+                    if (!this.context.isConnected)
+                      return this.context.showNoConnectionAlert();
+                    this.props.deleteReply(reply.id);
+                  }}
+                >
+                  <AntIcon
+                    name={'delete'}
+                    size={20 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
@@ -234,36 +219,31 @@ class Replies extends React.Component {
                   <View
                     key={'commentCount'}
                     style={{
-                      width: fullWidth,
+                      width: '100%',
                       zIndex: 5
                     }}
                   >
-                    <View style={{ height: fullHeight * 0.025 }} />
                     <View
                       key={'commentHeader'}
                       style={{
-                        width: fullWidth,
                         flexDirection: 'row',
-                        paddingLeft: fullWidth * 0.05,
-                        paddingRight: fullWidth * 0.02
+                        justifyContent: 'space-between',
+                        paddingHorizontal: 15,
+                        marginTop: 10
                       }}
                     >
-                      <View>
-                        <View style={{ flex: 1 }} />
-                        <Text
-                          style={{
-                            fontSize: 18 * factorRatio,
-                            marginBottom: 5 * factorVertical,
-                            textAlign: 'left',
-                            fontFamily: 'RobotoCondensed-Bold',
-                            color: colors.secondBackground
-                          }}
-                        >
-                          REPLIES
-                        </Text>
-                        <View style={{ flex: 1 }} />
-                      </View>
-                      <View style={{ flex: 1 }} />
+                      <Text
+                        style={{
+                          fontSize: 18 * factorRatio,
+                          marginBottom: 5 * factorVertical,
+                          textAlign: 'left',
+                          fontFamily: 'RobotoCondensed-Bold',
+                          color: colors.secondBackground
+                        }}
+                      >
+                        REPLIES
+                      </Text>
+
                       <TouchableOpacity onPress={this.props.close}>
                         <EntypoIcon
                           size={27.5 * factorRatio}
@@ -271,15 +251,13 @@ class Replies extends React.Component {
                           color={'#c2c2c2'}
                         />
                       </TouchableOpacity>
-                      <View style={{ flex: 0.07 }} />
                     </View>
-                    <View style={{ flex: 1.25 }} />
                     <View
                       key={'originalReply'}
                       style={{
-                        paddingTop: fullHeight * 0.02,
-                        paddingLeft: fullWidth * 0.05,
-                        paddingRight: fullWidth * 0.03,
+                        paddingTop: 5,
+                        paddingHorizontal: 15,
+                        marginBottom: 10 * factorRatio,
                         minHeight: 30 * factorVertical,
                         flexDirection: 'row'
                       }}
@@ -309,14 +287,8 @@ class Replies extends React.Component {
                             {this.changeXP(user.xp)}
                           </Text>
                         </View>
-                        <View style={{ flex: 1 }} />
                       </View>
-                      <View
-                        style={{
-                          flex: 1,
-                          paddingLeft: 12.5 * factorHorizontal
-                        }}
-                      >
+                      <View style={{ flex: 1, paddingLeft: 15 }}>
                         <View style={{ height: 3 * factorVertical }} />
                         <Text
                           style={{
@@ -338,11 +310,19 @@ class Replies extends React.Component {
                           {user.display_name} | {user.rank} |{' '}
                           {moment.utc(comment.created_on).local().fromNow()}
                         </Text>
-                        <View style={{ height: 50 * factorVertical }}>
-                          <View style={{ flex: 1 }} />
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginTop: 10
+                          }}
+                        >
                           <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View
+                              style={{ flexDirection: 'row', marginRight: 15 }}
+                            >
                               <TouchableOpacity
+                                style={{ marginRight: 10 }}
                                 onPress={() => {
                                   if (!this.context.isConnected)
                                     return this.context.showNoConnectionAlert();
@@ -360,102 +340,67 @@ class Replies extends React.Component {
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
-                              <View
-                                style={{
-                                  width: 10 * factorHorizontal
-                                }}
-                              />
                               {comment.like_count > 0 && (
-                                <View>
-                                  <View style={{ flex: 1 }} />
-                                  <View
-                                    style={[
-                                      styles.centerContent,
-                                      {
-                                        borderRadius: 40,
-                                        paddingLeft: 8 * factorHorizontal,
-                                        paddingRight: 8 * factorHorizontal,
-                                        paddingTop: 4 * factorVertical,
-                                        paddingBottom: 4 * factorVertical,
-                                        backgroundColor:
-                                          colors.notificationColor
-                                      }
-                                    ]}
+                                <View
+                                  style={{
+                                    borderRadius: 40,
+                                    backgroundColor: colors.notificationColor,
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontFamily: 'OpenSans-Regular',
+                                      fontSize: 9.5 * factorRatio,
+                                      color: colors.pianoteRed,
+                                      paddingHorizontal: 10
+                                    }}
                                   >
-                                    <Text
-                                      style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 9.5 * factorRatio,
-                                        color: colors.pianoteRed
-                                      }}
-                                    >
-                                      {comment.like_count}{' '}
-                                      {comment.like_count === 1
-                                        ? 'LIKE'
-                                        : 'LIKES'}
-                                    </Text>
-                                  </View>
-                                  <View style={{ flex: 1 }} />
+                                    {comment.like_count}{' '}
+                                    {comment.like_count === 1
+                                      ? 'LIKE'
+                                      : 'LIKES'}
+                                  </Text>
                                 </View>
                               )}
                             </View>
-                            <View
-                              style={{
-                                width: 20 * factorHorizontal
-                              }}
-                            />
+
                             <View style={{ flexDirection: 'row' }}>
                               <MaterialIcon
                                 name={'comment-text-outline'}
                                 size={20 * factorRatio}
                                 color={colors.pianoteRed}
-                              />
-                              <View
-                                style={{
-                                  width: 10 * factorHorizontal
-                                }}
+                                style={{ marginRight: 10 }}
                               />
                               {comment.replies.length > 0 && (
-                                <View>
-                                  <View style={{ flex: 1 }} />
-                                  <View
-                                    style={[
-                                      styles.centerContent,
-                                      {
-                                        borderRadius: 40,
-                                        paddingLeft: 8 * factorHorizontal,
-                                        paddingRight: 8 * factorHorizontal,
-                                        paddingTop: 4 * factorVertical,
-                                        paddingBottom: 4 * factorVertical,
-                                        backgroundColor:
-                                          colors.notificationColor
-                                      }
-                                    ]}
+                                <View
+                                  style={{
+                                    borderRadius: 40,
+                                    backgroundColor: colors.notificationColor,
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontFamily: 'OpenSans-Regular',
+                                      fontSize: 9.5 * factorRatio,
+                                      color: colors.pianoteRed,
+                                      paddingHorizontal: 10
+                                    }}
                                   >
-                                    <Text
-                                      style={{
-                                        fontFamily: 'OpenSans-Regular',
-                                        fontSize: 9.5 * factorRatio,
-                                        color: colors.pianoteRed
-                                      }}
-                                    >
-                                      {comment.replies.length}{' '}
-                                      {comment.replies.length == 1
-                                        ? 'REPLY'
-                                        : 'REPLIES'}
-                                    </Text>
-                                  </View>
-                                  <View style={{ flex: 1 }} />
+                                    {comment.replies.length}{' '}
+                                    {comment.replies.length == 1
+                                      ? 'REPLY'
+                                      : 'REPLIES'}
+                                  </Text>
                                 </View>
                               )}
                             </View>
-                            <View
-                              style={{
-                                width: 20 * factorHorizontal
-                              }}
-                            />
                             {me.userId === comment.user_id && (
                               <TouchableOpacity
+                                style={{ marginLeft: 15 }}
                                 onPress={() => {
                                   if (!this.context.isConnected)
                                     return this.context.showNoConnectionAlert();
@@ -470,74 +415,57 @@ class Replies extends React.Component {
                               </TouchableOpacity>
                             )}
                           </View>
-                          <View style={{ flex: 1 }} />
                         </View>
                       </View>
                     </View>
-                    <View style={{ height: 10 * factorRatio }} />
                     {!this.state.showMakeReply && (
                       <View
                         key={'addComment'}
                         style={{
-                          width: fullWidth,
-                          height: 85 * factorHorizontal,
+                          width: '100%',
                           flexDirection: 'row',
-                          paddingLeft: fullWidth * 0.05,
-                          borderTopWidth: 0.5 * factorRatio,
-                          borderBottomWidth: 0.5 * factorRatio,
+                          paddingLeft: 15,
+                          borderTopWidth: 1,
+                          borderBottomWidth: 1,
                           borderBottomColor: colors.secondBackground,
-                          borderTopColor: colors.secondBackground
+                          borderTopColor: colors.secondBackground,
+                          alignItems: 'center'
                         }}
                       >
-                        <View
-                          key={'profileImage'}
+                        <FastImage
                           style={{
-                            height: '100%',
-                            width: 40 * factorHorizontal
+                            height: 40 * factorHorizontal,
+                            width: 40 * factorHorizontal,
+                            borderRadius: 100
                           }}
-                        >
-                          <View style={{ flex: 1 }} />
-                          <FastImage
-                            style={{
-                              height: 40 * factorHorizontal,
-                              width: 40 * factorHorizontal,
-                              borderRadius: 100
-                            }}
-                            source={{
-                              uri:
-                                me.profileImage ||
-                                'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                            }}
-                            resizeMode={FastImage.resizeMode.stretch}
-                          />
-                          <View style={{ flex: 1 }} />
-                        </View>
-                        <View style={{ width: 12.5 * factorHorizontal }} />
+                          source={{
+                            uri:
+                              me.profileImage ||
+                              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
+                          }}
+                          resizeMode={FastImage.resizeMode.stretch}
+                        />
+
                         <TouchableOpacity
                           key={'makeReply'}
                           onPress={() => this.setState({ showMakeReply: true })}
-                          style={{
-                            height: 85 * factorHorizontal,
-                            width: fullWidth
-                          }}
+                          style={{ width: '80%', justifyContent: 'center' }}
                         >
-                          <View style={{ flex: 1 }} />
                           <Text
                             style={{
                               textAlign: 'left',
                               fontFamily: 'OpenSans-Regular',
                               fontSize: 13 * factorRatio,
                               color: 'white',
-                              paddingLeft: 10 * factorHorizontal
+                              paddingLeft: 15,
+                              paddingVertical: 30 * factorRatio
                             }}
                           >
                             Add a reply...
                           </Text>
-                          <View style={{ flex: 1 }} />
                         </TouchableOpacity>
                       </View>
                     )}
-                    <View style={{ flex: 1 }} />
                   </View>
                   {this.state.isLoading && (
                     <ActivityIndicator

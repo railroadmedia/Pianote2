@@ -9,13 +9,12 @@ import {
   TouchableOpacity,
   RefreshControl
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
-import NavMenuHeaders from 'Pianote2/src/components/NavMenuHeaders.js';
-import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
-import VerticalVideoList from 'Pianote2/src/components/VerticalVideoList.js';
+
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import VerticalVideoList from '../../components/VerticalVideoList';
 import { getMyListContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
@@ -47,7 +46,6 @@ export default class MyList extends React.Component {
         progress: [],
         instructors: []
       },
-      showModalMenu: false,
       refreshing: false
     };
   }
@@ -350,26 +348,6 @@ export default class MyList extends React.Component {
         </ScrollView>
 
         <NavigationBar currentPage={'MyList'} />
-        <Modal
-          key={'navMenu'}
-          isVisible={this.state.showModalMenu}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
-          animation={'slideInUp'}
-          animationInTiming={250}
-          animationOutTiming={250}
-          coverScreen={true}
-          hasBackdrop={false}
-        >
-          <NavigationMenu
-            onClose={e => this.setState({ showModalMenu: e })}
-            menu={this.state.menu}
-            parentPage={this.state.parentPage}
-          />
-        </Modal>
       </View>
     );
   }

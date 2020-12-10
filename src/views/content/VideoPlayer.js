@@ -497,34 +497,32 @@ export default class VideoPlayer extends React.Component {
           flexDirection: 'row'
         }}
       >
-        <View>
-          <View style={{ alignItems: 'center' }}>
-            <FastImage
-              style={{
-                height: 40 * factorHorizontal,
-                width: 40 * factorHorizontal,
-                borderRadius: 100
-              }}
-              source={{
-                uri: item.user['fields.profile_picture_image_url']
-              }}
-              resizeMode={FastImage.resizeMode.stretch}
-            />
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 10 * factorRatio,
-                marginTop: 2 * factorRatio,
-                fontWeight: 'bold',
-                color: 'grey'
-              }}
-            >
-              {this.changeXP(item.user.xp)}
-            </Text>
-          </View>
-          <View style={{ flex: 1 }} />
+        <View style={{ alignItems: 'center' }}>
+          <FastImage
+            style={{
+              height: 40 * factorHorizontal,
+              width: 40 * factorHorizontal,
+              borderRadius: 100
+            }}
+            source={{
+              uri: item.user['fields.profile_picture_image_url']
+            }}
+            resizeMode={FastImage.resizeMode.stretch}
+          />
+          <Text
+            style={{
+              fontFamily: 'OpenSans-Regular',
+              fontSize: 10 * factorRatio,
+              marginTop: 2 * factorRatio,
+              fontWeight: 'bold',
+              color: 'grey'
+            }}
+          >
+            {this.changeXP(item.user.xp)}
+          </Text>
         </View>
-        <View style={{ flex: 1, paddingLeft: 12.5 * factorHorizontal }}>
+
+        <View style={{ flex: 1, paddingLeft: 15 }}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -547,57 +545,45 @@ export default class VideoPlayer extends React.Component {
             {item.user['display_name']} | {item.user.rank} |{' '}
             {moment.utc(item.created_on).local().fromNow()}
           </Text>
-          <View
-            style={{
-              paddingTop: 15 * factorVertical,
-              paddingBottom: 15 * factorVertical
-            }}
-          >
-            <View style={{ flex: 1 }} />
+          <View style={{ paddingVertical: 15 }}>
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => this.likeComment(item.id)}>
+              <View style={{ flexDirection: 'row', marginRight: 15 }}>
+                <TouchableOpacity
+                  style={{ marginRight: 10 }}
+                  onPress={() => this.likeComment(item.id)}
+                >
                   <AntIcon
                     name={item.is_liked ? 'like1' : 'like2'}
                     size={20 * factorRatio}
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
-                <View style={{ width: 10 * factorHorizontal }} />
                 {item.like_count > 0 && (
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          borderRadius: 40,
-                          paddingLeft: 8 * factorHorizontal,
-                          paddingRight: 8 * factorHorizontal,
-                          paddingTop: 4 * factorVertical,
-                          paddingBottom: 4 * factorVertical,
-                          backgroundColor: colors.notificationColor
-                        }
-                      ]}
+                  <View
+                    style={{
+                      borderRadius: 40,
+                      backgroundColor: colors.notificationColor,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 10 * factorRatio,
+                        color: colors.pianoteRed,
+                        paddingHorizontal: 10
+                      }}
                     >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 10 * factorRatio,
-                          color: colors.pianoteRed
-                        }}
-                      >
-                        {item.like_count}{' '}
-                        {item.like_count === 1 ? 'LIKE' : 'LIKES'}
-                      </Text>
-                    </View>
-                    <View style={{ flex: 1 }} />
+                      {item.like_count}{' '}
+                      {item.like_count === 1 ? 'LIKE' : 'LIKES'}
+                    </Text>
                   </View>
                 )}
               </View>
-              <View style={{ width: 20 * factorHorizontal }} />
               <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
+                  style={{ marginRight: 10 }}
                   onPress={() =>
                     this.replies.toggle(() =>
                       this.setState({ selectedComment: item })
@@ -610,41 +596,34 @@ export default class VideoPlayer extends React.Component {
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
-                <View style={{ width: 10 * factorHorizontal }} />
                 {item.replies?.length > 0 && (
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          borderRadius: 40,
-                          paddingLeft: 8 * factorHorizontal,
-                          paddingRight: 8 * factorHorizontal,
-                          paddingTop: 4 * factorVertical,
-                          paddingBottom: 4 * factorVertical,
-                          backgroundColor: colors.notificationColor
-                        }
-                      ]}
+                  <View
+                    style={{
+                      borderRadius: 40,
+                      backgroundColor: colors.notificationColor,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 10 * factorRatio,
+                        color: colors.pianoteRed,
+                        paddingHorizontal: 10
+                      }}
                     >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 10 * factorRatio,
-                          color: colors.pianoteRed
-                        }}
-                      >
-                        {item.replies?.length}{' '}
-                        {item.replies?.length === 1 ? 'REPLY' : 'REPLIES'}
-                      </Text>
-                    </View>
-                    <View style={{ flex: 1 }} />
+                      {item.replies?.length}{' '}
+                      {item.replies?.length === 1 ? 'REPLY' : 'REPLIES'}
+                    </Text>
                   </View>
                 )}
               </View>
-              <View style={{ width: 20 * factorHorizontal }} />
               {this.userId === item.user_id && (
-                <TouchableOpacity onPress={() => this.deleteComment(item.id)}>
+                <TouchableOpacity
+                  style={{ marginLeft: 15 }}
+                  onPress={() => this.deleteComment(item.id)}
+                >
                   <AntIcon
                     name={'delete'}
                     size={20 * factorRatio}
@@ -653,7 +632,6 @@ export default class VideoPlayer extends React.Component {
                 </TouchableOpacity>
               )}
             </View>
-            <View style={{ flex: 1 }} />
           </View>
           {item.replies?.length !== 0 && (
             <TouchableOpacity
@@ -667,7 +645,8 @@ export default class VideoPlayer extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   fontSize: 12 * factorRatio,
-                  color: colors.secondBackground
+                  color: colors.secondBackground,
+                  paddingBottom: 10
                 }}
               >
                 VIEW {item.replies?.length}{' '}
@@ -1139,7 +1118,6 @@ export default class VideoPlayer extends React.Component {
                       paddingHorizontal: 15
                     }}
                   >
-                    <View style={{ flex: 1 }} />
                     <View
                       key={'icon'}
                       style={{
@@ -1159,12 +1137,12 @@ export default class VideoPlayer extends React.Component {
                           size={27.5 * factorRatio}
                           color={colors.pianoteRed}
                         />
-                        <View style={{ height: 5 * factorVertical }} />
                         <Text
                           style={{
                             textAlign: 'center',
                             fontSize: 12 * factorRatio,
-                            color: 'white'
+                            color: 'white',
+                            marginTop: 5
                           }}
                         >
                           {this.state.likes}
@@ -1180,12 +1158,12 @@ export default class VideoPlayer extends React.Component {
                           size={27.5 * factorRatio}
                           color={colors.pianoteRed}
                         />
-                        <View style={{ height: 5 * factorVertical }} />
                         <Text
                           style={{
                             textAlign: 'center',
                             fontSize: 12 * factorRatio,
-                            color: 'white'
+                            color: 'white',
+                            marginTop: 5
                           }}
                         >
                           {this.state.isAddedToMyList ? 'Added' : 'My List'}
@@ -1206,12 +1184,12 @@ export default class VideoPlayer extends React.Component {
                             width={27.5 * factorRatio}
                             fill={colors.pianoteRed}
                           />
-                          <View style={{ height: 7.5 * factorVertical }} />
                           <Text
                             style={{
                               textAlign: 'center',
                               fontSize: 12 * factorRatio,
-                              color: 'white'
+                              color: 'white',
+                              marginTop: 5
                             }}
                           >
                             Resources
@@ -1228,6 +1206,10 @@ export default class VideoPlayer extends React.Component {
                         }}
                         styles={{
                           touchable: { flex: 1 },
+                          iconSize: {
+                            width: 27.5 * factorRatio,
+                            height: 27.5 * factorRatio
+                          },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
@@ -1235,7 +1217,7 @@ export default class VideoPlayer extends React.Component {
                             color: '#ffffff',
                             fontSize: 12 * factorRatio,
                             fontFamily: 'OpenSans-Regular',
-                            marginTop: 7.5 * factorVertical
+                            marginTop: 5
                           },
                           alert: {
                             alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -1267,26 +1249,25 @@ export default class VideoPlayer extends React.Component {
                           size={27.5 * factorRatio}
                           color={colors.pianoteRed}
                         />
-                        <View style={{ height: 5 * factorVertical }} />
                         <Text
                           style={{
                             textAlign: 'center',
                             fontSize: 12 * factorRatio,
-                            color: 'white'
+                            color: 'white',
+                            marginTop: 5
                           }}
                         >
                           Info
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    <View style={{ flex: 1 }} />
                   </View>
                   <View key={'infoExpanded'}>
                     {this.state.showInfo && (
                       <Text
                         style={{
-                          paddingLeft: '5%',
-                          paddingRight: '5%',
+                          paddingHorizontal: '5%',
+                          paddingTop: 15,
                           fontFamily: 'OpenSans-Regular',
                           fontSize: 14 * factorRatio,
                           textAlign: 'center',
@@ -1310,7 +1291,7 @@ export default class VideoPlayer extends React.Component {
                     <>
                       <View
                         key={'assingmentsHeader'}
-                        style={{ paddingLeft: 15 }}
+                        style={{ paddingLeft: 15, paddingBottom: 10 }}
                       >
                         <Text
                           style={{
@@ -1321,7 +1302,6 @@ export default class VideoPlayer extends React.Component {
                         >
                           ASSIGNMENTS
                         </Text>
-                        <View style={{ height: 20 * factorVertical }} />
                       </View>
 
                       <View
@@ -1492,7 +1472,6 @@ export default class VideoPlayer extends React.Component {
                       )}
                       {this.state.comments.length > 0 && this.mapComments()}
                     </View>
-                    <View style={{ height: fullHeight * 0.035 }} />
                   </View>
                 </KeyboardAwareScrollView>
               )}
