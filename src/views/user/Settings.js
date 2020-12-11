@@ -24,7 +24,11 @@ import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import Loading from '../../components/Loading.js';
 import CustomModal from '../../modals/CustomModal.js';
 import { logOut, restorePurchase } from '../../services/UserDataAuth.js';
-import { NavigationActions, StackActions } from 'react-navigation';
+import {
+  NavigationActions,
+  SafeAreaView,
+  StackActions
+} from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
 
@@ -164,467 +168,412 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-      <View
+      <SafeAreaView
         style={{
           flex: 1,
-          alignSelf: 'stretch',
           backgroundColor: colors.mainBackground
         }}
       >
-        <View key={'contentContainer'} style={{ flex: 1 }}>
-          <View
-            key={'buffer'}
-            style={{
-              height: 15 * factorVertical
+        <View
+          key={'header'}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: 15
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.goBack();
             }}
-          />
-          <View
-            key={'mySettings'}
+            style={{ flex: 1 }}
+          >
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+
+          <Text
+            style={{
+              flex: 1,
+              fontSize: 22 * factorRatio,
+              fontFamily: 'OpenSans-Bold',
+              color: colors.secondBackground,
+              textAlign: 'center',
+              alignSelf: 'center'
+            }}
+          >
+            Settings
+          </Text>
+          <View style={{ flex: 1 }} />
+        </View>
+
+        <ScrollView style={{ flex: 1 }}>
+          <TouchableOpacity
+            key={'profileSettings'}
+            onPress={() => {
+              this.props.navigation.navigate('PROFILESETTINGS');
+            }}
             style={[
               styles.centerContent,
               {
-                flex: 0.1
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                borderTopWidth: 0.5 * factorRatio,
+                borderTopColor: colors.secondBackground,
+                flexDirection: 'row',
+                paddingRight: 15
               }
             ]}
           >
             <View
-              style={[
-                styles.centerContent,
-                {
-                  position: 'absolute',
-                  left: 0,
-                  bottom: 0 * factorRatio,
-                  height: 50 * factorRatio,
-                  width: 50 * factorRatio
-                }
-              ]}
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.goBack();
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '100%'
-                  }
-                ]}
-              >
-                <EntypoIcon
-                  name={'chevron-thin-left'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
+              <FeatherIcon
+                name={'user'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
             </View>
-            <View style={{ flex: 0.66 }} />
             <Text
               style={{
-                fontSize: 22 * factorRatio,
-                fontWeight: 'bold',
                 fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
                 color: colors.secondBackground
               }}
             >
-              Settings
+              Profile Settings
             </Text>
-            <View style={{ flex: 0.33 }} />
-          </View>
-          <View
-            key={'scrollview'}
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            key={'notificationSettings'}
+            onPress={() => {
+              this.props.navigation.navigate('NOTIFICATIONSETTINGS');
+            }}
+            style={[
+              styles.centerContent,
+              {
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                flexDirection: 'row',
+                paddingRight: 15
+              }
+            ]}
+          >
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <IonIcon
+                name={'ios-notifications-outline'}
+                color={colors.pianoteRed}
+                size={35 * factorRatio}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
+                color: colors.secondBackground
+              }}
+            >
+              Notification Settings
+            </Text>
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            key={'manageSubscriptions'}
+            onPress={this.manageSubscriptions}
+            style={[
+              styles.centerContent,
+              {
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                flexDirection: 'row',
+                paddingRight: 15
+              }
+            ]}
+          >
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <AntIcon
+                name={'folder1'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
+                color: colors.secondBackground
+              }}
+            >
+              Manage Subscriptions
+            </Text>
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            key={'restorePurchase'}
+            onPress={this.restorePurchase}
+            style={[
+              styles.centerContent,
+              {
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                flexDirection: 'row',
+                paddingRight: 15
+              }
+            ]}
+          >
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <AntIcon
+                name={'folder1'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
+                color: colors.secondBackground
+              }}
+            >
+              Restore Purchases
+            </Text>
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            key={'support'}
+            onPress={() => {
+              this.props.navigation.navigate('SUPPORT');
+            }}
+            style={[
+              styles.centerContent,
+              {
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                flexDirection: 'row',
+                paddingRight: 15
+              }
+            ]}
+          >
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <FontIcon
+                name={'support'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
+                color: colors.secondBackground
+              }}
+            >
+              Support
+            </Text>
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            key={'termsOfUse'}
+            onPress={() => {
+              this.props.navigation.navigate('TERMS');
+            }}
+            style={[
+              styles.centerContent,
+              {
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                flexDirection: 'row',
+                paddingRight: 15
+              }
+            ]}
+          >
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <AntIcon
+                name={'form'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
+                color: colors.secondBackground
+              }}
+            >
+              Terms of Use
+            </Text>
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            key={'privacyPolicy'}
+            onPress={() => {
+              this.props.navigation.navigate('PRIVACYPOLICY');
+            }}
+            style={[
+              styles.centerContent,
+              {
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                flexDirection: 'row',
+                paddingRight: 15
+              }
+            ]}
+          >
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <FontIcon
+                name={'shield'}
+                color={colors.pianoteRed}
+                size={27.5 * factorRatio}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
+                color: colors.secondBackground
+              }}
+            >
+              Privacy Policy
+            </Text>
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            key={'logOut'}
+            onPress={() => {
+              this.setState({ showLogOut: true });
+            }}
+            style={[
+              styles.centerContent,
+              {
+                height: 50 * factorRatio,
+                width: '100%',
+                borderBottomColor: colors.secondBackground,
+                borderBottomWidth: 1 * factorRatio,
+                flexDirection: 'row',
+                paddingRight: 15
+              }
+            ]}
+          >
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <AntIcon
+                name={'poweroff'}
+                color={colors.pianoteRed}
+                size={23.5 * factorRatio}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 18 * factorRatio,
+                color: colors.secondBackground
+              }}
+            >
+              Log Out
+            </Text>
+            <View style={{ flex: 1 }} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+          <Text
             style={{
-              flex: 0.95
+              fontFamily: 'OpenSans-Regular',
+              textAlign: 'center',
+              color: colors.secondBackground,
+              marginTop: 15 * factorRatio,
+              fontSize: 12 * factorRatio
             }}
           >
-            <ScrollView>
-              <TouchableOpacity
-                key={'profileSettings'}
-                onPress={() => {
-                  this.props.navigation.navigate('PROFILESETTINGS');
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    borderTopWidth: 0.5 * factorRatio,
-                    borderTopColor: colors.secondBackground,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <FeatherIcon
-                    name={'user'}
-                    size={25 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Profile Settings
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                key={'notificationSettings'}
-                onPress={() => {
-                  this.props.navigation.navigate('NOTIFICATIONSETTINGS');
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <IonIcon
-                    name={'ios-notifications-outline'}
-                    color={colors.pianoteRed}
-                    size={35 * factorRatio}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Notification Settings
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                key={'manageSubscriptions'}
-                onPress={this.manageSubscriptions}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <AntIcon
-                    name={'folder1'}
-                    size={25 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Manage Subscriptions
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
+            APP VERSION {DeviceInfo.getVersion()}
+          </Text>
+          {commonService.rootUrl.includes('staging') && (
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                textAlign: 'center',
+                color: colors.secondBackground,
+                marginTop: 15 * factorRatio,
+                fontSize: 12 * factorRatio
+              }}
+            >
+              BUILD NUMBER {DeviceInfo.getBuildNumber()}
+            </Text>
+          )}
+        </ScrollView>
 
-              <TouchableOpacity
-                key={'restorePurchase'}
-                onPress={this.restorePurchase}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <AntIcon
-                    name={'folder1'}
-                    size={25 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Restore Purchases
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                key={'support'}
-                onPress={() => {
-                  this.props.navigation.navigate('SUPPORT');
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <FontIcon
-                    name={'support'}
-                    size={25 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Support
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                key={'termsOfUse'}
-                onPress={() => {
-                  this.props.navigation.navigate('TERMS');
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <AntIcon
-                    name={'form'}
-                    size={25 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Terms of Use
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                key={'privacyPolicy'}
-                onPress={() => {
-                  this.props.navigation.navigate('PRIVACYPOLICY');
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <FontIcon
-                    name={'shield'}
-                    color={colors.pianoteRed}
-                    size={27.5 * factorRatio}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Privacy Policy
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                key={'logOut'}
-                onPress={() => {
-                  this.setState({ showLogOut: true });
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: 50 * factorRatio,
-                    width: '100%',
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 1 * factorRatio,
-                    flexDirection: 'row',
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 60 * factorHorizontal }
-                  ]}
-                >
-                  <AntIcon
-                    name={'poweroff'}
-                    color={colors.pianoteRed}
-                    size={23.5 * factorRatio}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 18 * factorRatio,
-                    color: colors.secondBackground
-                  }}
-                >
-                  Log Out
-                </Text>
-                <View style={{ flex: 1 }} />
-                <AntIcon
-                  name={'right'}
-                  size={22.5 * factorRatio}
-                  color={colors.secondBackground}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  textAlign: 'center',
-                  color: colors.secondBackground,
-                  marginTop: 15 * factorRatio,
-                  fontSize: 12 * factorRatio
-                }}
-              >
-                APP VERSION {DeviceInfo.getVersion()}
-              </Text>
-              {commonService.rootUrl.includes('staging') && (
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    color: colors.secondBackground,
-                    marginTop: 15 * factorRatio,
-                    fontSize: 12 * factorRatio
-                  }}
-                >
-                  BUILD NUMBER {DeviceInfo.getBuildNumber()}
-                </Text>
-              )}
-            </ScrollView>
-          </View>
-        </View>
         <Modal
           key={'logout'}
           isVisible={this.state.showLogOut}
@@ -687,7 +636,7 @@ export default class Settings extends React.Component {
           }}
         />
         <NavigationBar currentPage={'PROFILE'} />
-      </View>
+      </SafeAreaView>
     );
   }
 }

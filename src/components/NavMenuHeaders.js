@@ -29,7 +29,7 @@ class NavMenuHeaders extends React.Component {
   render = () => {
     return (
       <SafeAreaView
-        style={{ 
+        style={{
           flexDirection: 'row',
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
@@ -38,12 +38,10 @@ class NavMenuHeaders extends React.Component {
         <View
           style={{
             marginTop: DeviceInfo.isTablet() ? 10 : 0,
-            paddingBottom: 12.5*factorVertical,
-            paddingTop: (isNotch) ? 0 : 10*factorVertical,
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <TouchableOpacity
@@ -64,7 +62,8 @@ class NavMenuHeaders extends React.Component {
             style={[
               styles.centerContent,
               {
-                height: fullHeight * 0.035,
+                height:
+                  Platform.OS == 'ios' ? fullHeight * 0.035 : fullHeight * 0.08,
                 width: DeviceInfo.isTablet()
                   ? 0.25 * fullWidth
                   : 0.3 * fullWidth

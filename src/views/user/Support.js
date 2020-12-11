@@ -74,56 +74,39 @@ export default class Support extends React.Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
         <View
           key={'header'}
-          style={[
-            styles.centerContent,
-            {
-              flex: 0.1
-            }
-          ]}
+          style={{
+            backgroundColor: colors.thirdBackground,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: 15
+          }}
         >
-          <View
-            key={'goback'}
-            style={[
-              styles.centerContent,
-              {
-                position: 'absolute',
-                left: 0,
-                paddingLeft: 5 * factorHorizontal,
-                bottom: 0 * factorRatio,
-                height: 50 * factorRatio,
-                width: 50 * factorRatio
-              }
-            ]}
+          <TouchableOpacity
+            onPress={() => this.props.navigation.goBack()}
+            style={{ flex: 1 }}
           >
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}
-              style={[
-                styles.centerContent,
-                {
-                  height: '100%',
-                  width: '100%'
-                }
-              ]}
-            >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 0.66 }} />
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
+          </TouchableOpacity>
+
           <Text
             style={{
+              flex: 1,
               fontSize: 22 * factorRatio,
               fontWeight: 'bold',
               fontFamily: 'OpenSans-Regular',
-              color: colors.secondBackground
+              color: colors.secondBackground,
+              textAlign: 'center',
+              alignSelf: 'center'
             }}
           >
             Support
           </Text>
-          <View style={{ flex: 0.33 }} />
+          <View style={{ flex: 1 }} />
         </View>
         <ScrollView
           key={'contentContainer'}

@@ -476,11 +476,6 @@ class Replies extends React.Component {
                   )}
                   <View>{this.mapReplies()}</View>
                 </View>
-                <View
-                  style={{
-                    height: isNotch ? 90 * factorVertical : 60 * factorVertical
-                  }}
-                />
               </KeyboardAwareScrollView>
               <Modal visible={this.state.showMakeReply} transparent={true}>
                 <TouchableOpacity
