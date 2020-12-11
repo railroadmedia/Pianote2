@@ -193,14 +193,14 @@ export default class FoundationsLevel extends React.Component {
         forceInset={{
           bottom: 'never'
         }}
-        style={[styles.container, { backgroundColor: colors.mainBackground }]}
+        style={[styles.container, { backgroundColor: 'black' }]}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
           style={{
             flex: 1,
-            backgroundColor: colors.mainBackground
+            backgroundColor: 'black'
           }}
           refreshControl={
             <RefreshControl
@@ -234,7 +234,6 @@ export default class FoundationsLevel extends React.Component {
                   position: 'absolute',
                   left: 7.5 * factorHorizontal,
                   top: 10 * factorVertical,
-                  backgroundColor: 'black',
                   zIndex: 4
                 }
               ]}
@@ -247,7 +246,7 @@ export default class FoundationsLevel extends React.Component {
             </TouchableOpacity>
 
             <GradientFeature
-              color={'blue'}
+              color={'black'}
               opacity={1}
               height={'100%'}
               borderRadius={0}
@@ -258,7 +257,7 @@ export default class FoundationsLevel extends React.Component {
                 alignSelf: 'stretch',
                 backgroundColor: colors.mainBackground
               }}
-              source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
+              source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
               resizeMode={FastImage.resizeMode.cover}
             />
             <View
@@ -274,32 +273,28 @@ export default class FoundationsLevel extends React.Component {
               <View style={{ flex: 0.7 }} />
               <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <Pianote
-                  height={fullHeight * 0.03}
-                  width={fullWidth * 0.35}
-                  fill={'white'}
+                  height={fullHeight * 0.023}
+                  width={fullWidth * 0.3}
+                  fill={colors.pianoteRed}
                 />
               </View>
-              <Text
-                key={'foundations'}
+              <View style={{ height: 3.5 * factorVertical }} />
+              <FastImage
                 style={{
-                  fontSize: 20 * factorRatio,
-                  fontWeight: '700',
-                  color: 'white',
-                  fontFamily: 'RobotoCondensed-Regular',
-                  transform: [{ scaleX: 0.7 }],
-                  textAlign: 'center'
+                  width: fullWidth,
+                  height: 20 * factorVertical,
+                  alignSelf: 'stretch'
                 }}
-              >
-                FOUNDATIONS
-              </Text>
-              <View style={{ flex: 0.15 }} />
+                source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                resizeMode={FastImage.resizeMode.contain}
+              />   
+              <View style={{ height: 10 }} />
               <Text
                 key={'level'}
                 style={{
-                  fontSize: 40 * factorRatio,
-                  fontWeight: 'bold',
+                  fontSize: 42.5 * factorRatio,
                   color: 'white',
-                  fontFamily: 'RobotoCondensed-Regular',
+                  fontFamily: 'RobotoCondensed-Bold',
                   textAlign: 'center'
                 }}
               >
@@ -309,6 +304,7 @@ export default class FoundationsLevel extends React.Component {
               <View
                 key={'startIcon'}
                 style={{
+                  height: '17.5%',
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-evenly'
@@ -319,7 +315,7 @@ export default class FoundationsLevel extends React.Component {
                     this.toggleMyList();
                   }}
                   style={{
-                    flex: 1,
+                    flex: 0.5,
                     alignItems: 'center'
                   }}
                 >
@@ -346,7 +342,6 @@ export default class FoundationsLevel extends React.Component {
                     {this.state.isAddedToList ? 'Added' : 'My List'}
                   </Text>
                 </TouchableOpacity>
-
                 {this.state.isCompleted ? (
                   <ResetIcon
                     pressed={() =>
@@ -372,7 +367,6 @@ export default class FoundationsLevel extends React.Component {
                     }
                   />
                 ) : null}
-
                 <TouchableOpacity
                   onPress={() => {
                     this.setState({
@@ -380,7 +374,7 @@ export default class FoundationsLevel extends React.Component {
                     });
                   }}
                   style={{
-                    flex: 1,
+                    flex: 0.5,
                     alignItems: 'center'
                   }}
                 >
@@ -422,6 +416,7 @@ export default class FoundationsLevel extends React.Component {
             </View>
           )}
           <VerticalVideoList
+            foundationsLevel={true}
             items={this.state.items}
             isLoading={this.state.isLoadingAll}
             showFilter={false} // shows filters button
@@ -449,6 +444,7 @@ export default class FoundationsLevel extends React.Component {
             } // image height
             imageWidth={fullWidth * 0.3} // image width
           />
+          <View style={{height: 10}}/>
         </ScrollView>
         <Modal
           key={'restartCourse'}
@@ -479,6 +475,7 @@ export default class FoundationsLevel extends React.Component {
         </Modal>
         {this.state.nextLesson && (
           <NextVideo
+            isMethod={true}
             item={this.state.nextLesson}
             progress={this.state.progress}
             type='UNIT'
@@ -490,7 +487,7 @@ export default class FoundationsLevel extends React.Component {
           />
         )}
 
-        <NavigationBar currentPage={''} />
+        <NavigationBar currentPage={''} isMethod={true}/>
       </SafeAreaView>
     );
   }

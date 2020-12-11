@@ -38,6 +38,7 @@ import {
 } from '../../services/UserActions';
 
 let greaterWDim;
+
 export default class PathOverview extends React.Component {
   static contextType = NetworkContext;
   static navigationOptions = { header: null };
@@ -49,6 +50,7 @@ export default class PathOverview extends React.Component {
       isAddedToList: this.props.navigation.state.params.data?.isAddedToList,
       thumbnail: this.props.navigation.state.params.data?.thumbnail,
       artist: this.props.navigation.state.params.data?.artist,
+      isMethod: true,
       showInfo: false,
       totalLength: 0,
       isLiked: false,
@@ -222,7 +224,7 @@ export default class PathOverview extends React.Component {
           {
             flex: 1,
             width: '100%',
-            backgroundColor: colors.mainBackground
+            backgroundColor: (this.state.isMethod) ? 'black' : colors.mainBackground
           }
         ]}
       >
@@ -231,7 +233,7 @@ export default class PathOverview extends React.Component {
           contentInsetAdjustmentBehavior={'never'}
           style={{
             flex: 1,
-            backgroundColor: colors.mainBackground
+            backgroundColor: (this.state.isMethod) ? 'black' : colors.mainBackground
           }}
           refreshControl={
             <RefreshControl
@@ -290,7 +292,6 @@ export default class PathOverview extends React.Component {
                     height: '100%',
                     width: '100%',
                     borderRadius: 100,
-                    backgroundColor: 'black',
                     opacity: 0.4
                   }
                 ]}
@@ -345,7 +346,7 @@ export default class PathOverview extends React.Component {
                 numberOfLines={2}
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  color: colors.secondBackground,
+                  color: (this.state.isMethod) ? colors.pianoteGrey : colors.secondBackground,
                   textAlign: 'center',
                   fontSize: 14 * factorRatio
                 }}
@@ -354,7 +355,7 @@ export default class PathOverview extends React.Component {
                 {this.state.data.xp} XP
               </Text>
             </View>
-            <View style={{ height: 20 * factorVertical }} />
+            <View style={{ height: 15 * factorVertical }} />
             <View
               key={'thumb/Start/Info'}
               style={{
@@ -368,7 +369,7 @@ export default class PathOverview extends React.Component {
                 onPress={() => this.addToMyList()}
                 style={{
                   alignItems: 'center',
-                  flex: 1
+                  flex: 0.5
                 }}
               >
                 {!this.state.isAddedToList ? (
@@ -429,7 +430,7 @@ export default class PathOverview extends React.Component {
                 }
                 style={{
                   alignItems: 'center',
-                  flex: 1
+                  flex: 0.5
                 }}
               >
                 <AntIcon
@@ -695,6 +696,7 @@ export default class PathOverview extends React.Component {
           <View style={{ height: 15 * factorVertical }} />
 
           <VerticalVideoList
+            foundationsLevel={true} // change colors 
             items={this.state.items}
             isLoading={false}
             title={'Foundations'} // title for see all page
@@ -757,7 +759,10 @@ export default class PathOverview extends React.Component {
             onRestart={this.onRestartCourse}
           />
         </Modal>
-        <NavigationBar currentPage={'LessonsPathOverview'} />
+        <NavigationBar 
+          currentPage={'LessonsPathOverview'} 
+          isMethod={(this.state.isMethod) ? 'black' : colors.mainBackground}
+        />
       </SafeAreaView>
     );
   }

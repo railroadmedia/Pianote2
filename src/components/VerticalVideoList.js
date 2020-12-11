@@ -589,7 +589,7 @@ class VerticalVideoList extends React.Component {
                       numberOfLines={2}
                       style={{
                         fontSize: 12 * factorRatio,
-                        color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
+                        color: (this.props.isMethod || this.props.foundationsLevel) ? colors.pianoteGrey : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular'
                       }}
@@ -603,7 +603,7 @@ class VerticalVideoList extends React.Component {
                       numberOfLines={1}
                       style={{
                         fontSize: 12 * factorRatio,
-                        color: (this.props.isMethod) ? colors.pianoteGrey : colors.secondBackground,
+                        color: (this.props.isMethod || this.props.foundationsLevel) ? colors.pianoteGrey : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular'
                       }}
@@ -656,7 +656,7 @@ class VerticalVideoList extends React.Component {
                         <FontIcon
                           size={30 * factorRatio}
                           name={'calendar-plus'}
-                          color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
+                          color={(this.props.isMethod && !this.props.foundationsLevel) ? colors.pianoteGrey : colors.pianoteRed}
                         />
                       </TouchableOpacity>
                     ) : !row.isAddedToList ? (
@@ -669,7 +669,7 @@ class VerticalVideoList extends React.Component {
                         <AntIcon
                           name={'plus'}
                           size={30 * factorRatio}
-                          color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
+                          color={(this.props.isMethod && !this.props.foundationsLevel) ? colors.pianoteGrey : colors.pianoteRed}
                         />
                       </TouchableOpacity>
                     ) : row.isAddedToList ? (
@@ -682,7 +682,7 @@ class VerticalVideoList extends React.Component {
                         <AntIcon
                           name={'close'}
                           size={30 * factorRatio}
-                          color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
+                          color={(this.props.isMethod && !this.props.foundationsLevel) ? colors.pianoteGrey : colors.pianoteRed}
                         />
                       </TouchableOpacity>
                     ) : null}
