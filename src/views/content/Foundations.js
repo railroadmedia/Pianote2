@@ -217,14 +217,18 @@ export default class Foundations extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
-        <NavMenuHeaders currentPage={'LESSONS'} parentPage={'FOUNDATIONS'} />
+        <NavMenuHeaders
+          isMethod={true}
+          currentPage={'LESSONS'} 
+          parentPage={'FOUNDATIONS'}
+        />
 
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
           style={{
             flex: 1,
-            backgroundColor: colors.mainBackground
+            backgroundColor: 'black'
           }}
           refreshControl={
             <RefreshControl
@@ -245,7 +249,7 @@ export default class Foundations extends React.Component {
             ]}
           >
             <GradientFeature
-              color={'blue'}
+              color={'black'}
               opacity={1}
               height={'100%'}
               borderRadius={0}
@@ -256,7 +260,7 @@ export default class Foundations extends React.Component {
                 alignSelf: 'stretch',
                 backgroundColor: colors.mainBackground
               }}
-              source={require('Pianote2/src/assets/img/imgs/foundations-background-image.png')}
+              source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
               resizeMode={FastImage.resizeMode.cover}
             />
             <View
@@ -270,26 +274,24 @@ export default class Foundations extends React.Component {
               }}
             >
               <View style={{ flex: 0.4 }} />
-              <View style={{ alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <Pianote
                   height={fullHeight * 0.03}
                   width={fullWidth * 0.35}
-                  fill={'white'}
+                  fill={colors.pianoteRed}
                 />
-              </View>
-              <Text
-                key={'foundations'}
-                style={{
-                  fontSize: 40 * factorRatio,
-                  color: 'white',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  transform: [{ scaleX: 0.7 }],
-                  textAlign: 'center'
-                }}
-              >
-                FOUNDATIONS
-              </Text>
-              <View style={{ flex: 0.4 }} />
+                </View>
+                <View style={{ height: 7.5 * factorVertical }} />
+                <FastImage
+                  style={{
+                    width: fullWidth,
+                    height: 35 * factorVertical,
+                    alignSelf: 'stretch'
+                  }}
+                  source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                  resizeMode={FastImage.resizeMode.contain}
+                />              
+              <View style={{ flex: 0.35 }} />
               <View
                 style={{
                   flexDirection: 'row',
@@ -297,7 +299,7 @@ export default class Foundations extends React.Component {
                   justifyContent: 'space-evenly'
                 }}
               >
-                <View key='placeholder' style={{ flex: 1 }} />
+                <View key='placeholder' style={{ flex: 0.5 }} />
                 {this.state.foundationIsCompleted ? (
                   <ResetIcon
                     pressed={() =>
@@ -333,7 +335,7 @@ export default class Foundations extends React.Component {
                     });
                   }}
                   style={{
-                    flex: 1,
+                    flex: 0.5,
                     alignItems: 'center'
                   }}
                 >
@@ -360,20 +362,21 @@ export default class Foundations extends React.Component {
             <View
               key={'profile'}
               style={{
-                backgroundColor: colors.mainBackground,
+                backgroundColor: 'black',
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                paddingTop: 20*factorVertical,
               }}
             >
               <FastImage
                 style={{
-                  height: 40 * factorRatio,
+                  height: 50 * factorRatio,
                   aspectRatio: 1,
                   borderRadius: 100,
-                  backgroundColor: colors.secondBackground,
+                  backgroundColor: 'white',
                   borderWidth: 3 * factorRatio,
-                  borderColor: colors.secondBackground,
+                  borderColor: 'white',
                   marginRight: 5
                 }}
                 source={{
@@ -393,7 +396,7 @@ export default class Foundations extends React.Component {
                   marginLeft: 5
                 }}
               >
-                LEVEL 1
+                LEVEL {this.state.level}
               </Text>
             </View>
           )}
@@ -402,7 +405,9 @@ export default class Foundations extends React.Component {
               key={'info'}
               style={{
                 width: '100%',
-                paddingVertical: 15
+                paddingVertical: 15,
+                paddingLeft: fullWidth*0.035,
+                paddingRight: fullWidth*0.035,
               }}
             >
               <Text
@@ -568,6 +573,7 @@ export default class Foundations extends React.Component {
             </View>
           )}
           <VerticalVideoList
+            isMethod={true}
             items={this.state.items}
             isLoading={this.state.isLoadingAll}
             title={'FOUNDATIONS'}
@@ -623,6 +629,7 @@ export default class Foundations extends React.Component {
         {!this.state.isLoadingAll && this.state.nextLesson && (
           <NextVideo
             item={this.state.nextLesson}
+            isMethod={true}
             progress={this.state.progress}
             type='FOUNDATION'
             onNextLesson={() =>
@@ -632,7 +639,7 @@ export default class Foundations extends React.Component {
             }
           />
         )}
-        <NavigationBar currentPage={''} />
+        <NavigationBar currentPage={''} isMethod={true} />
       </View>
     );
   }

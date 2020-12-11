@@ -496,24 +496,7 @@ class VerticalVideoList extends React.Component {
                       <View style={{ flex: 1.5 }} />
                       <View
                         style={{
-                          zIndex: 20,
-                          elevation: 20,
-                          flexDirection: 'row'
-                        }}
-                      >
-                        <FastImage
-                          style={{
-                            height: 8 * factorRatio,
-                            flex: 1,
-                            alignSelf: 'stretch'
-                          }}
-                          source={require('Pianote2/src/assets/img/imgs/Pianote.png')}
-                          resizeMode={FastImage.resizeMode.contain}
-                        />
-                      </View>
-                      <View
-                        style={{
-                          height: 2.5 * factorVertical
+                          flex: 1
                         }}
                       />
                       <Text
@@ -528,7 +511,7 @@ class VerticalVideoList extends React.Component {
                       >
                         LEVEL {index + 1}
                       </Text>
-                      <View style={{ flex: 1 }} />
+                      <View style={{ flex: 0.5 }} />
                     </View>
                   )}
                   {Platform.OS === 'ios' ? (
@@ -590,7 +573,7 @@ class VerticalVideoList extends React.Component {
                     style={{
                       marginTop: 2 * factorRatio,
                       fontSize: 12 * factorRatio,
-                      color: colors.secondBackground,
+                      color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
                       textAlign: 'left',
                       fontFamily: 'OpenSans-Regular',
                       paddingRight: 20 * factorHorizontal
@@ -620,7 +603,7 @@ class VerticalVideoList extends React.Component {
                       numberOfLines={1}
                       style={{
                         fontSize: 12 * factorRatio,
-                        color: colors.secondBackground,
+                        color: (this.props.isMethod) ? colors.pianoteGrey : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular'
                       }}

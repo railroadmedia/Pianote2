@@ -23,8 +23,8 @@ class NextVideo extends React.Component {
       <TouchableOpacity
         onPress={this.props.onNextLesson}
         style={{
-          backgroundColor: colors.mainBackground,
-          borderBottomColor: colors.secondBackground,
+          backgroundColor: (this.props.isMethod) ? 'black' : colors.mainBackground,
+          borderBottomColor: (this.props.isMethod) ? colors.pianoteGrey : colors.secondBackground,
           borderBottomWidth: 0.25 * factorRatio
         }}
       >
@@ -45,7 +45,7 @@ class NextVideo extends React.Component {
             <View
               style={{
                 flex: 1 - this.props.progress / 100,
-                backgroundColor: colors.secondBackground
+                backgroundColor:  (this.props.isMethod) ? colors.pianoteGrey : colors.secondBackground
               }}
             />
           </View>
@@ -63,7 +63,7 @@ class NextVideo extends React.Component {
                 fontSize: 16 * factorRatio,
                 textAlign: 'left',
                 fontFamily: 'RobotoCondensed-Bold',
-                color: colors.secondBackground
+                color: (this.props.isMethod) ? colors.pianoteGrey : colors.secondBackground
               }}
             >
               YOUR NEXT LESSON
@@ -73,7 +73,7 @@ class NextVideo extends React.Component {
               style={{
                 fontSize: 12 * factorRatio,
                 fontFamily: 'OpenSans-Regular',
-                color: colors.secondBackground,
+                color: (this.props.isMethod) ? colors.pianoteGrey : colors.secondBackground,
                 textAlign: 'right'
               }}
             >
@@ -133,14 +133,14 @@ class NextVideo extends React.Component {
               >
                 {this.props.item.getField('title')}
               </Text>
-
+              <View style={{height: 2}}/>
               <Text
                 numberOfLines={2}
                 style={{
                   fontSize: 12 * factorRatio,
                   fontFamily: 'OpenSans-Regular',
                   textAlign: 'left',
-                  color: colors.secondBackground
+                  color: (this.props.isMethod) ? colors.pianoteGrey : colors.secondBackground
                 }}
               >
                 {this.props.item.post.fields?.find(f => f.key === 'video')

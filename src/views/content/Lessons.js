@@ -4,7 +4,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   Platform,
   ScrollView,
   RefreshControl,
