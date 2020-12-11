@@ -2,7 +2,13 @@
  * NavMenuHeaders
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  StatusBar
+} from 'react-native';
 import {
   withNavigation,
   NavigationActions,
@@ -35,9 +41,16 @@ class NavMenuHeaders extends React.Component {
         }}
         forceInset={{ top: 'always' }}
       >
+        <StatusBar
+          backgroundColor={
+            this.props.isMethod ? 'black' : colors.mainBackground
+          }
+          barStyle={'light-content'}
+        />
         <View
           style={{
-            marginTop: DeviceInfo.isTablet() ? 10 : 0,
+            paddingBottom: 12.5 * factorVertical,
+            paddingTop: 10 * factorVertical,
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',

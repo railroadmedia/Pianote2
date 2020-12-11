@@ -38,7 +38,6 @@ export default class Terms extends React.Component {
 
           <Text
             style={{
-              flex: 2,
               fontWeight: Platform.OS == 'android' ? 'bold' : '600',
               fontSize: 20 * factorRatio,
               alignSelf: 'center',

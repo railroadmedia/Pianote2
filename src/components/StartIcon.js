@@ -21,10 +21,7 @@ class StartIcon extends React.Component {
           {
             flex: 1,
             borderRadius: fullWidth * 0.1,
-            backgroundColor: '#fb1b2f',
-            flexDirection: 'row',
-            zIndex: 2,
-            elevation: 5
+            backgroundColor: '#fb1b2f'
           }
         ]}
       >
@@ -35,32 +32,27 @@ class StartIcon extends React.Component {
             {
               flex: 1,
               flexDirection: 'row',
+              paddingVertical: 15 * factorRatio
             }
           ]}
         >
-          <View style={{height: '100%'}}>
-            <View style={{flex: 1}}/>
-            <Icon
-              name={'controller-play'}
-              size={25 * factorRatio}
-              color={'white'}
-            />
-            <View style={{flex: 1}}/>
-          </View>
+          <Icon
+            name={'controller-play'}
+            size={25 * factorRatio}
+            color={'white'}
+          />
+
           <View style={{ flex: 0.025 }} />
-          <View style={{height: '100%'}}>
-            <View style={{flex: 1}}/>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 14 * factorRatio,
-                fontFamily: 'RobotoCondensed-Bold'
-              }}
-            >
-              START
-            </Text>
-            <View style={{flex: 1}}/>
-          </View>
+
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 14 * factorRatio,
+              fontFamily: 'RobotoCondensed-Bold'
+            }}
+          >
+            START
+          </Text>
         </TouchableOpacity>
       </View>
     );

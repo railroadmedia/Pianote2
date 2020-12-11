@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  Platform
+  Platform,
+  StatusBar
 } from 'react-native';
 import { ContentModel } from '@musora/models';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -360,6 +361,10 @@ export default class Search extends React.Component {
         }}
         style={{ flex: 1, backgroundColor: colors.mainBackground }}
       >
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
         <View style={{ backgroundColor: colors.thirdBackground }}>
           <Text
             style={{

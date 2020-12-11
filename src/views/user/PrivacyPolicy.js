@@ -38,7 +38,6 @@ export default class PrivacyPolicy extends React.Component {
 
           <Text
             style={{
-              flex: 1,
               fontWeight: Platform.OS == 'android' ? 'bold' : '600',
               fontSize: 20 * factorRatio,
               alignSelf: 'center',

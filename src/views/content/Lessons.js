@@ -476,7 +476,7 @@ export default class Lessons extends React.Component {
                   style={{
                     width: fullWidth,
                     height: 40 * factorVertical,
-                    alignSelf: 'stretch'
+                    alignSelf: 'center'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -613,11 +613,7 @@ export default class Lessons extends React.Component {
             </View>
           </ScrollView>
         ) : (
-          <ActivityIndicator
-            size='small'
-            style={{ flex: 1 }}
-            color={'white'}
-          />
+          <ActivityIndicator size='small' style={{ flex: 1 }} color={'white'} />
         )}
         <Modal
           key={'restartCourse'}

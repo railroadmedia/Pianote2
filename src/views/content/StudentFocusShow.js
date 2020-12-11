@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  StatusBar
 } from 'react-native';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -214,6 +215,10 @@ export default class StudentFocusShow extends React.Component {
         }}
         style={{ flex: 1, backgroundColor: colors.mainBackground }}
       >
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}

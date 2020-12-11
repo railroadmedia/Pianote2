@@ -8,13 +8,14 @@ import {
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Dimensions
+  Dimensions,
+  ImageBackground,
+  StatusBar
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ContentModel } from '@musora/models';
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
-import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -67,7 +68,7 @@ export default class PathOverview extends React.Component {
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
-    greaterWDim = fullWidth < fullHeight ? fullHeight : fullWidth;
+    greaterWDim = fullHeight < fullWidth ? fullHeight : fullWidth;
   }
 
   componentDidMount() {
@@ -82,7 +83,6 @@ export default class PathOverview extends React.Component {
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
-
     if (Platform.OS === 'ios') {
       if (DeviceInfo.isTablet()) this.setState({ isLandscape });
     } else {
@@ -209,7 +209,7 @@ export default class PathOverview extends React.Component {
   }
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
+    if (DeviceInfo.isTablet() && this.state.isLandscape) return 2.5;
     if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
     return 1.8;
   }
@@ -224,16 +224,26 @@ export default class PathOverview extends React.Component {
           {
             flex: 1,
             width: '100%',
-            backgroundColor: (this.state.isMethod) ? 'black' : colors.mainBackground
+            backgroundColor: this.state.isMethod
+              ? 'black'
+              : colors.mainBackground
           }
         ]}
       >
+        <StatusBar
+          backgroundColor={
+            this.state.isMethod ? 'black' : colors.mainBackground
+          }
+          barStyle={'light-content'}
+        />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
           style={{
             flex: 1,
-            backgroundColor: (this.state.isMethod) ? 'black' : colors.mainBackground
+            backgroundColor: this.state.isMethod
+              ? 'black'
+              : colors.mainBackground
           }}
           refreshControl={
             <RefreshControl
@@ -243,89 +253,43 @@ export default class PathOverview extends React.Component {
             />
           }
         >
-          <View
-            key={'image'}
-            style={[
-              styles.centerContent,
-              {
-                width: '100%',
-                aspectRatio: this.getAspectRatio()
-              }
-            ]}
+          <ImageBackground
+            resizeMode={'cover'}
+            style={{
+              width: '100%',
+              aspectRatio: this.getAspectRatio()
+            }}
+            source={{
+              uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+                (greaterWDim >> 0) * 2
+              },ar_${this.getAspectRatio()},c_fill,g_face/${
+                this.state.thumbnail
+              }`
+            }}
           >
-            <FastImage
-              style={{
-                width: '100%',
-                aspectRatio: this.getAspectRatio()
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.goBack();
               }}
-              source={{
-                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                  (greaterWDim >> 0) * 2
-                },ar_${this.getAspectRatio()},c_fill,g_face/${
-                  this.state.thumbnail
-                }`
-              }}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-            <View
-              key={'goBackIcon'}
               style={[
                 styles.centerContent,
                 {
                   position: 'absolute',
-                  left: 10 * factorHorizontal,
+                  left: 15,
                   top: 10,
-                  height: 35 * factorRatio,
-                  width: 35 * factorRatio,
                   borderRadius: 100,
-                  zIndex: 5
+                  height: 35 * factorRatio,
+                  width: 35 * factorRatio
                 }
               ]}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.goBack();
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '100%',
-                    borderRadius: 100,
-                    opacity: 0.4
-                  }
-                ]}
-              >
-                <EntypoIcon
-                  name={'chevron-thin-left'}
-                  size={22.5 * factorRatio}
-                  color={'white'}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.goBack();
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '100%',
-                    borderRadius: 100,
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                  }
-                ]}
-              >
-                <EntypoIcon
-                  name={'chevron-thin-left'}
-                  size={22.5 * factorRatio}
-                  color={'white'}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+              <EntypoIcon
+                name={'chevron-thin-left'}
+                size={22.5 * factorRatio}
+                color={'white'}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
           <View key={'title'}>
             <View style={{ height: 20 * factorVertical }} />
             <View style={{ flex: 1 }}>
@@ -346,7 +310,9 @@ export default class PathOverview extends React.Component {
                 numberOfLines={2}
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  color: (this.state.isMethod) ? colors.pianoteGrey : colors.secondBackground,
+                  color: this.state.isMethod
+                    ? colors.pianoteGrey
+                    : colors.secondBackground,
                   textAlign: 'center',
                   fontSize: 14 * factorRatio
                 }}
@@ -696,7 +662,7 @@ export default class PathOverview extends React.Component {
           <View style={{ height: 15 * factorVertical }} />
 
           <VerticalVideoList
-            foundationsLevel={true} // change colors 
+            foundationsLevel={true} // change colors
             items={this.state.items}
             isLoading={false}
             title={'Foundations'} // title for see all page
@@ -759,9 +725,9 @@ export default class PathOverview extends React.Component {
             onRestart={this.onRestartCourse}
           />
         </Modal>
-        <NavigationBar 
-          currentPage={'LessonsPathOverview'} 
-          isMethod={(this.state.isMethod) ? 'black' : colors.mainBackground}
+        <NavigationBar
+          currentPage={'LessonsPathOverview'}
+          isMethod={this.state.isMethod ? 'black' : colors.mainBackground}
         />
       </SafeAreaView>
     );

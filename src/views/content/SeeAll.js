@@ -7,7 +7,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
+  StatusBar
 } from 'react-native';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -267,6 +268,10 @@ export default class SeeAll extends React.Component {
         }}
         style={{ flex: 1, backgroundColor: colors.mainBackground }}
       >
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
         <View
           style={{
             flexDirection: 'row',
@@ -292,7 +297,6 @@ export default class SeeAll extends React.Component {
               fontSize: 22 * factorRatio,
               color: 'white',
               fontFamily: 'OpenSans-Bold',
-              flex: 1,
               alignSelf: 'center',
               textAlign: 'center'
             }}

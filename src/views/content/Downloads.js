@@ -2,7 +2,13 @@
  * Downloads
  */
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StatusBar
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
 import { Download_V2, offlineContent } from 'RNDownload';
@@ -95,9 +101,13 @@ export default class Downloads extends React.Component {
         forceInset={{
           bottom: 'never'
         }}
-        style={styles.container}
+        style={{ backgroundColor: colors.mainBackground, flex: 1 }}
       >
-        <View style={{ backgroundColor: colors.mainBackground, flex: 1 }}>
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
+        <View style={{ flex: 1 }}>
           <View
             style={{
               flexDirection: 'row',
@@ -113,7 +123,6 @@ export default class Downloads extends React.Component {
                 fontSize: 22 * factorRatio,
                 color: 'white',
                 fontFamily: 'OpenSans-Bold',
-                flex: 1,
                 paddingVertical: 15,
                 alignSelf: 'center',
                 textAlign: 'center'

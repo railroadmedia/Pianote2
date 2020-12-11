@@ -290,14 +290,12 @@ export default class Profile extends React.Component {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: 15,
-              backgroundColor: colors.thirdBackground
+              padding: 15
             }}
           >
             <View style={{ flex: 1 }} />
             <Text
               style={{
-                flex: 1,
                 fontSize: 22 * factorRatio,
                 color: 'white',
                 fontFamily: 'OpenSans-Bold',

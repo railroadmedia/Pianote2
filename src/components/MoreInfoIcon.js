@@ -23,9 +23,7 @@ class MoreInfoIcon extends React.Component {
             borderRadius: fullWidth * 0.1,
             backgroundColor: 'transparent',
             borderColor: 'white',
-            borderWidth: 2,
-            zIndex: 2,
-            elevation: 5
+            borderWidth: 2
           }
         ]}
       >
@@ -36,29 +34,23 @@ class MoreInfoIcon extends React.Component {
             {
               flex: 1,
               flexDirection: 'row',
-              height: '100%'
+              paddingVertical: 15 * factorRatio
             }
           ]}
         >
-          <View style={{height: '100%'}}>
-            <View style={{flex: 1}}/>
-            <Icon name={'arrowright'} size={23 * factorRatio} color={'white'} />
-            <View style={{flex: 1}}/>
-          </View>
-          <View style={{ flex: 0.1 }} />
-          <View style={{height: '100%'}}>
-          <View style={{flex: 1}}/>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 14 * factorRatio,
-                fontFamily: 'RobotoCondensed-Bold'
-              }}
-            >
-              MORE INFO
-            </Text>
-            <View style={{flex: 1}}/>
-          </View>
+          <Icon name={'arrowright'} size={23 * factorRatio} color={'white'} />
+
+          <View style={{ flex: 0.075 }} />
+
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 14 * factorRatio,
+              fontFamily: 'RobotoCondensed-Bold'
+            }}
+          >
+            MORE INFO
+          </Text>
         </TouchableOpacity>
       </View>
     );

@@ -95,7 +95,6 @@ export default class Support extends React.Component {
 
           <Text
             style={{
-              flex: 1,
               fontSize: 22 * factorRatio,
               fontWeight: 'bold',
               fontFamily: 'OpenSans-Regular',

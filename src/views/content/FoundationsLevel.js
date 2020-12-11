@@ -8,7 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
@@ -36,6 +37,8 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+let greaterWDim;
+
 export default class FoundationsLevel extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -60,6 +63,7 @@ export default class FoundationsLevel extends React.Component {
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
+    greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
 
   componentDidMount = async () => {
@@ -210,194 +214,171 @@ export default class FoundationsLevel extends React.Component {
             />
           }
         >
-          <View
-            key={'image'}
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.goBack();
+            }}
             style={[
               styles.centerContent,
               {
-                width: '100%',
-                aspectRatio: this.getAspectRatio()
+                position: 'absolute',
+                height: 35 * factorRatio,
+                width: 35 * factorRatio,
+                borderRadius: 100,
+                position: 'absolute',
+                left: 7.5 * factorHorizontal,
+                top: 10 * factorVertical,
+                zIndex: 4
               }
             ]}
           >
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}
-              style={[
-                styles.centerContent,
-                {
-                  position: 'absolute',
-                  height: 35 * factorRatio,
-                  width: 35 * factorRatio,
-                  borderRadius: 100,
-                  position: 'absolute',
-                  left: 7.5 * factorHorizontal,
-                  top: 10 * factorVertical,
-                  zIndex: 4
-                }
-              ]}
-            >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={22.5 * factorRatio}
-                color={'white'}
-              />
-            </TouchableOpacity>
-
-            <GradientFeature
-              color={'black'}
-              opacity={1}
-              height={'100%'}
-              borderRadius={0}
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={'white'}
             />
+          </TouchableOpacity>
+
+          <GradientFeature
+            color={'black'}
+            opacity={1}
+            height={'100%'}
+            borderRadius={0}
+          />
+          <ImageBackground
+            resizeMode={'cover'}
+            style={{
+              width: '100%',
+              aspectRatio: this.getAspectRatio(),
+              justifyContent: 'flex-end'
+            }}
+            source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+          >
+            <View style={{ alignSelf: 'center' }}>
+              <Pianote
+                height={fullHeight * 0.04}
+                width={fullWidth * 0.4}
+                fill={colors.pianoteRed}
+              />
+            </View>
+
             <FastImage
               style={{
-                flex: 1,
-                alignSelf: 'stretch',
-                backgroundColor: colors.mainBackground
-              }}
-              source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-            <View
-              key={'pianoteSVG'}
-              style={{
-                position: 'absolute',
-                height: '100%',
+                height: greaterWDim / 30,
                 width: '100%',
-                zIndex: 2,
-                elevation: 2
+                alignSelf: 'center'
+              }}
+              source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+
+            <Text
+              key={'level'}
+              style={{
+                fontSize: 43 * factorRatio,
+                color: 'white',
+                fontFamily: 'RobotoCondensed-Bold',
+                textAlign: 'center'
               }}
             >
-              <View style={{ flex: 0.7 }} />
-              <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                <Pianote
-                  height={fullHeight * 0.023}
-                  width={fullWidth * 0.3}
-                  fill={colors.pianoteRed}
-                />
-              </View>
-              <View style={{ height: 3.5 * factorVertical }} />
-              <FastImage
-                style={{
-                  width: fullWidth,
-                  height: 20 * factorVertical,
-                  alignSelf: 'stretch'
+              LEVEL {this.state.level}
+            </Text>
+
+            <View
+              key={'startIcon'}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                paddingVertical: 15 * factorRatio
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  this.toggleMyList();
                 }}
-                source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-                resizeMode={FastImage.resizeMode.contain}
-              />   
-              <View style={{ height: 10 }} />
-              <Text
-                key={'level'}
                 style={{
-                  fontSize: 42.5 * factorRatio,
-                  color: 'white',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  textAlign: 'center'
+                  flex: 0.5,
+                  alignItems: 'center'
                 }}
               >
-                LEVEL {this.state.level}
-              </Text>
-              <View style={{ flex: 0.3 }} />
-              <View
-                key={'startIcon'}
-                style={{
-                  height: '17.5%',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly'
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.toggleMyList();
-                  }}
-                  style={{
-                    flex: 0.5,
-                    alignItems: 'center'
-                  }}
-                >
-                  {!this.state.isAddedToList ? (
-                    <AntIcon
-                      name={'plus'}
-                      size={27.5 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                  ) : (
-                    <AntIcon
-                      name={'close'}
-                      size={27.5 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                  )}
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      fontSize: 12 * factorRatio
-                    }}
-                  >
-                    {this.state.isAddedToList ? 'Added' : 'My List'}
-                  </Text>
-                </TouchableOpacity>
-                {this.state.isCompleted ? (
-                  <ResetIcon
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : this.state.isStarted ? (
-                  <ContinueIcon
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLesson.post.mobile_app_url
-                      })
-                    }
-                  />
-                ) : !this.state.isStarted ? (
-                  <StartIcon
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLesson.post.mobile_app_url
-                      })
-                    }
-                  />
-                ) : null}
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                  style={{
-                    flex: 0.5,
-                    alignItems: 'center'
-                  }}
-                >
+                {!this.state.isAddedToList ? (
                   <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factorRatio}
+                    name={'plus'}
+                    size={27.5 * factorRatio}
                     color={colors.pianoteRed}
                   />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
-                    }}
-                  >
-                    Info
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ height: 20 * factorVertical }} />
+                ) : (
+                  <AntIcon
+                    name={'close'}
+                    size={27.5 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                )}
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    color: 'white',
+                    fontSize: 12 * factorRatio
+                  }}
+                >
+                  {this.state.isAddedToList ? 'Added' : 'My List'}
+                </Text>
+              </TouchableOpacity>
+              {this.state.isCompleted ? (
+                <ResetIcon
+                  pressed={() =>
+                    this.setState({
+                      showRestartCourse: true
+                    })
+                  }
+                />
+              ) : this.state.isStarted ? (
+                <ContinueIcon
+                  pressed={() =>
+                    this.props.navigation.navigate('VIDEOPLAYER', {
+                      url: this.state.nextLesson.post.mobile_app_url
+                    })
+                  }
+                />
+              ) : !this.state.isStarted ? (
+                <StartIcon
+                  pressed={() =>
+                    this.props.navigation.navigate('VIDEOPLAYER', {
+                      url: this.state.nextLesson.post.mobile_app_url
+                    })
+                  }
+                />
+              ) : null}
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({
+                    showInfo: !this.state.showInfo
+                  });
+                }}
+                style={{
+                  flex: 0.5,
+                  alignItems: 'center'
+                }}
+              >
+                <AntIcon
+                  name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                  size={22 * factorRatio}
+                  color={colors.pianoteRed}
+                />
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    color: 'white',
+                    marginTop: 3 * factorRatio,
+                    fontSize: 13 * factorRatio
+                  }}
+                >
+                  Info
+                </Text>
+              </TouchableOpacity>
             </View>
-          </View>
+          </ImageBackground>
           {this.state.showInfo && (
             <View key={'info'} style={{ width: '100%' }}>
               <View style={{ height: 20 * factorVertical }} />
@@ -444,7 +425,7 @@ export default class FoundationsLevel extends React.Component {
             } // image height
             imageWidth={fullWidth * 0.3} // image width
           />
-          <View style={{height: 10}}/>
+          <View style={{ height: 10 }} />
         </ScrollView>
         <Modal
           key={'restartCourse'}
@@ -487,7 +468,7 @@ export default class FoundationsLevel extends React.Component {
           />
         )}
 
-        <NavigationBar currentPage={''} isMethod={true}/>
+        <NavigationBar currentPage={''} isMethod={true} />
       </SafeAreaView>
     );
   }

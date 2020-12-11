@@ -9,7 +9,8 @@ import {
   Platform,
   FlatList,
   RefreshControl,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
@@ -176,7 +177,8 @@ export default class Packs extends React.Component {
             </View>
           )}
           ListHeaderComponent={() => (
-            <FastImage
+            <ImageBackground
+              resizeMode={'cover'}
               style={{
                 width: '100%',
                 aspectRatio: this.getAspectRatio(),
@@ -187,7 +189,6 @@ export default class Packs extends React.Component {
                   greaterWDim * 2
                 )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
               }}
-              resizeMode={FastImage.resizeMode.cover}
             >
               <GradientFeature
                 color={'blue'}
@@ -199,7 +200,7 @@ export default class Packs extends React.Component {
               />
               <FastImage
                 style={{
-                  height: greaterWDim / 10,
+                  height: greaterWDim / 15,
                   width: '100%',
                   zIndex: 6
                 }}
@@ -253,7 +254,7 @@ export default class Packs extends React.Component {
                   }}
                 />
               </View>
-            </FastImage>
+            </ImageBackground>
           )}
           renderItem={({ item }) => (
             <TouchableOpacity

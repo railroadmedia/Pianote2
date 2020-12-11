@@ -227,7 +227,6 @@ export default class ProfileSettings extends React.Component {
 
           <Text
             style={{
-              flex: 2,
               fontSize: 22 * factorRatio,
               fontFamily: 'OpenSans-Bold',
               color: colors.secondBackground,

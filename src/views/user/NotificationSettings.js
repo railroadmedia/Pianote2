@@ -121,7 +121,6 @@ export default class NotificationSettings extends React.Component {
 
           <Text
             style={{
-              flex: 3,
               textAlign: 'center',
               alignSelf: 'center',
               fontSize: 22 * factorRatio,
@@ -132,6 +131,7 @@ export default class NotificationSettings extends React.Component {
           >
             Notification Settings
           </Text>
+
           <View style={{ flex: 1 }} />
         </View>
         {this.state.isLoading && (

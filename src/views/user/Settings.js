@@ -198,7 +198,6 @@ export default class Settings extends React.Component {
 
           <Text
             style={{
-              flex: 1,
               fontSize: 22 * factorRatio,
               fontFamily: 'OpenSans-Bold',
               color: colors.secondBackground,
