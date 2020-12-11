@@ -406,8 +406,8 @@ export default class Lessons extends React.Component {
       <View style={{ flex: 1, backgroundColor: 'black' }}>
         <NavMenuHeaders
           isMethod={true}
-          currentPage={'LESSONS'}
-          parentPage={'LESSONS'}
+          currentPage={'HOME'}
+          parentPage={'HOME'}
         />
         {!this.state.refreshing ? (
           <ScrollView

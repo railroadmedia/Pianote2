@@ -101,8 +101,8 @@ class NavigationMenu extends React.Component {
                     : 'OpenSans-Bold',
                 color:
                   this.props.parentPage == nav.title.toUpperCase()
-                    ? 'white'
-                    : (this.props.isMethod ? colors.pianoteGrey : colors.secondBackground),
+                    ? (this.props.isMethod ? 'red' : 'white')
+                    : (this.props.isMethod ? 'white' : colors.secondBackground),
                 fontSize:
                   (this.props.parentPage == nav.title.toUpperCase()
                     ? 32.5 * factorRatio
