@@ -6,6 +6,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Dimensions,
   Platform,
   StatusBar
 } from 'react-native';
@@ -52,7 +53,9 @@ class NavMenuHeaders extends React.Component {
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingTop: (isNotch) ? 5*factorVertical : 0,
+            paddingBottom: 10*factorRatio,
           }}
         >
           <TouchableOpacity
@@ -73,15 +76,14 @@ class NavMenuHeaders extends React.Component {
             style={{
               flex: 1,
               paddingHorizontal: 10 * factorRatio,
-              height:
-                Platform.OS == 'ios' ? fullHeight * 0.035 : fullHeight * 0.08,
-              width: DeviceInfo.isTablet() ? 0.25 * fullWidth : 0.3 * fullWidth
+              height: Platform.OS == 'ios' ? fullHeight * 0.035 : fullHeight * 0.08,
+              width: DeviceInfo.isTablet() ? 0.25 * fullWidth : 0.3 * fullWidth,
             }}
           >
             <Pianote fill={'#fb1b2f'} />
           </TouchableOpacity>
-          {DeviceInfo.isTablet() && (
-            <View style={{ flex: fullWidth > 1000 ? 1.5 : 0.5 }} />
+          {onTablet && (
+            <View style={{ flex: Dimensions.get('window').width > Dimensions.get('window').height ? 3 : 0.5 }} />
           )}
           <TouchableOpacity
             key={'lessons'}

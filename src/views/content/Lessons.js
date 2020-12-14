@@ -17,7 +17,7 @@ import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo, { isTablet } from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
 import Filters from '../../components/FIlters.js';
 import StartIcon from '../../components/StartIcon';
@@ -472,14 +472,14 @@ export default class Lessons extends React.Component {
                   source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-                <View style={{ height: 10 * factorVertical }} />
+                <View style={{ height: 22.5 * factorVertical }} />
 
                 <View
                   style={{
+                    flex: (onTablet) ? 0.2 : 0.15,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingVertical: 15 * factorRatio,
                     paddingHorizontal: 25 * factorRatio
                   }}
                 >
@@ -520,6 +520,7 @@ export default class Lessons extends React.Component {
                     }}
                   />
                 </View>
+                <View style={{flex: 0.1}}/>
               </View>
             </ImageBackground>
 

@@ -32,7 +32,6 @@ class ContinueIcon extends React.Component {
             {
               flex: 1,
               flexDirection: 'row',
-              padding: 15 * factorRatio
             }
           ]}
         >

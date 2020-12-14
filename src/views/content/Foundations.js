@@ -242,12 +242,13 @@ export default class Foundations extends React.Component {
             />
           }
         >
-          {/* <GradientFeature
+          <View>
+          <GradientFeature
             color={'black'}
             opacity={1}
             height={'100%'}
             borderRadius={0}
-          /> */}
+          />
           <ImageBackground
             resizeMode={'cover'}
             style={{
@@ -260,25 +261,26 @@ export default class Foundations extends React.Component {
             <View style={{ alignSelf: 'center' }}>
               <Pianote
                 height={fullHeight * 0.04}
-                width={fullWidth * 0.45}
+                width={fullWidth * 0.33}
                 fill={colors.pianoteRed}
               />
             </View>
+            <View style={{height: 5*factorVertical}}/>
             <FastImage
               style={{
                 height: greaterWDim / 20,
-                width: '100%',
+                width: '50%',
                 alignSelf: 'center'
               }}
               source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
               resizeMode={FastImage.resizeMode.contain}
             />
+            <View style={{height: 30*factorRatio}}/>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
-                paddingVertical: 25 * factorRatio
               }}
             >
               <View key='placeholder' style={{ flex: 0.5 }} />
@@ -338,7 +340,9 @@ export default class Foundations extends React.Component {
                 </Text>
               </TouchableOpacity>
             </View>
+            <View style={{height: 30*factorVertical}}/>
           </ImageBackground>
+          </View>
           {this.state.foundationIsStarted && (
             <View
               key={'profile'}
