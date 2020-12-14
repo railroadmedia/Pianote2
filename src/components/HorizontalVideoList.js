@@ -6,21 +6,19 @@ import {
   View,
   Text,
   FlatList,
-  ActivityIndicator,
   TouchableOpacity,
-  TouchableHighlight,
   Platform,
-  Image
+  Image,
+  Dimensions
 } from 'react-native';
-import {
-  addToMyList,
-  removeFromMyList
-} from 'Pianote2/src/services/UserActions.js';
+import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
-import ContentModal from '../modals/ContentModal';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+
+import { addToMyList, removeFromMyList } from '../services/UserActions';
+import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
@@ -34,8 +32,7 @@ class HorizontalVideoList extends React.Component {
     super(props);
     this.state = {
       showModal: false,
-      items: this.props.items,
-      isLoading: this.props.isLoading
+      items: this.props.items
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -55,6 +52,16 @@ class HorizontalVideoList extends React.Component {
       myListStatusChanged = true;
     if (progressChanged || myListStatusChanged)
       this.setState({ items: this.props.items });
+  }
+
+  decideWidth() {
+    if (DeviceInfo.isTablet()) {
+      if (this.props.isSquare) return 300;
+      else return 400;
+    } else {
+      if (this.props.isSquare) return Dimensions.get('window').width / 2.2;
+      else return ((Dimensions.get('window').width - 30) * 3) / 4;
+    }
   }
 
   addToMyList = contentID => {
@@ -83,29 +90,6 @@ class HorizontalVideoList extends React.Component {
     }
     this.setState({ items: this.state.items });
     removeFromMyList(contentID);
-  };
-
-  showFooter = () => {
-    if (this.state.items.length == 0) {
-      return (
-        <View
-          style={[
-            styles.centerContent,
-            {
-              height: '100%'
-            }
-          ]}
-        >
-          <View style={{ flex: 0.33 }} />
-          <ActivityIndicator
-            size={onTablet ? 'large' : 'small'}
-            animating={true}
-            color={this.props.isMethod ? colors.pianoteGrey : colors.secondBackground}
-          />
-          <View style={{ flex: 0.66 }} />
-        </View>
-      );
-    }
   };
 
   like = contentID => {
@@ -189,340 +173,252 @@ class HorizontalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={styles.container}>
+      <View key={'container'} style={{ paddingHorizontal: 15 }}>
         <View
-          key={'container'}
-          style={[
-            styles.centerContent,
-            {
-              minHeight: this.props.itemHeight
-            }
-          ]}
+          key={'title'}
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingVertical: 10 * factorRatio
+          }}
         >
-          <View key={'title'} style={[styles.centerContent]}>
-            <View style={{ height: 10 * factorVertical }} />
-            <View
-              key={'title'}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignContent: 'center',
-                paddingBottom: 5 * factorVertical
-              }}
+          <Text
+            style={{
+              fontSize: 18 * factorRatio,
+              fontFamily: 'RobotoCondensed-Bold',
+              color: this.props.isMethod ? 'white' : colors.secondBackground
+            }}
+          >
+            {this.props.Title}
+          </Text>
+
+          {!this.props.hideSeeAll && (
+            <TouchableOpacity
+              key={'seeAll'}
+              onPress={() => this.props.seeAll()}
             >
               <Text
                 style={{
-                  fontSize: 18 * factorRatio,
-                  marginBottom: 5 * factorVertical,
-                  textAlign: 'left',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  color: this.props.isMethod ? 'white' : colors.secondBackground
+                  textAlign: 'right',
+                  fontSize: 14.5 * factorRatio,
+                  fontWeight: '300',
+                  color: colors.pianoteRed
                 }}
               >
-                {this.props.Title}
+                See All
               </Text>
-              <View style={{ flex: 1 }} />
-              {!this.props.hideSeeAll && (
-                <TouchableOpacity
-                  key={'seeAll'}
-                  style={{ flex: 1 }}
-                  onPress={() => this.props.seeAll()}
-                >
-                  <Text
-                    style={{
-                      textAlign: 'right',
-                      fontSize: 14.5 * factorRatio,
-                      marginRight: 3.5 * factorHorizontal,
-                      fontWeight: '300',
-                      marginTop: 5 * factorVertical,
-                      color: colors.pianoteRed
-                    }}
-                  >
-                    See All
-                  </Text>
-                </TouchableOpacity>
-              )}
-              <View style={{ flex: 0.1 }} />
-            </View>
-          </View>
-
-          {this.state.isLoading && (
-            <View
-              style={[
-                styles.centerContent,
-                {
-                  width: fullWidth,
-                  height: this.props.itemHeight + 80 * factorVertical,
-                  alignSelf: 'stretch'
-                }
-              ]}
-            >
-              {this.showFooter()}
-            </View>
+            </TouchableOpacity>
           )}
-          {!this.state.isLoading && (
-            <FlatList
-              key={'videos'}
-              data={this.state.items}
-              extraData={this.state}
-              horizontal={true}
-              style={{
-                width: '100%'
-              }}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  onLongPress={() => {
-                    this.setState({
-                      showModal: true,
-                      item
-                    });
-                  }}
-                  delayLongPress={350}
-                  onPress={() => this.navigate(item, index)}
-                >
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: this.props.itemWidth,
-                        height: this.props.itemHeight,
-                        marginRight: 10 * factorHorizontal,
-                        borderRadius: 7.5 * factorRatio
-                      }
-                    ]}
-                  >
-                    {item.isCompleted && (
-                      <View
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: this.props.itemWidth,
-                          height: this.props.itemHeight,
-                          borderRadius: 7.5 * factorRatio,
-                          zIndex: 1,
-                          opacity: 0.2,
-                          backgroundColor: colors.pianoteRed
-                        }}
-                      />
-                    )}
-
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: this.props.itemWidth,
-                          height: this.props.itemHeight,
-                          zIndex: 2
-                        }
-                      ]}
-                    >
-                      {item.isStarted ? (
-                        <Progress
-                          height={50}
-                          width={50 * factorRatio}
-                          fill={'white'}
-                        />
-                      ) : item.isCompleted ? (
-                        <ApprovedTeacher
-                          height={60}
-                          width={60 * factorRatio}
-                          fill={'white'}
-                        />
-                      ) : null}
-                    </View>
-
-                    <View
-                      style={{
-                        flex: 1,
-                        alignSelf: 'stretch'
-                      }}
-                    >
-                      {Platform.OS === 'ios' ? (
-                        <FastImage
-                          style={{
-                            flex: 1,
-                            borderRadius: 7.5 * factorRatio
-                          }}
-                          source={{
-                            uri:
-                              item.thumbnail && item.thumbnail !== 'TBD'
-                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                    this.props.itemWidth * 2
-                                  )},ar_${
-                                    this.props.itemWidth ===
-                                    this.props.itemHeight
-                                      ? '1'
-                                      : '16:9'
-                                  },fl_lossy,q_auto:eco,c_fill,g_face/${
-                                    item.thumbnail
-                                  }`
-                                : fallbackThumb
-                          }}
-                          resizeMode={FastImage.resizeMode.cover}
-                        />
-                      ) : (
-                        <Image
-                          style={{
-                            flex: 1,
-                            borderRadius: 7.5 * factorRatio
-                          }}
-                          resizeMode='cover'
-                          source={{
-                            uri:
-                              item.thumbnail && item.thumbnail !== 'TBD'
-                                ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                                    this.props.itemWidth * 2
-                                  )},ar_${
-                                    this.props.itemWidth ===
-                                    this.props.itemHeight
-                                      ? '1'
-                                      : '16:9'
-                                  },fl_lossy,q_auto:eco,c_fill,g_face/${
-                                    item.thumbnail
-                                  }`
-                                : fallbackThumb
-                          }}
-                        />
-                      )}
-                    </View>
-                  </View>
-
-                  <View
-                    style={{
-                      width: this.props.itemWidth,
-                      height: 80 * factorVertical,
-                      flexDirection: 'row'
-                    }}
-                  >
-                    <View style={{ flex: 0.8 }}>
-                      <Text
-                        numberOfLines={2}
-                        style={{
-                          fontSize: 15.5 * factorRatio,
-                          marginTop: 7.5 * factorRatio,
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Bold',
-                          color: 'white'
-                        }}
-                      >
-                        {item.title}
-                      </Text>
-                      <View
-                        style={{
-                          height: 3 * factorRatio
-                        }}
-                      />
-                      <View
-                        style={{
-                          flexDirection: 'row'
-                        }}
-                      >
-                        {this.props.showType && (
-                          <Text
-                            numberOfLines={2}
-                            style={{
-                              textAlign: 'left',
-                              fontFamily: 'OpenSans-Regular',
-                              color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
-                              fontSize: 12 * factorRatio
-                            }}
-                          >
-                            {this.changeType(item.type)}/
-                          </Text>
-                        )}
-                        {this.props.showArtist && (
-                          <Text
-                            numberOfLines={2}
-                            style={{
-                              textAlign: 'left',
-                              fontFamily: 'OpenSans-Regular',
-                              color: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
-                              fontSize: 12 * factorRatio
-                            }}
-                          >
-                            {' '}
-                            {item.artist}
-                          </Text>
-                        )}
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flex: 0.2,
-                        flexDirection: 'row'
-                      }}
-                    >
-                      <View style={{ flex: 1 }} />
-                      {this.props.showArtist && (
-                        <View>
-                          {!item.isAddedToList && (
-                            <TouchableOpacity
-                              style={{
-                                paddingTop: 5 * factorVertical
-                              }}
-                              onPress={() => this.addToMyList(item.id)}
-                            >
-                              <AntIcon
-                                name={'plus'}
-                                size={30 * factorRatio}
-                                color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          )}
-                          {item.isAddedToList && (
-                            <TouchableOpacity
-                              style={{
-                                paddingTop: 5 * factorVertical
-                              }}
-                              onPress={() => this.removeFromMyList(item.id)}
-                            >
-                              <AntIcon
-                                name={'close'}
-                                size={30 * factorRatio}
-                                color={this.props.isMethod ? colors.pianoteGrey : colors.pianoteRed}
-                              />
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
-          )}
-          <Modal
-            key={'modal'}
-            isVisible={this.state.showModal}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={250}
-            animationOutTiming={250}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <ContentModal
-              data={this.state.item}
-              hideContentModal={() => this.setState({ showModal: false })}
-              like={contentID => this.like(contentID)}
-              addToMyList={contentID => this.addToMyList(contentID)}
-              removeFromMyList={contentID => this.removeFromMyList(contentID)}
-            />
-          </Modal>
         </View>
+
+        <FlatList
+          key={'videos'}
+          data={this.state.items}
+          extraData={this.state}
+          horizontal={true}
+          style={{ width: '100%' }}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity
+              style={{ width: this.decideWidth(), marginRight: 15 }}
+              onLongPress={() => {
+                this.setState({
+                  showModal: true,
+                  item
+                });
+              }}
+              delayLongPress={350}
+              onPress={() => this.navigate(item, index)}
+            >
+              <View style={{ width: '100%' }}>
+                <View
+                  style={[
+                    styles.centerContent,
+                    {
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      zIndex: 1
+                    }
+                  ]}
+                >
+                  <Progress
+                    height={50}
+                    width={50 * factorRatio}
+                    fill={'white'}
+                  />
+                </View>
+
+                {Platform.OS === 'ios' ? (
+                  <FastImage
+                    style={{
+                      width: '100%',
+                      aspectRatio: this.props.isSquare ? 1 : 16 / 9,
+                      borderRadius: 7.5 * factorRatio
+                    }}
+                    source={{
+                      uri:
+                        item.thumbnail && item.thumbnail !== 'TBD'
+                          ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                              this.decideWidth() * 2
+                            )},ar_${
+                              this.props.isSquare ? '1' : '16:9'
+                            },fl_lossy,q_auto:eco,c_fill,g_face/${
+                              item.thumbnail
+                            }`
+                          : fallbackThumb
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : (
+                  <Image
+                    style={{
+                      width: '100%',
+                      aspectRatio: this.props.isSquare ? 1 : 16 / 9,
+                      borderRadius: 7.5 * factorRatio
+                    }}
+                    resizeMode='cover'
+                    source={{
+                      uri:
+                        item.thumbnail && item.thumbnail !== 'TBD'
+                          ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                              this.decideWidth() * 2
+                            )},ar_${
+                              this.props.isSquare ? '1' : '16:9'
+                            },fl_lossy,q_auto:eco,c_fill,g_face/${
+                              item.thumbnail
+                            }`
+                          : fallbackThumb
+                    }}
+                  />
+                )}
+              </View>
+
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <View style={{ width: '80%' }}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                    style={{
+                      fontSize: 14 * factorRatio,
+                      marginTop: 7.5 * factorRatio,
+                      marginBottom: 3 * factorRatio,
+                      fontFamily: 'OpenSans-Bold',
+                      color: 'white'
+                    }}
+                  >
+                    {item.title}
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginBottom: 3 * factorRatio
+                    }}
+                  >
+                    {this.props.showType && (
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          fontFamily: 'OpenSans-Regular',
+                          color: this.props.isMethod
+                            ? colors.pianoteGrey
+                            : colors.secondBackground,
+                          fontSize: 12 * factorRatio
+                        }}
+                      >
+                        {this.changeType(item.type)}/
+                      </Text>
+                    )}
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: this.props.isMethod
+                          ? colors.pianoteGrey
+                          : colors.secondBackground,
+                        fontSize: 12 * factorRatio
+                      }}
+                    >
+                      {' '}
+                      {item.artist}
+                    </Text>
+                  </View>
+                </View>
+
+                {!item.isAddedToList ? (
+                  <TouchableOpacity
+                    onPress={() => this.addToMyList(item.id)}
+                    style={{ paddingRight: 5 }}
+                  >
+                    <AntIcon
+                      name={'plus'}
+                      size={25 * factorRatio}
+                      color={
+                        this.props.isMethod
+                          ? colors.pianoteGrey
+                          : colors.pianoteRed
+                      }
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={{ paddingRight: 5 }}
+                    onPress={() => this.removeFromMyList(item.id)}
+                  >
+                    <AntIcon
+                      name={'close'}
+                      size={25 * factorRatio}
+                      color={
+                        this.props.isMethod
+                          ? colors.pianoteGrey
+                          : colors.pianoteRed
+                      }
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+
+        <Modal
+          key={'modal'}
+          isVisible={this.state.showModal}
+          style={[
+            styles.centerContent,
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <ContentModal
+            data={this.state.item}
+            hideContentModal={() => this.setState({ showModal: false })}
+            like={contentID => this.like(contentID)}
+            addToMyList={contentID => this.addToMyList(contentID)}
+            removeFromMyList={contentID => this.removeFromMyList(contentID)}
+          />
+        </Modal>
       </View>
     );
   };

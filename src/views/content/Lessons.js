@@ -523,14 +523,12 @@ export default class Lessons extends React.Component {
               </View>
             </ImageBackground>
 
-            <View style={{ height: 10 * factorVertical }} />
             <View>
               {this.state.lessonsStarted && (
                 <View
                   key={'progressCourses'}
                   style={{
                     minHeight: fullHeight * 0.225,
-                    paddingLeft: fullWidth * 0.035,
                     backgroundColor: 'black'
                   }}
                 >
@@ -543,20 +541,8 @@ export default class Lessons extends React.Component {
                         parent: 'Lessons'
                       })
                     }
-                    showArtist={true}
                     showType={true}
                     items={this.state.progressLessons}
-                    isLoading={false}
-                    itemWidth={
-                      isNotch
-                        ? fullWidth * 0.6
-                        : onTablet
-                        ? fullWidth * 0.425
-                        : fullWidth * 0.55
-                    }
-                    itemHeight={
-                      isNotch ? fullHeight * 0.155 : fullHeight * 0.175
-                    }
                   />
                 </View>
               )}

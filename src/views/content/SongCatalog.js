@@ -128,7 +128,7 @@ export default class SongCatalog extends React.Component {
     for (let i in newContent) {
       items.push({
         title: newContent[i].getField('title'),
-        artist: newContent[i].post.artist,
+        artist: newContent[i].getField('artist'),
         thumbnail: newContent[i].getData('thumbnail_url'),
         type: newContent[i].post.type,
         publishedOn:
@@ -264,7 +264,7 @@ export default class SongCatalog extends React.Component {
           >
             <Text
               style={{
-                paddingLeft: 12 * factorHorizontal,
+                paddingLeft: 15,
                 fontSize: 30 * factorRatio,
                 color: 'white',
                 fontFamily: 'OpenSans-ExtraBold'
@@ -272,18 +272,15 @@ export default class SongCatalog extends React.Component {
             >
               Songs
             </Text>
-            <View style={{ height: 15 * factorVertical }} />
             {this.state.started && (
               <View
                 key={'continueCourses'}
                 style={{
-                  paddingLeft: 15,
                   backgroundColor: colors.mainBackground
                 }}
               >
                 <HorizontalVideoList
                   Title={'CONTINUE'}
-                  isLoading={false}
                   seeAll={() =>
                     this.props.navigation.navigate('SEEALL', {
                       title: 'Continue',
@@ -291,10 +288,8 @@ export default class SongCatalog extends React.Component {
                     })
                   }
                   hideSeeAll={true}
-                  showArtist={true}
+                  isSquare={true}
                   items={this.state.progressSongs}
-                  itemWidth={isNotch ? fullHeight * 0.175 : fullHeight * 0.2}
-                  itemHeight={isNotch ? fullHeight * 0.175 : fullHeight * 0.2}
                 />
               </View>
             )}

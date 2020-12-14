@@ -146,7 +146,7 @@ export default class StudentFocusCatalog extends React.Component {
               <>
                 <Text
                   style={{
-                    paddingLeft: 12 * factorHorizontal,
+                    paddingLeft: 15,
                     paddingTop: 20 * factorVertical,
                     paddingBottom: 10 * factorVertical,
                     fontSize: 30 * factorRatio,
@@ -162,7 +162,6 @@ export default class StudentFocusCatalog extends React.Component {
                   <View
                     key={'continueCourses'}
                     style={{
-                      paddingLeft: 15,
                       backgroundColor: colors.mainBackground
                     }}
                   >
@@ -175,20 +174,8 @@ export default class StudentFocusCatalog extends React.Component {
                         })
                       }
                       hideSeeAll={true}
-                      showArtist={true}
-                      isLoading={false}
                       showType={true}
                       items={this.state.progressStudentFocus}
-                      itemWidth={
-                        isNotch
-                          ? fullWidth * 0.6
-                          : onTablet
-                          ? fullWidth * 0.425
-                          : fullWidth * 0.55
-                      }
-                      itemHeight={
-                        isNotch ? fullHeight * 0.155 : fullHeight * 0.175
-                      }
                     />
                   </View>
                 )}

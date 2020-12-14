@@ -273,7 +273,7 @@ export default class Course extends React.Component {
           >
             <Text
               style={{
-                paddingLeft: 12 * factorHorizontal,
+                paddingLeft: 15,
                 fontSize: 30 * factorRatio,
                 color: 'white',
                 fontFamily: 'OpenSans-ExtraBold'
@@ -285,7 +285,6 @@ export default class Course extends React.Component {
               <View
                 key={'continueCourses'}
                 style={{
-                  paddingLeft: 15,
                   backgroundColor: colors.mainBackground
                 }}
               >
@@ -297,17 +296,7 @@ export default class Course extends React.Component {
                       parent: 'Courses'
                     })
                   }
-                  showArtist={true}
                   items={this.state.progressCourses}
-                  isLoading={false}
-                  itemWidth={
-                    isNotch
-                      ? fullWidth * 0.6
-                      : onTablet
-                      ? fullWidth * 0.425
-                      : fullWidth * 0.55
-                  }
-                  itemHeight={isNotch ? fullHeight * 0.155 : fullHeight * 0.175}
                 />
               </View>
             )}
