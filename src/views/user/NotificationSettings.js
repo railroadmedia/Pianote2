@@ -7,7 +7,8 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  ScrollView
+  ScrollView,
+  StatusBar
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
@@ -92,6 +93,10 @@ export default class NotificationSettings extends React.Component {
           backgroundColor: colors.mainBackground
         }}
       >
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
         <View
           key={'header'}
           style={{

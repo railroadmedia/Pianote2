@@ -8,7 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
-  Alert
+  Alert,
+  StatusBar
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
@@ -174,6 +175,10 @@ export default class Settings extends React.Component {
           backgroundColor: colors.mainBackground
         }}
       >
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
         <View
           key={'header'}
           style={{

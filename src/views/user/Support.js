@@ -7,7 +7,8 @@ import {
   Text,
   Linking,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  StatusBar
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Intercom from 'react-native-intercom';
@@ -72,6 +73,10 @@ export default class Support extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
         <View
           key={'header'}
           style={{

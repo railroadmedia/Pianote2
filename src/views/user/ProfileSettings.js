@@ -8,7 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Platform
+  Platform,
+  StatusBar
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -199,6 +200,10 @@ export default class ProfileSettings extends React.Component {
           backgroundColor: colors.mainBackground
         }}
       >
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
         <View
           key={'myProfileSettings'}
           style={{

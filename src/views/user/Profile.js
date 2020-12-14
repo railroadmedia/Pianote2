@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
-  Linking
+  Linking,
+  StatusBar
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -283,6 +284,10 @@ export default class Profile extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
         <View key={'contentContainer'} style={{ flex: 1 }}>
           <View
             key={'header'}

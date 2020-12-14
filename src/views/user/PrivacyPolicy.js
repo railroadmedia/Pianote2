@@ -2,7 +2,13 @@
  * PrivacyPolicy
  */
 import React from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  StatusBar
+} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { SafeAreaView } from 'react-navigation';
 
@@ -16,6 +22,7 @@ export default class PrivacyPolicy extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar backgroundColor={'#ffffff'} barStyle={'dark-content'} />
         <View
           key={'header'}
           style={{
