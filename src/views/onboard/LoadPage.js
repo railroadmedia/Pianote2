@@ -227,7 +227,7 @@ export default class LoadPage extends React.Component {
               width: fullWidth,
               zIndex: 4,
               elevation: Platform.OS == 'android' ? 4 : 0,
-              backgroundColor: colors.mainBackground
+              backgroundColor: 'black'
             }
           ]}
         >
