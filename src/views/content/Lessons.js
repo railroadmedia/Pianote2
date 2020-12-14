@@ -8,7 +8,8 @@ import {
   ScrollView,
   RefreshControl,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -396,9 +397,9 @@ export default class Lessons extends React.Component {
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
-    return 1.8;
+    if (DeviceInfo.isTablet() && this.state.isLandscape) return 2.5;
+    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 1.8;
+    return 1;
   }
 
   render() {
@@ -428,30 +429,20 @@ export default class Lessons extends React.Component {
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             scrollEventThrottle={400}
           >
-            <View
-              key={'image'}
-              style={[
-                styles.centerContent,
-                {
-                  width: '100%',
-                  height: fullHeight * 0.61
-                }
-              ]}
+            <ImageBackground
+              resizeMode={'cover'}
+              style={{
+                width: '100%',
+                aspectRatio: this.getAspectRatio(),
+                justifyContent: 'flex-end'
+              }}
+              source={require('../../assets/img/imgs/lisamethod.png')}
             >
               <GradientFeature
                 color={'red'}
                 opacity={1}
                 height={'70%'}
                 borderRadius={0}
-              />
-              <FastImage
-                style={{
-                  flex: 1,
-                  alignSelf: 'stretch',
-                  backgroundColor: 'black'
-                }}
-                source={require('../../assets/img/imgs/lisamethod.png')}
-                resizeMode={FastImage.resizeMode.cover}
               />
               <View
                 key={'pianoteSVG'}
@@ -482,15 +473,14 @@ export default class Lessons extends React.Component {
                   resizeMode={FastImage.resizeMode.contain}
                 />
                 <View style={{ height: 10 * factorVertical }} />
-                <View style={{ flex: 0.035 }} />
 
                 <View
                   style={{
-                    flex: 0.12,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingHorizontal: 15
+                    paddingVertical: 15 * factorRatio,
+                    paddingHorizontal: 25 * factorRatio
                   }}
                 >
                   {this.state.foundationIsCompleted ? (
@@ -530,9 +520,9 @@ export default class Lessons extends React.Component {
                     }}
                   />
                 </View>
-                <View style={{ flex: 0.1 }} />
               </View>
-            </View>
+            </ImageBackground>
+
             <View style={{ height: 10 * factorVertical }} />
             <View>
               {this.state.lessonsStarted && (
