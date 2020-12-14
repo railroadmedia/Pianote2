@@ -34,7 +34,7 @@ class MoreInfoIcon extends React.Component {
             {
               flex: 1,
               flexDirection: 'row',
-              paddingVertical: 15 * factorRatio
+              
             }
           ]}
         >

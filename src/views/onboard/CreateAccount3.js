@@ -1430,7 +1430,7 @@ export default class CreateAccount3 extends React.Component {
                     fontWeight: '700'
                   }}
                 >
-                  You should start with{'\n'}The Pianote Foundations!
+                  You should start with{'\n'}The Pianote Method!
                 </Text>
                 <View
                   style={{
@@ -1456,12 +1456,12 @@ export default class CreateAccount3 extends React.Component {
                     <View style={{ flex: 1 }} />
                     <FastImage
                       style={{
-                        height: height * 0.14,
-                        width: width * 0.7,
+                        height: height * 0.134,
+                        width: width * 0.65,
                         borderRadius: 10 * factorRatio,
                         alignSelf: 'stretch'
                       }}
-                      source={require('Pianote2/src/assets/img/imgs/foundations-logo.png')}
+                      source={require('Pianote2/src/assets/img/imgs/pianote-method-logo.png')}
                       resizeMode={FastImage.resizeMode.contain}
                     />
                     <View style={{ flex: 1 }} />
