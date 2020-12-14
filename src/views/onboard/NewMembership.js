@@ -282,7 +282,7 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(skus[0])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR \n 7-DAY FREE TRIAL`}
+                      {`START YOUR\n7-DAY FREE TRIAL`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -347,7 +347,7 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(skus[1])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR \n 7-DAY FREE TRIAL`}
+                      {`START YOUR\n7-DAY FREE TRIAL`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -517,9 +517,9 @@ const styles = StyleSheet.create({
   planBtnText: {
     color: '#ffffff',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: isTablet ? 16 : 13,
+    fontSize: isTablet ? 16 : 12,
     textAlign: 'center',
-    padding: isTablet ? 16 : 10
+    padding: isTablet ? 16 : 5
   },
   underlineText: {
     color: 'white',

@@ -244,10 +244,8 @@ export default class LoginCredentials extends React.Component {
                 </View>
                 <View>
                   <Text
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
                     style={{
-                      fontSize: isiOS ? 99 : 18,
+                      fontSize: 20 * factorRatio,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
@@ -259,10 +257,8 @@ export default class LoginCredentials extends React.Component {
                     The Ultimate Online
                   </Text>
                   <Text
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
                     style={{
-                      fontSize: isiOS ? 99 : 18,
+                      fontSize: 20 * factorRatio,
                       color: 'white',
                       alignSelf: 'center',
                       textAlign: 'center',

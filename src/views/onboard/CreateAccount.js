@@ -33,7 +33,8 @@ export default class CreateAccount extends React.Component {
     else Orientation.lockToPortrait();
     this.state = {
       showCheckEmail: false,
-      email: ''
+      email: '',
+      scrollViewContentFlex: { flex: 1 }
     };
   }
 
@@ -109,75 +110,92 @@ export default class CreateAccount extends React.Component {
               style={{ flex: 1 }}
               keyboardShouldPersistTaps='handled'
               contentInsetAdjustmentBehavior='never'
-              contentContainerStyle={{
-                flex: 1,
-                justifyContent: 'space-between',
-                marginVertical: 40
-              }}
+              contentContainerStyle={this.state.scrollViewContentFlex}
             >
-              <View id='placeholder' />
-              <View style={{ justifyContent: 'center' }}>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 20 * factorRatio,
-                    fontWeight: '600',
-                    textAlign: 'left',
-                    color: 'white',
-                    paddingLeft: 15
-                  }}
-                >
-                  What's your email?
-                </Text>
-                <TextInput
-                  autoCorrect={false}
-                  keyboardAppearance={'dark'}
-                  placeholderTextColor={'grey'}
-                  placeholder={'Email Address'}
-                  keyboardType={
-                    Platform.OS == 'android'
-                      ? 'visible-password'
-                      : 'email-address'
-                  }
-                  onChangeText={email => this.setState({ email })}
-                  style={{
-                    padding: 15,
-                    marginVertical: 20,
-                    color: 'black',
-                    borderRadius: 100,
-                    marginHorizontal: 15,
-                    backgroundColor: 'white',
-                    fontFamily: 'OpenSans-Regular'
-                  }}
-                />
-
-                <TouchableOpacity
-                  onPress={() => this.verifyEmail()}
-                  style={[
-                    styles.centerContent,
-                    {
-                      borderWidth: 2,
-                      borderRadius: 50,
-                      alignSelf: 'center',
-                      borderColor: '#fb1b2f',
-                      width: onTablet ? '30%' : '50%',
-                      backgroundColor:
-                        this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
-                    }
-                  ]}
-                >
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'space-between',
+                  marginBottom: 20 * factorRatio
+                }}
+              >
+                <View id='placeholder' />
+                <View style={{ justifyContent: 'center' }}>
                   <Text
                     style={{
-                      padding: 15,
-                      fontFamily: 'RobotoCondensed-Bold',
-                      color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 20 * factorRatio,
+                      fontWeight: '600',
+                      textAlign: 'left',
+                      color: 'white',
+                      paddingLeft: 15
                     }}
                   >
-                    NEXT
+                    What's your email?
                   </Text>
-                </TouchableOpacity>
+                  <TextInput
+                    autoCorrect={false}
+                    onBlur={() =>
+                      this.setState({
+                        scrollViewContentFlex: { flex: 1 }
+                      })
+                    }
+                    onFocus={() =>
+                      this.setState({
+                        scrollViewContentFlex: {}
+                      })
+                    }
+                    keyboardAppearance={'dark'}
+                    placeholderTextColor={'grey'}
+                    placeholder={'Email Address'}
+                    keyboardType={
+                      Platform.OS == 'android'
+                        ? 'visible-password'
+                        : 'email-address'
+                    }
+                    onChangeText={email => this.setState({ email })}
+                    style={{
+                      padding: 15,
+                      marginVertical: 20,
+                      color: 'black',
+                      borderRadius: 100,
+                      marginHorizontal: 15,
+                      backgroundColor: 'white',
+                      fontFamily: 'OpenSans-Regular'
+                    }}
+                  />
+
+                  <TouchableOpacity
+                    onPress={() => this.verifyEmail()}
+                    style={[
+                      styles.centerContent,
+                      {
+                        marginBottom: 20 * factorRatio,
+                        borderWidth: 2,
+                        borderRadius: 50,
+                        alignSelf: 'center',
+                        borderColor: '#fb1b2f',
+                        width: onTablet ? '30%' : '50%',
+                        backgroundColor:
+                          this.state.email.length > 0
+                            ? '#fb1b2f'
+                            : 'transparent'
+                      }
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        padding: 15,
+                        fontFamily: 'RobotoCondensed-Bold',
+                        color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
+                      }}
+                    >
+                      NEXT
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <CreateAccountStepCounter step={1} />
               </View>
-              <CreateAccountStepCounter step={1} />
             </ScrollView>
             <Modal
               key={'checkEmailModal'}

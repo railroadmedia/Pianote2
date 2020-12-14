@@ -104,10 +104,8 @@ export default class ForgotPassword extends React.Component {
                 </View>
                 <View>
                   <Text
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
                     style={{
-                      fontSize: isiOS ? 99 : 18,
+                      fontSize: 20 * factorRatio,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
@@ -119,10 +117,8 @@ export default class ForgotPassword extends React.Component {
                     The Ultimate Online
                   </Text>
                   <Text
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
                     style={{
-                      fontSize: isiOS ? 99 : 18,
+                      fontSize: 20 * factorRatio,
                       color: 'white',
                       alignSelf: 'center',
                       textAlign: 'center',
@@ -197,7 +193,7 @@ export default class ForgotPassword extends React.Component {
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
-                      fontSize: 12 * factorRatio,
+                      fontSize: 15 * factorRatio,
                       color: 'grey',
                       textAlign: 'center',
                       textDecorationLine: 'underline'
@@ -214,7 +210,7 @@ export default class ForgotPassword extends React.Component {
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
-                      fontSize: 12 * factorRatio,
+                      fontSize: 15 * factorRatio,
                       color: 'grey',
                       textAlign: 'center',
                       textDecorationLine: 'underline'

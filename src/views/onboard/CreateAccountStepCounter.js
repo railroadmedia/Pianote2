@@ -28,8 +28,12 @@ export default class CreateAccountStepCounter extends React.Component {
             paddingVertical: 5
           }}
         >
-          <Text style={styles.text}>Step 1:</Text>
-          <Text style={styles.boldText}>EMAIL ADDRESS</Text>
+          <Text style={[styles.text, { fontSize: 15 * factorRatio }]}>
+            Step 1:
+          </Text>
+          <Text style={[styles.boldText, { fontSize: 15 * factorRatio }]}>
+            EMAIL ADDRESS
+          </Text>
         </View>
 
         <View
@@ -45,8 +49,12 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text style={styles.text}>Step 2:</Text>
-          <Text style={styles.boldText}>SET A PASSWORD</Text>
+          <Text style={[styles.text, { fontSize: 15 * factorRatio }]}>
+            Step 2:
+          </Text>
+          <Text style={[styles.boldText, { fontSize: 15 * factorRatio }]}>
+            SET A PASSWORD
+          </Text>
         </View>
 
         <View
@@ -62,8 +70,12 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text style={styles.text}>Step 3:</Text>
-          <Text style={styles.boldText}>CHOOSE A PLAN</Text>
+          <Text style={[styles.text, { fontSize: 15 * factorRatio }]}>
+            Step 3:
+          </Text>
+          <Text style={[styles.boldText, { fontSize: 15 * factorRatio }]}>
+            CHOOSE A PLAN
+          </Text>
         </View>
       </View>
     );
