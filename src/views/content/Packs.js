@@ -211,13 +211,15 @@ export default class Packs extends React.Component {
                 }}
                 resizeMode={FastImage.resizeMode.contain}
               />
+
               <View
                 style={{
+                  flex: onTablet ? 0.2 : 0.15,
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-evenly',
-                  margin: 15,
-                  zIndex: 3
+                  paddingHorizontal: 25 * factorRatio,
+                  marginVertical: 15
                 }}
               >
                 {this.state.headerPackCompleted ? (
