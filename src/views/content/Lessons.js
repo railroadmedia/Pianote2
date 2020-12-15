@@ -117,6 +117,31 @@ export default class Lessons extends React.Component {
     Orientation.removeDeviceOrientationListener(this.orientationListener);
   }
 
+  changeFilters = filters => {
+    // after leaving filter page. set filters here
+    this.setState(
+      {
+        allLessons: [],
+        outVideos: false,
+        page: 1,
+        filters:
+          filters.instructors.length == 0 &&
+          filters.level.length == 0 &&
+          filters.progress.length == 0 &&
+          filters.topics.length == 0
+            ? {
+                displayTopics: [],
+                level: [],
+                topics: [],
+                progress: [],
+                instructors: []
+              }
+            : filters
+      },
+      () => this.getAllLessons()
+    );
+  };  
+
   async getContent() {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
@@ -343,31 +368,6 @@ export default class Lessons extends React.Component {
         () => this.getAllLessons()
       );
     }
-  };
-
-  changeFilters = filters => {
-    // after leaving filter page. set filters here
-    this.setState(
-      {
-        allLessons: [],
-        outVideos: false,
-        page: 1,
-        filters:
-          filters.instructors.length == 0 &&
-          filters.level.length == 0 &&
-          filters.progress.length == 0 &&
-          filters.topics.length == 0
-            ? {
-                displayTopics: [],
-                level: [],
-                topics: [],
-                progress: [],
-                instructors: []
-              }
-            : filters
-      },
-      () => this.getAllLessons()
-    );
   };
 
   refresh() {
@@ -637,7 +637,7 @@ export default class Lessons extends React.Component {
         >
           <Filters
             hideFilters={() => this.setState({ showFilters: false })}
-            filtersAvailable={this.state.filters}
+            filtersAvailable={this.state.filtersAvailable}
             filters={this.state.filters}
             type={'Lessons'}
             reset={filters => {
