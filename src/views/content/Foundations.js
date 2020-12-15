@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import DeviceInfo from 'react-native-device-info';
+import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 
 import ResetIcon from '../../components/ResetIcon';
@@ -30,7 +31,6 @@ import ContinueIcon from '../../components/ContinueIcon';
 import foundationsService from '../../services/foundations.service';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import {
   likeContent,
@@ -242,13 +242,6 @@ export default class Foundations extends React.Component {
             />
           }
         >
-          <View>
-          <GradientFeature
-            color={'black'}
-            opacity={1}
-            height={'100%'}
-            borderRadius={0}
-          />
           <ImageBackground
             resizeMode={'cover'}
             style={{
@@ -258,91 +251,111 @@ export default class Foundations extends React.Component {
             }}
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
-            <View style={{ alignSelf: 'center' }}>
-              <Pianote
-                height={fullHeight * 0.04}
-                width={fullWidth * 0.33}
-                fill={colors.pianoteRed}
-              />
-            </View>
-            <View style={{height: 5*factorVertical}}/>
-            <FastImage
+            <LinearGradient
+              colors={['transparent', 'rgba(20, 20, 20, 0.5)', 'rgba(0, 0, 0, 1)']}
               style={{
-                height: greaterWDim / 20,
-                width: '50%',
-                alignSelf: 'center'
+                borderRadius: 0,
+                width: '100%',
+                height: '100%'
               }}
-              source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-              resizeMode={FastImage.resizeMode.contain}
             />
-            <View style={{height: 30*factorRatio}}/>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-evenly',
-              }}
-            >
-              <View key='placeholder' style={{ flex: 0.5 }} />
-              {this.state.foundationIsCompleted ? (
-                <ResetIcon
-                  pressed={() =>
-                    this.setState({
-                      showRestartCourse: true
-                    })
-                  }
-                />
-              ) : this.state.foundationIsStarted ? (
-                <ContinueIcon
-                  pressed={() =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      url: this.state.nextLesson.post.mobile_app_url
-                    })
-                  }
-                />
-              ) : (
-                !this.state.foundationIsStarted && (
-                  <StartIcon
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLesson.post.mobile_app_url
-                      })
-                    }
-                  />
-                )
-              )}
-
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({
-                    showInfo: !this.state.showInfo
-                  });
-                }}
+              <View
                 style={{
-                  flex: 0.5,
-                  alignItems: 'center'
+                  position: 'absolute',
+                  width: '100%',
+                  zIndex: 5,
+                  elevation: 5,
+                  left: 0,
+                  bottom: 0,
+                  opacity: 1,
                 }}
               >
-                <AntIcon
-                  name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                  size={22 * factorRatio}
-                  color={colors.pianoteRed}
-                />
-                <Text
+                <View style={{ alignSelf: 'center'}}>
+                  <Pianote
+                    height={fullHeight * 0.04}
+                    width={fullWidth * 0.33}
+                    fill={colors.pianoteRed}
+                  />
+                </View>
+                <View style={{height: 5*factorVertical}}/>
+                <FastImage
                   style={{
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'white',
-                    marginTop: 3 * factorRatio,
-                    fontSize: 12 * factorRatio
+                    height: greaterWDim / 20,
+                    width: '50%',
+                    alignSelf: 'center'
+                  }}
+                  source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+                <View style={{height: 25*factorRatio}}/>
+                <View
+                  style={{
+                    height: 40*factorRatio,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
                   }}
                 >
-                  Info
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{height: 30*factorVertical}}/>
-          </ImageBackground>
-          </View>
+                  <View key='placeholder' style={{ flex: 0.5 }} />
+                  {this.state.foundationIsCompleted ? (
+                    <ResetIcon
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : this.state.foundationIsStarted ? (
+                    <ContinueIcon
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.nextLesson.post.mobile_app_url
+                        })
+                      }
+                    />
+                  ) : (
+                    !this.state.foundationIsStarted && (
+                      <StartIcon
+                        pressed={() =>
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.nextLesson.post.mobile_app_url
+                          })
+                        }
+                      />
+                    )
+                  )}
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
+                    }}
+                    style={{
+                      flex: 0.5,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={22 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 3 * factorRatio,
+                        fontSize: 12 * factorRatio
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{height: 10*factorVertical}}/>
+              </View>
+        </ImageBackground>
           {this.state.foundationIsStarted && (
             <View
               key={'profile'}

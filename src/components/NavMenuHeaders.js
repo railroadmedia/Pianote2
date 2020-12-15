@@ -121,18 +121,21 @@ class NavMenuHeaders extends React.Component {
             >
               LESSONS{' '}
             </Text>
-            <EntypoIcon
-              name={'chevron-down'}
-              color={
-                this.props.currentPage == 'LESSONS'
-                  ? 'white'
-                  : this.props.isMethod
-                  ? 'white'
-                  : colors.secondBackground
-              }
-              size={18 * factorRatio}
-              style={{ marginLeft: -5 }}
-            />
+            <View>
+              <View style={{flex: 1}}/>
+              <EntypoIcon
+                name={'chevron-down'}
+                color={
+                  this.props.currentPage == 'LESSONS'
+                    ? 'white'
+                    : this.props.isMethod
+                    ? 'white'
+                    : colors.secondBackground
+                }
+                size={18 * factorRatio}
+                style={{ marginLeft: -2.5,  }}
+              />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             key={'packs'}

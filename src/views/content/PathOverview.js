@@ -51,7 +51,7 @@ export default class PathOverview extends React.Component {
       isAddedToList: this.props.navigation.state.params.data?.isAddedToList,
       thumbnail: this.props.navigation.state.params.data?.thumbnail,
       artist: this.props.navigation.state.params.data?.artist,
-      isMethod: true,
+      isMethod: true, ///// TO DO : connect to previous page
       showInfo: false,
       totalLength: 0,
       isLiked: false,
@@ -326,6 +326,7 @@ export default class PathOverview extends React.Component {
               key={'thumb/Start/Info'}
               style={{
                 width: '100%',
+                height: 40*factorRatio,
                 justifyContent: 'space-evenly',
                 alignItems: 'center',
                 flexDirection: 'row'

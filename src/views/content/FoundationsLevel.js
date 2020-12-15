@@ -18,6 +18,7 @@ import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import DeviceInfo from 'react-native-device-info';
+import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 
 import ResetIcon from '../../components/ResetIcon';
@@ -191,7 +192,6 @@ export default class FoundationsLevel extends React.Component {
   };
 
   render() {
-    console.log(this.state.isLandscape);
     return (
       <SafeAreaView
         forceInset={{
@@ -238,13 +238,6 @@ export default class FoundationsLevel extends React.Component {
               color={'white'}
             />
           </TouchableOpacity>
-
-          <GradientFeature
-            color={'black'}
-            opacity={1}
-            height={'100%'}
-            borderRadius={0}
-          />
           <ImageBackground
             resizeMode={'cover'}
             style={{
@@ -254,103 +247,121 @@ export default class FoundationsLevel extends React.Component {
             }}
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
-            <View style={{ alignSelf: 'center' }}>
-              <Pianote
-                height={fullHeight * 0.04}
-                width={fullWidth * 0.4}
-                fill={colors.pianoteRed}
-              />
-            </View>
-
-            <FastImage
+            <LinearGradient
+              colors={['transparent', 'rgba(20, 20, 20, 0.5)', 'rgba(0, 0, 0, 1)']}
               style={{
-                height: greaterWDim / 30,
+                borderRadius: 0,
                 width: '100%',
-                alignSelf: 'center'
+                height: '100%'
               }}
-              source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-              resizeMode={FastImage.resizeMode.contain}
             />
-
-            <Text
-              key={'level'}
-              style={{
-                fontSize: 43 * factorRatio,
-                color: 'white',
-                fontFamily: 'RobotoCondensed-Bold',
-                textAlign: 'center'
-              }}
-            >
-              LEVEL {this.state.level}
-            </Text>
-
-            <View
-              key={'startIcon'}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-evenly',
-                paddingVertical: 15 * factorRatio
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  this.toggleMyList();
-                }}
+              <View
                 style={{
-                  flex: 0.5,
-                  alignItems: 'center'
+                  position: 'absolute',
+                  width: '100%',
+                  zIndex: 5,
+                  elevation: 5,
+                  left: 0,
+                  bottom: 0,
+                  opacity: 1,
                 }}
               >
-                {!this.state.isAddedToList ? (
-                  <AntIcon
-                    name={'plus'}
-                    size={27.5 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                ) : (
-                  <AntIcon
-                    name={'close'}
-                    size={27.5 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                )}
-                <Text
+              <View style={{ alignSelf: 'center' }}>
+                <Pianote
+                  height={fullHeight * 0.035}
+                  width={fullWidth * 0.125}
+                  fill={colors.pianoteRed}
+                />
+              </View>
+              <FastImage
+                style={{
+                  height: greaterWDim / 40,
+                  width: '50%',
+                  alignSelf: 'center'
+                }}
+                source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+              <View style={{height: 15*factorRatio}}/>
+              <Text
+                key={'level'}
+                style={{
+                  fontSize: 43 * factorRatio,
+                  color: 'white',
+                  fontFamily: 'RobotoCondensed-Bold',
+                  textAlign: 'center'
+                }}
+              >
+                LEVEL {this.state.level}
+              </Text>
+              <View style={{height: 15*factorRatio}}/>
+              <View
+                key={'startIcon'}
+                style={{
+                  height: 40*factorRatio,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly',
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.toggleMyList();
+                  }}
                   style={{
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'white',
-                    fontSize: 12 * factorRatio
+                    flex: 0.5,
+                    alignItems: 'center'
                   }}
                 >
-                  {this.state.isAddedToList ? 'Added' : 'My List'}
-                </Text>
-              </TouchableOpacity>
-              {this.state.isCompleted ? (
-                <ResetIcon
-                  pressed={() =>
-                    this.setState({
-                      showRestartCourse: true
-                    })
-                  }
-                />
-              ) : this.state.isStarted ? (
-                <ContinueIcon
-                  pressed={() =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      url: this.state.nextLesson.post.mobile_app_url
-                    })
-                  }
-                />
-              ) : !this.state.isStarted ? (
-                <StartIcon
-                  pressed={() =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      url: this.state.nextLesson.post.mobile_app_url
-                    })
-                  }
-                />
-              ) : null}
-              <TouchableOpacity
+                  {!this.state.isAddedToList ? (
+                    <AntIcon
+                      name={'plus'}
+                      size={27.5 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                  ) : (
+                    <AntIcon
+                      name={'close'}
+                      size={27.5 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                  )}
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      color: 'white',
+                      fontSize: 12 * factorRatio
+                    }}
+                  >
+                    {this.state.isAddedToList ? 'Added' : 'My List'}
+                  </Text>
+                </TouchableOpacity>
+                {this.state.isCompleted ? (
+                  <ResetIcon
+                    pressed={() =>
+                      this.setState({
+                        showRestartCourse: true
+                      })
+                    }
+                  />
+                ) : this.state.isStarted ? (
+                  <ContinueIcon
+                    pressed={() =>
+                      this.props.navigation.navigate('VIDEOPLAYER', {
+                        url: this.state.nextLesson.post.mobile_app_url
+                      })
+                    }
+                  />
+                ) : !this.state.isStarted ? (
+                  <StartIcon
+                    pressed={() =>
+                      this.props.navigation.navigate('VIDEOPLAYER', {
+                        url: this.state.nextLesson.post.mobile_app_url
+                      })
+                    }
+                  />
+                ) : null}
+                <TouchableOpacity
                 onPress={() => {
                   this.setState({
                     showInfo: !this.state.showInfo
@@ -377,6 +388,8 @@ export default class FoundationsLevel extends React.Component {
                   Info
                 </Text>
               </TouchableOpacity>
+              </View>
+              <View style={{height: 10*factorVertical}}/>
             </View>
           </ImageBackground>
           {this.state.showInfo && (
