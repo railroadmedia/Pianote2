@@ -252,110 +252,114 @@ export default class Foundations extends React.Component {
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
             <LinearGradient
-              colors={['transparent', 'rgba(20, 20, 20, 0.5)', 'rgba(0, 0, 0, 1)']}
+              colors={[
+                'transparent',
+                'rgba(20, 20, 20, 0.5)',
+                'rgba(0, 0, 0, 1)'
+              ]}
               style={{
                 borderRadius: 0,
                 width: '100%',
                 height: '100%'
               }}
             />
+            <View
+              style={{
+                position: 'absolute',
+                width: '100%',
+                zIndex: 5,
+                elevation: 5,
+                left: 0,
+                bottom: 0,
+                opacity: 1
+              }}
+            >
+              <View style={{ alignSelf: 'center' }}>
+                <Pianote
+                  height={fullHeight * 0.04}
+                  width={fullWidth * 0.33}
+                  fill={colors.pianoteRed}
+                />
+              </View>
+              <View style={{ height: 5 * factorVertical }} />
+              <FastImage
+                style={{
+                  height: greaterWDim / 20,
+                  width: '50%',
+                  alignSelf: 'center'
+                }}
+                source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+              <View style={{ height: 25 * factorRatio }} />
               <View
                 style={{
-                  position: 'absolute',
-                  width: '100%',
-                  zIndex: 5,
-                  elevation: 5,
-                  left: 0,
-                  bottom: 0,
-                  opacity: 1,
+                  height: 40 * factorRatio,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly'
                 }}
               >
-                <View style={{ alignSelf: 'center'}}>
-                  <Pianote
-                    height={fullHeight * 0.04}
-                    width={fullWidth * 0.33}
-                    fill={colors.pianoteRed}
+                <View key='placeholder' style={{ flex: 0.5 }} />
+                {this.state.foundationIsCompleted ? (
+                  <ResetIcon
+                    pressed={() =>
+                      this.setState({
+                        showRestartCourse: true
+                      })
+                    }
                   />
-                </View>
-                <View style={{height: 5*factorVertical}}/>
-                <FastImage
-                  style={{
-                    height: greaterWDim / 20,
-                    width: '50%',
-                    alignSelf: 'center'
-                  }}
-                  source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-                  resizeMode={FastImage.resizeMode.contain}
-                />
-                <View style={{height: 25*factorRatio}}/>
-                <View
-                  style={{
-                    height: 40*factorRatio,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <View key='placeholder' style={{ flex: 0.5 }} />
-                  {this.state.foundationIsCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : this.state.foundationIsStarted ? (
-                    <ContinueIcon
+                ) : this.state.foundationIsStarted ? (
+                  <ContinueIcon
+                    pressed={() =>
+                      this.props.navigation.navigate('VIDEOPLAYER', {
+                        url: this.state.nextLesson.post.mobile_app_url
+                      })
+                    }
+                  />
+                ) : (
+                  !this.state.foundationIsStarted && (
+                    <StartIcon
                       pressed={() =>
                         this.props.navigation.navigate('VIDEOPLAYER', {
                           url: this.state.nextLesson.post.mobile_app_url
                         })
                       }
                     />
-                  ) : (
-                    !this.state.foundationIsStarted && (
-                      <StartIcon
-                        pressed={() =>
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.nextLesson.post.mobile_app_url
-                          })
-                        }
-                      />
-                    )
-                  )}
+                  )
+                )}
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({
+                      showInfo: !this.state.showInfo
+                    });
+                  }}
+                  style={{
+                    flex: 0.5,
+                    alignItems: 'center'
+                  }}
+                >
+                  <AntIcon
+                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                    size={22 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                  <Text
                     style={{
-                      flex: 0.5,
-                      alignItems: 'center'
+                      fontFamily: 'OpenSans-Regular',
+                      color: 'white',
+                      marginTop: 3 * factorRatio,
+                      fontSize: 12 * factorRatio
                     }}
                   >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={22 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factorRatio,
-                        fontSize: 12 * factorRatio
-                      }}
-                    >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{height: 10*factorVertical}}/>
+                    Info
+                  </Text>
+                </TouchableOpacity>
               </View>
-        </ImageBackground>
+              <View style={{ height: 10 * factorVertical }} />
+            </View>
+          </ImageBackground>
           {this.state.foundationIsStarted && (
             <View
               key={'profile'}
@@ -582,18 +586,8 @@ export default class Foundations extends React.Component {
             showLength={false}
             showSort={false}
             isFoundationsLevel={true}
-            imageRadius={5 * factorRatio}
-            containerBorderWidth={0}
-            containerWidth={fullWidth}
-            containerHeight={fullWidth * 0.3}
-            imageHeight={fullWidth * 0.26}
+            isSquare={true}
             imageWidth={fullWidth * 0.26}
-            imageRadius={7.5 * factorRatio}
-            containerBorderWidth={0}
-            containerWidth={fullWidth}
-            containerHeight={fullWidth * 0.285}
-            imageHeight={fullWidth * 0.25}
-            imageWidth={fullWidth * 0.25}
           />
           <View style={{ height: 10 * factorVertical }} />
         </ScrollView>

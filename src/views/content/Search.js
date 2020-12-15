@@ -555,26 +555,9 @@ export default class Search extends React.Component {
                     showSort={false}
                     showLength={false}
                     filters={this.state.filters}
-                    imageRadius={5 * factorRatio}
-                    containerBorderWidth={0}
-                    containerWidth={fullWidth}
                     currentSort={this.state.currentSort}
                     changeSort={sort => this.changeSort(sort)}
                     filterResults={() => this.filterResults()}
-                    containerHeight={
-                      onTablet
-                        ? fullHeight * 0.15
-                        : Platform.OS == 'android'
-                        ? fullHeight * 0.115
-                        : fullHeight * 0.0925
-                    } // height per row
-                    imageHeight={
-                      onTablet
-                        ? fullHeight * 0.12
-                        : Platform.OS == 'android'
-                        ? fullHeight * 0.09
-                        : fullHeight * 0.0825
-                    } // image height
                     imageWidth={fullWidth * 0.26} // image width
                     outVideos={this.state.outVideos} // if paging and out of videos
                     //getVideos={() => this.getContent()} // for paging

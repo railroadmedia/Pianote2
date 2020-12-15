@@ -556,23 +556,6 @@ export default class SinglePack extends React.Component {
                 showArtist={this.state.isDisplayingLessons ? false : true} // show artist name
                 showLength={this.state.isDisplayingLessons ? true : false}
                 showLines={!this.state.isDisplayingLessons}
-                imageRadius={5 * factorRatio} // radius of image shown
-                containerBorderWidth={0} // border of box
-                containerWidth={fullWidth} // width of list
-                containerHeight={
-                  onTablet
-                    ? fullHeight * 0.15
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.115
-                    : fullHeight * 0.095
-                } // height per row
-                imageHeight={
-                  onTablet
-                    ? fullHeight * 0.12
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.095
-                    : fullHeight * 0.0825
-                } // image height
                 imageWidth={fullWidth * 0.26} // image width
                 outVideos={this.state.outVideos} // if paging and out of videos
                 navigator={row => this.navigate(row)}

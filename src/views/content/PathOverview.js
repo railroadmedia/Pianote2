@@ -290,7 +290,7 @@ export default class PathOverview extends React.Component {
               />
             </TouchableOpacity>
           </ImageBackground>
-          <View key={'title'}>
+          <View key={'title'} style={{ paddingHorizontal: 20 * factorRatio }}>
             <View style={{ height: 20 * factorVertical }} />
             <View style={{ flex: 1 }}>
               <Text
@@ -326,7 +326,7 @@ export default class PathOverview extends React.Component {
               key={'thumb/Start/Info'}
               style={{
                 width: '100%',
-                height: 40*factorRatio,
+                height: 40 * factorRatio,
                 justifyContent: 'space-evenly',
                 alignItems: 'center',
                 flexDirection: 'row'
@@ -423,7 +423,7 @@ export default class PathOverview extends React.Component {
               key={'info'}
               style={{
                 width: '100%',
-                paddingHorizontal: 15
+                paddingHorizontal: 20 * factorRatio
               }}
             >
               <View style={{ height: 20 * factorVertical }} />
@@ -672,23 +672,6 @@ export default class PathOverview extends React.Component {
             showArtist={false}
             showLength={true}
             showSort={false}
-            imageRadius={5 * factorRatio} // radius of image shown
-            containerBorderWidth={0} // border of box
-            containerWidth={fullWidth} // width of list
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.0925
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.09
-                : fullHeight * 0.0825
-            } // image height
             imageWidth={fullWidth * 0.26} // image width
             navigator={row =>
               this.props.navigation.navigate('VIDEOPLAYER', {

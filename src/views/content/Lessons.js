@@ -476,7 +476,7 @@ export default class Lessons extends React.Component {
 
                 <View
                   style={{
-                    flex: (onTablet) ? 0.2 : 0.15,
+                    flex: onTablet ? 0.2 : 0.15,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
@@ -520,7 +520,7 @@ export default class Lessons extends React.Component {
                     }}
                   />
                 </View>
-                <View style={{flex: 0.1}}/>
+                <View style={{ flex: 0.1 }} />
               </View>
             </ImageBackground>
 
@@ -562,26 +562,9 @@ export default class Lessons extends React.Component {
                   showSort={true}
                   showLength={false}
                   filters={this.state.filters} // show filter list
-                  imageRadius={5 * factorRatio} // radius of image shown
-                  containerBorderWidth={0} // border of box
-                  containerWidth={fullWidth} // width of list
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                   filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                  containerHeight={
-                    onTablet
-                      ? fullHeight * 0.15
-                      : Platform.OS == 'android'
-                      ? fullHeight * 0.115
-                      : fullHeight * 0.0925
-                  } // height per row
-                  imageHeight={
-                    onTablet
-                      ? fullHeight * 0.12
-                      : Platform.OS == 'android'
-                      ? fullHeight * 0.09
-                      : fullHeight * 0.0825
-                  } // image height
                   imageWidth={fullWidth * 0.26} // image width
                   outVideos={this.state.outVideos} // if paging and out of videos
                   getVideos={() => this.getVideos()}

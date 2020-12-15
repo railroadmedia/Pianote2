@@ -248,24 +248,28 @@ export default class FoundationsLevel extends React.Component {
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
             <LinearGradient
-              colors={['transparent', 'rgba(20, 20, 20, 0.5)', 'rgba(0, 0, 0, 1)']}
+              colors={[
+                'transparent',
+                'rgba(20, 20, 20, 0.5)',
+                'rgba(0, 0, 0, 1)'
+              ]}
               style={{
                 borderRadius: 0,
                 width: '100%',
                 height: '100%'
               }}
             />
-              <View
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  zIndex: 5,
-                  elevation: 5,
-                  left: 0,
-                  bottom: 0,
-                  opacity: 1,
-                }}
-              >
+            <View
+              style={{
+                position: 'absolute',
+                width: '100%',
+                zIndex: 5,
+                elevation: 5,
+                left: 0,
+                bottom: 0,
+                opacity: 1
+              }}
+            >
               <View style={{ alignSelf: 'center' }}>
                 <Pianote
                   height={fullHeight * 0.035}
@@ -282,7 +286,7 @@ export default class FoundationsLevel extends React.Component {
                 source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
                 resizeMode={FastImage.resizeMode.contain}
               />
-              <View style={{height: 15*factorRatio}}/>
+              <View style={{ height: 15 * factorRatio }} />
               <Text
                 key={'level'}
                 style={{
@@ -294,14 +298,14 @@ export default class FoundationsLevel extends React.Component {
               >
                 LEVEL {this.state.level}
               </Text>
-              <View style={{height: 15*factorRatio}}/>
+              <View style={{ height: 15 * factorRatio }} />
               <View
                 key={'startIcon'}
                 style={{
-                  height: 40*factorRatio,
+                  height: 40 * factorRatio,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-evenly',
+                  justifyContent: 'space-evenly'
                 }}
               >
                 <TouchableOpacity
@@ -362,34 +366,34 @@ export default class FoundationsLevel extends React.Component {
                   />
                 ) : null}
                 <TouchableOpacity
-                onPress={() => {
-                  this.setState({
-                    showInfo: !this.state.showInfo
-                  });
-                }}
-                style={{
-                  flex: 0.5,
-                  alignItems: 'center'
-                }}
-              >
-                <AntIcon
-                  name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                  size={22 * factorRatio}
-                  color={colors.pianoteRed}
-                />
-                <Text
+                  onPress={() => {
+                    this.setState({
+                      showInfo: !this.state.showInfo
+                    });
+                  }}
                   style={{
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'white',
-                    marginTop: 3 * factorRatio,
-                    fontSize: 13 * factorRatio
+                    flex: 0.5,
+                    alignItems: 'center'
                   }}
                 >
-                  Info
-                </Text>
-              </TouchableOpacity>
+                  <AntIcon
+                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                    size={22 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      color: 'white',
+                      marginTop: 3 * factorRatio,
+                      fontSize: 13 * factorRatio
+                    }}
+                  >
+                    Info
+                  </Text>
+                </TouchableOpacity>
               </View>
-              <View style={{height: 10*factorVertical}}/>
+              <View style={{ height: 10 * factorVertical }} />
             </View>
           </ImageBackground>
           {this.state.showInfo && (
@@ -419,23 +423,6 @@ export default class FoundationsLevel extends React.Component {
             showLength={false} // duration of song
             showSort={false}
             showLines={true}
-            imageRadius={5 * factorRatio} // radius of image shown
-            containerBorderWidth={0} // border of box
-            containerWidth={fullWidth} // width of list
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.11
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.09
-                : fullHeight * 0.0825
-            } // image height
             imageWidth={fullWidth * 0.3} // image width
           />
           <View style={{ height: 10 }} />

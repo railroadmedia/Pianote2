@@ -312,26 +312,9 @@ export default class Course extends React.Component {
               showLength={false}
               showSort={true}
               filters={this.state.filters}
-              imageRadius={5 * factorRatio}
-              containerBorderWidth={0}
               currentSort={this.state.currentSort}
               changeSort={sort => this.changeSort(sort)}
               filterResults={() => this.filterResults()}
-              containerWidth={fullWidth}
-              containerHeight={
-                onTablet
-                  ? fullHeight * 0.15
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.115
-                  : fullHeight * 0.095
-              } // height per row
-              imageHeight={
-                onTablet
-                  ? fullHeight * 0.12
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.095
-                  : fullHeight * 0.0825
-              } // image height
               imageWidth={fullWidth * 0.26} // image width
               outVideos={this.state.outVideos}
               getVideos={() => this.getVideos()}

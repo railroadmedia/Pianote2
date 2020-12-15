@@ -305,27 +305,11 @@ export default class SongCatalog extends React.Component {
               showSort={true}
               isPaging={this.state.isPaging}
               filters={this.state.filters} // show filter list
-              imageRadius={5 * factorRatio} // radius of image shown
-              containerBorderWidth={0} // border of box
-              containerWidth={fullWidth} // width of list
               currentSort={this.state.currentSort}
               changeSort={sort => this.changeSort(sort)} // change sort and reload videos
               outVideos={this.state.outVideos} // if paging and out of videos
               filterResults={() => this.filterResults()} // apply from filters page
-              containerHeight={
-                onTablet
-                  ? fullHeight * 0.15
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.1375
-                  : fullHeight * 0.1
-              } // height per row
-              imageHeight={
-                onTablet
-                  ? fullHeight * 0.12
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.125
-                  : fullHeight * 0.09
-              } // image height
+              isSquare={true}
               imageWidth={
                 onTablet
                   ? fullHeight * 0.12

@@ -336,9 +336,6 @@ export default class SeeAll extends React.Component {
             showLength={false}
             showLargeTitle={true}
             filters={this.state.filters} // show filter list
-            imageRadius={5 * factorRatio} // radius of image shown
-            containerBorderWidth={0} // border of box
-            containerWidth={fullWidth} // width of list
             currentSort={this.state.currentSort}
             changeSort={sort => {
               this.setState({
@@ -348,20 +345,6 @@ export default class SeeAll extends React.Component {
                 this.getAllLessons();
             }} // change sort and reload videos
             filterResults={() => this.filterResults()} // apply from filters page
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.0925
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.09
-                : fullHeight * 0.0825
-            } // image height
             imageWidth={fullWidth * 0.26} // image width
             outVideos={this.state.outVideos} // if paging and out of videos
             //getVideos={() => this.getContent()} // for paging
