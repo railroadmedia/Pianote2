@@ -130,7 +130,6 @@ class NavMenuHeaders extends React.Component {
               LESSONS{' '}
             </Text>
             <View>
-              <View style={{ flex: 1 }} />
               <EntypoIcon
                 name={'chevron-down'}
                 color={

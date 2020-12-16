@@ -293,31 +293,46 @@ export default class SongCatalog extends React.Component {
                 />
               </View>
             )}
-            <VerticalVideoList
-              items={this.state.allSongs}
-              isLoading={false}
-              title={'ALL SONGS'} // title for see all page
-              type={'SONGS'} // the type of content on page
-              showFilter={true}
-              showType={false} // show course / song by artist name
-              showArtist={true} // show artist name
-              showLength={false}
-              showSort={true}
-              isPaging={this.state.isPaging}
-              filters={this.state.filters} // show filter list
-              currentSort={this.state.currentSort}
-              changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-              outVideos={this.state.outVideos} // if paging and out of videos
-              filterResults={() => this.filterResults()} // apply from filters page
-              isSquare={true}
-              imageWidth={
-                onTablet
-                  ? fullHeight * 0.12
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.125
-                  : fullHeight * 0.09
-              } // image height
-            />
+            {onTablet ? (
+              <HorizontalVideoList
+                Title={'ALL SONGS'}
+                seeAll={() =>
+                  this.props.navigation.navigate('SEEALL', {
+                    title: 'Songs',
+                    parent: 'Songs'
+                  })
+                }
+                hideSeeAll={false}
+                isSquare={true}
+                items={this.state.allSongs}
+              />
+            ) : (
+              <VerticalVideoList
+                items={this.state.allSongs}
+                isLoading={false}
+                title={'ALL SONGS'} // title for see all page
+                type={'SONGS'} // the type of content on page
+                showFilter={true}
+                showType={false} // show course / song by artist name
+                showArtist={true} // show artist name
+                showLength={false}
+                showSort={true}
+                isPaging={this.state.isPaging}
+                filters={this.state.filters} // show filter list
+                currentSort={this.state.currentSort}
+                changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                outVideos={this.state.outVideos} // if paging and out of videos
+                filterResults={() => this.filterResults()} // apply from filters page
+                isSquare={true}
+                imageWidth={
+                  onTablet
+                    ? fullHeight * 0.12
+                    : Platform.OS == 'android'
+                    ? fullHeight * 0.125
+                    : fullHeight * 0.09
+                } // image height
+              />
+            )}
           </ScrollView>
         ) : (
           <ActivityIndicator

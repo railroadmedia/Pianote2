@@ -300,25 +300,38 @@ export default class Course extends React.Component {
                 />
               </View>
             )}
-            <VerticalVideoList
-              items={this.state.allCourses}
-              isLoading={false}
-              title={'COURSES'}
-              type={'COURSES'}
-              isPaging={this.state.isPaging}
-              showFilter={true}
-              showType={true}
-              showArtist={true}
-              showLength={false}
-              showSort={true}
-              filters={this.state.filters}
-              currentSort={this.state.currentSort}
-              changeSort={sort => this.changeSort(sort)}
-              filterResults={() => this.filterResults()}
-              imageWidth={fullWidth * 0.26} // image width
-              outVideos={this.state.outVideos}
-              getVideos={() => this.getVideos()}
-            />
+            {onTablet ? (
+              <HorizontalVideoList
+                Title={'COURSES'}
+                seeAll={() =>
+                  this.props.navigation.navigate('SEEALL', {
+                    title: 'Courses',
+                    parent: 'Courses'
+                  })
+                }
+                items={this.state.allCourses}
+              />
+            ) : (
+              <VerticalVideoList
+                items={this.state.allCourses}
+                isLoading={false}
+                title={'COURSES'}
+                type={'COURSES'}
+                isPaging={this.state.isPaging}
+                showFilter={true}
+                showType={true}
+                showArtist={true}
+                showLength={false}
+                showSort={true}
+                filters={this.state.filters}
+                currentSort={this.state.currentSort}
+                changeSort={sort => this.changeSort(sort)}
+                filterResults={() => this.filterResults()}
+                imageWidth={fullWidth * 0.26} // image width
+                outVideos={this.state.outVideos}
+                getVideos={() => this.getVideos()}
+              />
+            )}
           </ScrollView>
         ) : (
           <ActivityIndicator

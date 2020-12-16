@@ -274,44 +274,46 @@ export default class PathOverview extends React.Component {
           />
         </TouchableOpacity>
       </ImageBackground>
-      <View key={'title'} style={{ paddingHorizontal: 20 * factorRatio }}>
-        <View style={{ height: 20 * factorVertical }} />
-        <View style={{ flex: 1 }}>
-          <Text
-            numberOfLines={2}
-            style={{
-              fontFamily: 'OpenSans-Bold',
-              color: 'white',
-              textAlign: 'center',
-              fontSize: 24 * factorRatio
-            }}
-          >
-            {this.state.data.title}
-          </Text>
-          <View style={{ height: 10 * factorVertical }} />
-          <Text
-            numberOfLines={2}
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              color: this.state.isMethod
-                ? colors.pianoteGrey
-                : colors.secondBackground,
-              textAlign: 'center',
-              fontSize: 14 * factorRatio
-            }}
-          >
-            {this.state.artist?.toUpperCase()} | {this.formatDifficulty()} |{' '}
-            {this.state.data.xp} XP
-          </Text>
-        </View>
-        <View style={{ height: 15 * factorVertical }} />
+      <View
+        key={'title'}
+        style={[
+          { paddingHorizontal: 20 * factorRatio },
+          this.state.isLandscape ? { marginHorizontal: '10%' } : {}
+        ]}
+      >
+        <Text
+          numberOfLines={2}
+          style={{
+            fontFamily: 'OpenSans-Bold',
+            color: 'white',
+            textAlign: 'center',
+            fontSize: 24 * factorRatio
+          }}
+        >
+          {this.state.data.title}
+        </Text>
+        <View style={{ height: 10 * factorVertical }} />
+        <Text
+          numberOfLines={2}
+          style={{
+            fontFamily: 'OpenSans-Regular',
+            color: this.state.isMethod
+              ? colors.pianoteGrey
+              : colors.secondBackground,
+            textAlign: 'center',
+            fontSize: 14 * factorRatio
+          }}
+        >
+          {this.state.artist?.toUpperCase()} | {this.formatDifficulty()} |{' '}
+          {this.state.data.xp} XP
+        </Text>
+        <View style={{ height: 10 * factorVertical }} />
         <View
           key={'thumb/Start/Info'}
           style={{
-            width: '80%',
+            width: '100%',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            alignSelf: 'center',
             flexDirection: 'row'
           }}
         >
@@ -378,13 +380,18 @@ export default class PathOverview extends React.Component {
           </TouchableOpacity>
         </View>
       </View>
+
       {this.state.showInfo && (
         <View
           key={'info'}
-          style={{
-            width: '100%',
-            paddingHorizontal: 20 * factorRatio
-          }}
+          style={[
+            {
+              paddingHorizontal: 20 * factorRatio
+            },
+            this.state.isLandscape
+              ? { marginHorizontal: '10%' }
+              : { width: '100%' }
+          ]}
         >
           <View style={{ height: 20 * factorVertical }} />
           <Text
@@ -617,6 +624,7 @@ export default class PathOverview extends React.Component {
   );
 
   render() {
+    const { isMethod, items, refreshing, isLandscape } = this.state;
     return (
       <SafeAreaView
         forceInset={{
@@ -626,47 +634,52 @@ export default class PathOverview extends React.Component {
           {
             flex: 1,
             width: '100%',
-            backgroundColor: this.state.isMethod
-              ? 'black'
-              : colors.mainBackground
+            backgroundColor: isMethod ? 'black' : colors.mainBackground
           }
         ]}
       >
         <StatusBar
-          backgroundColor={
-            this.state.isMethod ? 'black' : colors.mainBackground
-          }
+          backgroundColor={isMethod ? 'black' : colors.mainBackground}
           barStyle={'light-content'}
         />
         <FlatList
           style={{
             flex: 1,
-            backgroundColor: this.state.isMethod
-              ? 'black'
-              : colors.mainBackground
+            backgroundColor: isMethod ? 'black' : colors.mainBackground
           }}
           numColumns={onTablet ? 3 : 1}
-          data={this.state.items}
+          data={items}
           keyboardShouldPersistTaps='handled'
           keyExtractor={content => content.id.toString()}
           removeClippedSubviews={true}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.refreshing}
+              refreshing={refreshing}
               onRefresh={() => this.refresh()}
             />
           }
           ListHeaderComponent={this.renderHeader}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <TouchableOpacity
               onPress={() => this.goToLesson(item.id)}
-              style={{
-                width: onTablet ? `${100 / 3}%` : '100%',
-                paddingHorizontal: 15,
-                paddingVertical: onTablet ? 0 : 10,
-                flexDirection: onTablet ? 'column' : 'row'
-              }}
+              style={[
+                {
+                  width: onTablet
+                    ? `${isLandscape ? 80 / 3 : 100 / 3}%`
+                    : '100%',
+                  paddingHorizontal: 15,
+                  paddingVertical: onTablet ? 0 : 10,
+                  flexDirection: onTablet ? 'column' : 'row'
+                },
+                isLandscape
+                  ? index % 3 === 2
+                    ? { marginRight: '10%' }
+                    : index % 3 === 0
+                    ? { marginLeft: '10%' }
+                    : {}
+                  : {}
+              ]}
             >
               <ImageBackground
                 imageStyle={{ borderRadius: 5 * factorRatio }}

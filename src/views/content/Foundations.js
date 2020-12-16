@@ -257,18 +257,19 @@ export default class Foundations extends React.Component {
               ]}
               style={{
                 borderRadius: 0,
+                position: 'absolute',
+                top: 0,
                 width: '100%',
                 height: '100%'
               }}
             />
             <View
               style={{
-                position: 'absolute',
+                paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+                alignSelf: 'center',
                 width: '100%',
                 zIndex: 5,
                 elevation: 5,
-                left: 0,
-                bottom: 0,
                 opacity: 1
               }}
             >
@@ -406,8 +407,7 @@ export default class Foundations extends React.Component {
               style={{
                 width: '100%',
                 paddingVertical: 15,
-                paddingLeft: fullWidth * 0.035,
-                paddingRight: fullWidth * 0.035
+                paddingHorizontal: this.state.isLandscape ? '10%' : 15
               }}
             >
               <Text
@@ -572,21 +572,25 @@ export default class Foundations extends React.Component {
               </View>
             </View>
           )}
-          <VerticalVideoList
-            isMethod={true}
-            items={this.state.items}
-            isLoading={this.state.isLoadingAll}
-            title={'FOUNDATIONS'}
-            type={'LESSONS'}
-            showFilter={false}
-            showType={false}
-            showArtist={false}
-            showLength={false}
-            showSort={false}
-            isFoundationsLevel={true}
-            isSquare={true}
-            imageWidth={fullWidth * 0.26}
-          />
+          <View
+            style={{ paddingHorizontal: this.state.isLandscape ? '10%' : 0 }}
+          >
+            <VerticalVideoList
+              isMethod={true}
+              items={this.state.items}
+              isLoading={this.state.isLoadingAll}
+              title={'FOUNDATIONS'}
+              type={'LESSONS'}
+              showFilter={false}
+              showType={false}
+              showArtist={false}
+              showLength={false}
+              showSort={false}
+              isFoundationsLevel={true}
+              isSquare={true}
+              imageWidth={fullWidth * 0.26}
+            />
+          </View>
           <View style={{ height: 10 * factorVertical }} />
         </ScrollView>
         <Modal

@@ -254,17 +254,19 @@ export default class FoundationsLevel extends React.Component {
               style={{
                 borderRadius: 0,
                 width: '100%',
-                height: '100%'
+                height: '100%',
+                position: 'absolute',
+                left: 0,
+                bottom: 0
               }}
             />
             <View
               style={{
-                position: 'absolute',
+                paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+                alignSelf: 'center',
                 width: '100%',
                 zIndex: 5,
                 elevation: 5,
-                left: 0,
-                bottom: 0,
                 opacity: 1
               }}
             >
@@ -395,7 +397,13 @@ export default class FoundationsLevel extends React.Component {
             </View>
           </ImageBackground>
           {this.state.showInfo && (
-            <View key={'info'} style={{ width: '100%' }}>
+            <View
+              key={'info'}
+              style={{
+                width: '100%',
+                paddingHorizontal: this.state.isLandscape ? '10%' : 15
+              }}
+            >
               <View style={{ height: 20 * factorVertical }} />
               <Text
                 style={{
@@ -411,18 +419,22 @@ export default class FoundationsLevel extends React.Component {
               <View style={{ height: 15 * factorVertical }} />
             </View>
           )}
-          <VerticalVideoList
-            foundationsLevel={true}
-            items={this.state.items}
-            isLoading={this.state.isLoadingAll}
-            showFilter={false} // shows filters button
-            showType={false} // show course / song by artist name
-            showArtist={false} // show artist name
-            showLength={false} // duration of song
-            showSort={false}
-            showLines={true}
-            imageWidth={fullWidth * 0.3} // image width
-          />
+          <View
+            style={{ paddingHorizontal: this.state.isLandscape ? '10%' : 0 }}
+          >
+            <VerticalVideoList
+              foundationsLevel={true}
+              items={this.state.items}
+              isLoading={this.state.isLoadingAll}
+              showFilter={false} // shows filters button
+              showType={false} // show course / song by artist name
+              showArtist={false} // show artist name
+              showLength={false} // duration of song
+              showSort={false}
+              showLines={true}
+              imageWidth={fullWidth * 0.3} // image width
+            />
+          </View>
           <View style={{ height: 10 }} />
         </ScrollView>
         <Modal

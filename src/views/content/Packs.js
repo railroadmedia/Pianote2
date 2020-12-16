@@ -211,6 +211,7 @@ export default class Packs extends React.Component {
               />
               <View
                 style={{
+                  flex: onTablet ? 0.2 : 0.15,
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-evenly',
