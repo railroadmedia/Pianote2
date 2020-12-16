@@ -17,7 +17,6 @@ import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 
@@ -172,8 +171,8 @@ export default class FoundationsLevel extends React.Component {
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    if (onTablet && this.state.isLandscape) return 3;
+    if (onTablet && !this.state.isLandscape) return 2;
     return 1.8;
   }
 
@@ -182,11 +181,10 @@ export default class FoundationsLevel extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };

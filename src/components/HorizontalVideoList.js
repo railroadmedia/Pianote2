@@ -11,7 +11,6 @@ import {
   Image,
   Dimensions
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -54,7 +53,7 @@ class HorizontalVideoList extends React.Component {
   }
 
   decideWidth() {
-    if (DeviceInfo.isTablet()) {
+    if (onTablet) {
       if (this.props.isSquare) return 300;
       else return 400;
     } else {

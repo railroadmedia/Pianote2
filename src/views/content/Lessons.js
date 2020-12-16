@@ -387,18 +387,17 @@ export default class Lessons extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 2.5;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 1.8;
+    if (onTablet && this.state.isLandscape) return 2.5;
+    if (onTablet && !this.state.isLandscape) return 1.8;
     return 1;
   }
 

@@ -19,7 +19,6 @@ import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
-import DeviceInfo from 'react-native-device-info';
 
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote';
@@ -45,7 +44,7 @@ export default class LoginCredentials extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
+    if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     this.state = {
       email: props?.navigation?.state?.params?.email || '',
