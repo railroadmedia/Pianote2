@@ -387,18 +387,17 @@ export default class Lessons extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 2.5;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 1.8;
+    if (onTablet && this.state.isLandscape) return 2.5;
+    if (onTablet && !this.state.isLandscape) return 1.8;
     return 1;
   }
 
@@ -476,7 +475,7 @@ export default class Lessons extends React.Component {
 
                 <View
                   style={{
-                    flex: (onTablet) ? 0.2 : 0.15,
+                    flex: onTablet ? 0.2 : 0.15,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
@@ -520,7 +519,7 @@ export default class Lessons extends React.Component {
                     }}
                   />
                 </View>
-                <View style={{flex: 0.1}}/>
+                <View style={{ flex: 0.1 }} />
               </View>
             </ImageBackground>
 
@@ -548,44 +547,42 @@ export default class Lessons extends React.Component {
                 </View>
               )}
               <View style={{ height: 5 * factorRatio }} />
-              {!this.state.filtering && (
-                <VerticalVideoList
+              {onTablet ? (
+                <HorizontalVideoList
                   isMethod={true}
+                  Title={'ALL LESSONS'}
+                  seeAll={() =>
+                    this.props.navigation.navigate('SEEALL', {
+                      title: 'All Lessons',
+                      parent: 'Lessons'
+                    })
+                  }
+                  showType={true}
                   items={this.state.allLessons}
-                  isLoading={false}
-                  title={'ALL LESSONS'} // title for see all page
-                  type={'LESSONS'} // the type of content on page
-                  showFilter={true}
-                  isPaging={this.state.isPaging}
-                  showType={true} // show course / song by artist name
-                  showArtist={true} // show artist name
-                  showSort={true}
-                  showLength={false}
-                  filters={this.state.filters} // show filter list
-                  imageRadius={5 * factorRatio} // radius of image shown
-                  containerBorderWidth={0} // border of box
-                  containerWidth={fullWidth} // width of list
-                  currentSort={this.state.currentSort}
-                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                  filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                  containerHeight={
-                    onTablet
-                      ? fullHeight * 0.15
-                      : Platform.OS == 'android'
-                      ? fullHeight * 0.115
-                      : fullHeight * 0.0925
-                  } // height per row
-                  imageHeight={
-                    onTablet
-                      ? fullHeight * 0.12
-                      : Platform.OS == 'android'
-                      ? fullHeight * 0.09
-                      : fullHeight * 0.0825
-                  } // image height
-                  imageWidth={fullWidth * 0.26} // image width
-                  outVideos={this.state.outVideos} // if paging and out of videos
-                  getVideos={() => this.getVideos()}
                 />
+              ) : (
+                !this.state.filtering && (
+                  <VerticalVideoList
+                    isMethod={true}
+                    items={this.state.allLessons}
+                    isLoading={false}
+                    title={'ALL LESSONS'} // title for see all page
+                    type={'LESSONS'} // the type of content on page
+                    showFilter={true}
+                    isPaging={this.state.isPaging}
+                    showType={true} // show course / song by artist name
+                    showArtist={true} // show artist name
+                    showSort={true}
+                    showLength={false}
+                    filters={this.state.filters} // show filter list
+                    currentSort={this.state.currentSort}
+                    changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                    filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+                    imageWidth={fullWidth * 0.26} // image width
+                    outVideos={this.state.outVideos} // if paging and out of videos
+                    getVideos={() => this.getVideos()}
+                  />
+                )
               )}
             </View>
           </ScrollView>

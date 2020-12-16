@@ -300,42 +300,38 @@ export default class Course extends React.Component {
                 />
               </View>
             )}
-            <VerticalVideoList
-              items={this.state.allCourses}
-              isLoading={false}
-              title={'COURSES'}
-              type={'COURSES'}
-              isPaging={this.state.isPaging}
-              showFilter={true}
-              showType={true}
-              showArtist={true}
-              showLength={false}
-              showSort={true}
-              filters={this.state.filters}
-              imageRadius={5 * factorRatio}
-              containerBorderWidth={0}
-              currentSort={this.state.currentSort}
-              changeSort={sort => this.changeSort(sort)}
-              filterResults={() => this.filterResults()}
-              containerWidth={fullWidth}
-              containerHeight={
-                onTablet
-                  ? fullHeight * 0.15
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.115
-                  : fullHeight * 0.095
-              } // height per row
-              imageHeight={
-                onTablet
-                  ? fullHeight * 0.12
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.095
-                  : fullHeight * 0.0825
-              } // image height
-              imageWidth={fullWidth * 0.26} // image width
-              outVideos={this.state.outVideos}
-              getVideos={() => this.getVideos()}
-            />
+            {onTablet ? (
+              <HorizontalVideoList
+                Title={'COURSES'}
+                seeAll={() =>
+                  this.props.navigation.navigate('SEEALL', {
+                    title: 'Courses',
+                    parent: 'Courses'
+                  })
+                }
+                items={this.state.allCourses}
+              />
+            ) : (
+              <VerticalVideoList
+                items={this.state.allCourses}
+                isLoading={false}
+                title={'COURSES'}
+                type={'COURSES'}
+                isPaging={this.state.isPaging}
+                showFilter={true}
+                showType={true}
+                showArtist={true}
+                showLength={false}
+                showSort={true}
+                filters={this.state.filters}
+                currentSort={this.state.currentSort}
+                changeSort={sort => this.changeSort(sort)}
+                filterResults={() => this.filterResults()}
+                imageWidth={fullWidth * 0.26} // image width
+                outVideos={this.state.outVideos}
+                getVideos={() => this.getVideos()}
+              />
+            )}
           </ScrollView>
         ) : (
           <ActivityIndicator

@@ -6,11 +6,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   RefreshControl,
   Dimensions,
   ImageBackground,
-  StatusBar
+  StatusBar,
+  FlatList
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ContentModel } from '@musora/models';
@@ -19,14 +19,14 @@ import { Download_V2 } from 'RNDownload';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import DeviceInfo from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
 
 import StartIcon from '../../components/StartIcon';
 import ContinueIcon from '../../components/ContinueIcon';
 import ResetIcon from '../../components/ResetIcon';
 import NavigationBar from '../../components/NavigationBar';
-import VerticalVideoList from '../../components/VerticalVideoList';
+import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
+import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import RestartCourse from '../../modals/RestartCourse';
 import contentService from '../../services/content.service';
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -59,7 +59,7 @@ export default class PathOverview extends React.Component {
       started: false,
       completed: false,
       showRestartCourse: false,
-      nextLesson: 0,
+      nextLessonId: 0,
       isLoadingAll: this.props.navigation.state.params.items?.length
         ? false
         : true,
@@ -84,11 +84,10 @@ export default class PathOverview extends React.Component {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -106,7 +105,7 @@ export default class PathOverview extends React.Component {
         totalLength: r.length_in_seconds,
         started: r.started,
         completed: r.completed,
-        nextLesson: r.next_lesson.id,
+        nextLessonId: r.next_lesson.id,
         difficulty: r.fields.find(f => f.key === 'difficulty')?.value,
         thumbnail: r.data.find(f => f.key === 'thumbnail_url')?.value,
         artist:
@@ -140,16 +139,36 @@ export default class PathOverview extends React.Component {
     });
   };
 
-  addToMyList = () => {
+  toggleMyList = id => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    this.setState({ isAddedToList: !this.state.isAddedToList });
-    if (this.state.isAddedToList) {
-      removeFromMyList(this.state.data.id);
+    if (id === this.state.data.id) {
+      if (this.state.isAddedToList) {
+        removeFromMyList(id);
+      } else {
+        addToMyList(id);
+      }
     } else {
-      addToMyList(this.state.data.id);
+      const lesson = this.state.items.find(f => f.id === id);
+      if (lesson.isAddedToList) {
+        removeFromMyList(id);
+      } else {
+        addToMyList(id);
+      }
     }
+    this.setState(state => ({
+      isAddedToList:
+        id === state.data.id ? !state.isAddedToList : state.isAddedToList,
+      items: state.items.map(c =>
+        c.id === id
+          ? {
+              ...c,
+              isAddedToList: !c.isAddedToList
+            }
+          : c
+      )
+    }));
   };
 
   toggleLike = () => {
@@ -209,12 +228,403 @@ export default class PathOverview extends React.Component {
   }
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 2.5;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    if (onTablet && this.state.isLandscape) return 2.5;
+    if (onTablet && !this.state.isLandscape) return 2;
     return 1.8;
   }
 
+  goToLesson(id) {
+    this.props.navigation.navigate('VIDEOPLAYER', { id });
+  }
+
+  renderHeader = () => (
+    <>
+      <ImageBackground
+        resizeMode={'cover'}
+        style={{
+          width: '100%',
+          aspectRatio: this.getAspectRatio()
+        }}
+        source={{
+          uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
+            (greaterWDim >> 0) * 2
+          },ar_${this.getAspectRatio()},c_fill,g_face/${this.state.thumbnail}`
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            this.props.navigation.goBack();
+          }}
+          style={[
+            styles.centerContent,
+            {
+              position: 'absolute',
+              left: 15,
+              top: 10,
+              borderRadius: 100,
+              height: 35 * factorRatio,
+              width: 35 * factorRatio
+            }
+          ]}
+        >
+          <EntypoIcon
+            name={'chevron-thin-left'}
+            size={22.5 * factorRatio}
+            color={'white'}
+          />
+        </TouchableOpacity>
+      </ImageBackground>
+      <View
+        key={'title'}
+        style={[
+          { paddingHorizontal: 20 * factorRatio },
+          this.state.isLandscape ? { marginHorizontal: '10%' } : {}
+        ]}
+      >
+        <Text
+          numberOfLines={2}
+          style={{
+            fontFamily: 'OpenSans-Bold',
+            color: 'white',
+            textAlign: 'center',
+            fontSize: 24 * factorRatio
+          }}
+        >
+          {this.state.data.title}
+        </Text>
+        <View style={{ height: 10 * factorVertical }} />
+        <Text
+          numberOfLines={2}
+          style={{
+            fontFamily: 'OpenSans-Regular',
+            color: this.state.isMethod
+              ? colors.pianoteGrey
+              : colors.secondBackground,
+            textAlign: 'center',
+            fontSize: 14 * factorRatio
+          }}
+        >
+          {this.state.artist?.toUpperCase()} | {this.formatDifficulty()} |{' '}
+          {this.state.data.xp} XP
+        </Text>
+        <View style={{ height: 10 * factorVertical }} />
+        <View
+          key={'thumb/Start/Info'}
+          style={{
+            width: '100%',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            flexDirection: 'row'
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => this.toggleMyList(this.state.data.id)}
+            style={{
+              alignItems: 'center',
+              flex: 0.5
+            }}
+          >
+            <AntIcon
+              name={this.state.isAddedToList ? 'close' : 'plus'}
+              size={22 * factorRatio}
+              color={colors.pianoteRed}
+            />
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                color: 'white',
+                marginTop: 5,
+                fontSize: 12 * factorRatio
+              }}
+            >
+              {!this.state.isAddedToList ? 'My List' : 'Added'}
+            </Text>
+          </TouchableOpacity>
+
+          {this.state.completed ? (
+            <ResetIcon
+              pressed={() => this.setState({ showRestartCourse: true })}
+            />
+          ) : this.state.started ? (
+            <ContinueIcon
+              pressed={() => this.goToLesson(this.state.nextLessonId)}
+            />
+          ) : (
+            <StartIcon
+              pressed={() => this.goToLesson(this.state.nextLessonId)}
+            />
+          )}
+
+          <TouchableOpacity
+            onPress={() => this.setState({ showInfo: !this.state.showInfo })}
+            style={{
+              alignItems: 'center',
+              flex: 0.5
+            }}
+          >
+            <AntIcon
+              name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+              size={22 * factorRatio}
+              color={colors.pianoteRed}
+            />
+            <Text
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                color: 'white',
+                marginTop: 5,
+                fontSize: 12 * factorRatio
+              }}
+            >
+              Info
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {this.state.showInfo && (
+        <View
+          key={'info'}
+          style={[
+            {
+              paddingHorizontal: 20 * factorRatio
+            },
+            this.state.isLandscape
+              ? { marginHorizontal: '10%' }
+              : { width: '100%' }
+          ]}
+        >
+          <View style={{ height: 20 * factorVertical }} />
+          <Text
+            style={{
+              fontFamily: 'OpenSans-Regular',
+              marginTop: 5 * factorVertical,
+              fontSize: 15 * factorRatio,
+              color: 'white',
+              textAlign: 'center'
+            }}
+          >
+            {this.state.data.description}
+          </Text>
+          <View key={'containStats'}>
+            <View style={{ height: 10 * factorVertical }} />
+            <View
+              key={'stats'}
+              style={[styles.centerContent, { flexDirection: 'row' }]}
+            >
+              <View
+                style={[
+                  styles.centerContent,
+                  {
+                    flex: 1,
+                    alignItems: 'flex-end'
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontSize: 17 * factorRatio,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Bold',
+                    marginTop: 10 * factorVertical
+                  }}
+                >
+                  {this.state.items.length}
+                  {`\n`}
+                  <Text
+                    style={{
+                      fontSize: 13 * factorRatio,
+                      textAlign: 'center',
+                      color: 'white',
+                      fontFamily: 'OpenSans-Regular',
+                      marginTop: 10 * factorVertical
+                    }}
+                  >
+                    LESSONS
+                  </Text>
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.centerContent,
+                  {
+                    flex: 1
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontSize: 17 * factorRatio,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Bold',
+                    marginTop: 10 * factorVertical
+                  }}
+                >
+                  {Math.floor(this.state.totalLength / 60)}
+                  {`\n`}
+                  <Text
+                    style={{
+                      fontSize: 13 * factorRatio,
+                      textAlign: 'center',
+                      color: 'white',
+                      fontFamily: 'OpenSans-Regular',
+                      marginTop: 10 * factorVertical
+                    }}
+                  >
+                    MINS
+                  </Text>
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.centerContent,
+                  {
+                    flex: 1,
+                    alignItems: 'flex-start'
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontSize: 17 * factorRatio,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Bold',
+                    marginTop: 10 * factorVertical
+                  }}
+                >
+                  {this.state.data.xp}
+                  {`\n`}
+                  <Text
+                    style={{
+                      fontSize: 13 * factorRatio,
+                      textAlign: 'center',
+                      color: 'white',
+                      fontFamily: 'OpenSans-Regular',
+                      marginTop: 10 * factorVertical
+                    }}
+                  >
+                    XP
+                  </Text>
+                </Text>
+              </View>
+            </View>
+            <View
+              key={'buttons'}
+              style={[
+                styles.centerContent,
+                {
+                  flexDirection: 'row',
+                  marginTop: 15 * factorVertical
+                }
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() => this.toggleLike()}
+                style={[
+                  styles.centerContent,
+                  {
+                    flex: 1,
+                    alignItems: 'flex-end'
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontSize: 13 * factorRatio,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Regular',
+                    marginTop: 5
+                  }}
+                >
+                  <AntIcon
+                    name={this.state.isLiked ? 'like1' : 'like2'}
+                    size={27.5 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                  {`\n`}
+                  {this.state.likeCount}
+                </Text>
+              </TouchableOpacity>
+              <Download_V2
+                entity={{
+                  id: this.state.data.id,
+                  content: contentService.getContent(this.state.data.id, true)
+                }}
+                styles={{
+                  touchable: { flex: 1 },
+                  iconSize: {
+                    width: 27.5 * factorRatio,
+                    height: 27.5 * factorRatio
+                  },
+                  iconDownloadColor: colors.pianoteRed,
+                  activityIndicatorColor: colors.pianoteRed,
+                  animatedProgressBackground: colors.pianoteRed,
+                  textStatus: {
+                    color: '#ffffff',
+                    fontSize: 13 * factorRatio,
+                    fontFamily: 'OpenSans-Regular',
+                    marginTop: 5
+                  },
+                  alert: {
+                    alertTextMessageFontFamily: 'OpenSans-Regular',
+                    alertTouchableTextDeleteColor: 'white',
+                    alertTextTitleColor: 'black',
+                    alertTextMessageColor: 'black',
+                    alertTextTitleFontFamily: 'OpenSans-Bold',
+                    alertTouchableTextCancelColor: colors.pianoteRed,
+                    alertTouchableDeleteBackground: colors.pianoteRed,
+                    alertBackground: 'white',
+                    alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
+                    alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
+                  }
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({
+                    showRestartCourse: true
+                  });
+                }}
+                style={[
+                  styles.centerContent,
+                  {
+                    flex: 1,
+                    alignItems: 'flex-start'
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontSize: 13 * factorRatio,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Regular',
+                    marginTop: 5
+                  }}
+                >
+                  <MaterialIcon
+                    name={'replay'}
+                    size={27.5 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                  {`\n`}
+                  Restart
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ height: 30 * factorVertical }} />
+          </View>
+        </View>
+      )}
+      <View style={{ height: 30 * factorRatio }} />
+    </>
+  );
+
   render() {
+    const { isMethod, items, refreshing, isLandscape } = this.state;
     return (
       <SafeAreaView
         forceInset={{
@@ -224,480 +634,166 @@ export default class PathOverview extends React.Component {
           {
             flex: 1,
             width: '100%',
-            backgroundColor: this.state.isMethod
-              ? 'black'
-              : colors.mainBackground
+            backgroundColor: isMethod ? 'black' : colors.mainBackground
           }
         ]}
       >
         <StatusBar
-          backgroundColor={
-            this.state.isMethod ? 'black' : colors.mainBackground
-          }
+          backgroundColor={isMethod ? 'black' : colors.mainBackground}
           barStyle={'light-content'}
         />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentInsetAdjustmentBehavior={'never'}
+        <FlatList
           style={{
             flex: 1,
-            backgroundColor: this.state.isMethod
-              ? 'black'
-              : colors.mainBackground
+            backgroundColor: isMethod ? 'black' : colors.mainBackground
           }}
+          numColumns={onTablet ? 3 : 1}
+          data={items}
+          keyboardShouldPersistTaps='handled'
+          keyExtractor={content => content.id.toString()}
+          removeClippedSubviews={true}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
-              refreshing={this.state.refreshing}
+              refreshing={refreshing}
               onRefresh={() => this.refresh()}
             />
           }
-        >
-          <ImageBackground
-            resizeMode={'cover'}
-            style={{
-              width: '100%',
-              aspectRatio: this.getAspectRatio()
-            }}
-            source={{
-              uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${
-                (greaterWDim >> 0) * 2
-              },ar_${this.getAspectRatio()},c_fill,g_face/${
-                this.state.thumbnail
-              }`
-            }}
-          >
+          ListHeaderComponent={this.renderHeader}
+          renderItem={({ item, index }) => (
             <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}
+              onPress={() => this.goToLesson(item.id)}
               style={[
-                styles.centerContent,
                 {
-                  position: 'absolute',
-                  left: 15,
-                  top: 10,
-                  borderRadius: 100,
-                  height: 35 * factorRatio,
-                  width: 35 * factorRatio
-                }
+                  width: onTablet
+                    ? `${isLandscape ? 80 / 3 : 100 / 3}%`
+                    : '100%',
+                  paddingHorizontal: 15,
+                  paddingVertical: onTablet ? 0 : 10,
+                  flexDirection: onTablet ? 'column' : 'row'
+                },
+                isLandscape
+                  ? index % 3 === 2
+                    ? { marginRight: '10%' }
+                    : index % 3 === 0
+                    ? { marginLeft: '10%' }
+                    : {}
+                  : {}
               ]}
             >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={22.5 * factorRatio}
-                color={'white'}
-              />
-            </TouchableOpacity>
-          </ImageBackground>
-          <View key={'title'}>
-            <View style={{ height: 20 * factorVertical }} />
-            <View style={{ flex: 1 }}>
-              <Text
-                numberOfLines={2}
+              <ImageBackground
+                imageStyle={{ borderRadius: 5 * factorRatio }}
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontWeight: 'bold',
-                  color: 'white',
-                  textAlign: 'center',
-                  fontSize: 24 * factorRatio
+                  width: onTablet ? '100%' : fullWidth * 0.26,
+                  aspectRatio: 16 / 9
                 }}
-              >
-                {this.state.data.title}
-              </Text>
-              <View style={{ height: 10 * factorVertical }} />
-              <Text
-                numberOfLines={2}
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  color: this.state.isMethod
-                    ? colors.pianoteGrey
-                    : colors.secondBackground,
-                  textAlign: 'center',
-                  fontSize: 14 * factorRatio
+                source={{
+                  uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
+                    fullWidth
+                  )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                    item.thumbnail
+                  }`
                 }}
+                resizeMode='cover'
               >
-                {this.state.artist?.toUpperCase()} | {this.formatDifficulty()} |{' '}
-                {this.state.data.xp} XP
-              </Text>
-            </View>
-            <View style={{ height: 15 * factorVertical }} />
-            <View
-              key={'thumb/Start/Info'}
-              style={{
-                width: '100%',
-                height: 40*factorRatio,
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                flexDirection: 'row'
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => this.addToMyList()}
-                style={{
-                  alignItems: 'center',
-                  flex: 0.5
-                }}
-              >
-                {!this.state.isAddedToList ? (
-                  <AntIcon
-                    name={'plus'}
-                    size={27.5 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                ) : (
-                  <AntIcon
-                    name={'close'}
-                    size={27.5 * factorRatio}
-                    color={colors.pianoteRed}
+                {item.isCompleted && (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      aspectRatio: 16 / 9,
+                      borderRadius: 5 * factorRatio,
+                      zIndex: 1,
+                      opacity: 0.2,
+                      backgroundColor: colors.pianoteRed
+                    }}
                   />
                 )}
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'white',
-                    fontSize: 12 * factorRatio
-                  }}
-                >
-                  My List
-                </Text>
-              </TouchableOpacity>
 
-              {this.state.completed ? (
-                <ResetIcon
-                  pressed={() =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      id: this.state.data.id
-                    })
-                  }
-                />
-              ) : this.state.started ? (
-                <ContinueIcon
-                  pressed={() =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      id: this.state.nextLesson
-                    })
-                  }
-                />
-              ) : (
-                <StartIcon
-                  pressed={() =>
-                    this.props.navigation.navigate('VIDEOPLAYER', {
-                      id: this.state.nextLesson
-                    })
-                  }
-                />
-              )}
-
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    showInfo: !this.state.showInfo
-                  })
-                }
-                style={{
-                  alignItems: 'center',
-                  flex: 0.5
-                }}
-              >
-                <AntIcon
-                  name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                  size={22 * factorRatio}
-                  color={colors.pianoteRed}
-                />
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'white',
-                    marginTop: 3 * factorRatio,
-                    fontSize: 13 * factorRatio
-                  }}
-                >
-                  Info
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          {this.state.showInfo && (
-            <View
-              key={'info'}
-              style={{
-                width: '100%',
-                paddingHorizontal: 15
-              }}
-            >
-              <View style={{ height: 20 * factorVertical }} />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  marginTop: 5 * factorVertical,
-                  fontSize: 15 * factorRatio,
-                  color: 'white',
-                  textAlign: 'center'
-                }}
-              >
-                {this.state.data.description}
-              </Text>
-              <View key={'containStats'}>
-                <View style={{ height: 10 * factorVertical }} />
                 <View
-                  key={'stats'}
                   style={[
                     styles.centerContent,
                     {
-                      flexDirection: 'row'
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      aspectRatio: 16 / 9,
+                      zIndex: 2
                     }
                   ]}
                 >
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1,
-                        alignItems: 'flex-end'
-                      }
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 17 * factorRatio,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Bold',
-                        marginTop: 10 * factorVertical
-                      }}
-                    >
-                      {this.state.items.length}
-                      {`\n`}
-                      <Text
-                        style={{
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'center',
-                          color: 'white',
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
-                        }}
-                      >
-                        LESSONS
-                      </Text>
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1
-                      }
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 17 * factorRatio,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Bold',
-                        marginTop: 10 * factorVertical
-                      }}
-                    >
-                      {Math.floor(this.state.totalLength / 60)}
-                      {`\n`}
-                      <Text
-                        style={{
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'center',
-                          color: 'white',
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
-                        }}
-                      >
-                        MINS
-                      </Text>
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1,
-                        alignItems: 'flex-start'
-                      }
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 17 * factorRatio,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Bold',
-                        marginTop: 10 * factorVertical
-                      }}
-                    >
-                      {this.state.data.xp}
-                      {`\n`}
-                      <Text
-                        style={{
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'center',
-                          color: 'white',
-                          fontFamily: 'OpenSans-Regular',
-                          marginTop: 10 * factorVertical
-                        }}
-                      >
-                        XP
-                      </Text>
-                    </Text>
-                  </View>
+                  {item.isStarted ? (
+                    <Progress
+                      height={40 * factorRatio}
+                      width={40 * factorRatio}
+                      fill={'white'}
+                    />
+                  ) : item.isCompleted ? (
+                    <ApprovedTeacher
+                      height={50 * factorRatio}
+                      width={50 * factorRatio}
+                      fill={'white'}
+                    />
+                  ) : null}
                 </View>
-                <View
-                  key={'buttons'}
-                  style={[
-                    styles.centerContent,
-                    {
-                      flexDirection: 'row',
-                      marginTop: 15 * factorVertical
-                    }
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => this.toggleLike()}
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1,
-                        alignItems: 'flex-end'
-                      }
-                    ]}
+              </ImageBackground>
+              <View
+                style={[
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  },
+                  onTablet ? { width: '100%' } : { flex: 1 }
+                ]}
+              >
+                <View style={{ width: '80%' }}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 15 * factorRatio,
+                      textAlign: 'left',
+                      fontFamily: 'OpenSans-Bold',
+                      color: 'white',
+                      paddingVertical: 5,
+                      paddingHorizontal: onTablet ? 0 : 15
+                    }}
                   >
-                    <Text
-                      style={{
-                        fontSize: 13 * factorRatio,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 5
-                      }}
-                    >
-                      <AntIcon
-                        name={this.state.isLiked ? 'like1' : 'like2'}
-                        size={27.5 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                      {`\n`}
-                      {this.state.likeCount}
-                    </Text>
-                  </TouchableOpacity>
-                  <Download_V2
-                    entity={{
-                      id: this.state.data.id,
-                      content: contentService.getContent(
-                        this.state.data.id,
-                        true
-                      )
+                    {item.title}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 12 * factorRatio,
+                      color:
+                        this.props.isMethod || this.props.foundationsLevel
+                          ? colors.pianoteGrey
+                          : colors.secondBackground,
+                      textAlign: 'left',
+                      fontFamily: 'OpenSans-Regular',
+                      paddingBottom: 10,
+                      paddingHorizontal: onTablet ? 0 : 15
                     }}
-                    styles={{
-                      touchable: { flex: 1 },
-                      iconSize: {
-                        width: 27.5 * factorRatio,
-                        height: 27.5 * factorRatio
-                      },
-                      iconDownloadColor: colors.pianoteRed,
-                      activityIndicatorColor: colors.pianoteRed,
-                      animatedProgressBackground: colors.pianoteRed,
-                      textStatus: {
-                        color: '#ffffff',
-                        fontSize: 13 * factorRatio,
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 5
-                      },
-                      alert: {
-                        alertTextMessageFontFamily: 'OpenSans-Regular',
-                        alertTouchableTextDeleteColor: 'white',
-                        alertTextTitleColor: 'black',
-                        alertTextMessageColor: 'black',
-                        alertTextTitleFontFamily: 'OpenSans-Bold',
-                        alertTouchableTextCancelColor: colors.pianoteRed,
-                        alertTouchableDeleteBackground: colors.pianoteRed,
-                        alertBackground: 'white',
-                        alertTouchableTextDeleteFontFamily: 'OpenSans-Bold',
-                        alertTouchableTextCancelFontFamily: 'OpenSans-Bold'
-                      }
-                    }}
+                  >
+                    {Math.floor(item.duration / 60)}{' '}
+                    {Math.floor(item.duration / 60) == 1 ? 'min' : 'mins'}
+                  </Text>
+                </View>
+
+                <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
+                  <AntIcon
+                    name={item.isAddedToList ? 'close' : 'plus'}
+                    size={onTablet ? 20 * factorRatio : 30 * factorRatio}
+                    color={colors.pianoteRed}
                   />
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showRestartCourse: true
-                      });
-                    }}
-                    style={[
-                      styles.centerContent,
-                      {
-                        flex: 1,
-                        alignItems: 'flex-start'
-                      }
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 13 * factorRatio,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 5
-                      }}
-                    >
-                      <MaterialIcon
-                        name={'replay'}
-                        size={27.5 * factorRatio}
-                        color={colors.pianoteRed}
-                      />
-                      {`\n`}
-                      Restart
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ height: 30 * factorVertical }} />
+                </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
-          <View style={{ height: 15 * factorVertical }} />
-
-          <VerticalVideoList
-            foundationsLevel={true} // change colors
-            items={this.state.items}
-            isLoading={false}
-            title={'Foundations'} // title for see all page
-            showFilter={false}
-            showType={false}
-            showArtist={false}
-            showLength={true}
-            showSort={false}
-            imageRadius={5 * factorRatio} // radius of image shown
-            containerBorderWidth={0} // border of box
-            containerWidth={fullWidth} // width of list
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.0925
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.09
-                : fullHeight * 0.0825
-            } // image height
-            imageWidth={fullWidth * 0.26} // image width
-            navigator={row =>
-              this.props.navigation.navigate('VIDEOPLAYER', {
-                id: row.id,
-                parentId: this.state.data.id
-              })
-            }
-          />
-        </ScrollView>
+        />
 
         <Modal
           key={'restartCourse'}

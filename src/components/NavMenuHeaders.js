@@ -21,7 +21,6 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import NavigationMenu from 'Pianote2/src/components/NavigationMenu.js';
 import { NetworkContext } from '../context/NetworkProvider';
-import DeviceInfo from 'react-native-device-info';
 
 class NavMenuHeaders extends React.Component {
   static contextType = NetworkContext;
@@ -54,8 +53,8 @@ class NavMenuHeaders extends React.Component {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: (isNotch) ? 5*factorVertical : 0,
-            paddingBottom: 10*factorRatio,
+            paddingTop: isNotch ? 5 * factorVertical : 0,
+            paddingBottom: 10 * factorRatio
           }}
         >
           <TouchableOpacity
@@ -76,14 +75,23 @@ class NavMenuHeaders extends React.Component {
             style={{
               flex: 1,
               paddingHorizontal: 10 * factorRatio,
-              height: Platform.OS == 'ios' ? fullHeight * 0.035 : fullHeight * 0.08,
-              width: DeviceInfo.isTablet() ? 0.25 * fullWidth : 0.3 * fullWidth,
+              height:
+                Platform.OS == 'ios' ? fullHeight * 0.035 : fullHeight * 0.08,
+              width: onTablet ? 0.25 * fullWidth : 0.3 * fullWidth
             }}
           >
             <Pianote fill={'#fb1b2f'} />
           </TouchableOpacity>
           {onTablet && (
-            <View style={{ flex: Dimensions.get('window').width > Dimensions.get('window').height ? 3 : 0.5 }} />
+            <View
+              style={{
+                flex:
+                  Dimensions.get('window').width >
+                  Dimensions.get('window').height
+                    ? 3
+                    : 0.5
+              }}
+            />
           )}
           <TouchableOpacity
             key={'lessons'}
@@ -122,7 +130,6 @@ class NavMenuHeaders extends React.Component {
               LESSONS{' '}
             </Text>
             <View>
-              <View style={{flex: 1}}/>
               <EntypoIcon
                 name={'chevron-down'}
                 color={
@@ -133,7 +140,7 @@ class NavMenuHeaders extends React.Component {
                     : colors.secondBackground
                 }
                 size={18 * factorRatio}
-                style={{ marginLeft: -2.5,  }}
+                style={{ marginLeft: -2.5 }}
               />
             </View>
           </TouchableOpacity>

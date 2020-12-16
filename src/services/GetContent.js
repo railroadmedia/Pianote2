@@ -43,7 +43,7 @@ export async function getAllContent(type, sort, page, filtersDict) {
       `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
       filters +
       required_user_states;
-      console.log('URL', url)
+    console.log('URL', url);
     return await commonService.tryCall(url);
   } catch (error) {
     console.log('Error: ', error);
@@ -169,8 +169,11 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
     }
   } else if (contentType == 'courses') {
     // add types
-    url = url + `&included_types[]=course`;
-
+    if (type == 'continue') {
+      url = url + `&required_user_states[]=started`;
+    } else {
+      url = url + `&included_types[]=course`;
+    }
     //if (filtersDict.topics.length > 0) {
     // if user filtered for types
     //  for (i in filtersDict.topics) {

@@ -1329,32 +1329,7 @@ export default class VideoPlayer extends React.Component {
                       showArtist={false}
                       showSort={false}
                       showLength={true}
-                      imageRadius={5 * factorRatio}
-                      containerBorderWidth={0}
-                      containerWidth={fullWidth}
-                      containerHeight={
-                        this.state.type !== 'song'
-                          ? onTablet
-                            ? fullHeight * 0.15
-                            : Platform.OS == 'android'
-                            ? fullHeight * 0.115
-                            : fullHeight * 0.0925
-                          : fullWidth * 0.22
-                      }
-                      imageHeight={
-                        this.state.type !== 'song'
-                          ? onTablet
-                            ? fullHeight * 0.12
-                            : Platform.OS == 'android'
-                            ? fullHeight * 0.09
-                            : fullHeight * 0.08
-                          : fullWidth * 0.175
-                      }
-                      imageWidth={
-                        this.state.type !== 'song'
-                          ? fullWidth * 0.26
-                          : fullWidth * 0.175
-                      }
+                      imageWidth={fullWidth * 0.26}
                       navigator={row =>
                         this.switchLesson(row.id, row.mobile_app_url)
                       }

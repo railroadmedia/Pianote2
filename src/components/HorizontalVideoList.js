@@ -11,7 +11,6 @@ import {
   Image,
   Dimensions
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -20,7 +19,6 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 
 let greaterWDim;
@@ -55,7 +53,7 @@ class HorizontalVideoList extends React.Component {
   }
 
   decideWidth() {
-    if (DeviceInfo.isTablet()) {
+    if (onTablet) {
       if (this.props.isSquare) return 300;
       else return 400;
     } else {

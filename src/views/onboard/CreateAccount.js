@@ -14,7 +14,6 @@ import {
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 
 import Back from '../../assets/img/svgs/back';
 import CheckEmail from '../../modals/CheckEmail.js';
@@ -29,7 +28,7 @@ export default class CreateAccount extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
-    if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
+    if (onTablet) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
     this.state = {
       showCheckEmail: false,

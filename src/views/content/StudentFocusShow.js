@@ -285,26 +285,9 @@ export default class StudentFocusShow extends React.Component {
             showFilter={this.state.type == 'quick-tips' ? true : false}
             showSort={this.state.type == 'quick-tips' ? true : false}
             filters={this.state.filters}
-            containerWidth={fullWidth}
-            imageRadius={5 * factorRatio}
-            containerBorderWidth={0}
             currentSort={this.state.currentSort}
             changeSort={sort => this.changeSort(sort)}
             filterResults={() => this.filterResults()}
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.0925
-            }
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.125
-                : Platform.OS == 'android'
-                ? fullHeight * 0.0925
-                : fullHeight * 0.0825
-            }
             imageWidth={fullWidth * 0.26}
             outVideos={this.state.outVideos}
             getVideos={() => this.getVideos()}

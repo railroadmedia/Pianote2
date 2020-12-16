@@ -18,7 +18,6 @@ import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 
@@ -95,11 +94,10 @@ export default class Foundations extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -213,8 +211,8 @@ export default class Foundations extends React.Component {
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    if (onTablet && this.state.isLandscape) return 3;
+    if (onTablet && !this.state.isLandscape) return 2;
     return 1.8;
   }
 
@@ -252,110 +250,115 @@ export default class Foundations extends React.Component {
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
             <LinearGradient
-              colors={['transparent', 'rgba(20, 20, 20, 0.5)', 'rgba(0, 0, 0, 1)']}
+              colors={[
+                'transparent',
+                'rgba(20, 20, 20, 0.5)',
+                'rgba(0, 0, 0, 1)'
+              ]}
               style={{
                 borderRadius: 0,
+                position: 'absolute',
+                top: 0,
                 width: '100%',
                 height: '100%'
               }}
             />
+            <View
+              style={{
+                paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+                alignSelf: 'center',
+                width: '100%',
+                zIndex: 5,
+                elevation: 5,
+                opacity: 1
+              }}
+            >
+              <View style={{ alignSelf: 'center' }}>
+                <Pianote
+                  height={fullHeight * 0.04}
+                  width={fullWidth * 0.33}
+                  fill={colors.pianoteRed}
+                />
+              </View>
+              <View style={{ height: 5 * factorVertical }} />
+              <FastImage
+                style={{
+                  height: greaterWDim / 20,
+                  width: '50%',
+                  alignSelf: 'center'
+                }}
+                source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+              <View style={{ height: 25 * factorRatio }} />
               <View
                 style={{
-                  position: 'absolute',
-                  width: '100%',
-                  zIndex: 5,
-                  elevation: 5,
-                  left: 0,
-                  bottom: 0,
-                  opacity: 1,
+                  height: 40 * factorRatio,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly'
                 }}
               >
-                <View style={{ alignSelf: 'center'}}>
-                  <Pianote
-                    height={fullHeight * 0.04}
-                    width={fullWidth * 0.33}
-                    fill={colors.pianoteRed}
+                <View key='placeholder' style={{ flex: 0.5 }} />
+                {this.state.foundationIsCompleted ? (
+                  <ResetIcon
+                    pressed={() =>
+                      this.setState({
+                        showRestartCourse: true
+                      })
+                    }
                   />
-                </View>
-                <View style={{height: 5*factorVertical}}/>
-                <FastImage
-                  style={{
-                    height: greaterWDim / 20,
-                    width: '50%',
-                    alignSelf: 'center'
-                  }}
-                  source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-                  resizeMode={FastImage.resizeMode.contain}
-                />
-                <View style={{height: 25*factorRatio}}/>
-                <View
-                  style={{
-                    height: 40*factorRatio,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <View key='placeholder' style={{ flex: 0.5 }} />
-                  {this.state.foundationIsCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : this.state.foundationIsStarted ? (
-                    <ContinueIcon
+                ) : this.state.foundationIsStarted ? (
+                  <ContinueIcon
+                    pressed={() =>
+                      this.props.navigation.navigate('VIDEOPLAYER', {
+                        url: this.state.nextLesson.post.mobile_app_url
+                      })
+                    }
+                  />
+                ) : (
+                  !this.state.foundationIsStarted && (
+                    <StartIcon
                       pressed={() =>
                         this.props.navigation.navigate('VIDEOPLAYER', {
                           url: this.state.nextLesson.post.mobile_app_url
                         })
                       }
                     />
-                  ) : (
-                    !this.state.foundationIsStarted && (
-                      <StartIcon
-                        pressed={() =>
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.nextLesson.post.mobile_app_url
-                          })
-                        }
-                      />
-                    )
-                  )}
+                  )
+                )}
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({
+                      showInfo: !this.state.showInfo
+                    });
+                  }}
+                  style={{
+                    flex: 0.5,
+                    alignItems: 'center'
+                  }}
+                >
+                  <AntIcon
+                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                    size={22 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                  <Text
                     style={{
-                      flex: 0.5,
-                      alignItems: 'center'
+                      fontFamily: 'OpenSans-Regular',
+                      color: 'white',
+                      marginTop: 3 * factorRatio,
+                      fontSize: 12 * factorRatio
                     }}
                   >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={22 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factorRatio,
-                        fontSize: 12 * factorRatio
-                      }}
-                    >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{height: 10*factorVertical}}/>
+                    Info
+                  </Text>
+                </TouchableOpacity>
               </View>
-        </ImageBackground>
+              <View style={{ height: 10 * factorVertical }} />
+            </View>
+          </ImageBackground>
           {this.state.foundationIsStarted && (
             <View
               key={'profile'}
@@ -404,8 +407,7 @@ export default class Foundations extends React.Component {
               style={{
                 width: '100%',
                 paddingVertical: 15,
-                paddingLeft: fullWidth * 0.035,
-                paddingRight: fullWidth * 0.035
+                paddingHorizontal: this.state.isLandscape ? '10%' : 15
               }}
             >
               <Text
@@ -570,31 +572,25 @@ export default class Foundations extends React.Component {
               </View>
             </View>
           )}
-          <VerticalVideoList
-            isMethod={true}
-            items={this.state.items}
-            isLoading={this.state.isLoadingAll}
-            title={'FOUNDATIONS'}
-            type={'LESSONS'}
-            showFilter={false}
-            showType={false}
-            showArtist={false}
-            showLength={false}
-            showSort={false}
-            isFoundationsLevel={true}
-            imageRadius={5 * factorRatio}
-            containerBorderWidth={0}
-            containerWidth={fullWidth}
-            containerHeight={fullWidth * 0.3}
-            imageHeight={fullWidth * 0.26}
-            imageWidth={fullWidth * 0.26}
-            imageRadius={7.5 * factorRatio}
-            containerBorderWidth={0}
-            containerWidth={fullWidth}
-            containerHeight={fullWidth * 0.285}
-            imageHeight={fullWidth * 0.25}
-            imageWidth={fullWidth * 0.25}
-          />
+          <View
+            style={{ paddingHorizontal: this.state.isLandscape ? '10%' : 0 }}
+          >
+            <VerticalVideoList
+              isMethod={true}
+              items={this.state.items}
+              isLoading={this.state.isLoadingAll}
+              title={'FOUNDATIONS'}
+              type={'LESSONS'}
+              showFilter={false}
+              showType={false}
+              showArtist={false}
+              showLength={false}
+              showSort={false}
+              isFoundationsLevel={true}
+              isSquare={true}
+              imageWidth={fullWidth * 0.26}
+            />
+          </View>
           <View style={{ height: 10 * factorVertical }} />
         </ScrollView>
         <Modal

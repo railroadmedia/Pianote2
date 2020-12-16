@@ -15,7 +15,6 @@ import {
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import DeviceInfo from 'react-native-device-info';
 
 import StartIcon from '../../components/StartIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -67,11 +66,10 @@ export default class Packs extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -129,7 +127,7 @@ export default class Packs extends React.Component {
 
   getAspectRatio() {
     let { isLandscape } = this.state;
-    if (DeviceInfo.isTablet()) {
+    if (onTablet) {
       if (isLandscape) {
         return 3;
       }

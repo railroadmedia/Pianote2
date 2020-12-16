@@ -50,7 +50,6 @@ export default class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
-    console.log(response);
     const newContent = await response[0].data.map(data => {
       return new ContentModel(data);
     });
@@ -173,7 +172,7 @@ export default class StudentFocusCatalog extends React.Component {
                           parent: 'Student Focus'
                         })
                       }
-                      hideSeeAll={true}
+                      hideSeeAll={false}
                       showType={true}
                       items={this.state.progressStudentFocus}
                     />

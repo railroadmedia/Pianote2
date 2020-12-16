@@ -16,7 +16,12 @@ import { SafeAreaView } from 'react-navigation';
 
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
-import { seeAllContent, getMyListContent } from '../../services/GetContent';
+import {
+  seeAllContent,
+  getMyListContent,
+  getAllContent,
+  getStartedContent
+} from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 // correlates to filters
@@ -72,19 +77,26 @@ export default class SeeAll extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let response = null;
-    if (this.state.parent == 'My List') {
+    if (this.state.parent === 'My List') {
       // use my list API call when navigating to see all from my list
       response = await getMyListContent(
         this.state.page,
         this.state.filters,
         this.state.title == 'In Progress' ? 'started' : 'completed'
       );
-    } else if (this.state.parent == 'Lessons') {
+    } else if (this.state.parent === 'Lessons') {
       // lessons continue and new
       if (this.state.title.slice(0, 3) == 'New') {
         response = await seeAllContent(
           'lessons',
           'new',
+          this.state.page,
+          this.state.filters
+        );
+      } else if (this.state.title.includes('All')) {
+        response = await getAllContent(
+          '',
+          'newest',
           this.state.page,
           this.state.filters
         );
@@ -96,13 +108,41 @@ export default class SeeAll extends React.Component {
           this.state.filters
         );
       }
-    } else if (this.state.parent == 'Courses') {
-      // courses new courses
-      response = await seeAllContent(
-        'courses',
-        'new',
-        this.state.page,
-        this.state.filters
+    } else if (this.state.parent === 'Courses') {
+      if (this.state.title === 'Continue') {
+        response = await seeAllContent(
+          'courses',
+          'continue',
+          this.state.page,
+          this.state.filters
+        );
+      } else {
+        response = await getAllContent(
+          'course',
+          'newest',
+          this.state.page,
+          this.state.filters
+        );
+      }
+    } else if (this.state.parent === 'Songs') {
+      if (this.state.title === 'Continue') {
+        response = await seeAllContent(
+          'song',
+          'continue',
+          this.state.page,
+          this.state.filters
+        );
+      } else {
+        response = await getAllContent(
+          'song',
+          'newest',
+          this.state.page,
+          this.state.filters
+        );
+      }
+    } else if (this.state.parent === 'Student Focus') {
+      response = await getStartedContent(
+        'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
       );
     }
 
@@ -336,9 +376,6 @@ export default class SeeAll extends React.Component {
             showLength={false}
             showLargeTitle={true}
             filters={this.state.filters} // show filter list
-            imageRadius={5 * factorRatio} // radius of image shown
-            containerBorderWidth={0} // border of box
-            containerWidth={fullWidth} // width of list
             currentSort={this.state.currentSort}
             changeSort={sort => {
               this.setState({
@@ -348,20 +385,6 @@ export default class SeeAll extends React.Component {
                 this.getAllLessons();
             }} // change sort and reload videos
             filterResults={() => this.filterResults()} // apply from filters page
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.0925
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.09
-                : fullHeight * 0.0825
-            } // image height
             imageWidth={fullWidth * 0.26} // image width
             outVideos={this.state.outVideos} // if paging and out of videos
             //getVideos={() => this.getContent()} // for paging
