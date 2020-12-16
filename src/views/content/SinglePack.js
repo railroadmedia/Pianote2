@@ -47,6 +47,7 @@ export default class SinglePack extends React.Component {
       showInfo: false,
       isDisplayingLessons: true,
       videos: [],
+      id: '',
       url: this.props.navigation.state.params.url,
       isAddedToList: false,
       description: '',
@@ -266,106 +267,112 @@ export default class SinglePack extends React.Component {
                 zIndex={0}
                 elevation={0}
               />
-              <FastImage
-                style={{
-                  height: greaterWDim / 15,
-                  width: '100%',
-                  zIndex: 1
-                }}
-                source={{ uri: this.state.logo }}
-                resizeMode={FastImage.resizeMode.contain}
-              />
-
               <View
-                key={'buttonRow'}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  paddingVertical: 15 * factorRatio
-                }}
+                style={
+                  this.state.isLandscape ? { marginHorizontal: '10%' } : {}
+                }
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.toggleMyList();
-                  }}
+                <FastImage
                   style={{
-                    flex: 0.5,
-                    alignItems: 'center'
+                    height: greaterWDim / 15,
+                    width: '100%',
+                    zIndex: 1
+                  }}
+                  source={{ uri: this.state.logo }}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+
+                <View
+                  key={'buttonRow'}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    paddingVertical: 15 * factorRatio
                   }}
                 >
-                  <AntIcon
-                    name={this.state.isAddedToList ? 'close' : 'plus'}
-                    size={22 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.toggleMyList();
+                    }}
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
+                      flex: 0.5,
+                      alignItems: 'center'
                     }}
                   >
-                    {this.state.isAddedToList ? 'Added' : 'My List'}
-                  </Text>
-                </TouchableOpacity>
+                    <AntIcon
+                      name={this.state.isAddedToList ? 'close' : 'plus'}
+                      size={22 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 3 * factorRatio,
+                        fontSize: 13 * factorRatio
+                      }}
+                    >
+                      {this.state.isAddedToList ? 'Added' : 'My List'}
+                    </Text>
+                  </TouchableOpacity>
 
-                {this.state.isCompleted ? (
-                  <ResetIcon
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : !this.state.isStarted ? (
-                  <StartIcon
-                    pressed={() => {
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLessonUrl
-                      });
-                    }}
-                  />
-                ) : (
-                  this.state.isStarted && (
-                    <ContinueIcon
+                  {this.state.isCompleted ? (
+                    <ResetIcon
                       pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.nextLessonUrl
+                        this.setState({
+                          showRestartCourse: true
                         })
                       }
                     />
-                  )
-                )}
+                  ) : !this.state.isStarted ? (
+                    <StartIcon
+                      pressed={() => {
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.nextLessonUrl
+                        });
+                      }}
+                    />
+                  ) : (
+                    this.state.isStarted && (
+                      <ContinueIcon
+                        pressed={() =>
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.nextLessonUrl
+                          })
+                        }
+                      />
+                    )
+                  )}
 
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                  style={{
-                    flex: 0.5,
-                    alignItems: 'center'
-                  }}
-                >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
+                    }}
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
+                      flex: 0.5,
+                      alignItems: 'center'
                     }}
                   >
-                    Info
-                  </Text>
-                </TouchableOpacity>
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={22 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 3 * factorRatio,
+                        fontSize: 13 * factorRatio
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </ImageBackground>
 
@@ -373,9 +380,9 @@ export default class SinglePack extends React.Component {
               <View
                 key={'info'}
                 style={{
-                  width: '100%',
                   alignSelf: 'center',
-                  backgroundColor: colors.mainBackground
+                  backgroundColor: colors.mainBackground,
+                  marginHorizontal: this.state.isLandscape ? '10%' : 15
                 }}
               >
                 <Text
@@ -534,15 +541,7 @@ export default class SinglePack extends React.Component {
             <View style={{ height: 5 * factorVertical }} />
             <View
               key={'verticalVideoList'}
-              style={[
-                styles.centerContent,
-                {
-                  minHeight: fullHeight * 0.29 * 0.90625,
-                  justifyContent: 'space-around',
-                  alignContent: 'space-around',
-                  flexDirection: 'row'
-                }
-              ]}
+              style={this.state.isLandscape ? { marginHorizontal: '10%' } : {}}
             >
               <VerticalVideoList
                 items={this.state.videos}
