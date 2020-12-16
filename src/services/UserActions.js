@@ -21,9 +21,6 @@ export async function unlikeContent(contentID) {
 }
 
 export async function addToMyList(contentID) {
-  console.log(
-    `${commonService.rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`
-  );
   return commonService.tryCall(
     `${commonService.rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
     'PUT'

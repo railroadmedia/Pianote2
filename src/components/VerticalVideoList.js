@@ -101,7 +101,7 @@ class VerticalVideoList extends React.Component {
     );
   };
 
-  addToMyList = async contentID => {
+  addToMyList = contentID => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -110,9 +110,7 @@ class VerticalVideoList extends React.Component {
         this.state.items[i].isAddedToList = true;
       }
     }
-    console.log(contentID);
-    let res = await addToMyList(contentID);
-    console.log(res);
+    addToMyList(contentID);
     this.setState({ items: this.state.items });
   };
 
