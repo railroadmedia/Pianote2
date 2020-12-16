@@ -9,14 +9,22 @@ import {
   TouchableOpacity,
   RefreshControl
 } from 'react-native';
+import { connect } from 'react-redux';
+import Modal from 'react-native-modal';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
+import NavigationMenu from '../../components/NavigationMenu';
 import VerticalVideoList from '../../components/VerticalVideoList';
+
 import { getMyListContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
+
+import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
+import { ActivityIndicator } from 'react-native';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -26,11 +34,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-export default class MyList extends React.Component {
+class MyList extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { myListCache } = props;
     this.state = {
       allLessons: [],
       currentSort: 'newest',
@@ -46,12 +55,23 @@ export default class MyList extends React.Component {
         progress: [],
         instructors: []
       },
-      refreshing: false
+      showModalMenu: false,
+      refreshing: false,
+      ...this.initialValidData(myListCache, false, true)
     };
   }
 
   componentDidMount() {
     this.getMyList();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () =>
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
+    );
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
   }
 
   getMyList = async loadMore => {
@@ -61,56 +81,63 @@ export default class MyList extends React.Component {
       this.state.filters,
       ''
     );
+    this.props.cacheAndWriteMyList(response);
+    this.setState(this.initialValidData(response, loadMore));
+  };
 
-    const newContent = await response.data.map(data => {
-      return new ContentModel(data);
-    });
-
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: this.getArtist(newContent[i]),
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
-        description: newContent[i]
-          .getData('description')
-          .replace(/(<([^>]+)>)/g, '')
-          .replace(/&nbsp;/g, '')
-          .replace(/&amp;/g, '&')
-          .replace(/&#039;/g, "'")
-          .replace(/&quot;/g, '"')
-          .replace(/&gt;/g, '>')
-          .replace(/&lt;/g, '<'),
-        xp: newContent[i].post.xp,
-        id: newContent[i].id,
-        mobile_app_url: newContent[i].post.mobile_app_url,
-        lesson_count: newContent[i].post.lesson_count,
-        currentLessonId: newContent[i].post?.song_part_id,
-        like_count: newContent[i].post.like_count,
-        duration: i,
-        isLiked: newContent[i].post.is_liked_by_current_user,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        bundle_count: newContent[i].post.bundle_count,
-        progress_percent: newContent[i].post.progress_percent
+  initialValidData = (content, loadMore, fromCache) => {
+    try {
+      const newContent = content.data.map(data => {
+        return new ContentModel(data);
       });
+
+      let items = [];
+      for (let i in newContent) {
+        items.push({
+          title: newContent[i].getField('title'),
+          artist: this.getArtist(newContent[i]),
+          thumbnail: newContent[i].getData('thumbnail_url'),
+          type: newContent[i].post.type,
+          publishedOn:
+            newContent[i].publishedOn.slice(0, 10) +
+            'T' +
+            newContent[i].publishedOn.slice(11, 16),
+          description: newContent[i]
+            .getData('description')
+            .replace(/(<([^>]+)>)/g, '')
+            .replace(/&nbsp;/g, '')
+            .replace(/&amp;/g, '&')
+            .replace(/&#039;/g, "'")
+            .replace(/&quot;/g, '"')
+            .replace(/&gt;/g, '>')
+            .replace(/&lt;/g, '<'),
+          xp: newContent[i].post.xp,
+          id: newContent[i].id,
+          mobile_app_url: newContent[i].post.mobile_app_url,
+          lesson_count: newContent[i].post.lesson_count,
+          currentLessonId: newContent[i].post?.song_part_id,
+          like_count: newContent[i].post.like_count,
+          duration: i,
+          isLiked: newContent[i].post.is_liked_by_current_user,
+          isAddedToList: newContent[i].isAddedToList,
+          isStarted: newContent[i].isStarted,
+          isCompleted: newContent[i].isCompleted,
+          bundle_count: newContent[i].post.bundle_count,
+          progress_percent: newContent[i].post.progress_percent
+        });
+      }
+      return {
+        allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
+        outVideos: items.length == 0 || content.data.length < 20 ? true : false,
+        page: this.state?.page + 1 || 1,
+        isLoadingAll: false,
+        filtering: false,
+        isPaging: false,
+        refreshing: fromCache
+      };
+    } catch (e) {
+      return {};
     }
-    console.log('setstate');
-    this.setState(state => ({
-      allLessons: loadMore ? state.allLessons.concat(items) : items,
-      outVideos: items.length == 0 || response.data.length < 20 ? true : false,
-      page: this.state.page + 1,
-      isLoadingAll: false,
-      filtering: false,
-      isPaging: false,
-      refreshing: false
-    }));
   };
 
   removeFromMyList = contentID => {
@@ -189,11 +216,11 @@ export default class MyList extends React.Component {
     );
   };
 
-  refresh = () => {
-    this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
-      this.getMyList()
+  refresh = () =>
+    this.setState(
+      { refreshing: true, page: 1, outVideos: false },
+      this.getMyList
     );
-  };
 
   render() {
     return (
@@ -203,19 +230,24 @@ export default class MyList extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
+          style={{ flex: 1 }}
           onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
+              tintColor={'transparent'}
               colors={[colors.pianoteRed]}
-              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
+              refreshing={isiOS ? false : this.state.refreshing}
             />
           }
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
         >
+          {isiOS && this.state.refreshing && (
+            <ActivityIndicator
+              size='large'
+              style={{ padding: 10 }}
+              color={colors.pianoteRed}
+            />
+          )}
           <Text
             style={{
               paddingLeft: 12 * factorHorizontal,
@@ -335,3 +367,8 @@ export default class MyList extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ myListCache: state.myListCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteMyList }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyList);

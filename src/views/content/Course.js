@@ -10,6 +10,8 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -17,6 +19,8 @@ import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
+
+import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -26,11 +30,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-export default class Course extends React.Component {
+class Course extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { coursesCache } = props;
     this.state = {
       progressCourses: [],
       allCourses: [],
@@ -48,12 +53,22 @@ export default class Course extends React.Component {
       },
       started: true, // if started lesson
       refreshing: true,
-      refreshControl: false
+      refreshControl: false,
+      ...this.initialValidData(coursesCache, true)
     };
   }
 
   componentDidMount() {
     this.getContent();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () =>
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
+    );
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
   }
 
   async getContent() {
@@ -69,31 +84,48 @@ export default class Course extends React.Component {
       ),
       getStartedContent('course')
     ]);
-    let allVideos = this.setData(
-      content[0].data.map(data => {
-        return new ContentModel(data);
-      })
-    );
-
-    let inprogressVideos = this.setData(
-      content[1].data.map(data => {
-        return new ContentModel(data);
-      })
-    );
-
-    this.setState({
-      allCourses: allVideos,
-      progressCourses: inprogressVideos,
-      refreshing: false,
-      refreshControl: false,
-      outVideos:
-        allVideos.length == 0 || content[0].data.length < 20 ? true : false,
-      filtering: false,
-      isPaging: false,
-      page: this.state.page + 1,
-      started: inprogressVideos.length !== 0
+    this.props.cacheAndWriteCourses({
+      all: content[0],
+      inProgress: content[1]
     });
+    this.setState(
+      this.initialValidData({
+        all: content[0],
+        inProgress: content[1]
+      })
+    );
   }
+
+  initialValidData = (content, fromCache) => {
+    try {
+      let allVideos = this.setData(
+        content.all.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+
+      let inprogressVideos = this.setData(
+        content.inProgress.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+
+      return {
+        allCourses: allVideos,
+        progressCourses: inprogressVideos,
+        refreshing: false,
+        refreshControl: fromCache,
+        outVideos:
+          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+        filtering: false,
+        isPaging: false,
+        page: this.state?.page + 1 || 1,
+        started: inprogressVideos.length !== 0
+      };
+    } catch (e) {
+      return {};
+    }
+  };
 
   getAllCourses = async loadMore => {
     if (!this.context.isConnected) {
@@ -246,7 +278,7 @@ export default class Course extends React.Component {
   };
 
   refresh() {
-    this.setState({ refreshControl: true, page: 1 }, () => this.getContent());
+    this.setState({ refreshControl: true, page: 1 }, this.getContent);
   }
 
   render() {
@@ -261,9 +293,10 @@ export default class Course extends React.Component {
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             refreshControl={
               <RefreshControl
+                tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
+                refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
             style={{
@@ -271,6 +304,13 @@ export default class Course extends React.Component {
               backgroundColor: colors.mainBackground
             }}
           >
+            {isiOS && this.state.refreshControl && (
+              <ActivityIndicator
+                size='large'
+                style={{ padding: 10 }}
+                color={colors.pianoteRed}
+              />
+            )}
             <Text
               style={{
                 paddingLeft: 15,
@@ -345,3 +385,8 @@ export default class Course extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ coursesCache: state.coursesCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteCourses }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Course);

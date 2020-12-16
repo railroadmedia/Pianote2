@@ -11,9 +11,9 @@ import {
   StatusBar
 } from 'react-native';
 import {
+  StackActions,
   withNavigation,
-  NavigationActions,
-  StackActions
+  NavigationActions
 } from 'react-navigation';
 import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';

@@ -12,7 +12,9 @@ import {
   Dimensions,
   ImageBackground
 } from 'react-native';
+import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
@@ -28,12 +30,15 @@ import packsService from '../../services/packs.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import Orientation from 'react-native-orientation-locker';
 
+import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
+
 let greaterWDim;
-export default class Packs extends React.Component {
+class Packs extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { packsCache } = props;
     this.state = {
       packs: [],
       headerPackImg: '',
@@ -46,7 +51,8 @@ export default class Packs extends React.Component {
       refreshing: false,
       showRestartCourse: false,
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width
+        Dimensions.get('window').height < Dimensions.get('window').width,
+      ...this.initialValidData(packsCache, true)
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -75,39 +81,46 @@ export default class Packs extends React.Component {
   };
 
   async getData() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     const response = await packsService.allPacks();
-    const newContent = response.myPacks.map(data => {
-      return new ContentModel(data);
-    });
-    const topHeaderPack = new ContentModel(response.topHeaderPack);
-
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        id: newContent[i].id,
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        logo: newContent[i].getData('logo_image_url'),
-        bundle_count: newContent[i].post.bundle_count,
-        mobile_app_url: newContent[i].post.mobile_app_url
-      });
-    }
-
-    this.setState({
-      packs: items,
-      isLoading: false,
-      refreshing: false,
-      showRestartCourse: false,
-      headerPackImg: topHeaderPack.getData('thumbnail_url'),
-      headerPackLogo: topHeaderPack.getData('logo_image_url'),
-      headerPackUrl: topHeaderPack.post.mobile_app_url,
-      headerPackCompleted: topHeaderPack.isCompleted,
-      headerPackStarted: topHeaderPack.isStarted,
-      headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url
-    });
+    this.props.cacheAndWritePacks(response);
+    this.setState(this.initialValidData(response));
   }
+
+  initialValidData = (content, fromCache) => {
+    try {
+      const newContent = content.myPacks.map(data => {
+        return new ContentModel(data);
+      });
+      const topHeaderPack = new ContentModel(content.topHeaderPack);
+
+      let items = [];
+      for (let i in newContent) {
+        items.push({
+          id: newContent[i].id,
+          thumbnail: newContent[i].getData('thumbnail_url'),
+          logo: newContent[i].getData('logo_image_url'),
+          bundle_count: newContent[i].post.bundle_count,
+          mobile_app_url: newContent[i].post.mobile_app_url
+        });
+      }
+
+      return {
+        packs: items,
+        isLoading: false,
+        refreshing: fromCache,
+        showRestartCourse: false,
+        headerPackImg: topHeaderPack.getData('thumbnail_url'),
+        headerPackLogo: topHeaderPack.getData('logo_image_url'),
+        headerPackUrl: topHeaderPack.post.mobile_app_url,
+        headerPackCompleted: topHeaderPack.isCompleted,
+        headerPackStarted: topHeaderPack.isStarted,
+        headerPackNextLessonUrl: topHeaderPack.post.next_lesson_mobile_app_url
+      };
+    } catch (e) {
+      return {};
+    }
+  };
 
   onRestartPack = async () => {
     if (!this.context.isConnected) {
@@ -153,9 +166,10 @@ export default class Packs extends React.Component {
           keyboardShouldPersistTaps='handled'
           refreshControl={
             <RefreshControl
+              tintColor={'transparent'}
               colors={[colors.pianoteRed]}
-              refreshing={this.state.refreshing}
               onRefresh={() => this.refresh()}
+              refreshing={isiOS ? false : this.state.refreshing}
             />
           }
           ListEmptyComponent={() => (
@@ -175,86 +189,95 @@ export default class Packs extends React.Component {
             </View>
           )}
           ListHeaderComponent={() => (
-            <ImageBackground
-              resizeMode={'cover'}
-              style={{
-                width: '100%',
-                aspectRatio: this.getAspectRatio(),
-                justifyContent: 'flex-end'
-              }}
-              source={{
-                uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                  greaterWDim * 2
-                )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
-              }}
-            >
-              <GradientFeature
-                color={'blue'}
-                opacity={1}
-                height={'100%'}
-                borderRadius={0}
-                zIndex={0}
-                elevation={0}
-              />
-              <FastImage
+            <>
+              {isiOS && this.state.refreshing && (
+                <ActivityIndicator
+                  size='large'
+                  style={{ padding: 10 }}
+                  color={colors.pianoteRed}
+                />
+              )}
+              <ImageBackground
+                resizeMode={'cover'}
                 style={{
-                  height: greaterWDim / 15,
                   width: '100%',
-                  zIndex: 6
+                  aspectRatio: this.getAspectRatio(),
+                  justifyContent: 'flex-end'
                 }}
                 source={{
-                  uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
+                  uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
                     greaterWDim * 2
-                  )}/${this.state.headerPackLogo}`
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-              />
-
-              <View
-                style={{
-                  flex: onTablet ? 0.2 : 0.15,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  paddingHorizontal: 25 * factorRatio,
-                  marginVertical: 15
+                  )},ar_2,c_fill,g_face/${this.state.headerPackImg}`
                 }}
               >
-                {this.state.headerPackCompleted ? (
-                  <ResetIcon
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : !this.state.headerPackStarted ? (
-                  <StartIcon
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.headerPackNextLessonUrl
-                      })
-                    }
-                  />
-                ) : (
-                  <ContinueIcon
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.headerPackNextLessonUrl
-                      })
-                    }
-                  />
-                )}
-                <View style={{ flex: 0.1 }} />
-                <MoreInfoIcon
-                  pressed={() => {
-                    this.props.navigation.push('SINGLEPACK', {
-                      url: this.state.headerPackUrl
-                    });
-                  }}
+                <GradientFeature
+                  color={'blue'}
+                  opacity={1}
+                  height={'100%'}
+                  borderRadius={0}
+                  zIndex={0}
+                  elevation={0}
                 />
-              </View>
-            </ImageBackground>
+                <FastImage
+                  style={{
+                    height: greaterWDim / 15,
+                    width: '100%',
+                    zIndex: 6
+                  }}
+                  source={{
+                    uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
+                      greaterWDim * 2
+                    )}/${this.state.headerPackLogo}`
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+
+                <View
+                  style={{
+                    flex: onTablet ? 0.2 : 0.15,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    paddingHorizontal: 25 * factorRatio,
+                    marginVertical: 15
+                  }}
+                >
+                  {this.state.headerPackCompleted ? (
+                    <ResetIcon
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : !this.state.headerPackStarted ? (
+                    <StartIcon
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.headerPackNextLessonUrl
+                        })
+                      }
+                    />
+                  ) : (
+                    <ContinueIcon
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.headerPackNextLessonUrl
+                        })
+                      }
+                    />
+                  )}
+                  <View style={{ flex: 0.1 }} />
+                  <MoreInfoIcon
+                    pressed={() => {
+                      this.props.navigation.push('SINGLEPACK', {
+                        url: this.state.headerPackUrl
+                      });
+                    }}
+                  />
+                </View>
+              </ImageBackground>
+            </>
           )}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -350,3 +373,8 @@ export default class Packs extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ packsCache: state.packsCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWritePacks }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Packs);

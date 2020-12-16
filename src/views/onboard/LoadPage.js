@@ -3,18 +3,45 @@
  */
 import React from 'react';
 import { Linking, View } from 'react-native';
-import { Download_V2 } from 'RNDownload';
+
+import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
-import NoConnection from 'Pianote2/src/modals/NoConnection.js';
+import { Download_V2 } from 'RNDownload';
+import { bindActionCreators } from 'redux';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { NetworkContext } from '../../context/NetworkProvider';
+
 import { getToken, getUserData } from '../../services/UserDataAuth';
 import { notif, updateFcmToken } from '../../services/notification.service';
+
+import { cachePacks } from '../../redux/PacksCacheActions';
+import { cacheSongs } from '../../redux/SongsCacheActions';
+import { cacheMyList } from '../../redux/MyListCacheActions';
+import { cacheCourses } from '../../redux/CoursesCacheActions';
+import { cacheLessons } from '../../redux/LessonsCacheActions';
+import { cachePodcasts } from '../../redux/PodcastsCacheActions';
+import { cacheQuickTips } from '../../redux/QuickTipsCacheActions';
+import { cacheStudentFocus } from '../../redux/StudentFocusCacheActions';
+
 import Pianote from '../../assets/img/svgs/pianote';
 
-export default class LoadPage extends React.Component {
+import NoConnection from '../../modals/NoConnection';
+
+import { NetworkContext } from '../../context/NetworkProvider';
+import RNFetchBlob from 'rn-fetch-blob';
+
+const cache = [
+  'cachePacks',
+  'cacheSongs',
+  'cacheMyList',
+  'cacheLessons',
+  'cacheCourses',
+  'cachePodcasts',
+  'cacheQuickTips',
+  'cacheStudentFocus'
+];
+class LoadPage extends React.Component {
   static contextType = NetworkContext;
   static navigationOptions = { header: null };
   constructor(props) {
@@ -24,6 +51,7 @@ export default class LoadPage extends React.Component {
 
   async componentDidMount() {
     Download_V2.resumeAll().then(async () => {
+      this.loadCache();
       await SplashScreen.hide();
 
       let data = (
@@ -183,6 +211,14 @@ export default class LoadPage extends React.Component {
     });
   }
 
+  loadCache = () =>
+    cache.map(c =>
+      RNFetchBlob.fs
+        .readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/${c}`, 'utf8')
+        .then(stream => this.props[c]?.(JSON.parse(stream)))
+        .catch(() => {})
+    );
+
   async handleNoConnection() {
     let isLoggedIn = await AsyncStorage.getItem('loggedIn');
     if (isLoggedIn == 'true') {
@@ -265,3 +301,19 @@ export default class LoadPage extends React.Component {
     );
   }
 }
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      cachePacks,
+      cacheSongs,
+      cacheMyList,
+      cacheLessons,
+      cacheCourses,
+      cachePodcasts,
+      cacheQuickTips,
+      cacheStudentFocus
+    },
+    dispatch
+  );
+
+export default connect(null, mapDispatchToProps)(LoadPage);

@@ -9,6 +9,9 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
+import { connect } from 'react-redux';
+import Modal from 'react-native-modal';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 
 import NavigationBar from '../../components/NavigationBar';
@@ -18,6 +21,8 @@ import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
+
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -26,11 +31,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-export default class SongCatalog extends React.Component {
+class SongCatalog extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { songsCache } = props;
     this.state = {
       progressSongs: [],
       allSongs: [],
@@ -48,19 +54,26 @@ export default class SongCatalog extends React.Component {
       },
       started: true,
       refreshing: true,
-      refreshControl: false
+      refreshControl: false,
+      ...this.initialValidData(songsCache, true)
     };
   }
 
   componentDidMount() {
     this.getContent();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () =>
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
+    );
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
   }
 
   async getContent() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let content = await Promise.all([
       getAllContent(
         'song',
@@ -70,31 +83,46 @@ export default class SongCatalog extends React.Component {
       ),
       getStartedContent('song')
     ]);
-
-    let allVideos = this.setData(
-      content[0].data.map(data => {
-        return new ContentModel(data);
-      })
-    );
-
-    let inprogressVideos = this.setData(
-      content[1].data.map(data => {
-        return new ContentModel(data);
-      })
-    );
-
-    this.setState({
-      allSongs: allVideos,
-      outVideos:
-        allVideos.length == 0 || content[0].data.length < 20 ? true : false,
-      filtering: false,
-      isPaging: false,
-      progressSongs: inprogressVideos,
-      started: inprogressVideos.length !== 0,
-      refreshing: false,
-      refreshControl: false
+    this.props.cacheAndWriteSongs({
+      all: content[0],
+      inProgress: content[1]
     });
+    this.setState(
+      this.initialValidData({
+        all: content[0],
+        inProgress: content[1]
+      })
+    );
   }
+
+  initialValidData = (content, fromCache) => {
+    try {
+      let allVideos = this.setData(
+        content.all.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+
+      let inprogressVideos = this.setData(
+        content.inProgress.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+      return {
+        allSongs: allVideos,
+        outVideos:
+          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+        filtering: false,
+        isPaging: false,
+        progressSongs: inprogressVideos,
+        started: inprogressVideos.length !== 0,
+        refreshing: false,
+        refreshControl: fromCache
+      };
+    } catch (e) {
+      return {};
+    }
+  };
 
   getAllSongs = async loadMore => {
     if (!this.context.isConnected) {
@@ -252,8 +280,9 @@ export default class SongCatalog extends React.Component {
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             refreshControl={
               <RefreshControl
+                tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshControl}
+                refreshing={isiOS ? false : this.state.refreshControl}
                 onRefresh={() => this.refresh()}
               />
             }
@@ -262,6 +291,13 @@ export default class SongCatalog extends React.Component {
               backgroundColor: colors.mainBackground
             }}
           >
+            {isiOS && this.state.refreshControl && (
+              <ActivityIndicator
+                size='large'
+                style={{ padding: 10 }}
+                color={colors.pianoteRed}
+              />
+            )}
             <Text
               style={{
                 paddingLeft: 15,
@@ -346,3 +382,8 @@ export default class SongCatalog extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ songsCache: state.songsCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteSongs }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SongCatalog);
