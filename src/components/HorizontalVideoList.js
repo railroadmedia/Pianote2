@@ -138,15 +138,20 @@ class HorizontalVideoList extends React.Component {
           data: content
         });
       case 'learning-path':
-        return this.props.navigation.navigate('FOUNDATIONS', {
+        return this.props.navigation.navigate('METHOD', {
           url: content.mobile_app_url
         });
-      case 'unit':
-        return this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+      case 'learning-path-level':
+        return this.props.navigation.navigate('METHODLEVEL', {
           url: content.mobile_app_url,
           level: index + 1
         });
-      case 'unit-part':
+      case 'learning-path-course':
+        return this.props.navigation.push('PATHOVERVIEW', {
+          data: content,
+          isMethod: true
+        });
+      case 'learning-path-lesson':
         return this.props.navigation.push('VIDEOPLAYER', {
           url: content.mobile_app_url
         });

@@ -39,7 +39,6 @@ import RestartCourse from '../../modals/RestartCourse';
 import LessonComplete from '../../modals/LessonComplete';
 import OverviewComplete from '../../modals/OverviewComplete';
 import AssignmentComplete from '../../modals/AssignmentComplete';
-import foundationsService from '../../services/foundations.service';
 
 import contentService from '../../services/content.service';
 import commentsService from '../../services/comments.service';
@@ -60,6 +59,7 @@ import Resources from 'Pianote2/src/assets/img/svgs/resources';
 import VideoPlayerSong from './VideoPlayerSong';
 
 import { NetworkContext } from '../../context/NetworkProvider';
+import methodService from '../../services/method.service';
 
 export default class VideoPlayer extends React.Component {
   static contextType = NetworkContext;
@@ -100,7 +100,7 @@ export default class VideoPlayer extends React.Component {
       artist: null,
       instructor: null,
       nextLesson: null,
-      nextUnit: null,
+      nextLevel: null,
       previousLesson: null,
       lessonImage: '',
       lessonTitle: '',
@@ -140,8 +140,9 @@ export default class VideoPlayer extends React.Component {
       this.allCommentsNum = comments.length;
     } else {
       let result;
+      console.log(this.props.navigation.state.params.url, this.state.url);
       if (this.props.navigation.state.params.url) {
-        result = await foundationsService.getUnitLesson(this.state.url);
+        result = await methodService.getMethodContent(this.state.url);
       } else {
         result = await contentService.getContent(this.state.id);
       }
@@ -151,6 +152,7 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
+    console.log(content);
     content = new ContentModel(content);
     let relatedLessons = content.post.related_lessons?.map(rl => {
       return new ContentModel(rl);
@@ -263,7 +265,7 @@ export default class VideoPlayer extends React.Component {
             ? new ContentModel(content.post.parent).getField('artist')
             : content.getField('artist'),
         instructor:
-          content.post.type === 'unit-part'
+          content.post.type === 'learning-path-level'
             ? content.post.instructors
             : content.post.type === 'course-part' && content.post.parent
             ? new ContentModel(content.post.parent).getFieldMulti('instructor')
@@ -286,8 +288,8 @@ export default class VideoPlayer extends React.Component {
         isAddedToMyList: content.isAddedToList,
         isStarted: content.isStarted,
         assignmentList: al,
-        nextUnit: content.post.next_unit
-          ? new ContentModel(content.post.next_unit)
+        nextLevel: content.post.next_level
+          ? new ContentModel(content.post.next_level)
           : null,
         nextLesson: content.post.next_lesson
           ? new ContentModel(content.post.next_lesson)
@@ -717,7 +719,7 @@ export default class VideoPlayer extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let incompleteAssignments;
-    let { assignmentList, nextLesson, nextUnit } = this.state;
+    let { assignmentList, nextLesson, nextLevel } = this.state;
     if (id !== this.state.id) {
       incompleteAssignments = assignmentList.filter(
         a => a.progress !== 100 && a.id !== id
@@ -725,9 +727,9 @@ export default class VideoPlayer extends React.Component {
       this.setState(state => ({
         showAssignmentComplete: incompleteAssignments ? true : false,
         showLessonComplete:
-          !incompleteAssignments && (nextLesson || nextUnit) ? true : false,
+          !incompleteAssignments && (nextLesson || nextLevel) ? true : false,
         showOverviewComplete:
-          !incompleteAssignments && !nextLesson && !nextUnit ? true : false,
+          !incompleteAssignments && !nextLesson && !nextLevel ? true : false,
         progress: incompleteAssignments ? state.progress : 100,
         selectedAssignment: {
           ...this.state.selectedAssignment,
@@ -744,8 +746,8 @@ export default class VideoPlayer extends React.Component {
       }));
     } else {
       this.setState(state => ({
-        showLessonComplete: nextLesson || nextUnit ? true : false,
-        showOverviewComplete: nextLesson || nextUnit ? false : true,
+        showLessonComplete: nextLesson || nextLevel ? true : false,
+        showOverviewComplete: nextLesson || nextLevel ? false : true,
         progress: 100,
         assignmentList: state.assignmentList.map(a => ({
           ...a,
@@ -1201,7 +1203,7 @@ export default class VideoPlayer extends React.Component {
                           id,
                           comments,
                           content: this.props.navigation.state.params.url
-                            ? foundationsService.getUnitLesson(this.state.url)
+                            ? methodService.getMethodContent(this.state.url)
                             : contentService.getContent(this.state.id)
                         }}
                         styles={{
@@ -1799,7 +1801,7 @@ export default class VideoPlayer extends React.Component {
                 completedLessonTitle={this.state.lessonTitle}
                 completedLessonXp={this.state.xp}
                 type={this.state.type}
-                nextLesson={this.state.nextLesson || this.state.nextUnit}
+                nextLesson={this.state.nextLesson || this.state.nextLevel}
                 hideLessonComplete={() => {
                   this.setState({ showLessonComplete: false });
                 }}
@@ -1810,16 +1812,16 @@ export default class VideoPlayer extends React.Component {
                       this.state.nextLesson.id,
                       this.state.nextLesson.post.mobile_app_url
                     );
-                  } else if (this.state.nextUnit) {
+                  } else if (this.state.nextLevel) {
                     this.props.navigation.dispatch(
                       StackActions.reset({
                         index: 0,
                         actions: [
                           NavigationActions.navigate({
-                            routeName: 'FOUNDATIONSLEVEL',
+                            routeName: 'METHODLEVEL',
 
                             params: {
-                              url: this.state.nextUnit.post.mobile_app_url
+                              url: this.state.nextLevel.post.mobile_app_url
                             }
                           })
                         ]

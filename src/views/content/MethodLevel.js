@@ -1,5 +1,5 @@
 /**
- * FoundationsLevel
+ * MethodLevel
  */
 import React from 'react';
 import {
@@ -26,9 +26,7 @@ import NextVideo from '../../components/NextVideo';
 import StartIcon from '../../components/StartIcon';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import ContinueIcon from '../../components/ContinueIcon';
-import foundationsService from '../../services/foundations.service';
 import NavigationBar from '../../components/NavigationBar';
-import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import {
   addToMyList,
@@ -36,10 +34,11 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import methodService from '../../services/method.service';
 
 let greaterWDim;
 
-export default class FoundationsLevel extends React.Component {
+export default class MethodLevel extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
@@ -79,13 +78,14 @@ export default class FoundationsLevel extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    let response = await foundationsService.getUnit(
+    let response = await methodService.getMethodContent(
       this.props.navigation.state.params.url
     );
-    const newContent = response.lessons.map(data => {
+    const newContent = response.courses.map(data => {
       return new ContentModel(data);
     });
     response = new ContentModel(response);
+    console.log('level', response);
     try {
       let items = [];
       for (let i in newContent) {
@@ -102,7 +102,8 @@ export default class FoundationsLevel extends React.Component {
           isStarted: newContent[i].isStarted,
           isCompleted: newContent[i].isCompleted,
           progress_percent: newContent[i].post.progress_percent,
-          mobile_app_url: newContent[i].post.mobile_app_url
+          mobile_app_url: newContent[i].post.mobile_app_url,
+          levelNum: newContent[i].post.level_number
         });
       }
 
@@ -152,7 +153,7 @@ export default class FoundationsLevel extends React.Component {
     });
   };
 
-  onRestartFoundation = async () => {
+  onRestartLevel = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -423,7 +424,8 @@ export default class FoundationsLevel extends React.Component {
             style={{ paddingHorizontal: this.state.isLandscape ? '10%' : 0 }}
           >
             <VerticalVideoList
-              foundationsLevel={true}
+              methodLevel={true}
+              title={'METHOD'}
               items={this.state.items}
               isLoading={this.state.isLoadingAll}
               showFilter={false} // shows filters button
@@ -460,8 +462,8 @@ export default class FoundationsLevel extends React.Component {
                 showRestartCourse: false
               });
             }}
-            type='unit'
-            onRestart={() => this.onRestartFoundation()}
+            type='level'
+            onRestart={() => this.onRestartLevel()}
           />
         </Modal>
         {this.state.nextLesson && (
@@ -469,7 +471,7 @@ export default class FoundationsLevel extends React.Component {
             isMethod={true}
             item={this.state.nextLesson}
             progress={this.state.progress}
-            type='UNIT'
+            type='LEVEL'
             onNextLesson={() =>
               this.props.navigation.navigate('VIDEOPLAYER', {
                 url: this.state.nextLesson.post.mobile_app_url

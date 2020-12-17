@@ -19,7 +19,6 @@ import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
-import DeviceInfo, { isTablet } from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
 import Filters from '../../components/FIlters.js';
 import StartIcon from '../../components/StartIcon';
@@ -31,16 +30,11 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-
-import foundationsService from '../../services/foundations.service';
+import methodService from '../../services/method.service.js';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
-
 import Pianote from '../../assets/img/svgs/pianote';
-
 import RestartCourse from '../../modals/RestartCourse';
-
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
-
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
@@ -58,7 +52,6 @@ class Lessons extends React.Component {
     super(props);
     let { lessonsCache } = props;
     this.state = {
-      foundations: [],
       progressLessons: [],
       allLessons: [],
       currentSort: 'newest',
@@ -79,9 +72,10 @@ class Lessons extends React.Component {
       xp: '',
       rank: '',
       currentLesson: [],
-      foundationIsStarted: false,
-      foundationIsCompleted: false,
-      foundationNextLesson: null,
+      methodId: 0,
+      methodIsStarted: false,
+      methodIsCompleted: false,
+      methodNextLesson: null,
       showRestartCourse: false,
       lessonsStarted: true, // for showing continue lessons horizontal list
       refreshing: !lessonsCache,
@@ -99,16 +93,16 @@ class Lessons extends React.Component {
       'totalXP',
       'rank',
       'profileURI',
-      'foundationsIsStarted',
-      'foundationsIsCompleted'
+      'methodIsStarted',
+      'methodIsCompleted'
     ]).then(data => {
       this.setState({
         xp: data[0][1],
         rank: data[1][1],
         profileImage: data[2][1],
-        foundationIsStarted:
+        methodIsStarted:
           typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
-        foundationIsCompleted:
+        methodIsCompleted:
           typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false
       });
     });
@@ -132,7 +126,7 @@ class Lessons extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let content = await Promise.all([
-      foundationsService.getFoundation('foundations-2019'),
+      methodService.getMethod(),
       getAllContent(
         '',
         this.state.currentSort,
@@ -143,14 +137,14 @@ class Lessons extends React.Component {
     ]);
     this.props.cacheAndWriteLessons({
       all: content[1],
-      foundation: content[0],
+      method: content[0],
       inProgress: content[2]
     });
 
     this.setState(
       this.initialValidData({
         all: content[1],
-        foundation: content[0],
+        method: content[0],
         inProgress: content[2]
       })
     );
@@ -159,8 +153,8 @@ class Lessons extends React.Component {
   initialValidData = (content, fromCache) => {
     try {
       if (!content) return {};
-      let { foundation } = content;
-
+      let { method } = content;
+      console.log(method);
       let allVideos = this.setData(
         content.all.data.map(data => {
           return new ContentModel(data);
@@ -173,13 +167,14 @@ class Lessons extends React.Component {
         })
       );
       AsyncStorage.multiSet([
-        ['foundationsIsStarted', foundation.started.toString()],
-        ['foundationsIsCompleted', foundation.completed.toString()]
+        ['methodIsStarted', method.started.toString()],
+        ['methodIsCompleted', method.completed.toString()]
       ]);
       return {
-        foundationIsStarted: foundation.started,
-        foundationIsCompleted: foundation.completed,
-        foundationNextLesson: foundation.next_lesson,
+        methodId: method.id,
+        methodIsStarted: method.started,
+        methodIsCompleted: method.completed,
+        methodNextLesson: method.banner_button_url,
         allLessons: allVideos,
         progressLessons: inprogressVideos,
         outVideos:
@@ -195,22 +190,21 @@ class Lessons extends React.Component {
     }
   };
 
-  getFoundations = async () => {
+  getMethod = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    const response = new ContentModel(
-      await foundationsService.getFoundation('foundations-2019')
-    );
+    const response = await methodService.getMethod();
 
     await AsyncStorage.multiSet([
-      ['foundationsIsStarted', response.isStarted.toString()],
-      ['foundationsIsCompleted', response.isCompleted.toString()]
+      ['methodIsStarted', response.started.toString()],
+      ['methodIsCompleted', response.completed.toString()]
     ]);
     this.setState({
-      foundationIsStarted: response.isStarted,
-      foundationIsCompleted: response.isCompleted,
-      foundationNextLesson: response.post.next_lesson
+      methodId: response.id,
+      methodIsStarted: response.started,
+      methodIsCompleted: response.completed,
+      methodNextLesson: response.banner_button_url
     });
   };
 
@@ -281,25 +275,19 @@ class Lessons extends React.Component {
     return items;
   }
 
-  onRestartFoundation = async () => {
+  onRestartMethod = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    resetProgress(this.state.id);
+    resetProgress(this.state.methodId);
     this.setState(
       {
-        foundationIsStarted: false,
-        foundationIsCompleted: false,
+        methodIsStarted: false,
+        methodIsCompleted: false,
         showRestartCourse: false
       },
-      () => this.getFoundations()
+      () => this.getMethod()
     );
-  };
-
-  getDurationFoundations = newContent => {
-    newContent.post.current_lesson.fields
-      .find(f => f.key === 'video')
-      ?.value.fields.find(f => f.key === 'length_in_seconds')?.value;
   };
 
   getArtist = newContent => {
@@ -507,7 +495,7 @@ class Lessons extends React.Component {
                     paddingHorizontal: 25 * factorRatio
                   }}
                 >
-                  {this.state.foundationIsCompleted ? (
+                  {this.state.methodIsCompleted ? (
                     <ResetIcon
                       pressed={() =>
                         this.setState({
@@ -515,21 +503,21 @@ class Lessons extends React.Component {
                         })
                       }
                     />
-                  ) : !this.state.foundationIsStarted ? (
+                  ) : !this.state.methodIsStarted ? (
                     <StartIcon
                       pressed={() => {
-                        if (this.state.foundationNextLesson)
+                        if (this.state.methodNextLesson)
                           this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.foundationNextLesson.mobile_app_url
+                            url: this.state.methodNextLesson
                           });
                       }}
                     />
                   ) : (
                     <ContinueIcon
                       pressed={() => {
-                        if (this.state.foundationNextLesson)
+                        if (this.state.methodNextLesson)
                           this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.foundationNextLesson.mobile_app_url
+                            url: this.state.methodNextLesson
                           });
                       }}
                     />
@@ -537,9 +525,9 @@ class Lessons extends React.Component {
                   <View style={{ flex: 0.1 }} />
                   <MoreInfoIcon
                     pressed={() => {
-                      this.props.navigation.navigate('FOUNDATIONS', {
-                        foundationIsStarted: this.state.foundationIsStarted,
-                        foundationIsCompleted: this.state.foundationIsCompleted
+                      this.props.navigation.navigate('METHOD', {
+                        methodIsStarted: this.state.methodIsStarted,
+                        methodIsCompleted: this.state.methodIsCompleted
                       });
                     }}
                   />
@@ -637,8 +625,8 @@ class Lessons extends React.Component {
                 showRestartCourse: false
               })
             }
-            type='foundation'
-            onRestart={() => this.onRestartFoundation()}
+            type='method'
+            onRestart={() => this.onRestartMethod()}
           />
         </Modal>
         <Modal

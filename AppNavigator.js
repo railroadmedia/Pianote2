@@ -9,8 +9,6 @@ import { createStackNavigator } from 'react-navigation-stack';
 import StudentFocusCatalog from './src/views/content/StudentFocusCatalog';
 import StudentFocusShow from './src/views/content/StudentFocusShow';
 import VideoPlayerSong from './src/views/content/VideoPlayerSong';
-import FoundationsLevel from './src/views/content/FoundationsLevel';
-import Foundations from './src/views/content/Foundations';
 import VideoPlayer from './src/views/content/VideoPlayer';
 import SongCatalog from './src/views/content/SongCatalog';
 import PathOverview from './src/views/content/PathOverview';
@@ -23,6 +21,8 @@ import Course from './src/views/content/Course';
 import MyList from './src/views/content/MyList';
 import Search from './src/views/content/Search';
 import Packs from './src/views/content/Packs';
+import Method from './src/views/content/Method';
+import MethodLevel from './src/views/content/MethodLevel';
 
 // onboard
 import MembershipExpired from './src/views/onboard/MembershipExpired';
@@ -64,8 +64,8 @@ const AppNavigator = createStackNavigator(
     STUDENTFOCUSCATALOG: { screen: StudentFocusCatalog },
     STUDENTFOCUSSHOW: { screen: StudentFocusShow },
     VIDEOPLAYERSONG: { screen: VideoPlayerSong },
-    FOUNDATIONSLEVEL: { screen: FoundationsLevel },
-    FOUNDATIONS: { screen: Foundations },
+    METHODLEVEL: { screen: MethodLevel },
+    METHOD: { screen: Method },
     PATHOVERVIEW: { screen: PathOverview },
     SONGCATALOG: { screen: SongCatalog },
     VIDEOPLAYER: {

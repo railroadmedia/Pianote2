@@ -45,21 +45,21 @@ class NavigationMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      foundationIsStarted: false,
-      foundationIsCompleted: false
+      methodIsStarted: false,
+      methodIsCompleted: false
     };
   }
 
   UNSAFE_componentWillMount = async () => {
     let data = await AsyncStorage.multiGet([
-      'foundationsIsStarted',
-      'foundationsIsCompleted'
+      'methodIsStarted',
+      'methodIsCompleted'
     ]);
 
     this.setState({
-      foundationIsStarted:
+      methodIsStarted:
         typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
-      foundationIsCompleted:
+      methodIsCompleted:
         typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false
     });
   };
@@ -74,10 +74,10 @@ class NavigationMenu extends React.Component {
               if (!this.context.isConnected)
                 return this.context.showNoConnectionAlert();
               this.props.onClose(false);
-              if (nav.title === 'Foundations') {
-                this.props.navigation.navigate('FOUNDATIONS', {
-                  foundationIsStarted: this.state.foundationIsStarted,
-                  foundationIsCompleted: this.state.foundationIsCompleted
+              if (nav.title === 'Method') {
+                this.props.navigation.navigate('METHOD', {
+                  methodIsStarted: this.state.methodIsStarted,
+                  methodIsCompleted: this.state.methodIsCompleted
                 });
               } else if (nav.title === 'Quick Tips') {
                 this.props.navigation.navigate(nav.navigator, {
@@ -101,8 +101,12 @@ class NavigationMenu extends React.Component {
                     : 'OpenSans-Bold',
                 color:
                   this.props.parentPage == nav.title.toUpperCase()
-                    ? (this.props.isMethod ? 'red' : 'white')
-                    : (this.props.isMethod ? 'white' : colors.secondBackground),
+                    ? this.props.isMethod
+                      ? 'red'
+                      : 'white'
+                    : this.props.isMethod
+                    ? 'white'
+                    : colors.secondBackground,
                 fontSize:
                   (this.props.parentPage == nav.title.toUpperCase()
                     ? 32.5 * factorRatio
@@ -126,11 +130,13 @@ class NavigationMenu extends React.Component {
           height: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground,
+          backgroundColor: this.props.isMethod
+            ? 'black'
+            : colors.mainBackground,
           paddingVertical: 30 * factorRatio
         }}
       >
-        <View style={{height: 30*factorVertical}}/>
+        <View style={{ height: 30 * factorVertical }} />
         {this.lessonNav()}
         <View
           style={{
@@ -148,11 +154,11 @@ class NavigationMenu extends React.Component {
               size={40 * factorRatio}
               name={'x'}
               color={'white'}
-              style={{ padding: 10*factorRatio }}
+              style={{ padding: 10 * factorRatio }}
             />
           </TouchableOpacity>
         </View>
-        <View style={{height: 30*factorVertical}}/>
+        <View style={{ height: 30 * factorVertical }} />
       </View>
     );
   };

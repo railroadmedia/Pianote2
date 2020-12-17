@@ -1,5 +1,5 @@
 /**
- * Foundations
+ * Method
  */
 import React from 'react';
 import {
@@ -27,7 +27,6 @@ import StartIcon from '../../components/StartIcon';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import RestartCourse from '../../modals/RestartCourse';
 import ContinueIcon from '../../components/ContinueIcon';
-import foundationsService from '../../services/foundations.service';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -37,10 +36,11 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import methodService from '../../services/method.service';
 
 let greaterWDim;
 
-export default class Foundations extends React.Component {
+export default class Method extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
@@ -48,10 +48,8 @@ export default class Foundations extends React.Component {
 
     this.state = {
       items: [],
-      foundationIsStarted: this.props.navigation.state.params
-        .foundationIsStarted,
-      foundationIsCompleted: this.props.navigation.state.params
-        .foundationIsCompleted,
+      methodIsStarted: this.props.navigation.state.params.methodIsStarted,
+      methodIsCompleted: this.props.navigation.state.params.methodIsCompleted,
       showRestartCourse: false,
       id: null,
       isStarted: false,
@@ -106,10 +104,9 @@ export default class Foundations extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    const response = new ContentModel(
-      await foundationsService.getFoundation('foundations-2019')
-    );
-    const newContent = response.post.units.map(data => {
+    const response = new ContentModel(await methodService.getMethod());
+    console.log('method', response);
+    const newContent = response.post.levels.map(data => {
       return new ContentModel(data);
     });
     let items = [];
@@ -185,7 +182,7 @@ export default class Foundations extends React.Component {
     });
   };
 
-  onRestartFoundation = async () => {
+  onRestartMethod = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -222,7 +219,7 @@ export default class Foundations extends React.Component {
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
-          parentPage={'FOUNDATIONS'}
+          parentPage={'METHOD'}
         />
 
         <ScrollView
@@ -300,7 +297,7 @@ export default class Foundations extends React.Component {
                 }}
               >
                 <View key='placeholder' style={{ flex: 0.5 }} />
-                {this.state.foundationIsCompleted ? (
+                {this.state.methodIsCompleted ? (
                   <ResetIcon
                     pressed={() =>
                       this.setState({
@@ -308,7 +305,7 @@ export default class Foundations extends React.Component {
                       })
                     }
                   />
-                ) : this.state.foundationIsStarted ? (
+                ) : this.state.methodIsStarted ? (
                   <ContinueIcon
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
@@ -317,7 +314,7 @@ export default class Foundations extends React.Component {
                     }
                   />
                 ) : (
-                  !this.state.foundationIsStarted && (
+                  !this.state.methodIsStarted && (
                     <StartIcon
                       pressed={() =>
                         this.props.navigation.navigate('VIDEOPLAYER', {
@@ -359,7 +356,7 @@ export default class Foundations extends React.Component {
               <View style={{ height: 10 * factorVertical }} />
             </View>
           </ImageBackground>
-          {this.state.foundationIsStarted && (
+          {this.state.methodIsStarted && (
             <View
               key={'profile'}
               style={{
@@ -468,7 +465,7 @@ export default class Foundations extends React.Component {
                         marginTop: 10 * factorVertical
                       }}
                     >
-                      COURSES
+                      LEVELS
                     </Text>
                   </View>
                   <View style={{ width: 15 * factorRatio }} />
@@ -579,14 +576,14 @@ export default class Foundations extends React.Component {
               isMethod={true}
               items={this.state.items}
               isLoading={this.state.isLoadingAll}
-              title={'FOUNDATIONS'}
+              title={'METHOD'}
               type={'LESSONS'}
               showFilter={false}
               showType={false}
               showArtist={false}
               showLength={false}
               showSort={false}
-              isFoundationsLevel={true}
+              isMethodLevel={true}
               isSquare={true}
               imageWidth={fullWidth * 0.26}
             />
@@ -616,8 +613,8 @@ export default class Foundations extends React.Component {
                 showRestartCourse: false
               });
             }}
-            type='foundation'
-            onRestart={() => this.onRestartFoundation()}
+            type='method'
+            onRestart={() => this.onRestartMethod()}
           />
         </Modal>
         {!this.state.isLoadingAll && this.state.nextLesson && (
@@ -625,7 +622,7 @@ export default class Foundations extends React.Component {
             item={this.state.nextLesson}
             isMethod={true}
             progress={this.state.progress}
-            type='FOUNDATION'
+            type='METHOD'
             onNextLesson={() =>
               this.props.navigation.navigate('VIDEOPLAYER', {
                 url: this.state.nextLesson.post.mobile_app_url

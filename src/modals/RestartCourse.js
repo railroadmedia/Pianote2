@@ -71,10 +71,7 @@ class RestartCourse extends React.Component {
               }}
             >
               Restart{' '}
-              {type == 'foundations'
-                ? 'foundations'
-                : 'this ' + this.changeType(type)}
-              ?
+              {type == 'method' ? 'method' : 'this ' + this.changeType(type)}?
             </Text>
 
             <Text
@@ -86,9 +83,9 @@ class RestartCourse extends React.Component {
                 marginTop: 10 * factorRatio
               }}
             >
-              Take {type == 'foundations' ? 'foundations' : 'this ' + type}{' '}
-              again as a refresher, or just to make sure you've got the concepts
-              nailed! This will remove the XP you've earned.
+              Take {type == 'method' ? 'method' : 'this ' + type} again as a
+              refresher, or just to make sure you've got the concepts nailed!
+              This will remove the XP you've earned.
             </Text>
 
             <TouchableOpacity

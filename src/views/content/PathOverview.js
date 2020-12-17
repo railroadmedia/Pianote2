@@ -37,6 +37,7 @@ import {
   resetProgress,
   unlikeContent
 } from '../../services/UserActions';
+import methodService from '../../services/method.service';
 
 let greaterWDim;
 
@@ -51,7 +52,7 @@ export default class PathOverview extends React.Component {
       isAddedToList: this.props.navigation.state.params.data?.isAddedToList,
       thumbnail: this.props.navigation.state.params.data?.thumbnail,
       artist: this.props.navigation.state.params.data?.artist,
-      isMethod: true, ///// TO DO : connect to previous page
+      isMethod: this.props.navigation.state.params.isMethod,
       showInfo: false,
       totalLength: 0,
       isLiked: false,
@@ -65,6 +66,7 @@ export default class PathOverview extends React.Component {
         : true,
       difficulty: 0,
       refreshing: false,
+      levelNum: 0,
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
@@ -96,46 +98,56 @@ export default class PathOverview extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    // let response = await contentService.getContent(this.state.data.id);
-    contentService.getContent(this.state.data.id).then(r => {
-      this.setState({
-        likeCount: r.like_count,
-        isLiked: r.is_liked_by_current_user,
-        isAddedToList: r.is_added_to_primary_playlist,
-        totalLength: r.length_in_seconds,
-        started: r.started,
-        completed: r.completed,
-        nextLessonId: r.next_lesson.id,
-        difficulty: r.fields.find(f => f.key === 'difficulty')?.value,
-        thumbnail: r.data.find(f => f.key === 'thumbnail_url')?.value,
-        artist:
-          r.type === 'song'
-            ? r.fields.find(f => f.key === 'artist')?.value
-            : new ContentModel(
-                r.fields.find(f => f.key === 'instructor')?.value
-              )?.getField('name'),
-        isLoadingAll: false,
-        refreshing: false,
-        items:
-          r?.lessons?.map(l => {
-            l = new ContentModel(l);
-            let duration = new ContentModel(
-              l.getFieldMulti('video')[0]
-            )?.getField('length_in_seconds');
-            return {
-              title: l.getField('title'),
-              thumbnail: l.getData('thumbnail_url'),
-              type: l.type,
-              id: l.id,
-              mobile_app_url: l.post.mobile_app_url,
-              duration: duration < 60 ? 60 : duration,
-              isAddedToList: l.isAddedToList,
-              isStarted: l.isStarted,
-              isCompleted: l.isCompleted,
-              progress_percent: l.post.progress_percent
-            };
-          }) || []
-      });
+    let res;
+    console.log(this.state.data.mobile_app_url);
+    if (this.state.isMethod) {
+      res = await methodService.getMethodContent(
+        this.state.data.mobile_app_url
+      );
+    } else {
+      res = await contentService.getContent(this.state.data.id);
+    }
+    console.log(res);
+    this.setState({
+      likeCount: res.like_count,
+      isLiked: res.is_liked_by_current_user,
+      isAddedToList: res.is_added_to_primary_playlist,
+      totalLength: res.length_in_seconds,
+      started: res.started,
+      completed: res.completed,
+      nextLessonId: res.next_lesson.id,
+      levelNum: res.level_rank,
+      difficulty: res.fields.find(f => f.key === 'difficulty')?.value,
+      thumbnail: res.data.find(f => f.key === 'thumbnail_url')?.value,
+      artist:
+        res.type === 'song'
+          ? res.fields.find(f => f.key === 'artist')?.value
+          : new ContentModel(
+              res.fields.find(f => f.key === 'instructor')?.value
+            )?.getField('name'),
+      isLoadingAll: false,
+      refreshing: false,
+      items:
+        res?.lessons?.map(l => {
+          l = new ContentModel(l);
+          let duration = l.post.fields.find(f => f.key === 'video')
+            ? new ContentModel(l.getFieldMulti('video')[0])?.getField(
+                'length_in_seconds'
+              )
+            : 0;
+          return {
+            title: l.getField('title'),
+            thumbnail: l.getData('thumbnail_url'),
+            type: l.type,
+            id: l.id,
+            mobile_app_url: l.post.mobile_app_url,
+            duration: duration < 60 ? 60 : duration,
+            isAddedToList: l.isAddedToList,
+            isStarted: l.isStarted,
+            isCompleted: l.isCompleted,
+            progress_percent: l.post.progress_percent
+          };
+        }) || []
     });
   };
 
@@ -233,8 +245,11 @@ export default class PathOverview extends React.Component {
     return 1.8;
   }
 
-  goToLesson(id) {
-    this.props.navigation.navigate('VIDEOPLAYER', { id });
+  goToLesson(lesson) {
+    if (this.state.isMethod) {
+      return this.props.navigation.navigate('VIDEOPLAYER', { url: lesson });
+    }
+    return this.props.navigation.navigate('VIDEOPLAYER', { id: lesson });
   }
 
   renderHeader = () => (
@@ -281,17 +296,19 @@ export default class PathOverview extends React.Component {
           this.state.isLandscape ? { marginHorizontal: '10%' } : {}
         ]}
       >
-        <Text
-          numberOfLines={2}
-          style={{
-            fontFamily: 'OpenSans-Bold',
-            color: 'white',
-            textAlign: 'center',
-            fontSize: 24 * factorRatio
-          }}
-        >
-          {this.state.data.title}
-        </Text>
+        {!this.state.isMethod && (
+          <Text
+            numberOfLines={2}
+            style={{
+              fontFamily: 'OpenSans-Bold',
+              color: 'white',
+              textAlign: 'center',
+              fontSize: 24 * factorRatio
+            }}
+          >
+            {this.state.data.title}
+          </Text>
+        )}
         <View style={{ height: 10 * factorVertical }} />
         <Text
           numberOfLines={2}
@@ -304,8 +321,11 @@ export default class PathOverview extends React.Component {
             fontSize: 14 * factorRatio
           }}
         >
-          {this.state.artist?.toUpperCase()} | {this.formatDifficulty()} |{' '}
-          {this.state.data.xp} XP
+          {this.state.artist?.toUpperCase()} |{' '}
+          {this.state.isMethod
+            ? 'LEVEL ' + this.state.levelNum
+            : this.formatDifficulty()}{' '}
+          | {this.state.data.xp} XP
         </Text>
         <View style={{ height: 10 * factorVertical }} />
         <View
@@ -662,7 +682,9 @@ export default class PathOverview extends React.Component {
           ListHeaderComponent={this.renderHeader}
           renderItem={({ item, index }) => (
             <TouchableOpacity
-              onPress={() => this.goToLesson(item.id)}
+              onPress={() =>
+                this.goToLesson(isMethod ? item.mobile_app_url : item.id)
+              }
               style={[
                 {
                   width: onTablet
@@ -768,10 +790,9 @@ export default class PathOverview extends React.Component {
                     numberOfLines={1}
                     style={{
                       fontSize: 12 * factorRatio,
-                      color:
-                        this.props.isMethod || this.props.foundationsLevel
-                          ? colors.pianoteGrey
-                          : colors.secondBackground,
+                      color: this.props.isMethod
+                        ? colors.pianoteGrey
+                        : colors.secondBackground,
                       textAlign: 'left',
                       fontFamily: 'OpenSans-Regular',
                       paddingBottom: 10,

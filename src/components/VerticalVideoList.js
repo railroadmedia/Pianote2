@@ -263,17 +263,22 @@ class VerticalVideoList extends React.Component {
     if (
       !this.context.isConnected &&
       this.props.title !== 'RELATED LESSONS' &&
-      this.props.title !== 'Foundations'
+      this.props.title !== 'METHOD'
     )
       return this.context.showNoConnectionAlert();
-    if (new Date(content.publishedOn) > new Date()) {
+    if (
+      this.props.title !== 'METHOD' &&
+      new Date(content.publishedOn) > new Date()
+    ) {
       return;
     }
+
     if (this.props.navigator) return this.props.navigator(content, index);
     switch (content.type) {
       case 'course':
         return this.props.navigation.navigate('PATHOVERVIEW', {
-          data: content
+          data: content,
+          isMethod: false
         });
       case 'song':
         if (content.lesson_count === 1)
@@ -281,18 +286,24 @@ class VerticalVideoList extends React.Component {
             id: content.currentLessonId
           });
         return this.props.navigation.navigate('PATHOVERVIEW', {
-          data: content
+          data: content,
+          isMethod: false
         });
       case 'learning-path':
-        return this.props.navigation.navigate('FOUNDATIONS', {
+        return this.props.navigation.navigate('METHOD', {
           url: content.mobile_app_url
         });
-      case 'unit':
-        return this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+      case 'learning-path-level':
+        return this.props.navigation.navigate('METHODLEVEL', {
           url: content.mobile_app_url,
           level: index + 1
         });
-      case 'unit-part':
+      case 'learning-path-course':
+        return this.props.navigation.push('PATHOVERVIEW', {
+          data: content,
+          isMethod: true
+        });
+      case 'learning-path-lesson':
         return this.props.navigation.push('VIDEOPLAYER', {
           url: content.mobile_app_url
         });
@@ -316,9 +327,6 @@ class VerticalVideoList extends React.Component {
   };
 
   getImageUrl(thumbnail, publishDate) {
-    if (new Date(publishDate) > new Date()) {
-      return `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`;
-    }
     if (thumbnail.includes('http') && thumbnail !== 'TBD') {
       return `https://cdn.musora.com/image/fetch/w_${Math.round(
         this.props.imageWidth * 2
@@ -326,7 +334,9 @@ class VerticalVideoList extends React.Component {
         this.props.isSquare ? '1' : '16:9'
       },fl_lossy,q_auto:eco,c_fill,g_face/${thumbnail}`;
     }
-
+    if (new Date(publishDate) > new Date()) {
+      return `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`;
+    }
     return fallbackThumb;
   }
 
@@ -342,7 +352,7 @@ class VerticalVideoList extends React.Component {
         <TouchableOpacity
           key={index}
           onLongPress={() => {
-            row.type == 'unit'
+            row.type == 'learning-path-level'
               ? null
               : this.setState({
                   showModal: true,
@@ -464,7 +474,7 @@ class VerticalVideoList extends React.Component {
                   </>
                 )}
 
-                {this.props.isFoundationsLevel && (
+                {this.props.isMethodLevel && (
                   <View
                     style={{
                       height: '100%',
@@ -530,7 +540,7 @@ class VerticalVideoList extends React.Component {
             </View>
             <View style={{ width: 10 * factorHorizontal }} />
             <View style={{ flex: 1.5, justifyContent: 'center' }}>
-              {this.props.isFoundationsLevel && (
+              {this.props.isMethodLevel && (
                 <Text
                   style={{
                     fontSize: 10 * factorRatio,
@@ -556,7 +566,7 @@ class VerticalVideoList extends React.Component {
               >
                 {row.title}
               </Text>
-              {this.props.isFoundationsLevel && (
+              {this.props.isMethodLevel && (
                 <Text
                   numberOfLines={2}
                   style={{
@@ -581,7 +591,7 @@ class VerticalVideoList extends React.Component {
                     style={{
                       fontSize: 12 * factorRatio,
                       color:
-                        this.props.isMethod || this.props.foundationsLevel
+                        this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
                           : colors.secondBackground,
                       textAlign: 'left',
@@ -598,14 +608,14 @@ class VerticalVideoList extends React.Component {
                     style={{
                       fontSize: 12 * factorRatio,
                       color:
-                        this.props.isMethod || this.props.foundationsLevel
+                        this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
                           : colors.secondBackground,
                       textAlign: 'left',
                       fontFamily: 'OpenSans-Regular'
                     }}
                   >
-                    Level {(1.1 + index / 10).toFixed(1)}
+                    Level {row.levelNum}
                   </Text>
                 )}
                 {this.props.showType && (
@@ -640,7 +650,7 @@ class VerticalVideoList extends React.Component {
                 )}
               </View>
             </View>
-            {!this.props.isFoundationsLevel && (
+            {!this.props.isMethodLevel && (
               <View style={{ flex: 0.5 }}>
                 <View style={[styles.centerContent, { flex: 1 }]}>
                   {new Date(row.publishedOn) > new Date() ? (
@@ -658,7 +668,7 @@ class VerticalVideoList extends React.Component {
                         size={30 * factorRatio}
                         name={'calendar-plus'}
                         color={
-                          this.props.isMethod && !this.props.foundationsLevel
+                          this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
                             : colors.pianoteRed
                         }
@@ -675,7 +685,7 @@ class VerticalVideoList extends React.Component {
                         name={'plus'}
                         size={30 * factorRatio}
                         color={
-                          this.props.isMethod && !this.props.foundationsLevel
+                          this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
                             : colors.pianoteRed
                         }
@@ -692,7 +702,7 @@ class VerticalVideoList extends React.Component {
                         name={'close'}
                         size={30 * factorRatio}
                         color={
-                          this.props.isMethod && !this.props.foundationsLevel
+                          this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
                             : colors.pianoteRed
                         }
