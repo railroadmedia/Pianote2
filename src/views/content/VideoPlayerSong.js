@@ -39,15 +39,7 @@ export default class VideoPlayerSong extends React.Component {
   render() {
     let {
       showSheets,
-      assignment: {
-        slug,
-        index,
-        title,
-        sheets,
-        progress,
-        timeCodes,
-        description
-      }
+      assignment: { slug, index, title, sheets, timeCodes, description }
     } = this.state;
     return (
       <>
@@ -250,7 +242,9 @@ export default class VideoPlayerSong extends React.Component {
                   paddingVertical: 10
                 }}
               >
-                {progress === 100 ? 'COMPLETED' : 'COMPLETE ASSIGNMENT'}
+                {this.props.assignmentProgress === 100
+                  ? 'COMPLETED'
+                  : 'COMPLETE ASSIGNMENT'}
               </Text>
             </TouchableOpacity>
           </View>

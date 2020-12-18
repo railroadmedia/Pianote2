@@ -9,11 +9,9 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { logOut } from 'Pianote2/src/services/UserDataAuth.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Intercom from 'react-native-intercom';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const resetAction = StackActions.reset({
   index: 0,

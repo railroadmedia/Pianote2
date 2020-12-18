@@ -49,7 +49,7 @@ class LessonComplete extends React.Component {
     } = this.props;
     return (
       <TouchableWithoutFeedback
-        onPress={() => this.props.hideRestartCourse()}
+        onPress={() => this.props.hideLessonComplete()}
         style={{
           flex: 1,
           justifyContent: 'center',
@@ -102,9 +102,7 @@ class LessonComplete extends React.Component {
                   height: '20%',
                   width: '100%',
                   alignSelf: 'center',
-                  borderRadius: 10 * factorRatio,
-                  borderWidth: 1,
-                  borderColor: 'green'
+                  borderRadius: 10 * factorRatio
                 }
               ]}
             >

@@ -251,7 +251,7 @@ export default class ProfileSettings extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Bold',
-                  color: 'red',
+                  color: colors.pianoteRed,
                   textAlign: 'right',
                   alignSelf: 'flex-end'
                 }}

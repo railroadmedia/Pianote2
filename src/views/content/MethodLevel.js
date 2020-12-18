@@ -85,7 +85,6 @@ export default class MethodLevel extends React.Component {
       return new ContentModel(data);
     });
     response = new ContentModel(response);
-    console.log('level', response);
     try {
       let items = [];
       for (let i in newContent) {
@@ -103,7 +102,7 @@ export default class MethodLevel extends React.Component {
           isCompleted: newContent[i].isCompleted,
           progress_percent: newContent[i].post.progress_percent,
           mobile_app_url: newContent[i].post.mobile_app_url,
-          levelNum: newContent[i].post.level_number
+          levelNum: response.post.level_number
         });
       }
 
@@ -442,14 +441,11 @@ export default class MethodLevel extends React.Component {
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

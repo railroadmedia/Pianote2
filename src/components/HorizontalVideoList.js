@@ -184,7 +184,7 @@ class HorizontalVideoList extends React.Component {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingVertical: 10 * factorRatio
+            paddingVertical: 15 * factorRatio
           }}
         >
           <Text
@@ -233,7 +233,7 @@ class HorizontalVideoList extends React.Component {
                   item
                 });
               }}
-              delayLongPress={350}
+              delayLongPress={250}
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
@@ -400,14 +400,11 @@ class HorizontalVideoList extends React.Component {
         <Modal
           key={'modal'}
           isVisible={this.state.showModal}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

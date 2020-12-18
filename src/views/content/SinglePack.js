@@ -583,14 +583,11 @@ export default class SinglePack extends React.Component {
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

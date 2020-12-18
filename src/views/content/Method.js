@@ -105,7 +105,6 @@ export default class Method extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     const response = new ContentModel(await methodService.getMethod());
-    console.log('method', response);
     const newContent = response.post.levels.map(data => {
       return new ContentModel(data);
     });
@@ -160,7 +159,7 @@ export default class Method extends React.Component {
         .replace(/&gt;/g, '>')
         .replace(/&lt;/g, '<'),
       progress: response.post.progress_percent,
-      nextLesson: new ContentModel(response.post.current_lesson),
+      nextLesson: new ContentModel(response.post.next_lesson),
       refreshing: false
     });
   };
@@ -211,6 +210,10 @@ export default class Method extends React.Component {
     if (onTablet && this.state.isLandscape) return 3;
     if (onTablet && !this.state.isLandscape) return 2;
     return 1.8;
+  }
+
+  goToLesson(url) {
+    return this.props.navigation.navigate('VIDEOPLAYER', { url });
   }
 
   render() {
@@ -308,18 +311,16 @@ export default class Method extends React.Component {
                 ) : this.state.methodIsStarted ? (
                   <ContinueIcon
                     pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLesson.post.mobile_app_url
-                      })
+                      this.goToLesson(this.state.nextLesson.post.mobile_app_url)
                     }
                   />
                 ) : (
                   !this.state.methodIsStarted && (
                     <StartIcon
                       pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.nextLesson.post.mobile_app_url
-                        })
+                        this.goToLesson(
+                          this.state.nextLesson.post.mobile_app_url
+                        )
                       }
                     />
                   )
@@ -416,7 +417,7 @@ export default class Method extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {this.state.description}
+                {this.state.description !== 'TBD' ? this.state.description : ''}
               </Text>
               <View key={'containStats'}>
                 <View style={{ height: 10 * factorVertical }} />
@@ -593,14 +594,11 @@ export default class Method extends React.Component {
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -624,9 +622,7 @@ export default class Method extends React.Component {
             progress={this.state.progress}
             type='METHOD'
             onNextLesson={() =>
-              this.props.navigation.navigate('VIDEOPLAYER', {
-                url: this.state.nextLesson.post.mobile_app_url
-              })
+              this.goToLesson(this.state.nextLesson.post.mobile_app_url)
             }
           />
         )}

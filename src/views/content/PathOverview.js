@@ -38,6 +38,7 @@ import {
   unlikeContent
 } from '../../services/UserActions';
 import methodService from '../../services/method.service';
+import NextVideo from '../../components/NextVideo';
 
 let greaterWDim;
 
@@ -53,6 +54,8 @@ export default class PathOverview extends React.Component {
       thumbnail: this.props.navigation.state.params.data?.thumbnail,
       artist: this.props.navigation.state.params.data?.artist,
       isMethod: this.props.navigation.state.params.isMethod,
+      xp: this.props.navigation.state.params.data.total_xp,
+      type: '',
       showInfo: false,
       totalLength: 0,
       isLiked: false,
@@ -60,7 +63,8 @@ export default class PathOverview extends React.Component {
       started: false,
       completed: false,
       showRestartCourse: false,
-      nextLessonId: 0,
+      nextLesson: null,
+      progress: 0,
       isLoadingAll: this.props.navigation.state.params.items?.length
         ? false
         : true,
@@ -99,7 +103,6 @@ export default class PathOverview extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let res;
-    console.log(this.state.data.mobile_app_url);
     if (this.state.isMethod) {
       res = await methodService.getMethodContent(
         this.state.data.mobile_app_url
@@ -107,7 +110,6 @@ export default class PathOverview extends React.Component {
     } else {
       res = await contentService.getContent(this.state.data.id);
     }
-    console.log(res);
     this.setState({
       likeCount: res.like_count,
       isLiked: res.is_liked_by_current_user,
@@ -115,10 +117,13 @@ export default class PathOverview extends React.Component {
       totalLength: res.length_in_seconds,
       started: res.started,
       completed: res.completed,
-      nextLessonId: res.next_lesson.id,
-      levelNum: res.level_rank,
+      nextLesson: res.next_lesson ? new ContentModel(res.next_lesson) : null,
+      levelNum: res.level_position + '.' + res.course_position,
+      progress: res.progress_percent,
       difficulty: res.fields.find(f => f.key === 'difficulty')?.value,
       thumbnail: res.data.find(f => f.key === 'thumbnail_url')?.value,
+      xp: res.total_xp,
+      type: res.type,
       artist:
         res.type === 'song'
           ? res.fields.find(f => f.key === 'artist')?.value
@@ -169,6 +174,7 @@ export default class PathOverview extends React.Component {
         addToMyList(id);
       }
     }
+
     this.setState(state => ({
       isAddedToList:
         id === state.data.id ? !state.isAddedToList : state.isAddedToList,
@@ -247,9 +253,11 @@ export default class PathOverview extends React.Component {
 
   goToLesson(lesson) {
     if (this.state.isMethod) {
-      return this.props.navigation.navigate('VIDEOPLAYER', { url: lesson });
+      return this.props.navigation.navigate('VIDEOPLAYER', {
+        url: lesson.mobile_app_url || lesson.post.mobile_app_url
+      });
     }
-    return this.props.navigation.navigate('VIDEOPLAYER', { id: lesson });
+    return this.props.navigation.navigate('VIDEOPLAYER', { id: lesson.id });
   }
 
   renderHeader = () => (
@@ -325,7 +333,7 @@ export default class PathOverview extends React.Component {
           {this.state.isMethod
             ? 'LEVEL ' + this.state.levelNum
             : this.formatDifficulty()}{' '}
-          | {this.state.data.xp} XP
+          | {this.state.xp} XP
         </Text>
         <View style={{ height: 10 * factorVertical }} />
         <View
@@ -367,12 +375,10 @@ export default class PathOverview extends React.Component {
             />
           ) : this.state.started ? (
             <ContinueIcon
-              pressed={() => this.goToLesson(this.state.nextLessonId)}
+              pressed={() => this.goToLesson(this.state.nextLesson)}
             />
           ) : (
-            <StartIcon
-              pressed={() => this.goToLesson(this.state.nextLessonId)}
-            />
+            <StartIcon pressed={() => this.goToLesson(this.state.nextLesson)} />
           )}
 
           <TouchableOpacity
@@ -514,7 +520,7 @@ export default class PathOverview extends React.Component {
                     marginTop: 10 * factorVertical
                   }}
                 >
-                  {this.state.data.xp}
+                  {this.state.xp}
                   {`\n`}
                   <Text
                     style={{
@@ -644,7 +650,7 @@ export default class PathOverview extends React.Component {
   );
 
   render() {
-    const { isMethod, items, refreshing, isLandscape } = this.state;
+    const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
       <SafeAreaView
         forceInset={{
@@ -682,9 +688,7 @@ export default class PathOverview extends React.Component {
           ListHeaderComponent={this.renderHeader}
           renderItem={({ item, index }) => (
             <TouchableOpacity
-              onPress={() =>
-                this.goToLesson(isMethod ? item.mobile_app_url : item.id)
-              }
+              onPress={() => this.goToLesson(item)}
               style={[
                 {
                   width: onTablet
@@ -815,18 +819,23 @@ export default class PathOverview extends React.Component {
             </TouchableOpacity>
           )}
         />
-
+        {nextLesson && (
+          <NextVideo
+            item={nextLesson}
+            progress={this.state.progress}
+            type={isMethod ? 'LEVEL' : this.state.type.toUpperCase()}
+            onNextLesson={() => this.goToLesson(nextLesson)}
+            isMethod={isMethod}
+          />
+        )}
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -845,7 +854,7 @@ export default class PathOverview extends React.Component {
         </Modal>
         <NavigationBar
           currentPage={'LessonsPathOverview'}
-          isMethod={this.state.isMethod ? 'black' : colors.mainBackground}
+          isMethod={isMethod}
         />
       </SafeAreaView>
     );

@@ -100,7 +100,6 @@ export default class VideoPlayer extends React.Component {
       artist: null,
       instructor: null,
       nextLesson: null,
-      nextLevel: null,
       previousLesson: null,
       lessonImage: '',
       lessonTitle: '',
@@ -140,7 +139,6 @@ export default class VideoPlayer extends React.Component {
       this.allCommentsNum = comments.length;
     } else {
       let result;
-      console.log(this.props.navigation.state.params.url, this.state.url);
       if (this.props.navigation.state.params.url) {
         result = await methodService.getMethodContent(this.state.url);
       } else {
@@ -152,7 +150,6 @@ export default class VideoPlayer extends React.Component {
       content = result;
       this.allCommentsNum = result.total_comments;
     }
-    console.log(content);
     content = new ContentModel(content);
     let relatedLessons = content.post.related_lessons?.map(rl => {
       return new ContentModel(rl);
@@ -179,11 +176,7 @@ export default class VideoPlayer extends React.Component {
             .replace(/&gt;/g, '>')
             .replace(/&lt;/g, '<'),
           xp: assignments[a].xp,
-          progress:
-            parseInt(
-              Object.values(assignments[a].post.user_progress)?.[0]
-                .progress_percent
-            ) || 0,
+          progress: assignments[a].post.progress_percent,
           slug: assignments[a].post.fields?.find(
             f => f.key === 'soundslice_slug'
           )?.value,
@@ -288,9 +281,6 @@ export default class VideoPlayer extends React.Component {
         isAddedToMyList: content.isAddedToList,
         isStarted: content.isStarted,
         assignmentList: al,
-        nextLevel: content.post.next_level
-          ? new ContentModel(content.post.next_level)
-          : null,
         nextLesson: content.post.next_lesson
           ? new ContentModel(content.post.next_lesson)
           : null,
@@ -719,17 +709,16 @@ export default class VideoPlayer extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     let incompleteAssignments;
-    let { assignmentList, nextLesson, nextLevel } = this.state;
+    let { assignmentList, nextLesson } = this.state;
     if (id !== this.state.id) {
       incompleteAssignments = assignmentList.filter(
         a => a.progress !== 100 && a.id !== id
       ).length;
       this.setState(state => ({
         showAssignmentComplete: incompleteAssignments ? true : false,
-        showLessonComplete:
-          !incompleteAssignments && (nextLesson || nextLevel) ? true : false,
+        showLessonComplete: !incompleteAssignments && nextLesson ? true : false,
         showOverviewComplete:
-          !incompleteAssignments && !nextLesson && !nextLevel ? true : false,
+          !incompleteAssignments && !nextLesson ? true : false,
         progress: incompleteAssignments ? state.progress : 100,
         selectedAssignment: {
           ...this.state.selectedAssignment,
@@ -746,8 +735,8 @@ export default class VideoPlayer extends React.Component {
       }));
     } else {
       this.setState(state => ({
-        showLessonComplete: nextLesson || nextLevel ? true : false,
-        showOverviewComplete: nextLesson || nextLevel ? false : true,
+        showLessonComplete: nextLesson ? true : false,
+        showOverviewComplete: nextLesson ? false : true,
         progress: 100,
         assignmentList: state.assignmentList.map(a => ({
           ...a,
@@ -756,8 +745,7 @@ export default class VideoPlayer extends React.Component {
       }));
     }
     let res = await markComplete(id);
-
-    if (res?.parent[0]) {
+    if (res?.parent?.[0]) {
       if (res.parent[0].type !== 'course') {
         this.setState({
           progress: res.parent[0].progress_percent
@@ -790,6 +778,7 @@ export default class VideoPlayer extends React.Component {
     } else {
       addToMyList(this.state.id);
     }
+
     this.setState({
       isAddedToMyList: !this.state.isAddedToMyList
     });
@@ -1031,6 +1020,7 @@ export default class VideoPlayer extends React.Component {
                 <VideoPlayerSong
                   onSeek={time => this.video?.onSeek?.(time)}
                   assignment={this.state.selectedAssignment}
+                  assignmentProgress={this.state.selectedAssignment.progress}
                   onAssignmentFullscreen={() =>
                     this.setState({
                       showVideo: !this.state.showVideo
@@ -1786,10 +1776,7 @@ export default class VideoPlayer extends React.Component {
             <Modal
               key={'lessonComplete'}
               isVisible={this.state.showLessonComplete}
-              style={[
-                styles.centerContent,
-                { margin: 0, height: '100%', width: '100%' }
-              ]}
+              style={{ margin: 0, height: '100%', width: '100%' }}
               animation={'slideInUp'}
               animationInTiming={250}
               animationOutTiming={250}
@@ -1801,7 +1788,7 @@ export default class VideoPlayer extends React.Component {
                 completedLessonTitle={this.state.lessonTitle}
                 completedLessonXp={this.state.xp}
                 type={this.state.type}
-                nextLesson={this.state.nextLesson || this.state.nextLevel}
+                nextLesson={this.state.nextLesson}
                 hideLessonComplete={() => {
                   this.setState({ showLessonComplete: false });
                 }}
@@ -1811,21 +1798,6 @@ export default class VideoPlayer extends React.Component {
                     this.switchLesson(
                       this.state.nextLesson.id,
                       this.state.nextLesson.post.mobile_app_url
-                    );
-                  } else if (this.state.nextLevel) {
-                    this.props.navigation.dispatch(
-                      StackActions.reset({
-                        index: 0,
-                        actions: [
-                          NavigationActions.navigate({
-                            routeName: 'METHODLEVEL',
-
-                            params: {
-                              url: this.state.nextLevel.post.mobile_app_url
-                            }
-                          })
-                        ]
-                      })
                     );
                   }
                 }}
@@ -1846,11 +1818,9 @@ export default class VideoPlayer extends React.Component {
               hasBackdrop={true}
             >
               <RestartCourse
-                hideRestartCourse={() => {
-                  this.setState({
-                    showRestartCourse: false
-                  });
-                }}
+                hideRestartCourse={() =>
+                  this.setState({ showRestartCourse: false })
+                }
                 type={
                   this.state.selectedAssignment ? 'assignment' : this.state.type
                 }
@@ -1870,7 +1840,11 @@ export default class VideoPlayer extends React.Component {
               <OverviewComplete
                 title={this.state.lessonTitle}
                 xp={this.state.xp}
-                type={this.state.type}
+                type={
+                  this.state.type === 'learning-path-lesson'
+                    ? 'Method'
+                    : this.state.type
+                }
                 hideOverviewComplete={() => {
                   this.setState({
                     showOverviewComplete: false

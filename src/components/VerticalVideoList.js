@@ -615,7 +615,7 @@ class VerticalVideoList extends React.Component {
                       fontFamily: 'OpenSans-Regular'
                     }}
                   >
-                    Level {row.levelNum}
+                    Level {row.levelNum}.{index + 1}
                   </Text>
                 )}
                 {this.props.showType && (
@@ -930,14 +930,11 @@ class VerticalVideoList extends React.Component {
         <Modal
           key={'modal'}
           isVisible={this.state.showModal}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -955,14 +952,11 @@ class VerticalVideoList extends React.Component {
         <Modal
           key={'modalRelevance'}
           isVisible={this.state.showRelevance}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
