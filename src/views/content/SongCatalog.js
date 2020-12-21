@@ -113,7 +113,7 @@ class SongCatalog extends React.Component {
       );
       return {
         allSongs: allVideos,
-        filtersAvailable: content[0].meta.filterOptions,
+        filtersAvailable: content.all.meta.filterOptions,
         outVideos:
           allVideos.length == 0 || content.all.data.length < 20 ? true : false,
         filtering: false,
@@ -266,7 +266,7 @@ class SongCatalog extends React.Component {
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
-                size='large'
+                size='small'
                 style={{ padding: 10 }}
                 color={colors.pianoteRed}
               />
@@ -352,6 +352,7 @@ class SongCatalog extends React.Component {
             color={colors.secondBackground}
           />
         )}
+        {this.state.showFilters && (
           <Modal
             isVisible={this.state.showFilters}
             style={[
@@ -397,7 +398,7 @@ class SongCatalog extends React.Component {
             }}
           />
         </Modal>
-
+        )}
         <NavigationBar currentPage={''} />
       </View>
     );

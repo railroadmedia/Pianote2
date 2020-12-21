@@ -301,7 +301,7 @@ class StudentFocusShow extends React.Component {
         >
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
-              size='large'
+              size='small'
               style={{ padding: 10 }}
               color={colors.pianoteRed}
             />
@@ -389,6 +389,7 @@ class StudentFocusShow extends React.Component {
             getVideos={() => this.getVideos()}
           />
         </ScrollView>
+        {this.state.showFilters && (
         <Modal
           isVisible={this.state.showFilters}
           style={[
@@ -434,6 +435,7 @@ class StudentFocusShow extends React.Component {
             }}
           />
         </Modal>
+        )}
         <NavigationBar currentPage={'NONE'} />
       </SafeAreaView>
     );

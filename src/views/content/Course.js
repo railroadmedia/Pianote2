@@ -118,7 +118,7 @@ class Course extends React.Component {
       return {
         allCourses: allVideos,
         progressCourses: inprogressVideos,
-        filtersAvailable: content[0].meta.filterOptions,
+        filtersAvailable: content.all.meta.filterOptions,
         refreshing: false,
         refreshControl: fromCache,
         outVideos:
@@ -134,6 +134,7 @@ class Course extends React.Component {
   };
 
   getAllCourses = async loadMore => {
+    this.setState({filtering: true})
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -261,7 +262,7 @@ class Course extends React.Component {
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
-                size='large'
+                size='small'
                 style={{ padding: 10 }}
                 color={colors.pianoteRed}
               />
@@ -336,6 +337,7 @@ class Course extends React.Component {
             color={colors.secondBackground}
           />
         )}
+        {this.state.showFilters && (
         <Modal
           isVisible={this.state.showFilters}
           style={[
@@ -381,7 +383,7 @@ class Course extends React.Component {
             }}
           />
         </Modal>
-
+        )}
         <NavigationBar currentPage={''} />
       </View>
     );

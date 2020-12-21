@@ -176,7 +176,7 @@ class Lessons extends React.Component {
         methodIsCompleted: method.completed,
         methodNextLessonUrl: method.banner_button_url,
         allLessons: allVideos,
-        filtersAvailable: response.meta.filterOptions,
+        filtersAvailable: content.all.meta.filterOptions,
         progressLessons: inprogressVideos,
         outVideos:
           allVideos.length == 0 || content.all.data.length < 20 ? true : false,
@@ -603,6 +603,7 @@ class Lessons extends React.Component {
             onRestart={() => this.onRestartMethod()}
           />
         </Modal>
+        {this.state.showFilters && (
         <Modal
           isVisible={this.state.showFilters}
           style={[
@@ -648,7 +649,7 @@ class Lessons extends React.Component {
             }}
           />
         </Modal>
-
+        )}
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>
     );

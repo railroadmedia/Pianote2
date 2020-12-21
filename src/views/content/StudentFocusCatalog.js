@@ -65,6 +65,7 @@ class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
+    console.log(content)
     this.props.cacheAndWriteStudentFocus({
       types: content[1],
       inProgress: content[0]
@@ -175,7 +176,7 @@ class StudentFocusCatalog extends React.Component {
               <>
                 {isiOS && this.state.refreshControl && (
                   <ActivityIndicator
-                    size='large'
+                    size='small'
                     style={{ padding: 10 }}
                     color={colors.pianoteRed}
                   />

@@ -36,7 +36,7 @@ export default class Filters extends React.Component {
           } : this.props.filtersAvailable,
         filters: this.props.filters,
         type: this.props.type,
-        selected: false, 
+        selected: false,
         level: null,
         allLevels: true,
         
@@ -64,9 +64,6 @@ export default class Filters extends React.Component {
   };
 
   componentDidMount = () => {
-      console.log(
-        this.state.filtersAvailable
-      )
       this.setState({
         selected: (this.state.filters.length == 0) ? false : true,
         displayTopics: this.state.filters.displayTopics,
@@ -92,7 +89,6 @@ export default class Filters extends React.Component {
         instructors: [],
         showLoading: false,
     });
-
 
     this.props.reset({
         displayTopics: [],

@@ -132,7 +132,7 @@ class MyList extends React.Component {
       }
       return {
         allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
-        filtersAvailable: response.meta.filterOptions,
+        filtersAvailable: content.meta.filterOptions,
         outVideos: items.length == 0 || content.data.length < 20 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
@@ -215,7 +215,7 @@ class MyList extends React.Component {
         >
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
-              size='large'
+              size='small'
               style={{ padding: 10 }}
               color={colors.pianoteRed}
             />
@@ -333,6 +333,7 @@ class MyList extends React.Component {
             imageWidth={fullWidth * 0.26} // image width
           />
         </ScrollView>
+        {this.state.showFilters && (
         <Modal
           isVisible={this.state.showFilters}
           style={[
@@ -378,6 +379,7 @@ class MyList extends React.Component {
             }}
           />
         </Modal>
+        )}
         <NavigationBar currentPage={'MyList'} />
       </View>
     );

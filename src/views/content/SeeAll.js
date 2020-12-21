@@ -357,6 +357,7 @@ export default class SeeAll extends React.Component {
             outVideos={this.state.outVideos} // if paging and out of videos
           />
         </ScrollView>
+        {this.state.showFilters && (
         <Modal
           isVisible={this.state.showFilters}
           style={[
@@ -374,7 +375,9 @@ export default class SeeAll extends React.Component {
           hasBackdrop={true}
         >
           <Filters
-            hideFilters={() => this.setState({ showFilters: false })}
+            hideFilters={() => {
+              this.setState({ showFilters: false })
+            }}
             filtersAvailable={this.state.filtersAvailable}
             filters={this.state.filters}
             filtering={this.state.filtering}
@@ -402,7 +405,7 @@ export default class SeeAll extends React.Component {
             }}
           />
         </Modal>
-       
+       )}
         <NavigationBar currentPage={'SEEALL'} />
       </SafeAreaView>
     );
