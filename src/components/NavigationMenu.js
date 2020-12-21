@@ -98,7 +98,7 @@ class NavigationMenu extends React.Component {
                 fontFamily:
                   this.props.parentPage == nav.title.toUpperCase()
                     ? 'OpenSans-ExtraBold'
-                    : 'OpenSans-Bold',
+                    : 'OpenSans',
                 color:
                   this.props.parentPage == nav.title.toUpperCase()
                     ? this.props.isMethod
@@ -109,8 +109,8 @@ class NavigationMenu extends React.Component {
                     : colors.secondBackground,
                 fontSize:
                   (this.props.parentPage == nav.title.toUpperCase()
-                    ? 32.5 * factorRatio
-                    : 27.5 * factorRatio) + (onTablet ? 5 : 0)
+                    ? 35 * factorRatio
+                    : 25 * factorRatio)
               }}
             >
               {nav.title}
@@ -140,7 +140,6 @@ class NavigationMenu extends React.Component {
         {this.lessonNav()}
         <View
           style={{
-            flex: 0.1,
             alignSelf: 'center'
           }}
         >
@@ -148,14 +147,16 @@ class NavigationMenu extends React.Component {
             onPress={() => {
               this.props.onClose(false);
             }}
-            style={styles.redButton}
+            style={[styles.centerContent, styles.redButton, {height: 65*factorRatio, width: 65*factorRatio, borderRadius: 500 }]}
           >
+            <View style={{flex: 1}}/>
             <FeatherIcon
               size={40 * factorRatio}
               name={'x'}
               color={'white'}
-              style={{ padding: 10 * factorRatio }}
+              style={{ borderRadius: 500 }}
             />
+            <View style={{flex: 1}}/>
           </TouchableOpacity>
         </View>
         <View style={{ height: 30 * factorVertical }} />
