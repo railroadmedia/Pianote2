@@ -71,6 +71,7 @@ export default class PathOverview extends React.Component {
       difficulty: 0,
       refreshing: false,
       levelNum: 0,
+      bannerNextLessonUrl: '',
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
@@ -124,6 +125,7 @@ export default class PathOverview extends React.Component {
       thumbnail: res.data.find(f => f.key === 'thumbnail_url')?.value,
       xp: res.total_xp,
       type: res.type,
+      bannerNextLessonUrl: res.banner_button_url,
       artist:
         res.type === 'song'
           ? res.fields.find(f => f.key === 'artist')?.value
@@ -254,10 +256,10 @@ export default class PathOverview extends React.Component {
   goToLesson(lesson) {
     if (this.state.isMethod) {
       return this.props.navigation.navigate('VIDEOPLAYER', {
-        url: lesson.mobile_app_url || lesson.post.mobile_app_url
+        url: lesson
       });
     }
-    return this.props.navigation.navigate('VIDEOPLAYER', { id: lesson.id });
+    return this.props.navigation.navigate('VIDEOPLAYER', { id: lesson });
   }
 
   renderHeader = () => (
@@ -375,10 +377,24 @@ export default class PathOverview extends React.Component {
             />
           ) : this.state.started ? (
             <ContinueIcon
-              pressed={() => this.goToLesson(this.state.nextLesson)}
+              pressed={() =>
+                this.goToLesson(
+                  this.state.isMethod
+                    ? this.state.bannerNextLessonUrl
+                    : this.state.nextLesson.id
+                )
+              }
             />
           ) : (
-            <StartIcon pressed={() => this.goToLesson(this.state.nextLesson)} />
+            <StartIcon
+              pressed={() =>
+                this.goToLesson(
+                  this.state.isMethod
+                    ? this.state.bannerNextLessonUrl
+                    : this.state.nextLesson.id
+                )
+              }
+            />
           )}
 
           <TouchableOpacity
@@ -688,7 +704,9 @@ export default class PathOverview extends React.Component {
           ListHeaderComponent={this.renderHeader}
           renderItem={({ item, index }) => (
             <TouchableOpacity
-              onPress={() => this.goToLesson(item)}
+              onPress={() =>
+                this.goToLesson(isMethod ? item.mobile_app_url : item.id)
+              }
               style={[
                 {
                   width: onTablet
@@ -824,7 +842,13 @@ export default class PathOverview extends React.Component {
             item={nextLesson}
             progress={this.state.progress}
             type={isMethod ? 'LEVEL' : this.state.type.toUpperCase()}
-            onNextLesson={() => this.goToLesson(nextLesson)}
+            onNextLesson={() =>
+              this.goToLesson(
+                this.state.isMethod
+                  ? nextLesson.post.mobile_app_url
+                  : nextLesson.id
+              )
+            }
             isMethod={isMethod}
           />
         )}

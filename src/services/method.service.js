@@ -7,7 +7,6 @@ export default {
     );
   },
   getMethodContent: function (url) {
-    console.log(url);
     return commonService.tryCall(url);
   }
 };

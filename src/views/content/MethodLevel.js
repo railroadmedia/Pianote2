@@ -59,6 +59,7 @@ export default class MethodLevel extends React.Component {
       isAddedToList: false,
       progress: 0,
       refreshing: false,
+      bannerNextLessonUrl: '',
       isLandscape:
         Dimensions.get('window').height < Dimensions.get('window').width
     };
@@ -108,12 +109,13 @@ export default class MethodLevel extends React.Component {
 
       this.setState({
         items: items,
-        nextLesson: response.post.current_lesson
-          ? new ContentModel(response.post.current_lesson)
+        nextLesson: response.post.next_lesson
+          ? new ContentModel(response.post.next_lesson)
           : null,
         isLoadingAll: false,
         totalLength: this.state.totalLength,
         id: response.id,
+        bannerNextLessonUrl: response.post.banner_button_url,
         isStarted: response.isStarted,
         isCompleted: response.isCompleted,
         description: response
@@ -156,13 +158,14 @@ export default class MethodLevel extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    resetProgress(this.state.id);
+    await resetProgress(this.state.id);
     this.setState(
       {
+        items: [],
         isStarted: false,
         isCompleted: false,
         showRestartCourse: false,
-        isLoadingAll: true
+        refreshing: true
       },
       () => {
         this.getContent();
@@ -342,17 +345,13 @@ export default class MethodLevel extends React.Component {
                 </TouchableOpacity>
                 {this.state.isCompleted ? (
                   <ResetIcon
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
+                    pressed={() => this.setState({ showRestartCourse: true })}
                   />
                 ) : this.state.isStarted ? (
                   <ContinueIcon
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLesson.post.mobile_app_url
+                        url: this.state.bannerNextLessonUrl
                       })
                     }
                   />
@@ -360,7 +359,7 @@ export default class MethodLevel extends React.Component {
                   <StartIcon
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLesson.post.mobile_app_url
+                        url: this.state.bannerNextLessonUrl
                       })
                     }
                   />

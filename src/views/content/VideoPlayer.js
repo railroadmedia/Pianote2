@@ -796,6 +796,7 @@ export default class VideoPlayer extends React.Component {
           }}
           style={{
             paddingHorizontal: 15,
+            paddingVertical: 10,
             borderBottomColor: colors.secondBackground,
             borderBottomWidth: 1,
             justifyContent: 'space-between',
@@ -808,7 +809,7 @@ export default class VideoPlayer extends React.Component {
               fontSize: 18 * factorRatio,
               color: colors.secondBackground,
               fontFamily: 'RobotoCondensed-Bold',
-              paddingVertical: 10
+              maxWidth: '90%'
             }}
           >
             {index + 1}. {row.title}

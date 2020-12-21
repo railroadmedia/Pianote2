@@ -51,6 +51,7 @@ export default class Method extends React.Component {
       methodIsStarted: this.props.navigation.state.params.methodIsStarted,
       methodIsCompleted: this.props.navigation.state.params.methodIsCompleted,
       showRestartCourse: false,
+      bannerNextLessonUrl: '',
       id: null,
       isStarted: false,
       isCompleted: false,
@@ -144,6 +145,7 @@ export default class Method extends React.Component {
       id: response.id,
       isStarted: response.isStarted,
       isCompleted: response.isCompleted,
+      bannerNextLessonUrl: response.post.banner_button_url,
       isLiked: response.post.is_liked_by_current_user,
       likeCount: response.likeCount,
       isLoadingAll: false,
@@ -311,16 +313,14 @@ export default class Method extends React.Component {
                 ) : this.state.methodIsStarted ? (
                   <ContinueIcon
                     pressed={() =>
-                      this.goToLesson(this.state.nextLesson.post.mobile_app_url)
+                      this.goToLesson(this.state.bannerNextLessonUrl)
                     }
                   />
                 ) : (
                   !this.state.methodIsStarted && (
                     <StartIcon
                       pressed={() =>
-                        this.goToLesson(
-                          this.state.nextLesson.post.mobile_app_url
-                        )
+                        this.goToLesson(this.state.bannerNextLessonUrl)
                       }
                     />
                   )

@@ -75,7 +75,7 @@ class Lessons extends React.Component {
       methodId: 0,
       methodIsStarted: false,
       methodIsCompleted: false,
-      methodNextLesson: null,
+      methodNextLessonUrl: null,
       showRestartCourse: false,
       lessonsStarted: true, // for showing continue lessons horizontal list
       refreshing: !lessonsCache,
@@ -173,7 +173,7 @@ class Lessons extends React.Component {
         methodId: method.id,
         methodIsStarted: method.started,
         methodIsCompleted: method.completed,
-        methodNextLesson: method.banner_button_url,
+        methodNextLessonUrl: method.banner_button_url,
         allLessons: allVideos,
         progressLessons: inprogressVideos,
         outVideos:
@@ -203,7 +203,7 @@ class Lessons extends React.Component {
       methodId: response.id,
       methodIsStarted: response.started,
       methodIsCompleted: response.completed,
-      methodNextLesson: response.banner_button_url
+      methodNextLessonUrl: response.banner_button_url
     });
   };
 
@@ -505,18 +505,18 @@ class Lessons extends React.Component {
                   ) : !this.state.methodIsStarted ? (
                     <StartIcon
                       pressed={() => {
-                        if (this.state.methodNextLesson)
+                        if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.methodNextLesson
+                            url: this.state.methodNextLessonUrl
                           });
                       }}
                     />
                   ) : (
                     <ContinueIcon
                       pressed={() => {
-                        if (this.state.methodNextLesson)
+                        if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.methodNextLesson
+                            url: this.state.methodNextLessonUrl
                           });
                       }}
                     />
