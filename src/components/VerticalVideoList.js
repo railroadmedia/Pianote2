@@ -38,19 +38,23 @@ const sortDict = {
 };
 
 const instructorDict = {
-  196999: 'LISA',
-  197077: 'BRETT',
-  197087: 'CASSI',
-  202588: 'JAY',
-  196994: 'JORDAN',
-  203416: 'KENNY',
-  243082: 'SAM',
-  221245: 'JOSH',
-  'Colin Swatzsky': ['COLIN', 197106],
-  'Dave Attkinson': [266932],
-  'DR Sean Kiligaon': [247373],
-  'Gabriel Patelchi': [218895]
-};
+  197077: "Brett",
+  197087: "Cassi",
+  197106: "Colin", 
+  266932: "Dave", 
+  247373: "Sean", 
+  279887: "Eleny",
+  218895: "Gabriel", 
+  202588: "Jay", 
+  197048: "Jonny", 
+  196994: "Jordan", 
+  221245: "Josh", 
+  203416: "Kenny", 
+  196999: "Lisa",
+  197084: "Nate",
+  243082: "Sam",
+}
+
 let greaterWDim;
 
 class VerticalVideoList extends React.Component {

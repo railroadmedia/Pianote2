@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-
+import Modal from 'react-native-modal';
+import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -37,11 +38,14 @@ export default class MyList extends React.Component {
       page: 1,
       outVideos: false,
       isLoadingAll: true,
+      filtersAvailable: null,
+      showFilters: false,
       isPaging: false,
       filtering: false,
       filters: {
         displayTopics: [],
         topics: [],
+        content_type: [],
         level: [],
         progress: [],
         instructors: []
@@ -55,6 +59,7 @@ export default class MyList extends React.Component {
   }
 
   getMyList = async loadMore => {
+    this.setState({filtering: true})
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getMyListContent(
       this.state.page,
@@ -101,8 +106,9 @@ export default class MyList extends React.Component {
         progress_percent: newContent[i].post.progress_percent
       });
     }
-    console.log('setstate');
+
     this.setState(state => ({
+      filtersAvailable: response.meta.filterOptions,
       allLessons: loadMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
@@ -154,39 +160,6 @@ export default class MyList extends React.Component {
     ) {
       this.setState({ isPaging: true }, () => this.getMyList(true));
     }
-  };
-
-  filterResults = async () => {
-    // function to be sent to filters page
-    await this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: 'MYLIST',
-      onGoBack: filters => this.changeFilters(filters)
-    });
-  };
-
-  changeFilters = async filters => {
-    // after leaving filter page. set filters here
-    this.setState(
-      {
-        outVideos: false,
-        page: 1,
-        filters:
-          filters.instructors.length == 0 &&
-          filters.level.length == 0 &&
-          filters.progress.length == 0 &&
-          filters.topics.length == 0
-            ? {
-                displayTopics: [],
-                level: [],
-                topics: [],
-                progress: [],
-                instructors: []
-              }
-            : filters
-      },
-      () => this.getMyList()
-    );
   };
 
   refresh = () => {
@@ -321,7 +294,7 @@ export default class MyList extends React.Component {
             showLength={false} // duration of song
             showSort={false}
             filters={this.state.filters} // show filter list
-            filterResults={() => this.filterResults()} // apply from filters page
+            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
             removeItem={contentID => {
               this.removeFromMyList(contentID);
             }}
@@ -346,7 +319,51 @@ export default class MyList extends React.Component {
             imageWidth={fullWidth * 0.26} // image width
           />
         </ScrollView>
-
+        <Modal
+          isVisible={this.state.showFilters}
+          style={[
+            styles.centerContent,
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={10}
+          animationOutTiming={10}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <Filters
+            hideFilters={() => this.setState({ showFilters: false })}
+            filtersAvailable={this.state.filtersAvailable}
+            filters={this.state.filters}
+            filtering={this.state.filtering}
+            type={'My List'}
+            reset={filters => {
+              this.setState(
+                {
+                  allLessons: [],
+                  filters,
+                  page: 1,
+                },
+                () => this.getMyList()
+              );
+            }}
+            filterVideos={filters => {
+              this.setState(
+                {
+                  allLessons: [],
+                  outVideos: false,
+                  page: 1,
+                  filters
+                },
+                () => this.getMyList()
+              );
+            }}
+          />
+        </Modal>
         <NavigationBar currentPage={'MyList'} />
       </View>
     );

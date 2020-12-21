@@ -4,12 +4,13 @@
 import React from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   ScrollView,
   RefreshControl,
   StatusBar
 } from 'react-native';
+import Modal from 'react-native-modal';
+import Filters from '../../components/FIlters.js';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -41,12 +42,15 @@ export default class StudentFocusShow extends React.Component {
       page: 1,
       outVideos: false,
       refreshing: false,
+      filtersAvailable: null,
+      showFilters: false,
       isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
       filtering: false, // filtering
       filters: {
         displayTopics: [],
         topics: [],
+        content_type: [],
         level: [],
         progress: [],
         instructors: []
@@ -67,6 +71,7 @@ export default class StudentFocusShow extends React.Component {
   }
 
   getAllLessons = async isLoadingMore => {
+    this.setState({filtering: true})
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -100,6 +105,7 @@ export default class StudentFocusShow extends React.Component {
     }
 
     this.setState(state => ({
+      filtersAvailable: response.meta.filterOptions,
       allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
@@ -166,39 +172,6 @@ export default class StudentFocusShow extends React.Component {
         () => this.getAllLessons(true)
       );
     }
-  };
-
-  filterResults = async () => {
-    await this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: 'STUDENTFOCUSSHOW',
-      onGoBack: filters => this.changeFilters(filters)
-    });
-  };
-
-  changeFilters = async filters => {
-    // after leaving filter page. set filters here
-    this.setState(
-      {
-        allLessons: [],
-        outVideos: false,
-        page: 1,
-        filters:
-          filters.instructors.length == 0 &&
-          filters.level.length == 0 &&
-          filters.progress.length == 0 &&
-          filters.topics.length == 0
-            ? {
-                displayTopics: [],
-                level: [],
-                topics: [],
-                progress: [],
-                instructors: []
-              }
-            : filters
-      },
-      () => this.getAllLessons()
-    );
   };
 
   refresh = () => {
@@ -290,7 +263,7 @@ export default class StudentFocusShow extends React.Component {
             containerBorderWidth={0}
             currentSort={this.state.currentSort}
             changeSort={sort => this.changeSort(sort)}
-            filterResults={() => this.filterResults()}
+            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
             containerHeight={
               onTablet
                 ? fullHeight * 0.15
@@ -310,6 +283,51 @@ export default class StudentFocusShow extends React.Component {
             getVideos={() => this.getVideos()}
           />
         </ScrollView>
+        <Modal
+          isVisible={this.state.showFilters}
+          style={[
+            styles.centerContent,
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={10}
+          animationOutTiming={10}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <Filters
+            hideFilters={() => this.setState({ showFilters: false })}
+            filtersAvailable={this.state.filtersAvailable}
+            filters={this.state.filters}
+            filtering={this.state.filtering}
+            type={'Quick Tips'}
+            reset={filters => {
+              this.setState(
+                {
+                  allLessons: [],
+                  filters,
+                  page: 1,
+                },
+                () => this.getAllLessons()
+              );
+            }}
+            filterVideos={filters => {
+              this.setState(
+                {
+                  allLessons: [],
+                  outVideos: false,
+                  page: 1,
+                  filters
+                },
+                () => this.getAllLessons()
+              );
+            }}
+          />
+        </Modal>
         <NavigationBar currentPage={'NONE'} />
       </SafeAreaView>
     );

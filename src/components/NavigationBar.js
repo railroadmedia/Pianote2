@@ -83,7 +83,7 @@ class NavigationBar extends React.Component {
           left: 'never',
           right: 'never',
           top: 'never',
-          bottom: 'always'
+          bottom: (this.props.pad) ? 'never' : 'always'
         }}
         style={{
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
@@ -94,7 +94,7 @@ class NavigationBar extends React.Component {
           style={{
             alignSelf: 'stretch',
             flexDirection: 'row',
-            paddingVertical: 10 * factorVertical,
+            paddingTop: 10 * factorVertical,
             justifyContent: 'space-around',
             alignContent: 'space-around'
           }}

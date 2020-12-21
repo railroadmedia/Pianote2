@@ -40,11 +40,39 @@ export async function getAllContent(type, sort, page, filtersDict) {
 
   try {
     let url =
-      `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
-      filters +
-      required_user_states;
-      console.log('URL', url)
-    return await commonService.tryCall(url);
+      `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` + filters + required_user_states;
+      let response = await commonService.tryCall(url);
+      // if there is no filters available, then dont just show a blank array, maintain data structure
+      
+      if(response.meta.filterOptions.length == 0) {
+        response.meta.filterOptions = {
+          artist: [],
+          content_type: [],
+          difficulty: [],
+          instructor: [],
+          style: [],
+          topic: []
+        }
+      }
+      if(typeof response.meta.filterOptions.artist == 'undefined') {
+        response.meta.filterOptions.artist = []
+      } 
+      if(typeof response.meta.filterOptions.content_type == 'undefined') {
+        response.meta.filterOptions.content_type = []
+      }
+      if(typeof response.meta.filterOptions.difficulty == 'undefined') {
+        response.meta.filterOptions.difficulty = []
+      }
+      if(typeof response.meta.filterOptions.instructor == 'undefined') {
+        response.meta.filterOptions.instructor = []
+      }
+      if(typeof response.meta.filterOptions.style == 'undefined') {
+        response.meta.filterOptions.style = []
+      }
+      if(typeof response.meta.filterOptions.topic == 'undefined') {
+        response.meta.filterOptions.topic = []
+      }
+    return response
   } catch (error) {
     console.log('Error: ', error);
     return new Error(error);
@@ -89,24 +117,17 @@ export async function getStartedContent(type) {
 export async function searchContent(term, page, filtersDict) {
   let included_types = ''; // types
   if (isPackOnly == true) {
-    included_types =
-      included_types +
-      '&included_types[]=unit&included_types[]=pack-bundle-lesson';
-  } else if (filtersDict.topics.length > 0) {
-    for (i in filtersDict.topics) {
-      included_types =
-        included_types + `&included_types[]=${filtersDict.topics[i]}`;
+    included_types = included_types + '&included_types[]=unit&included_types[]=pack-bundle-lesson';
+  } else if (filtersDict.content_type.length > 0) {
+    for (i in filtersDict.content_type) {
+      included_types = included_types + `&included_types[]=${filtersDict.content_type[i]}`;
     }
   } else {
-    included_types =
-      included_types +
-      '&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
+    included_types = included_types + '&included_types[]=learning-path&included_types[]=unit&included_types[]=course&included_types[]=unit-part&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
   }
 
   try {
-    let url =
-      `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` +
-      included_types;
+    let url = `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` + included_types;
     return commonService.tryCall(url);
   } catch (error) {
     console.log('Error: ', error);
@@ -124,10 +145,10 @@ export async function getMyListContent(page, filtersDict, progressState) {
     sort = '-progress';
   }
 
-  if (filtersDict.topics.length > 0) {
-    for (i in filtersDict.topics) {
+  if (filtersDict.content_type.length > 0) {
+    for (i in filtersDict.content_type) {
       included_types =
-        included_types + `&included_types[]=${filtersDict.topics[i]}`;
+        included_types + `&included_types[]=${filtersDict.content_type[i]}`;
     }
   } else {
     included_types =
@@ -152,10 +173,10 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
 
   if (contentType == 'lessons') {
     // add types
-    if (filtersDict.topics.length > 0) {
+    if (filtersDict.content_type.length > 0) {
       // if user filtered for types
-      for (i in filtersDict.topics) {
-        url = url + `&included_types[]=${filtersDict.topics[i]}`;
+      for (i in filtersDict.content_type) {
+        url = url + `&included_types[]=${filtersDict.content_type[i]}`;
       }
     } else {
       // if user did not filter for types use all types except 2
@@ -170,13 +191,6 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
   } else if (contentType == 'courses') {
     // add types
     url = url + `&included_types[]=course`;
-
-    //if (filtersDict.topics.length > 0) {
-    // if user filtered for types
-    //  for (i in filtersDict.topics) {
-    //    url = url + `&included_types[]=${filtersDict.topics[i]}`;
-    // }
-    //}
   }
   try {
     let x = await commonService.tryCall(url);

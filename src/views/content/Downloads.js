@@ -101,7 +101,7 @@ export default class Downloads extends React.Component {
         forceInset={{
           bottom: 'never'
         }}
-        style={{ backgroundColor: colors.mainBackground, flex: 1 }}
+        style={{ flex: 1, backgroundColor: colors.thirdBackground }}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}

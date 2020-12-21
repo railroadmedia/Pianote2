@@ -556,7 +556,7 @@ export default class ProfileSettings extends React.Component {
         )}
 
         {this.state.currentlyView == 'Profile Settings' && (
-          <NavigationBar currentPage={'PROFILE'} />
+          <NavigationBar currentPage={'PROFILE'} pad={true} />
         )}
 
         <Modal

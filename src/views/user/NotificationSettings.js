@@ -518,7 +518,7 @@ export default class NotificationSettings extends React.Component {
           </ScrollView>
         )}
 
-        <NavigationBar currentPage={'PROFILE'} />
+        <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
     );
   }

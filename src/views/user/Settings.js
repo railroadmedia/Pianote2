@@ -639,7 +639,7 @@ export default class Settings extends React.Component {
             if (this.loadingRef) this.loadingRef.toggleLoading(false);
           }}
         />
-        <NavigationBar currentPage={'PROFILE'} />
+        <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
     );
   }

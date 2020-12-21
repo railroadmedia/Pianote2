@@ -13,7 +13,8 @@ import {
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { SafeAreaView } from 'react-navigation';
-
+import Modal from 'react-native-modal';
+import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import { seeAllContent, getMyListContent } from '../../services/GetContent';
@@ -53,9 +54,12 @@ export default class SeeAll extends React.Component {
       isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
       filtering: false, // filtering
+      filtersAvailable: null,
+      showFilters: false,
       filters: {
         displayTopics: [],
         topics: [],
+        content_type: [],
         level: [],
         progress: [],
         instructors: []
@@ -68,6 +72,7 @@ export default class SeeAll extends React.Component {
   }
 
   async getAllLessons(loadMore) {
+    this.setState({filtering: true})
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -147,6 +152,7 @@ export default class SeeAll extends React.Component {
     }
 
     this.setState(state => ({
+      filtersAvailable: response.meta.filterOptions,
       allLessons: loadMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
@@ -156,25 +162,6 @@ export default class SeeAll extends React.Component {
       isPaging: false
     }));
   }
-
-  filterResults = async () => {
-    this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: typeDict[this.state.parent],
-      onGoBack: filters => {
-        this.setState({
-          filters:
-            filters.instructors.length == 0 &&
-            filters.level.length == 0 &&
-            filters.progress.length == 0 &&
-            filters.topics.length == 0
-              ? null
-              : filters
-        });
-        this.getAllLessons();
-      }
-    });
-  };
 
   getArtist = newContent => {
     if (newContent.post.type == 'song') {
@@ -221,39 +208,6 @@ export default class SeeAll extends React.Component {
     }
   };
 
-  filterResults = async () => {
-    // function to be sent to filters page
-    await this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: 'SEEALL',
-      onGoBack: filters => this.changeFilters(filters)
-    });
-  };
-
-  changeFilters = filters => {
-    // after leaving filter page. set filters here
-    this.setState(
-      {
-        outVideos: false,
-        page: 1,
-        filters:
-          filters.instructors.length == 0 &&
-          filters.level.length == 0 &&
-          filters.progress.length == 0 &&
-          filters.topics.length == 0
-            ? {
-                displayTopics: [],
-                level: [],
-                topics: [],
-                progress: [],
-                instructors: []
-              }
-            : filters
-      },
-      () => this.getAllLessons()
-    );
-  };
-
   refresh = () => {
     this.setState({ refreshing: true, outVideos: false, page: 1 }, () =>
       this.getAllLessons()
@@ -266,7 +220,7 @@ export default class SeeAll extends React.Component {
         forceInset={{
           bottom: 'never'
         }}
-        style={{ flex: 1, backgroundColor: colors.mainBackground }}
+        style={{ flex: 1, backgroundColor: colors.thirdBackground }}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}
@@ -347,7 +301,7 @@ export default class SeeAll extends React.Component {
               }),
                 this.getAllLessons();
             }} // change sort and reload videos
-            filterResults={() => this.filterResults()} // apply from filters page
+            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
             containerHeight={
               onTablet
                 ? fullHeight * 0.15
@@ -364,10 +318,54 @@ export default class SeeAll extends React.Component {
             } // image height
             imageWidth={fullWidth * 0.26} // image width
             outVideos={this.state.outVideos} // if paging and out of videos
-            //getVideos={() => this.getContent()} // for paging
           />
         </ScrollView>
-
+        <Modal
+          isVisible={this.state.showFilters}
+          style={[
+            styles.centerContent,
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={10}
+          animationOutTiming={10}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <Filters
+            hideFilters={() => this.setState({ showFilters: false })}
+            filtersAvailable={this.state.filtersAvailable}
+            filters={this.state.filters}
+            filtering={this.state.filtering}
+            type={'See All'}
+            reset={filters => {
+              this.setState(
+                {
+                  allLessons: [],
+                  filters,
+                  page: 1,
+                },
+                () => this.getAllLessons()
+              );
+            }}
+            filterVideos={filters => {
+              this.setState(
+                {
+                  allLessons: [],
+                  outVideos: false,
+                  page: 1,
+                  filters
+                },
+                () => this.getAllLessons()
+              );
+            }}
+          />
+        </Modal>
+       
         <NavigationBar currentPage={'SEEALL'} />
       </SafeAreaView>
     );

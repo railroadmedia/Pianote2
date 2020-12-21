@@ -17,7 +17,8 @@ import { ContentModel } from '@musora/models';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-navigation';
-
+import Modal from 'react-native-modal';
+import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import { searchContent } from '../../services/GetContent';
@@ -47,9 +48,12 @@ export default class Search extends React.Component {
       isLoadingAll: false, // all lessons
       isPaging: false, // scrolling more
       filtering: false, // filtering
+      filtersAvailable: null,
+      showFilters: false,
       filters: {
         types: [],
         displayTopics: [],
+        content_type: [],
         topics: [],
         level: [],
         progress: [],
@@ -137,6 +141,7 @@ export default class Search extends React.Component {
   }
 
   search = async () => {
+    this.setState({filtering: true})
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -224,7 +229,10 @@ export default class Search extends React.Component {
           });
         }
 
+        console.log(response)
+
         this.setState({
+          filtersAvailable: response.meta.filterOptions,
           searchResults: [...this.state.searchResults, ...items],
           outVideos:
             items.length == 0 || response.data.length < 20 ? true : false,
@@ -318,48 +326,13 @@ export default class Search extends React.Component {
     }
   };
 
-  filterResults = async () => {
-    // function to be sent to filters page
-    await this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: 'SEARCH',
-      onGoBack: filters => this.changeFilters(filters)
-    });
-  };
-
-  changeFilters = filters => {
-    // after leaving filter page. set filters here
-    this.setState(
-      {
-        searchResults: [],
-        outVideos: false,
-        page: 1,
-        filters:
-          filters.type == 0 &&
-          filters.instructors.length == 0 &&
-          filters.level.length == 0 &&
-          filters.progress.length == 0 &&
-          filters.topics.length == 0
-            ? {
-                displayTopics: [],
-                level: [],
-                topics: [],
-                progress: [],
-                instructors: []
-              }
-            : filters
-      },
-      () => this.search()
-    );
-  };
-
   render() {
     return (
       <SafeAreaView
         forceInset={{
           bottom: 'never'
         }}
-        style={{ flex: 1, backgroundColor: colors.mainBackground }}
+        style={{ flex: 1, backgroundColor: colors.thirdBackground }}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}
@@ -433,6 +406,8 @@ export default class Search extends React.Component {
                 style={{
                   flex: 0.9,
                   color: 'grey',
+                  marginTop: 12.5*factorVertical,
+                  paddingBottom: 12.5*factorVertical,
                   justifyContent: 'center',
                   fontFamily: 'OpenSans-Regular',
                   fontSize: 16 * factorRatio
@@ -548,7 +523,7 @@ export default class Search extends React.Component {
                     title={`${
                       this.state.searchResults.length + ' '
                     }SEARCH RESULTS`}
-                    showFilter={true}
+                    showFilter={false}
                     isPaging={this.state.isPaging}
                     showType={true}
                     showArtist={true}
@@ -560,7 +535,7 @@ export default class Search extends React.Component {
                     containerWidth={fullWidth}
                     currentSort={this.state.currentSort}
                     changeSort={sort => this.changeSort(sort)}
-                    filterResults={() => this.filterResults()}
+                    filterResults={() => this.setState({ showFilters: true })} 
                     containerHeight={
                       onTablet
                         ? fullHeight * 0.15
@@ -612,6 +587,7 @@ export default class Search extends React.Component {
                   borderTopColor: colors.secondBackground
                 }}
               >
+                <View style={{height: 5*factorVertical}}/>
                 <Text
                   style={{
                     fontSize: 18 * factorRatio,
@@ -626,7 +602,52 @@ export default class Search extends React.Component {
             )}
           </View>
         </ScrollView>
-
+        <Modal
+          isVisible={this.state.showFilters}
+          style={[
+            styles.centerContent,
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={10}
+          animationOutTiming={10}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <Filters
+            hideFilters={() => this.setState({ showFilters: false })}
+            filtersAvailable={this.state.filtersAvailable}
+            filters={this.state.filters}
+            filtering={this.state.filtering}
+            type={'Search'}
+            reset={filters => {
+              this.setState(
+                {
+                  searchResults: [],
+                  filters,
+                  page: 1,
+                },
+                () => this.search()
+              );
+            }}
+            filterVideos={filters => {
+              this.setState(
+                {
+                  searchResults: [],
+                  outVideos: false,
+                  page: 1,
+                  filters
+                },
+                () => this.search()
+              );
+            }}
+          />
+        </Modal>
+        
         <NavigationBar currentPage={'SEARCH'} />
       </SafeAreaView>
     );

@@ -10,8 +10,10 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
+import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
+import Filters from '../../components/FIlters.js';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
@@ -37,11 +39,14 @@ export default class Course extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
+      showFilters: false, 
       isPaging: false, // scrolling more
       filtering: false, // filtering
+      filtersAvailable: null,
       filters: {
         displayTopics: [],
         topics: [],
+        content_type: [],
         level: [],
         progress: [],
         instructors: []
@@ -84,6 +89,7 @@ export default class Course extends React.Component {
     this.setState({
       allCourses: allVideos,
       progressCourses: inprogressVideos,
+      filtersAvailable: content[0].meta.filterOptions,
       refreshing: false,
       refreshControl: false,
       outVideos:
@@ -112,6 +118,7 @@ export default class Course extends React.Component {
     let items = this.setData(newContent);
 
     this.setState(state => ({
+      filtersAvailable: response.meta.filterOptions,
       allCourses: loadMore ? state.allCourses.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
@@ -156,25 +163,6 @@ export default class Course extends React.Component {
     return items;
   }
 
-  filterResults = () => {
-    this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: 'COURSES',
-      onGoBack: filters => {
-        this.setState({
-          filters:
-            filters.instructors.length == 0 &&
-            filters.level.length == 0 &&
-            filters.progress.length == 0 &&
-            filters.topics.length == 0
-              ? null
-              : filters
-        });
-        this.getAllCourses();
-      }
-    });
-  };
-
   changeSort = currentSort => {
     this.setState(
       {
@@ -210,39 +198,6 @@ export default class Course extends React.Component {
         () => this.getAllCourses(true)
       );
     }
-  };
-
-  filterResults = async () => {
-    // function to be sent to filters page
-    await this.props.navigation.navigate('FILTERS', {
-      filters: this.state.filters,
-      type: 'COURSES',
-      onGoBack: filters => this.changeFilters(filters)
-    });
-  };
-
-  changeFilters = filters => {
-    // after leaving filter page. set filters here
-    this.setState(
-      {
-        outVideos: false,
-        page: 1,
-        filters:
-          filters.instructors.length == 0 &&
-          filters.level.length == 0 &&
-          filters.progress.length == 0 &&
-          filters.topics.length == 0
-            ? {
-                displayTopics: [],
-                level: [],
-                topics: [],
-                progress: [],
-                instructors: []
-              }
-            : filters
-      },
-      () => this.getAllCourses()
-    );
   };
 
   refresh() {
@@ -281,6 +236,7 @@ export default class Course extends React.Component {
             >
               Courses
             </Text>
+            <View style={{height: 10*factorVertical}}/>
             {this.state.started && (
               <View
                 key={'continueCourses'}
@@ -303,7 +259,7 @@ export default class Course extends React.Component {
             <VerticalVideoList
               items={this.state.allCourses}
               isLoading={false}
-              title={'COURSES'}
+              title={'ALL COURSES'}
               type={'COURSES'}
               isPaging={this.state.isPaging}
               showFilter={true}
@@ -316,7 +272,7 @@ export default class Course extends React.Component {
               containerBorderWidth={0}
               currentSort={this.state.currentSort}
               changeSort={sort => this.changeSort(sort)}
-              filterResults={() => this.filterResults()}
+              filterResults={() => this.setState({ showFilters: true })} // apply from filters page
               containerWidth={fullWidth}
               containerHeight={
                 onTablet
@@ -344,6 +300,52 @@ export default class Course extends React.Component {
             color={colors.secondBackground}
           />
         )}
+        <Modal
+          isVisible={this.state.showFilters}
+          style={[
+            styles.centerContent,
+            {
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }
+          ]}
+          animation={'slideInUp'}
+          animationInTiming={10}
+          animationOutTiming={10}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <Filters
+            hideFilters={() => this.setState({ showFilters: false })}
+            filtersAvailable={this.state.filtersAvailable}
+            filters={this.state.filters}
+            filtering={this.state.filtering}
+            type={'Courses'}
+            reset={filters => {
+              this.setState(
+                {
+                  allCourses: [],
+                  filters,
+                  page: 1,
+                },
+                () => this.getAllCourses()
+              );
+            }}
+            filterVideos={filters => {
+              this.setState(
+                {
+                  allCourses: [],
+                  outVideos: false,
+                  page: 1,
+                  filters
+                },
+                () => this.getAllCourses()
+              );
+            }}
+          />
+        </Modal>
+
         <NavigationBar currentPage={''} />
       </View>
     );
