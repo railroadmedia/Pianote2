@@ -49,12 +49,14 @@ class NavMenuHeaders extends React.Component {
         />
         <View
           style={{
-            flex: 1,
             flexDirection: 'row',
+            flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
             paddingTop: isNotch ? 5 * factorVertical : 0,
-            paddingBottom: 10 * factorRatio
+            paddingBottom: 10 * factorRatio,
+            paddingRight: 10*factorHorizontal,
+            paddingLeft: 5*factorHorizontal,
           }}
         >
           <TouchableOpacity
@@ -73,8 +75,6 @@ class NavMenuHeaders extends React.Component {
                   );
             }}
             style={{
-              flex: 1,
-              paddingHorizontal: 10 * factorRatio,
               height:
                 Platform.OS == 'ios' ? fullHeight * 0.035 : fullHeight * 0.08,
               width: onTablet ? 0.25 * fullWidth : 0.3 * fullWidth
@@ -82,22 +82,12 @@ class NavMenuHeaders extends React.Component {
           >
             <Pianote fill={'#fb1b2f'} />
           </TouchableOpacity>
-          {onTablet && (
-            <View
-              style={{
-                flex:
-                  Dimensions.get('window').width >
-                  Dimensions.get('window').height
-                    ? 3
-                    : 0.5
-              }}
-            />
-          )}
+          <View style={{width: 5*factorHorizontal}}/>
+          <View style={{flex: 1}}/>
           <TouchableOpacity
             key={'lessons'}
             style={{
               flexDirection: 'row',
-              flex: 1,
               alignItems: 'center',
               justifyContent: 'center'
             }}
@@ -116,6 +106,7 @@ class NavMenuHeaders extends React.Component {
             }}
           >
             <Text
+              numberOfLines={1}
               style={{
                 fontSize: 14 * factorRatio,
                 fontFamily: 'OpenSans-ExtraBold',
@@ -144,6 +135,7 @@ class NavMenuHeaders extends React.Component {
               />
             </View>
           </TouchableOpacity>
+          <View style={{width: 7.5*factorHorizontal}}/>
           <TouchableOpacity
             key={'packs'}
             onPress={() => {
@@ -151,9 +143,10 @@ class NavMenuHeaders extends React.Component {
                 ? this.context.showNoConnectionAlert()
                 : this.props.navigation.navigate('PACKS');
             }}
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+            style={{ alignItems: 'center', justifyContent: 'center' }}
           >
             <Text
+              numberOfLines={1}
               style={{
                 fontSize: 14 * factorRatio,
                 fontFamily: 'OpenSans-ExtraBold',
@@ -168,6 +161,7 @@ class NavMenuHeaders extends React.Component {
               PACKS{' '}
             </Text>
           </TouchableOpacity>
+          <View style={{width: 7.5*factorHorizontal}}/>
           <TouchableOpacity
             key={'mylist'}
             onPress={() => {
@@ -175,9 +169,10 @@ class NavMenuHeaders extends React.Component {
                 ? this.context.showNoConnectionAlert()
                 : this.props.navigation.navigate('MYLIST');
             }}
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+            style={{ alignItems: 'center', justifyContent: 'center' }}
           >
             <Text
+              numberOfLines={1}
               style={{
                 fontSize: 14 * factorRatio,
                 shadowOpacity: 0.3,
@@ -195,6 +190,7 @@ class NavMenuHeaders extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
+        
         <Modal
           key={'navMenu'}
           isVisible={this.state.showModalMenu}
