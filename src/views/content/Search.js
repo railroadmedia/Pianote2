@@ -530,9 +530,6 @@ export default class Search extends React.Component {
                     showSort={false}
                     showLength={false}
                     filters={this.state.filters}
-                    imageRadius={5 * factorRatio}
-                    containerBorderWidth={0}
-                    containerWidth={fullWidth}
                     currentSort={this.state.currentSort}
                     changeSort={sort => this.changeSort(sort)}
                     filterResults={() => this.setState({ showFilters: true })} 

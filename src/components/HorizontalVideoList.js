@@ -11,7 +11,6 @@ import {
   Image,
   Dimensions
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -20,7 +19,6 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
-import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 
 let greaterWDim;
@@ -55,7 +53,7 @@ class HorizontalVideoList extends React.Component {
   }
 
   decideWidth() {
-    if (DeviceInfo.isTablet()) {
+    if (onTablet) {
       if (this.props.isSquare) return 300;
       else return 400;
     } else {
@@ -140,15 +138,20 @@ class HorizontalVideoList extends React.Component {
           data: content
         });
       case 'learning-path':
-        return this.props.navigation.navigate('FOUNDATIONS', {
+        return this.props.navigation.navigate('METHOD', {
           url: content.mobile_app_url
         });
-      case 'unit':
-        return this.props.navigation.navigate('FOUNDATIONSLEVEL', {
+      case 'learning-path-level':
+        return this.props.navigation.navigate('METHODLEVEL', {
           url: content.mobile_app_url,
           level: index + 1
         });
-      case 'unit-part':
+      case 'learning-path-course':
+        return this.props.navigation.push('PATHOVERVIEW', {
+          data: content,
+          isMethod: true
+        });
+      case 'learning-path-lesson':
         return this.props.navigation.push('VIDEOPLAYER', {
           url: content.mobile_app_url
         });
@@ -181,7 +184,7 @@ class HorizontalVideoList extends React.Component {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingVertical: 10 * factorRatio
+            paddingVertical: 15 * factorRatio
           }}
         >
           <Text
@@ -230,7 +233,7 @@ class HorizontalVideoList extends React.Component {
                   item
                 });
               }}
-              delayLongPress={350}
+              delayLongPress={250}
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
@@ -397,14 +400,11 @@ class HorizontalVideoList extends React.Component {
         <Modal
           key={'modal'}
           isVisible={this.state.showModal}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

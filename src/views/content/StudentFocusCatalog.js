@@ -10,6 +10,9 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
+import { connect } from 'react-redux';
+import Modal from 'react-native-modal';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 
@@ -17,71 +20,98 @@ import {
   getStartedContent,
   getStudentFocusTypes
 } from '../../services/GetContent';
-import NavigationBar from '../../components/NavigationBar.js';
-import NavMenuHeaders from '../../components/NavMenuHeaders.js';
-import HorizontalVideoList from '../../components/HorizontalVideoList.js';
+import NavigationBar from '../../components/NavigationBar';
+import NavMenuHeaders from '../../components/NavMenuHeaders';
+import NavigationMenu from '../../components/NavigationMenu';
+import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
-export default class StudentFocusCatalog extends React.Component {
+import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+
+class StudentFocusCatalog extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { studentFocusCache } = props;
     this.state = {
       progressStudentFocus: [], // videos
       studentFocus: [],
       refreshing: true,
       refreshControl: false,
-      started: true
+      started: true,
+      ...this.initialValidData(studentFocusCache, true)
     };
   }
 
   componentDidMount() {
     this.getData();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () =>
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
+    );
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
   }
 
   async getData() {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    let response = await Promise.all([
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    let content = await Promise.all([
       getStartedContent(
         'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
       ),
       getStudentFocusTypes()
     ]);
-    console.log(response);
-    const newContent = await response[0].data.map(data => {
-      return new ContentModel(data);
+    this.props.cacheAndWriteStudentFocus({
+      types: content[1],
+      inProgress: content[0]
     });
-    let shows = response[1];
-    shows = Object.keys(shows).map(key => {
-      shows[key].type = key;
-      return shows[key];
-    });
-    let items = [];
-    for (let i in newContent) {
-      items.push({
-        title: newContent[i].getField('title'),
-        artist: newContent[i].getField('instructor').fields[0].value,
-        thumbnail: newContent[i].getData('thumbnail_url'),
-        type: newContent[i].post.type,
-        id: newContent[i].id,
-        isAddedToList: newContent[i].isAddedToList,
-        isStarted: newContent[i].isStarted,
-        isCompleted: newContent[i].isCompleted,
-        progress_percent: newContent[i].post.progress_percent
-      });
-    }
-
-    this.setState({
-      progressStudentFocus: items,
-      studentFocus: shows,
-      refreshing: false,
-      refreshControl: false,
-      started: items.length !== 0
-    });
+    this.setState(
+      this.initialValidData({
+        types: content[1],
+        inProgress: content[0]
+      })
+    );
   }
+
+  initialValidData = (content, fromCache) => {
+    try {
+      const newContent = content.inProgress.data.map(data => {
+        return new ContentModel(data);
+      });
+      let shows = content.types;
+      shows = Object.keys(shows).map(key => {
+        shows[key].type = key;
+        return shows[key];
+      });
+      let items = [];
+      for (let i in newContent) {
+        items.push({
+          title: newContent[i].getField('title'),
+          artist: newContent[i].getField('instructor').fields[0].value,
+          thumbnail: newContent[i].getData('thumbnail_url'),
+          type: newContent[i].post.type,
+          id: newContent[i].id,
+          isAddedToList: newContent[i].isAddedToList,
+          isStarted: newContent[i].isStarted,
+          isCompleted: newContent[i].isCompleted,
+          progress_percent: newContent[i].post.progress_percent
+        });
+      }
+      return {
+        progressStudentFocus: items,
+        studentFocus: shows,
+        refreshing: false,
+        refreshControl: fromCache,
+        started: items.length !== 0
+      };
+    } catch (e) {
+      return {};
+    }
+  };
 
   renderFlatListItem = ({ item, index }) => {
     return (
@@ -94,18 +124,17 @@ export default class StudentFocusCatalog extends React.Component {
           });
         }}
         style={{
-          flex:
-            this.state.studentFocus.length % 2 === 1 &&
-            this.state.studentFocus.length - 1 === index
-              ? 0.5
-              : 1,
-          paddingRight: index % 2 === 0 ? 10 : 0,
-          paddingTop: 10
+          width: '50%',
+          paddingTop: 10,
+          paddingLeft: (12 * factorHorizontal) / (index % 2 === 0 ? 1 : 2),
+          paddingRight: (12 * factorHorizontal) / (index % 2 === 0 ? 2 : 1)
         }}
       >
         <FastImage
           style={{
             aspectRatio: 1,
+            borderWidth: 0.3,
+            borderColor: colors.pianoteRed,
             borderRadius: 10 * factorRatio
           }}
           source={{ uri: item.thumbnailUrl }}
@@ -127,8 +156,7 @@ export default class StudentFocusCatalog extends React.Component {
           <FlatList
             style={{
               flex: 1,
-              backgroundColor: colors.mainBackground,
-              paddingHorizontal: 10
+              backgroundColor: colors.mainBackground
             }}
             numColumns={2}
             removeClippedSubviews={true}
@@ -137,13 +165,21 @@ export default class StudentFocusCatalog extends React.Component {
             keyboardShouldPersistTaps='handled'
             refreshControl={
               <RefreshControl
+                tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
+                refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
             ListHeaderComponent={() => (
               <>
+                {isiOS && this.state.refreshControl && (
+                  <ActivityIndicator
+                    size='large'
+                    style={{ padding: 10 }}
+                    color={colors.pianoteRed}
+                  />
+                )}
                 <Text
                   style={{
                     paddingLeft: 15,
@@ -173,7 +209,7 @@ export default class StudentFocusCatalog extends React.Component {
                           parent: 'Student Focus'
                         })
                       }
-                      hideSeeAll={true}
+                      hideSeeAll={false}
                       showType={true}
                       items={this.state.progressStudentFocus}
                     />
@@ -195,3 +231,13 @@ export default class StudentFocusCatalog extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  studentFocusCache: state.studentFocusCache
+});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteStudentFocus }, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StudentFocusCatalog);

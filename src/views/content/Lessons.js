@@ -12,12 +12,13 @@ import {
   ImageBackground
 } from 'react-native';
 
+import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
-import DeviceInfo, { isTablet } from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
 import Filters from '../../components/FIlters.js';
 import StartIcon from '../../components/StartIcon';
@@ -29,15 +30,11 @@ import NavMenuHeaders from '../../components/NavMenuHeaders';
 import GradientFeature from '../../components/GradientFeature';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
-
-import commonService from '../../services/common.service';
-import foundationsService from '../../services/foundations.service';
+import methodService from '../../services/method.service.js';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
-
 import Pianote from '../../assets/img/svgs/pianote';
-
 import RestartCourse from '../../modals/RestartCourse';
-
+import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
@@ -48,13 +45,13 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-export default class Lessons extends React.Component {
+class Lessons extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { lessonsCache } = props;
     this.state = {
-      foundations: [],
       progressLessons: [],
       allLessons: [],
       currentSort: 'newest',
@@ -76,15 +73,17 @@ export default class Lessons extends React.Component {
       xp: '',
       rank: '',
       currentLesson: [],
-      foundationIsStarted: false,
-      foundationIsCompleted: false,
-      foundationNextLesson: null,
+      methodId: 0,
+      methodIsStarted: false,
+      methodIsCompleted: false,
+      methodNextLessonUrl: null,
       showRestartCourse: false,
       lessonsStarted: true, // for showing continue lessons horizontal list
-      refreshing: true,
+      refreshing: !lessonsCache,
       refreshControl: true,
       isLandscape:
-        Dimensions.get('window').height < Dimensions.get('window').width
+        Dimensions.get('window').height < Dimensions.get('window').width,
+      ...this.initialValidData(lessonsCache, true)
     };
   }
 
@@ -95,26 +94,31 @@ export default class Lessons extends React.Component {
       'totalXP',
       'rank',
       'profileURI',
-      'foundationsIsStarted',
-      'foundationsIsCompleted'
+      'methodIsStarted',
+      'methodIsCompleted'
     ]).then(data => {
       this.setState({
         xp: data[0][1],
         rank: data[1][1],
         profileImage: data[2][1],
-        foundationIsStarted:
+        methodIsStarted:
           typeof data[3][1] !== null ? JSON.parse(data[3][1]) : false,
-        foundationIsCompleted:
+        methodIsCompleted:
           typeof data[4][1] !== null ? JSON.parse(data[4][1]) : false
       });
     });
 
     this.getContent();
-
     messaging().requestPermission();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () =>
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
+    );
   };
 
   componentWillUnmount() {
+    this.willFocusSubscription.remove();
     Orientation.removeDeviceOrientationListener(this.orientationListener);
   }
 
@@ -122,78 +126,86 @@ export default class Lessons extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    commonService.cacheSystem(
-      'lessons',
-      [
-        foundationsService.getFoundation('foundations-2019'),
-        getAllContent(
-          '',
-          this.state.currentSort,
-          this.state.page,
-          this.state.filters
-        ),
-        getStartedContent('')
-      ],
-      (content, fromCache) => {
-        let foundation = content[0];
-        let allVideos = this.setData(
-          content[1].data.map(data => {
-            return new ContentModel(data);
-          })
-        );
+    let content = await Promise.all([
+      methodService.getMethod(),
+      getAllContent(
+        '',
+        this.state.currentSort,
+        this.state.page,
+        this.state.filters
+      ),
+      getStartedContent('')
+    ]);
+    this.props.cacheAndWriteLessons({
+      all: content[1],
+      method: content[0],
+      inProgress: content[2]
+    });
 
-        let inprogressVideos = this.setData(
-          content[2].data.map(data => {
-            return new ContentModel(data);
-          })
-        );
-
-        if (maxLevel.lessons == null) {
-          maxLevel.lessons = Number(
-            content[1].meta.filterOptions.difficulty.length - 1
-          );
-        }
-
-        this.setState({
-          foundationIsStarted: foundation.started,
-          foundationIsCompleted: foundation.completed,
-          foundationNextLesson: foundation.next_lesson,
-          filtersAvailable: content[1].meta.filterOptions,
-          allLessons: allVideos,
-          progressLessons: inprogressVideos,
-          outVideos:
-            allVideos.length == 0 || content[1].data.length < 20 ? true : false,
-          filtering: false,
-          isPaging: false,
-          lessonsStarted: inprogressVideos.length !== 0,
-          refreshing: false,
-          refreshControl: fromCache
-        });
-
-        AsyncStorage.multiSet([
-          ['foundationsIsStarted', foundation.started.toString()],
-          ['foundationsIsCompleted', foundation.completed.toString()]
-        ]);
-      }
+    this.setState(
+      this.initialValidData({
+        all: content[1],
+        method: content[0],
+        inProgress: content[2]
+      })
     );
   }
 
-  getFoundations = async () => {
+  initialValidData = (content, fromCache) => {
+    try {
+      if (!content) return {};
+      let { method } = content;
+      let allVideos = this.setData(
+        content.all.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+
+      let inprogressVideos = this.setData(
+        content.inProgress.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+      AsyncStorage.multiSet([
+        ['methodIsStarted', method.started.toString()],
+        ['methodIsCompleted', method.completed.toString()]
+      ]);
+      return {
+        methodId: method.id,
+        methodIsStarted: method.started,
+        methodIsCompleted: method.completed,
+        methodNextLessonUrl: method.banner_button_url,
+        allLessons: allVideos,
+        filtersAvailable: response.meta.filterOptions,
+        progressLessons: inprogressVideos,
+        outVideos:
+          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+        filtering: false,
+        isPaging: false,
+        lessonsStarted: inprogressVideos.length !== 0,
+        refreshing: false,
+        refreshControl: fromCache
+      };
+    } catch (e) {
+      return {};
+    }
+  };
+
+  getMethod = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    const response = new ContentModel(
-      await foundationsService.getFoundation('foundations-2019')
-    );
+    const response = await methodService.getMethod();
 
     await AsyncStorage.multiSet([
-      ['foundationsIsStarted', response.isStarted.toString()],
-      ['foundationsIsCompleted', response.isCompleted.toString()]
+      ['methodIsStarted', response.started.toString()],
+      ['methodIsCompleted', response.completed.toString()]
     ]);
     this.setState({
-      foundationIsStarted: response.isStarted,
-      foundationIsCompleted: response.isCompleted,
-      foundationNextLesson: response.post.next_lesson
+      methodId: response.id,
+      methodIsStarted: response.started,
+      methodIsCompleted: response.completed,
+      methodNextLessonUrl: response.banner_button_url
     });
   };
 
@@ -265,25 +277,19 @@ export default class Lessons extends React.Component {
     return items;
   }
 
-  onRestartFoundation = async () => {
+  onRestartMethod = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    resetProgress(this.state.id);
+    resetProgress(this.state.methodId);
     this.setState(
       {
-        foundationIsStarted: false,
-        foundationIsCompleted: false,
+        methodIsStarted: false,
+        methodIsCompleted: false,
         showRestartCourse: false
       },
-      () => this.getFoundations()
+      () => this.getMethod()
     );
-  };
-
-  getDurationFoundations = newContent => {
-    newContent.post.current_lesson.fields
-      .find(f => f.key === 'video')
-      ?.value.fields.find(f => f.key === 'length_in_seconds')?.value;
   };
 
   getArtist = newContent => {
@@ -355,27 +361,26 @@ export default class Lessons extends React.Component {
         allLessons: [],
         page: 1
       },
-      () => this.getContent()
+      this.getContent
     );
-  }
+  };
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 2.5;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 1.8;
+    if (onTablet && this.state.isLandscape) return 2.5;
+    if (onTablet && !this.state.isLandscape) return 1.8;
     return 1;
   }
 
@@ -397,15 +402,22 @@ export default class Lessons extends React.Component {
             }}
             refreshControl={
               <RefreshControl
-                colors={[colors.secondBackground]}
-                tintColor={colors.secondBackground}
-                refreshing={this.state.refreshControl}
+                tintColor={'transparent'}
                 onRefresh={() => this.refresh()}
+                colors={[colors.secondBackground]}
+                refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             scrollEventThrottle={400}
           >
+            {isiOS && this.state.refreshControl && (
+              <ActivityIndicator
+                size='small'
+                style={{ padding: 10 }}
+                color={colors.pianoteRed}
+              />
+            )}
             <ImageBackground
               resizeMode={'cover'}
               style={{
@@ -453,14 +465,14 @@ export default class Lessons extends React.Component {
 
                 <View
                   style={{
-                    flex: (onTablet) ? 0.2 : 0.15,
+                    flex: onTablet ? 0.2 : 0.15,
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
                     paddingHorizontal: 25 * factorRatio
                   }}
                 >
-                  {this.state.foundationIsCompleted ? (
+                  {this.state.methodIsCompleted ? (
                     <ResetIcon
                       pressed={() =>
                         this.setState({
@@ -468,21 +480,21 @@ export default class Lessons extends React.Component {
                         })
                       }
                     />
-                  ) : !this.state.foundationIsStarted ? (
+                  ) : !this.state.methodIsStarted ? (
                     <StartIcon
                       pressed={() => {
-                        if (this.state.foundationNextLesson)
+                        if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.foundationNextLesson.mobile_app_url
+                            url: this.state.methodNextLessonUrl
                           });
                       }}
                     />
                   ) : (
                     <ContinueIcon
                       pressed={() => {
-                        if (this.state.foundationNextLesson)
+                        if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.foundationNextLesson.mobile_app_url
+                            url: this.state.methodNextLessonUrl
                           });
                       }}
                     />
@@ -490,14 +502,14 @@ export default class Lessons extends React.Component {
                   <View style={{ flex: 0.1 }} />
                   <MoreInfoIcon
                     pressed={() => {
-                      this.props.navigation.navigate('FOUNDATIONS', {
-                        foundationIsStarted: this.state.foundationIsStarted,
-                        foundationIsCompleted: this.state.foundationIsCompleted
+                      this.props.navigation.navigate('METHOD', {
+                        methodIsStarted: this.state.methodIsStarted,
+                        methodIsCompleted: this.state.methodIsCompleted
                       });
                     }}
                   />
                 </View>
-                <View style={{flex: 0.1}}/>
+                <View style={{ flex: 0.1 }} />
               </View>
             </ImageBackground>
 
@@ -525,44 +537,42 @@ export default class Lessons extends React.Component {
                 </View>
               )}
               <View style={{ height: 5 * factorRatio }} />
-              {!this.state.filtering && (
-                <VerticalVideoList
+              {onTablet ? (
+                <HorizontalVideoList
                   isMethod={true}
+                  Title={'ALL LESSONS'}
+                  seeAll={() =>
+                    this.props.navigation.navigate('SEEALL', {
+                      title: 'All Lessons',
+                      parent: 'Lessons'
+                    })
+                  }
+                  showType={true}
                   items={this.state.allLessons}
-                  isLoading={false}
-                  title={'ALL LESSONS'} // title for see all page
-                  type={'LESSONS'} // the type of content on page
-                  showFilter={true}
-                  isPaging={this.state.isPaging}
-                  showType={true} // show course / song by artist name
-                  showArtist={true} // show artist name
-                  showSort={true}
-                  showLength={false}
-                  filters={this.state.filters} // show filter list
-                  imageRadius={5 * factorRatio} // radius of image shown
-                  containerBorderWidth={0} // border of box
-                  containerWidth={fullWidth} // width of list
-                  currentSort={this.state.currentSort}
-                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                  filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                  containerHeight={
-                    onTablet
-                      ? fullHeight * 0.15
-                      : Platform.OS == 'android'
-                      ? fullHeight * 0.115
-                      : fullHeight * 0.0925
-                  } // height per row
-                  imageHeight={
-                    onTablet
-                      ? fullHeight * 0.12
-                      : Platform.OS == 'android'
-                      ? fullHeight * 0.09
-                      : fullHeight * 0.0825
-                  } // image height
-                  imageWidth={fullWidth * 0.26} // image width
-                  outVideos={this.state.outVideos} // if paging and out of videos
-                  getVideos={() => this.getVideos()}
                 />
+              ) : (
+                !this.state.filtering && (
+                  <VerticalVideoList
+                    isMethod={true}
+                    items={this.state.allLessons}
+                    isLoading={false}
+                    title={'ALL LESSONS'} // title for see all page
+                    type={'LESSONS'} // the type of content on page
+                    showFilter={true}
+                    isPaging={this.state.isPaging}
+                    showType={true} // show course / song by artist name
+                    showArtist={true} // show artist name
+                    showSort={true}
+                    showLength={false}
+                    filters={this.state.filters} // show filter list
+                    currentSort={this.state.currentSort}
+                    changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                    filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+                    imageWidth={fullWidth * 0.26} // image width
+                    outVideos={this.state.outVideos} // if paging and out of videos
+                    getVideos={() => this.getVideos()}
+                  />
+                )
               )}
             </View>
           </ScrollView>
@@ -572,14 +582,11 @@ export default class Lessons extends React.Component {
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -592,8 +599,8 @@ export default class Lessons extends React.Component {
                 showRestartCourse: false
               })
             }
-            type='foundation'
-            onRestart={() => this.onRestartFoundation()}
+            type='method'
+            onRestart={() => this.onRestartMethod()}
           />
         </Modal>
         <Modal
@@ -647,3 +654,8 @@ export default class Lessons extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ lessonsCache: state.lessonsCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteLessons }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Lessons);

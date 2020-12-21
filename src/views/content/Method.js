@@ -1,5 +1,5 @@
 /**
- * Foundations
+ * Method
  */
 import React from 'react';
 import {
@@ -18,7 +18,6 @@ import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 
@@ -28,7 +27,6 @@ import StartIcon from '../../components/StartIcon';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import RestartCourse from '../../modals/RestartCourse';
 import ContinueIcon from '../../components/ContinueIcon';
-import foundationsService from '../../services/foundations.service';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -38,10 +36,11 @@ import {
   resetProgress
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import methodService from '../../services/method.service';
 
 let greaterWDim;
 
-export default class Foundations extends React.Component {
+export default class Method extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
@@ -49,11 +48,10 @@ export default class Foundations extends React.Component {
 
     this.state = {
       items: [],
-      foundationIsStarted: this.props.navigation.state.params
-        .foundationIsStarted,
-      foundationIsCompleted: this.props.navigation.state.params
-        .foundationIsCompleted,
+      methodIsStarted: this.props.navigation.state.params.methodIsStarted,
+      methodIsCompleted: this.props.navigation.state.params.methodIsCompleted,
       showRestartCourse: false,
+      bannerNextLessonUrl: '',
       id: null,
       isStarted: false,
       isCompleted: false,
@@ -95,11 +93,10 @@ export default class Foundations extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
 
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -108,10 +105,8 @@ export default class Foundations extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    const response = new ContentModel(
-      await foundationsService.getFoundation('foundations-2019')
-    );
-    const newContent = response.post.units.map(data => {
+    const response = new ContentModel(await methodService.getMethod());
+    const newContent = response.post.levels.map(data => {
       return new ContentModel(data);
     });
     let items = [];
@@ -150,6 +145,7 @@ export default class Foundations extends React.Component {
       id: response.id,
       isStarted: response.isStarted,
       isCompleted: response.isCompleted,
+      bannerNextLessonUrl: response.post.banner_button_url,
       isLiked: response.post.is_liked_by_current_user,
       likeCount: response.likeCount,
       isLoadingAll: false,
@@ -165,7 +161,7 @@ export default class Foundations extends React.Component {
         .replace(/&gt;/g, '>')
         .replace(/&lt;/g, '<'),
       progress: response.post.progress_percent,
-      nextLesson: new ContentModel(response.post.current_lesson),
+      nextLesson: new ContentModel(response.post.next_lesson),
       refreshing: false
     });
   };
@@ -187,7 +183,7 @@ export default class Foundations extends React.Component {
     });
   };
 
-  onRestartFoundation = async () => {
+  onRestartMethod = async () => {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -213,9 +209,13 @@ export default class Foundations extends React.Component {
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    if (onTablet && this.state.isLandscape) return 3;
+    if (onTablet && !this.state.isLandscape) return 2;
     return 1.8;
+  }
+
+  goToLesson(url) {
+    return this.props.navigation.navigate('VIDEOPLAYER', { url });
   }
 
   render() {
@@ -224,7 +224,7 @@ export default class Foundations extends React.Component {
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
-          parentPage={'FOUNDATIONS'}
+          parentPage={'METHOD'}
         />
 
         <ScrollView
@@ -252,111 +252,112 @@ export default class Foundations extends React.Component {
             source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
           >
             <LinearGradient
-              colors={['transparent', 'rgba(20, 20, 20, 0.5)', 'rgba(0, 0, 0, 1)']}
+              colors={[
+                'transparent',
+                'rgba(20, 20, 20, 0.5)',
+                'rgba(0, 0, 0, 1)'
+              ]}
               style={{
                 borderRadius: 0,
+                position: 'absolute',
+                top: 0,
                 width: '100%',
                 height: '100%'
               }}
             />
+            <View
+              style={{
+                paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+                alignSelf: 'center',
+                width: '100%',
+                zIndex: 5,
+                elevation: 5,
+                opacity: 1
+              }}
+            >
+              <View style={{ alignSelf: 'center' }}>
+                <Pianote
+                  height={fullHeight * 0.04}
+                  width={fullWidth * 0.33}
+                  fill={colors.pianoteRed}
+                />
+              </View>
+              <View style={{ height: 5 * factorVertical }} />
+              <FastImage
+                style={{
+                  height: greaterWDim / 20,
+                  width: '50%',
+                  alignSelf: 'center'
+                }}
+                source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+              <View style={{ height: 25 * factorRatio }} />
               <View
                 style={{
-                  position: 'absolute',
-                  width: '100%',
-                  zIndex: 5,
-                  elevation: 5,
-                  left: 0,
-                  bottom: 0,
-                  opacity: 1,
+                  height: 40 * factorRatio,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-evenly'
                 }}
               >
-                <View style={{ alignSelf: 'center'}}>
-                  <Pianote
-                    height={fullHeight * 0.04}
-                    width={fullWidth * 0.33}
-                    fill={colors.pianoteRed}
+                <View key='placeholder' style={{ flex: 0.5 }} />
+                {this.state.methodIsCompleted ? (
+                  <ResetIcon
+                    pressed={() =>
+                      this.setState({
+                        showRestartCourse: true
+                      })
+                    }
                   />
-                </View>
-                <View style={{height: 5*factorVertical}}/>
-                <FastImage
-                  style={{
-                    height: greaterWDim / 20,
-                    width: '50%',
-                    alignSelf: 'center'
+                ) : this.state.methodIsStarted ? (
+                  <ContinueIcon
+                    pressed={() =>
+                      this.goToLesson(this.state.bannerNextLessonUrl)
+                    }
+                  />
+                ) : (
+                  !this.state.methodIsStarted && (
+                    <StartIcon
+                      pressed={() =>
+                        this.goToLesson(this.state.bannerNextLessonUrl)
+                      }
+                    />
+                  )
+                )}
+
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({
+                      showInfo: !this.state.showInfo
+                    });
                   }}
-                  source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-                  resizeMode={FastImage.resizeMode.contain}
-                />
-                <View style={{height: 25*factorRatio}}/>
-                <View
                   style={{
-                    height: 40*factorRatio,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
+                    flex: 0.5,
+                    alignItems: 'center'
                   }}
                 >
-                  <View key='placeholder' style={{ flex: 0.5 }} />
-                  {this.state.foundationIsCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : this.state.foundationIsStarted ? (
-                    <ContinueIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.nextLesson.post.mobile_app_url
-                        })
-                      }
-                    />
-                  ) : (
-                    !this.state.foundationIsStarted && (
-                      <StartIcon
-                        pressed={() =>
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.nextLesson.post.mobile_app_url
-                          })
-                        }
-                      />
-                    )
-                  )}
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
+                  <AntIcon
+                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                    size={22 * factorRatio}
+                    color={colors.pianoteRed}
+                  />
+                  <Text
                     style={{
-                      flex: 0.5,
-                      alignItems: 'center'
+                      fontFamily: 'OpenSans-Regular',
+                      color: 'white',
+                      marginTop: 3 * factorRatio,
+                      fontSize: 12 * factorRatio
                     }}
                   >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={22 * factorRatio}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factorRatio,
-                        fontSize: 12 * factorRatio
-                      }}
-                    >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{height: 10*factorVertical}}/>
+                    Info
+                  </Text>
+                </TouchableOpacity>
               </View>
-        </ImageBackground>
-          {this.state.foundationIsStarted && (
+              <View style={{ height: 10 * factorVertical }} />
+            </View>
+          </ImageBackground>
+          {this.state.methodIsStarted && (
             <View
               key={'profile'}
               style={{
@@ -404,8 +405,7 @@ export default class Foundations extends React.Component {
               style={{
                 width: '100%',
                 paddingVertical: 15,
-                paddingLeft: fullWidth * 0.035,
-                paddingRight: fullWidth * 0.035
+                paddingHorizontal: this.state.isLandscape ? '10%' : 15
               }}
             >
               <Text
@@ -417,7 +417,7 @@ export default class Foundations extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {this.state.description}
+                {this.state.description !== 'TBD' ? this.state.description : ''}
               </Text>
               <View key={'containStats'}>
                 <View style={{ height: 10 * factorVertical }} />
@@ -466,7 +466,7 @@ export default class Foundations extends React.Component {
                         marginTop: 10 * factorVertical
                       }}
                     >
-                      COURSES
+                      LEVELS
                     </Text>
                   </View>
                   <View style={{ width: 15 * factorRatio }} />
@@ -570,44 +570,35 @@ export default class Foundations extends React.Component {
               </View>
             </View>
           )}
-          <VerticalVideoList
-            isMethod={true}
-            items={this.state.items}
-            isLoading={this.state.isLoadingAll}
-            title={'FOUNDATIONS'}
-            type={'LESSONS'}
-            showFilter={false}
-            showType={false}
-            showArtist={false}
-            showLength={false}
-            showSort={false}
-            isFoundationsLevel={true}
-            imageRadius={5 * factorRatio}
-            containerBorderWidth={0}
-            containerWidth={fullWidth}
-            containerHeight={fullWidth * 0.3}
-            imageHeight={fullWidth * 0.26}
-            imageWidth={fullWidth * 0.26}
-            imageRadius={7.5 * factorRatio}
-            containerBorderWidth={0}
-            containerWidth={fullWidth}
-            containerHeight={fullWidth * 0.285}
-            imageHeight={fullWidth * 0.25}
-            imageWidth={fullWidth * 0.25}
-          />
+          <View
+            style={{ paddingHorizontal: this.state.isLandscape ? '10%' : 0 }}
+          >
+            <VerticalVideoList
+              isMethod={true}
+              items={this.state.items}
+              isLoading={this.state.isLoadingAll}
+              title={'METHOD'}
+              type={'LESSONS'}
+              showFilter={false}
+              showType={false}
+              showArtist={false}
+              showLength={false}
+              showSort={false}
+              isMethodLevel={true}
+              isSquare={true}
+              imageWidth={fullWidth * 0.26}
+            />
+          </View>
           <View style={{ height: 10 * factorVertical }} />
         </ScrollView>
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -620,8 +611,8 @@ export default class Foundations extends React.Component {
                 showRestartCourse: false
               });
             }}
-            type='foundation'
-            onRestart={() => this.onRestartFoundation()}
+            type='method'
+            onRestart={() => this.onRestartMethod()}
           />
         </Modal>
         {!this.state.isLoadingAll && this.state.nextLesson && (
@@ -629,11 +620,9 @@ export default class Foundations extends React.Component {
             item={this.state.nextLesson}
             isMethod={true}
             progress={this.state.progress}
-            type='FOUNDATION'
+            type='METHOD'
             onNextLesson={() =>
-              this.props.navigation.navigate('VIDEOPLAYER', {
-                url: this.state.nextLesson.post.mobile_app_url
-              })
+              this.goToLesson(this.state.nextLesson.post.mobile_app_url)
             }
           />
         )}

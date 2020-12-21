@@ -193,7 +193,7 @@ class FullScreenVideoList extends React.Component {
                     marginRight: 7.5 * factorRatio,
                     fontWeight: '300',
                     marginTop: 10 * factorRatio,
-                    color: 'red'
+                    color: colors.pianoteRed
                   }}
                 >
                   See All

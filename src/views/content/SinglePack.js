@@ -21,7 +21,6 @@ import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import DeviceInfo from 'react-native-device-info';
 import Orientation from 'react-native-orientation-locker';
 
 import StartIcon from '../../components/StartIcon';
@@ -48,6 +47,7 @@ export default class SinglePack extends React.Component {
       showInfo: false,
       isDisplayingLessons: true,
       videos: [],
+      id: '',
       url: this.props.navigation.state.params.url,
       isAddedToList: false,
       description: '',
@@ -176,8 +176,8 @@ export default class SinglePack extends React.Component {
   };
 
   getAspectRatio() {
-    if (DeviceInfo.isTablet() && this.state.isLandscape) return 3;
-    if (DeviceInfo.isTablet() && !this.state.isLandscape) return 2;
+    if (onTablet && this.state.isLandscape) return 3;
+    if (onTablet && !this.state.isLandscape) return 2;
 
     return 1.8;
   }
@@ -187,11 +187,10 @@ export default class SinglePack extends React.Component {
     let isLandscape = o.indexOf('LAND') >= 0;
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
     if (Platform.OS === 'ios') {
-      if (DeviceInfo.isTablet()) this.setState({ isLandscape });
+      if (onTablet) this.setState({ isLandscape });
     } else {
       Orientation.getAutoRotateState(isAutoRotateOn => {
-        if (isAutoRotateOn && DeviceInfo.isTablet())
-          this.setState({ isLandscape });
+        if (isAutoRotateOn && onTablet) this.setState({ isLandscape });
       });
     }
   };
@@ -268,106 +267,112 @@ export default class SinglePack extends React.Component {
                 zIndex={0}
                 elevation={0}
               />
-              <FastImage
-                style={{
-                  height: greaterWDim / 15,
-                  width: '100%',
-                  zIndex: 1
-                }}
-                source={{ uri: this.state.logo }}
-                resizeMode={FastImage.resizeMode.contain}
-              />
-
               <View
-                key={'buttonRow'}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  paddingVertical: 15 * factorRatio
-                }}
+                style={
+                  this.state.isLandscape ? { marginHorizontal: '10%' } : {}
+                }
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.toggleMyList();
-                  }}
+                <FastImage
                   style={{
-                    flex: 0.5,
-                    alignItems: 'center'
+                    height: greaterWDim / 15,
+                    width: '100%',
+                    zIndex: 1
+                  }}
+                  source={{ uri: this.state.logo }}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+
+                <View
+                  key={'buttonRow'}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    paddingVertical: 15 * factorRatio
                   }}
                 >
-                  <AntIcon
-                    name={this.state.isAddedToList ? 'close' : 'plus'}
-                    size={22 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.toggleMyList();
+                    }}
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
+                      flex: 0.5,
+                      alignItems: 'center'
                     }}
                   >
-                    {this.state.isAddedToList ? 'Added' : 'My List'}
-                  </Text>
-                </TouchableOpacity>
+                    <AntIcon
+                      name={this.state.isAddedToList ? 'close' : 'plus'}
+                      size={22 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 3 * factorRatio,
+                        fontSize: 13 * factorRatio
+                      }}
+                    >
+                      {this.state.isAddedToList ? 'Added' : 'My List'}
+                    </Text>
+                  </TouchableOpacity>
 
-                {this.state.isCompleted ? (
-                  <ResetIcon
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : !this.state.isStarted ? (
-                  <StartIcon
-                    pressed={() => {
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.nextLessonUrl
-                      });
-                    }}
-                  />
-                ) : (
-                  this.state.isStarted && (
-                    <ContinueIcon
+                  {this.state.isCompleted ? (
+                    <ResetIcon
                       pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.nextLessonUrl
+                        this.setState({
+                          showRestartCourse: true
                         })
                       }
                     />
-                  )
-                )}
+                  ) : !this.state.isStarted ? (
+                    <StartIcon
+                      pressed={() => {
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.nextLessonUrl
+                        });
+                      }}
+                    />
+                  ) : (
+                    this.state.isStarted && (
+                      <ContinueIcon
+                        pressed={() =>
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.nextLessonUrl
+                          })
+                        }
+                      />
+                    )
+                  )}
 
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                  style={{
-                    flex: 0.5,
-                    alignItems: 'center'
-                  }}
-                >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
+                    }}
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
+                      flex: 0.5,
+                      alignItems: 'center'
                     }}
                   >
-                    Info
-                  </Text>
-                </TouchableOpacity>
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={22 * factorRatio}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 3 * factorRatio,
+                        fontSize: 13 * factorRatio
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </ImageBackground>
 
@@ -375,9 +380,9 @@ export default class SinglePack extends React.Component {
               <View
                 key={'info'}
                 style={{
-                  width: '100%',
                   alignSelf: 'center',
-                  backgroundColor: colors.mainBackground
+                  backgroundColor: colors.mainBackground,
+                  marginHorizontal: this.state.isLandscape ? '10%' : 15
                 }}
               >
                 <Text
@@ -536,15 +541,7 @@ export default class SinglePack extends React.Component {
             <View style={{ height: 5 * factorVertical }} />
             <View
               key={'verticalVideoList'}
-              style={[
-                styles.centerContent,
-                {
-                  minHeight: fullHeight * 0.29 * 0.90625,
-                  justifyContent: 'space-around',
-                  alignContent: 'space-around',
-                  flexDirection: 'row'
-                }
-              ]}
+              style={this.state.isLandscape ? { marginHorizontal: '10%' } : {}}
             >
               <VerticalVideoList
                 items={this.state.videos}
@@ -556,23 +553,6 @@ export default class SinglePack extends React.Component {
                 showArtist={this.state.isDisplayingLessons ? false : true} // show artist name
                 showLength={this.state.isDisplayingLessons ? true : false}
                 showLines={!this.state.isDisplayingLessons}
-                imageRadius={5 * factorRatio} // radius of image shown
-                containerBorderWidth={0} // border of box
-                containerWidth={fullWidth} // width of list
-                containerHeight={
-                  onTablet
-                    ? fullHeight * 0.15
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.115
-                    : fullHeight * 0.095
-                } // height per row
-                imageHeight={
-                  onTablet
-                    ? fullHeight * 0.12
-                    : Platform.OS == 'android'
-                    ? fullHeight * 0.095
-                    : fullHeight * 0.0825
-                } // image height
                 imageWidth={fullWidth * 0.26} // image width
                 outVideos={this.state.outVideos} // if paging and out of videos
                 navigator={row => this.navigate(row)}
@@ -603,14 +583,11 @@ export default class SinglePack extends React.Component {
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

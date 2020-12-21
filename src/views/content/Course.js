@@ -11,6 +11,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 import Modal from 'react-native-modal';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import Filters from '../../components/FIlters.js';
@@ -20,6 +22,8 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 import NavigationBar from '../../components/NavigationBar';
 
+import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
+
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -28,11 +32,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   );
 };
 
-export default class Course extends React.Component {
+class Course extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    let { coursesCache } = props;
     this.state = {
       progressCourses: [],
       allCourses: [],
@@ -53,12 +58,22 @@ export default class Course extends React.Component {
       },
       started: true, // if started lesson
       refreshing: true,
-      refreshControl: false
+      refreshControl: false,
+      ...this.initialValidData(coursesCache, true)
     };
   }
 
   componentDidMount() {
     this.getContent();
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () =>
+        !this.firstTimeFocused ? (this.firstTimeFocused = true) : this.refresh()
+    );
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
   }
 
   async getContent() {
@@ -74,32 +89,49 @@ export default class Course extends React.Component {
       ),
       getStartedContent('course')
     ]);
-    let allVideos = this.setData(
-      content[0].data.map(data => {
-        return new ContentModel(data);
-      })
-    );
-
-    let inprogressVideos = this.setData(
-      content[1].data.map(data => {
-        return new ContentModel(data);
-      })
-    );
-
-    this.setState({
-      allCourses: allVideos,
-      progressCourses: inprogressVideos,
-      filtersAvailable: content[0].meta.filterOptions,
-      refreshing: false,
-      refreshControl: false,
-      outVideos:
-        allVideos.length == 0 || content[0].data.length < 20 ? true : false,
-      filtering: false,
-      isPaging: false,
-      page: this.state.page + 1,
-      started: inprogressVideos.length !== 0
+    this.props.cacheAndWriteCourses({
+      all: content[0],
+      inProgress: content[1]
     });
+    this.setState(
+      this.initialValidData({
+        all: content[0],
+        inProgress: content[1]
+      })
+    );
   }
+
+  initialValidData = (content, fromCache) => {
+    try {
+      let allVideos = this.setData(
+        content.all.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+
+      let inprogressVideos = this.setData(
+        content.inProgress.data.map(data => {
+          return new ContentModel(data);
+        })
+      );
+
+      return {
+        allCourses: allVideos,
+        progressCourses: inprogressVideos,
+        filtersAvailable: content[0].meta.filterOptions,
+        refreshing: false,
+        refreshControl: fromCache,
+        outVideos:
+          allVideos.length == 0 || content.all.data.length < 20 ? true : false,
+        filtering: false,
+        isPaging: false,
+        page: this.state?.page + 1 || 1,
+        started: inprogressVideos.length !== 0
+      };
+    } catch (e) {
+      return {};
+    }
+  };
 
   getAllCourses = async loadMore => {
     if (!this.context.isConnected) {
@@ -201,7 +233,7 @@ export default class Course extends React.Component {
   };
 
   refresh() {
-    this.setState({ refreshControl: true, page: 1 }, () => this.getContent());
+    this.setState({ refreshControl: true, page: 1 }, this.getContent);
   }
 
   render() {
@@ -216,9 +248,10 @@ export default class Course extends React.Component {
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             refreshControl={
               <RefreshControl
+                tintColor={'transparent'}
                 colors={[colors.pianoteRed]}
-                refreshing={this.state.refreshControl}
                 onRefresh={() => this.refresh()}
+                refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
             style={{
@@ -226,6 +259,13 @@ export default class Course extends React.Component {
               backgroundColor: colors.mainBackground
             }}
           >
+            {isiOS && this.state.refreshControl && (
+              <ActivityIndicator
+                size='large'
+                style={{ padding: 10 }}
+                color={colors.pianoteRed}
+              />
+            )}
             <Text
               style={{
                 paddingLeft: 15,
@@ -256,42 +296,38 @@ export default class Course extends React.Component {
                 />
               </View>
             )}
-            <VerticalVideoList
-              items={this.state.allCourses}
-              isLoading={false}
-              title={'ALL COURSES'}
-              type={'COURSES'}
-              isPaging={this.state.isPaging}
-              showFilter={true}
-              showType={true}
-              showArtist={true}
-              showLength={false}
-              showSort={true}
-              filters={this.state.filters}
-              imageRadius={5 * factorRatio}
-              containerBorderWidth={0}
-              currentSort={this.state.currentSort}
-              changeSort={sort => this.changeSort(sort)}
-              filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-              containerWidth={fullWidth}
-              containerHeight={
-                onTablet
-                  ? fullHeight * 0.15
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.115
-                  : fullHeight * 0.095
-              } // height per row
-              imageHeight={
-                onTablet
-                  ? fullHeight * 0.12
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.095
-                  : fullHeight * 0.0825
-              } // image height
-              imageWidth={fullWidth * 0.26} // image width
-              outVideos={this.state.outVideos}
-              getVideos={() => this.getVideos()}
-            />
+            {onTablet ? (
+              <HorizontalVideoList
+                Title={'COURSES'}
+                seeAll={() =>
+                  this.props.navigation.navigate('SEEALL', {
+                    title: 'Courses',
+                    parent: 'Courses'
+                  })
+                }
+                items={this.state.allCourses}
+              />
+            ) : (
+              <VerticalVideoList
+                items={this.state.allCourses}
+                isLoading={false}
+                title={'COURSES'}
+                type={'COURSES'}
+                isPaging={this.state.isPaging}
+                showFilter={true}
+                showType={true}
+                showArtist={true}
+                showLength={false}
+                showSort={true}
+                filters={this.state.filters}
+                currentSort={this.state.currentSort}
+                changeSort={sort => this.changeSort(sort)}
+                filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+                imageWidth={fullWidth * 0.26} // image width
+                outVideos={this.state.outVideos}
+                getVideos={() => this.getVideos()}
+              />
+            )}
           </ScrollView>
         ) : (
           <ActivityIndicator
@@ -351,3 +387,8 @@ export default class Course extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({ coursesCache: state.coursesCache });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ cacheAndWriteCourses }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Course);
