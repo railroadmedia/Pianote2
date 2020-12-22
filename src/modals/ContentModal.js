@@ -13,12 +13,10 @@ import {
   unlikeContent,
   addToMyList,
   removeFromMyList,
-  resetProgress
 } from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Download_V2 } from 'RNDownload';
 import contentService from '../services/content.service';
 
@@ -89,8 +87,6 @@ class ContentModal extends React.Component {
     // unlike on backend
     unlikeContent(contentID);
   };
-
-  download = async contentID => {};
 
   render = () => {
     const {

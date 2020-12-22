@@ -322,23 +322,24 @@ class SongCatalog extends React.Component {
               changeSort={sort => this.changeSort(sort)} // change sort and reload videos
               outVideos={this.state.outVideos} // if paging and out of videos
               filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+              isSquare={true}
               containerHeight={
                 onTablet
-                  ? fullHeight * 0.15
+                  ? fullHeight * 0.14
                   : Platform.OS == 'android'
                   ? fullHeight * 0.1375
                   : fullHeight * 0.1
               } // height per row
               imageHeight={
                 onTablet
-                  ? fullHeight * 0.12
+                  ? fullHeight * 0.14
                   : Platform.OS == 'android'
                   ? fullHeight * 0.125
                   : fullHeight * 0.09
               } // image height
               imageWidth={
                 onTablet
-                  ? fullHeight * 0.12
+                  ? fullHeight * 0.14
                   : Platform.OS == 'android'
                   ? fullHeight * 0.125
                   : fullHeight * 0.09

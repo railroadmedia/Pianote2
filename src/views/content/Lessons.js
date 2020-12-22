@@ -551,28 +551,26 @@ class Lessons extends React.Component {
                   items={this.state.allLessons}
                 />
               ) : (
-                !this.state.filtering && (
-                  <VerticalVideoList
-                    isMethod={true}
-                    items={this.state.allLessons}
-                    isLoading={false}
-                    title={'ALL LESSONS'} // title for see all page
-                    type={'LESSONS'} // the type of content on page
-                    showFilter={true}
-                    isPaging={this.state.isPaging}
-                    showType={true} // show course / song by artist name
-                    showArtist={true} // show artist name
-                    showSort={true}
-                    showLength={false}
-                    filters={this.state.filters} // show filter list
-                    currentSort={this.state.currentSort}
-                    changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                    filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                    imageWidth={fullWidth * 0.26} // image width
-                    outVideos={this.state.outVideos} // if paging and out of videos
-                    getVideos={() => this.getVideos()}
-                  />
-                )
+                <VerticalVideoList
+                  isMethod={true}
+                  items={this.state.allLessons}
+                  isLoading={false}
+                  title={'ALL LESSONS'} // title for see all page
+                  type={'LESSONS'} // the type of content on page
+                  showFilter={true}
+                  isPaging={this.state.isPaging}
+                  showType={true} // show course / song by artist name
+                  showArtist={true} // show artist name
+                  showSort={true}
+                  showLength={false}
+                  filters={this.state.filters} // show filter list
+                  currentSort={this.state.currentSort}
+                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                  filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+                  imageWidth={fullWidth * 0.26} // image width
+                  outVideos={this.state.outVideos} // if paging and out of videos
+                  getVideos={() => this.getVideos()}
+                />
               )}
             </View>
           </ScrollView>

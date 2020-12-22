@@ -57,6 +57,7 @@ class NavMenuHeaders extends React.Component {
             paddingBottom: 10 * factorRatio,
             paddingRight: 10*factorHorizontal,
             paddingLeft: 5*factorHorizontal,
+            backgroundColor: 'green'
           }}
         >
           <TouchableOpacity
@@ -75,12 +76,17 @@ class NavMenuHeaders extends React.Component {
                   );
             }}
             style={{
-              height:
-                Platform.OS == 'ios' ? fullHeight * 0.035 : fullHeight * 0.08,
-              width: onTablet ? 0.25 * fullWidth : 0.3 * fullWidth
+                                                                                                // TO DO FIX DIMENSIONS ON ANDROID
+              height: Platform.OS == 'ios' ? (onTablet ? fullHeight*0.05 : fullHeight*0.035) : (onTablet ? fullHeight * 0.1 : fullHeight * 0.08),
+              width: onTablet ? 0.2 * fullWidth : 0.3 * fullWidth,
+              flexDirection: 'row',
+              backgroundColor: 'purple'
             }}
           >
-            <Pianote fill={'#fb1b2f'} />
+            <Pianote 
+              fill={'#fb1b2f'} 
+            />
+            <View style={{flex: 1}}/>
           </TouchableOpacity>
           <View style={{width: 5*factorHorizontal}}/>
           <View style={{flex: 1}}/>
