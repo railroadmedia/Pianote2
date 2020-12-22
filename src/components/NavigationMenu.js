@@ -66,7 +66,7 @@ class NavigationMenu extends React.Component {
 
   lessonNav() {
     return (
-      <View style={{ flex: 0.85 }}>
+      <View style={{ flex: 1, }}>
         {navigationOptions.map((nav, index) => (
           <TouchableOpacity
             key={index}

@@ -911,7 +911,6 @@ class VerticalVideoList extends React.Component {
                 </Text>
               </View>
             )}
-          <View style={{ height: 5 * factorVertical }} />
         </View>
         <View style={{ flex: 1 }}>
           {this.renderMappedList()}
@@ -980,7 +979,6 @@ class VerticalVideoList extends React.Component {
             }}
           />
         </Modal>
-
         <Modal
           key={'calendarModal'}
           isVisible={this.state.addToCalendarModal}
