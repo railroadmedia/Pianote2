@@ -877,7 +877,6 @@ export default class VideoPlayer extends React.Component {
           .join(', ')
           .toUpperCase()} | `
       : '';
-
     switch (type) {
       case 'song-part':
         return artistTag + style + xpTag;
@@ -887,7 +886,7 @@ export default class VideoPlayer extends React.Component {
         return instructorTag + xpTag;
       case 'student-focus':
         return instructorTag + artistTag + xpTag;
-      case 'pack':
+      case 'pack-bundle-lesson':
         return releaseDateTag + xpTag;
       default:
         return instructorTag + xpTag;

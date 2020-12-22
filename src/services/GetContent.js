@@ -197,6 +197,8 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
   } else if (contentType == 'courses') {
     // add types
     url = url + `&included_types[]=course`;
+  } else if (contentType == 'song') {
+    url = url + `&included_types[]=song`;
   }
   if (type == 'continue') {
     url = url + `&required_user_states[]=started`;

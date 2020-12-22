@@ -88,10 +88,15 @@ export default class Downloads extends React.Component {
             progress_percent: l.post.progress_percent
           }))
       });
+    } else if (item?.lesson.type === 'learning-path-lesson') {
+      this.props.navigation.navigate('VIDEOPLAYER', {
+        url: item.lesson.mobile_app_url
+      });
+    } else {
+      this.props.navigation.navigate('VIDEOPLAYER', {
+        id: item.id
+      });
     }
-    this.props.navigation.navigate('VIDEOPLAYER', {
-      id: item.id
-    });
   };
 
   render() {

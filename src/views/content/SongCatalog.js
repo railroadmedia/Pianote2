@@ -129,7 +129,7 @@ class SongCatalog extends React.Component {
   };
 
   getAllSongs = async loadMore => {
-    this.setState({filtering: true})
+    this.setState({ filtering: true });
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -281,7 +281,7 @@ class SongCatalog extends React.Component {
             >
               Songs
             </Text>
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
             {this.state.started && (
               <View
                 key={'continueCourses'}
@@ -297,7 +297,7 @@ class SongCatalog extends React.Component {
                       parent: 'Songs'
                     })
                   }
-                  hideSeeAll={true}
+                  hideSeeAll={false}
                   isSquare={true}
                   items={this.state.progressSongs}
                 />
@@ -369,35 +369,35 @@ class SongCatalog extends React.Component {
             coverScreen={true}
             hasBackdrop={true}
           >
-          <Filters
-            hideFilters={() => this.setState({ showFilters: false })}
-            filtersAvailable={this.state.filtersAvailable}
-            filters={this.state.filters}
-            filtering={this.state.filtering}
-            type={'Songs'}
-            reset={filters => {
-              this.setState(
-                {
-                  allSongs: [],
-                  filters,
-                  page: 1,
-                },
-                () => this.getAllSongs()
-              );
-            }}
-            filterVideos={filters => {
-              this.setState(
-                {
-                  allSongs: [],
-                  outVideos: false,
-                  page: 1,
-                  filters
-                },
-                () => this.getAllSongs()
-              );
-            }}
-          />
-        </Modal>
+            <Filters
+              hideFilters={() => this.setState({ showFilters: false })}
+              filtersAvailable={this.state.filtersAvailable}
+              filters={this.state.filters}
+              filtering={this.state.filtering}
+              type={'Songs'}
+              reset={filters => {
+                this.setState(
+                  {
+                    allSongs: [],
+                    filters,
+                    page: 1
+                  },
+                  () => this.getAllSongs()
+                );
+              }}
+              filterVideos={filters => {
+                this.setState(
+                  {
+                    allSongs: [],
+                    outVideos: false,
+                    page: 1,
+                    filters
+                  },
+                  () => this.getAllSongs()
+                );
+              }}
+            />
+          </Modal>
         )}
         <NavigationBar currentPage={''} />
       </View>
