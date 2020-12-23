@@ -446,8 +446,8 @@ class Lessons extends React.Component {
                 <View style={{ flex: 0.9 }} />
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <Pianote
-                    height={fullHeight * 0.03}
-                    width={fullWidth * 0.35}
+                    height={fullHeight * 0.03*factorRatio}
+                    width={fullWidth * 0.35*factorRatio}
                     fill={colors.pianoteRed}
                   />
                 </View>
@@ -455,7 +455,7 @@ class Lessons extends React.Component {
                 <FastImage
                   style={{
                     width: fullWidth,
-                    height: 40 * factorVertical,
+                    height: 40 * factorRatio,
                     alignSelf: 'center'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/method-logo.png')}

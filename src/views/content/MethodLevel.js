@@ -282,7 +282,7 @@ export default class MethodLevel extends React.Component {
               </View>
               <FastImage
                 style={{
-                  height: greaterWDim / 40,
+                  height: greaterWDim / 30,
                   width: '50%',
                   alignSelf: 'center'
                 }}

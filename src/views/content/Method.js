@@ -277,8 +277,8 @@ export default class Method extends React.Component {
             >
               <View style={{ alignSelf: 'center' }}>
                 <Pianote
-                  height={fullHeight * 0.04}
-                  width={fullWidth * 0.33}
+                  height={fullHeight * 0.04*factorRatio}
+                  width={fullWidth * 0.33*factorRatio}
                   fill={colors.pianoteRed}
                 />
               </View>
