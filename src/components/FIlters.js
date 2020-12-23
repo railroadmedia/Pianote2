@@ -547,7 +547,7 @@ export default class Filters extends React.Component {
                                 style={[
                                 styles.centerContent,
                                 {
-                                    height: 30 * factorVertical,
+                                    height: 30 * factorRatio,
                                     width: fullWidth * 0.3,
                                     marginRight: fullWidth * 0.01,
                                     marginLeft: fullWidth * 0.01,
@@ -637,6 +637,7 @@ export default class Filters extends React.Component {
                                                     }}
                                                 >
                                                     <Text
+                                                        numberOfLines={1}
                                                         style={{
                                                             textAlign: 'center',
                                                             color: (this.state.displayTopics.includes(this.state.filtersAvailable.topic[index])) ? 'white' : colors.secondBackground,
@@ -672,6 +673,7 @@ export default class Filters extends React.Component {
                                                     }}
                                                 >
                                                     <Text
+                                                        numberOfLines={1}
                                                         style={{
                                                             textAlign: 'center',
                                                             color: (this.state.displayTopics.includes(this.state.filtersAvailable.topic[index+1])) ? 'white' : colors.secondBackground,
@@ -707,6 +709,7 @@ export default class Filters extends React.Component {
                                                     }}
                                                 >
                                                     <Text
+                                                        numberOfLines={1}
                                                         style={{
                                                             textAlign: 'center',
                                                             color: (this.state.displayTopics.includes(this.state.filtersAvailable.topic[index+2])) ? 'white' : colors.secondBackground,
@@ -789,6 +792,7 @@ export default class Filters extends React.Component {
                                                     }}
                                                 >
                                                     <Text
+                                                        numberOfLines={1}
                                                         style={{
                                                             textAlign: 'center',
                                                             color: (this.state.displayTopics.includes(this.state.filtersAvailable.content_type[index])) ? 'white' : colors.secondBackground,
@@ -824,6 +828,7 @@ export default class Filters extends React.Component {
                                                     }}
                                                 >
                                                     <Text
+                                                        numberOfLines={1}
                                                         style={{
                                                             textAlign: 'center',
                                                             color: (this.state.displayTopics.includes(this.state.filtersAvailable.content_type[index+1])) ? 'white' : colors.secondBackground,
@@ -859,6 +864,7 @@ export default class Filters extends React.Component {
                                                     }}
                                                 >
                                                     <Text
+                                                        numberOfLines={1}
                                                         style={{
                                                             textAlign: 'center',
                                                             color: (this.state.displayTopics.includes(this.state.filtersAvailable.content_type[index+2])) ? 'white' : colors.secondBackground,
@@ -944,6 +950,7 @@ export default class Filters extends React.Component {
                                                 }}
                                             >
                                                 <Text
+                                                    numberOfLines={1}
                                                     style={{
                                                         textAlign: 'center',
                                                         color: (this.state.displayTopics.includes(this.state.filtersAvailable.style[index])) ? 'white' : colors.secondBackground,
@@ -979,6 +986,7 @@ export default class Filters extends React.Component {
                                                 }}
                                             >
                                                 <Text
+                                                    numberOfLines={1}
                                                     style={{
                                                         textAlign: 'center',
                                                         color: (this.state.displayTopics.includes(this.state.filtersAvailable.style[index+1])) ? 'white' : colors.secondBackground,
@@ -1014,6 +1022,7 @@ export default class Filters extends React.Component {
                                                 }}
                                             >
                                                 <Text
+                                                    numberOfLines={1}
                                                     style={{
                                                         textAlign: 'center',
                                                         color: (this.state.displayTopics.includes(this.state.filtersAvailable.style[index+2])) ? 'white' : colors.secondBackground,
@@ -1100,6 +1109,7 @@ export default class Filters extends React.Component {
                                                 }}
                                             >
                                                 <Text
+                                                    numberOfLines={1}
                                                     style={{
                                                         textAlign: 'center',
                                                         color: (this.state.displayTopics.includes(this.state.filtersAvailable.artist[index])) ? 'white' : colors.secondBackground,
@@ -1135,6 +1145,7 @@ export default class Filters extends React.Component {
                                                 }}
                                             >
                                                 <Text
+                                                    numberOfLines={1}
                                                     style={{
                                                         textAlign: 'center',
                                                         color: (this.state.displayTopics.includes(this.state.filtersAvailable.artist[index+1])) ? 'white' : colors.secondBackground,
@@ -1170,6 +1181,7 @@ export default class Filters extends React.Component {
                                                 }}
                                             >
                                                 <Text
+                                                    numberOfLines={1}
                                                     style={{
                                                         textAlign: 'center',
                                                         color: (this.state.displayTopics.includes(this.state.filtersAvailable.artist[index+2])) ? 'white' : colors.secondBackground,
@@ -1281,7 +1293,7 @@ export default class Filters extends React.Component {
                                 styles.centerContent,
                                 {
                                 height: 30 * factorRatio,
-                                width: fullWidth * 0.3,
+                                width: '30%',
                                 marginRight: fullWidth * 0.01,
                                 marginLeft: fullWidth * 0.01,
                                 borderWidth: 1 * factorRatio,
@@ -1310,8 +1322,8 @@ export default class Filters extends React.Component {
                             style={[
                                 styles.centerContent,
                                 {
-                                height: 30 * factorVertical,
-                                width: fullWidth * 0.3,
+                                height: 30 * factorRatio,
+                                width: '30%',
                                 marginRight: fullWidth * 0.01,
                                 marginLeft: fullWidth * 0.01,
                                 borderWidth: 1 * factorRatio,
@@ -1322,6 +1334,7 @@ export default class Filters extends React.Component {
                             ]}
                             >
                             <Text
+                                numberOfLines={1}
                                 style={{
                                 textAlign: 'center',
                                 fontWeight: 'bold',
@@ -1340,8 +1353,8 @@ export default class Filters extends React.Component {
                             style={[
                                 styles.centerContent,
                                 {
-                                height: 30 * factorVertical,
-                                width: fullWidth * 0.3,
+                                height: 30 * factorRatio,
+                                width: '30%',
                                 marginRight: fullWidth * 0.01,
                                 marginLeft: fullWidth * 0.01,
                                 borderWidth: 1 * factorRatio,
@@ -1352,6 +1365,7 @@ export default class Filters extends React.Component {
                             ]}
                             >
                             <Text
+                                numberOfLines={1}
                                 style={{
                                 textAlign: 'center',
                                 fontWeight: 'bold',
@@ -1479,6 +1493,7 @@ export default class Filters extends React.Component {
                                                 />
                                                 </TouchableOpacity>
                                                 <Text
+                                                numberOfLines={1}
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
                                                     marginTop: 5 * factorRatio,
@@ -1529,6 +1544,7 @@ export default class Filters extends React.Component {
                                                 />
                                                 </TouchableOpacity>
                                                 <Text
+                                                numberOfLines={1}
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
                                                     marginTop: 5 * factorRatio,
@@ -1578,6 +1594,7 @@ export default class Filters extends React.Component {
                                                 />
                                                 </TouchableOpacity>
                                                 <Text
+                                                numberOfLines={1}
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
                                                     marginTop: 5 * factorRatio,
@@ -1627,6 +1644,7 @@ export default class Filters extends React.Component {
                                                 />
                                                 </TouchableOpacity>
                                                 <Text
+                                                numberOfLines={1}
                                                 style={{
                                                     fontFamily: 'OpenSans-Regular',
                                                     marginTop: 5 * factorRatio,
@@ -1657,76 +1675,83 @@ export default class Filters extends React.Component {
                     </ScrollView>
                 </View>
                 <View
-                key={'doneApply'}
-                style={{
-                    posistion: 'absolute',
-                    bottom: 0,
-                    height: isNotch
-                    ? fullHeight * 0.035 + 75 * factorVertical
-                    : 75 * factorVertical,
-                    backgroundColor: colors.mainBackground,
-                    zIndex: 3
-                }}
+                    key={'doneApply'}
+                    style={{
+                        posistion: 'absolute',
+                        bottom: 0,
+                        height: isNotch ? fullHeight * 0.035 + 75 * factorVertical : 85 * factorVertical,
+                        backgroundColor: colors.mainBackground,
+                        zIndex: 3
+                    }}
                 >
                 <View
                     style={[
                     styles.centerContent,
                     {
                         flex: 1,
-                        flexDirection: 'row'
+                        flexDirection: 'row',
                     }
                     ]}
                 >
                     <View style={{ flex: 1 }} />
-                    <View style={styles.centerContent}>
-                    <TouchableOpacity
-                        onPress={() => this.props.hideFilters()}
-                        style={[
-                        styles.centerContent,
-                        {
-                            height: fullHeight * 0.05,
-                            width: fullWidth * 0.46,
-                            backgroundColor: colors.pianoteRed,
-                            borderRadius: 200
-                        }
-                        ]}
-                    >
-                        <Text
-                        style={{
-                            color: 'white',
-                            fontFamily: 'RobotoCondensed-Bold',
-                            fontSize: 14 * factorRatio
-                        }}
-                        >
-                        DONE & APPLY
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={[{width: '50%', flexDirection: 'row'}, styles.centerContent]}>
+                        <View style={{flex: 1}}/>
+                        <View style={{width: '90%',}}>
+                            <View style={{flex: 1}}/>
+                            <TouchableOpacity
+                                onPress={() => this.props.hideFilters()}
+                                style={[
+                                styles.centerContent,
+                                {
+                                    height: (onTablet) ? fullHeight * 0.07 : fullHeight * 0.05,
+                                    width: '100%',
+                                    backgroundColor: colors.pianoteRed,
+                                    borderRadius: 200
+                                }
+                                ]}
+                            >
+                                <Text
+                                style={{
+                                    color: 'white',
+                                    fontFamily: 'RobotoCondensed-Bold',
+                                    fontSize: 14 * factorRatio
+                                }}
+                                >
+                                DONE & APPLY
+                                </Text>
+                            </TouchableOpacity>
+                            <View style={{flex: 1}}/>
+                        </View>
+                        <View style={{flex: 1}}/>
                     </View>
-                    <View style={{ flex: 1 }} />
-                    <View style={styles.centerContent}>
-                    <TouchableOpacity
-                        onPress={() => this.reset()}
-                        style={[
-                        styles.centerContent,
-                        {
-                            height: fullHeight * 0.05,
-                            width: fullWidth * 0.46,
-                            borderColor: 'white',
-                            borderWidth: 1 * factorRatio,
-                            borderRadius: 200
-                        }
-                        ]}
-                    >
-                        <Text
-                        style={{
-                            color: 'white',
-                            fontFamily: 'RobotoCondensed-Bold',
-                            fontSize: 14 * factorRatio
-                        }}
-                        >
-                        RESET
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={[{width: '50%', flexDirection: 'row'}, styles.centerContent]}>
+                        <View style={{flex: 1}}/>
+                        <View style={{width: '90%',}}>
+                            <TouchableOpacity
+                                onPress={() => this.reset()}
+                                style={[
+                                styles.centerContent,
+                                {
+                                    height: (onTablet) ? fullHeight * 0.07 : fullHeight * 0.05,
+                                    width: '100%',
+                                    borderColor: 'white',
+                                    borderWidth: 1 * factorRatio,
+                                    borderRadius: 200
+                                }
+                                ]}
+                            >
+                                <Text
+                                style={{
+                                    color: 'white',
+                                    fontFamily: 'RobotoCondensed-Bold',
+                                    fontSize: 14 * factorRatio
+                                }}
+                                >
+                                RESET
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{flex: 1}}/>
                     </View>
                     <View style={{ flex: 1 }} />
                 </View>
