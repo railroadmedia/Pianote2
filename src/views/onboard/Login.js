@@ -844,7 +844,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: colors.pianoteRed }}
+        style={{ flex: 1, backgroundColor: 'rgba(23, 26, 26, 1)' }}
         forceInset={{ top: 'never', bottom: 'always' }}
       >
         <View style={{ flex: 1 }}>
