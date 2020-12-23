@@ -66,7 +66,7 @@ class NavigationMenu extends React.Component {
 
   lessonNav() {
     return (
-      <View style={{ flex: 1, }}>
+      <View style={{ flex: 1 }}>
         {navigationOptions.map((nav, index) => (
           <TouchableOpacity
             key={index}
@@ -108,9 +108,9 @@ class NavigationMenu extends React.Component {
                     ? 'white'
                     : colors.secondBackground,
                 fontSize:
-                  (this.props.parentPage == nav.title.toUpperCase()
+                  this.props.parentPage == nav.title.toUpperCase()
                     ? 35 * factorVertical
-                    : 25 * factorVertical)
+                    : 25 * factorVertical
               }}
             >
               {nav.title}
@@ -147,16 +147,24 @@ class NavigationMenu extends React.Component {
             onPress={() => {
               this.props.onClose(false);
             }}
-            style={[styles.centerContent, styles.redButton, {height: 65*factorVertical, width: 65*factorVertical, borderRadius: 500 }]}
+            style={[
+              styles.centerContent,
+              styles.redButton,
+              {
+                height: 65 * factorVertical,
+                width: 65 * factorVertical,
+                borderRadius: 500
+              }
+            ]}
           >
-            <View style={{flex: 1}}/>
+            <View style={{ flex: 1 }} />
             <FeatherIcon
               size={40 * factorVertical}
               name={'x'}
               color={'white'}
               style={{ borderRadius: 500 }}
             />
-            <View style={{flex: 1}}/>
+            <View style={{ flex: 1 }} />
           </TouchableOpacity>
         </View>
         <View style={{ height: 30 * factorVertical }} />

@@ -141,7 +141,7 @@ export default class Search extends React.Component {
   }
 
   search = async () => {
-    this.setState({filtering: true})
+    this.setState({ filtering: true });
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -229,7 +229,7 @@ export default class Search extends React.Component {
           });
         }
 
-        console.log(response)
+        console.log(response);
 
         this.setState({
           filtersAvailable: response.meta.filterOptions,
@@ -406,8 +406,8 @@ export default class Search extends React.Component {
                 style={{
                   flex: 0.9,
                   color: 'grey',
-                  marginTop: 12.5*factorVertical,
-                  paddingBottom: 12.5*factorVertical,
+                  marginTop: 12.5 * factorVertical,
+                  paddingBottom: 12.5 * factorVertical,
                   justifyContent: 'center',
                   fontFamily: 'OpenSans-Regular',
                   fontSize: 16 * factorRatio
@@ -532,7 +532,7 @@ export default class Search extends React.Component {
                     filters={this.state.filters}
                     currentSort={this.state.currentSort}
                     changeSort={sort => this.changeSort(sort)}
-                    filterResults={() => this.setState({ showFilters: true })} 
+                    filterResults={() => this.setState({ showFilters: true })}
                     containerHeight={
                       onTablet
                         ? fullHeight * 0.15
@@ -584,7 +584,7 @@ export default class Search extends React.Component {
                   borderTopColor: colors.secondBackground
                 }}
               >
-                <View style={{height: 5*factorVertical}}/>
+                <View style={{ height: 5 * factorVertical }} />
                 <Text
                   style={{
                     fontSize: 18 * factorRatio,
@@ -626,7 +626,7 @@ export default class Search extends React.Component {
                 {
                   searchResults: [],
                   filters,
-                  page: 1,
+                  page: 1
                 },
                 () => this.search()
               );
@@ -644,7 +644,7 @@ export default class Search extends React.Component {
             }}
           />
         </Modal>
-        
+
         <NavigationBar currentPage={'SEARCH'} />
       </SafeAreaView>
     );

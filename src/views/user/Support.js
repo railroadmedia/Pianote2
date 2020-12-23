@@ -259,7 +259,7 @@ export default class Support extends React.Component {
             </Text>
           </View>
         </ScrollView>
-        <NavigationBar currentPage={'PROFILE'} pad={true}/>
+        <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
     );
   }

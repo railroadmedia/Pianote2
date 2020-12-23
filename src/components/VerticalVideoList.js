@@ -36,22 +36,22 @@ const sortDict = {
 };
 
 const instructorDict = {
-  197077: "Brett",
-  197087: "Cassi",
-  197106: "Colin", 
-  266932: "Dave", 
-  247373: "Sean", 
-  279887: "Eleny",
-  218895: "Gabriel", 
-  202588: "Jay", 
-  197048: "Jonny", 
-  196994: "Jordan", 
-  221245: "Josh", 
-  203416: "Kenny", 
-  196999: "Lisa",
-  197084: "Nate",
-  243082: "Sam",
-}
+  197077: 'Brett',
+  197087: 'Cassi',
+  197106: 'Colin',
+  266932: 'Dave',
+  247373: 'Sean',
+  279887: 'Eleny',
+  218895: 'Gabriel',
+  202588: 'Jay',
+  197048: 'Jonny',
+  196994: 'Jordan',
+  221245: 'Josh',
+  203416: 'Kenny',
+  196999: 'Lisa',
+  197084: 'Nate',
+  243082: 'Sam'
+};
 
 let greaterWDim;
 

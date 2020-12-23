@@ -348,14 +348,14 @@ export default class Login extends React.Component {
           key={'content1b'}
           style={{
             position: 'absolute',
-            bottom: 20,
+            bottom: height * 0.055,
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }}></View>
+          <View key={'buff'} style={{ height: height * 0.02 }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -478,7 +478,7 @@ export default class Login extends React.Component {
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }}></View>
+          <View key={'buff'} style={{ height: height * 0.02 }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -600,7 +600,7 @@ export default class Login extends React.Component {
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }}></View>
+          <View key={'buff'} style={{ height: height * 0.02 }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -723,7 +723,7 @@ export default class Login extends React.Component {
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }}></View>
+          <View key={'buff'} style={{ height: height * 0.02 }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -834,7 +834,7 @@ export default class Login extends React.Component {
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }}></View>
+          <View key={'buff'} style={{ height: height * 0.02 }} />
           {this.renderButtons()}
         </View>
       </View>

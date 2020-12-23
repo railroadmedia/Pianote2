@@ -13,8 +13,7 @@ class Loading extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render = () => {
@@ -32,13 +31,15 @@ class Loading extends React.Component {
         <View
           key={'content'}
           style={[
-              styles.centerContent, {
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }]}
+            styles.centerContent,
+            {
+              height: '100%',
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'transparent'
+            }
+          ]}
         >
           <View
             key={'content'}
@@ -50,14 +51,14 @@ class Loading extends React.Component {
               width: '80%'
             }}
           >
-              <View style={{flex: 1}}/>
-                <ActivityIndicator
-                    size={'large'}
-                    color={colors.pianoteRed}
-                    animating={true}
-                    style={{ marginTop: 10, marginBottom: 10 }}
-                /> 
-            <View style={{flex: 1}}/>
+            <View style={{ flex: 1 }} />
+            <ActivityIndicator
+              size={'large'}
+              color={colors.pianoteRed}
+              animating={true}
+              style={{ marginTop: 10, marginBottom: 10 }}
+            />
+            <View style={{ flex: 1 }} />
           </View>
         </View>
       </TouchableWithoutFeedback>

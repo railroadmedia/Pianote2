@@ -77,7 +77,7 @@ export default class SeeAll extends React.Component {
   }
 
   async getAllLessons(loadMore) {
-    this.setState({filtering: true})
+    this.setState({ filtering: true });
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -358,54 +358,54 @@ export default class SeeAll extends React.Component {
           />
         </ScrollView>
         {this.state.showFilters && (
-        <Modal
-          isVisible={this.state.showFilters}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
-          animation={'slideInUp'}
-          animationInTiming={10}
-          animationOutTiming={10}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <Filters
-            hideFilters={() => {
-              this.setState({ showFilters: false })
-            }}
-            filtersAvailable={this.state.filtersAvailable}
-            filters={this.state.filters}
-            filtering={this.state.filtering}
-            type={'See All'}
-            reset={filters => {
-              this.setState(
-                {
-                  allLessons: [],
-                  filters,
-                  page: 1,
-                },
-                () => this.getAllLessons()
-              );
-            }}
-            filterVideos={filters => {
-              this.setState(
-                {
-                  allLessons: [],
-                  outVideos: false,
-                  page: 1,
-                  filters
-                },
-                () => this.getAllLessons()
-              );
-            }}
-          />
-        </Modal>
-       )}
+          <Modal
+            isVisible={this.state.showFilters}
+            style={[
+              styles.centerContent,
+              {
+                margin: 0,
+                height: '100%',
+                width: '100%'
+              }
+            ]}
+            animation={'slideInUp'}
+            animationInTiming={10}
+            animationOutTiming={10}
+            coverScreen={true}
+            hasBackdrop={true}
+          >
+            <Filters
+              hideFilters={() => {
+                this.setState({ showFilters: false });
+              }}
+              filtersAvailable={this.state.filtersAvailable}
+              filters={this.state.filters}
+              filtering={this.state.filtering}
+              type={'See All'}
+              reset={filters => {
+                this.setState(
+                  {
+                    allLessons: [],
+                    filters,
+                    page: 1
+                  },
+                  () => this.getAllLessons()
+                );
+              }}
+              filterVideos={filters => {
+                this.setState(
+                  {
+                    allLessons: [],
+                    outVideos: false,
+                    page: 1,
+                    filters
+                  },
+                  () => this.getAllLessons()
+                );
+              }}
+            />
+          </Modal>
+        )}
         <NavigationBar currentPage={'SEEALL'} />
       </SafeAreaView>
     );

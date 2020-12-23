@@ -88,7 +88,7 @@ class LogOut extends React.Component {
             >
               Are you sure that you want to log out?
             </Text>
-            <View style={{height: 15*factorRatio}}/>
+            <View style={{ height: 15 * factorRatio }} />
             <TouchableOpacity
               onPress={() => {
                 this.logOut();
@@ -107,7 +107,7 @@ class LogOut extends React.Component {
                   color: 'white',
                   fontFamily: 'RobotoCondensed-Bold',
                   fontSize: 14 * factorRatio,
-                  paddingVertical: 12.5*factorRatio
+                  paddingVertical: 12.5 * factorRatio
                 }}
               >
                 LOG OUT
@@ -132,7 +132,7 @@ class LogOut extends React.Component {
                 CANCEL
               </Text>
             </TouchableOpacity>
-            <View style={{height: 10*factorRatio}}/>
+            <View style={{ height: 10 * factorRatio }} />
           </View>
         </View>
       </TouchableWithoutFeedback>

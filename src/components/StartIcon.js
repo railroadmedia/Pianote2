@@ -31,7 +31,7 @@ class StartIcon extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              flexDirection: 'row',
+              flexDirection: 'row'
             }
           ]}
         >

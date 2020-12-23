@@ -83,7 +83,7 @@ class NavigationBar extends React.Component {
           left: 'never',
           right: 'never',
           top: 'never',
-          bottom: (this.props.pad) ? 'never' : 'always'
+          bottom: this.props.pad ? 'never' : 'always'
         }}
         style={{
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground

@@ -30,8 +30,7 @@ class Relevance extends React.Component {
         </View>
         <View
           style={{
-            minHeight:
-              fullHeight * 0.25 + (onTablet ? fullHeight * 0.1 : 0),
+            minHeight: fullHeight * 0.25 + (onTablet ? fullHeight * 0.1 : 0),
             flexDirection: 'row'
           }}
         >

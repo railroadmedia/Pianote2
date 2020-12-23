@@ -44,7 +44,7 @@ class Course extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      showFilters: false, 
+      showFilters: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
       filtersAvailable: null,
@@ -134,7 +134,7 @@ class Course extends React.Component {
   };
 
   getAllCourses = async loadMore => {
-    this.setState({filtering: true})
+    this.setState({ filtering: true });
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -277,7 +277,7 @@ class Course extends React.Component {
             >
               Courses
             </Text>
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
             {this.state.started && (
               <View
                 key={'continueCourses'}
@@ -338,51 +338,51 @@ class Course extends React.Component {
           />
         )}
         {this.state.showFilters && (
-        <Modal
-          isVisible={this.state.showFilters}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
-          animation={'slideInUp'}
-          animationInTiming={10}
-          animationOutTiming={10}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <Filters
-            hideFilters={() => this.setState({ showFilters: false })}
-            filtersAvailable={this.state.filtersAvailable}
-            filters={this.state.filters}
-            filtering={this.state.filtering}
-            type={'Courses'}
-            reset={filters => {
-              this.setState(
-                {
-                  allCourses: [],
-                  filters,
-                  page: 1,
-                },
-                () => this.getAllCourses()
-              );
-            }}
-            filterVideos={filters => {
-              this.setState(
-                {
-                  allCourses: [],
-                  outVideos: false,
-                  page: 1,
-                  filters
-                },
-                () => this.getAllCourses()
-              );
-            }}
-          />
-        </Modal>
+          <Modal
+            isVisible={this.state.showFilters}
+            style={[
+              styles.centerContent,
+              {
+                margin: 0,
+                height: '100%',
+                width: '100%'
+              }
+            ]}
+            animation={'slideInUp'}
+            animationInTiming={10}
+            animationOutTiming={10}
+            coverScreen={true}
+            hasBackdrop={true}
+          >
+            <Filters
+              hideFilters={() => this.setState({ showFilters: false })}
+              filtersAvailable={this.state.filtersAvailable}
+              filters={this.state.filters}
+              filtering={this.state.filtering}
+              type={'Courses'}
+              reset={filters => {
+                this.setState(
+                  {
+                    allCourses: [],
+                    filters,
+                    page: 1
+                  },
+                  () => this.getAllCourses()
+                );
+              }}
+              filterVideos={filters => {
+                this.setState(
+                  {
+                    allCourses: [],
+                    outVideos: false,
+                    page: 1,
+                    filters
+                  },
+                  () => this.getAllCourses()
+                );
+              }}
+            />
+          </Modal>
         )}
         <NavigationBar currentPage={''} />
       </View>

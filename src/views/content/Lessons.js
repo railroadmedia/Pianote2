@@ -210,7 +210,7 @@ class Lessons extends React.Component {
   };
 
   getAllLessons = async () => {
-    this.setState({filtering: true})
+    this.setState({ filtering: true });
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -363,7 +363,7 @@ class Lessons extends React.Component {
       },
       this.getContent
     );
-  };
+  }
 
   orientationListener = o => {
     if (o === 'UNKNOWN') return;
@@ -446,8 +446,8 @@ class Lessons extends React.Component {
                 <View style={{ flex: 0.9 }} />
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <Pianote
-                    height={fullHeight * 0.03*factorRatio}
-                    width={fullWidth * 0.35*factorRatio}
+                    height={fullHeight * 0.03 * factorRatio}
+                    width={fullWidth * 0.35 * factorRatio}
                     fill={colors.pianoteRed}
                   />
                 </View>
@@ -602,51 +602,51 @@ class Lessons extends React.Component {
           />
         </Modal>
         {this.state.showFilters && (
-        <Modal
-          isVisible={this.state.showFilters}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
-          animation={'slideInUp'}
-          animationInTiming={10}
-          animationOutTiming={10}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <Filters
-            hideFilters={() => this.setState({ showFilters: false })}
-            filtersAvailable={this.state.filtersAvailable}
-            filters={this.state.filters}
-            filtering={this.state.filtering}
-            type={'Lessons'}
-            reset={filters => {
-              this.setState(
-                {
-                  allLessons: [],
-                  filters,
-                  page: 1,
-                },
-                () => this.getAllLessons()
-              );
-            }}
-            filterVideos={filters => {
-              this.setState(
-                {
-                  allLessons: [],
-                  outVideos: false,
-                  page: 1,
-                  filters
-                },
-                () => this.getAllLessons()
-              );
-            }}
-          />
-        </Modal>
+          <Modal
+            isVisible={this.state.showFilters}
+            style={[
+              styles.centerContent,
+              {
+                margin: 0,
+                height: '100%',
+                width: '100%'
+              }
+            ]}
+            animation={'slideInUp'}
+            animationInTiming={10}
+            animationOutTiming={10}
+            coverScreen={true}
+            hasBackdrop={true}
+          >
+            <Filters
+              hideFilters={() => this.setState({ showFilters: false })}
+              filtersAvailable={this.state.filtersAvailable}
+              filters={this.state.filters}
+              filtering={this.state.filtering}
+              type={'Lessons'}
+              reset={filters => {
+                this.setState(
+                  {
+                    allLessons: [],
+                    filters,
+                    page: 1
+                  },
+                  () => this.getAllLessons()
+                );
+              }}
+              filterVideos={filters => {
+                this.setState(
+                  {
+                    allLessons: [],
+                    outVideos: false,
+                    page: 1,
+                    filters
+                  },
+                  () => this.getAllLessons()
+                );
+              }}
+            />
+          </Modal>
         )}
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>

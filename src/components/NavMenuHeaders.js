@@ -55,8 +55,8 @@ class NavMenuHeaders extends React.Component {
             justifyContent: 'center',
             paddingTop: isNotch ? 5 * factorVertical : 0,
             paddingBottom: 10 * factorRatio,
-            paddingRight: 10*factorHorizontal,
-            paddingLeft: 5*factorHorizontal,
+            paddingRight: 10 * factorHorizontal,
+            paddingLeft: 5 * factorHorizontal
           }}
         >
           <TouchableOpacity
@@ -75,19 +75,24 @@ class NavMenuHeaders extends React.Component {
                   );
             }}
             style={{
-                                                                                                // TO DO FIX DIMENSIONS ON ANDROID
-              height: Platform.OS == 'ios' ? (onTablet ? fullHeight*0.05 : fullHeight*0.035) : (onTablet ? fullHeight * 0.1 : fullHeight * 0.08),
+              // TO DO FIX DIMENSIONS ON ANDROID
+              height:
+                Platform.OS == 'ios'
+                  ? onTablet
+                    ? fullHeight * 0.05
+                    : fullHeight * 0.035
+                  : onTablet
+                  ? fullHeight * 0.1
+                  : fullHeight * 0.08,
               width: onTablet ? 0.14 * fullWidth : 0.3 * fullWidth,
-              flexDirection: 'row',
+              flexDirection: 'row'
             }}
           >
-            <Pianote 
-              fill={'#fb1b2f'} 
-            />
-            <View style={{flex: 1}}/>
+            <Pianote fill={'#fb1b2f'} />
+            <View style={{ flex: 1 }} />
           </TouchableOpacity>
-          <View style={{width: 5*factorHorizontal}}/>
-          <View style={{flex: 1}}/>
+          <View style={{ width: 5 * factorHorizontal }} />
+          <View style={{ flex: 1 }} />
           <TouchableOpacity
             key={'lessons'}
             style={{
@@ -139,7 +144,7 @@ class NavMenuHeaders extends React.Component {
               />
             </View>
           </TouchableOpacity>
-          <View style={{width: 7.5*factorHorizontal}}/>
+          <View style={{ width: 7.5 * factorHorizontal }} />
           <TouchableOpacity
             key={'packs'}
             onPress={() => {
@@ -165,7 +170,7 @@ class NavMenuHeaders extends React.Component {
               PACKS{' '}
             </Text>
           </TouchableOpacity>
-          <View style={{width: 7.5*factorHorizontal}}/>
+          <View style={{ width: 7.5 * factorHorizontal }} />
           <TouchableOpacity
             key={'mylist'}
             onPress={() => {
@@ -194,7 +199,7 @@ class NavMenuHeaders extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        
+
         <Modal
           key={'navMenu'}
           isVisible={this.state.showModalMenu}

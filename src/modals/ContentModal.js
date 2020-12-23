@@ -12,7 +12,7 @@ import {
   likeContent,
   unlikeContent,
   addToMyList,
-  removeFromMyList,
+  removeFromMyList
 } from 'Pianote2/src/services/UserActions.js';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -25,29 +25,55 @@ class ContentModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: (typeof this.props.data.type !== 'undefined') ? this.props.data.type : '',
-      thumbnail: (typeof this.props.data.thumbnail !== 'undefined') ? this.props.data.thumbnail : '',
-      title: (typeof this.props.data.title !== 'undefined') ? this.props.data.title : '',
-      artist: (typeof this.props.data.artist !== 'undefined') ? this.props.data.artist : '',
-      description: (typeof this.props.data.description !== 'undefined') ? this.props.data.description : '',
-      bundle_count: (typeof this.props.data.bundle_count !== 'undefined') ? this.props.data.bundle_count : 0,
-      lesson_count: (typeof this.props.data.lesson_count !== 'undefined') ? this.props.data.lesson_count : 0,
-      xp: (typeof this.props.data.xp !== 'undefined') ? this.props.data.xp : 0,
-      id: (typeof this.props.data.id !== 'undefined') ? this.props.data.id : 0,
-      isLiked: (typeof this.props.data.isLiked !== 'undefined') ? this.props.data.isLiked : false,
-      like_count: (typeof this.props.data.like_count !== 'undefined') ? this.props.data.like_count : 0,
-      isAddedToList: (typeof this.props.data.isAddedToList !== 'undefined') ? this.props.data.isAddedToList : false,
+      type:
+        typeof this.props.data.type !== 'undefined' ? this.props.data.type : '',
+      thumbnail:
+        typeof this.props.data.thumbnail !== 'undefined'
+          ? this.props.data.thumbnail
+          : '',
+      title:
+        typeof this.props.data.title !== 'undefined'
+          ? this.props.data.title
+          : '',
+      artist:
+        typeof this.props.data.artist !== 'undefined'
+          ? this.props.data.artist
+          : '',
+      description:
+        typeof this.props.data.description !== 'undefined'
+          ? this.props.data.description
+          : '',
+      bundle_count:
+        typeof this.props.data.bundle_count !== 'undefined'
+          ? this.props.data.bundle_count
+          : 0,
+      lesson_count:
+        typeof this.props.data.lesson_count !== 'undefined'
+          ? this.props.data.lesson_count
+          : 0,
+      xp: typeof this.props.data.xp !== 'undefined' ? this.props.data.xp : 0,
+      id: typeof this.props.data.id !== 'undefined' ? this.props.data.id : 0,
+      isLiked:
+        typeof this.props.data.isLiked !== 'undefined'
+          ? this.props.data.isLiked
+          : false,
+      like_count:
+        typeof this.props.data.like_count !== 'undefined'
+          ? this.props.data.like_count
+          : 0,
+      isAddedToList:
+        typeof this.props.data.isAddedToList !== 'undefined'
+          ? this.props.data.isAddedToList
+          : false
     };
   }
 
   componentDidMount = () => {
-    console.log(
-      this.state.isLiked 
-    )
-  }
+    console.log(this.state.isLiked);
+  };
 
   addToMyList = contentID => {
-    if(this.props.data.description !== 'TBD') {
+    if (this.props.data.description !== 'TBD') {
       // change status of content on parent data structure
       this.props.addToMyList(contentID);
       // make added to list on current data structure
@@ -86,11 +112,14 @@ class ContentModal extends React.Component {
   };
 
   like = contentID => {
-    if(this.props.data.description !== 'TBD') {
+    if (this.props.data.description !== 'TBD') {
       // change data on modal
       this.state.isLiked = !this.state.isLiked;
       this.state.like_count = Number(this.state.like_count) + 1;
-      this.setState({ isLiked: this.state.isLiked, like_count: this.state.like_count });
+      this.setState({
+        isLiked: this.state.isLiked,
+        like_count: this.state.like_count
+      });
       // change data on parent data
       // ADD IN
       // like on backend
@@ -102,7 +131,10 @@ class ContentModal extends React.Component {
     // change data on modal
     this.state.isLiked = !this.state.isLiked;
     this.state.like_count = Number(this.state.like_count) - 1;
-    this.setState({ isLiked: this.state.isLiked, like_count: this.state.like_count });
+    this.setState({
+      isLiked: this.state.isLiked,
+      like_count: this.state.like_count
+    });
     // change data on parent data
     // ADD IN
     // unlike on backend
@@ -157,7 +189,12 @@ class ContentModal extends React.Component {
               >
                 <FastImage
                   style={{ flex: 1, borderRadius: 10 }}
-                  source={{uri: this.state.thumbnail == "TBD" ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}` : this.state.thumbnail}}
+                  source={{
+                    uri:
+                      this.state.thumbnail == 'TBD'
+                        ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,e_grayscale/${fallbackThumb}`
+                        : this.state.thumbnail
+                  }}
                   resizeMode={FastImage.resizeMode.cover}
                 />
               </View>
@@ -203,7 +240,7 @@ class ContentModal extends React.Component {
                 }
               ]}
             >
-              {(this.state.bundle_count > 1 || this.state.lesson_count > 1 ) && (
+              {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
                 <View
                   style={[
                     styles.centerContent,
@@ -221,7 +258,9 @@ class ContentModal extends React.Component {
                       marginTop: 10 * factorVertical
                     }}
                   >
-                    {this.state.lesson_count > 1 ? this.state.lesson_count : this.state.bundle_count}
+                    {this.state.lesson_count > 1
+                      ? this.state.lesson_count
+                      : this.state.bundle_count}
                   </Text>
                   <Text
                     style={{
@@ -274,10 +313,15 @@ class ContentModal extends React.Component {
               <TouchableOpacity
                 style={{ flex: 1, alignItems: 'center' }}
                 onPress={() => {
-                  this.state.isLiked ? this.unlike(this.state.id) : this.like(this.state.id);
+                  this.state.isLiked
+                    ? this.unlike(this.state.id)
+                    : this.like(this.state.id);
                 }}
               >
-                <AntIcon name={this.state.isLiked ? 'like1' : 'like2'} size={25} />
+                <AntIcon
+                  name={this.state.isLiked ? 'like1' : 'like2'}
+                  size={25}
+                />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
@@ -292,7 +336,9 @@ class ContentModal extends React.Component {
               <TouchableOpacity
                 style={{ flex: 1, alignItems: 'center' }}
                 onPress={() => {
-                  (this.state.isAddedToList) ? this.removeFromMyList(this.state.id) : this.addToMyList(this.state.id)
+                  this.state.isAddedToList
+                    ? this.removeFromMyList(this.state.id)
+                    : this.addToMyList(this.state.id);
                 }}
               >
                 <AntIcon

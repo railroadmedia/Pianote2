@@ -78,7 +78,7 @@ class MyList extends React.Component {
   }
 
   getMyList = async loadMore => {
-    this.setState({filtering: true})
+    this.setState({ filtering: true });
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getMyListContent(
       this.state.page,
@@ -192,7 +192,7 @@ class MyList extends React.Component {
     this.setState({ refreshing: true, page: 1, outVideos: false }, () =>
       this.getMyList()
     );
-  }
+  };
 
   render() {
     return (
@@ -334,51 +334,51 @@ class MyList extends React.Component {
           />
         </ScrollView>
         {this.state.showFilters && (
-        <Modal
-          isVisible={this.state.showFilters}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
-          animation={'slideInUp'}
-          animationInTiming={10}
-          animationOutTiming={10}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <Filters
-            hideFilters={() => this.setState({ showFilters: false })}
-            filtersAvailable={this.state.filtersAvailable}
-            filters={this.state.filters}
-            filtering={this.state.filtering}
-            type={'My List'}
-            reset={filters => {
-              this.setState(
-                {
-                  allLessons: [],
-                  filters,
-                  page: 1,
-                },
-                () => this.getMyList()
-              );
-            }}
-            filterVideos={filters => {
-              this.setState(
-                {
-                  allLessons: [],
-                  outVideos: false,
-                  page: 1,
-                  filters
-                },
-                () => this.getMyList()
-              );
-            }}
-          />
-        </Modal>
+          <Modal
+            isVisible={this.state.showFilters}
+            style={[
+              styles.centerContent,
+              {
+                margin: 0,
+                height: '100%',
+                width: '100%'
+              }
+            ]}
+            animation={'slideInUp'}
+            animationInTiming={10}
+            animationOutTiming={10}
+            coverScreen={true}
+            hasBackdrop={true}
+          >
+            <Filters
+              hideFilters={() => this.setState({ showFilters: false })}
+              filtersAvailable={this.state.filtersAvailable}
+              filters={this.state.filters}
+              filtering={this.state.filtering}
+              type={'My List'}
+              reset={filters => {
+                this.setState(
+                  {
+                    allLessons: [],
+                    filters,
+                    page: 1
+                  },
+                  () => this.getMyList()
+                );
+              }}
+              filterVideos={filters => {
+                this.setState(
+                  {
+                    allLessons: [],
+                    outVideos: false,
+                    page: 1,
+                    filters
+                  },
+                  () => this.getMyList()
+                );
+              }}
+            />
+          </Modal>
         )}
         <NavigationBar currentPage={'MyList'} />
       </View>
