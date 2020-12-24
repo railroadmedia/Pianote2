@@ -250,7 +250,7 @@ export default class LoginCredentials extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: onTablet ? '30%' : '50%'
+                      width: onTablet ? '50%' : '50%'
                     }}
                   >
                     The Ultimate Online
@@ -262,7 +262,7 @@ export default class LoginCredentials extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: `${(25 * (onTablet ? 30 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
+                      width: `${(25 * (onTablet ? 50 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
                     }}
                   >
                     Piano Lessons Experience.
