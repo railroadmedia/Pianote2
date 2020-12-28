@@ -234,7 +234,6 @@ export default class SinglePack extends React.Component {
                   position: 'absolute',
                   left: 7.5 * factorHorizontal,
                   top: 10 * factorVertical,
-                  backgroundColor: 'black',
                   zIndex: 4
                 }
               ]}
