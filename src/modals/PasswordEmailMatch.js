@@ -48,6 +48,7 @@ class PasswordEmailMatch extends React.Component {
               margin: 20 * factorRatio
             }}
           >
+            <View style={{height: 10*factorVertical}}/>
             <Text
               numberOfLines={2}
               style={{
@@ -61,7 +62,6 @@ class PasswordEmailMatch extends React.Component {
             >
               {this.props.errorMessage}
             </Text>
-
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -73,7 +73,6 @@ class PasswordEmailMatch extends React.Component {
             >
               Please try again.
             </Text>
-
             <TouchableOpacity
               onPress={() => {
                 this.props.hidePasswordEmailMatch();
@@ -95,6 +94,7 @@ class PasswordEmailMatch extends React.Component {
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
+            <View style={{height: 10*factorVertical}}/>
           </View>
         </View>
       </TouchableWithoutFeedback>

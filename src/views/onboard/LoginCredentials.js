@@ -476,7 +476,7 @@ export default class LoginCredentials extends React.Component {
           animationInTiming={250}
           animationOutTiming={250}
           coverScreen={true}
-          hasBackdrop={false}
+          hasBackdrop={true}
         >
           <PasswordEmailMatch
             errorMessage={this.state.loginErrorMessage}
