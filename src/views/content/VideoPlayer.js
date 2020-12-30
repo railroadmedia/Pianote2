@@ -1108,7 +1108,6 @@ export default class VideoPlayer extends React.Component {
                     key={'icons'}
                     style={{
                       paddingHorizontal: 15,
-                      backgroundColor: 'green'
                     }}
                   >
                     <View
@@ -1130,6 +1129,7 @@ export default class VideoPlayer extends React.Component {
                           size={27.5 * factorRatio}
                           color={colors.pianoteRed}
                         />
+                        <View style={{flex: 1}}/>
                         <Text
                           style={{
                             textAlign: 'center',
@@ -1148,9 +1148,10 @@ export default class VideoPlayer extends React.Component {
                       >
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
-                          size={27.5 * factorRatio}
+                          size={28.5 * factorRatio}
                           color={colors.pianoteRed}
                         />
+                        <View style={{flex: 1}}/>
                         <Text
                           style={{
                             textAlign: 'center',
@@ -1177,6 +1178,7 @@ export default class VideoPlayer extends React.Component {
                             width={27.5 * factorRatio}
                             fill={colors.pianoteRed}
                           />
+                          <View style={{flex: 1}}/>
                           <Text
                             style={{
                               textAlign: 'center',
@@ -1239,9 +1241,10 @@ export default class VideoPlayer extends React.Component {
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
-                          size={27.5 * factorRatio}
+                          size={25 * factorRatio}
                           color={colors.pianoteRed}
                         />
+                        <View style={{flex: 1}}/>
                         <Text
                           style={{
                             textAlign: 'center',
