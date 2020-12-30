@@ -539,7 +539,7 @@ export default class VideoPlayer extends React.Component {
           </Text>
           <View style={{ paddingVertical: 15 }}>
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ flexDirection: 'row', marginRight: 15 }}>
+              <View style={{ flexDirection: 'row', marginRight: 15,}}>
                 <TouchableOpacity
                   style={{ marginRight: 10 }}
                   onPress={() => this.likeComment(item.id)}
@@ -1107,7 +1107,8 @@ export default class VideoPlayer extends React.Component {
                   <View
                     key={'icons'}
                     style={{
-                      paddingHorizontal: 15
+                      paddingHorizontal: 15,
+                      backgroundColor: 'green'
                     }}
                   >
                     <View
@@ -1661,7 +1662,7 @@ export default class VideoPlayer extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: 14 * factorRatio,
+                    fontSize: 15 * factorRatio,
                     paddingVertical: 10
                   }}
                 >
