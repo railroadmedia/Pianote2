@@ -62,25 +62,24 @@ class RestartCourse extends React.Component {
               elevation: 2
             }}
           >
+            <View style={{height: 10*factorVertical}}/>
             <Text
               style={{
-                fontWeight: 'bold',
-                fontSize: 20 * factorRatio,
-                marginTop: 10 * factorRatio,
+                fontFamily: 'OpenSans-ExtraBold',
+                fontSize: 18 * factorRatio,
                 textAlign: 'center'
               }}
             >
               Restart{' '}
               {type == 'method' ? 'method' : 'this ' + this.changeType(type)}?
             </Text>
-
+            <View style={{height: 10*factorVertical}}/>
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
                 fontSize: 16 * factorRatio,
                 textAlign: 'center',
                 paddingHorizontal: 20,
-                marginTop: 10 * factorRatio
               }}
             >
               Take {type == 'method' ? 'method' : 'this ' + type} again as a

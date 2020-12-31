@@ -79,21 +79,20 @@ class LessonComplete extends React.Component {
                 color={'#fb1b2f'}
               />
             </View>
+            <View style={{height: 10*factorVertical}}/>
             <Text
               key={'lessonComplete!'}
               style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 20 * factorRatio,
-                fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
+                fontFamily: 'OpenSans-ExtraBold',
+                fontSize: 18 * factorRatio,
                 textAlign: 'center',
                 paddingHorizontal: 20,
-                marginTop: 10
               }}
             >
               {this.changeType(type)}
               {'\n'}Complete
             </Text>
-
+            <View style={{height: 10*factorVertical}}/>
             <View
               key={'image1'}
               style={[
