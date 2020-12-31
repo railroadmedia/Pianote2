@@ -7,6 +7,9 @@ var React = require('react-native');
 
 const fullWidth = Dimensions.get('window').width;
 const fullHeight = Dimensions.get('window').height;
+const factorHorizontal = Dimensions.get('window').width / 375;
+const factorVertical = Dimensions.get('window').height / 812;
+const factorRatio = (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2;
 
 var { StyleSheet } = React;
 
@@ -14,6 +17,26 @@ module.exports = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch'
+  },
+  modalHeaderText: {
+    fontFamily: 'OpenSans-ExtraBold',
+    textAlign: 'center',
+    fontSize: 18 * factorRatio,
+  }, 
+  modalCancelButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: 12 * factorRatio,
+  }, 
+  modalButtonText: {
+    textAlign: 'center',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: 15 * factorRatio,
+  }, 
+  modalBodyText: {
+    textAlign: 'center',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 15 * factorRatio,
   },
   centerContent: {
     justifyContent: 'center',

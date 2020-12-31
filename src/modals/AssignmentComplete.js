@@ -37,7 +37,7 @@ class AssignmentComplete extends React.Component {
           >
             <View
               key={'trophy'}
-              style={[styles.centerContent, { padding: 5 * factorRatio }]}
+              style={[styles.centerContent,]}
             >
               <IonIcon
                 name={'ios-trophy'}
@@ -49,48 +49,25 @@ class AssignmentComplete extends React.Component {
               key={'complete'}
               style={[styles.centerContent, { padding: 5 * factorRatio }]}
             >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  fontSize: 25 * factorRatio,
-                  textAlign: 'center'
-                }}
-              >
+              <Text style={[styles.modalHeaderText]}>
                 Assignment{'\n'}Complete
               </Text>
             </View>
-            <View style={{ height: 5 * factorRatio }} />
+            <View style={{height: 10*factorVertical}}/>
             <View key={'lessonTitle'}>
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  textAlign: 'center'
-                }}
-              >
+              <Text style={[styles.modalBodyText, {marginHorizontal: 20*factorHorizontal,}]}>
                 Congratulations! You completed
               </Text>
-              <View style={{ height: 5 * factorRatio }} />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  fontSize: 16 * factorRatio,
-                  textAlign: 'center'
-                }}
-              >
+              <Text style={[styles.modalBodyText, {marginHorizontal: 20*factorHorizontal, fontWeight: 'bold'}]}>
                 {this.props.title}
               </Text>
-              <View style={{ height: 5 * factorRatio }} />
+              <View style={{height: 15*factorVertical}}/>
               <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  fontSize: 16 * factorRatio,
-                  textAlign: 'center',
-                  color: '#fb1b2f'
-                }}
+                style={[styles.modalButtonText, {color: '#fb1b2f'}]}
               >
                 YOU EARNED {this.props.xp} XP!
               </Text>
+              <View style={{height: 10*factorVertical}}/>
             </View>
           </View>
         </TouchableOpacity>

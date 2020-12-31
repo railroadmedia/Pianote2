@@ -65,30 +65,23 @@ class LogOut extends React.Component {
             }}
           >
             <Text
-              style={{
-                fontFamily: 'OpenSans-ExtraBold',
-                fontSize: 19 * factorRatio,
+              style={[styles.modalHeaderText, {
                 marginTop: 25 * factorRatio,
                 paddingHorizontal: 40,
-                alignSelf: 'center'
-              }}
+              }]}
             >
               Log Out
             </Text>
 
             <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 16 * factorRatio,
-                textAlign: 'center',
-                alignSelf: 'center',
+              style={[styles.modalBodyText, {
                 paddingHorizontal: 40,
                 marginVertical: 10 * factorRatio
-              }}
+              }]}
             >
               Are you sure that you want to log out?
             </Text>
-            <View style={{ height: 15 * factorRatio }} />
+            <View style={{ height: 10 * factorRatio }} />
             <TouchableOpacity
               onPress={() => {
                 this.logOut();
@@ -102,14 +95,7 @@ class LogOut extends React.Component {
                 }
               ]}
             >
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 14 * factorRatio,
-                  paddingVertical: 12.5 * factorRatio
-                }}
-              >
+              <Text style={[styles.modalButtonText, {color: 'white',paddingVertical: 12.5 * factorRatio}]}>
                 LOG OUT
               </Text>
             </TouchableOpacity>
@@ -121,14 +107,7 @@ class LogOut extends React.Component {
                 { paddingHorizontal: 40, marginVertical: 15 * factorRatio }
               ]}
             >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 14 * factorRatio,
-                  color: 'grey',
-                  fontWeight: '700'
-                }}
-              >
+              <Text style={[styles.modalCancelButtonText, {color: 'grey'}]}>
                 CANCEL
               </Text>
             </TouchableOpacity>

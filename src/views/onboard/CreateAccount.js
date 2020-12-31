@@ -93,14 +93,7 @@ export default class CreateAccount extends React.Component {
               }}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 24 * factorRatio,
-                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                  color: 'white'
-                }}
-              >
+              <Text style={[styles.modalHeaderText, {color: 'white', fontSize: 24*factorRatio}]}>
                 Create Account
               </Text>
               <View />
@@ -154,9 +147,10 @@ export default class CreateAccount extends React.Component {
                     }
                     onChangeText={email => this.setState({ email })}
                     style={{
-                      padding: 15,
-                      marginVertical: 20,
+                      padding: 15*factorRatio,
+                      marginVertical: 15*factorRatio,
                       color: 'black',
+                      fontSize: 15*factorRatio,
                       borderRadius: 100,
                       marginHorizontal: 15,
                       backgroundColor: 'white',
@@ -183,11 +177,10 @@ export default class CreateAccount extends React.Component {
                     ]}
                   >
                     <Text
-                      style={{
+                      style={[styles.modalButtonText, {
                         padding: 15,
-                        fontFamily: 'RobotoCondensed-Bold',
                         color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
-                      }}
+                      }]}
                     >
                       NEXT
                     </Text>
@@ -206,7 +199,7 @@ export default class CreateAccount extends React.Component {
                   height: '100%',
                   width: '100%'
                 }
-              ]}
+              ]}d
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}

@@ -49,26 +49,19 @@ class ProfileImage extends React.Component {
             }}
           >
             <Text
-              style={{
-                fontSize: 22 * factorRatio,
-                fontWeight: 'bold',
-                textAlign: 'center',
-                alignSelf: 'center',
+              style={[styles.modalHeaderText, {
                 paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }}
+                marginTop: 20 * factorRatio
+              }]}
             >
-              Profile Image is too large.
+              Profile image is too large.
             </Text>
 
             <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                textAlign: 'center',
+              style={[styles.modalBodyText, {
                 paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }}
+                marginTop: 20 * factorRatio
+              }]}
             >
               Please try again.
             </Text>
@@ -79,17 +72,13 @@ class ProfileImage extends React.Component {
               }}
               style={{
                 paddingHorizontal: 20,
-                marginVertical: 20 * factorRatio
+                marginVertical: 17.5 * factorRatio
               }}
             >
               <Text
-                style={{
-                  fontSize: 20 * factorRatio,
-                  fontWeight: 'bold',
+                style={[styles.modalButtonText, {
                   color: '#fb1b2f',
-                  textAlign: 'center',
-                  alignSelf: 'center'
-                }}
+                }]}
               >
                 TRY AGAIN
               </Text>

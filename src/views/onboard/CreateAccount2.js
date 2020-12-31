@@ -132,14 +132,7 @@ export default class CreateAccount extends React.Component {
               }}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 24 * factorRatio,
-                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                  color: 'white'
-                }}
-              >
+              <Text style={[styles.modalHeaderText, {color: 'white', fontSize: 24*factorRatio}]}>
                 Create Account
               </Text>
               <View />
@@ -196,9 +189,12 @@ export default class CreateAccount extends React.Component {
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
                     style={{
-                      padding: 15,
+                      marginVertical: 15*factorRatio,
                       color: 'black',
-                      marginRight: 45,
+                      fontSize: 15*factorRatio,
+                      borderRadius: 100,
+                      marginHorizontal: 15,
+                      backgroundColor: 'white',
                       fontFamily: 'OpenSans-Regular'
                     }}
                   />
@@ -283,9 +279,12 @@ export default class CreateAccount extends React.Component {
                       this.setState({ confirmPassword })
                     }
                     style={{
-                      padding: 15,
+                      marginVertical: 15*factorRatio,
                       color: 'black',
-                      marginRight: 45,
+                      fontSize: 15*factorRatio,
+                      borderRadius: 100,
+                      marginHorizontal: 15,
+                      backgroundColor: 'white',
                       fontFamily: 'OpenSans-Regular'
                     }}
                   />
@@ -364,17 +363,15 @@ export default class CreateAccount extends React.Component {
                   ]}
                 >
                   <Text
-                    style={{
+                    style={[styles.modalButtonText, {
                       padding: 15,
-                      fontSize: 15 * factorRatio,
-                      fontFamily: 'RobotoCondensed-Bold',
                       color:
                         this.state.password.length > 0 &&
                         this.state.confirmPassword.length > 0 &&
                         this.state.password == this.state.confirmPassword
                           ? 'white'
                           : '#fb1b2f'
-                    }}
+                    }]}
                   >
                     NEXT
                   </Text>

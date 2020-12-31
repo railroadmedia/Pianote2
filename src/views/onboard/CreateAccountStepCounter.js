@@ -2,12 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Animated,
-  Platform,
-  ScrollView,
   StyleSheet
 } from 'react-native';
 
@@ -25,13 +19,13 @@ export default class CreateAccountStepCounter extends React.Component {
               this.props.step == 1 ? 40 * factorRatio : 0,
             backgroundColor: 'black',
             flex: 1,
-            paddingVertical: 5
+            paddingVertical: 7*factorRatio,
           }}
         >
-          <Text style={[styles.text, { fontSize: 15 * factorRatio }]}>
+          <Text style={[styles.text, { fontSize: 10 * factorRatio }]}>
             Step 1:
           </Text>
-          <Text style={[styles.boldText, { fontSize: 15 * factorRatio }]}>
+          <Text style={[styles.boldText, { fontSize: 12 * factorRatio }]}>
             EMAIL ADDRESS
           </Text>
         </View>
@@ -41,7 +35,7 @@ export default class CreateAccountStepCounter extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              paddingVertical: 5,
+              paddingVertical: 7*factorRatio,
               borderTopRightRadius: this.props.step == 2 ? 40 * factorRatio : 0,
               borderBottomRightRadius:
                 this.props.step == 2 ? 40 * factorRatio : 0,
@@ -49,10 +43,10 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text style={[styles.text, { fontSize: 15 * factorRatio }]}>
+          <Text style={[styles.text, { fontSize: 10 * factorRatio }]}>
             Step 2:
           </Text>
-          <Text style={[styles.boldText, { fontSize: 15 * factorRatio }]}>
+          <Text style={[styles.boldText, { fontSize: 12 * factorRatio }]}>
             SET A PASSWORD
           </Text>
         </View>
@@ -62,7 +56,7 @@ export default class CreateAccountStepCounter extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              paddingVertical: 5,
+              paddingVertical: 7*factorRatio,
               borderTopRightRadius: this.props.step == 3 ? 40 * factorRatio : 0,
               borderBottomRightRadius:
                 this.props.step == 3 ? 40 * factorRatio : 0,
@@ -70,10 +64,10 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text style={[styles.text, { fontSize: 15 * factorRatio }]}>
+          <Text style={[styles.text, { fontSize: 10 * factorRatio }]}>
             Step 3:
           </Text>
-          <Text style={[styles.boldText, { fontSize: 15 * factorRatio }]}>
+          <Text style={[styles.boldText, { fontSize: 12 * factorRatio }]}>
             CHOOSE A PLAN
           </Text>
         </View>

@@ -1924,13 +1924,11 @@ export default class VideoPlayer extends React.Component {
               }}
             >
               <Text
-                style={{
+                style={[styles.modalButtonText, {
                   padding: 15,
                   fontSize: 15,
                   color: '#ffffff',
-                  textAlign: 'center',
-                  fontFamily: 'OpenSans-Bold'
-                }}
+                }]}
               >
                 RELOAD LESSON
               </Text>

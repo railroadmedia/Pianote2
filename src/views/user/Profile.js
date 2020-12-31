@@ -364,8 +364,8 @@ export default class Profile extends React.Component {
                           position: 'absolute',
                           zIndex: 10,
                           elevation: 10,
-                          top: -12.5 * factorRatio,
-                          right: -12.5 * factorRatio,
+                          top: -15 * factorRatio,
+                          right: -15 * factorRatio,
                           height: 35 * factorRatio,
                           width: 35 * factorRatio,
                           borderRadius: 100,
@@ -477,7 +477,7 @@ export default class Profile extends React.Component {
                   }}
                 >
                   <TouchableOpacity
-                    style={{ marginHorizontal: 25 * factorRatio }}
+                    style={{ marginHorizontal: 15 * factorHorizontal }}
                     onPress={() => {
                       this.setState({
                         showXpRank: true
@@ -505,8 +505,9 @@ export default class Profile extends React.Component {
                       {this.state.xp}
                     </Text>
                   </TouchableOpacity>
+                  <View style={{width: 15*factorHorizontal}}/>
                   <TouchableOpacity
-                    style={{ marginHorizontal: 25 * factorRatio }}
+                    style={{ marginHorizontal: 15 * factorHorizontal }}
                     onPress={() => {
                       this.setState({
                         showXpRank: true
@@ -620,8 +621,8 @@ export default class Profile extends React.Component {
                   <View>
                     <View
                       style={{
-                        height: fullWidth * 0.175,
-                        width: fullWidth * 0.175,
+                        height: fullWidth * 0.175 * factorRatio,
+                        width: fullWidth * 0.175 * factorRatio,
                         borderRadius: 150 * factorRatio,
                         backgroundColor: '#ececec'
                       }}
@@ -634,8 +635,8 @@ export default class Profile extends React.Component {
                               position: 'absolute',
                               bottom: 0,
                               right: 0,
-                              height: fullWidth * 0.075,
-                              width: fullWidth * 0.075,
+                              height: fullWidth * 0.075 * factorRatio,
+                              width: fullWidth * 0.075 * factorRatio,
                               backgroundColor: 'red',
                               borderRadius: 100 * factorRatio,
                               zIndex: 5
@@ -643,7 +644,7 @@ export default class Profile extends React.Component {
                           ]}
                         >
                           <FontAwesome
-                            size={fullWidth * 0.045}
+                            size={fullWidth * 0.045 * factorRatio}
                             color={'white'}
                             name={'video-camera'}
                           />

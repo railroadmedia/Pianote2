@@ -5,7 +5,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import X from 'Pianote2/src/assets/img/svgs/X.svg';
-import { BlurView } from '@react-native-community/blur';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 

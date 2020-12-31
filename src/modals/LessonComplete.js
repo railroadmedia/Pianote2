@@ -53,7 +53,7 @@ class LessonComplete extends React.Component {
         style={{
           flex: 1,
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <View
@@ -80,19 +80,11 @@ class LessonComplete extends React.Component {
               />
             </View>
             <View style={{height: 10*factorVertical}}/>
-            <Text
-              key={'lessonComplete!'}
-              style={{
-                fontFamily: 'OpenSans-ExtraBold',
-                fontSize: 18 * factorRatio,
-                textAlign: 'center',
-                paddingHorizontal: 20,
-              }}
-            >
+            <Text style={[styles.modalHeaderText]}>
               {this.changeType(type)}
               {'\n'}Complete
             </Text>
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{height: 20*factorVertical}}/>
             <View
               key={'image1'}
               style={[
@@ -144,67 +136,39 @@ class LessonComplete extends React.Component {
             </View>
 
             <View key={'lessonTitle'}>
-              <Text
-                key={'congrats'}
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 15 * factorRatio,
-                  fontWeight: '300',
-                  textAlign: 'center',
-                  paddingHorizontal: 20,
-                  marginTop: 10
-                }}
-              >
+              <Text style={[styles.modalBodyText, {marginHorizontal: 20*factorHorizontal, marginTop: 10}]}>
                 Congratulations! You completed
               </Text>
               <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 15 * factorRatio,
-                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                  textAlign: 'center',
-                  paddingHorizontal: 20
-                }}
+                style={[styles.modalBodyText, {
+                  fontWeight:'bold',
+                  marginHorizontal: 20*factorHorizontal,
+                }]}
               >
                 {completedLessonTitle}
               </Text>
-
+              <View style={{height: 10 * factorVertical}}/>
               <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 15 * factorRatio,
-                  fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
-                  textAlign: 'center',
+                style={[styles.modalBodyText, {
+                  fontWeight:  'bold',
                   color: '#fb1b2f',
-                  marginTop: 5
-                }}
+                }]}
               >
                 YOU EARNED {completedLessonXp} XP!
               </Text>
             </View>
-            <View
-              key={'line'}
-              style={{
-                height: 20 * factorVertical,
-                borderBottomWidth: 1,
-                borderBottomColor: '#ececec'
-              }}
-            />
+            <View style={{height: 5 * factorVertical}}/>
 
             <Text
               key={'upNext'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 16 * factorRatio,
+              style={[styles.modalBodyText, {
                 color: '#a8a8a8',
-                textAlign: 'center',
                 paddingHorizontal: 20,
-                marginTop: 10
-              }}
+              }]}
             >
-              Up next:
+              up next:
             </Text>
-
+            <View style={{height: 10 * factorVertical}}/>
             <TouchableOpacity
               key={'image2'}
               onPress={onGoToNext}
@@ -236,14 +200,10 @@ class LessonComplete extends React.Component {
             </TouchableOpacity>
 
             <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 15 * factorRatio,
-                fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-                textAlign: 'center',
+              style={[styles.modalHeaderText, {
                 paddingHorizontal: 20,
                 marginTop: 10
-              }}
+              }]}
             >
               {nextLesson.getField('title')}
             </Text>

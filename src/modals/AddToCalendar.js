@@ -52,28 +52,11 @@ class AddToCalendar extends React.Component {
             }}
           >
             <View style={{height: 12.5 * factorVertical}} />
-            <Text
-              key={'emailTaken'}
-              style={{
-                fontFamily: 'OpenSans-ExtraBold',
-                fontSize: 18 * factorRatio,
-                textAlign: 'center',
-                alignSelf: 'center',
-                paddingHorizontal: 40,
-              }}
-            >
+            <Text style={[styles.modalHeaderText, {paddingHorizontal: 40}]}>
               ADD TO CALENDAR
             </Text>
             <View style={{height: 7.5 * factorVertical}} />
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 15 * factorRatio,
-                textAlign: 'center',
-                alignSelf: 'center',
-                paddingHorizontal: 40,
-              }}
-            >
+            <Text style={[styles.modalBodyText, {paddingHorizontal: 40}]}>
               Add this lesson to your calendar to be notified when it's
               available
             </Text>
@@ -99,15 +82,7 @@ class AddToCalendar extends React.Component {
                 marginHorizontal: 40,
               }}
             >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  fontSize: 15 * factorRatio,
-                  textAlign: 'center',
-                  color: 'white',
-                  paddingVertical: 10
-                }}
-              >
+              <Text style={[styles.modalButtonText, {color: 'white', paddingVertical: 10}]}>
                 CONFIRM ADDITION
               </Text>
             </TouchableOpacity>

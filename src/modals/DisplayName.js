@@ -45,31 +45,23 @@ class DisplayName extends React.Component {
             style={{
               backgroundColor: 'white',
               borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio
+              margin: 20 * factorRatio,
             }}
           >
             <Text
-              style={{
-                fontSize: 22 * factorRatio,
-                fontWeight: 'bold',
-                textAlign: 'center',
-                alignSelf: 'center',
+              style={[styles.modalHeaderText, {
                 paddingHorizontal: 40,
                 marginTop: 10 * factorRatio
-              }}
+              }]}
             >
               This display name {'\n'} is already in use.
             </Text>
 
             <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 16 * factorRatio,
-                textAlign: 'center',
-                alignSelf: 'center',
+              style={[styles.modalBodyText, {
                 paddingHorizontal: 20,
                 marginTop: 10 * factorRatio
-              }}
+              }]}
             >
               Please try again.
             </Text>
@@ -84,12 +76,9 @@ class DisplayName extends React.Component {
               }}
             >
               <Text
-                style={{
-                  fontSize: 17 * factorRatio,
-                  fontWeight: 'bold',
+                style={[styles.modalButtonText, {
                   color: '#fb1b2f',
-                  textAlign: 'center'
-                }}
+                }]}
               >
                 TRY AGAIN
               </Text>

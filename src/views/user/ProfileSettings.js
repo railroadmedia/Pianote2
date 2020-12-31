@@ -469,12 +469,14 @@ export default class ProfileSettings extends React.Component {
 
             <TouchableOpacity
               onPress={() => this.chooseImage()}
-              style={{
+              style={[styles.centerContent, {
                 alignSelf: 'center',
+                height: 100 * factorRatio,
+                width: 100 * factorRatio,
                 borderRadius: 200 * factorRatio,
                 borderColor: colors.secondBackground,
                 borderWidth: 2 * factorRatio
-              }}
+              }]}
             >
               <IonIcon
                 size={50 * factorRatio}

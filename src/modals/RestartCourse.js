@@ -62,27 +62,20 @@ class RestartCourse extends React.Component {
               elevation: 2
             }}
           >
-            <View style={{height: 10*factorVertical}}/>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-ExtraBold',
-                fontSize: 18 * factorRatio,
-                textAlign: 'center'
-              }}
-            >
+            <View style={{height: 15*factorRatio}}/>
+            <Text style={styles.modalHeaderText}>
               Restart{' '}
               {type == 'method' ? 'method' : 'this ' + this.changeType(type)}?
             </Text>
             <View style={{height: 10*factorVertical}}/>
             <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 16 * factorRatio,
+              style={[ 
+                styles.modalBodyText, {
                 textAlign: 'center',
                 paddingHorizontal: 20,
-              }}
+              }]}
             >
-              Take {type == 'method' ? 'method' : 'this ' + type} again as a
+              Take {type == 'method' ? 'method' : 'this ' + this.changeType(type)}again as a
               refresher, or just to make sure you've got the concepts nailed!
               This will remove the XP you've earned.
             </Text>
@@ -97,37 +90,24 @@ class RestartCourse extends React.Component {
                 alignSelf: 'center'
               }}
             >
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 14 * factorRatio,
-                  textAlign: 'center',
-                  padding: 15
-                }}
-              >
+              <Text style={[styles.modalButtonText, {color: 'white', padding: 12.5*factorVertical}]}>
                 RESTART {this.changeType(type).toUpperCase()}
               </Text>
             </TouchableOpacity>
-
+            <View style={{height: 10*factorVertical}}/>
             <TouchableOpacity
               onPress={() => this.props.hideRestartCourse()}
               style={{
                 paddingHorizontal: 20,
-                marginVertical: 10 * factorRatio
               }}
             >
               <Text
-                style={{
-                  fontSize: 14 * factorRatio,
-                  fontFamily: 'RobotoCondensed-Bold',
-                  color: 'grey',
-                  textAlign: 'center'
-                }}
+                style={[styles.modalButtonText, {color: 'grey',}]}
               >
                 CANCEL
               </Text>
             </TouchableOpacity>
+            <View style={{height: 10*factorRatio}}/>
           </View>
         </View>
       </TouchableWithoutFeedback>

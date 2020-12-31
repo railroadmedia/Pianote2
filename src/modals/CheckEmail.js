@@ -47,30 +47,23 @@ class CheckEmail extends React.Component {
               margin: 20 * factorRatio
             }}
           >
+            <View style={{height: 10 * factorRatio}}/>
             <Text
-              style={{
-                fontSize: 22 * factorRatio,
-                fontWeight: 'bold',
-                textAlign: 'center',
+              style={[styles.modalHeaderText, {
                 paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }}
+              }]}
             >
               This email is already {'\n'} connected to an account.
             </Text>
-
+            <View style={{height: 10 * factorRatio}}/>
             <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 16 * factorRatio,
-                textAlign: 'center',
+              style={[styles.modalBodyText, {
                 paddingHorizontal: 40,
-                marginVertical: 10 * factorRatio
-              }}
+              }]}
             >
               Do you want to log in instead?
             </Text>
-
+            <View style={{height: 15 * factorRatio}}/>
             <TouchableOpacity
               onPress={() => {
                 this.props.navigation.navigate('LOGINCREDENTIALS');
@@ -83,19 +76,15 @@ class CheckEmail extends React.Component {
               }}
             >
               <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 17 * factorRatio,
-                  fontWeight: '700',
-                  textAlign: 'center',
+                style={[styles.modalButtonText, {
                   color: 'white',
                   paddingVertical: 10
-                }}
+                }]}
               >
                 LOG IN
               </Text>
             </TouchableOpacity>
-
+            <View style={{height: 5 * factorRatio}}/>
             <TouchableOpacity
               onPress={() => {
                 this.props.hideCheckEmail();
@@ -106,17 +95,14 @@ class CheckEmail extends React.Component {
               }}
             >
               <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 17 * factorRatio,
-                  fontWeight: '700',
+                style={[styles.modalCancelButtonText, {
                   color: '#fb1b2f',
-                  textAlign: 'center'
-                }}
+                }]}
               >
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
+            <View style={{height: 5 * factorRatio}}/>
           </View>
         </View>
       </TouchableWithoutFeedback>
