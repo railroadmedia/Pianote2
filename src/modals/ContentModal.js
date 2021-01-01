@@ -223,6 +223,7 @@ class ContentModal extends React.Component {
             </Text>
 
             <Text
+              numberOfLines={10}
               style={{
                 fontFamily: 'OpenSans-Regular',
                 fontSize: 14 * factorRatio,
@@ -308,7 +309,6 @@ class ContentModal extends React.Component {
                 </Text>
               </View>
             </View>
-            <View style={{ height: 10 * factorVertical }} />
             <View key={'buttons'} style={{ flexDirection: 'row', padding: 20 }}>
               <TouchableOpacity
                 style={{ flex: 1, alignItems: 'center' }}
