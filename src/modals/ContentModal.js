@@ -309,7 +309,7 @@ class ContentModal extends React.Component {
                 </Text>
               </View>
             </View>
-            <View key={'buttons'} style={{ flexDirection: 'row', padding: 20 }}>
+            <View key={'buttons'} style={{ flexDirection: 'row', padding: 20,}}>
               <TouchableOpacity
                 style={{ flex: 1, alignItems: 'center' }}
                 onPress={() => {
@@ -320,8 +320,9 @@ class ContentModal extends React.Component {
               >
                 <AntIcon
                   name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={25}
+                  size={25*factorRatio}
                 />
+                <View style={{flex: 1}}/>
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
@@ -342,10 +343,11 @@ class ContentModal extends React.Component {
                 }}
               >
                 <AntIcon
-                  size={25}
+                  size={25*factorRatio}
                   name={this.state.isAddedToList ? 'close' : 'plus'}
                   color={'black'}
                 />
+                <View style={{flex: 1}}/>
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
