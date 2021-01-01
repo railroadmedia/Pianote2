@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-community/async-storage';
+import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from './common.service';
 import { Platform } from 'react-native';
 
@@ -43,7 +45,7 @@ export async function resetProgress(contentID) {
 
 export async function markComplete(contentID) {
   try {
-    return commonService.tryCall(
+    let response = await commonService.tryCall(
       `${
         commonService.rootUrl
       }/api/complete?content_id=${contentID}&device_type=${
@@ -51,6 +53,13 @@ export async function markComplete(contentID) {
       }`,
       'PUT'
     );
+    let userData = await getUserData();
+
+    await AsyncStorage.multiSet([
+      ['totalXP', userData.totalXp.toString()],
+      ['rank', userData.xpRank.toString()]
+    ]);
+    return response
   } catch (error) {
     console.log('ERROR MARKING AS COMPLETE: ', error);
     return new Error(error);

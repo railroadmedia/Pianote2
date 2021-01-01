@@ -120,7 +120,9 @@ export default class Profile extends React.Component {
 
   async componentDidMount() {
     let userData = await getUserData();
+    
     this.setState({
+      
       notifications_summary_frequency_minutes:
         userData.notifications_summary_frequency_minutes,
       notify_on_forum_followed_thread_reply:

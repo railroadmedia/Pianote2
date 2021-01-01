@@ -162,7 +162,7 @@ export default class Settings extends React.Component {
       this.loadingRef?.toggleLoading();
       this.customModal.toggle(
         'Something went wrong',
-        'Something went wrong.\nPlease try Again later.'
+        'Please try Again later.'
       );
     }
   };

@@ -299,6 +299,7 @@ export default class PathOverview extends React.Component {
           />
         </TouchableOpacity>
       </ImageBackground>
+      <View style={{height: 10 * factorVertical}} />
       <View
         key={'title'}
         style={[
