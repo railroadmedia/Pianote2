@@ -184,7 +184,8 @@ class ContentModal extends React.Component {
                   aspectRatio: this.state.type == 'song' ? 1 : 16 / 9,
                   backgroundColor: 'white',
                   zIndex: 10,
-                  marginTop: 10 * factorRatio
+                  marginTop: 10 * factorRatio,
+                  marginHorizontal: 20*factorRatio,
                 }}
               >
                 <FastImage
@@ -223,8 +224,9 @@ class ContentModal extends React.Component {
             </Text>
 
             <Text
-              numberOfLines={10}
+              numberOfLines={5}
               style={{
+                marginHorizontal: 10*factorRatio,
                 fontFamily: 'OpenSans-Regular',
                 fontSize: 14 * factorRatio,
                 textAlign: 'center'
@@ -241,6 +243,7 @@ class ContentModal extends React.Component {
                 }
               ]}
             >
+              <View style={{ flex: 1 }} />
               {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
                 <View
                   style={[
@@ -271,12 +274,12 @@ class ContentModal extends React.Component {
                       marginTop: 5 * factorVertical
                     }}
                   >
-                    {'LESSONS'}
+                    LESSONS
                   </Text>
                 </View>
               )}
-              {this.state.bundle_count > 1 && (
-                <View style={{ width: 15 * factorRatio }} />
+              {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
+                <View style={{ flex: 0.6 }} />
               )}
               <View
                 style={[
@@ -308,6 +311,7 @@ class ContentModal extends React.Component {
                   XP
                 </Text>
               </View>
+              <View style={{ flex: 1 }} />
             </View>
             <View key={'buttons'} style={{ flexDirection: 'row', padding: 20,}}>
               <TouchableOpacity
