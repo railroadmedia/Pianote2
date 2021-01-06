@@ -193,8 +193,8 @@ class Packs extends React.Component {
               {isiOS && this.state.refreshing && (
                 <ActivityIndicator
                   size='small'
-                  style={{ padding: 10 }}
-                  color={colors.pianoteRed}
+                  style={{ padding: 20 }}
+                  color={colors.secondBackground}
                 />
               )}
               <ImageBackground

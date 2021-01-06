@@ -14,6 +14,10 @@ const factorRatio = (Dimensions.get('window').height / 812 + Dimensions.get('win
 var { StyleSheet } = React;
 
 module.exports = StyleSheet.create({
+  methodContainer: {
+    flex: 1, 
+    backgroundColor: 'black',
+  },
   container: {
     flex: 1,
     alignSelf: 'stretch'

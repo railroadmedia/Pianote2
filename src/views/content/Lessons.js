@@ -386,7 +386,7 @@ class Lessons extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'black' }}>
+      <View style={styles.methodContainer}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'HOME'}
@@ -396,10 +396,7 @@ class Lessons extends React.Component {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
-            style={{
-              flex: 1,
-              backgroundColor: 'black'
-            }}
+            style={styles.methodContainer}
             refreshControl={
               <RefreshControl
                 tintColor={'transparent'}
@@ -415,7 +412,7 @@ class Lessons extends React.Component {
               <ActivityIndicator
                 size='small'
                 style={{ padding: 10 }}
-                color={colors.pianoteRed}
+                color={colors.pianoteGrey}
               />
             )}
             <ImageBackground

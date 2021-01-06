@@ -36,7 +36,7 @@ class FullScreenVideoList extends React.Component {
           ]}
         >
           <View style={{ flex: 1 }} />
-          <ActivityIndicator size={'small'} color={'grey'} />
+          <ActivityIndicator size={'small'} color={colors.pianoteGrey} />
           <View style={{ flex: 1 }} />
         </View>
       );

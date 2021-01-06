@@ -268,7 +268,7 @@ class SongCatalog extends React.Component {
               <ActivityIndicator
                 size='small'
                 style={{ padding: 10 }}
-                color={colors.pianoteRed}
+                color={colors.secondBackground}
               />
             )}
             <Text
