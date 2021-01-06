@@ -855,8 +855,7 @@ export default class PathOverview extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={{
             margin: 0,
-            height: '100%',
-            width: '100%'
+            flex: 1,
           }}
           animation={'slideInUp'}
           animationInTiming={250}

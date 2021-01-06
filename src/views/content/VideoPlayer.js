@@ -1811,9 +1811,8 @@ export default class VideoPlayer extends React.Component {
               key={'restartCourse'}
               isVisible={this.state.showRestartCourse}
               style={{
-                height: '100%',
-                width: '100%',
-                margin: 0
+                margin: 0,
+                flex: 1,
               }}
               animation={'slideInUp'}
               animationInTiming={250}

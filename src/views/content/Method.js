@@ -220,7 +220,7 @@ export default class Method extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+      <View style={styles.mainContainer}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
@@ -230,10 +230,7 @@ export default class Method extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={{
-            flex: 1,
-            backgroundColor: 'black'
-          }}
+          style={styles.methodContainer}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
@@ -275,16 +272,16 @@ export default class Method extends React.Component {
                 opacity: 1
               }}
             >
-              <View style={{ alignSelf: 'center' }}>
+              <View style={styles.centerContent}>
                 <Pianote
                   height={fullHeight * 0.04 * factorRatio}
                   width={fullWidth * 0.33 * factorRatio}
                   fill={colors.pianoteRed}
                 />
               </View>
-              <View style={{ height: 5 * factorVertical }} />
               <FastImage
                 style={{
+                  marginTop: 5 * factorVertical,
                   height: greaterWDim / 20,
                   width: '50%',
                   alignSelf: 'center'
@@ -292,16 +289,17 @@ export default class Method extends React.Component {
                 source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
                 resizeMode={FastImage.resizeMode.contain}
               />
-              <View style={{ height: 25 * factorRatio }} />
               <View
                 style={{
+                  marginBottom: 10 * factorVertical,
+                  marginTop: 25 * factorRatio,
                   height: 40 * factorRatio,
+                  justifyContent: 'space-evenly',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-evenly'
                 }}
               >
-                <View key='placeholder' style={{ flex: 0.5 }} />
+                <View style={{ flex: 0.5 }} />
                 {this.state.methodIsCompleted ? (
                   <ResetIcon
                     pressed={() =>
@@ -327,14 +325,11 @@ export default class Method extends React.Component {
                 )}
 
                 <TouchableOpacity
+                  style={[styles.centerContent, {flex: 0.5}]}
                   onPress={() => {
                     this.setState({
                       showInfo: !this.state.showInfo
                     });
-                  }}
-                  style={{
-                    flex: 0.5,
-                    alignItems: 'center'
                   }}
                 >
                   <AntIcon
@@ -354,7 +349,6 @@ export default class Method extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ height: 10 * factorVertical }} />
             </View>
           </ImageBackground>
           {this.state.methodIsStarted && (
@@ -420,38 +414,33 @@ export default class Method extends React.Component {
                 {this.state.description !== 'TBD' ? this.state.description : ''}
               </Text>
               <View key={'containStats'}>
-                <View style={{ height: 10 * factorVertical }} />
                 <View
                   key={'stats'}
                   style={[
                     styles.centerContent,
                     {
+                      marginTop: 10 * factorVertical,
                       flex: 0.22,
                       flexDirection: 'row'
                     }
                   ]}
                 >
-                  <View
-                    style={{
-                      flex: 1,
-                      alignSelf: 'stretch'
-                    }}
-                  />
+                  <View style={{flex: 1}}/>
                   <View
                     style={[
                       styles.centerContent,
                       {
-                        width: 70 * factorRatio
+                        width: 70 * factorRatio,
+                        marginRight: 15 * factorRatio,
                       }
                     ]}
                   >
                     <Text
                       style={{
-                        fontWeight: '700',
                         fontSize: 17 * factorRatio,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Regular',
+                        fontFamily: 'OpenSans-Bold',
                         marginTop: 10 * factorVertical
                       }}
                     >
@@ -469,7 +458,6 @@ export default class Method extends React.Component {
                       LEVELS
                     </Text>
                   </View>
-                  <View style={{ width: 15 * factorRatio }} />
                   <View
                     style={[
                       styles.centerContent,
@@ -502,13 +490,7 @@ export default class Method extends React.Component {
                       XP
                     </Text>
                   </View>
-
-                  <View
-                    style={{
-                      flex: 1,
-                      alignSelf: 'stretch'
-                    }}
-                  />
+                  <View style={{flex: 1}}/>
                 </View>
                 <View style={{ height: 15 * factorVertical }} />
                 <View
@@ -521,13 +503,7 @@ export default class Method extends React.Component {
                     }
                   ]}
                 >
-                  <View
-                    style={{
-                      flex: 1,
-                      alignSelf: 'stretch'
-                    }}
-                  />
-                  <View style={{ width: 15 * factorRatio }} />
+                  <View style={{flex: 1}}/>
                   <TouchableOpacity
                     onPress={() => {
                       this.setState({
@@ -537,6 +513,8 @@ export default class Method extends React.Component {
                     style={[
                       styles.centerContent,
                       {
+                        marginLeft: 15 * factorRatio,
+                        marginBottom: 30 * factorVertical,
                         width: 70 * factorRatio
                       }
                     ]}
@@ -559,19 +537,16 @@ export default class Method extends React.Component {
                       Restart
                     </Text>
                   </TouchableOpacity>
-                  <View
-                    style={{
-                      flex: 1,
-                      alignSelf: 'stretch'
-                    }}
-                  />
+                  <View style={{flex: 1}}/>
                 </View>
-                <View style={{ height: 30 * factorVertical }} />
               </View>
             </View>
           )}
           <View
-            style={{ paddingHorizontal: this.state.isLandscape ? '10%' : 0 }}
+            style={{ 
+              paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+              marginBottom: 10 * factorVertical
+            }}
           >
             <VerticalVideoList
               isMethod={true}
@@ -589,15 +564,13 @@ export default class Method extends React.Component {
               imageWidth={fullWidth * 0.26}
             />
           </View>
-          <View style={{ height: 10 * factorVertical }} />
         </ScrollView>
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
           style={{
             margin: 0,
-            height: '100%',
-            width: '100%'
+            flex: 1,
           }}
           animation={'slideInUp'}
           animationInTiming={250}
