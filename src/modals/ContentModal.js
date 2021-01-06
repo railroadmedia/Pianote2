@@ -185,7 +185,7 @@ class ContentModal extends React.Component {
                   backgroundColor: 'white',
                   zIndex: 10,
                   marginTop: 10 * factorRatio,
-                  marginHorizontal: 20*factorRatio,
+                  marginHorizontal: 20 * factorRatio
                 }}
               >
                 <FastImage
@@ -226,7 +226,7 @@ class ContentModal extends React.Component {
             <Text
               numberOfLines={5}
               style={{
-                marginHorizontal: 10*factorRatio,
+                marginHorizontal: 10 * factorRatio,
                 fontFamily: 'OpenSans-Regular',
                 fontSize: 14 * factorRatio,
                 textAlign: 'center'
@@ -313,7 +313,7 @@ class ContentModal extends React.Component {
               </View>
               <View style={{ flex: 1 }} />
             </View>
-            <View key={'buttons'} style={{ flexDirection: 'row', padding: 20,}}>
+            <View key={'buttons'} style={{ flexDirection: 'row', padding: 20 }}>
               <TouchableOpacity
                 style={{ flex: 1, alignItems: 'center' }}
                 onPress={() => {
@@ -324,9 +324,9 @@ class ContentModal extends React.Component {
               >
                 <AntIcon
                   name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={25*factorRatio}
+                  size={25 * factorRatio}
                 />
-                <View style={{flex: 1}}/>
+                <View style={{ flex: 1 }} />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
@@ -347,11 +347,11 @@ class ContentModal extends React.Component {
                 }}
               >
                 <AntIcon
-                  size={25*factorRatio}
+                  size={25 * factorRatio}
                   name={this.state.isAddedToList ? 'close' : 'plus'}
                   color={'black'}
                 />
-                <View style={{flex: 1}}/>
+                <View style={{ flex: 1 }} />
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',

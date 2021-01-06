@@ -45,23 +45,29 @@ class DisplayName extends React.Component {
             style={{
               backgroundColor: 'white',
               borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio,
+              margin: 20 * factorRatio
             }}
           >
             <Text
-              style={[styles.modalHeaderText, {
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               This display name {'\n'} is already in use.
             </Text>
 
             <Text
-              style={[styles.modalBodyText, {
-                paddingHorizontal: 20,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  paddingHorizontal: 20,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               Please try again.
             </Text>
@@ -76,9 +82,12 @@ class DisplayName extends React.Component {
               }}
             >
               <Text
-                style={[styles.modalButtonText, {
-                  color: '#fb1b2f',
-                }]}
+                style={[
+                  styles.modalButtonText,
+                  {
+                    color: '#fb1b2f'
+                  }
+                ]}
               >
                 TRY AGAIN
               </Text>

@@ -49,19 +49,25 @@ class NoConnection extends React.Component {
             }}
           >
             <Text
-              style={[styles.modalHeaderText, {
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               Sorry, our server {'\n'}is down right now.
             </Text>
 
             <Text
-              style={[styles.modalBodyText, {
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               Please try again later!
             </Text>
@@ -77,11 +83,14 @@ class NoConnection extends React.Component {
               }}
             >
               <Text
-                style={[styles.modalButtonText, {
-                  color: '#fb1b2f',
-                  paddingHorizontal: 20,
-                  margin: 10 * factorRatio
-                }]}
+                style={[
+                  styles.modalButtonText,
+                  {
+                    color: '#fb1b2f',
+                    paddingHorizontal: 20,
+                    margin: 10 * factorRatio
+                  }
+                ]}
               >
                 TRY AGAIN
               </Text>

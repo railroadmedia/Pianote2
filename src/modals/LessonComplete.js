@@ -53,7 +53,7 @@ class LessonComplete extends React.Component {
         style={{
           flex: 1,
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         <View
@@ -79,12 +79,12 @@ class LessonComplete extends React.Component {
                 color={'#fb1b2f'}
               />
             </View>
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
             <Text style={[styles.modalHeaderText]}>
               {this.changeType(type)}
               {'\n'}Complete
             </Text>
-            <View style={{height: 20*factorVertical}}/>
+            <View style={{ height: 20 * factorVertical }} />
             <View
               key={'image1'}
               style={[
@@ -136,39 +136,53 @@ class LessonComplete extends React.Component {
             </View>
 
             <View key={'lessonTitle'}>
-              <Text style={[styles.modalBodyText, {marginHorizontal: 20*factorHorizontal, marginTop: 10}]}>
+              <Text
+                style={[
+                  styles.modalBodyText,
+                  { marginHorizontal: 20 * factorHorizontal, marginTop: 10 }
+                ]}
+              >
                 Congratulations! You completed
               </Text>
               <Text
-                style={[styles.modalBodyText, {
-                  fontWeight:'bold',
-                  marginHorizontal: 20*factorHorizontal,
-                }]}
+                style={[
+                  styles.modalBodyText,
+                  {
+                    fontWeight: 'bold',
+                    marginHorizontal: 20 * factorHorizontal
+                  }
+                ]}
               >
                 {completedLessonTitle}
               </Text>
-              <View style={{height: 10 * factorVertical}}/>
+              <View style={{ height: 10 * factorVertical }} />
               <Text
-                style={[styles.modalBodyText, {
-                  fontWeight:  'bold',
-                  color: '#fb1b2f',
-                }]}
+                style={[
+                  styles.modalBodyText,
+                  {
+                    fontWeight: 'bold',
+                    color: '#fb1b2f'
+                  }
+                ]}
               >
                 YOU EARNED {completedLessonXp} XP!
               </Text>
             </View>
-            <View style={{height: 5 * factorVertical}}/>
+            <View style={{ height: 5 * factorVertical }} />
 
             <Text
               key={'upNext'}
-              style={[styles.modalBodyText, {
-                color: '#a8a8a8',
-                paddingHorizontal: 20,
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  color: '#a8a8a8',
+                  paddingHorizontal: 20
+                }
+              ]}
             >
               up next:
             </Text>
-            <View style={{height: 10 * factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
             <TouchableOpacity
               key={'image2'}
               onPress={onGoToNext}
@@ -200,10 +214,13 @@ class LessonComplete extends React.Component {
             </TouchableOpacity>
 
             <Text
-              style={[styles.modalHeaderText, {
-                paddingHorizontal: 20,
-                marginTop: 10
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  paddingHorizontal: 20,
+                  marginTop: 10
+                }
+              ]}
             >
               {nextLesson.getField('title')}
             </Text>

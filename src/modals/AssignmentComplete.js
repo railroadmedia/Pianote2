@@ -35,10 +35,7 @@ class AssignmentComplete extends React.Component {
               padding: 30
             }}
           >
-            <View
-              key={'trophy'}
-              style={[styles.centerContent,]}
-            >
+            <View key={'trophy'} style={[styles.centerContent]}>
               <IonIcon
                 name={'ios-trophy'}
                 size={36 * factorRatio}
@@ -53,21 +50,32 @@ class AssignmentComplete extends React.Component {
                 Assignment{'\n'}Complete
               </Text>
             </View>
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
             <View key={'lessonTitle'}>
-              <Text style={[styles.modalBodyText, {marginHorizontal: 20*factorHorizontal,}]}>
+              <Text
+                style={[
+                  styles.modalBodyText,
+                  { marginHorizontal: 20 * factorHorizontal }
+                ]}
+              >
                 Congratulations! You completed
               </Text>
-              <Text style={[styles.modalBodyText, {marginHorizontal: 20*factorHorizontal, fontWeight: 'bold'}]}>
+              <Text
+                style={[
+                  styles.modalBodyText,
+                  {
+                    marginHorizontal: 20 * factorHorizontal,
+                    fontWeight: 'bold'
+                  }
+                ]}
+              >
                 {this.props.title}
               </Text>
-              <View style={{height: 15*factorVertical}}/>
-              <Text
-                style={[styles.modalButtonText, {color: '#fb1b2f'}]}
-              >
+              <View style={{ height: 15 * factorVertical }} />
+              <Text style={[styles.modalButtonText, { color: '#fb1b2f' }]}>
                 YOU EARNED {this.props.xp} XP!
               </Text>
-              <View style={{height: 10*factorVertical}}/>
+              <View style={{ height: 10 * factorVertical }} />
             </View>
           </View>
         </TouchableOpacity>

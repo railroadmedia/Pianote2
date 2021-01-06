@@ -196,13 +196,12 @@ class MyList extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+      <View style={styles.mainContainer}>
         <NavMenuHeaders currentPage={'MYLIST'} />
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={{ flex: 1 }}
+          style={styles.mainContainer}
           onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
@@ -220,117 +219,63 @@ class MyList extends React.Component {
               color={colors.secondBackground}
             />
           )}
-          <Text
-            style={{
-              paddingLeft: 12 * factorHorizontal,
-              fontSize: 30 * factorRatio,
-              color: 'white',
-              fontFamily: 'OpenSans-ExtraBold',
-              fontStyle: 'normal',
-              paddingBottom: 30 * factorVertical
-            }}
-          >
-            My List
-          </Text>
+          <Text style={styles.contentPageHeader}>My List</Text>
           <TouchableOpacity
+            style={[
+              styles.tabRightContainer,
+              {
+                marginTop: 15 * factorVertical
+              }
+            ]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
                 title: 'In Progress',
                 parent: 'My List'
               });
             }}
-            style={{
-              width: '100%',
-              borderTopWidth: 0.25 * factorRatio,
-              borderTopColor: colors.secondBackground,
-              borderBottomWidth: 0.25 * factorRatio,
-              borderBottomColor: colors.secondBackground,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
           >
-            <Text
-              style={{
-                paddingLeft: 12 * factorHorizontal,
-                fontSize: 20 * factorRatio,
-                marginBottom: 5 * factorVertical,
-                textAlign: 'left',
-                fontWeight: 'bold',
-                fontFamily: 'RobotoCondensed-Bold',
-                color: colors.secondBackground,
-                paddingVertical: 10
-              }}
-            >
-              In Progress
-            </Text>
-
+            <Text style={styles.tabRightContainerText}>In Progress</Text>
             <EntypoIcon
               name={'chevron-thin-right'}
               size={22.5 * factorRatio}
               color={colors.secondBackground}
-              style={{
-                paddingRight: 12 * factorHorizontal
-              }}
             />
           </TouchableOpacity>
           <TouchableOpacity
+            style={[
+              styles.tabRightContainer,
+              { marginBottom: 15 * factorVertical }
+            ]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
                 title: 'Completed',
                 parent: 'My List'
               });
             }}
-            style={{
-              width: '100%',
-              borderBottomWidth: 0.25 * factorRatio,
-              borderBottomColor: colors.secondBackground,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
           >
-            <Text
-              style={{
-                paddingLeft: 12 * factorHorizontal,
-                fontSize: 20 * factorRatio,
-                marginBottom: 5 * factorVertical,
-                textAlign: 'left',
-                fontWeight: 'bold',
-                fontFamily: 'RobotoCondensed-Bold',
-                color: colors.secondBackground,
-                paddingVertical: 10
-              }}
-            >
-              Completed
-            </Text>
-
+            <Text style={styles.tabRightContainerText}>Completed</Text>
             <EntypoIcon
               name={'chevron-thin-right'}
               size={22.5 * factorRatio}
               color={colors.secondBackground}
-              style={{ paddingRight: 12 * factorHorizontal }}
             />
           </TouchableOpacity>
-          <View style={{ height: 15 * factorVertical }} />
           <VerticalVideoList
+            title={'ADDED TO MY LIST'}
+            type={'MYLIST'} 
             items={this.state.allLessons}
             isLoading={this.state.isLoadingAll}
-            title={'ADDED TO MY LIST'}
             isPaging={this.state.isPaging}
-            type={'MYLIST'} // the type of content on page
-            showFilter={true} // shows filters button
-            showType={false} // show course / song by artist name
-            showArtist={true} // show artist name
-            showLength={false} // duration of song
+            showFilter={true}
+            showType={false}
+            showArtist={true}
+            showLength={false}
             showSort={false}
-            filters={this.state.filters} // show filter list
-            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            removeItem={contentID => {
-              this.removeFromMyList(contentID);
-            }}
-            outVideos={this.state.outVideos} // if paging and out of videos
-            imageWidth={fullWidth * 0.26} // image width
+            filters={this.state.filters}
+            filterResults={() => this.setState({ showFilters: true })}
+            removeItem={contentID => this.removeFromMyList(contentID)}
+            outVideos={this.state.outVideos}
+            imageWidth={fullWidth * 0.26}
           />
         </ScrollView>
         {this.state.showFilters && (

@@ -93,7 +93,12 @@ export default class CreateAccount extends React.Component {
               }}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text style={[styles.modalHeaderText, {color: 'white', fontSize: 24*factorRatio}]}>
+              <Text
+                style={[
+                  styles.modalHeaderText,
+                  { color: 'white', fontSize: 24 * factorRatio }
+                ]}
+              >
                 Create Account
               </Text>
               <View />
@@ -147,10 +152,10 @@ export default class CreateAccount extends React.Component {
                     }
                     onChangeText={email => this.setState({ email })}
                     style={{
-                      padding: 15*factorRatio,
-                      marginVertical: 15*factorRatio,
+                      padding: 15 * factorRatio,
+                      marginVertical: 15 * factorRatio,
                       color: 'black',
-                      fontSize: 15*factorRatio,
+                      fontSize: 15 * factorRatio,
                       borderRadius: 100,
                       marginHorizontal: 15,
                       backgroundColor: 'white',
@@ -177,10 +182,14 @@ export default class CreateAccount extends React.Component {
                     ]}
                   >
                     <Text
-                      style={[styles.modalButtonText, {
-                        padding: 15,
-                        color: this.state.email.length > 0 ? 'white' : '#fb1b2f'
-                      }]}
+                      style={[
+                        styles.modalButtonText,
+                        {
+                          padding: 15,
+                          color:
+                            this.state.email.length > 0 ? 'white' : '#fb1b2f'
+                        }
+                      ]}
                     >
                       NEXT
                     </Text>
@@ -199,7 +208,8 @@ export default class CreateAccount extends React.Component {
                   height: '100%',
                   width: '100%'
                 }
-              ]}d
+              ]}
+              d
               animation={'slideInUp'}
               animationInTiming={350}
               animationOutTiming={350}

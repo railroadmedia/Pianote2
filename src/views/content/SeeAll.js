@@ -260,21 +260,13 @@ export default class SeeAll extends React.Component {
         forceInset={{
           bottom: 'never'
         }}
-        style={{ flex: 1, backgroundColor: colors.thirdBackground }}
+        style={styles.packsContainer}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}
         />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            backgroundColor: colors.thirdBackground,
-            padding: 15
-          }}
-        >
+        <View style={styles.childHeader}>
           <TouchableOpacity
             style={{ flex: 1 }}
             onPress={() => this.props.navigation.goBack()}
@@ -286,22 +278,14 @@ export default class SeeAll extends React.Component {
             />
           </TouchableOpacity>
 
-          <Text
-            style={{
-              fontSize: 22 * factorRatio,
-              color: 'white',
-              fontFamily: 'OpenSans-Bold',
-              alignSelf: 'center',
-              textAlign: 'center'
-            }}
-          >
-            {this.state.parent}
-          </Text>
-          <View id='placeholder' style={{ flex: 1 }} />
+          <Text style={styles.childHeaderText}>{this.state.parent}</Text>
+          <View style={{ flex: 1 }} />
         </View>
         <ScrollView
+          style={styles.mainContainer}
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
+          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
@@ -309,13 +293,8 @@ export default class SeeAll extends React.Component {
               onRefresh={() => this.refresh()}
             />
           }
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
         >
-          <View style={{ height: 15 * factorVertical }} />
+          <View style={{ height: 5 * factorVertical }} />
           <VerticalVideoList
             items={this.state.allLessons}
             isLoading={this.state.isLoadingAll}

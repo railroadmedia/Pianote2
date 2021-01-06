@@ -319,7 +319,12 @@ export default class CreateAccount3 extends React.Component {
                       />
                     )}
                   </TouchableOpacity>
-                  <Text style={[styles.modalHeaderText, {color: 'white', fontSize: 24*factorRatio}]}>
+                  <Text
+                    style={[
+                      styles.modalHeaderText,
+                      { color: 'white', fontSize: 24 * factorRatio }
+                    ]}
+                  >
                     Create Account
                   </Text>
                   <View style={{ flex: 1 }} />

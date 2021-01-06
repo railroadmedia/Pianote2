@@ -151,7 +151,7 @@ class Packs extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.thirdBackground }}>
+      <View style={styles.packsContainer}>
         <NavMenuHeaders currentPage={'PACKS'} />
 
         <FlatList

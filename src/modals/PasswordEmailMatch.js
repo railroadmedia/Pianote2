@@ -48,26 +48,32 @@ class PasswordEmailMatch extends React.Component {
               margin: 20 * factorRatio
             }}
           >
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
             <Text
               numberOfLines={2}
-              style={[styles.modalHeaderText,{
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               {this.props.errorMessage}
             </Text>
-            <View style={{height: 10*factorRatio}}/>
+            <View style={{ height: 10 * factorRatio }} />
             <Text
-              style={[styles.modalBodyText, {
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               Please try again.
             </Text>
-            <View style={{height: 10*factorRatio}}/>
+            <View style={{ height: 10 * factorRatio }} />
             <TouchableOpacity
               onPress={() => {
                 this.props.hidePasswordEmailMatch();
@@ -78,14 +84,17 @@ class PasswordEmailMatch extends React.Component {
               }}
             >
               <Text
-                style={[styles.modalButtonText, {
-                  color: '#fb1b2f',
-                }]}
+                style={[
+                  styles.modalButtonText,
+                  {
+                    color: '#fb1b2f'
+                  }
+                ]}
               >
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
-            <View style={{height: 10*factorVertical}}/>
+            <View style={{ height: 10 * factorVertical }} />
           </View>
         </View>
       </TouchableWithoutFeedback>

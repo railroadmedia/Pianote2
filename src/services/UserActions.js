@@ -59,7 +59,7 @@ export async function markComplete(contentID) {
       ['totalXP', userData.totalXp.toString()],
       ['rank', userData.xpRank.toString()]
     ]);
-    return response
+    return response;
   } catch (error) {
     console.log('ERROR MARKING AS COMPLETE: ', error);
     return new Error(error);

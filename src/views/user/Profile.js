@@ -120,9 +120,8 @@ export default class Profile extends React.Component {
 
   async componentDidMount() {
     let userData = await getUserData();
-    
+
     this.setState({
-      
       notifications_summary_frequency_minutes:
         userData.notifications_summary_frequency_minutes,
       notify_on_forum_followed_thread_reply:
@@ -507,7 +506,7 @@ export default class Profile extends React.Component {
                       {this.state.xp}
                     </Text>
                   </TouchableOpacity>
-                  <View style={{width: 15*factorHorizontal}}/>
+                  <View style={{ width: 15 * factorHorizontal }} />
                   <TouchableOpacity
                     style={{ marginHorizontal: 15 * factorHorizontal }}
                     onPress={() => {

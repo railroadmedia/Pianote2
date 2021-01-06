@@ -656,7 +656,7 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
             {!this.props.isMethodLevel && (
-              <View style={{ flex: 0.5 }}>
+              <View style={{ paddingRight: 15 * factorRatio }}>
                 <View style={[styles.centerContent, { flex: 1 }]}>
                   {new Date(row.publishedOn) > new Date() ? (
                     <TouchableOpacity
@@ -761,18 +761,17 @@ class VerticalVideoList extends React.Component {
               {!this.props.showTitleOnly && (
                 <View
                   style={{
-                    paddingRight: 15,
-                    flexDirection: 'row'
+                    paddingRight: 15 * factorRatio,
+                    flexDirection: 'row',
                   }}
                 >
                   {this.props.showSort && (
                     <TouchableOpacity
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignContent: 'center',
-                        alignItems: 'center'
-                      }}
+                      style={[styles.centerContent, 
+                        {
+                          flexDirection: 'row',
+                          marginRight: 7.5 * factorHorizontal,
+                      }]}
                       onPress={() => {
                         this.setState({
                           showRelevance: !this.state.showRelevance
@@ -784,16 +783,12 @@ class VerticalVideoList extends React.Component {
                         style={{
                           color: colors.pianoteRed,
                           fontSize: 12 * factorRatio,
-                          fontFamily: 'OpenSans-Regular'
+                          fontFamily: 'OpenSans-Regular',
+                          marginRight: 3.5 * factorHorizontal,
                         }}
                       >
                         {sortDict[this.props.currentSort]}
                       </Text>
-                      <View
-                        style={{
-                          width: 5 * factorHorizontal
-                        }}
-                      />
                       <View>
                         <FontIcon
                           size={14 * factorRatio}
@@ -804,7 +799,6 @@ class VerticalVideoList extends React.Component {
                       <View style={{ flex: 1 }} />
                     </TouchableOpacity>
                   )}
-                  <View style={{ width: 10 * factorHorizontal }} />
                   <View>
                     <View style={{ flex: 1 }} />
                     {!this.props.hideFilterButton && (
@@ -819,7 +813,7 @@ class VerticalVideoList extends React.Component {
                             borderColor: colors.pianoteRed,
                             height: 30 * factorRatio,
                             width: 30 * factorRatio,
-                            borderRadius: 20 * factorRatio
+                            borderRadius: 30 * factorRatio
                           }
                         ]}
                       >
@@ -840,7 +834,6 @@ class VerticalVideoList extends React.Component {
                     )}
                     <View style={{ flex: 1 }} />
                   </View>
-                  <View style={{ width: 5 * factorHorizontal }} />
                 </View>
               )}
             </View>

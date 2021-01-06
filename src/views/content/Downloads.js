@@ -103,38 +103,17 @@ export default class Downloads extends React.Component {
     let { edit, items } = this.state;
     return (
       <SafeAreaView
-        forceInset={{
-          bottom: 'never'
-        }}
-        style={{ flex: 1, backgroundColor: colors.thirdBackground }}
+        forceInset={{bottom: 'never'}}
+        style={styles.packsContainer}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}
         />
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              backgroundColor: colors.thirdBackground,
-              paddingHorizontal: 15
-            }}
-          >
+        <View style={styles.packsContainer}>
+          <View style={styles.childHeader}>
             <View style={{ flex: 1 }} />
-            <Text
-              style={{
-                fontSize: 22 * factorRatio,
-                color: 'white',
-                fontFamily: 'OpenSans-Bold',
-                paddingVertical: 15,
-                alignSelf: 'center',
-                textAlign: 'center'
-              }}
-            >
-              Downloads
-            </Text>
+            <Text style={styles.childHeaderText}>Downloads</Text>
 
             <TouchableOpacity
               onPress={() =>
@@ -145,7 +124,7 @@ export default class Downloads extends React.Component {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}
             >
               <Text
@@ -164,10 +143,7 @@ export default class Downloads extends React.Component {
             data={items}
             keyboardShouldPersistTaps='handled'
             keyExtractor={item => item.id.toString()}
-            style={{
-              flex: 1,
-              backgroundColor: colors.mainBackground
-            }}
+            style={styles.mainContainer}
             ListEmptyComponent={() => (
               <Text
                 style={{

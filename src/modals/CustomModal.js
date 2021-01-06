@@ -48,12 +48,8 @@ export default class CustomModal extends React.PureComponent {
           <Animated.View
             style={[styles.animatedView, { opacity: this.state.opacity }]}
           >
-            <Text style={[styles.modalHeaderText]}>
-              {this.title}
-            </Text>
-            <Text style={[styles.modalBodyText]}>
-              {this.message}
-            </Text>
+            <Text style={[styles.modalHeaderText]}>{this.title}</Text>
+            <Text style={[styles.modalBodyText]}>{this.message}</Text>
             {this.props.additionalBtn}
           </Animated.View>
         </TouchableOpacity>

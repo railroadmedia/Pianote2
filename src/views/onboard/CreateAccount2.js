@@ -132,7 +132,12 @@ export default class CreateAccount extends React.Component {
               }}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text style={[styles.modalHeaderText, {color: 'white', fontSize: 24*factorRatio}]}>
+              <Text
+                style={[
+                  styles.modalHeaderText,
+                  { color: 'white', fontSize: 24 * factorRatio }
+                ]}
+              >
                 Create Account
               </Text>
               <View />
@@ -189,9 +194,9 @@ export default class CreateAccount extends React.Component {
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
                     style={{
-                      marginVertical: 15*factorRatio,
+                      marginVertical: 15 * factorRatio,
                       color: 'black',
-                      fontSize: 15*factorRatio,
+                      fontSize: 15 * factorRatio,
                       borderRadius: 100,
                       marginHorizontal: 15,
                       backgroundColor: 'white',
@@ -279,9 +284,9 @@ export default class CreateAccount extends React.Component {
                       this.setState({ confirmPassword })
                     }
                     style={{
-                      marginVertical: 15*factorRatio,
+                      marginVertical: 15 * factorRatio,
                       color: 'black',
-                      fontSize: 15*factorRatio,
+                      fontSize: 15 * factorRatio,
                       borderRadius: 100,
                       marginHorizontal: 15,
                       backgroundColor: 'white',
@@ -363,15 +368,18 @@ export default class CreateAccount extends React.Component {
                   ]}
                 >
                   <Text
-                    style={[styles.modalButtonText, {
-                      padding: 15,
-                      color:
-                        this.state.password.length > 0 &&
-                        this.state.confirmPassword.length > 0 &&
-                        this.state.password == this.state.confirmPassword
-                          ? 'white'
-                          : '#fb1b2f'
-                    }]}
+                    style={[
+                      styles.modalButtonText,
+                      {
+                        padding: 15,
+                        color:
+                          this.state.password.length > 0 &&
+                          this.state.confirmPassword.length > 0 &&
+                          this.state.password == this.state.confirmPassword
+                            ? 'white'
+                            : '#fb1b2f'
+                      }
+                    ]}
                   >
                     NEXT
                   </Text>

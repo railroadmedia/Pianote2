@@ -49,19 +49,25 @@ class PasswordMatch extends React.Component {
             }}
           >
             <Text
-              style={[styles.modalHeaderText, {
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               Your passwords do {'\n'} not match.
             </Text>
 
             <Text
-              style={[styles.modalBodyText, {
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               Please try again.
             </Text>
@@ -76,14 +82,17 @@ class PasswordMatch extends React.Component {
               }}
             >
               <Text
-                style={[styles.modalButtonText, {
-                  color: '#fb1b2f',
-                }]}
+                style={[
+                  styles.modalButtonText,
+                  {
+                    color: '#fb1b2f'
+                  }
+                ]}
               >
                 TRY AGAIN
               </Text>
             </TouchableOpacity>
-            <View style={{height: 7.5*factorRatio}}/>
+            <View style={{ height: 7.5 * factorRatio }} />
           </View>
         </View>
       </TouchableWithoutFeedback>

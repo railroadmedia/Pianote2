@@ -65,19 +65,25 @@ class LogOut extends React.Component {
             }}
           >
             <Text
-              style={[styles.modalHeaderText, {
-                marginTop: 25 * factorRatio,
-                paddingHorizontal: 40,
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  marginTop: 25 * factorRatio,
+                  paddingHorizontal: 40
+                }
+              ]}
             >
               Log Out
             </Text>
 
             <Text
-              style={[styles.modalBodyText, {
-                paddingHorizontal: 40,
-                marginVertical: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  paddingHorizontal: 40,
+                  marginVertical: 10 * factorRatio
+                }
+              ]}
             >
               Are you sure that you want to log out?
             </Text>
@@ -95,7 +101,12 @@ class LogOut extends React.Component {
                 }
               ]}
             >
-              <Text style={[styles.modalButtonText, {color: 'white',paddingVertical: 12.5 * factorRatio}]}>
+              <Text
+                style={[
+                  styles.modalButtonText,
+                  { color: 'white', paddingVertical: 12.5 * factorRatio }
+                ]}
+              >
                 LOG OUT
               </Text>
             </TouchableOpacity>
@@ -107,7 +118,7 @@ class LogOut extends React.Component {
                 { paddingHorizontal: 40, marginVertical: 15 * factorRatio }
               ]}
             >
-              <Text style={[styles.modalCancelButtonText, {color: 'grey'}]}>
+              <Text style={[styles.modalCancelButtonText, { color: 'grey' }]}>
                 CANCEL
               </Text>
             </TouchableOpacity>

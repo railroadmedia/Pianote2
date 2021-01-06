@@ -49,19 +49,25 @@ class ProfileImage extends React.Component {
             }}
           >
             <Text
-              style={[styles.modalHeaderText, {
-                paddingHorizontal: 40,
-                marginTop: 20 * factorRatio
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 20 * factorRatio
+                }
+              ]}
             >
               Profile image is too large.
             </Text>
 
             <Text
-              style={[styles.modalBodyText, {
-                paddingHorizontal: 40,
-                marginTop: 20 * factorRatio
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 20 * factorRatio
+                }
+              ]}
             >
               Please try again.
             </Text>
@@ -76,9 +82,12 @@ class ProfileImage extends React.Component {
               }}
             >
               <Text
-                style={[styles.modalButtonText, {
-                  color: '#fb1b2f',
-                }]}
+                style={[
+                  styles.modalButtonText,
+                  {
+                    color: '#fb1b2f'
+                  }
+                ]}
               >
                 TRY AGAIN
               </Text>

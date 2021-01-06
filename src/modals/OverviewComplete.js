@@ -72,22 +72,36 @@ class OverviewComplete extends React.Component {
             <View style={{ height: 5 * factorRatio }} />
             <View key={'lessonTitle'}>
               <Text
-                style={[styles.modalBodyText, {
-                  textAlign: 'center',
-                  marginHorizontal: 20*factorHorizontal,
-                }]}
+                style={[
+                  styles.modalBodyText,
+                  {
+                    textAlign: 'center',
+                    marginHorizontal: 20 * factorHorizontal
+                  }
+                ]}
               >
                 Congratulations! You completed
               </Text>
               <View style={{ height: 5 * factorRatio }} />
-              <Text style={[styles.modalBodyText, {marginHorizontal: 20*factorHorizontal, fontWeight: 'bold'}]}>
+              <Text
+                style={[
+                  styles.modalBodyText,
+                  {
+                    marginHorizontal: 20 * factorHorizontal,
+                    fontWeight: 'bold'
+                  }
+                ]}
+              >
                 {this.props.title}
               </Text>
               <View style={{ height: 15 * factorRatio }} />
               <Text
-                style={[styles.modalButtonText, {
-                  color: '#fb1b2f'
-                }]}
+                style={[
+                  styles.modalButtonText,
+                  {
+                    color: '#fb1b2f'
+                  }
+                ]}
               >
                 YOU EARNED {this.props.xp} XP!
               </Text>

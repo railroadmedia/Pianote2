@@ -88,19 +88,25 @@ class XpRank extends React.Component {
             }}
           >
             <Text
-              style={[styles.modalHeaderText, {
-                paddingHorizontal: 40,
-                marginTop: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalHeaderText,
+                {
+                  paddingHorizontal: 40,
+                  marginTop: 10 * factorRatio
+                }
+              ]}
             >
               Your XP Rank
             </Text>
 
             <Text
-              style={[styles.modalBodyText, {
-                paddingHorizontal: 40,
-                marginVertical: 10 * factorRatio
-              }]}
+              style={[
+                styles.modalBodyText,
+                {
+                  paddingHorizontal: 40,
+                  marginVertical: 10 * factorRatio
+                }
+              ]}
             >
               You earn XP by completing lessons,{'\n'}
               commenting on videos and more!
@@ -158,11 +164,14 @@ class XpRank extends React.Component {
             </View>
             <View key={'nextRank'}>
               <Text
-                style={[styles.modalBodyText, {
-                  color: 'grey',
-                  paddingHorizontal: 40,
-                  marginVertical: 10 * factorRatio
-                }]}
+                style={[
+                  styles.modalBodyText,
+                  {
+                    color: 'grey',
+                    paddingHorizontal: 40,
+                    marginVertical: 10 * factorRatio
+                  }
+                ]}
               >
                 Next rank: {this.state.nextRank}
               </Text>

@@ -299,7 +299,7 @@ export default class PathOverview extends React.Component {
           />
         </TouchableOpacity>
       </ImageBackground>
-      <View style={{height: 10 * factorVertical}} />
+      <View style={{ height: 10 * factorVertical }} />
       <View
         key={'title'}
         style={[
@@ -670,13 +670,10 @@ export default class PathOverview extends React.Component {
     const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
       <SafeAreaView
-        forceInset={{
-          bottom: 'never'
-        }}
+        forceInset={{bottom: 'never'}}
         style={[
           {
             flex: 1,
-            width: '100%',
             backgroundColor: isMethod ? 'black' : colors.mainBackground
           }
         ]}

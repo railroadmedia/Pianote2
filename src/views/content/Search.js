@@ -86,9 +86,9 @@ export default class Search extends React.Component {
         <View
           key={id}
           style={{
-            borderBottomWidth: 1.25 * factorRatio,
+            borderBottomWidth: 1.25,
+            borderTopWidth: 1.25,
             borderBottomColor: colors.thirdBackground,
-            borderTopWidth: 1.25 * factorRatio,
             borderTopColor: colors.thirdBackground
           }}
         >
@@ -96,15 +96,14 @@ export default class Search extends React.Component {
             onPress={() => this.clickSearchRecent(row[0])}
             style={{
               justifyContent: 'center',
-              paddingLeft: 15
+              paddingLeft: 15 * factorRatio
             }}
           >
             <Text
               style={{
                 color: 'white',
                 fontSize: 18 * factorRatio,
-                fontWeight: '700',
-                fontFamily: 'OpenSans-Regular',
+                fontFamily: 'OpenSans-Bold',
                 paddingVertical: 10
               }}
             >
@@ -119,8 +118,8 @@ export default class Search extends React.Component {
           key={'noResults'}
           style={{
             justifyContent: 'center',
-            paddingLeft: 15,
-            borderTopWidth: 1 * factorRatio,
+            paddingLeft: 15 * factorRatio,
+            borderTopWidth: 1,
             borderTopColor: colors.secondBackground
           }}
         >
@@ -329,54 +328,25 @@ export default class Search extends React.Component {
   render() {
     return (
       <SafeAreaView
-        forceInset={{
-          bottom: 'never'
-        }}
-        style={{ flex: 1, backgroundColor: colors.thirdBackground }}
+        forceInset={{bottom: 'never'}}
+        style={styles.packsContainer}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}
         />
-        <View style={{ backgroundColor: colors.thirdBackground }}>
-          <Text
-            style={{
-              fontSize: 22 * factorRatio,
-              color: 'white',
-              fontFamily: 'OpenSans-Bold',
-              paddingVertical: 15,
-              alignSelf: 'center'
-            }}
-          >
-            Search
-          </Text>
+        <View style={[styles.child, {flex: 1}]}>
+          <Text style={styles.childHeaderText}>Search</Text>
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
           contentInsetAdjustmentBehavior={'never'}
           onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
-          style={{
-            backgroundColor: colors.mainBackground,
-            flex: 1
-          }}
+          style={styles.mainContainer}
         >
-          <View style={{ height: fullHeight * 0.05 }} />
-          <View
-            key={'searchBox'}
-            style={{
-              flexDirection: 'row',
-              paddingLeft: 15
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: '#f3f6f6',
-                borderRadius: 60 * factorHorizontal,
-                flexDirection: 'row'
-              }}
-            >
+          <View style={styles.searchContainer}>
+            <View style={styles.searchBox}>
               <View
                 style={[styles.centerContent, { width: 40 * factorHorizontal }]}
               >
@@ -389,28 +359,18 @@ export default class Search extends React.Component {
                 />
               </View>
               <TextInput
-                ref={searchTerm => {
-                  this.searchTerm = searchTerm;
-                }}
+                ref={searchTerm => this.searchTerm = searchTerm}
                 placeholder={'Type your search...'}
                 placeholderTextColor={'grey'}
                 onChangeText={searchTerm => this.setState({ searchTerm })}
+                returnKeyType={'search'}
+                style={styles.searchText}
                 onSubmitEditing={() => {
                   this.setState({
                     showCancel: true,
                     searchResults: []
                   }),
                     this.search(this.state.searchTerm);
-                }}
-                returnKeyType={'search'}
-                style={{
-                  flex: 0.9,
-                  color: 'grey',
-                  marginTop: 12.5 * factorVertical,
-                  paddingBottom: 12.5 * factorVertical,
-                  justifyContent: 'center',
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio
                 }}
               />
             </View>
@@ -444,39 +404,20 @@ export default class Search extends React.Component {
                     });
                   }}
                 >
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      fontSize: 12 * factorRatio,
-                      color: '#fb1b2f',
-                      fontFamily: 'OpenSans-Bold'
-                    }}
-                  >
-                    CANCEL
-                  </Text>
+                  <Text style={styles.cancelSearch}>CANCEL</Text>
                 </TouchableOpacity>
               )}
             </View>
           </View>
-          <View style={{ height: fullHeight * 0.02 }} />
-          <View
-            key={'recentSearches'}
-            style={[
-              styles.centerContent,
-              {
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }
-            ]}
-          >
+          <View style={[styles.centerContent, styles.recentSearches]}>
             {(!this.state.searchEntered ||
               this.state.searchResults.length > 0) && (
               <Text
                 style={{
-                  paddingLeft: 15,
+                  paddingLeft: 15 * factorRatio,
                   fontFamily: 'OpenSans-Bold',
                   fontSize: 18 * factorRatio,
-                  color: colors.secondBackground
+                  color: colors.secondBackground,
                 }}
               >
                 RECENT
@@ -500,7 +441,6 @@ export default class Search extends React.Component {
                     color: colors.pianoteRed,
                     textAlign: 'right',
                     fontFamily: 'OpenSans-Regular',
-                    marginTop: 3 * factorVertical
                   }}
                 >
                   Clear
@@ -508,15 +448,15 @@ export default class Search extends React.Component {
               </TouchableOpacity>
             )}
           </View>
-          <View style={{ height: fullHeight * 0.015 }} />
-          <View style={{ flex: 1 }}>
+
+          <View style={{ flex: 1, marginBottom: fullHeight * 0.015 }}>
             {!this.state.searchEntered &&
               !this.state.isLoadingAll &&
               !this.state.noResults && <View>{this.mapRecentResults()}</View>}
             {this.state.searchEntered &&
               !this.state.noResults &&
               !this.state.isLoadingAll && (
-                <View>
+                <View style={{marginBottom: 10 * factorVertical}}>
                   <VerticalVideoList
                     items={this.state.searchResults}
                     isLoading={this.state.isLoadingAll}
@@ -549,12 +489,6 @@ export default class Search extends React.Component {
                     } // image height
                     imageWidth={fullWidth * 0.26} // image width
                     outVideos={this.state.outVideos} // if paging and out of videos
-                    //getVideos={() => this.getContent()} // for paging
-                  />
-                  <View
-                    style={{
-                      height: 10 * factorVertical
-                    }}
                   />
                 </View>
               )}
@@ -584,13 +518,13 @@ export default class Search extends React.Component {
                   borderTopColor: colors.secondBackground
                 }}
               >
-                <View style={{ height: 5 * factorVertical }} />
                 <Text
                   style={{
+                    marginTop: 5 * factorVertical,
                     fontSize: 18 * factorRatio,
                     fontFamily: 'OpenSans-Bold',
                     color: 'white',
-                    paddingLeft: 15
+                    paddingLeft: 15 * factorRatio
                   }}
                 >
                   No Results

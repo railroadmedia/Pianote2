@@ -15,7 +15,6 @@ import PathOverview from './src/views/content/PathOverview';
 import SinglePack from './src/views/content/SinglePack';
 import Downloads from './src/views/content/Downloads';
 import Lessons from './src/views/content/Lessons';
-import Filters from './src/views/content/Filters';
 import SeeAll from './src/views/content/SeeAll';
 import Course from './src/views/content/Course';
 import MyList from './src/views/content/MyList';
@@ -77,7 +76,6 @@ const AppNavigator = createStackNavigator(
     SINGLEPACK: { screen: SinglePack },
     DOWNLOADS: { screen: Downloads },
     LESSONS: { screen: Lessons },
-    FILTERS: { screen: Filters },
     SEEALL: { screen: SeeAll },
     COURSE: { screen: Course },
     MYLIST: { screen: MyList },

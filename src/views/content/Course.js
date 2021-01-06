@@ -239,7 +239,7 @@ class Course extends React.Component {
 
   render() {
     return (
-      <View style={{ backgroundColor: colors.mainBackground, flex: 1 }}>
+      <View style={styles.mainContainer}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'COURSES'} />
 
         {!this.state.refreshing ? (
@@ -255,10 +255,7 @@ class Course extends React.Component {
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
-            style={{
-              flex: 1,
-              backgroundColor: colors.mainBackground
-            }}
+            style={styles.mainContainer}
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
@@ -267,16 +264,7 @@ class Course extends React.Component {
                 color={colors.secondBackground}
               />
             )}
-            <Text
-              style={{
-                paddingLeft: 15,
-                fontSize: 30 * factorRatio,
-                color: 'white',
-                fontFamily: 'OpenSans-ExtraBold'
-              }}
-            >
-              Courses
-            </Text>
+            <Text style={styles.contentPageHeader}>Courses</Text>
             <View style={{ height: 10 * factorVertical }} />
             {this.state.started && (
               <View

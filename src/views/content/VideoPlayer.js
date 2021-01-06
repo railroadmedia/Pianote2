@@ -539,7 +539,7 @@ export default class VideoPlayer extends React.Component {
           </Text>
           <View style={{ paddingVertical: 15 }}>
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ flexDirection: 'row', marginRight: 15,}}>
+              <View style={{ flexDirection: 'row', marginRight: 15 }}>
                 <TouchableOpacity
                   style={{ marginRight: 10 }}
                   onPress={() => this.likeComment(item.id)}
@@ -1107,7 +1107,7 @@ export default class VideoPlayer extends React.Component {
                   <View
                     key={'icons'}
                     style={{
-                      paddingHorizontal: 15,
+                      paddingHorizontal: 15
                     }}
                   >
                     <View
@@ -1129,7 +1129,7 @@ export default class VideoPlayer extends React.Component {
                           size={27.5 * factorRatio}
                           color={colors.pianoteRed}
                         />
-                        <View style={{flex: 1}}/>
+                        <View style={{ flex: 1 }} />
                         <Text
                           style={{
                             textAlign: 'center',
@@ -1151,7 +1151,7 @@ export default class VideoPlayer extends React.Component {
                           size={28.5 * factorRatio}
                           color={colors.pianoteRed}
                         />
-                        <View style={{flex: 1}}/>
+                        <View style={{ flex: 1 }} />
                         <Text
                           style={{
                             textAlign: 'center',
@@ -1178,7 +1178,7 @@ export default class VideoPlayer extends React.Component {
                             width={27.5 * factorRatio}
                             fill={colors.pianoteRed}
                           />
-                          <View style={{flex: 1}}/>
+                          <View style={{ flex: 1 }} />
                           <Text
                             style={{
                               textAlign: 'center',
@@ -1244,7 +1244,7 @@ export default class VideoPlayer extends React.Component {
                           size={25 * factorRatio}
                           color={colors.pianoteRed}
                         />
-                        <View style={{flex: 1}}/>
+                        <View style={{ flex: 1 }} />
                         <Text
                           style={{
                             textAlign: 'center',
@@ -1924,11 +1924,14 @@ export default class VideoPlayer extends React.Component {
               }}
             >
               <Text
-                style={[styles.modalButtonText, {
-                  padding: 15,
-                  fontSize: 15,
-                  color: '#ffffff',
-                }]}
+                style={[
+                  styles.modalButtonText,
+                  {
+                    padding: 15,
+                    fontSize: 15,
+                    color: '#ffffff'
+                  }
+                ]}
               >
                 RELOAD LESSON
               </Text>

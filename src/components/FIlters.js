@@ -236,13 +236,8 @@ export default class Filters extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: colors.mainBackground
-          }}
-        >
-          <View key={'contentContainer'} style={{ flex: 1 }}>
+        <View style={styles.mainContainer}>
+          <View style={styles.mainContainer}>
             <View
               style={[
                 styles.centerContent,
@@ -263,6 +258,7 @@ export default class Filters extends React.Component {
                   styles.centerContent,
                   {
                     flexDirection: 'row',
+                    marginBottom: 20 * factorVertical,
                     backgroundColor: colors.thirdBackground
                   }
                 ]}
@@ -298,39 +294,21 @@ export default class Filters extends React.Component {
                 </Text>
                 <View style={{ flex: 1 }} />
               </View>
-              <View style={{ height: 20 * factorVertical }} />
             </View>
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentInsetAdjustmentBehavior={'never'}
-              style={{
-                flex: 0.9,
-                backgroundColor: colors.mainBackground
-              }}
+              style={styles.mainContainer}
             >
-              <View style={{ height: 30 * factorVertical }} />
               {!this.state.filterType && (
                 <View>
-                  <Text
-                    key={'setYourSkill'}
-                    style={{
-                      fontSize: 18 * factorRatio,
-                      marginBottom: 5 * factorVertical,
-                      textAlign: 'left',
-                      fontFamily: 'RobotoCondensed-Bold',
-                      color: colors.secondBackground,
-                      paddingLeft: fullWidth * 0.035
-                    }}
-                  >
-                    SET YOUR SKILL LEVEL
-                  </Text>
+                  <Text style={styles.filterHeader}>SET YOUR SKILL LEVEL</Text>
                   <View
-                    key={'slider'}
                     style={[
                       styles.centerContent,
                       {
-                        paddingLeft: fullWidth * 0.035,
-                        paddingRight: fullWidth * 0.035
+                        paddingHorizontal: fullWidth * 0.035,
+                        marginBottom: 10 * factorRatio
                       }
                     ]}
                   >
@@ -338,17 +316,15 @@ export default class Filters extends React.Component {
                       style={[
                         styles.centerContent,
                         {
-                          height: 50 * factorVertical,
+                          marginVertical: 10*factorVertical,
+                          height: 10 * factorVertical,
                           width: `100%`,
-                          paddingTop: 20 * factorVertical,
-                          paddingBottom: 20 * factorVertical
                         }
                       ]}
                     >
                       <View
                         style={{
-                          height: '100%',
-                          width: '100%',
+                          flex: 1,
                           flexDirection: 'row'
                         }}
                       >
@@ -373,10 +349,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('2')
@@ -398,10 +374,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('3')
@@ -423,10 +399,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('4')
@@ -448,10 +424,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('5')
@@ -473,10 +449,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('6')
@@ -498,10 +474,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('7')
@@ -523,10 +499,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('8')
@@ -548,10 +524,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes('9')
@@ -573,10 +549,10 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                         <TouchableOpacity
                           onPress={() => {
                             this.state.filtersAvailable.difficulty.includes(
@@ -600,60 +576,57 @@ export default class Filters extends React.Component {
                               ? colors.pianoteRed
                               : colors.secondBackground,
                             borderWidth: 1.25,
-                            borderRadius: 5 * factorRatio
+                            borderRadius: 5 * factorRatio,
+                            marginRight: 2.5 * factorHorizontal,
                           }}
                         />
-                        <View style={{ width: 2.5 * factorHorizontal }} />
                       </View>
                     </View>
                   </View>
-                  <View style={{ height: 10 * factorRatio }} />
                   <Text
                     style={{
                       textAlign: 'center',
                       fontSize: 24 * factorRatio,
                       fontFamily: 'OpenSans-Bold',
-                      color: 'white'
+                      color: 'white',
+                      marginBottom: 10 * factorRatio,
+                      
                     }}
                   >
                     {this.state.allLevels
                       ? 'ALL LEVELS'
                       : 'LEVEL ' + this.state.level[0]}
                   </Text>
-                  <View style={{ height: 10 * factorRatio }} />
                   <Text
                     style={{
                       textAlign: 'center',
                       fontSize: 14 * factorRatio,
                       fontFamily: 'OpenSans-Regular',
                       color: 'white',
-                      paddingLeft: fullWidth * 0.1,
-                      paddingRight: fullWidth * 0.1
+                      paddingHorizontal: fullWidth * 0.1,
+                      marginBottom: 15 * factorRatio,
                     }}
                   >
                     {this.state.level == null || this.state.allLevels
                       ? messageDict['All']
                       : messageDict[this.state.level[0]]}
                   </Text>
-                  <View style={{ height: 10 * factorRatio }} />
                   <View
                     key={'allLevels'}
                     style={{
-                      minHeight: 70 * factorVertical,
+                      height: 60 * factorVertical,
                       borderBottomWidth: 0.5 * factorRatio,
-                      borderBottomColor: colors.secondBackground
+                      borderBottomColor: colors.secondBackground,
                     }}
                   >
-                    <View style={{ height: 10 * factorRatio }} />
                     <View
                       style={{
                         height: 30 * factorVertical,
                         justifyContent: 'space-around',
                         alignContent: 'space-around',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
                       }}
                     >
-                      <View style={{ flex: 1 }} />
                       <TouchableOpacity
                         onPress={() => {
                           !this.state.selected
@@ -694,43 +667,27 @@ export default class Filters extends React.Component {
                           ALL
                         </Text>
                       </TouchableOpacity>
-                      <View style={{ flex: 1 }} />
                     </View>
-                    <View style={{ height: 40 * factorRatio }} />
                   </View>
-                  <View style={{ height: 30 * factorVertical }} />
                 </View>
               )}
               {this.state.type !== 'Songs' && (
                 <View key={'topics & content type'}>
                   {!this.state.filterType && (
                     <View key={'topics-'}>
-                      <Text
-                        style={{
-                          fontSize: 18 * factorRatio,
-                          marginBottom: 5 * factorVertical,
-                          textAlign: 'left',
-                          fontFamily: 'RobotoCondensed-Bold',
-                          color: colors.secondBackground,
-                          paddingLeft: fullWidth * 0.035
-                        }}
-                      >
-                        {!this.state.filterType
-                          ? 'WHAT DO YOU WANT TO WORK ON?'
-                          : 'CHOOSE A CONTENT TYPE'}
-                      </Text>
-                      <View style={{ height: 5 * factorVertical }} />
+                      
+                      <Text style={styles.filterHeader}>WHAT DO YOU WANT TO WORK ON?</Text>
+                      
                       <View
                         style={{
-                          minHeight: 70 * factorVertical,
+                          minHeight: 160 * factorRatio,
                           width: '100%'
                         }}
                       >
                         <ScrollView
                           style={{
-                            height: !this.state.filterType
-                              ? 40 * factorRatio + 90 * factorVertical
-                              : 350 * factorVertical,
+                            height: this.state.filterType
+                              ? 350 * factorVertical : 40 * factorRatio + 90 * factorVertical,
                             width: '100%'
                           }}
                         >
@@ -957,23 +914,11 @@ export default class Filters extends React.Component {
                     </View>
                   )}
                   {this.state.filterType && (
-                    <View key={'contentTypes-'}>
-                      <Text
-                        style={{
-                          fontSize: 18 * factorRatio,
-                          marginBottom: 5 * factorVertical,
-                          textAlign: 'left',
-                          fontFamily: 'RobotoCondensed-Bold',
-                          color: colors.secondBackground,
-                          paddingLeft: fullWidth * 0.035
-                        }}
-                      >
-                        {'CHOOSE A CONTENT TYPE'}
-                      </Text>
-                      <View style={{ height: 5 * factorVertical }} />
+                    <View>
+                      <Text style={styles.filterHeader}>CHOOSE A CONTENT TYPE</Text>
                       <View
                         style={{
-                          minHeight: 70 * factorVertical,
+                          minHeight: 160 * factorRatio,
                           width: '100%'
                         }}
                       >
@@ -1186,23 +1131,12 @@ export default class Filters extends React.Component {
                 </View>
               )}
               {this.state.type == 'Songs' && (
-                <View key={'styles'}>
+                <View>
                   <View>
-                    <Text
-                      style={{
-                        fontSize: 18 * factorRatio,
-                        textAlign: 'left',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        color: colors.secondBackground,
-                        paddingLeft: fullWidth * 0.035
-                      }}
-                    >
-                      WHAT DO YOU WANT TO WORK ON?
-                    </Text>
-                    <View style={{ height: 15 * factorVertical }} />
+                    <Text style={styles.filterHeader}>WHAT DO YOU WANT TO WORK ON?</Text>
                     <View
                       style={{
-                        minHeight: 70 * factorVertical,
+                        minHeight: 160 * factorRatio,
                         width: '100%'
                       }}
                     >
@@ -1440,24 +1374,12 @@ export default class Filters extends React.Component {
               )}
               {this.state.type == 'Songs' && (
                 <View key={'artists'}>
-                  <View style={{ height: 30 * factorVertical }} />
                   <View key={'artists'}>
-                    <Text
-                      style={{
-                        fontSize: 18 * factorRatio,
-                        marginBottom: 5 * factorVertical,
-                        textAlign: 'left',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        color: colors.secondBackground,
-                        paddingLeft: fullWidth * 0.035
-                      }}
-                    >
-                      CHOOSE YOUR ARTISTS
-                    </Text>
+                    <Text style={styles.filterHeader}>CHOOSE YOUR ARTISTS</Text>
                     <View style={{ height: 5 * factorVertical }} />
                     <View
                       style={{
-                        minHeight: 70 * factorVertical,
+                        minHeight: 160 * factorRatio,
                         width: '100%'
                       }}
                     >
@@ -1693,7 +1615,6 @@ export default class Filters extends React.Component {
                   </View>
                 </View>
               )}
-              <View style={{ height: 30 * factorVertical }} />
               {!this.state.filterType && (
                 <TouchableOpacity
                   key={'chooseProgress'}
@@ -1705,8 +1626,6 @@ export default class Filters extends React.Component {
                   style={{
                     height: fullHeight * 0.1,
                     flexDirection: 'row',
-                    paddingLeft: fullWidth * 0.035,
-                    paddingRight: fullWidth * 0.035,
                     borderTopColor: colors.secondBackground,
                     borderTopWidth: 0.5 * factorRatio,
                     borderBottomColor: colors.secondBackground,
@@ -1715,30 +1634,11 @@ export default class Filters extends React.Component {
                       : 0.25 * factorRatio
                   }}
                 >
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    <Text
-                      style={{
-                        fontSize: 18 * factorRatio,
-                        marginBottom: 5 * factorVertical,
-                        textAlign: 'left',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        color: colors.secondBackground
-                      }}
-                    >
-                      CHOOSE YOUR PROGRESS
-                    </Text>
-                    <View style={{ flex: 1 }} />
+                  <View style={styles.centerContent}>
+                    <Text style={styles.filterHeader}>CHOOSE YOUR PROGRESS</Text>
                   </View>
                   <View style={{ flex: 1 }} />
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={{
-                        paddingLeft: 10 * factorRatio,
-                        paddingRight: 10 * factorRatio
-                      }}
-                    >
+                  <View style={[styles.centerContent, {paddingHorizontal: 10 * factorRatio}]}>
                       <EntypoIcon
                         name={
                           this.state.openProgress
@@ -1748,8 +1648,6 @@ export default class Filters extends React.Component {
                         size={25 * factorRatio}
                         color={colors.secondBackground}
                       />
-                    </View>
-                    <View style={{ flex: 1 }} />
                   </View>
                 </TouchableOpacity>
               )}
@@ -1900,8 +1798,6 @@ export default class Filters extends React.Component {
                   style={{
                     height: fullHeight * 0.1,
                     flexDirection: 'row',
-                    paddingLeft: fullWidth * 0.035,
-                    paddingRight: fullWidth * 0.035,
                     borderTopColor: colors.secondBackground,
                     borderBottomColor: colors.secondBackground,
                     borderBottomWidth: this.state.openInstructors
@@ -1909,41 +1805,20 @@ export default class Filters extends React.Component {
                       : 0.5 * factorRatio
                   }}
                 >
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    <Text
-                      style={{
-                        fontSize: 18 * factorRatio,
-                        marginBottom: 5 * factorVertical,
-                        textAlign: 'left',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        color: colors.secondBackground
-                      }}
-                    >
-                      CHOOSE YOUR INSTRUCTOR
-                    </Text>
-                    <View style={{ flex: 1 }} />
+                  <View style={styles.centerContent}>
+                    <Text style={styles.filterHeader}>CHOOSE YOUR INSTRUCTOR</Text>
                   </View>
                   <View style={{ flex: 1 }} />
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={{
-                        paddingLeft: 10 * factorRatio,
-                        paddingRight: 10 * factorRatio
-                      }}
-                    >
-                      <EntypoIcon
-                        name={
-                          this.state.openInstructors
-                            ? 'chevron-thin-up'
-                            : 'chevron-thin-down'
-                        }
-                        size={25 * factorRatio}
-                        color={colors.secondBackground}
-                      />
-                    </View>
-                    <View style={{ flex: 1 }} />
+                  <View style={[styles.centerContent, {paddingHorizontal: 10 * factorRatio}]}>
+                    <EntypoIcon
+                      name={
+                        this.state.openInstructors
+                          ? 'chevron-thin-up'
+                          : 'chevron-thin-down'
+                      }
+                      size={25 * factorRatio}
+                      color={colors.secondBackground}
+                    />
                   </View>
                 </TouchableOpacity>
               )}

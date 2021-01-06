@@ -101,7 +101,10 @@ global.navHeight =
   Platform.OS == 'android' ? fullScreen - fullHeight - statusBarHeight : 0;
 global.factorHorizontal = Dimensions.get('window').width / 375;
 global.factorVertical = Dimensions.get('window').height / 812;
-global.factorRatio = (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2;
+global.factorRatio =
+  (Dimensions.get('window').height / 812 +
+    Dimensions.get('window').width / 375) /
+  2;
 global.onTablet = DeviceInfo.isTablet();
 global.isNotch = DeviceInfo.hasNotch();
 global.navPxFromTop = isNotch
