@@ -299,11 +299,12 @@ export default class PathOverview extends React.Component {
           />
         </TouchableOpacity>
       </ImageBackground>
-      <View style={{ height: 10 * factorVertical }} />
       <View
         key={'title'}
         style={[
-          { paddingHorizontal: 20 * factorRatio },
+          { 
+            paddingHorizontal: 20 * factorRatio,
+          },
           this.state.isLandscape ? { marginHorizontal: '10%' } : {}
         ]}
       >
@@ -320,10 +321,10 @@ export default class PathOverview extends React.Component {
             {this.state.data.title}
           </Text>
         )}
-        <View style={{ height: 10 * factorVertical }} />
         <Text
           numberOfLines={2}
           style={{
+            marginVertical: 10 * factorVertical,
             fontFamily: 'OpenSans-Regular',
             color: this.state.isMethod
               ? colors.pianoteGrey
@@ -338,7 +339,6 @@ export default class PathOverview extends React.Component {
             : this.formatDifficulty()}{' '}
           | {this.state.xp} XP
         </Text>
-        <View style={{ height: 10 * factorVertical }} />
         <View
           key={'thumb/Start/Info'}
           style={{
@@ -429,14 +429,14 @@ export default class PathOverview extends React.Component {
           key={'info'}
           style={[
             {
-              paddingHorizontal: 20 * factorRatio
+              paddingHorizontal: 20 * factorRatio,
+              marginTop: 10 * factorVertical,
             },
             this.state.isLandscape
               ? { marginHorizontal: '10%' }
               : { width: '100%' }
           ]}
         >
-          <View style={{ height: 20 * factorVertical }} />
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -449,10 +449,9 @@ export default class PathOverview extends React.Component {
             {this.state.data.description}
           </Text>
           <View key={'containStats'}>
-            <View style={{ height: 10 * factorVertical }} />
             <View
               key={'stats'}
-              style={[styles.centerContent, { flexDirection: 'row' }]}
+              style={[styles.centerContent, {marginTop: 10 * factorVertical, flexDirection: 'row' }]}
             >
               <View
                 style={[
@@ -658,7 +657,7 @@ export default class PathOverview extends React.Component {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ height: 30 * factorVertical }} />
+            <View style={{ height: 20 * factorVertical }} />
           </View>
         </View>
       )}

@@ -194,12 +194,7 @@ export default class ProfileSettings extends React.Component {
 
   render() {
     return (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.mainBackground
-        }}
-      >
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBar
           backgroundColor={colors.mainBackground}
           barStyle={'light-content'}
@@ -231,13 +226,9 @@ export default class ProfileSettings extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={{
-              fontSize: 22 * factorRatio,
-              fontFamily: 'OpenSans-Bold',
+            style={[styles.childHeaderText, {
               color: colors.secondBackground,
-              textAlign: 'center',
-              alignSelf: 'center'
-            }}
+            }]}
           >
             {this.state.currentlyView}
           </Text>
@@ -283,24 +274,11 @@ export default class ProfileSettings extends React.Component {
                   borderTopWidth: 1 * factorRatio,
                   borderTopColor: colors.secondBackground,
                   flexDirection: 'row',
-                  paddingRight: 15
+                  paddingHorizontal: 20 * factorHorizontal
                 }
               ]}
             >
-              <View
-                style={{
-                  width: 20 * factorHorizontal
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 18 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Display Name
-              </Text>
+              <Text style={styles.settingsText}>Display Name</Text>
               <View style={{ flex: 1 }} />
               <AntIcon
                 name={'right'}
@@ -323,24 +301,11 @@ export default class ProfileSettings extends React.Component {
                   borderBottomColor: colors.secondBackground,
                   borderBottomWidth: 1 * factorRatio,
                   flexDirection: 'row',
-                  paddingRight: 15
+                  paddingHorizontal: 20 * factorHorizontal
                 }
               ]}
             >
-              <View
-                style={{
-                  width: 20 * factorHorizontal
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 18 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Profile Photo
-              </Text>
+              <Text style={styles.settingsText}>Profile Photo</Text>
               <View style={{ flex: 1 }} />
               <AntIcon
                 name={'right'}
@@ -351,7 +316,7 @@ export default class ProfileSettings extends React.Component {
           </ScrollView>
         )}
         {this.state.currentlyView == 'Display Name' && (
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView style={styles.mainContainer}>
             <TextInput
               ref={txt => {
                 this.txt = txt;
@@ -365,15 +330,16 @@ export default class ProfileSettings extends React.Component {
               style={{
                 fontFamily: 'OpenSans-Regular',
                 paddingLeft: 15,
+                paddingBottom: 5, 
                 width: '100%',
                 justifyContent: 'center',
                 fontSize: 18 * factorRatio,
                 borderBottomColor: colors.secondBackground,
                 borderBottomWidth: 1 * factorRatio,
-                color: colors.secondBackground
+                color: colors.secondBackground,
+                marginBottom: 10 * factorRatio,
               }}
             />
-            <View style={{ height: 10 * factorRatio }} />
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -444,7 +410,7 @@ export default class ProfileSettings extends React.Component {
               {this.state.imageURI == '' && (
                 <TouchableOpacity
                   onPress={() => this.chooseImage()}
-                  style={{ alignSelf: 'center' }}
+                  style={styles.centerContent}
                 >
                   <AntIcon
                     name={'plus'}
@@ -490,75 +456,6 @@ export default class ProfileSettings extends React.Component {
             </TouchableOpacity>
           </ScrollView>
         )}
-        {this.state.currentlyView == 'Password' && (
-          <View style={{ width: '100%' }}>
-            <TextInput
-              ref={txt => {
-                this.password = txt;
-              }}
-              placeholder={'Current Password'}
-              value={this.state.password}
-              placeholderTextColor={colors.secondBackground}
-              onChangeText={password => this.setState({ password })}
-              onSubmitEditing={() => {}}
-              returnKeyType={'go'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                paddingLeft: 15,
-                width: '100%',
-                justifyContent: 'center',
-                fontSize: 18 * factorRatio,
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                color: colors.secondBackground
-              }}
-            />
-            <TextInput
-              ref={txt => {
-                this.newPassword = txt;
-              }}
-              placeholder={'New Password'}
-              value={this.state.newPassword}
-              placeholderTextColor={colors.secondBackground}
-              onChangeText={newPassword => this.setState({ newPassword })}
-              onSubmitEditing={() => {}}
-              returnKeyType={'go'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                paddingLeft: 15,
-                width: '100%',
-                justifyContent: 'center',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground,
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio
-              }}
-            />
-            <TextInput
-              ref={txt => {
-                this.retypeNewPassword = txt;
-              }}
-              placeholder={'Re-Type New Password'}
-              value={this.state.retypeNewPassword}
-              placeholderTextColor={colors.secondBackground}
-              onChangeText={retypeNewPassword => {
-                this.setState({ retypeNewPassword });
-              }}
-              onSubmitEditing={() => {}}
-              returnKeyType={'go'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                paddingLeft: 15,
-                width: '100%',
-                color: colors.secondBackground,
-                justifyContent: 'center',
-                fontSize: 18 * factorRatio,
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio
-              }}
-            />
-          </View>
-        )}
 
         {this.state.currentlyView == 'Profile Settings' && (
           <NavigationBar currentPage={'PROFILE'} pad={true} />
@@ -570,8 +467,7 @@ export default class ProfileSettings extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: '100%',
-              width: '100%'
+              flex: 1,
             }
           ]}
           animation={'slideInUp'}
@@ -594,8 +490,7 @@ export default class ProfileSettings extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: '100%',
-              width: '100%'
+              flex: 1,
             }
           ]}
           animation={'slideInUp'}

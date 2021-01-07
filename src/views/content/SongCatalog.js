@@ -242,11 +242,12 @@ class SongCatalog extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+      <View style={styles.mainContainer}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'SONGS'} />
 
         {!this.state.refreshing ? (
           <ScrollView
+            style={styles.mainContainer}
             showsVerticalScrollIndicator={false}
             contentInsetAdjustmentBehavior={'never'}
             scrollEventThrottle={400}
@@ -259,10 +260,6 @@ class SongCatalog extends React.Component {
                 onRefresh={() => this.refresh()}
               />
             }
-            style={{
-              flex: 1,
-              backgroundColor: colors.mainBackground
-            }}
           >
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
@@ -274,6 +271,7 @@ class SongCatalog extends React.Component {
             <Text
               style={{
                 paddingLeft: 15,
+                marginBottom: 5 * factorVertical,
                 fontSize: 30 * factorRatio,
                 color: 'white',
                 fontFamily: 'OpenSans-ExtraBold'
@@ -281,14 +279,8 @@ class SongCatalog extends React.Component {
             >
               Songs
             </Text>
-            <View style={{ height: 10 * factorVertical }} />
             {this.state.started && (
-              <View
-                key={'continueCourses'}
-                style={{
-                  backgroundColor: colors.mainBackground
-                }}
-              >
+              <View style={styles.mainContainer}>
                 <HorizontalVideoList
                   Title={'CONTINUE'}
                   seeAll={() =>

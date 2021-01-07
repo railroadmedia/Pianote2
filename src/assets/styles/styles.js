@@ -17,6 +17,15 @@ const factorRatio =
 var { StyleSheet } = React;
 
 module.exports = StyleSheet.create({
+  modalContainer: {
+    margin: 0,
+    flex: 1,
+  },
+  buttonText: {
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold',
+    fontSize: 14 * factorRatio
+  },
   searchContainer: {
     marginTop: fullHeight * 0.04,
     flexDirection: 'row',
@@ -88,6 +97,11 @@ module.exports = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch'
+  },
+  settingsText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 18 * factorRatio,
+    color: '#445f73'
   },
   tabRightContainerText: {
     paddingLeft: 12 * factorHorizontal,

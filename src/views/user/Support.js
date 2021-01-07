@@ -72,7 +72,7 @@ export default class Support extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBar
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}
@@ -99,14 +99,10 @@ export default class Support extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={{
-              fontSize: 22 * factorRatio,
-              fontWeight: 'bold',
-              fontFamily: 'OpenSans-Regular',
+            style={[styles.childHeaderText, {
               color: colors.secondBackground,
               textAlign: 'center',
-              alignSelf: 'center'
-            }}
+            }]}
           >
             Support
           </Text>

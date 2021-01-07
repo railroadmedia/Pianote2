@@ -2,7 +2,7 @@
  * Taskbar for navigation
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -30,10 +30,7 @@ class NextVideo extends React.Component {
         }}
       >
         <View style={{ width: '100%' }}>
-          <View
-            key={'progress'}
-            style={{ flexDirection: 'row', height: 3 * factorVertical }}
-          >
+          <View style={localStyles.container}>
             <View
               style={{
                 flex: this.props.progress / 100,
@@ -49,15 +46,7 @@ class NextVideo extends React.Component {
               }}
             />
           </View>
-          <View style={{ height: 10 * factorVertical }} />
-          <View
-            key={'nextLesson'}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: 15
-            }}
-          >
+          <View style={localStyles.nextLesson}>
             <Text
               style={{
                 fontSize: 16 * factorRatio,
@@ -70,38 +59,22 @@ class NextVideo extends React.Component {
             >
               YOUR NEXT LESSON
             </Text>
-
             <Text
-              style={{
-                fontSize: 12 * factorRatio,
-                fontFamily: 'OpenSans-Regular',
-                color: this.props.isMethod
-                  ? colors.pianoteGrey
-                  : colors.secondBackground,
-                textAlign: 'right'
-              }}
+              style={[localStyles.typeText, {
+                color: this.props.isMethod ? 
+                  colors.pianoteGrey : colors.secondBackground,
+              }]}
             >
               {this.props.type} - {this.props.progress}% COMPLETE
             </Text>
           </View>
-          <View
-            key={'video'}
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 15
-            }}
-          >
+          <View style={localStyles.videoContainer}>
             <View
-              key={'thumbnail'}
               style={{ justifyContent: 'center' }}
               underlayColor={'transparent'}
             >
               <FastImage
-                style={{
-                  width: fullWidth * 0.24,
-                  aspectRatio: 16 / 9,
-                  borderRadius: 7 * factorRatio
-                }}
+                style={localStyles.image}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                     fullWidth * 0.24 * 2
@@ -112,35 +85,16 @@ class NextVideo extends React.Component {
                 resizeMode={FastImage.resizeMode.cover}
               />
             </View>
-            <View
-              key={'titles'}
-              style={{
-                paddingLeft: 15,
-                alignSelf: 'center'
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 15 * factorRatio,
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                  fontFamily: 'OpenSans-Regular',
-                  color: 'white'
-                }}
-              >
-                {this.props.item.getField('title')}
-              </Text>
-              <View style={{ height: 2 }} />
+            <View style={localStyles.titleTextContainer}>
+              <Text style={localStyles.videoTitle}>{this.props.item.getField('title')}</Text>
               <Text
                 numberOfLines={2}
-                style={{
-                  fontSize: 12 * factorRatio,
-                  fontFamily: 'OpenSans-Regular',
-                  textAlign: 'left',
+                style={[
+                  localStyles.videoTitleText , {
                   color: this.props.isMethod
                     ? colors.pianoteGrey
                     : colors.secondBackground
-                }}
+                }]}
               >
                 {this.props.item.post.fields?.find(f => f.key === 'video')
                   ? Math.round(
@@ -153,15 +107,8 @@ class NextVideo extends React.Component {
               </Text>
             </View>
             <View
-              key={'play'}
               onPress={() => {}}
-              style={[
-                styles.centerContent,
-                {
-                  flex: 1,
-                  flexDirection: 'row'
-                }
-              ]}
+              style={[styles.centerContent, localStyles.play]}
             >
               <View style={{ flex: 1 }} />
               <EntypoIcon
@@ -177,5 +124,65 @@ class NextVideo extends React.Component {
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    flexDirection: 'row', 
+    height: 3 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  nextLesson: {
+    marginTop: 10 * Dimensions.get('window').height / 812,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15
+  },
+  typeText: {
+    fontSize: 12 * (
+      Dimensions.get('window').height / 812 + 
+      Dimensions.get('window').width / 375
+    ) / 2,
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'right'
+  },
+  videoContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 15
+  },
+  image: {
+    width: Dimensions.get('window').width * 0.24,
+    aspectRatio: 16 / 9,
+    borderRadius: 7 * (
+      Dimensions.get('window').height / 812 + 
+      Dimensions.get('window').width / 375
+    ) / 2
+  },
+  videoTitle: {
+    fontSize: 15 * (
+      Dimensions.get('window').height / 812 + 
+      Dimensions.get('window').width / 375
+    ) / 2,
+    marginBottom: 2,
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontFamily: 'OpenSans-Regular',
+    color: 'white'
+  },
+  play: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  videoTitleText: {
+    fontSize: 12 * (
+      Dimensions.get('window').height / 812 + 
+      Dimensions.get('window').width / 375
+    ) / 2,
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'left',
+  },
+  titleTextContainer: {
+    paddingLeft: 15,
+    alignSelf: 'center'
+  }
+});
 
 export default withNavigation(NextVideo);

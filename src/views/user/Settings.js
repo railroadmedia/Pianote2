@@ -169,12 +169,7 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.mainBackground
-        }}
-      >
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBar
           backgroundColor={colors.mainBackground}
           barStyle={'light-content'}
@@ -201,21 +196,11 @@ export default class Settings extends React.Component {
             />
           </TouchableOpacity>
 
-          <Text
-            style={{
-              fontSize: 22 * factorRatio,
-              fontFamily: 'OpenSans-Bold',
-              color: colors.secondBackground,
-              textAlign: 'center',
-              alignSelf: 'center'
-            }}
-          >
-            Settings
-          </Text>
+          <Text style={[styles.childHeaderText, {color: colors.secondBackground}]}>Settings</Text>
           <View style={{ flex: 1 }} />
         </View>
 
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={styles.mainContainer}>
           <TouchableOpacity
             key={'profileSettings'}
             onPress={() => {
@@ -244,15 +229,7 @@ export default class Settings extends React.Component {
                 color={colors.pianoteRed}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
-              Profile Settings
-            </Text>
+            <Text style={styles.settingsText}>Profile Settings</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -286,15 +263,7 @@ export default class Settings extends React.Component {
                 size={35 * factorRatio}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
-              Notification Settings
-            </Text>
+            <Text style={styles.settingsText}>Notification Settings</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -326,15 +295,7 @@ export default class Settings extends React.Component {
                 color={colors.pianoteRed}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
-              Manage Subscriptions
-            </Text>
+            <Text style={styles.settingsText}>Manage Subscriptions</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -367,15 +328,7 @@ export default class Settings extends React.Component {
                 color={colors.pianoteRed}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
-              Restore Purchases
-            </Text>
+            <Text style={styles.settingsText}>Restore Purchases</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -410,15 +363,7 @@ export default class Settings extends React.Component {
                 color={colors.pianoteRed}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
-              Support
-            </Text>
+            <Text style={styles.settingsText}>Support</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -452,13 +397,7 @@ export default class Settings extends React.Component {
                 color={colors.pianoteRed}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
+            <Text style={styles.settingsText}>
               Terms of Use
             </Text>
             <View style={{ flex: 1 }} />
@@ -494,15 +433,7 @@ export default class Settings extends React.Component {
                 size={27.5 * factorRatio}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
-              Privacy Policy
-            </Text>
+            <Text style={styles.settingsText}>Privacy Policy</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -527,24 +458,14 @@ export default class Settings extends React.Component {
               }
             ]}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factorHorizontal }]}>
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
                 size={23.5 * factorRatio}
               />
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 18 * factorRatio,
-                color: colors.secondBackground
-              }}
-            >
-              Log Out
-            </Text>
+            <Text style={styles.settingsText}>Log Out</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -553,14 +474,12 @@ export default class Settings extends React.Component {
             />
           </TouchableOpacity>
           <Text
-            style={{
-              fontFamily: 'OpenSans-Regular',
-              textAlign: 'center',
-              color: colors.secondBackground,
+            style={[styles.settingsText, {
               marginTop: 15 * factorRatio,
+              textAlign: 'center',
               fontSize: 12 * factorRatio
-            }}
-          >
+            }]}
+            >
             APP VERSION {DeviceInfo.getVersion()}
           </Text>
           {commonService.rootUrl.includes('staging') && (
@@ -585,8 +504,7 @@ export default class Settings extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              height: '100%',
-              width: '100%'
+              flex: 1, 
             }
           ]}
           animation={'slideInUp'}

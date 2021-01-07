@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -89,18 +89,8 @@ class NavigationBar extends React.Component {
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
         }}
       >
-        <View
-          key={'icons'}
-          style={{
-            alignSelf: 'stretch',
-            flexDirection: 'row',
-            paddingTop: 10 * factorVertical,
-            justifyContent: 'space-around',
-            alignContent: 'space-around'
-          }}
-        >
+        <View style={localStyles.navContainer}>
           <TouchableOpacity
-            key={'lessons'}
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
@@ -131,7 +121,6 @@ class NavigationBar extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'search'}
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
@@ -160,7 +149,6 @@ class NavigationBar extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'download'}
             onPress={() => {
               this.state.onMain
                 ? this.props.navigation.dispatch(
@@ -187,7 +175,6 @@ class NavigationBar extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'profile'}
             onPress={() => {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
@@ -207,14 +194,12 @@ class NavigationBar extends React.Component {
           >
             <View
               style={[
+                localStyles.navIconContainer,
                 this.state.profileImage.length > 0
                   ? null
                   : styles.centerContent,
                 {
-                  width: 37.5 * factorRatio,
-                  height: 37.5 * factorRatio,
-                  borderRadius: 100,
-                  borderWidth: 2.25 * factorRatio,
+                  paddingTop: isNotch ? 2 : 0,  
                   borderColor:
                     this.props.currentPage == 'PROFILE' &&
                     this.state.profileImage.length > 0
@@ -225,12 +210,28 @@ class NavigationBar extends React.Component {
             >
               {this.profile()}
             </View>
-            <View style={{ height: 2 * factorVertical }} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  navIconContainer: {
+    borderRadius: 100,
+    width: 37.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 37.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderWidth: 2.25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+  },
+  navContainer: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    paddingTop: 10 * (Dimensions.get('window').height / 812),
+    justifyContent: 'space-around',
+    alignContent: 'space-around'    
+  }
+});
+
 
 export default withNavigation(NavigationBar);

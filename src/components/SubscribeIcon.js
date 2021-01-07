@@ -45,15 +45,7 @@ class SubscribeIcon extends React.Component {
             fill={'white'}
           />
           <View style={{ flex: 0.2 }} />
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 14 * factorRatio,
-              fontFamily: 'RobotoCondensed-Bold'
-            }}
-          >
-            SUBSCRIBE
-          </Text>
+          <Text style={styles.buttonText}>SUBSCRIBE</Text>
           <View style={{ flex: 1 }} />
         </TouchableOpacity>
       </View>

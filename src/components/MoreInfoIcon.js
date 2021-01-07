@@ -38,18 +38,8 @@ class MoreInfoIcon extends React.Component {
           ]}
         >
           <Icon name={'arrowright'} size={23 * factorRatio} color={'white'} />
-
           <View style={{ flex: 0.075 }} />
-
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 14 * factorRatio,
-              fontFamily: 'RobotoCondensed-Bold'
-            }}
-          >
-            MORE INFO
-          </Text>
+          <Text style={styles.buttonText}>MORE INFO</Text>
         </TouchableOpacity>
       </View>
     );

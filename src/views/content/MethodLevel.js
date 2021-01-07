@@ -195,18 +195,13 @@ export default class MethodLevel extends React.Component {
   render() {
     return (
       <SafeAreaView
-        forceInset={{
-          bottom: 'never'
-        }}
-        style={[styles.container, { backgroundColor: 'black' }]}
+        style={styles.methodContainer}  
+        forceInset={{bottom: 'never'}}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
-          style={{
-            flex: 1,
-            backgroundColor: 'black'
-          }}
+          style={styles.methodContainer}
           refreshControl={
             <RefreshControl
               colors={[colors.pianoteRed]}
@@ -273,7 +268,7 @@ export default class MethodLevel extends React.Component {
                 opacity: 1
               }}
             >
-              <View style={{ alignSelf: 'center' }}>
+              <View style={styles.centerContent}>
                 <Pianote
                   height={fullHeight * 0.035}
                   width={fullWidth * 0.125}
@@ -284,40 +279,38 @@ export default class MethodLevel extends React.Component {
                 style={{
                   height: greaterWDim / 30,
                   width: '50%',
-                  alignSelf: 'center'
+                  alignSelf: 'center',
                 }}
                 source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
                 resizeMode={FastImage.resizeMode.contain}
               />
-              <View style={{ height: 15 * factorRatio }} />
               <Text
                 key={'level'}
                 style={{
                   fontSize: 43 * factorRatio,
                   color: 'white',
+                  marginTop: 10 * factorRatio,
+                  marginBottom: 10 * factorRatio,
                   fontFamily: 'RobotoCondensed-Bold',
                   textAlign: 'center'
                 }}
               >
                 LEVEL {this.state.level}
               </Text>
-              <View style={{ height: 15 * factorRatio }} />
               <View
                 key={'startIcon'}
                 style={{
                   height: 40 * factorRatio,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-evenly'
+                  justifyContent: 'space-evenly',
+                  marginBottom: 15 * factorVertical,
                 }}
               >
                 <TouchableOpacity
+                  style={[styles.centerContent, {flex: 0.5}]}
                   onPress={() => {
                     this.toggleMyList();
-                  }}
-                  style={{
-                    flex: 0.5,
-                    alignItems: 'center'
                   }}
                 >
                   {!this.state.isAddedToList ? (
@@ -365,14 +358,11 @@ export default class MethodLevel extends React.Component {
                   />
                 ) : null}
                 <TouchableOpacity
+                  style={[styles.centerContent, {flex: 0.5}]}
                   onPress={() => {
                     this.setState({
                       showInfo: !this.state.showInfo
                     });
-                  }}
-                  style={{
-                    flex: 0.5,
-                    alignItems: 'center'
                   }}
                 >
                   <AntIcon
@@ -385,14 +375,13 @@ export default class MethodLevel extends React.Component {
                       fontFamily: 'OpenSans-Regular',
                       color: 'white',
                       marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
+                      fontSize: 13 * factorRatio,
                     }}
                   >
                     Info
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ height: 10 * factorVertical }} />
             </View>
           </ImageBackground>
           {this.state.showInfo && (
@@ -403,11 +392,10 @@ export default class MethodLevel extends React.Component {
                 paddingHorizontal: this.state.isLandscape ? '10%' : 15
               }}
             >
-              <View style={{ height: 20 * factorVertical }} />
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 5 * factorVertical,
+                  marginVertical: 15 * factorVertical,
                   fontSize: 15 * factorRatio,
                   color: 'white',
                   textAlign: 'center'
@@ -415,27 +403,28 @@ export default class MethodLevel extends React.Component {
               >
                 {this.state.description}
               </Text>
-              <View style={{ height: 15 * factorVertical }} />
             </View>
           )}
           <View
-            style={{ paddingHorizontal: this.state.isLandscape ? '10%' : 0 }}
+            style={{ 
+              paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+              marginBottom: 10 * factorVertical
+            }}
           >
             <VerticalVideoList
               methodLevel={true}
               title={'METHOD'}
               items={this.state.items}
               isLoading={this.state.isLoadingAll}
-              showFilter={false} // shows filters button
-              showType={false} // show course / song by artist name
-              showArtist={false} // show artist name
-              showLength={false} // duration of song
+              showFilter={false}
+              showType={false}
+              showArtist={false}
+              showLength={false}
               showSort={false}
               showLines={true}
-              imageWidth={fullWidth * 0.3} // image width
+              imageWidth={fullWidth * 0.3}
             />
           </View>
-          <View style={{ height: 10 }} />
         </ScrollView>
         <Modal
           key={'restartCourse'}

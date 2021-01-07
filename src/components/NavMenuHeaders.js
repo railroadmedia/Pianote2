@@ -75,7 +75,6 @@ class NavMenuHeaders extends React.Component {
                   );
             }}
             style={{
-              // TO DO FIX DIMENSIONS ON ANDROID
               height:
                 Platform.OS == 'ios'
                   ? onTablet
@@ -85,13 +84,13 @@ class NavMenuHeaders extends React.Component {
                   ? fullHeight * 0.1
                   : fullHeight * 0.08,
               width: onTablet ? 0.14 * fullWidth : 0.3 * fullWidth,
-              flexDirection: 'row'
+              flexDirection: 'row',
+              marginRight: 5 * factorHorizontal,
             }}
           >
             <Pianote fill={'#fb1b2f'} />
             <View style={{ flex: 1 }} />
           </TouchableOpacity>
-          <View style={{ width: 5 * factorHorizontal }} />
           <View style={{ flex: 1 }} />
           <TouchableOpacity
             key={'lessons'}
@@ -205,8 +204,7 @@ class NavMenuHeaders extends React.Component {
           isVisible={this.state.showModalMenu}
           style={{
             margin: 0,
-            height: '100%',
-            width: '100%'
+            flex: 1,
           }}
           animation={'slideInUp'}
           animationInTiming={250}

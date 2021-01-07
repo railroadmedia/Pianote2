@@ -2,7 +2,7 @@
  * Filters
  */
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Loading from 'Pianote2/src/modals/Loading.js';
@@ -2286,3 +2286,12 @@ export default class Filters extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  header: {
+      
+  },
+  text: {
+      
+  }
+});    

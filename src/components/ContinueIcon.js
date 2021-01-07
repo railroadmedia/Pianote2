@@ -41,15 +41,7 @@ class ContinueIcon extends React.Component {
             color={'white'}
           />
           <View style={{ flex: 0.025 }} />
-          <Text
-            style={{
-              color: 'white',
-              fontFamily: 'RobotoCondensed-Bold',
-              fontSize: 14 * factorRatio
-            }}
-          >
-            CONTINUE
-          </Text>
+          <Text style={styles.buttonText}>CONTINUE</Text>
         </TouchableOpacity>
       </View>
     );

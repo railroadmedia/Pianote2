@@ -87,12 +87,7 @@ export default class NotificationSettings extends React.Component {
 
   render() {
     return (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.mainBackground
-        }}
-      >
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBar
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}
@@ -125,14 +120,10 @@ export default class NotificationSettings extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={{
+            style={[styles.childHeaderText, {
               textAlign: 'center',
-              alignSelf: 'center',
-              fontSize: 22 * factorRatio,
-              fontWeight: 'bold',
-              fontFamily: 'OpenSans-Regular',
               color: colors.secondBackground
-            }}
+            }]}
           >
             Notification Settings
           </Text>
@@ -161,6 +152,7 @@ export default class NotificationSettings extends React.Component {
             >
               <Text
                 style={{
+                  marginTop: 10*factorRatio,
                   fontFamily: 'OpenSans-Regular',
                   fontSize: 16 * factorRatio,
                   color: colors.secondBackground,

@@ -151,14 +151,11 @@ class StudentFocusCatalog extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+      <View style={styles.mainContainer}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'STUDENT FOCUS'} />
         {!this.state.refreshing ? (
           <FlatList
-            style={{
-              flex: 1,
-              backgroundColor: colors.mainBackground
-            }}
+            style={styles.mainContainer}
             numColumns={2}
             removeClippedSubviews={true}
             keyExtractor={item => item.name}
@@ -196,12 +193,7 @@ class StudentFocusCatalog extends React.Component {
                 </Text>
 
                 {this.state.started && (
-                  <View
-                    key={'continueCourses'}
-                    style={{
-                      backgroundColor: colors.mainBackground
-                    }}
-                  >
+                  <View style={styles.mainContainer}>
                     <HorizontalVideoList
                       Title={'CONTINUE'}
                       seeAll={() =>

@@ -21,7 +21,7 @@ export default class Loading extends React.Component {
     return (
       <View
         style={[
-          styles.loadingContainer,
+          localStyles.loadingContainer,
           { backgroundColor: backgroundColor || 'rgba(0,0,0,.5)' },
           this.state.isLoading ? { width: '100%' } : { width: 0 }
         ]}
@@ -30,14 +30,14 @@ export default class Loading extends React.Component {
           size={'large'}
           color={activityColor || 'white'}
           animating={this.state.isLoading}
-          style={{ marginTop: 10, marginBottom: 10 }}
+          style={{ marginVertical: 10 }}
         />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   loadingContainer: {
     overflow: 'hidden',
     position: 'absolute',

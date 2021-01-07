@@ -40,18 +40,8 @@ class StartIcon extends React.Component {
             size={25 * factorRatio}
             color={'white'}
           />
-
           <View style={{ flex: 0.025 }} />
-
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 14 * factorRatio,
-              fontFamily: 'RobotoCondensed-Bold'
-            }}
-          >
-            START
-          </Text>
+          <Text style={styles.buttonText}>START</Text>
         </TouchableOpacity>
       </View>
     );

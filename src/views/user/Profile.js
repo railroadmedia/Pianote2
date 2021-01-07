@@ -284,17 +284,12 @@ export default class Profile extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBar
           backgroundColor={colors.mainBackground}
           barStyle={'light-content'}
         />
-        <View
-          key={'contentContainer'}
-          style={{
-            flex: 1
-          }}
-        >
+        <View style={styles.mainContainer}>
           <View
             key={'header'}
             style={{
@@ -309,7 +304,7 @@ export default class Profile extends React.Component {
               style={{
                 fontSize: 22 * factorRatio,
                 color: 'white',
-                fontFamily: 'OpenSans-Bold',
+                fontFamily: 'OpenSans-ExtraBold',
                 textAlign: 'center',
                 alignSelf: 'center'
               }}
@@ -355,7 +350,8 @@ export default class Profile extends React.Component {
                       borderWidth: 2 * factorRatio,
                       borderColor: colors.pianoteRed,
                       height: onTablet ? 112 * factorRatio : 140 * factorRatio,
-                      aspectRatio: 1
+                      aspectRatio: 1,
+                      marginBottom: 5 * factorVertical,
                     }}
                   >
                     <View
@@ -429,27 +425,18 @@ export default class Profile extends React.Component {
                       />
                     )}
                   </View>
-                  <View
-                    style={{
-                      height: 10 * factorVertical
-                    }}
-                  />
                   <View key={'name'} style={styles.centerContent}>
                     <Text
                       style={{
                         fontFamily: 'OpenSans-ExtraBold',
                         fontSize: 30 * factorRatio,
                         textAlign: 'center',
-                        color: 'white'
+                        color: 'white',
+                        marginBottom: 10 * factorVertical,
                       }}
                     >
                       {this.state.username}
                     </Text>
-                    <View
-                      style={{
-                        height: 10 * factorVertical
-                      }}
-                    />
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
@@ -744,13 +731,9 @@ export default class Profile extends React.Component {
                         {messageDict[item.type][0]}
                       </Text>
                     </Text>
-                    <View
-                      style={{
-                        height: 5 * factorVertical
-                      }}
-                    />
                     <Text
                       style={{
+                        marginTop: 5 * factorVertical,
                         fontFamily: 'OpenSans-Regular',
                         fontSize: 13 * factorRatio,
                         color: colors.secondBackground
@@ -761,11 +744,7 @@ export default class Profile extends React.Component {
                   </View>
                 </View>
                 <View>
-                  <View
-                    style={{
-                      flexDirection: 'row'
-                    }}
-                  >
+                  <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity
                       onPress={() => {
                         this.checkNotificationTypeStatus(item);

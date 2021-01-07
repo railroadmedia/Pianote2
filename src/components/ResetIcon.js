@@ -43,15 +43,7 @@ class ResetIcon extends React.Component {
             color={'white'}
           />
           <View style={{ flex: 0.075 }} />
-          <Text
-            style={{
-              color: 'white',
-              fontFamily: 'RobotoCondensed-Bold',
-              fontSize: 14 * factorRatio
-            }}
-          >
-            RESET
-          </Text>
+          <Text style={styles.buttonText}>RESET</Text>
         </TouchableOpacity>
       </View>
     );

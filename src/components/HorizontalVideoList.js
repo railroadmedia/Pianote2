@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Platform,
   Image,
+  StyleSheet,
   Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
@@ -176,23 +177,12 @@ class HorizontalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View key={'container'} style={{ paddingHorizontal: 15 }}>
-        <View
-          key={'title'}
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingVertical: 15 * factorRatio
-          }}
-        >
+      <View style={localStyles.listContainer}>
+        <View style={localStyles.titleContain}>
           <Text
-            style={{
-              fontSize: 18 * factorRatio,
-              fontFamily: 'RobotoCondensed-Bold',
+            style={[localStyles.title, {
               color: this.props.isMethod ? 'white' : colors.secondBackground
-            }}
+            }]}
           >
             {this.props.Title}
           </Text>
@@ -202,16 +192,7 @@ class HorizontalVideoList extends React.Component {
               key={'seeAll'}
               onPress={() => this.props.seeAll()}
             >
-              <Text
-                style={{
-                  textAlign: 'right',
-                  fontSize: 14.5 * factorRatio,
-                  fontWeight: '300',
-                  color: colors.pianoteRed
-                }}
-              >
-                See All
-              </Text>
+              <Text style={localStyles.seeAllText}>See All</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -237,19 +218,7 @@ class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      zIndex: 1
-                    }
-                  ]}
-                >
+                <View style={[styles.centerContent, localStyles.progressItem]}>
                   <Progress
                     height={50}
                     width={50 * factorRatio}
@@ -259,11 +228,9 @@ class HorizontalVideoList extends React.Component {
 
                 {Platform.OS === 'ios' ? (
                   <FastImage
-                    style={{
-                      width: '100%',
-                      aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                      borderRadius: 7.5 * factorRatio
-                    }}
+                    style={[localStyles.imageIOS,
+                      {aspectRatio: this.props.isSquare ? 1 : 16 / 9}
+                    ]}
                     source={{
                       uri:
                         item.thumbnail && item.thumbnail !== 'TBD'
@@ -280,11 +247,9 @@ class HorizontalVideoList extends React.Component {
                   />
                 ) : (
                   <Image
-                    style={{
-                      width: '100%',
-                      aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                      borderRadius: 7.5 * factorRatio
-                    }}
+                    style={[localStyles.imageIOS,
+                      {aspectRatio: this.props.isSquare ? 1 : 16 / 9}
+                    ]}
                     resizeMode='cover'
                     source={{
                       uri:
@@ -302,35 +267,16 @@ class HorizontalVideoList extends React.Component {
                 )}
               </View>
 
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
+              <View style={localStyles.videoTitle}>
                 <View style={{ width: '80%' }}>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode='tail'
-                    style={{
-                      fontSize: 14 * factorRatio,
-                      marginTop: 7.5 * factorRatio,
-                      marginBottom: 3 * factorRatio,
-                      fontFamily: 'OpenSans-Bold',
-                      color: 'white'
-                    }}
+                    style={localStyles.videoTitleText}
                   >
                     {item.title}
                   </Text>
-
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      marginBottom: 3 * factorRatio
-                    }}
-                  >
+                  <View style={localStyles.typeContainer}>
                     {this.props.showType && (
                       <Text
                         numberOfLines={1}
@@ -347,13 +293,12 @@ class HorizontalVideoList extends React.Component {
                     )}
                     <Text
                       numberOfLines={1}
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
+                      style={[localStyles.artist, {
                         color: this.props.isMethod
                           ? colors.pianoteGrey
                           : colors.secondBackground,
-                        fontSize: 12 * factorRatio
-                      }}
+                        
+                      }]}
                     >
                       {' '}
                       {item.artist}
@@ -400,11 +345,7 @@ class HorizontalVideoList extends React.Component {
         <Modal
           key={'modal'}
           isVisible={this.state.showModal}
-          style={{
-            margin: 0,
-            height: '100%',
-            width: '100%'
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -423,5 +364,79 @@ class HorizontalVideoList extends React.Component {
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  listContainer: {
+    paddingHorizontal: 15
+  },
+  artist: {
+    fontSize: 12 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2,
+      fontFamily: 'OpenSans-Regular',
+  },
+  title: {
+    fontSize: 18 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2,
+    fontFamily: 'RobotoCondensed-Bold',
+  },
+  seeAllText: {
+    textAlign: 'right',
+    fontSize: 14.5 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2,
+    fontWeight: '300',
+    color: '#fb1b2f'
+  },
+  titleContain: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2
+  },
+  progressItem: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 1
+  },
+  imageIOS: {
+    width: '100%',
+    borderRadius: 7.5 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2
+  },
+  videoTitle: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  videoTitleText: {
+    fontSize: 14 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2,
+    marginTop: 7.5 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2,
+    marginBottom: 3 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2,
+    fontFamily: 'OpenSans-Bold',
+    color: 'white'
+  },
+  typeContainer: {
+    flexDirection: 'row',
+    marginBottom: 3 * (
+      Dimensions.get('window').height / 812 +
+      Dimensions.get('window').width / 375 ) / 2,
+  },
+});    
 
 export default withNavigation(HorizontalVideoList);

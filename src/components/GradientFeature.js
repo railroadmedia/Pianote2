@@ -49,8 +49,7 @@ class GradientFeature extends React.Component {
           colors={colorDict[color]}
           style={{
             borderRadius,
-            width: '100%',
-            height: '100%'
+            flex: 1,
           }}
         />
       </View>
