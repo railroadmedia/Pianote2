@@ -6,7 +6,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -20,77 +22,21 @@ class ProfileImage extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
+        style={styles.container}
         onPress={() => this.props.hideProfileImage()}
-        key={'container'}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
       >
-        <View
-          key={'content'}
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }}
-        >
-          <View
-            key={'content'}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio
-            }}
-          >
-            <Text
-              style={[
-                styles.modalHeaderText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 20 * factorRatio
-                }
-              ]}
-            >
-              Profile image is too large.
-            </Text>
-
-            <Text
-              style={[
-                styles.modalBodyText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 20 * factorRatio
-                }
-              ]}
-            >
-              Please try again.
-            </Text>
+        <View style={[styles.container, styles.centerContent]}>
+          <View style={localStyles.container}>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>Profile image is too large.</Text>
+            <Text style={[styles.modalBodyText, localStyles.tryAgain]}>Please try again.</Text>
 
             <TouchableOpacity
+              style={localStyles.tryAgainTextContainer}
               onPress={() => {
                 this.props.hideProfileImage();
               }}
-              style={{
-                paddingHorizontal: 20,
-                marginVertical: 17.5 * factorRatio
-              }}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    color: '#fb1b2f'
-                  }
-                ]}
-              >
-                TRY AGAIN
-              </Text>
+              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>TRY AGAIN</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -98,5 +44,29 @@ class ProfileImage extends React.Component {
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  title: {
+    paddingHorizontal: 40,
+    marginTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgain: {
+    paddingHorizontal: 40,
+    marginTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgainTextContainer: {
+    paddingHorizontal: 20,
+    marginVertical: 17.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgainText: {
+    color: '#fb1b2f',
+    marginBottom: 5,
+  }
+});
 
 export default withNavigation(ProfileImage);

@@ -6,7 +6,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 
 import { withNavigation } from 'react-navigation';
@@ -21,64 +23,22 @@ class DisplayName extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        onPress={() => this.props.hideDisplayName()}
-        key={'container'}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
+        style={styles.container}  
+        onPress={() => this.props.hideDisplayName()}  
       >
-        <View
-          key={'content'}
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio
-            }}
-          >
-            <Text
-              style={[
-                styles.modalHeaderText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
-            >
+        <View style={[styles.container, styles.centerContent]}>
+          <View style={localStyles.titleContainer}>
+            <Text style={[styles.modalHeaderText, localStyles.displayText]}>
               This display name {'\n'} is already in use.
             </Text>
-
-            <Text
-              style={[
-                styles.modalBodyText,
-                {
-                  paddingHorizontal: 20,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
-            >
+            <Text style={[styles.modalBodyText, localStyles.pleaseTryAgain]}>
               Please try again.
             </Text>
 
             <TouchableOpacity
+              style={localStyles.tryAgainContainer}
               onPress={() => {
                 this.props.hideDisplayName();
-              }}
-              style={{
-                paddingHorizontal: 20,
-                marginVertical: 20 * factorRatio
               }}
             >
               <Text
@@ -98,5 +58,31 @@ class DisplayName extends React.Component {
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,.5)'
+  },
+  titleContainer: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+  },
+  displayText: {
+    paddingHorizontal: 40,
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  pleaseTryAgain: {
+    paddingHorizontal: 20,
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgainContainer: {
+    paddingHorizontal: 20,
+    marginVertical: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  }
+});
 
 export default withNavigation(DisplayName);

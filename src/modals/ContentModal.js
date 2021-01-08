@@ -6,7 +6,9 @@ import {
   View,
   Text,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  StyleSheet, 
+  Dimensions
 } from 'react-native';
 import {
   likeContent,
@@ -144,52 +146,15 @@ class ContentModal extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        onPress={() => this.props.hideContentModal()}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
+        style={styles.container}  
+        onPress={() => this.props.hideContentModal()}  
       >
-        <View
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }}
-        >
-          <View
-            style={{
-              margin: 40 * factorRatio,
-              paddingHorizontal: 15,
-              borderRadius: 10 * factorRatio,
-              shadowOffset: {
-                width: 5 * factorRatio,
-                height: 10 * factorRatio
-              },
-              shadowColor: 'black',
-              shadowOpacity: 0.1,
-              elevation: 3,
-              backgroundColor: 'white'
-            }}
-          >
+        <View style={[styles.container,styles.centerContent]}>
+          <View style={localStyles.container}>
             <View key={'image'} style={styles.centerContent}>
-              <View
-                style={{
-                  height: 180 * factorRatio,
-                  aspectRatio: this.state.type == 'song' ? 1 : 16 / 9,
-                  backgroundColor: 'white',
-                  zIndex: 10,
-                  marginTop: 10 * factorRatio,
-                  marginHorizontal: 20 * factorRatio
-                }}
-              >
+              <View style={[localStyles.imageContainer, {aspectRatio: this.state.type == 'song' ? 1 : 16 / 9}]}>
                 <FastImage
-                  style={{ flex: 1, borderRadius: 10 }}
+                  style={localStyles.image}
                   source={{
                     uri:
                       this.state.thumbnail == 'TBD'
@@ -200,49 +165,12 @@ class ContentModal extends React.Component {
                 />
               </View>
             </View>
-
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontWeight: 'bold',
-                fontSize: 22 * factorRatio,
-                textAlign: 'center'
-              }}
-            >
-              {this.state.title}
-            </Text>
-
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                textAlign: 'center',
-                fontSize: 12 * factorRatio,
-                color: 'grey'
-              }}
-            >
-              {this.changeType(this.state.type)}/ {this.state.artist}
-            </Text>
-
-            <Text
-              numberOfLines={5}
-              style={{
-                marginHorizontal: 10 * factorRatio,
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factorRatio,
-                textAlign: 'center'
-              }}
-            >
+            <Text style={localStyles.title}>{this.state.title}</Text>
+            <Text style={localStyles.type}>{this.changeType(this.state.type)}/ {this.state.artist}</Text>
+            <Text numberOfLines={5} style={localStyles.description}>
               {this.state.description}
             </Text>
-            <View
-              key={'stats'}
-              style={[
-                styles.centerContent,
-                {
-                  flexDirection: 'row'
-                }
-              ]}
-            >
+            <View style={[styles.centerContent, {flexDirection: 'row'}]}>
               <View style={{ flex: 1 }} />
               {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
                 <View
@@ -253,29 +181,12 @@ class ContentModal extends React.Component {
                     }
                   ]}
                 >
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontWeight: 'bold',
-                      fontSize: 18 * factorRatio,
-                      textAlign: 'left',
-                      marginTop: 10 * factorVertical
-                    }}
-                  >
+                  <Text style={localStyles.lessonCount}>
                     {this.state.lesson_count > 1
                       ? this.state.lesson_count
                       : this.state.bundle_count}
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 12 * factorRatio,
-                      textAlign: 'left',
-                      marginTop: 5 * factorVertical
-                    }}
-                  >
-                    LESSONS
-                  </Text>
+                  <Text style={localStyles.lessons}>LESSONS</Text>
                 </View>
               )}
               {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
@@ -289,57 +200,26 @@ class ContentModal extends React.Component {
                   }
                 ]}
               >
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontWeight: 'bold',
-                    fontSize: 18 * factorRatio,
-                    textAlign: 'left',
-                    marginTop: 10 * factorVertical
-                  }}
-                >
-                  {this.state.xp}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 12 * factorRatio,
-                    textAlign: 'left',
-                    marginTop: 5 * factorVertical
-                  }}
-                >
-                  XP
-                </Text>
+                <Text style={localStyles.xp}>{this.state.xp}</Text>
+                <Text style={localStyles.XPtext}>XP</Text>
               </View>
               <View style={{ flex: 1 }} />
             </View>
-            <View key={'buttons'} style={{ flexDirection: 'row', padding: 20 }}>
+            <View style={localStyles.button}>
               <TouchableOpacity
-                style={{ flex: 1, alignItems: 'center' }}
+                style={localStyles.likeContainer}
                 onPress={() => {
                   this.state.isLiked
                     ? this.unlike(this.state.id)
                     : this.like(this.state.id);
                 }}
               >
-                <AntIcon
-                  name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={25 * factorRatio}
-                />
+                <AntIcon name={this.state.isLiked ? 'like1' : 'like2'} size={25 * factorRatio}/>
                 <View style={{ flex: 1 }} />
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 12 * factorRatio,
-                    textAlign: 'left',
-                    marginTop: 15 * factorVertical
-                  }}
-                >
-                  {this.state.like_count}
-                </Text>
+                <Text style={localStyles.likeCount}>{this.state.like_count}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{ flex: 1, alignItems: 'center' }}
+                style={styles.centerContent}
                 onPress={() => {
                   this.state.isAddedToList
                     ? this.removeFromMyList(this.state.id)
@@ -352,16 +232,7 @@ class ContentModal extends React.Component {
                   color={'black'}
                 />
                 <View style={{ flex: 1 }} />
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 12 * factorRatio,
-                    textAlign: 'left',
-                    marginTop: 10 * factorVertical
-                  }}
-                >
-                  My List
-                </Text>
+                <Text style={localStyles.myList}>My List</Text>
               </TouchableOpacity>
               <Download_V2
                 entity={{
@@ -400,4 +271,93 @@ class ContentModal extends React.Component {
   };
 }
 
+const localStyles = StyleSheet.create({
+  container: {
+    margin: 40 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    shadowOffset: {
+      width: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+      height: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    },
+    shadowColor: 'black',
+    shadowOpacity: 0.1,
+    elevation: 3,
+    backgroundColor: 'white'
+  },
+  imageContainer: {
+    height: 180 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    backgroundColor: 'white',
+    zIndex: 10,
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginHorizontal: 12.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  title: {
+    fontFamily: 'OpenSans-Regular',
+    fontWeight: 'bold',
+    fontSize: 22 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center'
+  },
+  type: {
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'center',
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'grey'
+  },
+  image: {
+    flex: 1, 
+    borderRadius: 10
+  },
+  description: {
+    marginHorizontal: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center'
+  },
+  myList: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    marginTop: 10 * (Dimensions.get('window').height / 812)
+  },
+  likeCount: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    marginTop: 15 * (Dimensions.get('window').height / 812)
+  },
+  likeContainer: {
+    flex: 1, 
+    alignItems: 'center'
+  },
+  button: {
+    flexDirection: 'row', 
+    padding: 20 
+  },
+  XPtext: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    marginTop: 5 * Dimensions.get('window').height / 812
+  },
+  xp: {
+    fontFamily: 'OpenSans-Regular',
+    fontWeight: 'bold',
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    marginTop: 10 * (Dimensions.get('window').height / 812 )
+  },
+  lessonCount: {
+    fontFamily: 'OpenSans-Regular',
+    fontWeight: 'bold',
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    marginTop: 10 * (Dimensions.get('window').height / 812 )
+  },
+  lessons: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    marginTop: 5 * (Dimensions.get('window').height / 812 )
+  }
+})
 export default withNavigation(ContentModal);

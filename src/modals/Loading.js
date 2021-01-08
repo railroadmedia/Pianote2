@@ -5,7 +5,9 @@ import React from 'react';
 import {
   View,
   TouchableWithoutFeedback,
-  ActivityIndicator
+  ActivityIndicator,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -18,45 +20,14 @@ class Loading extends React.Component {
 
   render = () => {
     return (
-      <TouchableWithoutFeedback
-        key={'container'}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
-      >
-        <View
-          key={'content'}
-          style={[
-            styles.centerContent,
-            {
-              height: '100%',
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'transparent'
-            }
-          ]}
-        >
-          <View
-            key={'content'}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio,
-              height: 200,
-              width: '80%'
-            }}
-          >
+      <TouchableWithoutFeedback style={styles.container}>
+        <View style={[styles.centerContent, styles.container]}>
+          <View style={localStyles.container}>
             <View style={{ flex: 1 }} />
             <ActivityIndicator
               size={'large'}
               color={colors.pianoteRed}
               animating={true}
-              style={{ marginTop: 10, marginBottom: 10 }}
             />
             <View style={{ flex: 1 }} />
           </View>
@@ -65,5 +36,15 @@ class Loading extends React.Component {
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+});
 
 export default withNavigation(Loading);

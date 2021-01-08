@@ -966,6 +966,7 @@ class VerticalVideoList extends React.Component {
             hideRelevance={() => {
               this.setState({ showRelevance: false });
             }}
+            isMethod={this.props.isMethod}
             currentSort={this.props.currentSort}
             changeSort={sort => {
               this.props.changeSort(sort);

@@ -6,7 +6,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -20,86 +22,52 @@ class PasswordEmailMatch extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        key={'container'}
+        style={styles.container}
         onPress={() => this.props.hidePasswordEmailMatch()}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
       >
-        <View
-          key={'content'}
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }}
-        >
-          <View
-            key={'content'}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio
-            }}
-          >
-            <View style={{ height: 10 * factorVertical }} />
+        <View style={[styles.container, styles.centerContent]}>
+          <View style={localStyles.container}>
             <Text
               numberOfLines={2}
-              style={[
-                styles.modalHeaderText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
+              style={[styles.modalHeaderText, localStyles.errorMessage]}
             >
               {this.props.errorMessage}
             </Text>
-            <View style={{ height: 10 * factorRatio }} />
-            <Text
-              style={[
-                styles.modalBodyText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
-            >
-              Please try again.
-            </Text>
-            <View style={{ height: 10 * factorRatio }} />
+            <Text style={[styles.modalBodyText, localStyles.tryAgainText]}>Please try again.</Text>
             <TouchableOpacity
+              style={localStyles.tryAgainText}
               onPress={() => {
                 this.props.hidePasswordEmailMatch();
               }}
-              style={{
-                paddingHorizontal: 40,
-                marginVertical: 10 * factorRatio
-              }}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    color: '#fb1b2f'
-                  }
-                ]}
-              >
-                TRY AGAIN
-              </Text>
+              <Text style={[styles.modalButtonText, localStyles.tryAgain]}>TRY AGAIN</Text>
             </TouchableOpacity>
-            <View style={{ height: 10 * factorVertical }} />
           </View>
         </View>
       </TouchableWithoutFeedback>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  errorMessage: {
+    paddingHorizontal: 40,
+    marginTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginBottom: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+  },
+  tryAgainText: {
+    paddingHorizontal: 40,
+    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgain: {
+    color: '#fb1b2f',
+    marginBottom: 10 * Dimensions.get('window').height / 812,
+  }
+});
 
 export default withNavigation(PasswordEmailMatch);

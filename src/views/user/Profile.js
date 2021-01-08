@@ -797,7 +797,7 @@ export default class Profile extends React.Component {
         </Modal>
         <Modal
           key={'replyNotification'}
-          isVisible={this.state.showReplyNotification}
+          isVisible={true}
           style={[
             styles.centerContent,
             {

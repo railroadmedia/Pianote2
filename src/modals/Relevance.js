@@ -2,7 +2,8 @@
  * Relevance
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
@@ -18,22 +19,13 @@ class Relevance extends React.Component {
   render = () => {
     return (
       <View style={styles.container}>
-        <View style={{ flex: 1, alignSelf: 'stretch' }}>
+        <View style={styles.container}>
           <TouchableOpacity
+            style={styles.container}
             onPress={() => this.props.hideRelevance()}
-            style={{
-              height: '100%',
-              width: '100%',
-              alignSelf: 'stretch'
-            }}
-          ></TouchableOpacity>
+          />
         </View>
-        <View
-          style={{
-            minHeight: fullHeight * 0.25 + (onTablet ? fullHeight * 0.1 : 0),
-            flexDirection: 'row'
-          }}
-        >
+        <View style={localStyles.container}>
           <View
             style={{
               width: '100%',
@@ -41,126 +33,57 @@ class Relevance extends React.Component {
             }}
           >
             <TouchableOpacity
-              key={'newest'}
+              style={localStyles.button}
               onPress={() => {
                 this.props.hideRelevance(), this.props.changeSort('newest');
               }}
-              style={{
-                flex: 0.4,
-                paddingLeft: fullWidth * 0.05,
-                flexDirection: 'row',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 0.25 * factorRatio
-              }}
             >
-              <View>
-                <View style={{ flex: 1 }} />
+              <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
                   size={20 * factorRatio}
-                  color={
-                    this.state.currentSort == 'newest'
-                      ? 'white'
-                      : colors.mainBackground
-                  }
+                  color={this.state.currentSort == 'newest' ? 'white' : colors.mainBackground}
                 />
-                <View style={{ flex: 1 }} />
               </View>
-              <View style={{ width: 15 * factorHorizontal }} />
-              <View>
-                <View style={{ flex: 1 }} />
-                <Text
-                  style={{
-                    fontSize: 16 * factorRatio,
-                    fontFamily: 'OpenSans-Regular',
-                    color:
-                      this.state.currentSort == 'newest'
-                        ? 'white'
-                        : colors.secondBackground
-                  }}
+              <View style={styles.centerContent}>
+                <Text style={[localStyles.word, {
+                    color: this.state.currentSort == 'newest' ? 'white' : colors.secondBackground
+                  }]}
                 >
                   Newest First
                 </Text>
-                <View style={{ flex: 1 }} />
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              key={'oldest'}
-              onPress={() => {
-                this.props.hideRelevance(), this.props.changeSort('oldest');
-              }}
-              style={{
-                flex: 0.4,
-                paddingLeft: fullWidth * 0.05,
-                flexDirection: 'row',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 0.25 * factorRatio
-              }}
+              style={localStyles.button}
+              onPress={() => {this.props.hideRelevance(), this.props.changeSort('oldest')}}
             >
-              <View>
-                <View style={{ flex: 1 }} />
+              <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
                   size={20 * factorRatio}
-                  color={
-                    this.state.currentSort == 'oldest'
-                      ? 'white'
-                      : colors.mainBackground
-                  }
+                  color={this.state.currentSort == 'oldest' ? 'white' : colors.mainBackground}
                 />
-                <View style={{ flex: 1 }} />
               </View>
-              <View style={{ width: 15 * factorHorizontal }} />
-              <View>
-                <View style={{ flex: 1 }} />
+              <View style={styles.centerContent}>
                 <Text
-                  style={{
-                    fontSize: 16 * factorRatio,
-                    fontFamily: 'OpenSans-Regular',
-                    color:
-                      this.state.currentSort == 'oldest'
-                        ? 'white'
-                        : colors.secondBackground
-                  }}
+                  style={[localStyles.word, {
+                    color: this.state.currentSort == 'oldest' ? 'white' : colors.secondBackground
+                  }]}
                 >
                   Oldest First
                 </Text>
-                <View style={{ flex: 1 }} />
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              key={'cancel'}
-              onPress={() => {
-                this.props.hideRelevance();
-              }}
-              style={{
-                flex: 0.4,
-                paddingLeft: fullWidth * 0.05,
-                flexDirection: 'row'
-              }}
+              style={localStyles.button}
+              onPress={() => this.props.hideRelevance()}
             >
-              <View>
-                <View style={{ flex: 1 }} />
-                <EntypoIcon
-                  name={'cross'}
-                  size={25 * factorRatio}
-                  color={'white'}
-                />
-                <View style={{ flex: 1 }} />
+              <View style={styles.centerContent}>
+                <EntypoIcon name={'cross'} size={25 * factorRatio} color={'white'} />
               </View>
-              <View style={{ width: 10 * factorHorizontal }} />
-              <View>
-                <View style={{ flex: 1 }} />
-                <Text
-                  style={{
-                    fontSize: 16 * factorRatio,
-                    fontFamily: 'OpenSans-Regular',
-                    color: 'white'
-                  }}
-                >
-                  Cancel
-                </Text>
-                <View style={{ flex: 1 }} />
+              <View style={styles.centerContent}>
+                <Text style={localStyles.cancel}>Cancel</Text>
               </View>
             </TouchableOpacity>
             <View style={{ flex: 0.25 }} />
@@ -171,147 +94,29 @@ class Relevance extends React.Component {
   };
 }
 
-export default withNavigation(Relevance);
+const localStyles = StyleSheet.create({
+  container: {
+    minHeight: Dimensions.get('window').height * 0.25 + (DeviceInfo.isTablet() ? Dimensions.get('window').height * 0.1 : 0),
+    flexDirection: 'row',
+  },
+  word: {
+    marginLeft: 15 * Dimensions.get('window').width / 375,
+    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-Regular',
+  },
+  button: {
+    flex: 0.4,
+    paddingLeft: Dimensions.get('window').width * 0.05,
+    flexDirection: 'row',
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 0.25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  cancel: {
+    marginLeft: 10 * Dimensions.get('window').width / 375,
+    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-Regular',
+    color: 'white'
+  }
+});
 
-/**
- * 
-<TouchableOpacity
-    key={'relevance'}
-    onPress={() => {
-        this.props.hideRelevance(),
-            this.props.changeSort('relevance');
-    }}
-    style={{
-        flex: 0.4,
-        paddingLeft: fullWidth * 0.05,
-        flexDirection: 'row',
-        borderBottomColor: colors.secondBackground,
-        borderBottomWidth: 0.25 * factorRatio,
-    }}
->
-    <View>
-        <View style={{flex: 1}} />
-        <EntypoIcon
-            name={'check'}
-            size={20 * factorRatio}
-            color={
-                this.state.currentSort == 'relevance'
-                    ? 'white'
-                    : colors.mainBackground
-            }
-        />
-        <View style={{flex: 1}} />
-    </View>
-    <View style={{width: 15 * factorHorizontal}} />
-    <View>
-        <View style={{flex: 1}} />
-        <Text
-            style={{
-                fontSize: 16 * factorRatio,
-                fontFamily: 'OpenSans-Regular',
-                color:
-                    this.state.currentSort ==
-                    'relevance'
-                        ? 'white'
-                        : colors.secondBackground,
-            }}
-        >
-            Relevance
-        </Text>
-        <View style={{flex: 1}} />
-    </View>
-</TouchableOpacity>
-<TouchableOpacity
-    key={'trending'}
-    onPress={() => {
-        this.props.hideRelevance(),
-            this.props.changeSort('trending');
-    }}
-    style={{
-        flex: 0.4,
-        paddingLeft: fullWidth * 0.05,
-        flexDirection: 'row',
-        borderBottomColor: colors.secondBackground,
-        borderBottomWidth: 0.25 * factorRatio,
-    }}
->
-    <View>
-        <View style={{flex: 1}} />
-        <EntypoIcon
-            name={'check'}
-            size={20 * factorRatio}
-            color={
-                this.state.currentSort == 'trending'
-                    ? 'white'
-                    : colors.mainBackground
-            }
-        />
-        <View style={{flex: 1}} />
-    </View>
-    <View style={{width: 15 * factorHorizontal}} />
-    <View>
-        <View style={{flex: 1}} />
-        <Text
-            style={{
-                fontSize: 16 * factorRatio,
-                fontFamily: 'OpenSans-Regular',
-                color:
-                    this.state.currentSort == 'trending'
-                        ? 'white'
-                        : colors.secondBackground,
-            }}
-        >
-            Trending
-        </Text>
-        <View style={{flex: 1}} />
-    </View>
-</TouchableOpacity>
-<TouchableOpacity
-    key={'popular'}
-    onPress={() => {
-        this.props.hideRelevance(),
-            this.props.changeSort('popularity');
-    }}
-    style={{
-        flex: 0.4,
-        paddingLeft: fullWidth * 0.05,
-        flexDirection: 'row',
-        borderBottomColor: colors.secondBackground,
-        borderBottomWidth: 0.25 * factorRatio,
-    }}
->
-    <View>
-        <View style={{flex: 1}} />
-        <EntypoIcon
-            name={'check'}
-            size={20 * factorRatio}
-            color={
-                this.state.currentSort == 'popularity'
-                    ? 'white'
-                    : colors.mainBackground
-            }
-        />
-        <View style={{flex: 1}} />
-    </View>
-    <View style={{width: 15 * factorHorizontal}} />
-    <View>
-        <View style={{flex: 1}} />
-        <Text
-            style={{
-                fontSize: 16 * factorRatio,
-                fontFamily: 'OpenSans-Regular',
-                color:
-                    this.state.currentSort ==
-                    'popularity'
-                        ? 'white'
-                        : colors.secondBackground,
-            }}
-        >
-            Most Popular
-        </Text>
-        <View style={{flex: 1}} />
-    </View>
-</TouchableOpacity>
- * 
- * 
- */
+export default withNavigation(Relevance);

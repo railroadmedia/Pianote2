@@ -2,9 +2,10 @@
  * ReplyNotification
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -51,12 +52,10 @@ class ReplyNotification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user:
-        this.props.data.type == 'new content releases'
-          ? this.props.data.content?.display_name
+      user: this.props.data.type == 'new content releases'
+         ? this.props.data.content?.display_name
           : this.props.data.sender?.display_name,
-      profileImage:
-        this.props.data.type == 'new content releases'
+      profileImage: this.props.data.type == 'new content releases'
           ? this.props.data.content?.thumbnail_url
           : this.props.data.sender?.profile_image_url,
       type: messageDict[this.props.data.type]?.[0],
@@ -72,7 +71,6 @@ class ReplyNotification extends React.Component {
   }
 
   componentDidMount = async () => {
-    console.log(this.state.profileImage);
     let userData = await getUserData();
     let statusChange = null;
 
@@ -121,259 +119,177 @@ class ReplyNotification extends React.Component {
 
   render = () => {
     return (
-      <View
-        key={'container'}
-        style={{
-          height: '100%',
-          width: '100%',
-          backgroundColor: 'transparent'
-        }}
-      >
-        <View key={'buffTop'} style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.container}>
           <TouchableOpacity
             onPress={() => this.props.hideReplyNotification()}
-            style={{
-              height: '100%',
-              width: '100%'
-            }}
-          ></TouchableOpacity>
+            style={styles.container}
+          />
         </View>
-        <View
-          key={'content'}
-          style={{
-            height: onTablet ? fullHeight * 0.45 : fullHeight * 0.35,
-            width: '100%',
-            flexDirection: 'row'
-          }}
-        >
-          <View
-            key={'content'}
-            style={{
-              height: '100%',
-              width: '100%',
-              backgroundColor: colors.mainBackground
-            }}
-          >
-            <View style={{ height: '2%' }} />
-            <View
-              key={'profile'}
-              style={{
-                flexDirection: 'row',
-                height: '30%'
-              }}
-            >
-              <View style={{ flex: 1 }} />
-              <View>
-                <View style={{ flex: 1 }} />
-                <View
-                  style={{
-                    height: fullWidth * 0.165,
-                    width: fullWidth * 0.165,
-                    borderRadius: 100 * factorRatio,
-                    backgroundColor: colors.secondBackground
-                  }}
-                >
+        <View style={localStyles.container}>
+          <View style={styles.container}>
+            <View style={[styles.centerContent, localStyles.profileContainer]}>
+              <View style={styles.centerContent}>
+                <View style={localStyles.profileContainer2}>
                   {messageDict[this.props.data.type][2] == 'red' && (
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          height: fullWidth * 0.075,
-                          width: fullWidth * 0.075,
-                          backgroundColor: 'red',
-                          borderRadius: 100 * factorRatio,
-                          zIndex: 5
-                        }
-                      ]}
-                    >
-                      <FontAwesome
-                        size={fullWidth * 0.045}
-                        color={'white'}
-                        name={'video-camera'}
-                      />
+                    <View style={[styles.centerContent, localStyles.videoContainer]}>
+                      <FontAwesome size={fullWidth * 0.045} color={'white'} name={'video-camera'} />
                     </View>
                   )}
                   {messageDict[this.props.data.type][2] == 'orange' && (
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          height: fullWidth * 0.075,
-                          width: fullWidth * 0.075,
-                          backgroundColor: 'orange',
-                          borderRadius: 100 * factorRatio,
-                          zIndex: 5
-                        }
-                      ]}
-                    >
-                      <Chat
-                        height={fullWidth * 0.05}
-                        width={fullWidth * 0.05}
-                        fill={'white'}
-                      />
+                    <View style={[styles.centerContent, localStyles.chatContainer]}>
+                      <Chat height={fullWidth * 0.05} width={fullWidth * 0.05} fill={'white'} />
                     </View>
                   )}
                   {messageDict[this.props.data.type][2] == 'blue' && (
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          position: 'absolute',
-                          bottom: 0,
-                          right: 0,
-                          height: fullWidth * 0.075,
-                          width: fullWidth * 0.075,
-                          backgroundColor: 'blue',
-                          borderRadius: 100 * factorRatio,
-                          zIndex: 5
-                        }
-                      ]}
-                    >
-                      <AntIcon
-                        size={fullWidth * 0.045}
-                        color={'white'}
-                        name={'like1'}
-                      />
+                    <View style={[styles.centerContent, localStyles.likeContainer]}>
+                      <AntIcon size={fullWidth * 0.045} color={'white'} name={'like1'} />
                     </View>
                   )}
                   <FastImage
-                    style={{
-                      flex: 1,
-                      borderRadius: 100 * factorRatio
-                    }}
-                    source={{
-                      uri: this.state.profileImage
-                    }}
+                    style={localStyles.image}
+                    source={{uri: this.state.profileImage}}
                     resizeMode={FastImage.resizeMode.cover}
                   />
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
-              <View style={{ flex: 1 }} />
             </View>
-            <View style={{ height: 7.5 * factorVertical }} />
-            <Text
-              key={'replyUser'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factorRatio,
-                textAlign: 'center',
-                color: colors.secondBackground
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 15 * factorRatio,
-                  fontWeight: '600',
-                  textAlign: 'center'
-                }}
-              >
-                {this.state.user}
-              </Text>{' '}
-              {this.state.type}
-            </Text>
+            <Text style={localStyles.replyUser}>
+              <Text style={localStyles.user}>{this.state.user}</Text>{' '}{this.state.type}</Text>
             <View style={{ flex: 1 }} />
-            <View
-              key={'remove'}
-              style={{
-                height: '18.5%',
-                width: '100%',
-                borderTopWidth: 0.5 * factorRatio,
-                borderTopColor: colors.secondBackground
-              }}
-            >
+            <View style={localStyles.removeContainer}>
               <TouchableOpacity
+                style={styles.container}
                 onPress={() => this.props.removeNotification(this.props.data)}
-                style={{
-                  height: '100%',
-                  width: '100%'
-                }}
               >
                 <View style={{ flex: 1 }} />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingLeft: fullWidth * 0.035
-                  }}
-                >
-                  <EntypoIcon
-                    name={'cross'}
-                    size={26 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 17 * factorRatio,
-                      color: colors.secondBackground
-                    }}
-                  >
-                    Remove this notification
-                  </Text>
+                <View style={localStyles.crossContainer}>
+                  <EntypoIcon name={'cross'} size={26 * factorRatio} color={colors.pianoteRed} />
+                  <Text style={localStyles.removeText}>Remove this notification</Text>
                 </View>
                 <View style={{ flex: 1 }} />
               </TouchableOpacity>
             </View>
-            <View
-              key={'mute'}
-              style={{
-                height: '18.5%',
-                width: '100%',
-                borderTopWidth: 0.5 * factorRatio,
-                borderTopColor: colors.secondBackground
-              }}
-            >
+            <View style={localStyles.muteContainer}>
               <TouchableOpacity
-                onPress={() => {
-                  this.props.turnOfffNotifications(this.state.statusChange);
-                }}
-                style={{
-                  height: '100%',
-                  width: '100%'
-                }}
+                style={styles.container}
+                onPress={() => this.props.turnOfffNotifications(this.state.statusChange)}
               >
                 <View style={{ flex: 1 }} />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingLeft: fullWidth * 0.035
-                  }}
-                >
+                <View style={localStyles.notificationContainer}>
                   <IonIcon
                     name={'ios-notifications-outline'}
                     size={26 * factorRatio}
                     color={colors.pianoteRed}
                   />
                   <View style={{ width: 5 * factorRatio }} />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 17 * factorRatio,
-                      color: colors.secondBackground
-                    }}
-                  >
+                  <Text style={localStyles.removeText}>
                     Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
-                    {messageDict[this.props.data.type][3]}
+                    {messageDict[this.props.data.type][3]} 
                   </Text>
                 </View>
                 <View style={{ flex: 1 }} />
               </TouchableOpacity>
             </View>
-            <View style={{ height: '12.5%' }} />
           </View>
         </View>
       </View>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  profileContainer: {
+    marginTop: Dimensions.get('window').height * 0.0175,
+    flexDirection: 'row',
+    height: '30%',
+    marginBottom: 7.5 * Dimensions.get('window').height / 812,
+  },
+  container: {
+    height: DeviceInfo.isTablet() ? Dimensions.get('window').height * 0.45 : Dimensions.get('window').height * 0.35,
+    width: '100%',
+    flexDirection: 'row',
+    backgroundColor: '#00101d'
+  },
+  profileContainer2: {
+    height: Dimensions.get('window').width * 0.165,
+    width: Dimensions.get('window').width * 0.165,
+    borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    backgroundColor: '#445f73'
+  },
+  videoContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    height: Dimensions.get('window').width * 0.075,
+    width: Dimensions.get('window').width * 0.075,
+    backgroundColor: 'red',
+    borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    zIndex: 5
+  },
+  chatContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    height: Dimensions.get('window').width * 0.075,
+    width: Dimensions.get('window').width * 0.075,
+    backgroundColor: 'orange',
+    borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    zIndex: 5
+  },
+  likeContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    height: Dimensions.get('window').width * 0.075,
+    width: Dimensions.get('window').width * 0.075,
+    backgroundColor: 'blue',
+    borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    zIndex: 5
+  },
+  image: {
+    flex: 1,
+    borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  replyUser: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center',
+    color: '#445f73'
+  },
+  user: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center'
+  },
+  removeContainer: {
+    height: '18.5%',
+    width: '100%',
+    borderTopWidth: 0.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderTopColor: '#445f73'
+  },
+  crossContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: Dimensions.get('window').width * 0.035
+  },
+  removeText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 17 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: '#445f73',
+  },
+  muteContainer: {
+    height: '18.5%',
+    width: '100%',
+    marginBottom: '10%',
+    borderTopWidth: 0.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderTopColor: '#445f73'
+  },
+  notificationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: Dimensions.get('window').width * 0.035
+  }
+});
 
 export default withNavigation(ReplyNotification);

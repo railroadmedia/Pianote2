@@ -6,7 +6,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  StyleSheet, 
+  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -20,106 +22,65 @@ class CheckEmail extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        onPress={() => this.props.hideCheckEmail()}
-        key={'container'}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
+        style={[styles.container, styles.centerContent]}  
+        onPress={() => this.props.hideCheckEmail()}  
       >
-        <View
-          key={'content'}
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio
-            }}
-          >
-            <View style={{ height: 10 * factorRatio }} />
-            <Text
-              style={[
-                styles.modalHeaderText,
-                {
-                  paddingHorizontal: 40
-                }
-              ]}
-            >
-              This email is already {'\n'} connected to an account.
-            </Text>
-            <View style={{ height: 10 * factorRatio }} />
-            <Text
-              style={[
-                styles.modalBodyText,
-                {
-                  paddingHorizontal: 40
-                }
-              ]}
-            >
-              Do you want to log in instead?
-            </Text>
-            <View style={{ height: 15 * factorRatio }} />
+        <View style={[styles.container, styles.centerContent]}>
+          <View style={localStyles.container}>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>This email is already {'\n'} connected to an account.</Text>
+            <Text style={[styles.modalBodyText, localStyles.title]}>Do you want to log in instead?</Text>
             <TouchableOpacity
+              style={localStyles.loginContainer}
               onPress={() => {
                 this.props.navigation.navigate('LOGINCREDENTIALS');
                 this.props.hideCheckEmail();
               }}
-              style={{
-                borderRadius: 45 * factorRatio,
-                backgroundColor: '#fb1b2f',
-                marginHorizontal: 40
-              }}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    color: 'white',
-                    paddingVertical: 10
-                  }
-                ]}
-              >
-                LOG IN
-              </Text>
+              <Text style={[styles.modalButtonText, localStyles.loginText]}>LOG IN</Text>
             </TouchableOpacity>
-            <View style={{ height: 5 * factorRatio }} />
             <TouchableOpacity
-              onPress={() => {
-                this.props.hideCheckEmail();
-              }}
-              style={{
-                paddingHorizontal: 40,
-                marginVertical: 10 * factorRatio
-              }}
+              onPress={() =>  this.props.hideCheckEmail()}
+              style={localStyles.tryAgain}
             >
-              <Text
-                style={[
-                  styles.modalCancelButtonText,
-                  {
-                    color: '#fb1b2f'
-                  }
-                ]}
-              >
-                TRY AGAIN
-              </Text>
+              <Text style={[styles.modalCancelButtonText, localStyles.tryAgainText]}>TRY AGAIN</Text>
             </TouchableOpacity>
-            <View style={{ height: 5 * factorRatio }} />
           </View>
         </View>
       </TouchableWithoutFeedback>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingBottom: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    backgroundColor: 'white',
+  },
+  title: {
+    paddingHorizontal: 40,
+    marginBottom: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+  },
+  loginContainer: {
+    borderRadius: 45 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    backgroundColor: '#fb1b2f',
+    marginHorizontal: 40,
+    marginVertical: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+  },
+  loginText: {
+    color: 'white',
+    paddingVertical: 10
+  },
+  tryAgain: {
+    paddingHorizontal: 40,
+    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgainText: {
+    color: '#fb1b2f'
+  }
+})
 
 export default withNavigation(CheckEmail);

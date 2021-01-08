@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Modal,
   TouchableOpacity,
-  View,
   Text,
   StyleSheet,
   Animated
@@ -42,11 +41,11 @@ export default class CustomModal extends React.PureComponent {
         supportedOrientations={['portrait', 'landscape']}
       >
         <TouchableOpacity
-          style={styles.modalBackground}
+          style={localStyles.modalBackground}
           onPress={() => this.toggle()}
         >
           <Animated.View
-            style={[styles.animatedView, { opacity: this.state.opacity }]}
+            style={[localStyles.animatedView, { opacity: this.state.opacity }]}
           >
             <Text style={[styles.modalHeaderText]}>{this.title}</Text>
             <Text style={[styles.modalBodyText]}>{this.message}</Text>
@@ -58,7 +57,7 @@ export default class CustomModal extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   modalBackground: {
     flex: 1,
     alignItems: 'center',

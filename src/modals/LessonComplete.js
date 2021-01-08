@@ -7,7 +7,8 @@ import {
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Platform
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -50,158 +51,39 @@ class LessonComplete extends React.Component {
     return (
       <TouchableWithoutFeedback
         onPress={() => this.props.hideLessonComplete()}
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
+        style={styles.container}
       >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <View
-            style={{
-              borderRadius: 10 * factorRatio,
-              margin: 20 * factorRatio,
-              backgroundColor: 'white',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <View key={'trophy'} style={styles.centerContent}>
-              <IonIcon
-                name={'ios-trophy'}
-                size={32.5 * factorRatio}
-                color={'#fb1b2f'}
-              />
+        <View style={[styles.centerContent, styles.container]}>
+          <View style={localStyles.container}>
+            <View style={styles.centerContent}>
+              <IonIcon name={'ios-trophy'} size={32.5 * factorRatio} color={'#fb1b2f'}/>
             </View>
-            <View style={{ height: 10 * factorVertical }} />
-            <Text style={[styles.modalHeaderText]}>
-              {this.changeType(type)}
-              {'\n'}Complete
-            </Text>
-            <View style={{ height: 20 * factorVertical }} />
-            <View
-              key={'image1'}
-              style={[
-                styles.centerContent,
-                {
-                  height: '20%',
-                  width: '100%',
-                  alignSelf: 'center',
-                  borderRadius: 10 * factorRatio
-                }
-              ]}
-            >
+            <Text style={[styles.modalHeaderText, localStyles.headerText]}>{this.changeType(type)}{'\n'}Complete</Text>
+            <View style={[styles.centerContent, localStyles.imageContainer]}>
               <FastImage
-                style={{
-                  height: '100%',
-                  aspectRatio: 16 / 9,
-                  borderRadius: 10 * factorRatio,
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
+                style={localStyles.image}
+                resizeMode={FastImage.resizeMode.cover}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                     fullWidth * 0.55 * 2
                   )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
                 }}
-                resizeMode={FastImage.resizeMode.cover}
               >
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: 10 * factorRatio,
-                      opacity: 0.2,
-                      backgroundColor: 'red'
-                    }
-                  ]}
-                />
-                <ApprovedTeacher
-                  height={47 * factorRatio}
-                  width={47 * factorRatio}
-                  fill={'white'}
-                />
+                <View style={[styles.centerContent, localStyles.approvedTeacherContainer]}/>
+                <ApprovedTeacher height={47 * factorRatio} width={47 * factorRatio} fill={'white'} />
               </FastImage>
             </View>
-
-            <View key={'lessonTitle'}>
-              <Text
-                style={[
-                  styles.modalBodyText,
-                  { marginHorizontal: 20 * factorHorizontal, marginTop: 10 }
-                ]}
-              >
-                Congratulations! You completed
-              </Text>
-              <Text
-                style={[
-                  styles.modalBodyText,
-                  {
-                    fontWeight: 'bold',
-                    marginHorizontal: 20 * factorHorizontal
-                  }
-                ]}
-              >
-                {completedLessonTitle}
-              </Text>
-              <View style={{ height: 10 * factorVertical }} />
-              <Text
-                style={[
-                  styles.modalBodyText,
-                  {
-                    fontWeight: 'bold',
-                    color: '#fb1b2f'
-                  }
-                ]}
-              >
-                YOU EARNED {completedLessonXp} XP!
-              </Text>
-            </View>
-            <View style={{ height: 5 * factorVertical }} />
-
-            <Text
-              key={'upNext'}
-              style={[
-                styles.modalBodyText,
-                {
-                  color: '#a8a8a8',
-                  paddingHorizontal: 20
-                }
-              ]}
-            >
-              up next:
-            </Text>
-            <View style={{ height: 10 * factorVertical }} />
+            <Text style={[styles.modalBodyText, localStyles.congratsText]}>Congratulations! You completed</Text>
+            <Text style={[styles.modalBodyText, localStyles.completeLesson]}>{completedLessonTitle}</Text>
+            <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>YOU EARNED {completedLessonXp} XP!</Text>
+            <Text style={[styles.modalBodyText, localStyles.upNextText]}>up next:</Text>
             <TouchableOpacity
-              key={'image2'}
+              style={[styles.centerContent, localStyles.image2Container]}
               onPress={onGoToNext}
-              style={[
-                styles.centerContent,
-                {
-                  height: '20%',
-                  width: '100%',
-                  alignSelf: 'center',
-                  borderRadius: 10 * factorRatio
-                }
-              ]}
             >
               <FastImage
-                style={{
-                  height: '100%',
-                  aspectRatio: 16 / 9,
-                  borderRadius: 10 * factorRatio
-                }}
+                style={localStyles.image2}
+                resizeMode={FastImage.resizeMode.cover}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
                     fullWidth * 0.55 * 2
@@ -209,26 +91,84 @@ class LessonComplete extends React.Component {
                     'thumbnail_url'
                   )}`
                 }}
-                resizeMode={FastImage.resizeMode.cover}
               />
             </TouchableOpacity>
-
-            <Text
-              style={[
-                styles.modalHeaderText,
-                {
-                  paddingHorizontal: 20,
-                  marginTop: 10
-                }
-              ]}
-            >
-              {nextLesson.getField('title')}
-            </Text>
+            <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>{nextLesson.getField('title')}</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  headerText: {
+    marginVertical: 10 * Dimensions.get('window').height / 812
+  },
+  imageContainer: {
+    height: '20%',
+    width: '100%',
+    alignSelf: 'center',
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  image: {
+    height: '100%',
+    aspectRatio: 16 / 9,
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  approvedTeacherContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    opacity: 0.2,
+    backgroundColor: 'red'
+  },
+  youEarnedText: {
+    fontWeight: 'bold',
+    marginTop: 10 * Dimensions.get('window').height / 812,
+    color: '#fb1b2f'
+  },
+  congratsText: {
+    marginHorizontal: 20 * Dimensions.get('window').width / 375, 
+    marginTop: 10
+  },
+  completeLesson: {
+    fontWeight: 'bold',
+    marginHorizontal: 20 * Dimensions.get('window').width / 375
+  },
+  upNextText: {
+    marginTop: 5 * Dimensions.get('window').height / 812,
+    marginBottom: 10 * Dimensions.get('window').height / 812,
+    color: '#a8a8a8',
+    paddingHorizontal: 20
+  },
+  image2Container: {
+    height: '20%',
+    width: '100%',
+    alignSelf: 'center',
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  image2: {
+    height: '100%',
+    aspectRatio: 16 / 9,
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  videoTitle: {
+    paddingHorizontal: 20,
+    marginTop: 10
+  }
+});
 
 export default withNavigation(LessonComplete);

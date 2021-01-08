@@ -2,7 +2,7 @@
  * AssignmentComplete
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -16,66 +16,22 @@ class AssignmentComplete extends React.Component {
 
   render = () => {
     return (
-      <BlurView style={{ flex: 1 }} blurAmount={5}>
+      <BlurView style={styles.container} blurAmount={5}>
         <TouchableOpacity
-          key={'content'}
+          style={[styles.container, styles.centerContent]}
           onPress={() => this.props.hideAssignmentComplete()}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'transparent'
-          }}
         >
-          <View
-            key={'content'}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 10 * factorRatio,
-              padding: 30
-            }}
-          >
-            <View key={'trophy'} style={[styles.centerContent]}>
-              <IonIcon
-                name={'ios-trophy'}
-                size={36 * factorRatio}
-                color={'#fb1b2f'}
-              />
+          <View style={localStyles.container}>
+            <View style={[styles.centerContent]}>
+              <IonIcon name={'ios-trophy'} size={36 * factorRatio} color={'#fb1b2f'} />
             </View>
-            <View
-              key={'complete'}
-              style={[styles.centerContent, { padding: 5 * factorRatio }]}
-            >
-              <Text style={[styles.modalHeaderText]}>
-                Assignment{'\n'}Complete
-              </Text>
+            <View style={[styles.centerContent, localStyles.assignmentCompleteContainer]}>
+              <Text style={[styles.modalHeaderText]}>Assignment Complete</Text>
             </View>
-            <View style={{ height: 10 * factorVertical }} />
-            <View key={'lessonTitle'}>
-              <Text
-                style={[
-                  styles.modalBodyText,
-                  { marginHorizontal: 20 * factorHorizontal }
-                ]}
-              >
-                Congratulations! You completed
-              </Text>
-              <Text
-                style={[
-                  styles.modalBodyText,
-                  {
-                    marginHorizontal: 20 * factorHorizontal,
-                    fontWeight: 'bold'
-                  }
-                ]}
-              >
-                {this.props.title}
-              </Text>
-              <View style={{ height: 15 * factorVertical }} />
-              <Text style={[styles.modalButtonText, { color: '#fb1b2f' }]}>
-                YOU EARNED {this.props.xp} XP!
-              </Text>
-              <View style={{ height: 10 * factorVertical }} />
+            <View>
+              <Text style={[styles.modalBodyText, localStyles.congratsText]}>Congratulations! You completed</Text>
+              <Text style={[styles.modalBodyText, localStyles.assignmentTitle]}>{this.props.title}</Text>
+              <Text style={[styles.modalButtonText, localStyles.xpText]}>YOU EARNED {this.props.xp} XP!</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -83,5 +39,29 @@ class AssignmentComplete extends React.Component {
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    padding: 30
+  },
+  assignmentCompleteContainer: {
+    padding: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2, 
+    marginBottom: 7.5 * (Dimensions.get('window').height / 812)
+  },
+  xpText: {
+    color: '#fb1b2f', 
+    marginTop: 15 * (Dimensions.get('window').height / 812),
+    marginBottom: 10 * (Dimensions.get('window').height / 812),
+  },
+  assignmentTitle: {
+    marginHorizontal: 20 * (Dimensions.get('window').width / 375),
+    fontWeight: 'bold'
+  },
+  congratsText: {
+    marginHorizontal: 20 * (Dimensions.get('window').width / 375)
+  }
+})
 
 export default withNavigation(AssignmentComplete);

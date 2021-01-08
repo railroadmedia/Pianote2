@@ -2,7 +2,7 @@
  * OverviewComplete
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -33,84 +33,50 @@ class OverviewComplete extends React.Component {
 
   render = () => {
     return (
-      <BlurView style={{ flex: 1 }} blurAmount={5}>
+      <BlurView style={[styles.container, styles.centerContent]} blurAmount={5}>
         <TouchableOpacity
-          key={'content'}
+          style={[styles.centerContent, styles.container]}
           onPress={() => this.props.hideOverviewComplete()}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'transparent'
-          }}
         >
-          <View
-            key={'content'}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 10 * factorRatio,
-              marginHorizontal: 30,
-              paddingVertical: 30
-            }}
-          >
+          <View style={localStyles.container}>
             <View style={[styles.centerContent]}>
-              <IonIcon
-                name={'ios-trophy'}
-                size={36 * factorRatio}
-                color={'#fb1b2f'}
-              />
+              <IonIcon name={'ios-trophy'} size={36 * factorRatio} color={'#fb1b2f'} />
             </View>
-            <View
-              key={'complete'}
-              style={[styles.centerContent, { padding: 5 * factorRatio }]}
-            >
+            <View style={[styles.centerContent, { padding: 5 * factorRatio }]}>
               <Text style={[styles.modalHeaderText]}>
-                {this.changeType(this.props.type).toUpperCase()}
-                {'\n'}Complete
+                {this.changeType(this.props.type).toUpperCase()}{'\n'}Complete
               </Text>
             </View>
-            <View style={{ height: 5 * factorRatio }} />
-            <View key={'lessonTitle'}>
-              <Text
-                style={[
-                  styles.modalBodyText,
-                  {
-                    textAlign: 'center',
-                    marginHorizontal: 20 * factorHorizontal
-                  }
-                ]}
-              >
-                Congratulations! You completed
-              </Text>
-              <View style={{ height: 5 * factorRatio }} />
-              <Text
-                style={[
-                  styles.modalBodyText,
-                  {
-                    marginHorizontal: 20 * factorHorizontal,
-                    fontWeight: 'bold'
-                  }
-                ]}
-              >
-                {this.props.title}
-              </Text>
-              <View style={{ height: 15 * factorRatio }} />
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    color: '#fb1b2f'
-                  }
-                ]}
-              >
-                YOU EARNED {this.props.xp} XP!
-              </Text>
-            </View>
+            <Text style={[styles.modalBodyText, localStyles.congrats]}>Congratulations! You completed</Text>
+            <Text style={[styles.modalBodyText, localStyles.title]}>{this.props.title}</Text>
+            <Text style={[styles.modalButtonText, localStyles.xp]}>YOU EARNED {this.props.xp} XP!</Text>
           </View>
         </TouchableOpacity>
       </BlurView>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginHorizontal: 30,
+    paddingVertical: 30
+  },
+  congrats: {
+    textAlign: 'center',
+    marginVertical:  5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginHorizontal: 20 * Dimensions.get('window').width / 375
+  },
+  title: {
+    marginHorizontal: 20 * Dimensions.get('window').width / 375,
+    marginBottom: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontWeight: 'bold'
+  },
+  xp: {
+    color: '#fb1b2f'
+  }
+});
 
 export default withNavigation(OverviewComplete);

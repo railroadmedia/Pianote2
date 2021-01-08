@@ -6,7 +6,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -20,80 +22,18 @@ class NoConnection extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        key={'container'}
+        style={styles.container}
         onPress={() => this.props.hideNoConnection()}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
       >
-        <View
-          key={'content'}
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }}
-        >
-          <View
-            key={'content'}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio
-            }}
-          >
-            <Text
-              style={[
-                styles.modalHeaderText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
-            >
-              Sorry, our server {'\n'}is down right now.
-            </Text>
-
-            <Text
-              style={[
-                styles.modalBodyText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
-            >
-              Please try again later!
-            </Text>
-
+        <View style={[styles.container, styles.centerContent]}>
+          <View style={localStyles.container}>
+            <Text style={[styles.modalHeaderText, localStyles.sorryText]}>Sorry, our server {'\n'}is down right now.</Text>
+            <Text style={[styles.modalBodyText, localStyles.sorryText]}>Please try again later!</Text>
             <TouchableOpacity
-              onPress={() => {
-                this.props.hideNoConnection();
-              }}
-              style={{
-                alignSelf: 'center',
-                paddingHorizontal: 40,
-                marginVertical: 10 * factorRatio
-              }}
+              style={localStyles.tryAgainContainer}
+              onPress={() =>  this.props.hideNoConnection()}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    color: '#fb1b2f',
-                    paddingHorizontal: 20,
-                    margin: 10 * factorRatio
-                  }
-                ]}
-              >
-                TRY AGAIN
-              </Text>
+              <Text style={styles.modalButtonText, localStyles.tryAgain}>TRY AGAIN</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -101,5 +41,27 @@ class NoConnection extends React.Component {
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  sorryText: {
+    paddingHorizontal: 40,
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgainContainer: {
+    alignSelf: 'center',
+    paddingHorizontal: 40,
+    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgain: {
+    color: '#fb1b2f',
+    paddingHorizontal: 20,
+    margin: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  }
+});
 
 export default withNavigation(NoConnection);

@@ -6,7 +6,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -20,84 +22,44 @@ class PasswordMatch extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        key={'container'}
+        style={styles.container}
         onPress={() => this.props.hidePasswordMatch()}
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'transparent'
-        }}
       >
-        <View
-          key={'content'}
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'transparent'
-          }}
-        >
-          <View
-            key={'content'}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 15 * factorRatio,
-              margin: 20 * factorRatio
-            }}
-          >
-            <Text
-              style={[
-                styles.modalHeaderText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
-            >
-              Your passwords do {'\n'} not match.
-            </Text>
-
-            <Text
-              style={[
-                styles.modalBodyText,
-                {
-                  paddingHorizontal: 40,
-                  marginTop: 10 * factorRatio
-                }
-              ]}
-            >
-              Please try again.
-            </Text>
-
+        <View style={[styles.centerContent, styles.container]}>
+          <View style={localStyles.container}>
+            <Text style={[styles.modalHeaderText, localStyles.text]}>Your passwords do {'\n'} not match.</Text>
+            <Text style={[styles.modalBodyText, localStyles.text]}>Please try again.</Text>
             <TouchableOpacity
-              onPress={() => {
-                this.props.hidePasswordMatch();
-              }}
-              style={{
-                paddingHorizontal: 40,
-                marginVertical: 10 * factorRatio
-              }}
+              style={localStyles.tryAgainContainer}
+              onPress={() => this.props.hidePasswordMatch()}
             >
-              <Text
-                style={[
-                  styles.modalButtonText,
-                  {
-                    color: '#fb1b2f'
-                  }
-                ]}
-              >
-                TRY AGAIN
-              </Text>
+              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>TRY AGAIN</Text>
             </TouchableOpacity>
-            <View style={{ height: 7.5 * factorRatio }} />
           </View>
         </View>
       </TouchableWithoutFeedback>
     );
   };
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  text: {
+    paddingHorizontal: 40,
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgainContainer: {
+    paddingHorizontal: 40,
+    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  tryAgainText: {
+    color: '#fb1b2f',
+    marginBottom: 7.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+  }
+});
 
 export default withNavigation(PasswordMatch);
