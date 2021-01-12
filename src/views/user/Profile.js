@@ -9,16 +9,18 @@ import {
   ActivityIndicator,
   FlatList,
   Linking,
-  StatusBar
+  StatusBar,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
+import DeviceInfo from 'react-native-device-info';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
-
 import Chat from 'Pianote2/src/assets/img/svgs/chat.svg';
 import Settings from 'Pianote2/src/assets/img/svgs/settings.svg';
 
@@ -285,37 +287,14 @@ export default class Profile extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar
-          backgroundColor={colors.mainBackground}
-          barStyle={'light-content'}
-        />
+        <StatusBar backgroundColor={colors.mainBackground} barStyle={'light-content'}/>
         <View style={styles.mainContainer}>
-          <View
-            key={'header'}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: 15
-            }}
-          >
+          <View style={localStyles.headerContainer}>
             <View style={{ flex: 1 }} />
-            <Text
-              style={{
-                fontSize: 22 * factorRatio,
-                color: 'white',
-                fontFamily: 'OpenSans-ExtraBold',
-                textAlign: 'center',
-                alignSelf: 'center'
-              }}
-            >
-              My Profile
-            </Text>
+            <Text style={styles.childHeaderText}>My Profile</Text>
             <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate('SETTINGS');
-              }}
               style={{ flex: 1 }}
+              onPress={() => this.props.navigation.navigate('SETTINGS')}
             >
               <Settings
                 height={25 * factorRatio}
@@ -326,260 +305,71 @@ export default class Profile extends React.Component {
             </TouchableOpacity>
           </View>
           <FlatList
-            style={{
-              flex: 1,
-              backgroundColor: colors.mainBackground
-            }}
+            style={styles.mainContainer}
             data={this.state.notifications}
             keyExtractor={(item, index) => index.toString()}
             onEndReached={this.loadMoreNotifications}
             onEndReachedThreshold={0.01}
             ListHeaderComponent={() => (
               <>
-                <View
-                  key={'profilePicture'}
-                  style={[
-                    styles.centerContent,
-                    { marginTop: 20 * factorVertical }
-                  ]}
-                >
-                  <View
-                    key={'imageProfile'}
-                    style={{
-                      borderRadius: 250,
-                      borderWidth: 2 * factorRatio,
-                      borderColor: colors.pianoteRed,
-                      height: onTablet ? 112 * factorRatio : 140 * factorRatio,
-                      aspectRatio: 1,
-                      marginBottom: 5 * factorVertical,
-                    }}
-                  >
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          position: 'absolute',
-                          zIndex: 10,
-                          elevation: 10,
-                          top: -15 * factorRatio,
-                          right: -15 * factorRatio,
-                          height: 35 * factorRatio,
-                          width: 35 * factorRatio,
-                          borderRadius: 100,
-                          borderColor: colors.pianoteRed,
-                          borderWidth: 1.5 * factorRatio
-                        }
-                      ]}
-                    >
+                <View style={[styles.centerContent, { marginTop: 20 * factorVertical }]}>
+                  <View style={localStyles.imageContainer}>
+                    <View style={[styles.centerContent, localStyles.profilePic]}>
                       <TouchableOpacity
-                        onPress={() => {
-                          this.props.navigation.navigate('PROFILESETTINGS', {
-                            data: 'Profile Photo'
-                          });
-                        }}
-                        style={[
-                          styles.centerContent,
-                          {
-                            height: '100%',
-                            width: '100%'
-                          }
-                        ]}
+                        onPress={() => this.props.navigation.navigate('PROFILESETTINGS', {data: 'Profile Photo'})}
+                        style={[styles.centerContent, styles.container]}
                       >
-                        <IonIcon
-                          size={25 * factorRatio}
-                          name={'ios-camera'}
-                          color={colors.pianoteRed}
-                        />
+                        <IonIcon size={25 * factorRatio} name={'ios-camera'} color={colors.pianoteRed} />
                       </TouchableOpacity>
                     </View>
                     {this.state.profileImage == '' && (
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            height: '100%',
-                            width: '100%',
-                            alignSelf: 'stretch'
-                          }
-                        ]}
-                      >
-                        <AntIcon
-                          name={'user'}
-                          color={colors.pianoteRed}
-                          size={85 * factorRatio}
-                        />
+                      <View style={styles.container}>
+                        <AntIcon name={'user'} color={colors.pianoteRed} size={85 * factorRatio} />
                       </View>
                     )}
                     {this.state.profileImage !== '' && (
-                      <FastImage
-                        style={{
-                          height: '100%',
-                          width: '100%',
-                          borderRadius: 250,
-                          backgroundColor: colors.secondBackground
-                        }}
-                        source={{
-                          uri: this.state.profileImage
-                        }}
+                      <FastImage 
+                        style={localStyles.profileImageBackground}
+                        source={{uri: this.state.profileImage}}
                         resizeMode={FastImage.resizeMode.cover}
                       />
                     )}
                   </View>
-                  <View key={'name'} style={styles.centerContent}>
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-ExtraBold',
-                        fontSize: 30 * factorRatio,
-                        textAlign: 'center',
-                        color: 'white',
-                        marginBottom: 10 * factorVertical,
-                      }}
-                    >
-                      {this.state.username}
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 14 * factorRatio,
-                        textAlign: 'center',
-                        color: colors.secondBackground
-                      }}
-                    >
+                  <View style={styles.centerContent}>
+                    <Text style={localStyles.usernameText}>{this.state.username}</Text>
+                    <Text style={localStyles.memberSinceText}>
                       MEMBER SINCE {this.state.memberSince?.slice(0, 4)}
                     </Text>
                   </View>
                 </View>
-                <View
-                  key={'rank'}
-                  style={{
-                    marginTop: 20 * factorVertical,
-                    borderTopColor: colors.secondBackground,
-                    borderTopWidth: 0.25,
-                    borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 0.25,
-                    paddingVertical: 10,
-                    backgroundColor: colors.mainBackground,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{ marginHorizontal: 15 * factorHorizontal }}
-                    onPress={() => {
-                      this.setState({
-                        showXpRank: true
-                      });
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.pianoteRed,
-                        fontSize: 12 * factorRatio,
-                        fontFamily: 'OpenSans-Bold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      XP
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 24 * factorRatio,
-                        fontFamily: 'OpenSans-ExtraBold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      {this.state.xp}
-                    </Text>
+                <View style={localStyles.rankText}>
+                  <TouchableOpacity onPress={() => this.setState({showXpRank: true})}>
+                    <Text style={localStyles.redXpRank}>XP</Text>
+                    <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
                   </TouchableOpacity>
-                  <View style={{ width: 15 * factorHorizontal }} />
-                  <TouchableOpacity
-                    style={{ marginHorizontal: 15 * factorHorizontal }}
-                    onPress={() => {
-                      this.setState({
-                        showXpRank: true
-                      });
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.pianoteRed,
-                        fontSize: 12 * factorRatio,
-                        fontFamily: 'OpenSans-Bold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      RANK
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 24 * factorRatio,
-                        fontFamily: 'OpenSans-ExtraBold',
-                        textAlign: 'center'
-                      }}
-                    >
-                      {this.state.rank}
-                    </Text>
+                  <View style={{ width: 30 * factorHorizontal }} />
+                  <TouchableOpacity onPress={() => this.setState({showXpRank: true})}>
+                    <Text style={localStyles.redXpRank}>RANK</Text>
+                    <Text style={localStyles.whiteXpRank}>{this.state.rank}</Text>
                   </TouchableOpacity>
                 </View>
-
-                <View
-                  key={'notifications'}
-                  style={{
-                    paddingTop: 25 * factorVertical,
-                    paddingBottom: 15 * factorVertical,
-                    elevation: 1
-                  }}
-                >
-                  <Text
-                    style={{
-                      paddingLeft: 15,
-                      fontSize: 18 * factorRatio,
-                      fontFamily: 'OpenSans-ExtraBold',
-                      color: colors.secondBackground
-                    }}
-                  >
-                    NOTIFICATIONS
-                  </Text>
+                <View style={localStyles.notificationContainer}>
+                  <Text style={localStyles.notificationText}>NOTIFICATIONS</Text>
                 </View>
               </>
             )}
             ListEmptyComponent={() =>
               this.state.isLoading ? (
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1,
-                      marginTop: 15 * factorRatio
-                    }
-                  ]}
-                >
-                  <ActivityIndicator
-                    size={onTablet ? 'large' : 'small'}
-                    animating={true}
-                    color={colors.secondBackground}
-                  />
+                <View style={[styles.centerContent, localStyles.activityContainer]}>
+                  <ActivityIndicator size={onTablet ? 'large' : 'small'} animating={true} color={colors.secondBackground}/>
                 </View>
               ) : (
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-ExtraBold',
-                    fontSize: 15 * factorRatio,
-                    textAlign: 'left',
-                    paddingLeft: 15,
-                    color: 'white'
-                  }}
-                >
-                  No New Notifications...
-                </Text>
+                <Text style={localStyles.noNotificationText}>No New Notifications...</Text>
               )
             }
             ListFooterComponent={() => (
               <ActivityIndicator
-                style={{ marginTop: 20, marginBottom: 10 }}
+                style={{ marginVertical: 10 }}
                 size='small'
                 color={colors.secondBackground}
                 animating={this.state.animateLoadMore}
@@ -588,107 +378,30 @@ export default class Profile extends React.Component {
             )}
             renderItem={({ item, index }) => (
               <TouchableOpacity
-                style={{
-                  height: 90 * factorRatio,
-                  backgroundColor:
-                    index % 2
-                      ? colors.mainBackground
-                      : colors.notificationColor,
-                  flexDirection: 'row'
-                }}
+                style={[localStyles.notification, { 
+                  backgroundColor: index % 2 ? colors.mainBackground : colors.notificationColor,
+                }]}
                 onPress={() => this.openNotification(item)}
               >
-                <View
-                  style={{
-                    paddingLeft: 15,
-                    flex: 0.275,
-                    flexDirection: 'row',
-                    alignItems: 'center'
-                  }}
-                >
-                  <View>
-                    <View
-                      style={{
-                        height: fullWidth * 0.175 * factorRatio,
-                        width: fullWidth * 0.175 * factorRatio,
-                        borderRadius: 150 * factorRatio,
-                        backgroundColor: '#ececec'
-                      }}
-                    >
+                <View style={localStyles.innerNotificationContainer}>
+                    <View style={localStyles.messageContainer}>
                       {messageDict[item.type][2] == 'red' && (
-                        <View
-                          style={[
-                            styles.centerContent,
-                            {
-                              position: 'absolute',
-                              bottom: 0,
-                              right: 0,
-                              height: fullWidth * 0.075 * factorRatio,
-                              width: fullWidth * 0.075 * factorRatio,
-                              backgroundColor: 'red',
-                              borderRadius: 100 * factorRatio,
-                              zIndex: 5
-                            }
-                          ]}
-                        >
-                          <FontAwesome
-                            size={fullWidth * 0.045 * factorRatio}
-                            color={'white'}
-                            name={'video-camera'}
-                          />
+                        <View style={[styles.centerContent, localStyles.iconContainer, {backgroundColor: 'red'}]}>
+                          <FontAwesome size={fullWidth * 0.045 * factorRatio} color={'white'} name={'video-camera'} />
                         </View>
                       )}
                       {messageDict[item.type][2] == 'orange' && (
-                        <View
-                          style={[
-                            styles.centerContent,
-                            {
-                              position: 'absolute',
-                              bottom: 0,
-                              right: 0,
-                              height: fullWidth * 0.075,
-                              width: fullWidth * 0.075,
-                              backgroundColor: 'orange',
-                              borderRadius: 100 * factorRatio,
-                              zIndex: 5
-                            }
-                          ]}
-                        >
-                          <Chat
-                            height={fullWidth * 0.05}
-                            width={fullWidth * 0.05}
-                            fill={'white'}
-                          />
+                        <View style={[styles.centerContent, localStyles.iconContainer, {backgroundColor: 'orange'}]}>
+                          <Chat height={fullWidth * 0.05} width={fullWidth * 0.05} fill={'white'} />
                         </View>
                       )}
                       {messageDict[item.type][2] == 'blue' && (
-                        <View
-                          style={[
-                            styles.centerContent,
-                            {
-                              position: 'absolute',
-                              bottom: 0,
-                              right: 0,
-                              height: fullWidth * 0.075,
-                              width: fullWidth * 0.075,
-                              backgroundColor: 'blue',
-                              borderRadius: 100 * factorRatio,
-                              zIndex: 5
-                            }
-                          ]}
-                        >
-                          <AntIcon
-                            size={fullWidth * 0.045}
-                            color={'white'}
-                            name={'like1'}
-                          />
+                        <View style={[styles.centerContent, localStyles.iconContainer, {backgroundColor: 'blue'}]}>
+                          <AntIcon size={fullWidth * 0.045} color={'white'} name={'like1'} />
                         </View>
                       )}
                       <FastImage
-                        style={{
-                          flex: 1,
-                          borderRadius: 100
-                        }}
+                        style={{ flex: 1, borderRadius: 100 }}
                         source={{
                           uri:
                             item.type == 'new content releases'
@@ -698,54 +411,21 @@ export default class Profile extends React.Component {
                         resizeMode={FastImage.resizeMode.stretch}
                       />
                     </View>
-                  </View>
                 </View>
                 <View style={{ flex: 0.675 }}>
                   <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Bold',
-                        fontSize: 15 * factorRatio,
-                        color: 'white'
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-ExtraBold',
-                          fontSize: 15 * factorRatio,
-                          color: 'white'
-                        }}
-                      >
-                        {messageDict[item.type][1] ? '' : 'NEW - '}
-                      </Text>
-                      {item.type == 'new content releases'
-                        ? item.content.display_name
-                        : item.sender?.display_name}
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 14 * factorRatio
-                        }}
-                      >
-                        {' '}
-                        {messageDict[item.type][0]}
-                      </Text>
+                    <Text style={localStyles.notitificationText}>
+                      <Text style={localStyles.boldNotificationText}>{messageDict[item.type][1] ? '' : 'NEW - '}</Text>
+                      {item.type == 'new content releases' ? item.content.display_name : item.sender?.display_name}
+                      <Text style={localStyles.messageTypeText}>{' '}{messageDict[item.type][0]}</Text>
                     </Text>
-                    <Text
-                      style={{
-                        marginTop: 5 * factorVertical,
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 13 * factorRatio,
-                        color: colors.secondBackground
-                      }}
-                    >
-                      {item.created_at}
-                    </Text>
+                    <Text style={localStyles.createdAtText}>{item.created_at}</Text>
                   </View>
                 </View>
                 <View>
                   <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity
+                      style={localStyles.threeDotsContainer}
                       onPress={() => {
                         this.checkNotificationTypeStatus(item);
                         this.setState({
@@ -753,16 +433,8 @@ export default class Profile extends React.Component {
                           clickedNotification: item
                         });
                       }}
-                      style={{
-                        height: 35 * factorRatio,
-                        justifyContent: 'center'
-                      }}
                     >
-                      <EntypoIcon
-                        size={20 * factorRatio}
-                        name={'dots-three-horizontal'}
-                        color={colors.secondBackground}
-                      />
+                      <EntypoIcon size={20 * factorRatio} name={'dots-three-horizontal'} color={colors.secondBackground} />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -788,22 +460,19 @@ export default class Profile extends React.Component {
           hasBackdrop={true}
         >
           <XpRank
-            hideXpRank={() => {
-              this.setState({ showXpRank: false });
-            }}
+            hideXpRank={() => this.setState({ showXpRank: false })}
             xp={this.state.xp}
             rank={this.state.rank}
           />
         </Modal>
         <Modal
           key={'replyNotification'}
-          isVisible={true}
+          isVisible={this.state.showReplyNotification}
           style={[
             styles.centerContent,
             {
               margin: 0,
-              height: '100%',
-              width: '100%'
+              flex: 1,
             }
           ]}
           animation={'slideInUp'}
@@ -833,3 +502,155 @@ export default class Profile extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15
+  },
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+  imageContainer: {
+    borderRadius: 250,
+    borderWidth: 2 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderColor: '#fb1b2f',
+    height: DeviceInfo.isTablet() ? 
+      112 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2 
+      : 
+      140 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    aspectRatio: 1,
+    marginBottom: 5 * (Dimensions.get('window').height / 812),
+  },
+  profilePic: {
+    position: 'absolute',
+    zIndex: 10,
+    elevation: 10,
+    top: -15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    right: -15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 35 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: 35 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius: 100,
+    borderColor: '#fb1b2f',
+    borderWidth: 1.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  profileImageBackground: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 250,
+    backgroundColor: '#445f73'
+  },
+  usernameText: {
+    fontFamily: 'OpenSans-ExtraBold',
+    fontSize: 30 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center',
+    color: 'white',
+    marginBottom: 10 * Dimensions.get('window').height / 812,
+  },
+  memberSinceText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center',
+    color: '#445f73'
+  },
+  rankText: {
+    marginTop: 20 * Dimensions.get('window').height / 812,
+    borderTopColor: '#445f73',
+    borderTopWidth: 0.25,
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 0.25,
+    paddingVertical: 10,
+    backgroundColor: '#00101d',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  redXpRank: {
+    color: '#fb1b2f',
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-Bold',
+    textAlign: 'center'
+  },
+  whiteXpRank: {
+    color: 'white',
+    fontSize: 24 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-ExtraBold',
+    textAlign: 'center'
+  },
+  notificationContainer: {
+    paddingVertical: 15 * Dimensions.get('window').height / 812,
+    elevation: 1
+  },
+  notificationText: {
+    paddingLeft: 15,
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-ExtraBold',
+    color: '#445f73'
+  },
+  activityContainer: {
+    flex: 1,
+    marginTop: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  noNotificationText: {
+    fontFamily: 'OpenSans-ExtraBold',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    paddingLeft: 15,
+    color: 'white'
+  },
+  notification: {
+    height: 90 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    flexDirection: 'row'
+  },
+  innerNotificationContainer: {
+    paddingLeft: 15,
+    flex: 0.275,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  messageContainer: {
+    height: Dimensions.get('window').width * 0.175 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: Dimensions.get('window').width * 0.175 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius: 150 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    backgroundColor: '#ececec'
+  },
+  iconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    height: fullWidth * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: fullWidth * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    zIndex: 5
+  },
+  boldNotificationText: {
+    fontFamily: 'OpenSans-ExtraBold',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'white'
+  },
+  messageTypeText: {
+    fontFamily: 'OpenSans-Regular', 
+    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  notificationText: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'white'
+  },
+  createdAtText: {
+    marginTop: 5 * Dimensions.get('window').height / 812,
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 13 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: '#445f73'
+  },
+  threeDotsContainer: {
+    height: 35 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    justifyContent: 'center'
+  }
+});
