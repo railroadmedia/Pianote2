@@ -7,16 +7,16 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Animated,
   TouchableHighlight,
-  Platform,
   Linking,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
-
+import DeviceInfo from 'react-native-device-info';
 import Back from '../../assets/img/svgs/back';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -85,21 +85,8 @@ export default class ForgotPassword extends React.Component {
               contentInsetAdjustmentBehavior='never'
               contentContainerStyle={{ flex: 1 }}
             >
-              <View
-                style={{
-                  flex: 1,
-                  marginTop: 40,
-                  justifyContent: 'center'
-                }}
-              >
-                <View
-                  style={{
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                    width: onTablet ? '30%' : '50%',
-                    aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
-                  }}
-                >
+              <View style={localStyles.pianoteContainer}>
+                <View style={localStyles.pianoteInnerContainer}>
                   <Pianote fill={'#fb1b2f'} />
                 </View>
                 <View>
@@ -111,7 +98,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: onTablet ? '30%' : '50%'
+                      width: onTablet ? '50%' : '50%'
                     }}
                   >
                     The Ultimate Online
@@ -123,7 +110,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: `${(25 * (onTablet ? 30 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
+                      width: `${(25 * (onTablet ? 50 : 50)) / 19}%` //25=second row chars, 50=width % of first row (same as pianote svg), 19=first row chars
                     }}
                   >
                     Piano Lessons Experience.
@@ -139,15 +126,7 @@ export default class ForgotPassword extends React.Component {
                   placeholderTextColor={'grey'}
                   placeholder={'Email Address'}
                   onChangeText={email => this.setState({ email })}
-                  style={{
-                    padding: 15,
-                    marginVertical: 20,
-                    color: 'black',
-                    borderRadius: 100,
-                    marginHorizontal: 15,
-                    backgroundColor: 'white',
-                    fontFamily: 'OpenSans-Regular'
-                  }}
+                  style={localStyles.email}
                 />
 
                 <TouchableHighlight
@@ -163,8 +142,7 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       borderColor: '#fb1b2f',
                       width: onTablet ? '30%' : '50%',
-                      backgroundColor:
-                        this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
+                      backgroundColor: this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
                     }
                   ]}
                 >
@@ -179,54 +157,26 @@ export default class ForgotPassword extends React.Component {
                   </Text>
                 </TouchableHighlight>
               </View>
-              <View
-                key={'forgotpassword'}
-                style={{
-                  marginBottom: 20 * factorRatio
-                }}
-              >
+              <View style={{ marginBottom: 20 * factorRatio }}>
                 <TouchableOpacity
                   onPress={() => {
                     this.props.navigation.navigate('LOGINCREDENTIALS');
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 15 * factorRatio,
-                      color: 'grey',
-                      textAlign: 'center',
-                      textDecorationLine: 'underline'
-                    }}
-                  >
-                    Already a member? Log in.
-                  </Text>
+                  <Text style={localStyles.greyText}>Already a member? Log in.</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     this.props.navigation.navigate('CREATEACCOUNT');
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 15 * factorRatio,
-                      color: 'grey',
-                      textAlign: 'center',
-                      textDecorationLine: 'underline'
-                    }}
-                  >
-                    Not a member?
-                  </Text>
+                  <Text style={localStyles.greyText}>Not a member?</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
             <TouchableOpacity
               onPress={() => this.props.navigation.goBack()}
-              style={{
-                padding: 15,
-                position: 'absolute'
-              }}
+              style={{ padding: 15, position: 'absolute' }}
             >
               <Back width={25} height={25} fill={'white'} />
             </TouchableOpacity>
@@ -241,14 +191,7 @@ export default class ForgotPassword extends React.Component {
               }}
               additionalBtn={
                 <TouchableOpacity
-                  style={{
-                    backgroundColor: colors.pianoteRed,
-                    borderRadius: 25,
-                    marginTop: 10,
-                    height: 50,
-                    justifyContent: 'center',
-                    alignSelf: 'center'
-                  }}
+                  style={localStyles.goToEmailContainer}
                   onPress={() => {
                     this.alertSuccess.toggle();
                     openInbox();
@@ -297,3 +240,48 @@ export default class ForgotPassword extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+  pianoteContainer: {
+    flex: 1,
+    marginTop: 40,
+    justifyContent: 'center'
+  },
+  pianoteInnerContainer: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    aspectRatio: 177 / 53 
+  },
+  email: {
+    padding: 15,
+    marginVertical: 20,
+    color: 'black',
+    borderRadius: 100,
+    marginHorizontal: 15,
+    backgroundColor: 'white',
+    fontFamily: 'OpenSans-Regular'
+  },
+  greyText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'grey',
+    textAlign: 'center',
+    textDecorationLine: 'underline'
+  },
+  goToEmailContainer: {
+    backgroundColor: '#fb1b2f',
+    borderRadius: 25,
+    marginTop: 10,
+    height: 50,
+    justifyContent: 'center',
+    alignSelf: 'center'
+  }
+});

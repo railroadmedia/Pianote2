@@ -9,13 +9,16 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Dimensions,
+  StyleSheet
 } from 'react-native';
 
 import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
+import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
@@ -224,21 +227,8 @@ export default class LoginCredentials extends React.Component {
               contentInsetAdjustmentBehavior='never'
               contentContainerStyle={this.state.scrollViewContentFlex}
             >
-              <View
-                style={{
-                  flex: 1,
-                  marginTop: 40,
-                  justifyContent: 'center'
-                }}
-              >
-                <View
-                  style={{
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                    width: onTablet ? '30%' : '50%',
-                    aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
-                  }}
-                >
+              <View style={localStyles.scrollContainer}>
+                <View style={localStyles.pianoteInnerContainer}>
                   <Pianote fill={'#fb1b2f'} />
                 </View>
                 <View>
@@ -287,26 +277,9 @@ export default class LoginCredentials extends React.Component {
                   placeholder={'Email Address'}
                   keyboardType={'email-address'}
                   onChangeText={email => this.setState({ email })}
-                  style={{
-                    padding: 15,
-                    marginTop: 40,
-                    color: 'black',
-                    borderRadius: 100,
-                    marginHorizontal: 15,
-                    backgroundColor: 'white',
-                    fontFamily: 'OpenSans-Regular'
-                  }}
+                  style={localStyles.email}
                 />
-                <View
-                  style={{
-                    marginBottom: 40,
-                    borderRadius: 100,
-                    marginVertical: 10,
-                    marginHorizontal: 15,
-                    justifyContent: 'center',
-                    backgroundColor: 'white'
-                  }}
-                >
+                <View style={localStyles.textInputContainer}>
                   <TextInput
                     autoCapitalize={false}
                     onBlur={() =>
@@ -327,29 +300,16 @@ export default class LoginCredentials extends React.Component {
                     placeholder={'Password'}
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
-                    style={{
-                      padding: 15,
-                      color: 'black',
-                      marginRight: 45,
-                      fontFamily: 'OpenSans-Regular'
-                    }}
+                    style={localStyles.textInputPassword}
                   />
                   {!this.state.secureTextEntry && (
                     <TouchableOpacity
+                      style={localStyles.passwordContainer}  
                       onPress={() =>
                         this.setState({
                           secureTextEntry: true
                         })
                       }
-                      style={{
-                        left: 0,
-                        right: 50,
-                        padding: 15,
-                        height: '100%',
-                        borderRadius: 100,
-                        position: 'absolute',
-                        backgroundColor: 'white'
-                      }}
                     >
                       <Text>{this.state.password}</Text>
                     </TouchableOpacity>
@@ -416,29 +376,17 @@ export default class LoginCredentials extends React.Component {
               </View>
               <View style={{ padding: 10 }}>
                 <Text
+                  style={localStyles.greyText}
                   onPress={() => {
                     this.props.navigation.navigate('FORGOTPASSWORD');
-                  }}
-                  style={{
-                    padding: 5,
-                    color: 'grey',
-                    textAlign: 'center',
-                    fontFamily: 'OpenSans-Regular',
-                    textDecorationLine: 'underline'
                   }}
                 >
                   Forgot your password?
                 </Text>
                 <Text
+                  style={localStyles.greyText}
                   onPress={() => {
                     this.props.navigation.navigate('SUPPORTSIGNUP');
-                  }}
-                  style={{
-                    padding: 5,
-                    color: 'grey',
-                    textAlign: 'center',
-                    fontFamily: 'OpenSans-Regular',
-                    textDecorationLine: 'underline'
                   }}
                 >
                   Can't log in? Contact support.
@@ -469,8 +417,7 @@ export default class LoginCredentials extends React.Component {
           isVisible={this.state.showPasswordEmailMatch}
           style={{
             margin: 0,
-            height: '100%',
-            width: '100%'
+            flex: 1
           }}
           animation={'slideInUp'}
           animationInTiming={250}
@@ -494,3 +441,76 @@ export default class LoginCredentials extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+  pianoteContainer: {
+    flex: 1,
+    marginTop: 40,
+    justifyContent: 'center'
+  },
+  pianoteInnerContainer: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    aspectRatio: 177 / 53 
+  },
+  email: {
+    padding: 15,
+    marginTop: 40,
+    color: 'black',
+    borderRadius: 100,
+    marginHorizontal: 15,
+    backgroundColor: 'white',
+    fontFamily: 'OpenSans-Regular'
+  },
+  greyText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'grey',
+    textAlign: 'center',
+    textDecorationLine: 'underline'
+  },
+  passwordContainer: {
+    left: 0,
+    right: 50,
+    padding: 15,
+    height: '100%',
+    borderRadius: 100,
+    position: 'absolute',
+    backgroundColor: 'white'
+  },
+  goToEmailContainer: {
+    backgroundColor: '#fb1b2f',
+    borderRadius: 25,
+    marginTop: 10,
+    height: 50,
+    justifyContent: 'center',
+    alignSelf: 'center'
+  },
+  scrollContainer: {
+    flex: 1,
+    marginTop: 40,
+    justifyContent: 'center'
+  },
+  textInputContainer: {
+    marginBottom: 40,
+    borderRadius: 100,
+    marginVertical: 10,
+    marginHorizontal: 15,
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
+  textInputPassword: {
+    padding: 15,
+    color: 'black',
+    marginRight: 45,
+    fontFamily: 'OpenSans-Regular'
+  }
+});

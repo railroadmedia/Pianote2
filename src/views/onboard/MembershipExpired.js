@@ -2,8 +2,9 @@
  * MembershipExpired
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import DeviceInfo from 'react-native-device-info';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
@@ -23,60 +24,24 @@ export default class MembershipExpired extends React.Component {
         source={require('Pianote2/src/assets/img/imgs/lisa-foundations.png')}
       >
         <LinearGradient
-          style={{
-            bottom: 0,
-            position: 'absolute',
-            justifyContent: 'flex-end',
-            width: '100%',
-            height: '70%'
-          }}
-          colors={['transparent', colors.mainBackground]}
+          style={localStyles.linearStyle}
+          colors={['transparent', 'black']}
         />
         <SafeAreaView style={{ flex: 1 }}>
-          <View
-            style={{
-              flex: 1,
-              paddingVertical: '5%',
-              justifyContent: 'space-between'
-            }}
-          >
-            <View
-              style={{
-                alignSelf: 'center',
-                alignItems: 'center',
-                width: onTablet ? '30%' : '50%',
-                aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
-              }}
-            >
+          <View style={localStyles.container}>
+            <View style={localStyles.pianoteContainer}>
               <Pianote fill={'#fb1b2f'} />
             </View>
             <View>
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  fontSize: 30 * factorRatio,
-                  paddingHorizontal: 15,
-                  textAlign: 'center',
-                  color: 'white'
-                }}
-              >
-                Your Membership {'\n'} Has Expired
-              </Text>
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 18 * factorRatio,
-                  padding: 15,
-                  textAlign: 'center',
-                  color: 'white'
-                }}
-              >
+              <Text style={localStyles.title}>Your Membership {'\n'} Has Expired</Text>
+              <Text style={localStyles.description}>
                 Your account no longer has access to Pianote. Click the button
                 below to renew your membership - or, if you believe this is an
                 error, please contact support@pianote.com
               </Text>
 
               <TouchableOpacity
+                style={localStyles.buttonContainer}
                 onPress={() => {
                   this.props.navigation.navigate('NEWMEMBERSHIP', {
                     data: {
@@ -87,24 +52,8 @@ export default class MembershipExpired extends React.Component {
                     }
                   });
                 }}
-                style={{
-                  borderRadius: 60,
-                  backgroundColor: '#fb1b2f',
-                  justifyContent: 'center',
-                  marginHorizontal: '5%'
-                }}
               >
-                <Text
-                  style={{
-                    fontSize: 18 * factorRatio,
-                    textAlign: 'center',
-                    color: 'white',
-                    fontFamily: 'RobotoCondensed-Bold',
-                    paddingVertical: 10
-                  }}
-                >
-                  RENEW MEMBERSHIP
-                </Text>
+                <Text style={localStyles.buttonText}>RENEW MEMBERSHIP</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -113,3 +62,53 @@ export default class MembershipExpired extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: '5%',
+    justifyContent: 'space-between'
+  },
+  linearStyle: {
+    bottom: 0,
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    width: '100%',
+    height: '70%'
+  },
+  buttonText: {
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center',
+    color: 'white',
+    fontFamily: 'RobotoCondensed-Bold',
+    paddingVertical: 10
+  },
+  pianoteContainer: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    width: DeviceInfo.isTablet() ? '30%' : '50%',
+    aspectRatio: 177 / 53 //svg's viewbox viewBox="0 0 177 53"
+  },
+  title: {
+    fontFamily: 'OpenSans-ExtraBold',
+    fontSize: 30 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingHorizontal: 15,
+    textAlign: 'center',
+    color: 'white'
+  },
+  description: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    padding: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center',
+    color: 'white'
+  },
+  buttonContainer: {
+    borderRadius: 60,
+    backgroundColor: '#fb1b2f',
+    justifyContent: 'center',
+    marginHorizontal: '5%',
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  }
+});
+// borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,

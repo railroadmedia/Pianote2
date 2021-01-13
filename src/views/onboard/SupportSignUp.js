@@ -30,7 +30,7 @@ export default class SupportSignUp extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.mainContainer}>
         <View
           style={{
             flex: 1,

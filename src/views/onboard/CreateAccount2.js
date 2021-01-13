@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert,
-  ScrollView
+  ScrollView,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -109,14 +111,7 @@ export default class CreateAccount extends React.Component {
         resizeMode={FastImage.resizeMode.cover}
         source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
       >
-        <GradientFeature
-          zIndex={0}
-          opacity={0.5}
-          elevation={0}
-          color={'dark'}
-          height={'100%'}
-          borderRadius={0}
-        />
+        <GradientFeature zIndex={0} opacity={0.5} elevation={0} color={'dark'} height={'100%'} borderRadius={0} />
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -124,22 +119,10 @@ export default class CreateAccount extends React.Component {
           >
             <TouchableOpacity
               onPress={() => this.props.navigation.goBack()}
-              style={{
-                padding: 15,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
+              style={localStyles.createAccountContainer}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text
-                style={[
-                  styles.modalHeaderText,
-                  { color: 'white', fontSize: 24 * factorRatio }
-                ]}
-              >
-                Create Account
-              </Text>
+              <Text style={[styles.modalHeaderText, localStyles.createAccountText]}>Create Account</Text>
               <View />
             </TouchableOpacity>
             <ScrollView
@@ -148,36 +131,9 @@ export default class CreateAccount extends React.Component {
               contentInsetAdjustmentBehavior='never'
               contentContainerStyle={this.state.scrollViewContentFlex}
             >
-              <View
-                style={{
-                  flex: 1,
-                  marginTop: 40,
-                  justifyContent: 'center'
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 19 * factorRatio,
-                    fontWeight: '600',
-                    textAlign: 'left',
-                    color: 'white',
-                    paddingLeft: 15
-                  }}
-                >
-                  Create a password
-                </Text>
-                <View
-                  key={'pass'}
-                  style={{
-                    marginBottom: 20,
-                    borderRadius: 100,
-                    marginVertical: 10,
-                    marginHorizontal: 15,
-                    justifyContent: 'center',
-                    backgroundColor: 'white'
-                  }}
-                >
+              <View style={localStyles.createPasswordContainer}>
+                <Text style={localStyles.createPasswordText}>Create a password</Text>
+                <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
                     onBlur={() =>
@@ -193,15 +149,7 @@ export default class CreateAccount extends React.Component {
                     }
                     secureTextEntry={true}
                     onChangeText={password => this.setState({ password })}
-                    style={{
-                      marginVertical: 15 * factorRatio,
-                      color: 'black',
-                      fontSize: 15 * factorRatio,
-                      borderRadius: 100,
-                      marginHorizontal: 15,
-                      backgroundColor: 'white',
-                      fontFamily: 'OpenSans-Regular'
-                    }}
+                    style={localStyles.textinput}
                   />
                   {!this.state.showPassword && (
                     <TouchableOpacity
@@ -210,15 +158,7 @@ export default class CreateAccount extends React.Component {
                           showPassword: true
                         })
                       }
-                      style={{
-                        left: 0,
-                        right: 50,
-                        padding: 15,
-                        height: '100%',
-                        borderRadius: 100,
-                        position: 'absolute',
-                        backgroundColor: 'white'
-                      }}
+                      style={localStyles.showPassword}
                     >
                       <Text>{this.state.password}</Text>
                     </TouchableOpacity>
@@ -229,13 +169,7 @@ export default class CreateAccount extends React.Component {
                         showPassword: !this.state.showPassword
                       });
                     }}
-                    style={{
-                      right: 0,
-                      padding: 15,
-                      height: '100%',
-                      aspectRatio: 1,
-                      position: 'absolute'
-                    }}
+                    style={localStyles.passwordVisible}
                   >
                     {this.state.showPassword ? (
                       <PasswordHidden />
@@ -244,29 +178,10 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 19 * factorRatio,
-                    fontWeight: '600',
-                    textAlign: 'left',
-                    color: 'white',
-                    paddingLeft: 15
-                  }}
-                >
-                  Confirm password
-                </Text>
-                <View
-                  key={'pass'}
-                  style={{
-                    borderRadius: 100,
-                    marginVertical: 10,
-                    marginHorizontal: 15,
-                    justifyContent: 'center',
-                    backgroundColor: 'white'
-                  }}
-                >
+                <Text style={localStyles.createPasswordText}>Confirm password</Text>
+                <View style={localStyles.passInput}>
                   <TextInput
+                    style={localStyles.textinput}
                     autoCorrect={false}
                     onBlur={() =>
                       this.setState({ scrollViewContentFlex: { flex: 1 } })
@@ -283,48 +198,25 @@ export default class CreateAccount extends React.Component {
                     onChangeText={confirmPassword =>
                       this.setState({ confirmPassword })
                     }
-                    style={{
-                      marginVertical: 15 * factorRatio,
-                      color: 'black',
-                      fontSize: 15 * factorRatio,
-                      borderRadius: 100,
-                      marginHorizontal: 15,
-                      backgroundColor: 'white',
-                      fontFamily: 'OpenSans-Regular'
-                    }}
                   />
                   {!this.state.showConfirmPassword && (
                     <TouchableOpacity
+                      style={localStyles.showPassword}  
                       onPress={() =>
                         this.setState({
                           showConfirmPassword: true
                         })
                       }
-                      style={{
-                        left: 0,
-                        right: 50,
-                        padding: 15,
-                        height: '100%',
-                        borderRadius: 100,
-                        position: 'absolute',
-                        backgroundColor: 'white'
-                      }}
                     >
                       <Text>{this.state.confirmPassword}</Text>
                     </TouchableOpacity>
                   )}
                   <TouchableOpacity
+                    style={localStyles.passwordVisible}
                     onPress={() => {
                       this.setState({
                         showConfirmPassword: !this.state.showConfirmPassword
                       });
-                    }}
-                    style={{
-                      right: 0,
-                      padding: 15,
-                      height: '100%',
-                      aspectRatio: 1,
-                      position: 'absolute'
                     }}
                   >
                     {this.state.showConfirmPassword ? (
@@ -334,29 +226,13 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'left',
-                    fontSize: 14 * factorRatio,
-                    color: 'white',
-                    paddingLeft: 15,
-                    marginBottom: 40
-                  }}
-                >
-                  Use at least 8 characters
-                </Text>
+                <Text style={localStyles.characters}>Use at least 8 characters</Text>
 
                 <TouchableOpacity
                   onPress={() => this.savePassword()}
                   style={[
-                    styles.centerContent,
+                    styles.centerContent, localStyles.savePass,
                     {
-                      marginBottom: 10,
-                      borderWidth: 2,
-                      borderRadius: 50,
-                      alignSelf: 'center',
-                      borderColor: '#fb1b2f',
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
                         this.state.password.length > 0 &&
@@ -420,3 +296,83 @@ export default class CreateAccount extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  createAccountContainer: {
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  createAccountText: {
+    color: 'white', 
+    fontSize: 24 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+  createPasswordContainer: {
+    flex: 1,
+    marginTop: 40,
+    justifyContent: 'center'
+  },
+  createPasswordText: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: 19 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    color: 'white',
+    paddingLeft: 15
+  },
+  passInput: {
+    marginBottom: 20,
+    borderRadius: 100,
+    marginVertical: 10,
+    marginHorizontal: 15,
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
+  textinput: {
+    marginVertical: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'black',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius: 100,
+    marginHorizontal: 15,
+    backgroundColor: 'white',
+    fontFamily: 'OpenSans-Regular'
+  },
+  showPassword: {
+    left: 0,
+    right: 50,
+    padding: 15,
+    height: '100%',
+    borderRadius: 100,
+    position: 'absolute',
+    backgroundColor: 'white'
+  },
+  passwordVisible: {
+    right: 0,
+    padding: 15,
+    height: '100%',
+    aspectRatio: 1,
+    position: 'absolute'
+  },
+  characters: {
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'left',
+    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'white',
+    paddingLeft: 15,
+    marginBottom: 40
+  },
+  savePass: {
+    marginBottom: 10,
+    borderWidth: 2,
+    borderRadius: 50,
+    alignSelf: 'center',
+    borderColor: '#fb1b2f',
+  }
+});

@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
-  Dimensions
+  Dimensions,
+  StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -258,14 +259,7 @@ export default class CreateAccount3 extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <View
-          style={[
-            styles.centerContent,
-            {
-              height
-            }
-          ]}
-        >
+        <View style={styles.centerContent}>
           <ScrollView
             horizontal={true}
             ref={ref => {
@@ -277,1341 +271,1312 @@ export default class CreateAccount3 extends React.Component {
             onMomentumScrollEnd={e => this.changeColor(e)}
             contentContainerStyle={{ flexGrow: 1 }}
           >
-            <View key={'displayName'}>
-              <View
-                style={[
-                  styles.centerContent,
-                  {
-                    height: height,
-                    width: width,
-                    alignSelf: 'stretch'
-                  }
-                ]}
-              >
-                <View
-                  key={'CreateAccount'}
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: height * 0.05,
-                      width: width,
-                      zIndex: 10,
-                      elevation: 10,
-                      flexDirection: 'row'
-                    }
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.goBack()}
-                    style={{
-                      paddingLeft: 12.5 * factorHorizontal,
-                      height: '100%',
-                      width: '100%',
-                      flex: 1,
-                      justifyContent: 'center'
-                    }}
-                  >
-                    {false && (
-                      <EntypoIcon
-                        name={'chevron-thin-left'}
-                        size={22.5 * factorRatio}
-                        color={'black'}
-                      />
-                    )}
-                  </TouchableOpacity>
-                  <Text
-                    style={[
-                      styles.modalHeaderText,
-                      { color: 'white', fontSize: 24 * factorRatio }
-                    ]}
-                  >
-                    Create Account
-                  </Text>
-                  <View style={{ flex: 1 }} />
-                </View>
-                <Animated.View
-                  key={'items'}
+            <View style={styles.centerContent}>
+              <View style={[styles.centerContent, localStyles.container1]}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.goBack()}
                   style={{
-                    position: 'relative',
-                    bottom: this.state.pianoteYdelta,
-                    height: height * 0.9,
-                    width: width,
-                    zIndex: 3
+                    paddingLeft: 12.5 * factorHorizontal,
+                    height: '100%',
+                    width: '100%',
+                    flex: 1,
+                    justifyContent: 'center'
                   }}
                 >
+                  {false && (
+                    <EntypoIcon
+                      name={'chevron-thin-left'}
+                      size={22.5 * factorRatio}
+                      color={'black'}
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.modalHeaderText,
+                    { color: 'white', fontSize: 24 * factorRatio }
+                  ]}
+                >
+                  Create Account
+                </Text>
+                <View style={{ flex: 1 }} />
+              </View>
+              <Animated.View
+                key={'items'}
+                style={{
+                  position: 'relative',
+                  bottom: this.state.pianoteYdelta,
+                  height: height * 0.9,
+                  width: width,
+                  zIndex: 3
+                }}
+              >
+                <View
+                  key={'container'}
+                  style={{
+                    height: height,
+                    width: width,
+                    alignItems: 'center'
+                  }}
+                >
+                  <View style={{ flex: 0.45 }} />
                   <View
-                    key={'container'}
+                    key={'displayname'}
                     style={{
-                      height: height,
+                      height: 35 * factorVertical,
+                      marginBottom: 2 * factorVertical,
+                      flexDirection: 'row',
+                      paddingLeft: 20 * factorHorizontal
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 20 * factorRatio,
+                        fontWeight: Platform.OS == 'ios' ? '600' : 'bold',
+                        textAlign: 'left'
+                      }}
+                    >
+                      Add a display name
+                    </Text>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View
+                    key={'input'}
+                    style={{
+                      height: height * 0.07,
+                      width: width * 0.9,
+                      borderRadius: 50 * factorRatio,
+                      backgroundColor: 'white',
+                      justifyContent: 'center',
+                      paddingLeft: 20 * factorHorizontal,
+                      flexDirection: 'row',
+                      borderWidth: 1 * factorRatio,
+                      borderRadius: 50 * factorRatio,
+                      borderColor: '#c2c2c2'
+                    }}
+                  >
+                    <TextInput
+                      autoCorrect={false}
+                      placeholderTextColor={'grey'}
+                      returnKeyType={'go'}
+                      placeholder={'Display name'}
+                      keyboardType={'email-address'}
+                      onChangeText={displayName => {
+                        this.typingDisplayName(displayName);
+                      }}
+                      style={{
+                        color: 'black',
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 18 * factorRatio,
+                        flex: 1
+                      }}
+                    />
+                  </View>
+                  <View style={{ height: 10 * factorVertical }} />
+                  <View
+                    key={'appearsOnProfile'}
+                    style={{
+                      width: width,
+                      paddingLeft: 20 * factorHorizontal
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 13 * factorRatio,
+                        textAlign: 'left'
+                      }}
+                    >
+                      This appears on your Pianote profile and comments.
+                    </Text>
+                  </View>
+                  <View style={{ height: 40 * factorVertical }} />
+                  <View
+                    key={'next'}
+                    style={{
+                      height: height * 0.06,
+                      width: width * 0.4,
+                      borderRadius: 50 * factorRatio,
+                      borderColor: '#fb1b2f',
+                      backgroundColor:
+                        this.state.displayName.length == 0
+                          ? 'transparent'
+                          : '#fb1b2f',
+                      borderWidth: 1
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => this.setName()}
+                      style={[
+                        styles.centerContent,
+                        {
+                          height: '100%',
+                          width: '100%',
+                          flexDirection: 'row'
+                        }
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: 'RobotoCondensed-Bold',
+                          fontSize: 18 * factorRatio,
+                          color:
+                            this.state.displayName.length == 0
+                              ? '#fb1b2f'
+                              : 'white'
+                        }}
+                      >
+                        NEXT
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ height: 30 * factorVertical }} />
+                  <View
+                    key={'dots'}
+                    style={{
+                      height: height * 0.035,
+                      flexDirection: 'row'
+                    }}
+                  >
+                    <View style={{ flex: 1 }} />
+                    <View style={{ justifyContent: 'center' }}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 1
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 7.5 * factorHorizontal
+                          }}
+                        />
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 2
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 7.5 * factorHorizontal
+                          }}
+                        />
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 3
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 7.5 * factorHorizontal
+                          }}
+                        />
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 4
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                      </View>
+                    </View>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View style={{ height: 30 * factorVertical }} />
+                  <View
+                    key={'skip'}
+                    style={{
                       width: width,
                       alignItems: 'center'
                     }}
                   >
-                    <View style={{ flex: 0.45 }} />
-                    <View
-                      key={'displayname'}
-                      style={{
-                        height: 35 * factorVertical,
-                        marginBottom: 2 * factorVertical,
-                        flexDirection: 'row',
-                        paddingLeft: 20 * factorHorizontal
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.createAccount();
                       }}
                     >
                       <Text
                         style={{
                           fontFamily: 'OpenSans-Regular',
                           fontSize: 20 * factorRatio,
-                          fontWeight: Platform.OS == 'ios' ? '600' : 'bold',
-                          textAlign: 'left'
+                          fontWeight: '700',
+                          color: '#fb1b2f'
                         }}
                       >
-                        Add a display name
+                        SKIP
                       </Text>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View
-                      key={'input'}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Animated.View>
+              <Modal
+                key={'checkUserTakenModal'}
+                isVisible={this.state.showDisplayName}
+                style={[
+                  styles.centerContent,
+                  {
+                    margin: 0,
+                    height: '100%',
+                    width: '100%'
+                  }
+                ]}
+                animation={'slideInUp'}
+                animationInTiming={350}
+                animationOutTiming={350}
+                coverScreen={true}
+                hasBackdrop={true}
+              >
+                <DisplayName
+                  hideDisplayName={() => {
+                    this.setState({
+                      showDisplayName: false
+                    });
+                  }}
+                />
+              </Modal>
+            </View>
+            <View
+              style={[
+                styles.centerContent,
+                {
+                  height: height,
+                  width: width,
+                  alignSelf: 'stretch'
+                }
+              ]}
+            >
+              <View
+                key={'CreateAccount2'}
+                style={[
+                  styles.centerContent,
+                  {
+                    height: height * 0.05,
+                    width: width,
+                    zIndex: 5,
+                    elevation: 5,
+                    flexDirection: 'row'
+                  }
+                ]}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.myScroll.scrollTo({
+                      x: 0,
+                      y: 0,
+                      animated: true
+                    });
+                  }}
+                  style={{
+                    paddingLeft: 12.5 * factorHorizontal,
+                    flex: 1
+                  }}
+                >
+                  <EntypoIcon
+                    name={'chevron-thin-left'}
+                    size={22.5 * factorRatio}
+                    color={'black'}
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: 24 * factorRatio,
+                    fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
+                  }}
+                >
+                  Create Account
+                </Text>
+                <View style={{ flex: 1 }} />
+              </View>
+              <View
+                key={'items'}
+                style={{
+                  bottom: 0,
+                  height: height * 0.9,
+                  width: width,
+                  zIndex: 3,
+                  elevation: 3
+                }}
+              >
+                <View
+                  key={'container'}
+                  style={{
+                    height: height,
+                    width: width,
+                    alignItems: 'center'
+                  }}
+                >
+                  <View style={{ flex: 0.2 }} />
+                  <View
+                    key={'addPicture'}
+                    style={{
+                      height: 35 * factorVertical,
+                      flexDirection: 'row'
+                    }}
+                  >
+                    <Text
                       style={{
-                        height: height * 0.07,
-                        width: width * 0.9,
-                        borderRadius: 50 * factorRatio,
-                        backgroundColor: 'white',
-                        justifyContent: 'center',
-                        paddingLeft: 20 * factorHorizontal,
-                        flexDirection: 'row',
-                        borderWidth: 1 * factorRatio,
-                        borderRadius: 50 * factorRatio,
-                        borderColor: '#c2c2c2'
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 17.5 * factorRatio,
+                        fontWeight: '700',
+                        textAlign: 'center'
                       }}
                     >
-                      <TextInput
-                        autoCorrect={false}
-                        placeholderTextColor={'grey'}
-                        returnKeyType={'go'}
-                        placeholder={'Display name'}
-                        keyboardType={'email-address'}
-                        onChangeText={displayName => {
-                          this.typingDisplayName(displayName);
-                        }}
-                        style={{
-                          color: 'black',
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 18 * factorRatio,
-                          flex: 1
-                        }}
+                      Add a profile picture
+                    </Text>
+                  </View>
+                  <View style={{ height: 10 * factorVertical }} />
+                  <View
+                    key={'profilePicture'}
+                    style={{
+                      height: height * 0.22,
+                      width: width,
+                      flexDirection: 'row',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <View style={{ flex: 1 }} />
+                    <TouchableOpacity
+                      onPress={() => this.chooseImage()}
+                      style={[
+                        styles.centerContent,
+                        {
+                          height: height * 0.19125,
+                          width: height * 0.19125,
+                          borderRadius: 200 * factorRatio,
+                          backgroundColor: '#fb1b2f'
+                        }
+                      ]}
+                    >
+                      {this.state.showImage && (
+                        <FastImage
+                          style={{
+                            position: 'absolute',
+                            height: '100%',
+                            width: '100%',
+                            borderRadius: 200 * factorRatio,
+                            zIndex: 5
+                          }}
+                          source={{
+                            uri: this.state.imageURI
+                          }}
+                          resizeMode={FastImage.resizeMode.cover}
+                        />
+                      )}
+                      {this.state.showImage && (
+                        <TouchableOpacity
+                          onPress={() => this.clearImage()}
+                          style={[
+                            styles.centerContent,
+                            {
+                              position: 'absolute',
+                              height: '22.5%',
+                              width: '22.5%',
+                              right: '4%',
+                              top: '4%',
+                              backgroundColor: '#0090d3',
+                              borderRadius: 200 * factorRatio,
+                              zIndex: 5
+                            }
+                          ]}
+                        >
+                          <X fill={'white'} height={'50%'} width={'50%'} />
+                        </TouchableOpacity>
+                      )}
+                      <AntIcon
+                        name={'plus'}
+                        size={55 * factorRatio}
+                        color={'white'}
                       />
-                    </View>
-                    <View style={{ height: 10 * factorVertical }} />
-                    <View
-                      key={'appearsOnProfile'}
+                    </TouchableOpacity>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View style={{ height: 10 * factorVertical }} />
+                  <View
+                    key={'appearsOnProfile'}
+                    style={{
+                      width: width,
+                      paddingLeft: 20 * factorHorizontal
+                    }}
+                  >
+                    <Text
                       style={{
-                        width: width,
-                        paddingLeft: 20 * factorHorizontal
+                        fontFamily: 'OpenSans-Regular',
+                        fontSize: 13 * factorRatio,
+                        textAlign: 'center'
+                      }}
+                    >
+                      This appears on your Pianote profile and comments.
+                    </Text>
+                  </View>
+                  <View style={{ height: 40 * factorVertical }} />
+                  <View
+                    key={'next'}
+                    style={{
+                      height: height * 0.06,
+                      width: width * 0.4,
+                      borderRadius: 50 * factorRatio,
+                      borderColor: '#fb1b2f',
+                      backgroundColor:
+                        this.state.imageURI.length == 0
+                          ? 'transparent'
+                          : '#fb1b2f',
+                      borderWidth: 1
+                    }}
+                  >
+                    <TouchableOpacity
+                      underlayColor={'transparent'}
+                      onPress={() => {
+                        this.myScroll.scrollTo({
+                          x: width * 2,
+                          y: 0,
+                          animated: true
+                        });
+                        this.setState({
+                          page: 3,
+                          canScroll: true
+                        });
+                      }}
+                      style={[
+                        styles.centerContent,
+                        {
+                          height: '100%',
+                          width: '100%',
+                          flexDirection: 'row'
+                        }
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: 'RobotoCondensed-Bold',
+                          fontSize: 18 * factorRatio,
+                          color:
+                            this.state.imageURI.length == 0
+                              ? '#fb1b2f'
+                              : 'white'
+                        }}
+                      >
+                        NEXT
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 0.5 }} />
+                  <View
+                    key={'dots'}
+                    style={{
+                      height: height * 0.035,
+                      flexDirection: 'row'
+                    }}
+                  >
+                    <View style={{ flex: 1 }} />
+                    <View style={{ justifyContent: 'center' }}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 1
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 7.5 * factorHorizontal
+                          }}
+                        />
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 2
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 7.5 * factorHorizontal
+                          }}
+                        />
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 3
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 7.5 * factorHorizontal
+                          }}
+                        />
+                        <View
+                          style={{
+                            height: 10 * factorRatio,
+                            width: 10 * factorRatio,
+                            borderRadius: 100,
+                            backgroundColor:
+                              this.state.page == 4
+                                ? '#fb1b2f'
+                                : 'transparent',
+                            borderWidth: 1,
+                            borderColor: '#fb1b2f'
+                          }}
+                        ></View>
+                      </View>
+                    </View>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View style={{ height: 30 * factorVertical }} />
+                  <View
+                    key={'skip'}
+                    style={{
+                      width: width,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.createAccount();
                       }}
                     >
                       <Text
                         style={{
                           fontFamily: 'OpenSans-Regular',
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'left'
+                          fontSize: 20 * factorRatio,
+                          fontWeight: '700',
+                          color: '#fb1b2f'
                         }}
                       >
-                        This appears on your Pianote profile and comments.
+                        SKIP
                       </Text>
-                    </View>
-                    <View style={{ height: 40 * factorVertical }} />
-                    <View
-                      key={'next'}
-                      style={{
-                        height: height * 0.06,
-                        width: width * 0.4,
-                        borderRadius: 50 * factorRatio,
-                        borderColor: '#fb1b2f',
-                        backgroundColor:
-                          this.state.displayName.length == 0
-                            ? 'transparent'
-                            : '#fb1b2f',
-                        borderWidth: 1
-                      }}
-                    >
-                      <TouchableOpacity
-                        onPress={() => this.setName()}
-                        style={[
-                          styles.centerContent,
-                          {
-                            height: '100%',
-                            width: '100%',
-                            flexDirection: 'row'
-                          }
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: 'RobotoCondensed-Bold',
-                            fontSize: 18 * factorRatio,
-                            color:
-                              this.state.displayName.length == 0
-                                ? '#fb1b2f'
-                                : 'white'
-                          }}
-                        >
-                          NEXT
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ height: 30 * factorVertical }} />
-                    <View
-                      key={'dots'}
-                      style={{
-                        height: height * 0.035,
-                        flexDirection: 'row'
-                      }}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View style={{ justifyContent: 'center' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 1
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                          <View
-                            style={{
-                              width: 7.5 * factorHorizontal
-                            }}
-                          />
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 2
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                          <View
-                            style={{
-                              width: 7.5 * factorHorizontal
-                            }}
-                          />
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 3
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                          <View
-                            style={{
-                              width: 7.5 * factorHorizontal
-                            }}
-                          />
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 4
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                        </View>
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ height: 30 * factorVertical }} />
-                    <View
-                      key={'skip'}
-                      style={{
-                        width: width,
-                        alignItems: 'center'
-                      }}
-                    >
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.createAccount();
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 20 * factorRatio,
-                            fontWeight: '700',
-                            color: '#fb1b2f'
-                          }}
-                        >
-                          SKIP
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                   </View>
-                </Animated.View>
-                <Modal
-                  key={'checkUserTakenModal'}
-                  isVisible={this.state.showDisplayName}
-                  style={[
-                    styles.centerContent,
-                    {
-                      margin: 0,
-                      height: '100%',
-                      width: '100%'
-                    }
-                  ]}
-                  animation={'slideInUp'}
-                  animationInTiming={350}
-                  animationOutTiming={350}
-                  coverScreen={true}
-                  hasBackdrop={true}
+                </View>
+              </View>
+              <Modal
+                isVisible={this.state.showDisplayName}
+                style={[
+                  styles.centerContent,
+                  {
+                    margin: 0,
+                    height: '100%',
+                    width: '100%'
+                  }
+                ]}
+                animation={'slideInUp'}
+                animationInTiming={350}
+                animationOutTiming={350}
+                coverScreen={true}
+                hasBackdrop={true}
+              >
+                <DisplayName
+                  hideDisplayName={() => {
+                    this.setState({
+                      showDisplayName: false
+                    });
+                  }}
+                />
+              </Modal>
+            </View>
+            <View
+              key={'pianote1'}
+              style={{
+                height: height,
+                width: width,
+                zIndex: 2
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  textAlign: 'center',
+                  fontSize: 24 * factorRatio,
+                  fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
+                }}
+              >
+                Here's what is included{'\n'}in the Pianote App!
+              </Text>
+              <View
+                style={{
+                  height: '4%',
+                  borderBottomColor: '#dbdbdb',
+                  borderBottomWidth: 0.75 * factorRatio
+                }}
+              />
+              <View
+                key={'learningPathLine'}
+                style={{
+                  height: height * 0.15,
+                  width: width,
+                  alignSelf: 'stretch',
+                  flexDirection: 'row',
+                  borderBottomColor: '#dbdbdb',
+                  borderBottomWidth: 0.75 * factorRatio
+                }}
+              >
+                <View style={{ flex: 0.35 }}>
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={[
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row'
+                      }
+                    ]}
+                  >
+                    <View style={{ flex: 1 }} />
+                    <View
+                      style={[
+                        styles.centerContent,
+                        {
+                          width: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          height: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          borderRadius: 100 * factorRatio,
+                          backgroundColor: '#fb1b2f'
+                        }
+                      ]}
+                    >
+                      <LearningPaths
+                        height={
+                          onTablet
+                            ? width * 0.06 * factorRatio
+                            : width * 0.125 * factorRatio
+                        }
+                        width={
+                          onTablet
+                            ? width * 0.06 * factorRatio
+                            : width * 0.125 * factorRatio
+                        }
+                        fill={'white'}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View
+                  style={{
+                    flex: 0.65
+                  }}
                 >
-                  <DisplayName
-                    hideDisplayName={() => {
-                      this.setState({
-                        showDisplayName: false
-                      });
+                  <View style={{ flex: 1 }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 22 * factorRatio,
+                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
                     }}
-                  />
-                </Modal>
+                  >
+                    Learning Path
+                  </Text>
+                  <View style={{ height: 5 * factorVertical }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 18 * factorRatio
+                    }}
+                  >
+                    Guided lessons covering{'\n'}every topic along the way.
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                </View>
+              </View>
+              <View
+                key={'coursesLine'}
+                style={{
+                  height: height * 0.15,
+                  width: width,
+                  alignSelf: 'stretch',
+                  flexDirection: 'row',
+                  borderBottomColor: '#dbdbdb',
+                  borderBottomWidth: 0.75 * factorRatio
+                }}
+              >
+                <View style={{ flex: 0.35 }}>
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={[
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row'
+                      }
+                    ]}
+                  >
+                    <View style={{ flex: 1 }} />
+                    <View
+                      style={[
+                        styles.centerContent,
+                        {
+                          width: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          height: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          borderRadius: 100 * factorRatio,
+                          backgroundColor: '#fb1b2f'
+                        }
+                      ]}
+                    >
+                      <Courses
+                        height={
+                          onTablet
+                            ? width * 0.06 * factorRatio
+                            : width * 0.125 * factorRatio
+                        }
+                        width={
+                          onTablet
+                            ? width * 0.06 * factorRatio
+                            : width * 0.125 * factorRatio
+                        }
+                        fill={'white'}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View
+                  style={{
+                    flex: 0.65
+                  }}
+                >
+                  <View style={{ flex: 1 }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 22 * factorRatio,
+                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
+                    }}
+                  >
+                    Courses
+                  </Text>
+                  <View style={{ height: 5 * factorVertical }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 18 * factorRatio
+                    }}
+                  >
+                    Series of short lessons{'\n'}based on a single topic.
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                </View>
+              </View>
+              <View
+                key={'songsLine'}
+                style={{
+                  height: height * 0.15,
+                  width: width,
+                  alignSelf: 'stretch',
+                  flexDirection: 'row',
+                  borderBottomColor: '#dbdbdb',
+                  borderBottomWidth: 0.75 * factorRatio
+                }}
+              >
+                <View style={{ flex: 0.35 }}>
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={[
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row'
+                      }
+                    ]}
+                  >
+                    <View style={{ flex: 1 }} />
+                    <View
+                      style={[
+                        styles.centerContent,
+                        {
+                          width: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          height: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          borderRadius: 100 * factorRatio,
+                          backgroundColor: '#fb1b2f'
+                        }
+                      ]}
+                    >
+                      <Songs
+                        height={
+                          onTablet
+                            ? width * 0.06 * factorRatio
+                            : width * 0.125 * factorRatio
+                        }
+                        width={
+                          onTablet
+                            ? width * 0.06 * factorRatio
+                            : width * 0.125 * factorRatio
+                        }
+                        fill={'white'}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View
+                  style={{
+                    flex: 0.65
+                  }}
+                >
+                  <View style={{ flex: 1 }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 22 * factorRatio,
+                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
+                    }}
+                  >
+                    Songs
+                  </Text>
+                  <View style={{ height: 5 * factorVertical }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 18 * factorRatio
+                    }}
+                  >
+                    Famous songs with note-{'\n'}for-note transcriptions.
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                </View>
+              </View>
+              <View
+                key={'supportLine'}
+                style={{
+                  height: height * 0.15,
+                  width: width,
+                  alignSelf: 'stretch',
+                  flexDirection: 'row',
+                  borderBottomColor: '#dbdbdb',
+                  borderBottomWidth: 0.75 * factorRatio
+                }}
+              >
+                <View style={{ flex: 0.35 }}>
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={[
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row'
+                      }
+                    ]}
+                  >
+                    <View style={{ flex: 1 }} />
+                    <View
+                      style={[
+                        styles.centerContent,
+                        {
+                          width: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          height: onTablet
+                            ? width * 0.1 * factorRatio
+                            : width * 0.2 * factorRatio,
+                          borderRadius: 100 * factorRatio,
+                          backgroundColor: '#fb1b2f'
+                        }
+                      ]}
+                    >
+                      <Support
+                        height={
+                          onTablet
+                            ? width * 0.065 * factorRatio
+                            : width * 0.135 * factorRatio
+                        }
+                        width={
+                          onTablet
+                            ? width * 0.065 * factorRatio
+                            : width * 0.135 * factorRatio
+                        }
+                        fill={'white'}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }} />
+                  </View>
+                  <View style={{ flex: 1 }} />
+                </View>
+                <View
+                  style={{
+                    flex: 0.65
+                  }}
+                >
+                  <View style={{ flex: 1 }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 20 * factorRatio,
+                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
+                    }}
+                  >
+                    Support
+                  </Text>
+                  <View style={{ height: 5 * factorVertical }} />
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 18 * factorRatio
+                    }}
+                  >
+                    Get personal support{'\n'}from real piano teachers.
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                </View>
+              </View>
+              <View style={{ height: '5%' }} />
+              <View
+                key={'dots'}
+                style={{
+                  height: height * 0.035,
+                  flexDirection: 'row'
+                }}
+              >
+                <View style={{ flex: 1 }} />
+                <View style={{ justifyContent: 'center' }}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 1 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                    <View
+                      style={{
+                        width: 7.5 * factorHorizontal
+                      }}
+                    />
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 2 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                    <View
+                      style={{
+                        width: 7.5 * factorHorizontal
+                      }}
+                    />
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 3 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                    <View
+                      style={{
+                        width: 7.5 * factorHorizontal
+                      }}
+                    />
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 4 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }} />
+              </View>
+              <View style={{ height: 30 * factorVertical }} />
+              <View
+                key={'skip'}
+                style={{
+                  width: width,
+                  alignItems: 'center'
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.createAccount();
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: 'OpenSans-Regular',
+                      fontSize: 20 * factorRatio,
+                      fontWeight: '700',
+                      color: '#fb1b2f'
+                    }}
+                  >
+                    SKIP
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View key={'profilePic'}>
+            <View
+              key={'pianote1'}
+              style={{
+                height: height,
+                width: width,
+                zIndex: 2
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  textAlign: 'center',
+                  fontSize: 25 * factorRatio,
+                  fontWeight: '700'
+                }}
+              >
+                You should start with{'\n'}The Pianote Method!
+              </Text>
+              <View
+                style={{
+                  height: '4%',
+                  borderBottomColor: '#dbdbdb',
+                  borderBottomWidth: 0.75 * factorRatio
+                }}
+              />
               <View
                 style={[
                   styles.centerContent,
                   {
-                    height: height,
+                    height: height * 0.575,
                     width: width,
                     alignSelf: 'stretch'
                   }
                 ]}
               >
-                <View
-                  key={'CreateAccount2'}
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: height * 0.05,
-                      width: width,
-                      zIndex: 5,
-                      elevation: 5,
-                      flexDirection: 'row'
-                    }
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.myScroll.scrollTo({
-                        x: 0,
-                        y: 0,
-                        animated: true
-                      });
-                    }}
-                    style={{
-                      paddingLeft: 12.5 * factorHorizontal,
-                      flex: 1
-                    }}
-                  >
-                    <EntypoIcon
-                      name={'chevron-thin-left'}
-                      size={22.5 * factorRatio}
-                      color={'black'}
-                    />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 24 * factorRatio,
-                      fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
-                    }}
-                  >
-                    Create Account
-                  </Text>
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View
-                  key={'items'}
-                  style={{
-                    bottom: 0,
-                    height: height * 0.9,
-                    width: width,
-                    zIndex: 3,
-                    elevation: 3
-                  }}
-                >
-                  <View
-                    key={'container'}
-                    style={{
-                      height: height,
-                      width: width,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <View style={{ flex: 0.2 }} />
-                    <View
-                      key={'addPicture'}
-                      style={{
-                        height: 35 * factorVertical,
-                        flexDirection: 'row'
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 17.5 * factorRatio,
-                          fontWeight: '700',
-                          textAlign: 'center'
-                        }}
-                      >
-                        Add a profile picture
-                      </Text>
-                    </View>
-                    <View style={{ height: 10 * factorVertical }} />
-                    <View
-                      key={'profilePicture'}
-                      style={{
-                        height: height * 0.22,
-                        width: width,
-                        flexDirection: 'row',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <TouchableOpacity
-                        onPress={() => this.chooseImage()}
-                        style={[
-                          styles.centerContent,
-                          {
-                            height: height * 0.19125,
-                            width: height * 0.19125,
-                            borderRadius: 200 * factorRatio,
-                            backgroundColor: '#fb1b2f'
-                          }
-                        ]}
-                      >
-                        {this.state.showImage && (
-                          <FastImage
-                            style={{
-                              position: 'absolute',
-                              height: '100%',
-                              width: '100%',
-                              borderRadius: 200 * factorRatio,
-                              zIndex: 5
-                            }}
-                            source={{
-                              uri: this.state.imageURI
-                            }}
-                            resizeMode={FastImage.resizeMode.cover}
-                          />
-                        )}
-                        {this.state.showImage && (
-                          <TouchableOpacity
-                            onPress={() => this.clearImage()}
-                            style={[
-                              styles.centerContent,
-                              {
-                                position: 'absolute',
-                                height: '22.5%',
-                                width: '22.5%',
-                                right: '4%',
-                                top: '4%',
-                                backgroundColor: '#0090d3',
-                                borderRadius: 200 * factorRatio,
-                                zIndex: 5
-                              }
-                            ]}
-                          >
-                            <X fill={'white'} height={'50%'} width={'50%'} />
-                          </TouchableOpacity>
-                        )}
-                        <AntIcon
-                          name={'plus'}
-                          size={55 * factorRatio}
-                          color={'white'}
-                        />
-                      </TouchableOpacity>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ height: 10 * factorVertical }} />
-                    <View
-                      key={'appearsOnProfile'}
-                      style={{
-                        width: width,
-                        paddingLeft: 20 * factorHorizontal
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 13 * factorRatio,
-                          textAlign: 'center'
-                        }}
-                      >
-                        This appears on your Pianote profile and comments.
-                      </Text>
-                    </View>
-                    <View style={{ height: 40 * factorVertical }} />
-                    <View
-                      key={'next'}
-                      style={{
-                        height: height * 0.06,
-                        width: width * 0.4,
-                        borderRadius: 50 * factorRatio,
-                        borderColor: '#fb1b2f',
-                        backgroundColor:
-                          this.state.imageURI.length == 0
-                            ? 'transparent'
-                            : '#fb1b2f',
-                        borderWidth: 1
-                      }}
-                    >
-                      <TouchableOpacity
-                        underlayColor={'transparent'}
-                        onPress={() => {
-                          this.myScroll.scrollTo({
-                            x: width * 2,
-                            y: 0,
-                            animated: true
-                          });
-                          this.setState({
-                            page: 3,
-                            canScroll: true
-                          });
-                        }}
-                        style={[
-                          styles.centerContent,
-                          {
-                            height: '100%',
-                            width: '100%',
-                            flexDirection: 'row'
-                          }
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: 'RobotoCondensed-Bold',
-                            fontSize: 18 * factorRatio,
-                            color:
-                              this.state.imageURI.length == 0
-                                ? '#fb1b2f'
-                                : 'white'
-                          }}
-                        >
-                          NEXT
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 0.5 }} />
-                    <View
-                      key={'dots'}
-                      style={{
-                        height: height * 0.035,
-                        flexDirection: 'row'
-                      }}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View style={{ justifyContent: 'center' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 1
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                          <View
-                            style={{
-                              width: 7.5 * factorHorizontal
-                            }}
-                          />
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 2
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                          <View
-                            style={{
-                              width: 7.5 * factorHorizontal
-                            }}
-                          />
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 3
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                          <View
-                            style={{
-                              width: 7.5 * factorHorizontal
-                            }}
-                          />
-                          <View
-                            style={{
-                              height: 10 * factorRatio,
-                              width: 10 * factorRatio,
-                              borderRadius: 100,
-                              backgroundColor:
-                                this.state.page == 4
-                                  ? '#fb1b2f'
-                                  : 'transparent',
-                              borderWidth: 1,
-                              borderColor: '#fb1b2f'
-                            }}
-                          ></View>
-                        </View>
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ height: 30 * factorVertical }} />
-                    <View
-                      key={'skip'}
-                      style={{
-                        width: width,
-                        alignItems: 'center'
-                      }}
-                    >
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.createAccount();
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontFamily: 'OpenSans-Regular',
-                            fontSize: 20 * factorRatio,
-                            fontWeight: '700',
-                            color: '#fb1b2f'
-                          }}
-                        >
-                          SKIP
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-                <Modal
-                  isVisible={this.state.showDisplayName}
-                  style={[
-                    styles.centerContent,
-                    {
-                      margin: 0,
-                      height: '100%',
-                      width: '100%'
-                    }
-                  ]}
-                  animation={'slideInUp'}
-                  animationInTiming={350}
-                  animationOutTiming={350}
-                  coverScreen={true}
-                  hasBackdrop={true}
-                >
-                  <DisplayName
-                    hideDisplayName={() => {
-                      this.setState({
-                        showDisplayName: false
-                      });
-                    }}
-                  />
-                </Modal>
-              </View>
-            </View>
-            <View key={'overview'}>
-              <View
-                key={'pianote1'}
-                style={{
-                  height: height,
-                  width: width,
-                  zIndex: 2
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    fontSize: 24 * factorRatio,
-                    fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
-                  }}
-                >
-                  Here's what is included{'\n'}in the Pianote App!
-                </Text>
-                <View
-                  style={{
-                    height: '4%',
-                    borderBottomColor: '#dbdbdb',
-                    borderBottomWidth: 0.75 * factorRatio
-                  }}
-                />
-                <View
-                  key={'learningPathLine'}
-                  style={{
-                    height: height * 0.15,
-                    width: width,
-                    alignSelf: 'stretch',
-                    flexDirection: 'row',
-                    borderBottomColor: '#dbdbdb',
-                    borderBottomWidth: 0.75 * factorRatio
-                  }}
-                >
-                  <View style={{ flex: 0.35 }}>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          flexDirection: 'row'
-                        }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            width: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            height: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            borderRadius: 100 * factorRatio,
-                            backgroundColor: '#fb1b2f'
-                          }
-                        ]}
-                      >
-                        <LearningPaths
-                          height={
-                            onTablet
-                              ? width * 0.06 * factorRatio
-                              : width * 0.125 * factorRatio
-                          }
-                          width={
-                            onTablet
-                              ? width * 0.06 * factorRatio
-                              : width * 0.125 * factorRatio
-                          }
-                          fill={'white'}
-                        />
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                  <View
-                    style={{
-                      flex: 0.65
-                    }}
-                  >
-                    <View style={{ flex: 1 }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 22 * factorRatio,
-                        fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
-                      }}
-                    >
-                      Learning Path
-                    </Text>
-                    <View style={{ height: 5 * factorVertical }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 18 * factorRatio
-                      }}
-                    >
-                      Guided lessons covering{'\n'}every topic along the way.
-                    </Text>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                </View>
-                <View
-                  key={'coursesLine'}
-                  style={{
-                    height: height * 0.15,
-                    width: width,
-                    alignSelf: 'stretch',
-                    flexDirection: 'row',
-                    borderBottomColor: '#dbdbdb',
-                    borderBottomWidth: 0.75 * factorRatio
-                  }}
-                >
-                  <View style={{ flex: 0.35 }}>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          flexDirection: 'row'
-                        }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            width: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            height: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            borderRadius: 100 * factorRatio,
-                            backgroundColor: '#fb1b2f'
-                          }
-                        ]}
-                      >
-                        <Courses
-                          height={
-                            onTablet
-                              ? width * 0.06 * factorRatio
-                              : width * 0.125 * factorRatio
-                          }
-                          width={
-                            onTablet
-                              ? width * 0.06 * factorRatio
-                              : width * 0.125 * factorRatio
-                          }
-                          fill={'white'}
-                        />
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                  <View
-                    style={{
-                      flex: 0.65
-                    }}
-                  >
-                    <View style={{ flex: 1 }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 22 * factorRatio,
-                        fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
-                      }}
-                    >
-                      Courses
-                    </Text>
-                    <View style={{ height: 5 * factorVertical }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 18 * factorRatio
-                      }}
-                    >
-                      Series of short lessons{'\n'}based on a single topic.
-                    </Text>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                </View>
-                <View
-                  key={'songsLine'}
-                  style={{
-                    height: height * 0.15,
-                    width: width,
-                    alignSelf: 'stretch',
-                    flexDirection: 'row',
-                    borderBottomColor: '#dbdbdb',
-                    borderBottomWidth: 0.75 * factorRatio
-                  }}
-                >
-                  <View style={{ flex: 0.35 }}>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          flexDirection: 'row'
-                        }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            width: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            height: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            borderRadius: 100 * factorRatio,
-                            backgroundColor: '#fb1b2f'
-                          }
-                        ]}
-                      >
-                        <Songs
-                          height={
-                            onTablet
-                              ? width * 0.06 * factorRatio
-                              : width * 0.125 * factorRatio
-                          }
-                          width={
-                            onTablet
-                              ? width * 0.06 * factorRatio
-                              : width * 0.125 * factorRatio
-                          }
-                          fill={'white'}
-                        />
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                  <View
-                    style={{
-                      flex: 0.65
-                    }}
-                  >
-                    <View style={{ flex: 1 }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 22 * factorRatio,
-                        fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
-                      }}
-                    >
-                      Songs
-                    </Text>
-                    <View style={{ height: 5 * factorVertical }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 18 * factorRatio
-                      }}
-                    >
-                      Famous songs with note-{'\n'}for-note transcriptions.
-                    </Text>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                </View>
-                <View
-                  key={'supportLine'}
-                  style={{
-                    height: height * 0.15,
-                    width: width,
-                    alignSelf: 'stretch',
-                    flexDirection: 'row',
-                    borderBottomColor: '#dbdbdb',
-                    borderBottomWidth: 0.75 * factorRatio
-                  }}
-                >
-                  <View style={{ flex: 0.35 }}>
-                    <View style={{ flex: 1 }} />
-                    <View
-                      style={[
-                        styles.centerContent,
-                        {
-                          flexDirection: 'row'
-                        }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={[
-                          styles.centerContent,
-                          {
-                            width: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            height: onTablet
-                              ? width * 0.1 * factorRatio
-                              : width * 0.2 * factorRatio,
-                            borderRadius: 100 * factorRatio,
-                            backgroundColor: '#fb1b2f'
-                          }
-                        ]}
-                      >
-                        <Support
-                          height={
-                            onTablet
-                              ? width * 0.065 * factorRatio
-                              : width * 0.135 * factorRatio
-                          }
-                          width={
-                            onTablet
-                              ? width * 0.065 * factorRatio
-                              : width * 0.135 * factorRatio
-                          }
-                          fill={'white'}
-                        />
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                  <View
-                    style={{
-                      flex: 0.65
-                    }}
-                  >
-                    <View style={{ flex: 1 }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 20 * factorRatio,
-                        fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
-                      }}
-                    >
-                      Support
-                    </Text>
-                    <View style={{ height: 5 * factorVertical }} />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 18 * factorRatio
-                      }}
-                    >
-                      Get personal support{'\n'}from real piano teachers.
-                    </Text>
-                    <View style={{ flex: 1 }} />
-                  </View>
-                </View>
-                <View style={{ height: '5%' }} />
-                <View
-                  key={'dots'}
-                  style={{
-                    height: height * 0.035,
-                    flexDirection: 'row'
-                  }}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View style={{ justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 1 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                      <View
-                        style={{
-                          width: 7.5 * factorHorizontal
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 2 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                      <View
-                        style={{
-                          width: 7.5 * factorHorizontal
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 3 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                      <View
-                        style={{
-                          width: 7.5 * factorHorizontal
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 4 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                    </View>
-                  </View>
-                  <View style={{ flex: 1 }} />
-                </View>
-                <View style={{ height: 30 * factorVertical }} />
-                <View
-                  key={'skip'}
-                  style={{
-                    width: width,
-                    alignItems: 'center'
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.createAccount();
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        fontSize: 20 * factorRatio,
-                        fontWeight: '700',
-                        color: '#fb1b2f'
-                      }}
-                    >
-                      SKIP
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-            <View key={'foundations'} style={styles.centerContent}>
-              <View
-                key={'pianote1'}
-                style={{
-                  height: height,
-                  width: width,
-                  zIndex: 2
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    textAlign: 'center',
-                    fontSize: 25 * factorRatio,
-                    fontWeight: '700'
-                  }}
-                >
-                  You should start with{'\n'}The Pianote Method!
-                </Text>
-                <View
-                  style={{
-                    height: '4%',
-                    borderBottomColor: '#dbdbdb',
-                    borderBottomWidth: 0.75 * factorRatio
-                  }}
-                />
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      height: height * 0.575,
-                      width: width,
-                      alignSelf: 'stretch'
-                    }
-                  ]}
-                >
-                  <View style={{ height: 20 * factorVertical }} />
-                  <View
-                    style={[styles.centerContent, { flexDirection: 'row' }]}
-                  >
-                    <View style={{ flex: 1 }} />
-                    <FastImage
-                      style={{
-                        height: height * 0.134,
-                        width: width * 0.65,
-                        borderRadius: 10 * factorRatio,
-                        alignSelf: 'stretch'
-                      }}
-                      source={require('Pianote2/src/assets/img/imgs/pianote-method-logo.png')}
-                      resizeMode={FastImage.resizeMode.contain}
-                    />
-                    <View style={{ flex: 1 }} />
-                  </View>
-                  <View style={{ height: 10 * factorVertical }} />
-                  <View style={{ flexDirection: 'row' }}>
-                    <FastImage
-                      style={{
-                        height: onTablet ? height * 0.275 : height * 0.225,
-                        width: width * 0.85,
-                        borderRadius: 10 * factorRatio,
-                        alignSelf: 'stretch'
-                      }}
-                      source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
-                      resizeMode={FastImage.resizeMode.cover}
-                    />
-                  </View>
-                  <View style={{ height: 15 * factorVertical }} />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontWeight: '700',
-                      fontSize: 18 * factorRatio,
-                      textAlign: 'center'
-                    }}
-                  >
-                    Welcome To{'\n'}The Keyboard
-                  </Text>
-                  <View style={{ height: 10 * factorVertical }} />
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 14 * factorRatio,
-                      color: 'grey',
-                      textAlign: 'center'
-                    }}
-                  >
-                    Level 1 / Lesson 1 / Lisa Witt
-                  </Text>
-                </View>
-                <View style={{ height: '3%' }} />
-                <View
-                  key={'dots'}
-                  style={{
-                    height: height * 0.035,
-                    flexDirection: 'row'
-                  }}
-                >
-                  <View style={{ flex: 1 }} />
-                  <View style={{ justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 1 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                      <View
-                        style={{
-                          width: 7.5 * factorHorizontal
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 2 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                      <View
-                        style={{
-                          width: 7.5 * factorHorizontal
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 3 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                      <View
-                        style={{
-                          width: 7.5 * factorHorizontal
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 10 * factorRatio,
-                          width: 10 * factorRatio,
-                          borderRadius: 100,
-                          backgroundColor:
-                            this.state.page == 4 ? '#fb1b2f' : 'transparent',
-                          borderWidth: 1,
-                          borderColor: '#fb1b2f'
-                        }}
-                      ></View>
-                    </View>
-                  </View>
-                  <View style={{ flex: 1 }} />
-                </View>
                 <View style={{ height: 20 * factorVertical }} />
                 <View
-                  key={'skip'}
-                  style={{
-                    width: width,
-                    height: '6.25%',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    borderRadius: 30 * factorRatio
-                  }}
+                  style={[styles.centerContent, { flexDirection: 'row' }]}
                 >
                   <View style={{ flex: 1 }} />
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.createAccount();
+                  <FastImage
+                    style={{
+                      height: height * 0.134,
+                      width: width * 0.65,
+                      borderRadius: 10 * factorRatio,
+                      alignSelf: 'stretch'
                     }}
-                    style={[
-                      styles.centerContent,
-                      {
-                        width: '85%',
-                        height: '100%',
-                        borderRadius: 30 * factorRatio,
-                        backgroundColor: '#fb1b2f'
-                      }
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 18 * factorRatio,
-                        color: 'white'
-                      }}
-                    >
-                      GET STARTED
-                    </Text>
-                  </TouchableOpacity>
+                    source={require('Pianote2/src/assets/img/imgs/pianote-method-logo.png')}
+                    resizeMode={FastImage.resizeMode.contain}
+                  />
                   <View style={{ flex: 1 }} />
                 </View>
+                <View style={{ height: 10 * factorVertical }} />
+                <View style={{ flexDirection: 'row' }}>
+                  <FastImage
+                    style={{
+                      height: onTablet ? height * 0.275 : height * 0.225,
+                      width: width * 0.85,
+                      borderRadius: 10 * factorRatio,
+                      alignSelf: 'stretch'
+                    }}
+                    source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                </View>
+                <View style={{ height: 15 * factorVertical }} />
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontWeight: '700',
+                    fontSize: 18 * factorRatio,
+                    textAlign: 'center'
+                  }}
+                >
+                  Welcome To{'\n'}The Keyboard
+                </Text>
+                <View style={{ height: 10 * factorVertical }} />
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: 14 * factorRatio,
+                    color: 'grey',
+                    textAlign: 'center'
+                  }}
+                >
+                  Level 1 / Lesson 1 / Lisa Witt
+                </Text>
+              </View>
+              <View style={{ height: '3%' }} />
+              <View
+                key={'dots'}
+                style={{
+                  height: height * 0.035,
+                  flexDirection: 'row'
+                }}
+              >
+                <View style={{ flex: 1 }} />
+                <View style={{ justifyContent: 'center' }}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 1 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                    <View
+                      style={{
+                        width: 7.5 * factorHorizontal
+                      }}
+                    />
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 2 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                    <View
+                      style={{
+                        width: 7.5 * factorHorizontal
+                      }}
+                    />
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 3 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                    <View
+                      style={{
+                        width: 7.5 * factorHorizontal
+                      }}
+                    />
+                    <View
+                      style={{
+                        height: 10 * factorRatio,
+                        width: 10 * factorRatio,
+                        borderRadius: 100,
+                        backgroundColor:
+                          this.state.page == 4 ? '#fb1b2f' : 'transparent',
+                        borderWidth: 1,
+                        borderColor: '#fb1b2f'
+                      }}
+                    ></View>
+                  </View>
+                </View>
+                <View style={{ flex: 1 }} />
+              </View>
+              <View style={{ height: 20 * factorVertical }} />
+              <View
+                key={'skip'}
+                style={{
+                  width: width,
+                  height: '6.25%',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  borderRadius: 30 * factorRatio
+                }}
+              >
+                <View style={{ flex: 1 }} />
+                <TouchableOpacity
+                  onPress={() => {
+                    this.createAccount();
+                  }}
+                  style={[
+                    styles.centerContent,
+                    {
+                      width: '85%',
+                      height: '100%',
+                      borderRadius: 30 * factorRatio,
+                      backgroundColor: '#fb1b2f'
+                    }
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontFamily: 'RobotoCondensed-Bold',
+                      fontSize: 18 * factorRatio,
+                      color: 'white'
+                    }}
+                  >
+                    GET STARTED
+                  </Text>
+                </TouchableOpacity>
+                <View style={{ flex: 1 }} />
               </View>
             </View>
           </ScrollView>
@@ -1620,3 +1585,13 @@ export default class CreateAccount3 extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+});

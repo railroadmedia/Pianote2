@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -85,22 +87,10 @@ export default class CreateAccount extends React.Component {
           >
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
-              style={{
-                padding: 15,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
+              style={localStyles.createAccountContainer}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text
-                style={[
-                  styles.modalHeaderText,
-                  { color: 'white', fontSize: 24 * factorRatio }
-                ]}
-              >
-                Create Account
-              </Text>
+              <Text style={[styles.modalHeaderText, localStyles.createAccountText]}>Create Account</Text>
               <View />
             </TouchableOpacity>
             <ScrollView
@@ -109,27 +99,10 @@ export default class CreateAccount extends React.Component {
               contentInsetAdjustmentBehavior='never'
               contentContainerStyle={this.state.scrollViewContentFlex}
             >
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'space-between',
-                  marginBottom: 20 * factorRatio
-                }}
-              >
+              <View style={localStyles.emailContainer}>
                 <View id='placeholder' />
                 <View style={{ justifyContent: 'center' }}>
-                  <Text
-                    style={{
-                      fontFamily: 'OpenSans-Regular',
-                      fontSize: 20 * factorRatio,
-                      fontWeight: '600',
-                      textAlign: 'left',
-                      color: 'white',
-                      paddingLeft: 15
-                    }}
-                  >
-                    What's your email?
-                  </Text>
+                  <Text style={localStyles.emailText}>What's your email?</Text>
                   <TextInput
                     autoCorrect={false}
                     onBlur={() =>
@@ -151,28 +124,15 @@ export default class CreateAccount extends React.Component {
                         : 'email-address'
                     }
                     onChangeText={email => this.setState({ email })}
-                    style={{
-                      padding: 15 * factorRatio,
-                      marginVertical: 15 * factorRatio,
-                      color: 'black',
-                      fontSize: 15 * factorRatio,
-                      borderRadius: 100,
-                      marginHorizontal: 15,
-                      backgroundColor: 'white',
-                      fontFamily: 'OpenSans-Regular'
-                    }}
+                    style={localStyles.textInput}
                   />
 
                   <TouchableOpacity
                     onPress={() => this.verifyEmail()}
                     style={[
-                      styles.centerContent,
+                      styles.centerContent, localStyles.verifyContainer,
                       {
-                        marginBottom: 20 * factorRatio,
-                        borderWidth: 2,
-                        borderRadius: 50,
-                        alignSelf: 'center',
-                        borderColor: '#fb1b2f',
+                        
                         width: onTablet ? '30%' : '50%',
                         backgroundColor:
                           this.state.email.length > 0
@@ -230,3 +190,52 @@ export default class CreateAccount extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  createAccountContainer: {
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  emailContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    marginBottom: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  emailText: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'left',
+    color: 'white',
+    paddingLeft: 15
+  },
+  createAccountText: {
+    color: 'white', 
+    fontSize: 24 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+  textInput: {
+    padding: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginVertical: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: 'black',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius: 100,
+    marginHorizontal: 15,
+    backgroundColor: 'white',
+    fontFamily: 'OpenSans-Regular'
+  },
+  verifyContainer: {
+    marginBottom: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderWidth: 2,
+    borderRadius: 50,
+    alignSelf: 'center',
+    borderColor: '#fb1b2f',
+  }
+});
