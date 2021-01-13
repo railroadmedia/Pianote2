@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
-  StatusBar
+  StatusBar,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
@@ -170,30 +172,15 @@ export default class Settings extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar
-          backgroundColor={colors.mainBackground}
-          barStyle={'light-content'}
-        />
-        <View
-          key={'header'}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 15
-          }}
-        >
+        <StatusBar backgroundColor={colors.mainBackground} barStyle={'light-content'} />
+        <View style={localStyles.header}>
           <TouchableOpacity
+            style={{ flex: 1 }}
             onPress={() => {
               this.props.navigation.goBack();
             }}
-            style={{ flex: 1 }}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
+            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={colors.secondBackground} />
           </TouchableOpacity>
 
           <Text style={[styles.childHeaderText, {color: colors.secondBackground}]}>Settings</Text>
@@ -202,57 +189,24 @@ export default class Settings extends React.Component {
 
         <ScrollView style={styles.mainContainer}>
           <TouchableOpacity
-            key={'profileSettings'}
+            style={[styles.centerContent, localStyles.profileSettingsContainer]}
             onPress={() => {
               this.props.navigation.navigate('PROFILESETTINGS');
             }}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                borderTopWidth: 0.5 * factorRatio,
-                borderTopColor: colors.secondBackground,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
-            >
-              <FeatherIcon
-                name={'user'}
-                size={25 * factorRatio}
-                color={colors.pianoteRed}
-              />
+            <View style={[styles.centerContent, { width: 60 * factorHorizontal }]}>
+              <FeatherIcon name={'user'} size={25 * factorRatio} color={colors.pianoteRed} />
             </View>
             <Text style={styles.settingsText}>Profile Settings</Text>
             <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
+            <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
           </TouchableOpacity>
           <TouchableOpacity
             key={'notificationSettings'}
             onPress={() => {
               this.props.navigation.navigate('NOTIFICATIONSETTINGS');
             }}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
+            style={[styles.centerContent, localStyles.container]}
           >
             <View
               style={[styles.centerContent, { width: 60 * factorHorizontal }]}
@@ -272,87 +226,36 @@ export default class Settings extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'manageSubscriptions'}
+            style={[styles.centerContent, localStyles.container]}
             onPress={this.manageSubscriptions}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
           >
             <View
               style={[styles.centerContent, { width: 60 * factorHorizontal }]}
             >
-              <AntIcon
-                name={'folder1'}
-                size={25 * factorRatio}
-                color={colors.pianoteRed}
-              />
+              <AntIcon name={'folder1'} size={25 * factorRatio} color={colors.pianoteRed} />
             </View>
             <Text style={styles.settingsText}>Manage Subscriptions</Text>
             <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
+            <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
           </TouchableOpacity>
 
           <TouchableOpacity
             key={'restorePurchase'}
             onPress={this.restorePurchase}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
+            style={[styles.centerContent, localStyles.container]}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
-            >
-              <AntIcon
-                name={'folder1'}
-                size={25 * factorRatio}
-                color={colors.pianoteRed}
-              />
+            <View style={[styles.centerContent, { width: 60 * factorHorizontal }]}>
+              <AntIcon name={'folder1'} size={25 * factorRatio} color={colors.pianoteRed} />
             </View>
             <Text style={styles.settingsText}>Restore Purchases</Text>
             <View style={{ flex: 1 }} />
-            <AntIcon
-              name={'right'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
+            <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
           </TouchableOpacity>
-
           <TouchableOpacity
-            key={'support'}
+            style={[styles.centerContent, localStyles.container]}
             onPress={() => {
               this.props.navigation.navigate('SUPPORT');
             }}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
           >
             <View
               style={[styles.centerContent, { width: 60 * factorHorizontal }]}
@@ -372,21 +275,10 @@ export default class Settings extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'termsOfUse'}
+            style={[styles.centerContent, localStyles.container]}
             onPress={() => {
               this.props.navigation.navigate('TERMS');
             }}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
           >
             <View
               style={[styles.centerContent, { width: 60 * factorHorizontal }]}
@@ -408,21 +300,10 @@ export default class Settings extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'privacyPolicy'}
+            style={[styles.centerContent, localStyles.container]}
             onPress={() => {
               this.props.navigation.navigate('PRIVACYPOLICY');
             }}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
           >
             <View
               style={[styles.centerContent, { width: 60 * factorHorizontal }]}
@@ -442,21 +323,10 @@ export default class Settings extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            key={'logOut'}
+            style={[styles.centerContent, localStyles.container]}
             onPress={() => {
               this.setState({ showLogOut: true });
             }}
-            style={[
-              styles.centerContent,
-              {
-                height: 50 * factorRatio,
-                width: '100%',
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                flexDirection: 'row',
-                paddingRight: 15
-              }
-            ]}
           >
             <View style={[styles.centerContent, { width: 60 * factorHorizontal }]}>
               <AntIcon
@@ -473,25 +343,11 @@ export default class Settings extends React.Component {
               color={colors.secondBackground}
             />
           </TouchableOpacity>
-          <Text
-            style={[styles.settingsText, {
-              marginTop: 15 * factorRatio,
-              textAlign: 'center',
-              fontSize: 12 * factorRatio
-            }]}
-            >
+          <Text style={[styles.settingsText, localStyles.appText]}>
             APP VERSION {DeviceInfo.getVersion()}
           </Text>
           {commonService.rootUrl.includes('staging') && (
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                textAlign: 'center',
-                color: colors.secondBackground,
-                marginTop: 15 * factorRatio,
-                fontSize: 12 * factorRatio
-              }}
-            >
+            <Text style={localStyles.buildText}>
               BUILD NUMBER {DeviceInfo.getBuildNumber()}
             </Text>
           )}
@@ -562,3 +418,42 @@ export default class Settings extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: '100%',
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 1 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    flexDirection: 'row',
+    paddingRight: 15
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15
+  },
+  profileSettingsContainer: {
+    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: '100%',
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 1 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderTopWidth: 0.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderTopColor: '#445f73',
+    flexDirection: 'row',
+    paddingRight: 15
+  },
+  appText: {
+    marginTop: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center',
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  buildText: {
+    fontFamily: 'OpenSans-Regular',
+    textAlign: 'center',
+    color: '#445f73',
+    marginTop: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  }
+});

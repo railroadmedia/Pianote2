@@ -7,7 +7,9 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { SafeAreaView } from 'react-navigation';
@@ -23,55 +25,23 @@ export default class PrivacyPolicy extends React.Component {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor={'#ffffff'} barStyle={'dark-content'} />
-        <View
-          key={'header'}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 15
-          }}
-        >
+        <View style={localStyles.header}>
           <TouchableOpacity
             onPress={() => this.props.navigation.goBack()}
             style={{ flex: 1 }}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={'black'}
-            />
+            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={'black'} />
           </TouchableOpacity>
-
-          <Text
-            style={{
-              fontWeight: Platform.OS == 'android' ? 'bold' : '600',
-              fontSize: 20 * factorRatio,
-              alignSelf: 'center',
-              textAlign: 'center'
-            }}
-          >
-            Privacy Policy
-          </Text>
+          <Text style={localStyles.title}>Privacy Policy</Text>
           <View style={{ flex: 1 }} />
         </View>
-        <ScrollView
-          style={{
-            flex: 1,
-            paddingHorizontal: 15
-          }}
-        >
-          <View style={{ height: 5 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold' }]}>
+        <ScrollView style={localStyles.scrollContainer}>
+          <Text style={[styles.text, localStyles.subtitle]}>Indemnification
             Below is a list of the standard policies we use on this website.
             They are in place to safeguard our users, and to ensure we can
             provide a quality user experience!
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}>
-            Standard Website Logs
-          </Text>
-          <View style={{ height: 5 * factorRatio }} />
+          <Text style={[styles.text, localStyles.subtitle]}>Standard Website Logs</Text>
           <Text style={styles.text}>
             The Pianote.com website logs all website visitors and transactions.
             We collect the standard information most all websites collect such
@@ -82,18 +52,13 @@ export default class PrivacyPolicy extends React.Component {
             any of the information outside of our company, and only analyze
             group numbers – never singling out an individuals information.
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}>
-            Subscriptions & E-mail Data
-          </Text>
-          <View style={{ height: 5 * factorRatio }} />
+          <Text style={[styles.text, localStyles.subtitle]}>Subscriptions & E-mail Data</Text>
           <Text style={styles.text}>
             Our website offers users the option to subscribe for periodical
             updates. This is done with a name and e-mail address for
             registration. As with our server logs – all information that is
             collected will never be shared with any 3rd party.
           </Text>
-          <View style={{ height: 5 * factorRatio }} />
           <Text style={styles.text}>
             In addition, all outgoing e-mail contains our mailing address and a
             simple unsubscribe link that can be used by the recipient to remove
@@ -101,11 +66,7 @@ export default class PrivacyPolicy extends React.Component {
             get any e-mail from us. These features are in place to improve our
             user experience.
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}>
-            IP Logging
-          </Text>
-          <View style={{ height: 5 * factorRatio }} />
+          <Text style={[styles.text, localStyles.subtitle]}>IP Logging</Text>
           <Text style={styles.text}>
             We use visitor IP information to assist in diagnosing possible
             problems encountered on our web servers. If there is a future
@@ -113,11 +74,7 @@ export default class PrivacyPolicy extends React.Component {
             IP address can be used to gather a wide range of demographic
             information; again, this data is kept internal.
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}>
-            Cookies
-          </Text>
-          <View style={{ height: 5 * factorRatio }} />
+          <Text style={[styles.text, localStyles.subtitle]}>Cookies</Text>
           <Text style={styles.text}>
             We use cookies to track basic website information. This data can be
             used to be sure affiliate partners are recognized for visitors they
@@ -125,22 +82,14 @@ export default class PrivacyPolicy extends React.Component {
             that said, you can rest easy knowing we never single out any
             individual users, and always analyze group numbers.
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}>
-            External Links
-          </Text>
-          <View style={{ height: 5 * factorRatio }} />
+          <Text style={[styles.text, localStyles.subtitle]}>External Links</Text>
           <Text style={styles.text}>
             This website contains some links to external websites. We are not
             responsible for the privacy practices or the content of these web
             destinations. You are encouraged to read the individual privacy
             policies of those websites to be sure they match our high standards.
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}>
-            Customers
-          </Text>
-          <View style={{ height: 5 * factorRatio }} />
+          <Text style={[styles.text, localStyles.subtitle]}>Customers</Text>
           <Text style={styles.text}>
             Those that buy products on this website are asked for additional
             information. This data is used to process each sale, and to mail out
@@ -152,52 +101,61 @@ export default class PrivacyPolicy extends React.Component {
             to see the last 4-5 digits of a credit card for future client
             verification.
           </Text>
-          <View style={{ height: 5 * factorRatio }} />
           <Text style={styles.text}>
             Customers that have purchased from us are also added to our
             mailing-list by default. However, as stated above – all outgoing
             e-mail contains a simple unsubscribe link that can be used by the
             recipient at anytime.
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}>
-            Changes to this Policy
-          </Text>
-          <View style={{ height: 5 * factorRatio }} />
+          <Text style={[styles.text, localStyles.subtitle]}>Changes to this Policy</Text>
           <Text style={styles.text}>
             Please note that basic changes to this policy can be done at any
             time.
           </Text>
-          <View style={{ height: 5 * factorRatio }} />
           <Text style={styles.text}>
             We pride ourselves on taking every precaution necessary to ensure
             our users are safe and secure while browsing our website. This is
             why we have developed a privacy policy that covers how we collect,
             and store your information.
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
-          <Text
-            style={[
-              styles.text,
-              {
-                paddingLeft: 10 * factorRatio,
-                paddingRight: 10 * factorRatio,
-                textAlign: 'center'
-              }
-            ]}
-          >
+          <Text style={[styles.text, localStyles.contact]}>
             Please contact{' '}
-            <Text
-              style={[styles.text, { fontWeight: 'bold', marginBottom: 0 }]}
-            >
-              {' '}
-              support@pianote.com
-            </Text>{' '}
-            if you have any questions that aren't answered here.
-          </Text>
+            <Text style={[styles.text, localStyles.subtitle]}>{' '}support@pianote.com</Text>{' '}if you have any questions that aren't answered here.</Text>
           <View style={{ height: 25 * factorRatio }} />
         </ScrollView>
       </SafeAreaView>
     );
   }
 }
+
+
+const localStyles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15
+  },
+  title: {
+    fontWeight: Platform.OS == 'android' ? 'bold' : '800',
+    fontSize: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: 15
+  },
+  subtitle: {
+    paddingBottom: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2, 
+    marginTop: 25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2, 
+    fontWeight: 'bold', 
+    marginBottom: 0
+  },
+  contact: {
+    marginTop: 20, 
+    paddingLeft: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingRight: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    textAlign: 'center'
+  }
+});

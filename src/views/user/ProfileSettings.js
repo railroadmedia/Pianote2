@@ -8,8 +8,9 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Platform,
-  StatusBar
+  StatusBar,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -195,19 +196,8 @@ export default class ProfileSettings extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar
-          backgroundColor={colors.mainBackground}
-          barStyle={'light-content'}
-        />
-        <View
-          key={'myProfileSettings'}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 15
-          }}
-        >
+        <StatusBar backgroundColor={colors.mainBackground} barStyle={'light-content'}/>
+        <View style={localStyles.myProfileSettings}>
           <TouchableOpacity
             onPress={() => {
               this.state.currentlyView == 'Profile Settings'
@@ -218,20 +208,9 @@ export default class ProfileSettings extends React.Component {
             }}
             style={{ flex: 1 }}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
+            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={colors.secondBackground} />
           </TouchableOpacity>
-
-          <Text
-            style={[styles.childHeaderText, {
-              color: colors.secondBackground,
-            }]}
-          >
-            {this.state.currentlyView}
-          </Text>
+          <Text style={[styles.childHeaderText, {color: colors.secondBackground}]}>{this.state.currentlyView}</Text>
           {this.state.currentlyView !== 'Profile Settings' ? (
             <TouchableOpacity
               onPress={() => {
@@ -239,16 +218,7 @@ export default class ProfileSettings extends React.Component {
               }}
               style={{ flex: 1 }}
             >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Bold',
-                  color: colors.pianoteRed,
-                  textAlign: 'right',
-                  alignSelf: 'flex-end'
-                }}
-              >
-                SAVE
-              </Text>
+              <Text style={localStyles.save}>SAVE</Text>
             </TouchableOpacity>
           ) : (
             <View style={{ flex: 1 }} />
@@ -258,97 +228,44 @@ export default class ProfileSettings extends React.Component {
         {this.state.currentlyView == 'Profile Settings' && (
           <ScrollView style={{ flex: 1 }}>
             <TouchableOpacity
-              key={'profileProfileSettings'}
+              style={[styles.centerContent, localStyles.displayContainer]}
               onPress={() =>
                 this.setState({
                   currentlyView: 'Display Name'
                 })
               }
-              style={[
-                styles.centerContent,
-                {
-                  height: 50 * factorRatio,
-                  width: '100%',
-                  borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 1 * factorRatio,
-                  borderTopWidth: 1 * factorRatio,
-                  borderTopColor: colors.secondBackground,
-                  flexDirection: 'row',
-                  paddingHorizontal: 20 * factorHorizontal
-                }
-              ]}
             >
               <Text style={styles.settingsText}>Display Name</Text>
               <View style={{ flex: 1 }} />
-              <AntIcon
-                name={'right'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
-              />
+              <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
             </TouchableOpacity>
             <TouchableOpacity
-              key={'notificationProfileSettings'}
+              style={[styles.centerContent, localStyles.profilePhoto]}
               onPress={() => {
                 this.setState({
                   currentlyView: 'Profile Photo'
                 });
               }}
-              style={[
-                styles.centerContent,
-                {
-                  height: 50 * factorRatio,
-                  width: '100%',
-                  borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 1 * factorRatio,
-                  flexDirection: 'row',
-                  paddingHorizontal: 20 * factorHorizontal
-                }
-              ]}
             >
               <Text style={styles.settingsText}>Profile Photo</Text>
               <View style={{ flex: 1 }} />
-              <AntIcon
-                name={'right'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
-              />
+              <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
             </TouchableOpacity>
           </ScrollView>
         )}
         {this.state.currentlyView == 'Display Name' && (
           <ScrollView style={styles.mainContainer}>
             <TextInput
-              ref={txt => {
-                this.txt = txt;
-              }}
+              ref={txt => {this.txt = txt}}
               placeholder={'Display Name'}
               value={this.state.displayName}
               placeholderTextColor={colors.secondBackground}
               onChangeText={displayName => this.setState({ displayName })}
               onSubmitEditing={() => {}}
               returnKeyType={'go'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                paddingLeft: 15,
-                paddingBottom: 5, 
-                width: '100%',
-                justifyContent: 'center',
-                fontSize: 18 * factorRatio,
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio,
-                color: colors.secondBackground,
-                marginBottom: 10 * factorRatio,
-              }}
+              style={localStyles.textInput}
             />
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 16 * factorRatio,
-                paddingLeft: 15,
-                paddingRight: 15,
-                color: colors.secondBackground
-              }}
-            >
+            <Text style={localStyles.text}>
               This is the name that will appear on your comments and forum
               posts.
             </Text>
@@ -356,28 +273,16 @@ export default class ProfileSettings extends React.Component {
         )}
         {this.state.currentlyView == 'Profile Photo' && (
           <ScrollView style={{ flex: 1 }}>
-            <View
-              key={'imageCircle'}
-              style={{
-                alignSelf: 'center',
-                marginTop: 10,
-                width: 25 * factorRatio + 200 * factorRatio
-              }}
-            >
+            <View style={localStyles.scrollContainer}>
               {this.state.imageURI !== '' && (
                 <>
                   <FastImage
-                    style={{
-                      width: 200 * factorRatio,
-                      aspectRatio: 1,
-                      borderRadius: 200
-                    }}
-                    source={{
-                      uri: this.state.imageURI
-                    }}
+                    style={localStyles.image}
+                    source={{uri: this.state.imageURI}}
                     resizeMode={FastImage.resizeMode.cover}
                   />
                   <TouchableOpacity
+                    style={localStyles.crossContainer}
                     onPress={() =>
                       this.setState({
                         imageURI: '',
@@ -385,24 +290,8 @@ export default class ProfileSettings extends React.Component {
                         imageName: ''
                       })
                     }
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      alignSelf: 'flex-end',
-                      position: 'absolute',
-                      minHeight: 40,
-                      minWidth: 40,
-                      top: 0,
-                      borderRadius: 100,
-                      borderColor: colors.secondBackground,
-                      borderWidth: 2
-                    }}
                   >
-                    <EntypoIcon
-                      name={'cross'}
-                      size={25 * factorRatio}
-                      color={colors.secondBackground}
-                    />
+                    <EntypoIcon name={'cross'} size={25 * factorRatio} color={colors.secondBackground} />
                   </TouchableOpacity>
                 </>
               )}
@@ -412,40 +301,18 @@ export default class ProfileSettings extends React.Component {
                   onPress={() => this.chooseImage()}
                   style={styles.centerContent}
                 >
-                  <AntIcon
-                    name={'plus'}
-                    size={65 * factorRatio}
-                    color={'white'}
-                  />
+                  <AntIcon name={'plus'} size={65 * factorRatio} color={'white'} />
                 </TouchableOpacity>
               )}
             </View>
-            <Text
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 15 * factorRatio,
-                padding: 15,
-                color: colors.secondBackground,
-                textAlign: 'center'
-              }}
-            >
+            <Text style={localStyles.imageText}>
               This is the image that will appear with your comments and forum
               posts.
             </Text>
 
             <TouchableOpacity
               onPress={() => this.chooseImage()}
-              style={[
-                styles.centerContent,
-                {
-                  alignSelf: 'center',
-                  height: 100 * factorRatio,
-                  width: 100 * factorRatio,
-                  borderRadius: 200 * factorRatio,
-                  borderColor: colors.secondBackground,
-                  borderWidth: 2 * factorRatio
-                }
-              ]}
+              style={[styles.centerContent, localStyles.imageContainer]}
             >
               <IonIcon
                 size={50 * factorRatio}
@@ -511,3 +378,99 @@ export default class ProfileSettings extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+  myProfileSettings: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15
+  },
+  save: {
+    fontFamily: 'OpenSans-Bold',
+    color: '#fb1b2f',
+    textAlign: 'right',
+    alignSelf: 'flex-end'
+  },
+  displayContainer: {
+    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+      width: '100%',
+      borderBottomColor: '#445f73',
+      borderBottomWidth: 1,
+      borderTopWidth: 1,
+      borderTopColor: '#445f73',
+      flexDirection: 'row',
+      paddingHorizontal: 20 * Dimensions.get('window').width / 375
+  },
+  profilePhoto: {
+    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: '100%',
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 20 * Dimensions.get('window').width / 375
+  },
+  textInput: {
+    fontFamily: 'OpenSans-Regular',
+    paddingLeft: 15,
+    paddingBottom: 5, 
+    width: '100%',
+    justifyContent: 'center',
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 1 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: '#445f73',
+    marginBottom: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+  },
+  text: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingLeft: 15,
+    paddingRight: 15,
+    color: '#445f73'
+  },
+  scrollContainer: {
+    alignSelf: 'center',
+    marginTop: 10,
+    width: 225 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  image: {
+    width: 200 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    aspectRatio: 1,
+    borderRadius: 200
+  },
+  crossContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    minHeight: 40,
+    minWidth: 40,
+    top: 0,
+    borderRadius: 100,
+    borderColor: '#445f73',
+    borderWidth: 2
+  },
+  imageText: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    padding: 15,
+    color: '#445f73',
+    textAlign: 'center'
+  },
+  imageContainer: {
+    alignSelf: 'center',
+    height: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius: 200 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderColor: '#445f73',
+    borderWidth: 2 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  }
+});

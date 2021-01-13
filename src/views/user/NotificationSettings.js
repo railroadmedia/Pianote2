@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  StatusBar
+  StatusBar,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
@@ -88,21 +90,10 @@ export default class NotificationSettings extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar
-          backgroundColor={colors.thirdBackground}
-          barStyle={'light-content'}
-        />
-        <View
-          key={'header'}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 15,
-            backgroundColor: colors.thirdBackground
-          }}
-        >
+        <StatusBar backgroundColor={colors.thirdBackground} barStyle={'light-content'} />
+        <View style={localStyles.header}>
           <TouchableOpacity
+            style={{ flex: 1 }}
             onPress={() => {
               this.state.currentlyView == 'Profile Settings'
                 ? this.props.navigation.goBack()
@@ -110,78 +101,24 @@ export default class NotificationSettings extends React.Component {
                     currentlyView: 'Profile Settings'
                   });
             }}
-            style={{ flex: 1 }}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
+            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={colors.secondBackground} />
           </TouchableOpacity>
-
-          <Text
-            style={[styles.childHeaderText, {
-              textAlign: 'center',
-              color: colors.secondBackground
-            }]}
-          >
-            Notification Settings
-          </Text>
-
+          <Text style={[styles.childHeaderText, localStyles.title]}>Notification Settings</Text>
           <View style={{ flex: 1 }} />
         </View>
         {this.state.isLoading && (
           <View style={[styles.centerContent, { flex: 1 }]}>
-            <ActivityIndicator
-              size={onTablet ? 'large' : 'small'}
-              animating={true}
-              color={colors.secondBackground}
-            />
+            <ActivityIndicator size={onTablet ? 'large' : 'small'} animating={true} color={colors.secondBackground} />
           </View>
         )}
         {!this.state.isLoading && (
           <ScrollView style={{ flex: 1 }}>
-            <View
-              key={'notifcationTypes'}
-              style={{
-                paddingLeft: 15,
-                width: '100%',
-                justifyContent: 'center',
-                fontSize: 18 * factorRatio
-              }}
-            >
-              <Text
-                style={{
-                  marginTop: 10*factorRatio,
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground,
-                  paddingVertical: 5
-                }}
-              >
-                Notification Types
-              </Text>
+            <View style={localStyles.noteTypeContainer}>
+              <Text style={localStyles.noteTypeText}>Notification Types</Text>
             </View>
-
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Weekly community updates
-              </Text>
-
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Weekly community updates</Text>
               <CustomSwitch
                 isClicked={this.state.notify_weekly_update}
                 clicked={bool => {
@@ -193,25 +130,8 @@ export default class NotificationSettings extends React.Component {
               />
             </View>
 
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Comment replies
-              </Text>
-
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Comment replies</Text>
               <CustomSwitch
                 isClicked={this.state.notify_on_lesson_comment_reply}
                 clicked={bool => {
@@ -222,25 +142,8 @@ export default class NotificationSettings extends React.Component {
                 }}
               />
             </View>
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Comment likes
-              </Text>
-
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Comment likes</Text>
               <CustomSwitch
                 isClicked={this.state.commentLikesClicked}
                 clicked={bool => {
@@ -252,24 +155,8 @@ export default class NotificationSettings extends React.Component {
               />
             </View>
 
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Forum post replies
-              </Text>
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Forum post replies</Text>
               <CustomSwitch
                 isClicked={this.state.notify_on_forum_post_reply}
                 clicked={() => {
@@ -280,26 +167,8 @@ export default class NotificationSettings extends React.Component {
                 }}
               />
             </View>
-
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Forum post likes
-              </Text>
-
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Forum post likes</Text>
               <CustomSwitch
                 isClicked={this.state.notify_on_forum_post_like}
                 clicked={bool => {
@@ -310,55 +179,13 @@ export default class NotificationSettings extends React.Component {
                 }}
               />
             </View>
-
-            <View
-              key={'border'}
-              style={{
-                height: 25 * factorVertical,
-                borderBottomColor: colors.secondBackground,
-                borderBottomWidth: 1 * factorRatio
-              }}
-            />
-            <View
-              key={'emailNotificationFrequency'}
-              style={{
-                paddingLeft: 15,
-                width: '100%',
-                justifyContent: 'center',
-                fontSize: 18 * factorRatio
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground,
-                  paddingVertical: 5
-                }}
-              >
-                Email Notification Frequency
-              </Text>
+            <View style={localStyles.border}/>
+            <View style={localStyles.emailNotificationFrequency}>
+              <Text style={[localStyles.text, {paddingVertical: 10}]}>Email Notification Frequency</Text>
             </View>
 
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Immediate
-              </Text>
-
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Immediate</Text>
               <TouchableOpacity
                 onPress={() => {
                   this.changeNotificationStatus(),
@@ -378,41 +205,16 @@ export default class NotificationSettings extends React.Component {
                 ]}
               >
                 {this.state.notifications_summary_frequency_minutes == 1 && (
-                  <FontIcon
-                    name={'check'}
-                    size={20 * factorRatio}
-                    color={'white'}
-                  />
+                  <FontIcon name={'check'} size={20 * factorRatio} color={'white'} />
                 )}
                 {this.state.notifications_summary_frequency_minutes !== 1 && (
-                  <EntypoIcon
-                    name={'cross'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
+                  <EntypoIcon name={'cross'} size={22.5 * factorRatio} color={'white'} />
                 )}
               </TouchableOpacity>
             </View>
 
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Once per day
-              </Text>
-
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Once per day</Text>
               <TouchableOpacity
                 onPress={() => {
                   this.changeNotificationStatus(),
@@ -432,42 +234,17 @@ export default class NotificationSettings extends React.Component {
                 ]}
               >
                 {this.state.notifications_summary_frequency_minutes == 1440 && (
-                  <FontIcon
-                    name={'check'}
-                    size={20 * factorRatio}
-                    color={'white'}
-                  />
+                  <FontIcon name={'check'} size={20 * factorRatio} color={'white'} />
                 )}
                 {this.state.notifications_summary_frequency_minutes !==
                   1440 && (
-                  <EntypoIcon
-                    name={'cross'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
+                  <EntypoIcon name={'cross'} size={22.5 * factorRatio} color={'white'} />
                 )}
               </TouchableOpacity>
             </View>
 
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                Never
-              </Text>
-
+            <View style={localStyles.textContainer}>
+              <Text style={localStyles.text}>Never</Text>
               <TouchableOpacity
                 onPress={() => {
                   this.changeNotificationStatus(),
@@ -490,20 +267,12 @@ export default class NotificationSettings extends React.Component {
                 {(this.state.notifications_summary_frequency_minutes == 0 ||
                   this.state.notifications_summary_frequency_minutes ==
                     null) && (
-                  <FontIcon
-                    name={'check'}
-                    size={20 * factorRatio}
-                    color={'white'}
-                  />
+                  <FontIcon name={'check'} size={20 * factorRatio} color={'white'} />
                 )}
                 {this.state.notifications_summary_frequency_minutes !== 0 &&
                   this.state.notifications_summary_frequency_minutes !==
                     null && (
-                    <EntypoIcon
-                      name={'cross'}
-                      size={22.5 * factorRatio}
-                      color={'white'}
-                    />
+                    <EntypoIcon name={'cross'} size={22.5 * factorRatio} color={'white'} />
                   )}
               </TouchableOpacity>
             </View>
@@ -515,3 +284,60 @@ export default class NotificationSettings extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: 200,
+    width: '80%'
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#081826'
+  },
+  title: {
+    textAlign: 'center', 
+    color: '#445f73'
+  },
+  noteTypeContainer: {
+    paddingLeft: 15,
+    width: '100%',
+    justifyContent: 'center',
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  noteTypeText: {
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: '#445f73',
+    paddingVertical: 5
+  },
+  textContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  text: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    color: '#445f73'
+  },
+  emailNotificationFrequency: {
+    paddingLeft: 15,
+    width: '100%',
+    justifyContent: 'center',
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+  },
+  border: {
+    height: 25 * Dimensions.get('window').height / 812,
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 1
+  }
+});

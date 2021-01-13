@@ -587,12 +587,6 @@ const localStyles = StyleSheet.create({
     paddingVertical: 15 * Dimensions.get('window').height / 812,
     elevation: 1
   },
-  notificationText: {
-    paddingLeft: 15,
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    fontFamily: 'OpenSans-ExtraBold',
-    color: '#445f73'
-  },
   activityContainer: {
     flex: 1,
     marginTop: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
@@ -624,8 +618,8 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    height: fullWidth * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    width: fullWidth * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: Dimensions.get('window').width * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: Dimensions.get('window').width * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     zIndex: 5
   },
@@ -639,9 +633,10 @@ const localStyles = StyleSheet.create({
     fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
   },
   notificationText: {
-    fontFamily: 'OpenSans-Bold',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    color: 'white'
+    paddingLeft: 15,
+    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontFamily: 'OpenSans-ExtraBold',
+    color: '#445f73'
   },
   createdAtText: {
     marginTop: 5 * Dimensions.get('window').height / 812,
