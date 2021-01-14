@@ -5,7 +5,6 @@ import React from 'react';
 import {
   View,
   TouchableOpacity,
-  Text,
   StatusBar,
   ScrollView,
   RefreshControl,
@@ -136,7 +135,9 @@ class StudentFocusShow extends React.Component {
           progress_percent: newContent[i].post.progress_percent
         });
       }
+
       return {
+        filtersAvailable: content.all.meta.filterOptions,
         thumbnailUrl:
           content.thumbnail[this.props.navigation.state.params.type]
             .thumbnailUrl,
@@ -195,7 +196,7 @@ class StudentFocusShow extends React.Component {
         progress_percent: newContent[i].post.progress_percent
       });
     }
-
+    console.log('response', response)
     this.setState(state => ({
       filtersAvailable: response.meta.filterOptions,
       allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
@@ -292,7 +293,7 @@ class StudentFocusShow extends React.Component {
           refreshControl={
             <RefreshControl
               tint={'transparent'}
-              colors={[colors.pianoteRed]}
+              colors={[colors.secondBackground]}
               onRefresh={() => this.refresh()}
               refreshing={isiOS ? false : this.state.refreshing}
             />
@@ -303,7 +304,7 @@ class StudentFocusShow extends React.Component {
             <ActivityIndicator
               size='small'
               style={{ padding: 10 }}
-              color={colors.pianoteRed}
+              color={colors.secondBackground}
             />
           )}
           <View key={'imageContainer'} style={{ width: '100%' }}>

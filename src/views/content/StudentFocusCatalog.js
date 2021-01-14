@@ -164,7 +164,7 @@ class StudentFocusCatalog extends React.Component {
             refreshControl={
               <RefreshControl
                 tintColor={'transparent'}
-                colors={[colors.pianoteRed]}
+                colors={[colors.secondBackground]}
                 onRefresh={() => this.refresh()}
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
