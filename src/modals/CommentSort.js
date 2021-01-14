@@ -2,7 +2,13 @@
  * CommentSort
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
@@ -43,9 +49,23 @@ class CommentSort extends React.Component {
               <EntypoIcon
                 name={'check'}
                 size={20 * factorRatio}
-                color={this.state.currentSort == sortOption.option ? 'white' : colors.mainBackground}
+                color={
+                  this.state.currentSort == sortOption.option
+                    ? 'white'
+                    : colors.mainBackground
+                }
               />
-              <Text style={[localStyles.sortText,  {color: this.state.currentSort == sortOption.option ? 'white' : colors.secondBackground}]}>
+              <Text
+                style={[
+                  localStyles.sortText,
+                  {
+                    color:
+                      this.state.currentSort == sortOption.option
+                        ? 'white'
+                        : colors.secondBackground
+                  }
+                ]}
+              >
                 {sortOption.title}
               </Text>
             </TouchableOpacity>
@@ -54,7 +74,11 @@ class CommentSort extends React.Component {
             style={localStyles.cancelContainer}
             onPress={() => this.props.hideCommentSort()}
           >
-            <EntypoIcon name={'cross'} size={25 * factorRatio} color={'white'} />
+            <EntypoIcon
+              name={'cross'}
+              size={25 * factorRatio}
+              color={'white'}
+            />
             <Text style={localStyles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -72,13 +96,21 @@ const localStyles = StyleSheet.create({
     paddingLeft: 15,
     flexDirection: 'row',
     borderBottomColor: '#445f73',
-    borderBottomWidth: 0.25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderBottomWidth:
+      (0.25 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     alignItems: 'center'
   },
   sortText: {
     padding: 15,
-    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    fontFamily: 'OpenSans-Regular',
+    fontSize:
+      (16 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontFamily: 'OpenSans-Regular'
   },
   cancelContainer: {
     paddingLeft: 15,
@@ -86,11 +118,15 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   cancel: {
-    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (16 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
     color: 'white',
     padding: 15
   }
-})
+});
 
 export default withNavigation(CommentSort);

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { SafeAreaView } from 'react-navigation';
@@ -30,21 +30,32 @@ export default class Terms extends React.Component {
             onPress={() => this.props.navigation.goBack()}
             style={{ flex: 1 }}
           >
-            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={'black'} />
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={'black'}
+            />
           </TouchableOpacity>
           <Text style={localStyles.title}>Terms of Service</Text>
           <View style={{ flex: 1 }} />
         </View>
         <ScrollView style={localStyles.scrollContainer}>
           <Text style={styles.title}>Terms of Use</Text>
-          <Text style={[styles.text, { fontWeight: 'bold', marginTop: 5 * factorRatio }]}>
+          <Text
+            style={[
+              styles.text,
+              { fontWeight: 'bold', marginTop: 5 * factorRatio }
+            ]}
+          >
             Please read this agreement carefully before accessing or using this
             web site. By accessing or using the site, you agree to be bound by
             this agreement. The information and services on this site are
             provided by Musora Media, Inc. and its suppliers, subject to your
             agreement to the terms and conditions below.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Use Of Information And Services</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Use Of Information And Services
+          </Text>
           <Text style={styles.text}>
             The staff of Musora Media and its users create the majority of the
             content in this site. The information (including without limitation
@@ -61,7 +72,9 @@ export default class Terms extends React.Component {
             damage, or loss related to, the accuracy, completeness or timeliness
             of the information.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Copyright Information</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Copyright Information
+          </Text>
           <Text style={styles.text}>
             Unless otherwise noted, all of the text, audio, and video content
             within Pianote.com is the copyrighted property of Musora Media, Inc.
@@ -83,7 +96,9 @@ export default class Terms extends React.Component {
             Media Web site is not infringing on any registered or non-registered
             copyrights.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>User Contributions</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            User Contributions
+          </Text>
           <Text style={styles.text}>
             Users who post materials to this site (e.g., bulletin boards or chat
             rooms) agree to abide by the following rules: (1) users may not post
@@ -112,7 +127,9 @@ export default class Terms extends React.Component {
             consult a physician or other qualified health care provider before
             relying on any information you find on this site.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Links To Other Web Sites</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Links To Other Web Sites
+          </Text>
           <Text style={styles.text}>
             This site may include links to other Internet sites solely as a
             convenience to users. Musora Media does not endorse any such sites
@@ -127,7 +144,9 @@ export default class Terms extends React.Component {
             Should a problem arise with a featured link, the user should contact
             the appropriate author(s) with any questions or concerns.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Disclaimer of Warranty</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Disclaimer of Warranty
+          </Text>
           <Text style={styles.text}>
             Musora Media AND ITS SUPPLIERS DISCLAIM ALL EXPRESS AND IMPLIED
             WARRANTIES WITH REGARD TO THE INFORMATION, SERVICES, AND MATERIALS
@@ -136,7 +155,9 @@ export default class Terms extends React.Component {
             NON-INFRINGEMENT. ALL SUCH INFORMATION, SERVICES, AND MATERIALS ARE
             PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Limitation of Liability</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Limitation of Liability
+          </Text>
           <Text style={styles.text}>
             IN NO EVENT SHALL Musora Media OR ITS SUPPLIERS BE LIABLE FOR ANY
             SPECIAL, INDIRECT, PUNITIVE INCIDENTAL, EXEMPLARY OR CONSEQUENTIAL
@@ -154,7 +175,9 @@ export default class Terms extends React.Component {
             LIMITATIONS. SOME STATE STATUTES MIGHT APPLY REGARDING LIMITATION OF
             LIABILITY.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Indemnification</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Indemnification
+          </Text>
           <Text style={styles.text}>
             You agree to indemnify, defend and hold harmless Musora Media, Inc.,
             its affiliates and suppliers from any liability, loss, claim and
@@ -162,7 +185,9 @@ export default class Terms extends React.Component {
             violation of this agreement, and (ii) your posting of material to
             this site.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Proprietary Rights</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Proprietary Rights
+          </Text>
           <Text style={styles.text}>
             All materials on this site (as well as the organization and layout
             of the site) are owned and copyrighted by Musora Media, Inc. or its
@@ -172,7 +197,9 @@ export default class Terms extends React.Component {
             distribute or transfer any material on this site, in whole or in
             part.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Changes To Site</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Changes To Site
+          </Text>
           <Text style={styles.text}>
             Musora Media and its suppliers may make improvements or changes in
             the information, services, products, and other materials on this
@@ -183,7 +210,9 @@ export default class Terms extends React.Component {
             periodically, and your continued access or use of this site shall be
             deemed your acceptance of the modified agreement.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Restriction of Liability</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Restriction of Liability
+          </Text>
           <Text style={styles.text}>
             Musora Media makes no claims, promises or guarantees about the
             accuracy, completeness, or adequacy of the contents of its resources
@@ -217,7 +246,11 @@ const localStyles = StyleSheet.create({
   },
   title: {
     fontWeight: Platform.OS == 'android' ? 'bold' : '800',
-    fontSize: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     alignSelf: 'center',
     textAlign: 'center'
   },
@@ -226,9 +259,17 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 15
   },
   subtitle: {
-    paddingBottom: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2, 
-    marginTop: 25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2, 
-    fontWeight: 'bold', 
+    paddingBottom:
+      (5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginTop:
+      (25 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontWeight: 'bold',
     marginBottom: 0
   }
 });

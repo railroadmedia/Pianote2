@@ -48,10 +48,7 @@ class Replies extends React.Component {
   mapReplies = () =>
     this.props.comment.replies.map((reply, index) => {
       return (
-        <View
-          key={index}
-          style={localStyles.replyContainer}
-        >
+        <View key={index} style={localStyles.replyContainer}>
           <View style={{ alignItems: 'center' }}>
             <FastImage
               style={localStyles.profileImage}
@@ -61,9 +58,12 @@ class Replies extends React.Component {
               resizeMode={FastImage.resizeMode.stretch}
             />
             <Text
-              style={[localStyles.replyName, {
-                fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
-              }]}
+              style={[
+                localStyles.replyName,
+                {
+                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold'
+                }
+              ]}
             >
               {reply.user.display_name}
             </Text>
@@ -72,7 +72,8 @@ class Replies extends React.Component {
           <View style={localStyles.commentContainer}>
             <Text style={localStyles.comment}>{reply.comment}</Text>
             <Text style={localStyles.displayNameText}>
-              {reply.user['display_name']} | {reply.user.rank} |{' '}{moment.utc(reply.created_on).local().fromNow()}
+              {reply.user['display_name']} | {reply.user.rank} |{' '}
+              {moment.utc(reply.created_on).local().fromNow()}
             </Text>
             <View style={localStyles.likeContainer}>
               <View style={{ flexDirection: 'row' }}>
@@ -152,7 +153,7 @@ class Replies extends React.Component {
                 contentInsetAdjustmentBehavior={'never'}
               >
                 <View style={{ flex: 1 }}>
-                  <View style={{width: '100%', zIndex: 5}}>
+                  <View style={{ width: '100%', zIndex: 5 }}>
                     <View style={localStyles.commentHeader}>
                       <Text style={localStyles.replyText}>REPLIES</Text>
                       <TouchableOpacity onPress={this.props.close}>
@@ -173,11 +174,15 @@ class Replies extends React.Component {
                             }}
                             resizeMode={FastImage.resizeMode.stretch}
                           />
-                          <Text style={localStyles.opXP}>{this.changeXP(user.xp)}</Text>
+                          <Text style={localStyles.opXP}>
+                            {this.changeXP(user.xp)}
+                          </Text>
                         </View>
                       </View>
                       <View style={localStyles.commentContainer}>
-                        <Text style={localStyles.commentText}>{comment.comment}</Text>
+                        <Text style={localStyles.commentText}>
+                          {comment.comment}
+                        </Text>
                         <Text style={localStyles.userStats}>
                           {user.display_name} | {user.rank} |{' '}
                           {moment.utc(comment.created_on).local().fromNow()}
@@ -272,7 +277,9 @@ class Replies extends React.Component {
                           onPress={() => this.setState({ showMakeReply: true })}
                           style={localStyles.makeReplyContainer}
                         >
-                          <Text style={localStyles.addReplyText}>Add a reply...</Text>
+                          <Text style={localStyles.addReplyText}>
+                            Add a reply...
+                          </Text>
                         </TouchableOpacity>
                       </View>
                     )}
@@ -302,7 +309,7 @@ class Replies extends React.Component {
                   >
                     <View style={localStyles.replierContainer}>
                       <FastImage
-                        style={[localStyles.profileImage, {marginRight: 15}]}
+                        style={[localStyles.profileImage, { marginRight: 15 }]}
                         source={{
                           uri:
                             me.profileImage ||
@@ -322,7 +329,10 @@ class Replies extends React.Component {
                       <View style={styles.centerContent}>
                         <TouchableOpacity
                           onPress={() => this.sendReply(this.state.reply)}
-                          style={{marginBottom: Platform.OS == 'android' ? 10 * factorVertical : 0}}
+                          style={{
+                            marginBottom:
+                              Platform.OS == 'android' ? 10 * factorVertical : 0
+                          }}
                         >
                           <IonIcon
                             name={'md-send'}
@@ -351,36 +361,54 @@ const localStyles = StyleSheet.create({
   replyContainer: {
     paddingVertical: 10,
     paddingHorizontal: 15,
-    minHeight: 30 * Dimensions.get('window').height / 812,
+    minHeight: (30 * Dimensions.get('window').height) / 812,
     flexDirection: 'row'
   },
   profileImage: {
-    height: 40 * Dimensions.get('window').width / 375,
-    width: 40 * Dimensions.get('window').width / 375,
+    height: (40 * Dimensions.get('window').width) / 375,
+    width: (40 * Dimensions.get('window').width) / 375,
     borderRadius: 100
   },
   replyName: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 10 * (Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375) / 2,
-    marginTop: 2 * (Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375) / 2,
-    color: 'grey',
+    fontSize:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginTop:
+      (2 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    color: 'grey'
   },
   commentContainer: {
     flex: 1,
     paddingLeft: 15,
-    marginTop: 3,
+    marginTop: 3
   },
   displayNameText: {
-    marginTop: 7.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    fontSize: 11 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginTop:
+      (7.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontSize:
+      (11 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
-    color: 'grey'    
+    color: 'grey'
   },
   comment: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 13 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (13 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'white'
   },
   likeContainer: {
@@ -396,7 +424,11 @@ const localStyles = StyleSheet.create({
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 9.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (9.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: '#fb1b2f',
     paddingHorizontal: 10
   },
@@ -415,8 +447,12 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   replyText: {
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    marginBottom: 5 * Dimensions.get('window').height / 812,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginBottom: (5 * Dimensions.get('window').height) / 812,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73'
@@ -424,30 +460,58 @@ const localStyles = StyleSheet.create({
   originalReply: {
     paddingTop: 5,
     paddingHorizontal: 15,
-    marginBottom: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    minHeight: 30 * Dimensions.get('window').height / 812,
+    marginBottom:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    minHeight: (30 * Dimensions.get('window').height) / 812,
     flexDirection: 'row'
   },
   replierImage: {
-    height: 40 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    width: 40 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (40 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    width:
+      (40 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderRadius: 100
   },
   opXP: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    marginTop: 2 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginTop:
+      (2 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'grey'
   },
   commentText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 13 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (13 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'white',
-    marginBottom: 7,
+    marginBottom: 7
   },
   userStats: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 11 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (11 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: '#445f73'
   },
   iconContainer: {
@@ -466,33 +530,49 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   makeReplyContainer: {
-    width: '80%', 
+    width: '80%',
     justifyContent: 'center'
   },
   addReplyText: {
     textAlign: 'left',
     fontFamily: 'OpenSans-Regular',
-    fontSize: 13 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (13 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'white',
     paddingLeft: 15,
-    paddingVertical: 30 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    paddingVertical:
+      (30 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   replierContainer: {
     padding: 10,
     alignItems: 'center',
     flexDirection: 'row',
-    borderTopWidth: 0.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderTopWidth:
+      (0.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     backgroundColor: '#00101d',
     borderTopColor: '#445f73'
   },
   textInput: {
     width: '75%',
-    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (14 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: '#445f73',
     fontFamily: 'OpenSans-Regular',
-    paddingVertical: 10 * Dimensions.get('window').height / 812,
+    paddingVertical: (10 * Dimensions.get('window').height) / 812,
     backgroundColor: '#00101d'
   }
-});    
+});
 
 export default withNavigation(Replies);

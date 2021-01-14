@@ -11,7 +11,7 @@ import {
   Alert,
   ScrollView,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -111,7 +111,14 @@ export default class CreateAccount extends React.Component {
         resizeMode={FastImage.resizeMode.cover}
         source={require('Pianote2/src/assets/img/imgs/backgroundHands.png')}
       >
-        <GradientFeature zIndex={0} opacity={0.5} elevation={0} color={'dark'} height={'100%'} borderRadius={0} />
+        <GradientFeature
+          zIndex={0}
+          opacity={0.5}
+          elevation={0}
+          color={'dark'}
+          height={'100%'}
+          borderRadius={0}
+        />
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -122,7 +129,11 @@ export default class CreateAccount extends React.Component {
               style={localStyles.createAccountContainer}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text style={[styles.modalHeaderText, localStyles.createAccountText]}>Create Account</Text>
+              <Text
+                style={[styles.modalHeaderText, localStyles.createAccountText]}
+              >
+                Create Account
+              </Text>
               <View />
             </TouchableOpacity>
             <ScrollView
@@ -132,7 +143,9 @@ export default class CreateAccount extends React.Component {
               contentContainerStyle={this.state.scrollViewContentFlex}
             >
               <View style={localStyles.createPasswordContainer}>
-                <Text style={localStyles.createPasswordText}>Create a password</Text>
+                <Text style={localStyles.createPasswordText}>
+                  Create a password
+                </Text>
                 <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
@@ -178,7 +191,9 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <Text style={localStyles.createPasswordText}>Confirm password</Text>
+                <Text style={localStyles.createPasswordText}>
+                  Confirm password
+                </Text>
                 <View style={localStyles.passInput}>
                   <TextInput
                     style={localStyles.textinput}
@@ -201,7 +216,7 @@ export default class CreateAccount extends React.Component {
                   />
                   {!this.state.showConfirmPassword && (
                     <TouchableOpacity
-                      style={localStyles.showPassword}  
+                      style={localStyles.showPassword}
                       onPress={() =>
                         this.setState({
                           showConfirmPassword: true
@@ -226,12 +241,15 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <Text style={localStyles.characters}>Use at least 8 characters</Text>
+                <Text style={localStyles.characters}>
+                  Use at least 8 characters
+                </Text>
 
                 <TouchableOpacity
                   onPress={() => this.savePassword()}
                   style={[
-                    styles.centerContent, localStyles.savePass,
+                    styles.centerContent,
+                    localStyles.savePass,
                     {
                       width: onTablet ? '30%' : '50%',
                       backgroundColor:
@@ -305,13 +323,25 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   createAccountText: {
-    color: 'white', 
-    fontSize: 24 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    color: 'white',
+    fontSize:
+      (24 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
@@ -322,7 +352,11 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 19 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (19 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
@@ -336,9 +370,17 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white'
   },
   textinput: {
-    marginVertical: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginVertical:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'black',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderRadius: 100,
     marginHorizontal: 15,
     backgroundColor: 'white',
@@ -363,7 +405,11 @@ const localStyles = StyleSheet.create({
   characters: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
-    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (14 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 40
@@ -373,6 +419,6 @@ const localStyles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 50,
     alignSelf: 'center',
-    borderColor: '#fb1b2f',
+    borderColor: '#fb1b2f'
   }
 });

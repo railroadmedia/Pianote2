@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -56,9 +56,16 @@ class LessonComplete extends React.Component {
         <View style={[styles.centerContent, styles.container]}>
           <View style={localStyles.container}>
             <View style={styles.centerContent}>
-              <IonIcon name={'ios-trophy'} size={32.5 * factorRatio} color={'#fb1b2f'}/>
+              <IonIcon
+                name={'ios-trophy'}
+                size={32.5 * factorRatio}
+                color={'#fb1b2f'}
+              />
             </View>
-            <Text style={[styles.modalHeaderText, localStyles.headerText]}>{this.changeType(type)}{'\n'}Complete</Text>
+            <Text style={[styles.modalHeaderText, localStyles.headerText]}>
+              {this.changeType(type)}
+              {'\n'}Complete
+            </Text>
             <View style={[styles.centerContent, localStyles.imageContainer]}>
               <FastImage
                 style={localStyles.image}
@@ -69,14 +76,31 @@ class LessonComplete extends React.Component {
                   )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
                 }}
               >
-                <View style={[styles.centerContent, localStyles.approvedTeacherContainer]}/>
-                <ApprovedTeacher height={47 * factorRatio} width={47 * factorRatio} fill={'white'} />
+                <View
+                  style={[
+                    styles.centerContent,
+                    localStyles.approvedTeacherContainer
+                  ]}
+                />
+                <ApprovedTeacher
+                  height={47 * factorRatio}
+                  width={47 * factorRatio}
+                  fill={'white'}
+                />
               </FastImage>
             </View>
-            <Text style={[styles.modalBodyText, localStyles.congratsText]}>Congratulations! You completed</Text>
-            <Text style={[styles.modalBodyText, localStyles.completeLesson]}>{completedLessonTitle}</Text>
-            <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>YOU EARNED {completedLessonXp} XP!</Text>
-            <Text style={[styles.modalBodyText, localStyles.upNextText]}>up next:</Text>
+            <Text style={[styles.modalBodyText, localStyles.congratsText]}>
+              Congratulations! You completed
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.completeLesson]}>
+              {completedLessonTitle}
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.youEarnedText]}>
+              YOU EARNED {completedLessonXp} XP!
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.upNextText]}>
+              up next:
+            </Text>
             <TouchableOpacity
               style={[styles.centerContent, localStyles.image2Container]}
               onPress={onGoToNext}
@@ -93,7 +117,9 @@ class LessonComplete extends React.Component {
                 }}
               />
             </TouchableOpacity>
-            <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>{nextLesson.getField('title')}</Text>
+            <Text style={[styles.modalHeaderText, localStyles.videoTitle]}>
+              {nextLesson.getField('title')}
+            </Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -103,25 +129,41 @@ class LessonComplete extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center'
   },
   headerText: {
-    marginVertical: 10 * Dimensions.get('window').height / 812
+    marginVertical: (10 * Dimensions.get('window').height) / 812
   },
   imageContainer: {
     height: '20%',
     width: '100%',
     alignSelf: 'center',
-    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   image: {
     height: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -131,26 +173,30 @@ const localStyles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     opacity: 0.2,
     backgroundColor: 'red'
   },
   youEarnedText: {
     fontWeight: 'bold',
-    marginTop: 10 * Dimensions.get('window').height / 812,
+    marginTop: (10 * Dimensions.get('window').height) / 812,
     color: '#fb1b2f'
   },
   congratsText: {
-    marginHorizontal: 20 * Dimensions.get('window').width / 375, 
+    marginHorizontal: (20 * Dimensions.get('window').width) / 375,
     marginTop: 10
   },
   completeLesson: {
     fontWeight: 'bold',
-    marginHorizontal: 20 * Dimensions.get('window').width / 375
+    marginHorizontal: (20 * Dimensions.get('window').width) / 375
   },
   upNextText: {
-    marginTop: 5 * Dimensions.get('window').height / 812,
-    marginBottom: 10 * Dimensions.get('window').height / 812,
+    marginTop: (5 * Dimensions.get('window').height) / 812,
+    marginBottom: (10 * Dimensions.get('window').height) / 812,
     color: '#a8a8a8',
     paddingHorizontal: 20
   },
@@ -158,12 +204,20 @@ const localStyles = StyleSheet.create({
     height: '20%',
     width: '100%',
     alignSelf: 'center',
-    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   image2: {
     height: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   videoTitle: {
     paddingHorizontal: 20,

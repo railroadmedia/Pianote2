@@ -99,10 +99,13 @@ export default class Support extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={[styles.childHeaderText, {
-              color: colors.secondBackground,
-              textAlign: 'center',
-            }]}
+            style={[
+              styles.childHeaderText,
+              {
+                color: colors.secondBackground,
+                textAlign: 'center'
+              }
+            ]}
           >
             Support
           </Text>

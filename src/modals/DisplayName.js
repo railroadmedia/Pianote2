@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 
 import { withNavigation } from 'react-navigation';
@@ -23,8 +23,8 @@ class DisplayName extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        style={styles.container}  
-        onPress={() => this.props.hideDisplayName()}  
+        style={styles.container}
+        onPress={() => this.props.hideDisplayName()}
       >
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.titleContainer}>
@@ -68,20 +68,40 @@ const localStyles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   displayText: {
     paddingHorizontal: 40,
-    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   pleaseTryAgain: {
     paddingHorizontal: 20,
-    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainContainer: {
     paddingHorizontal: 20,
-    marginVertical: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   }
 });
 

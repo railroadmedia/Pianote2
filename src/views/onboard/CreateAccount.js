@@ -11,7 +11,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -90,7 +90,11 @@ export default class CreateAccount extends React.Component {
               style={localStyles.createAccountContainer}
             >
               <Back width={25} height={25} fill={'white'} />
-              <Text style={[styles.modalHeaderText, localStyles.createAccountText]}>Create Account</Text>
+              <Text
+                style={[styles.modalHeaderText, localStyles.createAccountText]}
+              >
+                Create Account
+              </Text>
               <View />
             </TouchableOpacity>
             <ScrollView
@@ -130,9 +134,9 @@ export default class CreateAccount extends React.Component {
                   <TouchableOpacity
                     onPress={() => this.verifyEmail()}
                     style={[
-                      styles.centerContent, localStyles.verifyContainer,
+                      styles.centerContent,
+                      localStyles.verifyContainer,
                       {
-                        
                         width: onTablet ? '30%' : '50%',
                         backgroundColor:
                           this.state.email.length > 0
@@ -201,41 +205,77 @@ const localStyles = StyleSheet.create({
   emailContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginBottom:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   emailText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
   },
   createAccountText: {
-    color: 'white', 
-    fontSize: 24 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    color: 'white',
+    fontSize:
+      (24 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
   textInput: {
-    padding: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    marginVertical: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    padding:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginVertical:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'black',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderRadius: 100,
     marginHorizontal: 15,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   verifyContainer: {
-    marginBottom: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginBottom:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderWidth: 2,
     borderRadius: 50,
     alignSelf: 'center',
-    borderColor: '#fb1b2f',
+    borderColor: '#fb1b2f'
   }
 });

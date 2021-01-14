@@ -195,8 +195,8 @@ export default class MethodLevel extends React.Component {
   render() {
     return (
       <SafeAreaView
-        style={styles.methodContainer}  
-        forceInset={{bottom: 'never'}}
+        style={styles.methodContainer}
+        forceInset={{ bottom: 'never' }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -279,7 +279,7 @@ export default class MethodLevel extends React.Component {
                 style={{
                   height: greaterWDim / 30,
                   width: '50%',
-                  alignSelf: 'center',
+                  alignSelf: 'center'
                 }}
                 source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
                 resizeMode={FastImage.resizeMode.contain}
@@ -304,11 +304,11 @@ export default class MethodLevel extends React.Component {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-evenly',
-                  marginBottom: 15 * factorVertical,
+                  marginBottom: 15 * factorVertical
                 }}
               >
                 <TouchableOpacity
-                  style={[styles.centerContent, {flex: 0.5}]}
+                  style={[styles.centerContent, { flex: 0.5 }]}
                   onPress={() => {
                     this.toggleMyList();
                   }}
@@ -358,7 +358,7 @@ export default class MethodLevel extends React.Component {
                   />
                 ) : null}
                 <TouchableOpacity
-                  style={[styles.centerContent, {flex: 0.5}]}
+                  style={[styles.centerContent, { flex: 0.5 }]}
                   onPress={() => {
                     this.setState({
                       showInfo: !this.state.showInfo
@@ -375,7 +375,7 @@ export default class MethodLevel extends React.Component {
                       fontFamily: 'OpenSans-Regular',
                       color: 'white',
                       marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio,
+                      fontSize: 13 * factorRatio
                     }}
                   >
                     Info
@@ -406,7 +406,7 @@ export default class MethodLevel extends React.Component {
             </View>
           )}
           <View
-            style={{ 
+            style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
               marginBottom: 10 * factorVertical
             }}
@@ -431,7 +431,7 @@ export default class MethodLevel extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={{
             margin: 0,
-            flex: 1,
+            flex: 1
           }}
           animation={'slideInUp'}
           animationInTiming={250}

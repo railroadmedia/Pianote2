@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { SafeAreaView } from 'react-navigation';
@@ -30,18 +30,24 @@ export default class PrivacyPolicy extends React.Component {
             onPress={() => this.props.navigation.goBack()}
             style={{ flex: 1 }}
           >
-            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={'black'} />
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={'black'}
+            />
           </TouchableOpacity>
           <Text style={localStyles.title}>Privacy Policy</Text>
           <View style={{ flex: 1 }} />
         </View>
         <ScrollView style={localStyles.scrollContainer}>
-          <Text style={[styles.text, localStyles.subtitle]}>Indemnification
-            Below is a list of the standard policies we use on this website.
-            They are in place to safeguard our users, and to ensure we can
-            provide a quality user experience!
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Indemnification Below is a list of the standard policies we use on
+            this website. They are in place to safeguard our users, and to
+            ensure we can provide a quality user experience!
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Standard Website Logs</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Standard Website Logs
+          </Text>
           <Text style={styles.text}>
             The Pianote.com website logs all website visitors and transactions.
             We collect the standard information most all websites collect such
@@ -52,7 +58,9 @@ export default class PrivacyPolicy extends React.Component {
             any of the information outside of our company, and only analyze
             group numbers – never singling out an individuals information.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Subscriptions & E-mail Data</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Subscriptions & E-mail Data
+          </Text>
           <Text style={styles.text}>
             Our website offers users the option to subscribe for periodical
             updates. This is done with a name and e-mail address for
@@ -82,7 +90,9 @@ export default class PrivacyPolicy extends React.Component {
             that said, you can rest easy knowing we never single out any
             individual users, and always analyze group numbers.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>External Links</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            External Links
+          </Text>
           <Text style={styles.text}>
             This website contains some links to external websites. We are not
             responsible for the privacy practices or the content of these web
@@ -107,7 +117,9 @@ export default class PrivacyPolicy extends React.Component {
             e-mail contains a simple unsubscribe link that can be used by the
             recipient at anytime.
           </Text>
-          <Text style={[styles.text, localStyles.subtitle]}>Changes to this Policy</Text>
+          <Text style={[styles.text, localStyles.subtitle]}>
+            Changes to this Policy
+          </Text>
           <Text style={styles.text}>
             Please note that basic changes to this policy can be done at any
             time.
@@ -120,14 +132,18 @@ export default class PrivacyPolicy extends React.Component {
           </Text>
           <Text style={[styles.text, localStyles.contact]}>
             Please contact{' '}
-            <Text style={[styles.text, localStyles.subtitle]}>{' '}support@pianote.com</Text>{' '}if you have any questions that aren't answered here.</Text>
+            <Text style={[styles.text, localStyles.subtitle]}>
+              {' '}
+              support@pianote.com
+            </Text>{' '}
+            if you have any questions that aren't answered here.
+          </Text>
           <View style={{ height: 25 * factorRatio }} />
         </ScrollView>
       </SafeAreaView>
     );
   }
 }
-
 
 const localStyles = StyleSheet.create({
   header: {
@@ -138,7 +154,11 @@ const localStyles = StyleSheet.create({
   },
   title: {
     fontWeight: Platform.OS == 'android' ? 'bold' : '800',
-    fontSize: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     alignSelf: 'center',
     textAlign: 'center'
   },
@@ -147,15 +167,31 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 15
   },
   subtitle: {
-    paddingBottom: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2, 
-    marginTop: 25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2, 
-    fontWeight: 'bold', 
+    paddingBottom:
+      (5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginTop:
+      (25 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontWeight: 'bold',
     marginBottom: 0
   },
   contact: {
-    marginTop: 20, 
-    paddingLeft: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    paddingRight: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginTop: 20,
+    paddingLeft:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    paddingRight:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center'
   }
 });

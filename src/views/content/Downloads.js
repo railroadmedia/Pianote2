@@ -103,7 +103,7 @@ export default class Downloads extends React.Component {
     let { edit, items } = this.state;
     return (
       <SafeAreaView
-        forceInset={{bottom: 'never'}}
+        forceInset={{ bottom: 'never' }}
         style={styles.packsContainer}
       >
         <StatusBar
@@ -124,7 +124,7 @@ export default class Downloads extends React.Component {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'flex-end',
+                alignItems: 'flex-end'
               }}
             >
               <Text

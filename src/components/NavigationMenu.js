@@ -2,7 +2,13 @@
  * BlurredList
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -125,16 +131,16 @@ class NavigationMenu extends React.Component {
     return (
       <View
         style={[
-          localStyles.navContainer, {
-          backgroundColor: this.props.isMethod
-            ? 'black'
-            : colors.mainBackground,
-        }]}
+          localStyles.navContainer,
+          {
+            backgroundColor: this.props.isMethod
+              ? 'black'
+              : colors.mainBackground
+          }
+        ]}
       >
         {this.lessonNav()}
-        <View
-          style={{alignSelf: 'center'}}
-        >
+        <View style={{ alignSelf: 'center' }}>
           <TouchableOpacity
             onPress={() => {
               this.props.onClose(false);
@@ -172,9 +178,11 @@ const localStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
-    paddingVertical: 30 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
+    paddingVertical:
+      (30 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   }
 });
 

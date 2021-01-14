@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -27,8 +27,12 @@ class ProfileImage extends React.Component {
       >
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.title]}>Profile image is too large.</Text>
-            <Text style={[styles.modalBodyText, localStyles.tryAgain]}>Please try again.</Text>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>
+              Profile image is too large.
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.tryAgain]}>
+              Please try again.
+            </Text>
 
             <TouchableOpacity
               style={localStyles.tryAgainTextContainer}
@@ -36,7 +40,9 @@ class ProfileImage extends React.Component {
                 this.props.hideProfileImage();
               }}
             >
-              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>TRY AGAIN</Text>
+              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
+                TRY AGAIN
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -48,24 +54,44 @@ class ProfileImage extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   title: {
     paddingHorizontal: 40,
-    marginTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainTextContainer: {
     paddingHorizontal: 20,
-    marginVertical: 17.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (17.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginBottom: 5,
+    marginBottom: 5
   }
 });
 

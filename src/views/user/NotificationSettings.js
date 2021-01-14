@@ -10,7 +10,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
@@ -90,7 +90,10 @@ export default class NotificationSettings extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar backgroundColor={colors.thirdBackground} barStyle={'light-content'} />
+        <StatusBar
+          backgroundColor={colors.thirdBackground}
+          barStyle={'light-content'}
+        />
         <View style={localStyles.header}>
           <TouchableOpacity
             style={{ flex: 1 }}
@@ -102,14 +105,24 @@ export default class NotificationSettings extends React.Component {
                   });
             }}
           >
-            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={colors.secondBackground} />
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
           </TouchableOpacity>
-          <Text style={[styles.childHeaderText, localStyles.title]}>Notification Settings</Text>
+          <Text style={[styles.childHeaderText, localStyles.title]}>
+            Notification Settings
+          </Text>
           <View style={{ flex: 1 }} />
         </View>
         {this.state.isLoading && (
           <View style={[styles.centerContent, { flex: 1 }]}>
-            <ActivityIndicator size={onTablet ? 'large' : 'small'} animating={true} color={colors.secondBackground} />
+            <ActivityIndicator
+              size={onTablet ? 'large' : 'small'}
+              animating={true}
+              color={colors.secondBackground}
+            />
           </View>
         )}
         {!this.state.isLoading && (
@@ -179,9 +192,11 @@ export default class NotificationSettings extends React.Component {
                 }}
               />
             </View>
-            <View style={localStyles.border}/>
+            <View style={localStyles.border} />
             <View style={localStyles.emailNotificationFrequency}>
-              <Text style={[localStyles.text, {paddingVertical: 10}]}>Email Notification Frequency</Text>
+              <Text style={[localStyles.text, { paddingVertical: 10 }]}>
+                Email Notification Frequency
+              </Text>
             </View>
 
             <View style={localStyles.textContainer}>
@@ -205,10 +220,18 @@ export default class NotificationSettings extends React.Component {
                 ]}
               >
                 {this.state.notifications_summary_frequency_minutes == 1 && (
-                  <FontIcon name={'check'} size={20 * factorRatio} color={'white'} />
+                  <FontIcon
+                    name={'check'}
+                    size={20 * factorRatio}
+                    color={'white'}
+                  />
                 )}
                 {this.state.notifications_summary_frequency_minutes !== 1 && (
-                  <EntypoIcon name={'cross'} size={22.5 * factorRatio} color={'white'} />
+                  <EntypoIcon
+                    name={'cross'}
+                    size={22.5 * factorRatio}
+                    color={'white'}
+                  />
                 )}
               </TouchableOpacity>
             </View>
@@ -234,11 +257,19 @@ export default class NotificationSettings extends React.Component {
                 ]}
               >
                 {this.state.notifications_summary_frequency_minutes == 1440 && (
-                  <FontIcon name={'check'} size={20 * factorRatio} color={'white'} />
+                  <FontIcon
+                    name={'check'}
+                    size={20 * factorRatio}
+                    color={'white'}
+                  />
                 )}
                 {this.state.notifications_summary_frequency_minutes !==
                   1440 && (
-                  <EntypoIcon name={'cross'} size={22.5 * factorRatio} color={'white'} />
+                  <EntypoIcon
+                    name={'cross'}
+                    size={22.5 * factorRatio}
+                    color={'white'}
+                  />
                 )}
               </TouchableOpacity>
             </View>
@@ -267,12 +298,20 @@ export default class NotificationSettings extends React.Component {
                 {(this.state.notifications_summary_frequency_minutes == 0 ||
                   this.state.notifications_summary_frequency_minutes ==
                     null) && (
-                  <FontIcon name={'check'} size={20 * factorRatio} color={'white'} />
+                  <FontIcon
+                    name={'check'}
+                    size={20 * factorRatio}
+                    color={'white'}
+                  />
                 )}
                 {this.state.notifications_summary_frequency_minutes !== 0 &&
                   this.state.notifications_summary_frequency_minutes !==
                     null && (
-                    <EntypoIcon name={'cross'} size={22.5 * factorRatio} color={'white'} />
+                    <EntypoIcon
+                      name={'cross'}
+                      size={22.5 * factorRatio}
+                      color={'white'}
+                    />
                   )}
               </TouchableOpacity>
             </View>
@@ -288,8 +327,16 @@ export default class NotificationSettings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
@@ -301,19 +348,31 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#081826'
   },
   title: {
-    textAlign: 'center', 
+    textAlign: 'center',
     color: '#445f73'
   },
   noteTypeContainer: {
     paddingLeft: 15,
     width: '100%',
     justifyContent: 'center',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   noteTypeText: {
-    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginTop:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
-    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (16 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: '#445f73',
     paddingVertical: 5
   },
@@ -326,17 +385,25 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (16 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: '#445f73'
   },
   emailNotificationFrequency: {
     paddingLeft: 15,
     width: '100%',
     justifyContent: 'center',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   border: {
-    height: 25 * Dimensions.get('window').height / 812,
+    height: (25 * Dimensions.get('window').height) / 812,
     borderBottomColor: '#445f73',
     borderBottomWidth: 1
   }

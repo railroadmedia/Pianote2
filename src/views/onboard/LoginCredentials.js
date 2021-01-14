@@ -304,7 +304,7 @@ export default class LoginCredentials extends React.Component {
                   />
                   {!this.state.secureTextEntry && (
                     <TouchableOpacity
-                      style={localStyles.passwordContainer}  
+                      style={localStyles.passwordContainer}
                       onPress={() =>
                         this.setState({
                           secureTextEntry: true
@@ -445,8 +445,16 @@ export default class LoginCredentials extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
@@ -459,7 +467,7 @@ const localStyles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     width: DeviceInfo.isTablet() ? '30%' : '50%',
-    aspectRatio: 177 / 53 
+    aspectRatio: 177 / 53
   },
   email: {
     padding: 15,
@@ -472,7 +480,11 @@ const localStyles = StyleSheet.create({
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'

@@ -180,9 +180,12 @@ class HorizontalVideoList extends React.Component {
       <View style={localStyles.listContainer}>
         <View style={localStyles.titleContain}>
           <Text
-            style={[localStyles.title, {
-              color: this.props.isMethod ? 'white' : colors.secondBackground
-            }]}
+            style={[
+              localStyles.title,
+              {
+                color: this.props.isMethod ? 'white' : colors.secondBackground
+              }
+            ]}
           >
             {this.props.Title}
           </Text>
@@ -228,8 +231,9 @@ class HorizontalVideoList extends React.Component {
 
                 {Platform.OS === 'ios' ? (
                   <FastImage
-                    style={[localStyles.imageIOS,
-                      {aspectRatio: this.props.isSquare ? 1 : 16 / 9}
+                    style={[
+                      localStyles.imageIOS,
+                      { aspectRatio: this.props.isSquare ? 1 : 16 / 9 }
                     ]}
                     source={{
                       uri:
@@ -247,8 +251,9 @@ class HorizontalVideoList extends React.Component {
                   />
                 ) : (
                   <Image
-                    style={[localStyles.imageIOS,
-                      {aspectRatio: this.props.isSquare ? 1 : 16 / 9}
+                    style={[
+                      localStyles.imageIOS,
+                      { aspectRatio: this.props.isSquare ? 1 : 16 / 9 }
                     ]}
                     resizeMode='cover'
                     source={{
@@ -293,12 +298,14 @@ class HorizontalVideoList extends React.Component {
                     )}
                     <Text
                       numberOfLines={1}
-                      style={[localStyles.artist, {
-                        color: this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.secondBackground,
-                        
-                      }]}
+                      style={[
+                        localStyles.artist,
+                        {
+                          color: this.props.isMethod
+                            ? colors.pianoteGrey
+                            : colors.secondBackground
+                        }
+                      ]}
                     >
                       {' '}
                       {item.artist}
@@ -370,22 +377,28 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 15
   },
   artist: {
-    fontSize: 12 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
-      fontFamily: 'OpenSans-Regular',
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontFamily: 'OpenSans-Regular'
   },
   title: {
-    fontSize: 18 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
-    fontFamily: 'RobotoCondensed-Bold',
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontFamily: 'RobotoCondensed-Bold'
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: 14.5 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
+    fontSize:
+      (14.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontWeight: '300',
     color: '#fb1b2f'
   },
@@ -394,9 +407,11 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 15 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2
+    paddingVertical:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   progressItem: {
     position: 'absolute',
@@ -408,9 +423,11 @@ const localStyles = StyleSheet.create({
   },
   imageIOS: {
     width: '100%',
-    borderRadius: 7.5 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2
+    borderRadius:
+      (7.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   videoTitle: {
     width: '100%',
@@ -419,24 +436,32 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   videoTitleText: {
-    fontSize: 14 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
-    marginTop: 7.5 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
-    marginBottom: 3 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
+    fontSize:
+      (14 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginTop:
+      (7.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginBottom:
+      (3 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Bold',
     color: 'white'
   },
   typeContainer: {
     flexDirection: 'row',
-    marginBottom: 3 * (
-      Dimensions.get('window').height / 812 +
-      Dimensions.get('window').width / 375 ) / 2,
-  },
-});    
+    marginBottom:
+      (3 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
+  }
+});
 
 export default withNavigation(HorizontalVideoList);

@@ -7,7 +7,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  StyleSheet, 
+  StyleSheet,
   Dimensions
 } from 'react-native';
 import {
@@ -146,13 +146,18 @@ class ContentModal extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        style={styles.container}  
-        onPress={() => this.props.hideContentModal()}  
+        style={styles.container}
+        onPress={() => this.props.hideContentModal()}
       >
-        <View style={[styles.container,styles.centerContent]}>
+        <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.container}>
             <View key={'image'} style={styles.centerContent}>
-              <View style={[localStyles.imageContainer, {aspectRatio: this.state.type == 'song' ? 1 : 16 / 9}]}>
+              <View
+                style={[
+                  localStyles.imageContainer,
+                  { aspectRatio: this.state.type == 'song' ? 1 : 16 / 9 }
+                ]}
+              >
                 <FastImage
                   style={localStyles.image}
                   source={{
@@ -166,11 +171,13 @@ class ContentModal extends React.Component {
               </View>
             </View>
             <Text style={localStyles.title}>{this.state.title}</Text>
-            <Text style={localStyles.type}>{this.changeType(this.state.type)}/ {this.state.artist}</Text>
+            <Text style={localStyles.type}>
+              {this.changeType(this.state.type)}/ {this.state.artist}
+            </Text>
             <Text numberOfLines={5} style={localStyles.description}>
               {this.state.description}
             </Text>
-            <View style={[styles.centerContent, {flexDirection: 'row'}]}>
+            <View style={[styles.centerContent, { flexDirection: 'row' }]}>
               <View style={{ flex: 1 }} />
               {(this.state.bundle_count > 1 || this.state.lesson_count > 1) && (
                 <View
@@ -214,9 +221,14 @@ class ContentModal extends React.Component {
                     : this.like(this.state.id);
                 }}
               >
-                <AntIcon name={this.state.isLiked ? 'like1' : 'like2'} size={25 * factorRatio}/>
+                <AntIcon
+                  name={this.state.isLiked ? 'like1' : 'like2'}
+                  size={25 * factorRatio}
+                />
                 <View style={{ flex: 1 }} />
-                <Text style={localStyles.likeCount}>{this.state.like_count}</Text>
+                <Text style={localStyles.likeCount}>
+                  {this.state.like_count}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.centerContent}
@@ -273,11 +285,27 @@ class ContentModal extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    margin: 40 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    borderRadius: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    margin:
+      (40 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    borderRadius:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     shadowOffset: {
-      width: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-      height: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+      width:
+        (5 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
+      height:
+        (10 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2
     },
     shadowColor: 'black',
     shadowOpacity: 0.1,
@@ -285,79 +313,131 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white'
   },
   imageContainer: {
-    height: 180 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (180 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     backgroundColor: 'white',
     zIndex: 10,
-    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    marginHorizontal: 12.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginHorizontal:
+      (12.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   title: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: 22 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (22 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center'
   },
   type: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'grey'
   },
   image: {
-    flex: 1, 
+    flex: 1,
     borderRadius: 10
   },
   description: {
-    marginHorizontal: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginHorizontal:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
-    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (14 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center'
   },
   myList: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
     marginTop: 10 * (Dimensions.get('window').height / 812)
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
     marginTop: 15 * (Dimensions.get('window').height / 812)
   },
   likeContainer: {
-    flex: 1, 
+    flex: 1,
     alignItems: 'center'
   },
   button: {
-    flexDirection: 'row', 
-    padding: 20 
+    flexDirection: 'row',
+    padding: 20
   },
   XPtext: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
-    marginTop: 5 * Dimensions.get('window').height / 812
+    marginTop: (5 * Dimensions.get('window').height) / 812
   },
   xp: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
-    marginTop: 10 * (Dimensions.get('window').height / 812 )
+    marginTop: 10 * (Dimensions.get('window').height / 812)
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
-    marginTop: 10 * (Dimensions.get('window').height / 812 )
+    marginTop: 10 * (Dimensions.get('window').height / 812)
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
-    marginTop: 5 * (Dimensions.get('window').height / 812 )
+    marginTop: 5 * (Dimensions.get('window').height / 812)
   }
-})
+});
 export default withNavigation(ContentModal);

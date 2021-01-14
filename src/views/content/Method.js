@@ -296,7 +296,7 @@ export default class Method extends React.Component {
                   height: 40 * factorRatio,
                   justifyContent: 'space-evenly',
                   flexDirection: 'row',
-                  alignItems: 'center',
+                  alignItems: 'center'
                 }}
               >
                 <View style={{ flex: 0.5 }} />
@@ -325,7 +325,7 @@ export default class Method extends React.Component {
                 )}
 
                 <TouchableOpacity
-                  style={[styles.centerContent, {flex: 0.5}]}
+                  style={[styles.centerContent, { flex: 0.5 }]}
                   onPress={() => {
                     this.setState({
                       showInfo: !this.state.showInfo
@@ -425,13 +425,13 @@ export default class Method extends React.Component {
                     }
                   ]}
                 >
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                   <View
                     style={[
                       styles.centerContent,
                       {
                         width: 70 * factorRatio,
-                        marginRight: 15 * factorRatio,
+                        marginRight: 15 * factorRatio
                       }
                     ]}
                   >
@@ -490,7 +490,7 @@ export default class Method extends React.Component {
                       XP
                     </Text>
                   </View>
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                 </View>
                 <View style={{ height: 15 * factorVertical }} />
                 <View
@@ -503,7 +503,7 @@ export default class Method extends React.Component {
                     }
                   ]}
                 >
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                   <TouchableOpacity
                     onPress={() => {
                       this.setState({
@@ -537,13 +537,13 @@ export default class Method extends React.Component {
                       Restart
                     </Text>
                   </TouchableOpacity>
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                 </View>
               </View>
             </View>
           )}
           <View
-            style={{ 
+            style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
               marginBottom: 10 * factorVertical
             }}
@@ -570,7 +570,7 @@ export default class Method extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={{
             margin: 0,
-            flex: 1,
+            flex: 1
           }}
           animation={'slideInUp'}
           animationInTiming={250}

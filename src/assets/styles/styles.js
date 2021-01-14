@@ -19,7 +19,7 @@ var { StyleSheet } = React;
 module.exports = StyleSheet.create({
   modalContainer: {
     margin: 0,
-    flex: 1,
+    flex: 1
   },
   buttonText: {
     color: 'white',
@@ -29,7 +29,7 @@ module.exports = StyleSheet.create({
   searchContainer: {
     marginTop: fullHeight * 0.04,
     flexDirection: 'row',
-    paddingLeft: 15,
+    paddingLeft: 15
   },
   searchBox: {
     flex: 1,
@@ -67,17 +67,17 @@ module.exports = StyleSheet.create({
     backgroundColor: 'black'
   },
   packsContainer: {
-    flex: 1, 
+    flex: 1,
     backgroundColor: '#081826'
   },
   childHeaderText: {
-    // used on search, see all, downloads, 
+    // used on search, see all, downloads,
     fontSize: 22 * factorRatio,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold',
     alignSelf: 'center',
-    textAlign: 'center',
-  }, 
+    textAlign: 'center'
+  },
   childHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -87,12 +87,12 @@ module.exports = StyleSheet.create({
   },
   filterHeader: {
     fontSize: 18 * factorRatio,
-      marginBottom: 12.5 * factorVertical,
-      marginTop: 12.5 * factorVertical,
-      textAlign: 'left',
-      fontFamily: 'RobotoCondensed-Bold',
-      color: '#445f73',
-      paddingLeft: fullWidth * 0.035
+    marginBottom: 12.5 * factorVertical,
+    marginTop: 12.5 * factorVertical,
+    textAlign: 'left',
+    fontFamily: 'RobotoCondensed-Bold',
+    color: '#445f73',
+    paddingLeft: fullWidth * 0.035
   },
   container: {
     flex: 1,

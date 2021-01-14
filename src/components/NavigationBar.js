@@ -199,7 +199,7 @@ class NavigationBar extends React.Component {
                   ? null
                   : styles.centerContent,
                 {
-                  paddingTop: isNotch ? 2 : 0,  
+                  paddingTop: isNotch ? 2 : 0,
                   borderColor:
                     this.props.currentPage == 'PROFILE' &&
                     this.state.profileImage.length > 0
@@ -220,18 +220,29 @@ class NavigationBar extends React.Component {
 const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
-    width: 37.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    height: 37.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    borderWidth: 2.25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width:
+      (37.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    height:
+      (37.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    borderWidth:
+      (2.25 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   navContainer: {
     alignSelf: 'stretch',
     flexDirection: 'row',
     paddingTop: 10 * (Dimensions.get('window').height / 812),
     justifyContent: 'space-around',
-    alignContent: 'space-around'    
+    alignContent: 'space-around'
   }
 });
-
 
 export default withNavigation(NavigationBar);

@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet, 
+  StyleSheet,
   Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
@@ -22,13 +22,17 @@ class CheckEmail extends React.Component {
   render = () => {
     return (
       <TouchableWithoutFeedback
-        style={[styles.container, styles.centerContent]}  
-        onPress={() => this.props.hideCheckEmail()}  
+        style={[styles.container, styles.centerContent]}
+        onPress={() => this.props.hideCheckEmail()}
       >
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.title]}>This email is already {'\n'} connected to an account.</Text>
-            <Text style={[styles.modalBodyText, localStyles.title]}>Do you want to log in instead?</Text>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>
+              This email is already {'\n'} connected to an account.
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.title]}>
+              Do you want to log in instead?
+            </Text>
             <TouchableOpacity
               style={localStyles.loginContainer}
               onPress={() => {
@@ -36,13 +40,19 @@ class CheckEmail extends React.Component {
                 this.props.hideCheckEmail();
               }}
             >
-              <Text style={[styles.modalButtonText, localStyles.loginText]}>LOG IN</Text>
+              <Text style={[styles.modalButtonText, localStyles.loginText]}>
+                LOG IN
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() =>  this.props.hideCheckEmail()}
+              onPress={() => this.props.hideCheckEmail()}
               style={localStyles.tryAgain}
             >
-              <Text style={[styles.modalCancelButtonText, localStyles.tryAgainText]}>TRY AGAIN</Text>
+              <Text
+                style={[styles.modalCancelButtonText, localStyles.tryAgainText]}
+              >
+                TRY AGAIN
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -54,21 +64,49 @@ class CheckEmail extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    paddingBottom: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    paddingTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    backgroundColor: 'white',
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    paddingBottom:
+      (5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    paddingTop:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    backgroundColor: 'white'
   },
   title: {
     paddingHorizontal: 40,
-    marginBottom: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginBottom:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   loginContainer: {
-    borderRadius: 45 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (45 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
-    marginVertical: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginVertical:
+      (5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   loginText: {
     color: 'white',
@@ -76,11 +114,15 @@ const localStyles = StyleSheet.create({
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainText: {
     color: '#fb1b2f'
   }
-})
+});
 
 export default withNavigation(CheckEmail);

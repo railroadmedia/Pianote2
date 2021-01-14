@@ -265,7 +265,6 @@ class Course extends React.Component {
               />
             )}
             <Text style={styles.contentPageHeader}>Courses</Text>
-            <View style={{ height: 10 * factorVertical }} />
             {this.state.started && (
               <View
                 key={'continueCourses'}

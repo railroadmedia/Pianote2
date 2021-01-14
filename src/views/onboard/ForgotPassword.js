@@ -12,7 +12,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
@@ -142,7 +142,8 @@ export default class ForgotPassword extends React.Component {
                       alignSelf: 'center',
                       borderColor: '#fb1b2f',
                       width: onTablet ? '30%' : '50%',
-                      backgroundColor: this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
+                      backgroundColor:
+                        this.state.email.length > 0 ? '#fb1b2f' : 'transparent'
                     }
                   ]}
                 >
@@ -163,7 +164,9 @@ export default class ForgotPassword extends React.Component {
                     this.props.navigation.navigate('LOGINCREDENTIALS');
                   }}
                 >
-                  <Text style={localStyles.greyText}>Already a member? Log in.</Text>
+                  <Text style={localStyles.greyText}>
+                    Already a member? Log in.
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -244,8 +247,16 @@ export default class ForgotPassword extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
@@ -258,7 +269,7 @@ const localStyles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     width: DeviceInfo.isTablet() ? '30%' : '50%',
-    aspectRatio: 177 / 53 
+    aspectRatio: 177 / 53
   },
   email: {
     padding: 15,
@@ -271,7 +282,11 @@ const localStyles = StyleSheet.create({
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'

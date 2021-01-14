@@ -302,8 +302,8 @@ export default class PathOverview extends React.Component {
       <View
         key={'title'}
         style={[
-          { 
-            paddingHorizontal: 20 * factorRatio,
+          {
+            paddingHorizontal: 20 * factorRatio
           },
           this.state.isLandscape ? { marginHorizontal: '10%' } : {}
         ]}
@@ -430,7 +430,7 @@ export default class PathOverview extends React.Component {
           style={[
             {
               paddingHorizontal: 20 * factorRatio,
-              marginTop: 10 * factorVertical,
+              marginTop: 10 * factorVertical
             },
             this.state.isLandscape
               ? { marginHorizontal: '10%' }
@@ -451,7 +451,10 @@ export default class PathOverview extends React.Component {
           <View key={'containStats'}>
             <View
               key={'stats'}
-              style={[styles.centerContent, {marginTop: 10 * factorVertical, flexDirection: 'row' }]}
+              style={[
+                styles.centerContent,
+                { marginTop: 10 * factorVertical, flexDirection: 'row' }
+              ]}
             >
               <View
                 style={[
@@ -669,7 +672,7 @@ export default class PathOverview extends React.Component {
     const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
       <SafeAreaView
-        forceInset={{bottom: 'never'}}
+        forceInset={{ bottom: 'never' }}
         style={[
           {
             flex: 1,
@@ -854,7 +857,7 @@ export default class PathOverview extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={{
             margin: 0,
-            flex: 1,
+            flex: 1
           }}
           animation={'slideInUp'}
           animationInTiming={250}

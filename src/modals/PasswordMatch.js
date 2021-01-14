@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -27,13 +27,19 @@ class PasswordMatch extends React.Component {
       >
         <View style={[styles.centerContent, styles.container]}>
           <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.text]}>Your passwords do {'\n'} not match.</Text>
-            <Text style={[styles.modalBodyText, localStyles.text]}>Please try again.</Text>
+            <Text style={[styles.modalHeaderText, localStyles.text]}>
+              Your passwords do {'\n'} not match.
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.text]}>
+              Please try again.
+            </Text>
             <TouchableOpacity
               style={localStyles.tryAgainContainer}
               onPress={() => this.props.hidePasswordMatch()}
             >
-              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>TRY AGAIN</Text>
+              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
+                TRY AGAIN
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -45,20 +51,40 @@ class PasswordMatch extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   text: {
     paddingHorizontal: 40,
-    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainContainer: {
     paddingHorizontal: 40,
-    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginBottom: 7.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginBottom:
+      (7.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   }
 });
 

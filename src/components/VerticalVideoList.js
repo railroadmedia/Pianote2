@@ -762,16 +762,18 @@ class VerticalVideoList extends React.Component {
                 <View
                   style={{
                     paddingRight: 15 * factorRatio,
-                    flexDirection: 'row',
+                    flexDirection: 'row'
                   }}
                 >
                   {this.props.showSort && (
                     <TouchableOpacity
-                      style={[styles.centerContent, 
+                      style={[
+                        styles.centerContent,
                         {
                           flexDirection: 'row',
-                          marginRight: 7.5 * factorHorizontal,
-                      }]}
+                          marginRight: 7.5 * factorHorizontal
+                        }
+                      ]}
                       onPress={() => {
                         this.setState({
                           showRelevance: !this.state.showRelevance
@@ -784,7 +786,7 @@ class VerticalVideoList extends React.Component {
                           color: colors.pianoteRed,
                           fontSize: 12 * factorRatio,
                           fontFamily: 'OpenSans-Regular',
-                          marginRight: 3.5 * factorHorizontal,
+                          marginRight: 3.5 * factorHorizontal
                         }}
                       >
                         {sortDict[this.props.currentSort]}

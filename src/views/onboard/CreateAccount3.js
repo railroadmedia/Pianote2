@@ -12,7 +12,7 @@ import {
   ScrollView,
   Platform,
   Dimensions,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
@@ -448,9 +448,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 1
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 1 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -466,9 +464,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 2
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 2 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -484,9 +480,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 3
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 3 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -502,9 +496,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 4
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 4 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -808,9 +800,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 1
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 1 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -826,9 +816,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 2
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 2 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -844,9 +832,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 3
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 3 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -862,9 +848,7 @@ export default class CreateAccount3 extends React.Component {
                             width: 10 * factorRatio,
                             borderRadius: 100,
                             backgroundColor:
-                              this.state.page == 4
-                                ? '#fb1b2f'
-                                : 'transparent',
+                              this.state.page == 4 ? '#fb1b2f' : 'transparent',
                             borderWidth: 1,
                             borderColor: '#fb1b2f'
                           }}
@@ -1414,9 +1398,7 @@ export default class CreateAccount3 extends React.Component {
                 ]}
               >
                 <View style={{ height: 20 * factorVertical }} />
-                <View
-                  style={[styles.centerContent, { flexDirection: 'row' }]}
-                >
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                   <View style={{ flex: 1 }} />
                   <FastImage
                     style={{
@@ -1589,9 +1571,17 @@ export default class CreateAccount3 extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
-  },
+  }
 });

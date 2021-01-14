@@ -178,19 +178,7 @@ class StudentFocusCatalog extends React.Component {
                     color={colors.secondBackground}
                   />
                 )}
-                <Text
-                  style={{
-                    paddingLeft: 15,
-                    paddingTop: 20 * factorVertical,
-                    paddingBottom: 10 * factorVertical,
-                    fontSize: 30 * factorRatio,
-                    color: 'white',
-                    justifyContent: 'flex-start',
-                    fontFamily: 'OpenSans-ExtraBold'
-                  }}
-                >
-                  Student Focus
-                </Text>
+                <Text style={styles.contentPageHeader}>Student Focus</Text>
 
                 {this.state.started && (
                   <View style={styles.mainContainer}>

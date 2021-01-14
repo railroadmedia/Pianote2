@@ -579,7 +579,7 @@ class Lessons extends React.Component {
           isVisible={this.state.showRestartCourse}
           style={{
             margin: 0,
-            flex: 1,
+            flex: 1
           }}
           animation={'slideInUp'}
           animationInTiming={250}

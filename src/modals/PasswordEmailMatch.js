@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -33,14 +33,18 @@ class PasswordEmailMatch extends React.Component {
             >
               {this.props.errorMessage}
             </Text>
-            <Text style={[styles.modalBodyText, localStyles.tryAgainText]}>Please try again.</Text>
+            <Text style={[styles.modalBodyText, localStyles.tryAgainText]}>
+              Please try again.
+            </Text>
             <TouchableOpacity
               style={localStyles.tryAgainText}
               onPress={() => {
                 this.props.hidePasswordEmailMatch();
               }}
             >
-              <Text style={[styles.modalButtonText, localStyles.tryAgain]}>TRY AGAIN</Text>
+              <Text style={[styles.modalButtonText, localStyles.tryAgain]}>
+                TRY AGAIN
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -52,21 +56,41 @@ class PasswordEmailMatch extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   errorMessage: {
     paddingHorizontal: 40,
-    marginTop: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    marginBottom: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginTop:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    marginBottom:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainText: {
     paddingHorizontal: 40,
-    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgain: {
     color: '#fb1b2f',
-    marginBottom: 10 * Dimensions.get('window').height / 812,
+    marginBottom: (10 * Dimensions.get('window').height) / 812
   }
 });
 

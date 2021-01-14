@@ -7,7 +7,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import ProgressCircle from 'react-native-progress-circle';
@@ -66,13 +66,20 @@ class XpRank extends React.Component {
       >
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.title]}>Your XP Rank</Text>
+            <Text style={[styles.modalHeaderText, localStyles.title]}>
+              Your XP Rank
+            </Text>
             <Text style={[styles.modalBodyText, localStyles.description]}>
               You earn XP by completing lessons,{'\n'}
               commenting on videos and more!
             </Text>
             <View style={localStyles.description}>
-              <View style={[styles.centerContent, localStyles.ProgressCircleContainer]}>
+              <View
+                style={[
+                  styles.centerContent,
+                  localStyles.ProgressCircleContainer
+                ]}
+              >
                 <ProgressCircle
                   percent={this.state.rankProgress}
                   radius={fullWidth * 0.27}
@@ -81,14 +88,18 @@ class XpRank extends React.Component {
                   color={'red'}
                   bgColor={'white'}
                 >
-                  <View style={{transform: [{ rotate: '45deg' }]}}>
-                    <Text style={localStyles.XPtext}>{Number(this.state.XP).toLocaleString()}</Text>
+                  <View style={{ transform: [{ rotate: '45deg' }] }}>
+                    <Text style={localStyles.XPtext}>
+                      {Number(this.state.XP).toLocaleString()}
+                    </Text>
                     <Text style={localStyles.rankText}>{this.state.rank}</Text>
                   </View>
                 </ProgressCircle>
               </View>
             </View>
-            <Text style={[styles.modalBodyText, localStyles.nextRank]}>Next rank: {this.state.nextRank}</Text>
+            <Text style={[styles.modalBodyText, localStyles.nextRank]}>
+              Next rank: {this.state.nextRank}
+            </Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -98,17 +109,29 @@ class XpRank extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     backgroundColor: 'white',
     elevation: 10
   },
   title: {
     paddingHorizontal: 40,
-    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   description: {
     paddingHorizontal: 40,
-    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -116,17 +139,29 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: 34 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    fontSize:
+      (34 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: 24 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    fontSize:
+      (24 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
-    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   }
 });
 

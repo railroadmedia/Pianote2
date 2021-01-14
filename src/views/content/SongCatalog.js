@@ -268,17 +268,7 @@ class SongCatalog extends React.Component {
                 color={colors.secondBackground}
               />
             )}
-            <Text
-              style={{
-                paddingLeft: 15,
-                marginBottom: 5 * factorVertical,
-                fontSize: 30 * factorRatio,
-                color: 'white',
-                fontFamily: 'OpenSans-ExtraBold'
-              }}
-            >
-              Songs
-            </Text>
+            <Text style={styles.contentPageHeader}>Songs</Text>
             {this.state.started && (
               <View style={styles.mainContainer}>
                 <HorizontalVideoList

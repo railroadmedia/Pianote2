@@ -11,7 +11,7 @@ import {
   Linking,
   StatusBar,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -287,7 +287,10 @@ export default class Profile extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar backgroundColor={colors.mainBackground} barStyle={'light-content'}/>
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
         <View style={styles.mainContainer}>
           <View style={localStyles.headerContainer}>
             <View style={{ flex: 1 }} />
@@ -312,59 +315,96 @@ export default class Profile extends React.Component {
             onEndReachedThreshold={0.01}
             ListHeaderComponent={() => (
               <>
-                <View style={[styles.centerContent, { marginTop: 20 * factorVertical }]}>
+                <View
+                  style={[
+                    styles.centerContent,
+                    { marginTop: 20 * factorVertical }
+                  ]}
+                >
                   <View style={localStyles.imageContainer}>
-                    <View style={[styles.centerContent, localStyles.profilePic]}>
+                    <View
+                      style={[styles.centerContent, localStyles.profilePic]}
+                    >
                       <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('PROFILESETTINGS', {data: 'Profile Photo'})}
+                        onPress={() =>
+                          this.props.navigation.navigate('PROFILESETTINGS', {
+                            data: 'Profile Photo'
+                          })
+                        }
                         style={[styles.centerContent, styles.container]}
                       >
-                        <IonIcon size={25 * factorRatio} name={'ios-camera'} color={colors.pianoteRed} />
+                        <IonIcon
+                          size={25 * factorRatio}
+                          name={'ios-camera'}
+                          color={colors.pianoteRed}
+                        />
                       </TouchableOpacity>
                     </View>
                     {this.state.profileImage == '' && (
                       <View style={styles.container}>
-                        <AntIcon name={'user'} color={colors.pianoteRed} size={85 * factorRatio} />
+                        <AntIcon
+                          name={'user'}
+                          color={colors.pianoteRed}
+                          size={85 * factorRatio}
+                        />
                       </View>
                     )}
                     {this.state.profileImage !== '' && (
-                      <FastImage 
+                      <FastImage
                         style={localStyles.profileImageBackground}
-                        source={{uri: this.state.profileImage}}
+                        source={{ uri: this.state.profileImage }}
                         resizeMode={FastImage.resizeMode.cover}
                       />
                     )}
                   </View>
                   <View style={styles.centerContent}>
-                    <Text style={localStyles.usernameText}>{this.state.username}</Text>
+                    <Text style={localStyles.usernameText}>
+                      {this.state.username}
+                    </Text>
                     <Text style={localStyles.memberSinceText}>
                       MEMBER SINCE {this.state.memberSince?.slice(0, 4)}
                     </Text>
                   </View>
                 </View>
                 <View style={localStyles.rankText}>
-                  <TouchableOpacity onPress={() => this.setState({showXpRank: true})}>
+                  <TouchableOpacity
+                    onPress={() => this.setState({ showXpRank: true })}
+                  >
                     <Text style={localStyles.redXpRank}>XP</Text>
                     <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
                   </TouchableOpacity>
                   <View style={{ width: 30 * factorHorizontal }} />
-                  <TouchableOpacity onPress={() => this.setState({showXpRank: true})}>
+                  <TouchableOpacity
+                    onPress={() => this.setState({ showXpRank: true })}
+                  >
                     <Text style={localStyles.redXpRank}>RANK</Text>
-                    <Text style={localStyles.whiteXpRank}>{this.state.rank}</Text>
+                    <Text style={localStyles.whiteXpRank}>
+                      {this.state.rank}
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <View style={localStyles.notificationContainer}>
-                  <Text style={localStyles.notificationText}>NOTIFICATIONS</Text>
+                  <Text style={localStyles.notificationText}>
+                    NOTIFICATIONS
+                  </Text>
                 </View>
               </>
             )}
             ListEmptyComponent={() =>
               this.state.isLoading ? (
-                <View style={[styles.centerContent, localStyles.activityContainer]}>
-                  <ActivityIndicator size={onTablet ? 'large' : 'small'} animating={true} color={colors.secondBackground}/>
+                <View
+                  style={[styles.centerContent, localStyles.activityContainer]}
+                >
+                  <ActivityIndicator
+                    size={onTablet ? 'large' : 'small'}
+                    animating={true}
+                    color={colors.secondBackground}
+                  />
                 </View>
               ) : (
-                <Text style={localStyles.noNotificationText}>No New Notifications...</Text>
+                <Text style={localStyles.noNotificationText}>
+                  No New Notifications...
+                </Text>
               )
             }
             ListFooterComponent={() => (
@@ -378,52 +418,97 @@ export default class Profile extends React.Component {
             )}
             renderItem={({ item, index }) => (
               <TouchableOpacity
-                style={[localStyles.notification, { 
-                  backgroundColor: index % 2 ? colors.mainBackground : colors.notificationColor,
-                }]}
+                style={[
+                  localStyles.notification,
+                  {
+                    backgroundColor:
+                      index % 2
+                        ? colors.mainBackground
+                        : colors.notificationColor
+                  }
+                ]}
                 onPress={() => this.openNotification(item)}
               >
                 <View style={localStyles.innerNotificationContainer}>
-                    <View style={localStyles.messageContainer}>
-                      {messageDict[item.type][2] == 'red' && (
-                        <View style={[styles.centerContent, localStyles.iconContainer, {backgroundColor: 'red'}]}>
-                          <FontAwesome size={fullWidth * 0.045 * factorRatio} color={'white'} name={'video-camera'} />
-                        </View>
-                      )}
-                      {messageDict[item.type][2] == 'orange' && (
-                        <View style={[styles.centerContent, localStyles.iconContainer, {backgroundColor: 'orange'}]}>
-                          <Chat height={fullWidth * 0.05} width={fullWidth * 0.05} fill={'white'} />
-                        </View>
-                      )}
-                      {messageDict[item.type][2] == 'blue' && (
-                        <View style={[styles.centerContent, localStyles.iconContainer, {backgroundColor: 'blue'}]}>
-                          <AntIcon size={fullWidth * 0.045} color={'white'} name={'like1'} />
-                        </View>
-                      )}
-                      <FastImage
-                        style={{ flex: 1, borderRadius: 100 }}
-                        source={{
-                          uri:
-                            item.type == 'new content releases'
-                              ? item.content.thumbnail_url
-                              : item.sender?.profile_image_url
-                        }}
-                        resizeMode={FastImage.resizeMode.stretch}
-                      />
-                    </View>
+                  <View style={localStyles.messageContainer}>
+                    {messageDict[item.type][2] == 'red' && (
+                      <View
+                        style={[
+                          styles.centerContent,
+                          localStyles.iconContainer,
+                          { backgroundColor: 'red' }
+                        ]}
+                      >
+                        <FontAwesome
+                          size={fullWidth * 0.045 * factorRatio}
+                          color={'white'}
+                          name={'video-camera'}
+                        />
+                      </View>
+                    )}
+                    {messageDict[item.type][2] == 'orange' && (
+                      <View
+                        style={[
+                          styles.centerContent,
+                          localStyles.iconContainer,
+                          { backgroundColor: 'orange' }
+                        ]}
+                      >
+                        <Chat
+                          height={fullWidth * 0.05}
+                          width={fullWidth * 0.05}
+                          fill={'white'}
+                        />
+                      </View>
+                    )}
+                    {messageDict[item.type][2] == 'blue' && (
+                      <View
+                        style={[
+                          styles.centerContent,
+                          localStyles.iconContainer,
+                          { backgroundColor: 'blue' }
+                        ]}
+                      >
+                        <AntIcon
+                          size={fullWidth * 0.045}
+                          color={'white'}
+                          name={'like1'}
+                        />
+                      </View>
+                    )}
+                    <FastImage
+                      style={{ flex: 1, borderRadius: 100 }}
+                      source={{
+                        uri:
+                          item.type == 'new content releases'
+                            ? item.content.thumbnail_url
+                            : item.sender?.profile_image_url
+                      }}
+                      resizeMode={FastImage.resizeMode.stretch}
+                    />
+                  </View>
                 </View>
                 <View style={{ flex: 0.675 }}>
                   <View style={{ flex: 1, justifyContent: 'center' }}>
                     <Text style={localStyles.notitificationText}>
-                      <Text style={localStyles.boldNotificationText}>{messageDict[item.type][1] ? '' : 'NEW - '}</Text>
-                      {item.type == 'new content releases' ? item.content.display_name : item.sender?.display_name}
-                      <Text style={localStyles.messageTypeText}>{' '}{messageDict[item.type][0]}</Text>
+                      <Text style={localStyles.boldNotificationText}>
+                        {messageDict[item.type][1] ? '' : 'NEW - '}
+                      </Text>
+                      {item.type == 'new content releases'
+                        ? item.content.display_name
+                        : item.sender?.display_name}
+                      <Text style={localStyles.messageTypeText}>
+                        {' '}
+                        {messageDict[item.type][0]}
+                      </Text>
                     </Text>
-                    <Text style={localStyles.createdAtText}>{item.created_at}</Text>
+                    <Text style={localStyles.createdAtText}>
+                      {item.created_at}
+                    </Text>
                   </View>
                 </View>
                 <View>
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                       style={localStyles.threeDotsContainer}
                       onPress={() => {
@@ -434,7 +519,11 @@ export default class Profile extends React.Component {
                         });
                       }}
                     >
-                      <EntypoIcon size={20 * factorRatio} name={'dots-three-horizontal'} color={colors.secondBackground} />
+                      <EntypoIcon
+                        size={20 * factorRatio}
+                        name={'dots-three-horizontal'}
+                        color={colors.secondBackground}
+                      />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -472,7 +561,7 @@ export default class Profile extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              flex: 1,
+              flex: 1
             }
           ]}
           animation={'slideInUp'}
@@ -512,33 +601,70 @@ const localStyles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
   imageContainer: {
     borderRadius: 250,
-    borderWidth: 2 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderWidth:
+      (2 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderColor: '#fb1b2f',
-    height: DeviceInfo.isTablet() ? 
-      112 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2 
-      : 
-      140 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: DeviceInfo.isTablet()
+      ? (112 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2
+      : (140 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
     aspectRatio: 1,
-    marginBottom: 5 * (Dimensions.get('window').height / 812),
+    marginBottom: 5 * (Dimensions.get('window').height / 812)
   },
   profilePic: {
     position: 'absolute',
     zIndex: 10,
     elevation: 10,
-    top: -15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    right: -15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    height: 35 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    width: 35 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    top:
+      (-15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    right:
+      (-15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    height:
+      (35 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    width:
+      (35 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderRadius: 100,
     borderColor: '#fb1b2f',
-    borderWidth: 1.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderWidth:
+      (1.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   profileImageBackground: {
     height: '100%',
@@ -548,19 +674,27 @@ const localStyles = StyleSheet.create({
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: 30 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (30 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center',
     color: 'white',
-    marginBottom: 10 * Dimensions.get('window').height / 812,
+    marginBottom: (10 * Dimensions.get('window').height) / 812
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (14 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center',
     color: '#445f73'
   },
   rankText: {
-    marginTop: 20 * Dimensions.get('window').height / 812,
+    marginTop: (20 * Dimensions.get('window').height) / 812,
     borderTopColor: '#445f73',
     borderTopWidth: 0.25,
     borderBottomColor: '#445f73',
@@ -573,33 +707,53 @@ const localStyles = StyleSheet.create({
   },
   redXpRank: {
     color: '#fb1b2f',
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center'
   },
   whiteXpRank: {
     color: 'white',
-    fontSize: 24 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (24 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center'
   },
   notificationContainer: {
-    paddingVertical: 15 * Dimensions.get('window').height / 812,
+    paddingVertical: (15 * Dimensions.get('window').height) / 812,
     elevation: 1
   },
   activityContainer: {
     flex: 1,
-    marginTop: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   noNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'left',
     paddingLeft: 15,
     color: 'white'
   },
   notification: {
-    height: 90 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (90 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     flexDirection: 'row'
   },
   innerNotificationContainer: {
@@ -609,43 +763,91 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   messageContainer: {
-    height: Dimensions.get('window').width * 0.175 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    width: Dimensions.get('window').width * 0.175 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    borderRadius: 150 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (Dimensions.get('window').width *
+        0.175 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    width:
+      (Dimensions.get('window').width *
+        0.175 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    borderRadius:
+      (150 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     backgroundColor: '#ececec'
   },
   iconContainer: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    height: Dimensions.get('window').width * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    width: Dimensions.get('window').width * 0.075 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    borderRadius: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (Dimensions.get('window').width *
+        0.075 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    width:
+      (Dimensions.get('window').width *
+        0.075 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    borderRadius:
+      (100 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     zIndex: 5
   },
   boldNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'white'
   },
   messageTypeText: {
-    fontFamily: 'OpenSans-Regular', 
-    fontSize: 14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    fontFamily: 'OpenSans-Regular',
+    fontSize:
+      (14 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   notificationText: {
     paddingLeft: 15,
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-ExtraBold',
     color: '#445f73'
   },
   createdAtText: {
-    marginTop: 5 * Dimensions.get('window').height / 812,
+    marginTop: (5 * Dimensions.get('window').height) / 812,
     fontFamily: 'OpenSans-Regular',
-    fontSize: 13 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (13 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: '#445f73'
   },
   threeDotsContainer: {
-    height: 35 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (35 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     justifyContent: 'center'
   }
 });

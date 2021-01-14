@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
@@ -27,13 +27,19 @@ class NoConnection extends React.Component {
       >
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.sorryText]}>Sorry, our server {'\n'}is down right now.</Text>
-            <Text style={[styles.modalBodyText, localStyles.sorryText]}>Please try again later!</Text>
+            <Text style={[styles.modalHeaderText, localStyles.sorryText]}>
+              Sorry, our server {'\n'}is down right now.
+            </Text>
+            <Text style={[styles.modalBodyText, localStyles.sorryText]}>
+              Please try again later!
+            </Text>
             <TouchableOpacity
               style={localStyles.tryAgainContainer}
-              onPress={() =>  this.props.hideNoConnection()}
+              onPress={() => this.props.hideNoConnection()}
             >
-              <Text style={styles.modalButtonText, localStyles.tryAgain}>TRY AGAIN</Text>
+              <Text style={(styles.modalButtonText, localStyles.tryAgain)}>
+                TRY AGAIN
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -45,22 +51,42 @@ class NoConnection extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   sorryText: {
     paddingHorizontal: 40,
-    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgainContainer: {
     alignSelf: 'center',
     paddingHorizontal: 40,
-    marginVertical: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginVertical:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   tryAgain: {
     color: '#fb1b2f',
     paddingHorizontal: 20,
-    margin: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    margin:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   }
 });
 

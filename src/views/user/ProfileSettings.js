@@ -10,7 +10,7 @@ import {
   TextInput,
   StatusBar,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -196,7 +196,10 @@ export default class ProfileSettings extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar backgroundColor={colors.mainBackground} barStyle={'light-content'}/>
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
         <View style={localStyles.myProfileSettings}>
           <TouchableOpacity
             onPress={() => {
@@ -208,9 +211,17 @@ export default class ProfileSettings extends React.Component {
             }}
             style={{ flex: 1 }}
           >
-            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={colors.secondBackground} />
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
           </TouchableOpacity>
-          <Text style={[styles.childHeaderText, {color: colors.secondBackground}]}>{this.state.currentlyView}</Text>
+          <Text
+            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+          >
+            {this.state.currentlyView}
+          </Text>
           {this.state.currentlyView !== 'Profile Settings' ? (
             <TouchableOpacity
               onPress={() => {
@@ -237,7 +248,11 @@ export default class ProfileSettings extends React.Component {
             >
               <Text style={styles.settingsText}>Display Name</Text>
               <View style={{ flex: 1 }} />
-              <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
+              <AntIcon
+                name={'right'}
+                size={22.5 * factorRatio}
+                color={colors.secondBackground}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.centerContent, localStyles.profilePhoto]}
@@ -249,14 +264,20 @@ export default class ProfileSettings extends React.Component {
             >
               <Text style={styles.settingsText}>Profile Photo</Text>
               <View style={{ flex: 1 }} />
-              <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
+              <AntIcon
+                name={'right'}
+                size={22.5 * factorRatio}
+                color={colors.secondBackground}
+              />
             </TouchableOpacity>
           </ScrollView>
         )}
         {this.state.currentlyView == 'Display Name' && (
           <ScrollView style={styles.mainContainer}>
             <TextInput
-              ref={txt => {this.txt = txt}}
+              ref={txt => {
+                this.txt = txt;
+              }}
               placeholder={'Display Name'}
               value={this.state.displayName}
               placeholderTextColor={colors.secondBackground}
@@ -278,7 +299,7 @@ export default class ProfileSettings extends React.Component {
                 <>
                   <FastImage
                     style={localStyles.image}
-                    source={{uri: this.state.imageURI}}
+                    source={{ uri: this.state.imageURI }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
                   <TouchableOpacity
@@ -291,7 +312,11 @@ export default class ProfileSettings extends React.Component {
                       })
                     }
                   >
-                    <EntypoIcon name={'cross'} size={25 * factorRatio} color={colors.secondBackground} />
+                    <EntypoIcon
+                      name={'cross'}
+                      size={25 * factorRatio}
+                      color={colors.secondBackground}
+                    />
                   </TouchableOpacity>
                 </>
               )}
@@ -301,7 +326,11 @@ export default class ProfileSettings extends React.Component {
                   onPress={() => this.chooseImage()}
                   style={styles.centerContent}
                 >
-                  <AntIcon name={'plus'} size={65 * factorRatio} color={'white'} />
+                  <AntIcon
+                    name={'plus'}
+                    size={65 * factorRatio}
+                    color={'white'}
+                  />
                 </TouchableOpacity>
               )}
             </View>
@@ -334,7 +363,7 @@ export default class ProfileSettings extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              flex: 1,
+              flex: 1
             }
           ]}
           animation={'slideInUp'}
@@ -357,7 +386,7 @@ export default class ProfileSettings extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              flex: 1,
+              flex: 1
             }
           ]}
           animation={'slideInUp'}
@@ -382,8 +411,16 @@ export default class ProfileSettings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
@@ -400,38 +437,62 @@ const localStyles = StyleSheet.create({
     alignSelf: 'flex-end'
   },
   displayContainer: {
-    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-      width: '100%',
-      borderBottomColor: '#445f73',
-      borderBottomWidth: 1,
-      borderTopWidth: 1,
-      borderTopColor: '#445f73',
-      flexDirection: 'row',
-      paddingHorizontal: 20 * Dimensions.get('window').width / 375
+    height:
+      (50 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    width: '100%',
+    borderBottomColor: '#445f73',
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderTopColor: '#445f73',
+    flexDirection: 'row',
+    paddingHorizontal: (20 * Dimensions.get('window').width) / 375
   },
   profilePhoto: {
-    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (50 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     width: '100%',
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 20 * Dimensions.get('window').width / 375
+    paddingHorizontal: (20 * Dimensions.get('window').width) / 375
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',
     paddingLeft: 15,
-    paddingBottom: 5, 
+    paddingBottom: 5,
     width: '100%',
     justifyContent: 'center',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderBottomColor: '#445f73',
-    borderBottomWidth: 1 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderBottomWidth:
+      (1 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: '#445f73',
-    marginBottom: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginBottom:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (16 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     paddingLeft: 15,
     paddingRight: 15,
     color: '#445f73'
@@ -439,10 +500,18 @@ const localStyles = StyleSheet.create({
   scrollContainer: {
     alignSelf: 'center',
     marginTop: 10,
-    width: 225 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    width:
+      (225 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   image: {
-    width: 200 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width:
+      (200 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     aspectRatio: 1,
     borderRadius: 200
   },
@@ -460,17 +529,37 @@ const localStyles = StyleSheet.create({
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     padding: 15,
     color: '#445f73',
     textAlign: 'center'
   },
   imageContainer: {
     alignSelf: 'center',
-    height: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    width: 100 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    borderRadius: 200 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (100 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    width:
+      (100 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    borderRadius:
+      (200 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderColor: '#445f73',
-    borderWidth: 2 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderWidth:
+      (2 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   }
 });

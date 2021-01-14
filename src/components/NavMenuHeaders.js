@@ -85,7 +85,7 @@ class NavMenuHeaders extends React.Component {
                   : fullHeight * 0.08,
               width: onTablet ? 0.14 * fullWidth : 0.3 * fullWidth,
               flexDirection: 'row',
-              marginRight: 5 * factorHorizontal,
+              marginRight: 5 * factorHorizontal
             }}
           >
             <Pianote fill={'#fb1b2f'} />
@@ -204,7 +204,7 @@ class NavMenuHeaders extends React.Component {
           isVisible={this.state.showModalMenu}
           style={{
             margin: 0,
-            flex: 1,
+            flex: 1
           }}
           animation={'slideInUp'}
           animationInTiming={250}

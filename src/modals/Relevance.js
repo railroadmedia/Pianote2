@@ -2,7 +2,13 @@
  * Relevance
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -30,7 +36,9 @@ class Relevance extends React.Component {
           <View
             style={{
               width: '100%',
-              backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
+              backgroundColor: this.props.isMethod
+                ? 'black'
+                : colors.mainBackground
             }}
           >
             <TouchableOpacity
@@ -43,13 +51,24 @@ class Relevance extends React.Component {
                 <EntypoIcon
                   name={'check'}
                   size={20 * factorRatio}
-                  color={this.state.currentSort == 'newest' ? 'white' : this.state.background}
+                  color={
+                    this.state.currentSort == 'newest'
+                      ? 'white'
+                      : this.state.background
+                  }
                 />
               </View>
               <View style={styles.centerContent}>
-                <Text style={[localStyles.word, {
-                    color: this.state.currentSort == 'newest' ? 'white' : this.state.background
-                  }]}
+                <Text
+                  style={[
+                    localStyles.word,
+                    {
+                      color:
+                        this.state.currentSort == 'newest'
+                          ? 'white'
+                          : this.state.background
+                    }
+                  ]}
                 >
                   Newest First
                 </Text>
@@ -57,20 +76,32 @@ class Relevance extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={localStyles.button}
-              onPress={() => {this.props.hideRelevance(), this.props.changeSort('oldest')}}
+              onPress={() => {
+                this.props.hideRelevance(), this.props.changeSort('oldest');
+              }}
             >
               <View style={styles.centerContent}>
                 <EntypoIcon
                   name={'check'}
                   size={20 * factorRatio}
-                  color={this.state.currentSort == 'oldest' ? 'white' : this.state.background}
+                  color={
+                    this.state.currentSort == 'oldest'
+                      ? 'white'
+                      : this.state.background
+                  }
                 />
               </View>
               <View style={styles.centerContent}>
                 <Text
-                  style={[localStyles.word, {
-                    color: this.state.currentSort == 'oldest' ? 'white' : this.state.background
-                  }]}
+                  style={[
+                    localStyles.word,
+                    {
+                      color:
+                        this.state.currentSort == 'oldest'
+                          ? 'white'
+                          : this.state.background
+                    }
+                  ]}
                 >
                   Oldest First
                 </Text>
@@ -81,7 +112,11 @@ class Relevance extends React.Component {
               onPress={() => this.props.hideRelevance()}
             >
               <View style={styles.centerContent}>
-                <EntypoIcon name={'cross'} size={25 * factorRatio} color={'white'} />
+                <EntypoIcon
+                  name={'cross'}
+                  size={25 * factorRatio}
+                  color={'white'}
+                />
               </View>
               <View style={styles.centerContent}>
                 <Text style={localStyles.cancel}>Cancel</Text>
@@ -97,24 +132,38 @@ class Relevance extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    minHeight: Dimensions.get('window').height * 0.25 + (DeviceInfo.isTablet() ? Dimensions.get('window').height * 0.1 : 0),
-    flexDirection: 'row',
+    minHeight:
+      Dimensions.get('window').height * 0.25 +
+      (DeviceInfo.isTablet() ? Dimensions.get('window').height * 0.1 : 0),
+    flexDirection: 'row'
   },
   word: {
-    marginLeft: 15 * Dimensions.get('window').width / 375,
-    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    fontFamily: 'OpenSans-Regular',
+    marginLeft: (15 * Dimensions.get('window').width) / 375,
+    fontSize:
+      (16 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontFamily: 'OpenSans-Regular'
   },
   button: {
     flex: 0.4,
     paddingLeft: Dimensions.get('window').width * 0.05,
     flexDirection: 'row',
     borderBottomColor: '#445f73',
-    borderBottomWidth: 0.25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderBottomWidth:
+      (0.25 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   cancel: {
-    marginLeft: 10 * Dimensions.get('window').width / 375,
-    fontSize: 16 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginLeft: (10 * Dimensions.get('window').width) / 375,
+    fontSize:
+      (16 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   }

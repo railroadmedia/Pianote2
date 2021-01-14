@@ -328,14 +328,14 @@ export default class Search extends React.Component {
   render() {
     return (
       <SafeAreaView
-        forceInset={{bottom: 'never'}}
+        forceInset={{ bottom: 'never' }}
         style={styles.packsContainer}
       >
         <StatusBar
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}
         />
-        <View style={[styles.child, {flex: 1}]}>
+        <View style={[styles.child, { flex: 1 }]}>
           <Text style={styles.childHeaderText}>Search</Text>
         </View>
         <ScrollView
@@ -359,7 +359,7 @@ export default class Search extends React.Component {
                 />
               </View>
               <TextInput
-                ref={searchTerm => this.searchTerm = searchTerm}
+                ref={searchTerm => (this.searchTerm = searchTerm)}
                 placeholder={'Type your search...'}
                 placeholderTextColor={'grey'}
                 onChangeText={searchTerm => this.setState({ searchTerm })}
@@ -417,7 +417,7 @@ export default class Search extends React.Component {
                   paddingLeft: 15 * factorRatio,
                   fontFamily: 'OpenSans-Bold',
                   fontSize: 18 * factorRatio,
-                  color: colors.secondBackground,
+                  color: colors.secondBackground
                 }}
               >
                 RECENT
@@ -440,7 +440,7 @@ export default class Search extends React.Component {
                     fontSize: 14 * factorRatio,
                     color: colors.pianoteRed,
                     textAlign: 'right',
-                    fontFamily: 'OpenSans-Regular',
+                    fontFamily: 'OpenSans-Regular'
                   }}
                 >
                   Clear
@@ -456,7 +456,7 @@ export default class Search extends React.Component {
             {this.state.searchEntered &&
               !this.state.noResults &&
               !this.state.isLoadingAll && (
-                <View style={{marginBottom: 10 * factorVertical}}>
+                <View style={{ marginBottom: 10 * factorVertical }}>
                   <VerticalVideoList
                     items={this.state.searchResults}
                     isLoading={this.state.isLoadingAll}

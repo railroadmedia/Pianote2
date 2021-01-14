@@ -262,7 +262,7 @@ class MyList extends React.Component {
           </TouchableOpacity>
           <VerticalVideoList
             title={'ADDED TO MY LIST'}
-            type={'MYLIST'} 
+            type={'MYLIST'}
             items={this.state.allLessons}
             isLoading={this.state.isLoadingAll}
             isPaging={this.state.isPaging}

@@ -2,7 +2,13 @@
  * Taskbar for navigation
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -60,10 +66,14 @@ class NextVideo extends React.Component {
               YOUR NEXT LESSON
             </Text>
             <Text
-              style={[localStyles.typeText, {
-                color: this.props.isMethod ? 
-                  colors.pianoteGrey : colors.secondBackground,
-              }]}
+              style={[
+                localStyles.typeText,
+                {
+                  color: this.props.isMethod
+                    ? colors.pianoteGrey
+                    : colors.secondBackground
+                }
+              ]}
             >
               {this.props.type} - {this.props.progress}% COMPLETE
             </Text>
@@ -86,15 +96,19 @@ class NextVideo extends React.Component {
               />
             </View>
             <View style={localStyles.titleTextContainer}>
-              <Text style={localStyles.videoTitle}>{this.props.item.getField('title')}</Text>
+              <Text style={localStyles.videoTitle}>
+                {this.props.item.getField('title')}
+              </Text>
               <Text
                 numberOfLines={2}
                 style={[
-                  localStyles.videoTitleText , {
-                  color: this.props.isMethod
-                    ? colors.pianoteGrey
-                    : colors.secondBackground
-                }]}
+                  localStyles.videoTitleText,
+                  {
+                    color: this.props.isMethod
+                      ? colors.pianoteGrey
+                      : colors.secondBackground
+                  }
+                ]}
               >
                 {this.props.item.post.fields?.find(f => f.key === 'video')
                   ? Math.round(
@@ -127,20 +141,25 @@ class NextVideo extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    flexDirection: 'row', 
-    height: 3 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    flexDirection: 'row',
+    height:
+      (3 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   nextLesson: {
-    marginTop: 10 * Dimensions.get('window').height / 812,
+    marginTop: (10 * Dimensions.get('window').height) / 812,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 15
   },
   typeText: {
-    fontSize: 12 * (
-      Dimensions.get('window').height / 812 + 
-      Dimensions.get('window').width / 375
-    ) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
     textAlign: 'right'
   },
@@ -151,16 +170,18 @@ const localStyles = StyleSheet.create({
   image: {
     width: Dimensions.get('window').width * 0.24,
     aspectRatio: 16 / 9,
-    borderRadius: 7 * (
-      Dimensions.get('window').height / 812 + 
-      Dimensions.get('window').width / 375
-    ) / 2
+    borderRadius:
+      (7 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   videoTitle: {
-    fontSize: 15 * (
-      Dimensions.get('window').height / 812 + 
-      Dimensions.get('window').width / 375
-    ) / 2,
+    fontSize:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     marginBottom: 2,
     textAlign: 'left',
     fontWeight: 'bold',
@@ -172,12 +193,13 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   videoTitleText: {
-    fontSize: 12 * (
-      Dimensions.get('window').height / 812 + 
-      Dimensions.get('window').width / 375
-    ) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
-    textAlign: 'left',
+    textAlign: 'left'
   },
   titleTextContainer: {
     paddingLeft: 15,

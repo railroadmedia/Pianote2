@@ -2,7 +2,13 @@
  * GetRestarted
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 export default class GetRestarted extends React.Component {
@@ -49,7 +55,9 @@ export default class GetRestarted extends React.Component {
               alignSelf: 'stretch'
             }}
           >
-            <Text style={localStyles.pianoteText}>Welcome to the Pianote app!</Text>
+            <Text style={localStyles.pianoteText}>
+              Welcome to the Pianote app!
+            </Text>
             <Text style={localStyles.description}>
               We're so glad you decided to give us{'\n'}another chance. Pick up
               where you{'\n'}left off or you can start exploring!
@@ -74,16 +82,28 @@ export default class GetRestarted extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    margin: 20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    margin:
+      (20 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     height: 200,
     width: '80%'
   },
   pianoteText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center',
-    marginBottom: 20 * Dimensions.get('window').height / 812
+    marginBottom: (20 * Dimensions.get('window').height) / 812
   },
   outerContainer: {
     position: 'absolute',
@@ -97,38 +117,62 @@ const localStyles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     flexDirection: 'row',
     zIndex: 5
   },
   image: {
     height: '100%',
     width: '100%',
-    borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   description: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center',
-    marginBottom: 155 * Dimensions.get('window').height / 812
+    marginBottom: (155 * Dimensions.get('window').height) / 812
   },
   skip: {
     width: Dimensions.get('window').width,
     height: '13.5%',
     alignItems: 'center',
     flexDirection: 'row',
-    borderRadius: 30 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    borderRadius:
+      (30 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   getStartedContainer: {
     width: '85%',
     height: '100%',
-    borderRadius: 30 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderRadius:
+      (30 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     backgroundColor: '#fb1b2f',
     zIndex: 5
   },
   getStarted: {
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    fontSize:
+      (18 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     color: 'white'
   }
 });

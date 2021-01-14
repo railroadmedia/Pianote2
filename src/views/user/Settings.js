@@ -11,7 +11,7 @@ import {
   Alert,
   StatusBar,
   StyleSheet,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
@@ -172,7 +172,10 @@ export default class Settings extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBar backgroundColor={colors.mainBackground} barStyle={'light-content'} />
+        <StatusBar
+          backgroundColor={colors.mainBackground}
+          barStyle={'light-content'}
+        />
         <View style={localStyles.header}>
           <TouchableOpacity
             style={{ flex: 1 }}
@@ -180,10 +183,18 @@ export default class Settings extends React.Component {
               this.props.navigation.goBack();
             }}
           >
-            <EntypoIcon name={'chevron-thin-left'} size={22.5 * factorRatio} color={colors.secondBackground} />
+            <EntypoIcon
+              name={'chevron-thin-left'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
           </TouchableOpacity>
 
-          <Text style={[styles.childHeaderText, {color: colors.secondBackground}]}>Settings</Text>
+          <Text
+            style={[styles.childHeaderText, { color: colors.secondBackground }]}
+          >
+            Settings
+          </Text>
           <View style={{ flex: 1 }} />
         </View>
 
@@ -194,12 +205,22 @@ export default class Settings extends React.Component {
               this.props.navigation.navigate('PROFILESETTINGS');
             }}
           >
-            <View style={[styles.centerContent, { width: 60 * factorHorizontal }]}>
-              <FeatherIcon name={'user'} size={25 * factorRatio} color={colors.pianoteRed} />
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <FeatherIcon
+                name={'user'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
             </View>
             <Text style={styles.settingsText}>Profile Settings</Text>
             <View style={{ flex: 1 }} />
-            <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             key={'notificationSettings'}
@@ -232,11 +253,19 @@ export default class Settings extends React.Component {
             <View
               style={[styles.centerContent, { width: 60 * factorHorizontal }]}
             >
-              <AntIcon name={'folder1'} size={25 * factorRatio} color={colors.pianoteRed} />
+              <AntIcon
+                name={'folder1'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
             </View>
             <Text style={styles.settingsText}>Manage Subscriptions</Text>
             <View style={{ flex: 1 }} />
-            <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -244,12 +273,22 @@ export default class Settings extends React.Component {
             onPress={this.restorePurchase}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View style={[styles.centerContent, { width: 60 * factorHorizontal }]}>
-              <AntIcon name={'folder1'} size={25 * factorRatio} color={colors.pianoteRed} />
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
+              <AntIcon
+                name={'folder1'}
+                size={25 * factorRatio}
+                color={colors.pianoteRed}
+              />
             </View>
             <Text style={styles.settingsText}>Restore Purchases</Text>
             <View style={{ flex: 1 }} />
-            <AntIcon name={'right'} size={22.5 * factorRatio} color={colors.secondBackground} />
+            <AntIcon
+              name={'right'}
+              size={22.5 * factorRatio}
+              color={colors.secondBackground}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.centerContent, localStyles.container]}
@@ -289,9 +328,7 @@ export default class Settings extends React.Component {
                 color={colors.pianoteRed}
               />
             </View>
-            <Text style={styles.settingsText}>
-              Terms of Use
-            </Text>
+            <Text style={styles.settingsText}>Terms of Use</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
@@ -328,7 +365,9 @@ export default class Settings extends React.Component {
               this.setState({ showLogOut: true });
             }}
           >
-            <View style={[styles.centerContent, { width: 60 * factorHorizontal }]}>
+            <View
+              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+            >
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
@@ -360,7 +399,7 @@ export default class Settings extends React.Component {
             styles.centerContent,
             {
               margin: 0,
-              flex: 1, 
+              flex: 1
             }
           ]}
           animation={'slideInUp'}
@@ -421,10 +460,18 @@ export default class Settings extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (50 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     width: '100%',
     borderBottomColor: '#445f73',
-    borderBottomWidth: 1 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderBottomWidth:
+      (1 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     flexDirection: 'row',
     paddingRight: 15
   },
@@ -435,25 +482,53 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   profileSettingsContainer: {
-    height: 50 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height:
+      (50 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     width: '100%',
     borderBottomColor: '#445f73',
-    borderBottomWidth: 1 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    borderTopWidth: 0.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    borderBottomWidth:
+      (1 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    borderTopWidth:
+      (0.5 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     borderTopColor: '#445f73',
     flexDirection: 'row',
     paddingRight: 15
   },
   appText: {
-    marginTop: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginTop:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     textAlign: 'center',
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   buildText: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     color: '#445f73',
-    marginTop: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
-    fontSize: 12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    marginTop:
+      (15 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   }
 });
