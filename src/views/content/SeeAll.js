@@ -277,7 +277,6 @@ export default class SeeAll extends React.Component {
               color={'white'}
             />
           </TouchableOpacity>
-
           <Text style={styles.childHeaderText}>{this.state.parent}</Text>
           <View style={{ flex: 1 }} />
         </View>
@@ -348,8 +347,8 @@ export default class SeeAll extends React.Component {
               }
             ]}
             animation={'slideInUp'}
-            animationInTiming={10}
-            animationOutTiming={10}
+            animationInTiming={1}
+            animationOutTiming={1}
             coverScreen={true}
             hasBackdrop={true}
           >

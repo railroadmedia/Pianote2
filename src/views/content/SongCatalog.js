@@ -357,8 +357,8 @@ class SongCatalog extends React.Component {
               }
             ]}
             animation={'slideInUp'}
-            animationInTiming={10}
-            animationOutTiming={10}
+            animationInTiming={1}
+            animationOutTiming={1}
             coverScreen={true}
             hasBackdrop={true}
           >

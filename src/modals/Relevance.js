@@ -12,7 +12,8 @@ class Relevance extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentSort: this.props.currentSort // 'newest', ‘oldest’, NOT YET: ‘popularity’, ‘trending’ and ‘relevance’
+      currentSort: this.props.currentSort, // 'newest', ‘oldest’, NOT YET: ‘popularity’, ‘trending’ and ‘relevance’
+      background: this.props.isMethod ? '#4C5253' : '#445f73'
     };
   }
 
@@ -29,7 +30,7 @@ class Relevance extends React.Component {
           <View
             style={{
               width: '100%',
-              backgroundColor: colors.mainBackground
+              backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
             }}
           >
             <TouchableOpacity
@@ -42,12 +43,12 @@ class Relevance extends React.Component {
                 <EntypoIcon
                   name={'check'}
                   size={20 * factorRatio}
-                  color={this.state.currentSort == 'newest' ? 'white' : colors.mainBackground}
+                  color={this.state.currentSort == 'newest' ? 'white' : this.state.background}
                 />
               </View>
               <View style={styles.centerContent}>
                 <Text style={[localStyles.word, {
-                    color: this.state.currentSort == 'newest' ? 'white' : colors.secondBackground
+                    color: this.state.currentSort == 'newest' ? 'white' : this.state.background
                   }]}
                 >
                   Newest First
@@ -62,13 +63,13 @@ class Relevance extends React.Component {
                 <EntypoIcon
                   name={'check'}
                   size={20 * factorRatio}
-                  color={this.state.currentSort == 'oldest' ? 'white' : colors.mainBackground}
+                  color={this.state.currentSort == 'oldest' ? 'white' : this.state.background}
                 />
               </View>
               <View style={styles.centerContent}>
                 <Text
                   style={[localStyles.word, {
-                    color: this.state.currentSort == 'oldest' ? 'white' : colors.secondBackground
+                    color: this.state.currentSort == 'oldest' ? 'white' : this.state.background
                   }]}
                 >
                   Oldest First
