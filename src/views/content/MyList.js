@@ -224,7 +224,7 @@ class MyList extends React.Component {
             style={[
               styles.tabRightContainer,
               {
-                marginTop: 15 * factorVertical
+                marginTop: 20 * factorVertical
               }
             ]}
             onPress={() => {
