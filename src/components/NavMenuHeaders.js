@@ -15,6 +15,7 @@ import {
   withNavigation,
   NavigationActions
 } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -38,7 +39,7 @@ class NavMenuHeaders extends React.Component {
         style={{
           flexDirection: 'row',
           backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground,
-          marginTop: 5,
+          marginTop: DeviceInfo.hasNotch() ? 0 : 5,
         }}
         forceInset={{ top: 'always' }}
       >
