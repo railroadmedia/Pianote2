@@ -443,8 +443,8 @@ class Lessons extends React.Component {
                 <View style={{ flex: 0.9 }} />
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <Pianote
-                    height={fullHeight * 0.03 * factorRatio}
-                    width={fullWidth * 0.35 * factorRatio}
+                    height={fullHeight * 0.04 * factorRatio}
+                    width={fullWidth * 0.33 * factorRatio}
                     fill={colors.pianoteRed}
                   />
                 </View>

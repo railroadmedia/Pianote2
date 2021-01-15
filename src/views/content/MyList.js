@@ -224,6 +224,7 @@ class MyList extends React.Component {
             style={[
               styles.tabRightContainer,
               {
+                borderBottomWidth: 0,
                 marginTop: 20 * factorVertical
               }
             ]}
