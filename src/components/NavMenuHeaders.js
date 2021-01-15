@@ -37,7 +37,8 @@ class NavMenuHeaders extends React.Component {
       <SafeAreaView
         style={{
           flexDirection: 'row',
-          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground
+          backgroundColor: this.props.isMethod ? 'black' : colors.mainBackground,
+          marginTop: 5,
         }}
         forceInset={{ top: 'always' }}
       >

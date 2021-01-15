@@ -240,10 +240,7 @@ export default class Filters extends React.Component {
 
     return words;
   };
-  //<SafeAreaView style={{ flex:0, backgroundColor: 'red' }} />
-  //<SafeAreaView style={{ flex:1, backgroundColor: 'gray' }}>
-  //<View style={{ flex: 1, backgroundColor: 'white' }} />
-  //</SafeAreaView>
+
   render() {
     return (
       <View style={styles.mainContainer}>

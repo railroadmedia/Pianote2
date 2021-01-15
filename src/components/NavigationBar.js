@@ -5,7 +5,7 @@ import React from 'react';
 import FastImage from 'react-native-fast-image';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-
+import DeviceInfo from 'react-native-device-info';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -234,7 +234,8 @@ const localStyles = StyleSheet.create({
       (2.25 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
-      2
+      2,
+    marginBottom: DeviceInfo.hasNotch() ? 0 : 5,
   },
   navContainer: {
     alignSelf: 'stretch',
