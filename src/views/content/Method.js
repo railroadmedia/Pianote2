@@ -220,7 +220,7 @@ export default class Method extends React.Component {
 
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <View style={[styles.mainContainer, {backgroundColor: 'black'}]}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}

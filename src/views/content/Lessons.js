@@ -442,24 +442,22 @@ class Lessons extends React.Component {
               >
                 <View style={{ flex: 0.9 }} />
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                  <Pianote
-                    height={fullHeight * 0.04 * factorRatio}
-                    width={fullWidth * 0.33 * factorRatio}
-                    fill={colors.pianoteRed}
+                  <FastImage
+                    style={{
+                      width: fullWidth*0.75,
+                      height: 65 * factorRatio,
+                      alignSelf: 'center',
+                      marginBottom: 12.5 * factorRatio,
+                    }}
+                    source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
+                  {/* <Pianote */}
+                    {/* height={fullHeight * 0.04 * factorRatio} */}
+                    {/* width={fullWidth * 0.33 * factorRatio} */}
+                    {/* fill={colors.pianoteRed} */}
+                  {/* /> */}
                 </View>
-                <View style={{ height: 7.5 * factorVertical }} />
-                <FastImage
-                  style={{
-                    width: fullWidth,
-                    height: 40 * factorRatio,
-                    alignSelf: 'center'
-                  }}
-                  source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-                  resizeMode={FastImage.resizeMode.contain}
-                />
-                <View style={{ height: 22.5 * factorVertical }} />
-
                 <View
                   style={{
                     flex: onTablet ? 0.2 : 0.15,
