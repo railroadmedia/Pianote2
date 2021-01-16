@@ -273,26 +273,21 @@ export default class Method extends React.Component {
               }}
             >
               <View style={styles.centerContent}>
-                <Pianote
-                  height={fullHeight * 0.04 * factorRatio}
-                  width={fullWidth * 0.33 * factorRatio}
-                  fill={colors.pianoteRed}
-                />
+                  <FastImage
+                    style={{
+                      width: fullWidth*0.75,
+                      height: 65 * factorRatio,
+                      alignSelf: 'center',
+                      marginBottom: 12.5 * factorRatio,
+                    }}
+                    source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
+                    resizeMode={FastImage.resizeMode.contain}
+                  />
               </View>
-              <FastImage
-                style={{
-                  marginTop: 5 * factorVertical,
-                  height: greaterWDim / 20,
-                  width: '50%',
-                  alignSelf: 'center'
-                }}
-                source={require('Pianote2/src/assets/img/imgs/method-logo.png')}
-                resizeMode={FastImage.resizeMode.contain}
-              />
               <View
                 style={{
                   marginBottom: 10 * factorVertical,
-                  marginTop: 25 * factorRatio,
+                  marginTop: 0 * factorRatio,
                   height: 40 * factorRatio,
                   justifyContent: 'space-evenly',
                   flexDirection: 'row',
