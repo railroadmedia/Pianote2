@@ -89,237 +89,246 @@ export default class NotificationSettings extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.mainContainer}>
-        <StatusBar
-          backgroundColor={colors.thirdBackground}
-          barStyle={'light-content'}
-        />
-        <View style={localStyles.header}>
-          <TouchableOpacity
-            style={{ flex: 1 }}
-            onPress={() => {
-              this.state.currentlyView == 'Profile Settings'
-                ? this.props.navigation.goBack()
-                : this.setState({
-                    currentlyView: 'Profile Settings'
-                  });
-            }}
-          >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-          <Text style={[styles.childHeaderText, localStyles.title]}>
-            Notification Settings
-          </Text>
-          <View style={{ flex: 1 }} />
-        </View>
-        {this.state.isLoading && (
-          <View style={[styles.centerContent, { flex: 1 }]}>
-            <ActivityIndicator
-              size={onTablet ? 'large' : 'small'}
-              animating={true}
-              color={colors.secondBackground}
-            />
+      <View style={styles.container}>
+        <SafeAreaView style={{ flex: 0, backgroundColor: colors.thirdBackground }} />
+        <SafeAreaView style={styles.mainContainer}>
+          <StatusBar
+            backgroundColor={colors.thirdBackground}
+            barStyle={'light-content'}
+          />
+          <View style={localStyles.header}>
+            <TouchableOpacity
+              style={{ flex: 1 }}
+              onPress={() => {
+                this.state.currentlyView == 'Profile Settings'
+                  ? this.props.navigation.goBack()
+                  : this.setState({
+                      currentlyView: 'Profile Settings'
+                    });
+              }}
+            >
+              <EntypoIcon
+                name={'chevron-thin-left'}
+                size={22.5 * factorRatio}
+                color={colors.secondBackground}
+              />
+            </TouchableOpacity>
+            <Text style={[styles.childHeaderText, localStyles.title]}>
+              Notification Settings
+            </Text>
+            <View style={{ flex: 1 }} />
           </View>
-        )}
-        {!this.state.isLoading && (
-          <ScrollView style={{ flex: 1 }}>
-            <View style={localStyles.noteTypeContainer}>
-              <Text style={localStyles.noteTypeText}>Notification Types</Text>
-            </View>
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Weekly community updates</Text>
-              <CustomSwitch
-                isClicked={this.state.notify_weekly_update}
-                clicked={bool => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      weeklyCommunityUpdatesClicked: bool
-                    });
-                }}
+          {this.state.isLoading && (
+            <View style={[styles.centerContent, { flex: 1 }]}>
+              <ActivityIndicator
+                size={onTablet ? 'large' : 'small'}
+                animating={true}
+                color={colors.secondBackground}
               />
             </View>
+          )}
+          {!this.state.isLoading && (
+            <ScrollView style={{ flex: 1 }}>
+              <View style={localStyles.noteTypeContainer}>
+                <Text style={localStyles.noteTypeText}>Notification Types</Text>
+              </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Weekly community updates</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_weekly_update}
+                  clicked={bool => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        weeklyCommunityUpdatesClicked: bool
+                      });
+                  }}
+                />
+              </View>
 
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Comment replies</Text>
-              <CustomSwitch
-                isClicked={this.state.notify_on_lesson_comment_reply}
-                clicked={bool => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      notify_on_lesson_comment_reply: bool
-                    });
-                }}
-              />
-            </View>
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Comment likes</Text>
-              <CustomSwitch
-                isClicked={this.state.commentLikesClicked}
-                clicked={bool => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      notify_on_lesson_comment_like: bool
-                    });
-                }}
-              />
-            </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Comment replies</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_on_lesson_comment_reply}
+                  clicked={bool => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        notify_on_lesson_comment_reply: bool
+                      });
+                  }}
+                />
+              </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Comment likes</Text>
+                <CustomSwitch
+                  isClicked={this.state.commentLikesClicked}
+                  clicked={bool => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        notify_on_lesson_comment_like: bool
+                      });
+                  }}
+                />
+              </View>
 
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Forum post replies</Text>
-              <CustomSwitch
-                isClicked={this.state.notify_on_forum_post_reply}
-                clicked={() => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      notify_on_forum_post_reply: bool
-                    });
-                }}
-              />
-            </View>
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Forum post likes</Text>
-              <CustomSwitch
-                isClicked={this.state.notify_on_forum_post_like}
-                clicked={bool => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      notify_on_forum_post_like: bool
-                    });
-                }}
-              />
-            </View>
-            <View style={localStyles.border} />
-            <View style={localStyles.emailNotificationFrequency}>
-              <Text style={[localStyles.text, { paddingVertical: 10 }]}>
-                Email Notification Frequency
-              </Text>
-            </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Forum post replies</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_on_forum_post_reply}
+                  clicked={() => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        notify_on_forum_post_reply: bool
+                      });
+                  }}
+                />
+              </View>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Forum post likes</Text>
+                <CustomSwitch
+                  isClicked={this.state.notify_on_forum_post_like}
+                  clicked={bool => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        notify_on_forum_post_like: bool
+                      });
+                  }}
+                />
+              </View>
+              <View style={localStyles.border} />
+              <View style={localStyles.emailNotificationFrequency}>
+                <Text style={[localStyles.text, { paddingVertical: 10 }]}>
+                  Email Notification Frequency
+                </Text>
+              </View>
 
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Immediate</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      notifications_summary_frequency_minutes: 1
-                    });
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    backgroundColor:
-                      this.state.notifications_summary_frequency_minutes == 1
-                        ? '#fb1b2f'
-                        : colors.secondBackground,
-                    borderRadius: 100
-                  }
-                ]}
-              >
-                {this.state.notifications_summary_frequency_minutes == 1 && (
-                  <FontIcon
-                    name={'check'}
-                    size={20 * factorRatio}
-                    color={'white'}
-                  />
-                )}
-                {this.state.notifications_summary_frequency_minutes !== 1 && (
-                  <EntypoIcon
-                    name={'cross'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Once per day</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      notifications_summary_frequency_minutes: 1440
-                    });
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    backgroundColor:
-                      this.state.notifications_summary_frequency_minutes == 1
-                        ? '#fb1b2f'
-                        : colors.secondBackground,
-                    borderRadius: 100
-                  }
-                ]}
-              >
-                {this.state.notifications_summary_frequency_minutes == 1440 && (
-                  <FontIcon
-                    name={'check'}
-                    size={20 * factorRatio}
-                    color={'white'}
-                  />
-                )}
-                {this.state.notifications_summary_frequency_minutes !==
-                  1440 && (
-                  <EntypoIcon
-                    name={'cross'}
-                    size={22.5 * factorRatio}
-                    color={'white'}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <View style={localStyles.textContainer}>
-              <Text style={localStyles.text}>Never</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  this.changeNotificationStatus(),
-                    this.setState({
-                      notifications_summary_frequency_minutes: 0
-                    });
-                }}
-                style={[
-                  styles.centerContent,
-                  {
-                    backgroundColor:
-                      this.state.notifications_summary_frequency_minutes == 0 ||
-                      this.state.notifications_summary_frequency_minutes == null
-                        ? '#fb1b2f'
-                        : colors.secondBackground,
-                    borderRadius: 100
-                  }
-                ]}
-              >
-                {(this.state.notifications_summary_frequency_minutes == 0 ||
-                  this.state.notifications_summary_frequency_minutes ==
-                    null) && (
-                  <FontIcon
-                    name={'check'}
-                    size={20 * factorRatio}
-                    color={'white'}
-                  />
-                )}
-                {this.state.notifications_summary_frequency_minutes !== 0 &&
-                  this.state.notifications_summary_frequency_minutes !==
-                    null && (
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Immediate</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        notifications_summary_frequency_minutes: 1
+                      });
+                  }}
+                  style={[
+                    styles.centerContent,
+                    {
+                      backgroundColor:
+                        this.state.notifications_summary_frequency_minutes == 1
+                          ? '#fb1b2f'
+                          : colors.secondBackground,
+                      borderRadius: 100,
+                      width: 27.5 * factorRatio,
+                      height: 27.5 * factorRatio
+                    }
+                  ]}
+                >
+                  {this.state.notifications_summary_frequency_minutes == 1 && (
+                    <FontIcon
+                      name={'check'}
+                      size={20 * factorRatio}
+                      color={'white'}
+                    />
+                  )}
+                  {this.state.notifications_summary_frequency_minutes !== 1 && (
                     <EntypoIcon
                       name={'cross'}
                       size={22.5 * factorRatio}
                       color={'white'}
                     />
                   )}
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        )}
+                </TouchableOpacity>
+              </View>
 
-        <NavigationBar currentPage={'PROFILE'} pad={true} />
-      </SafeAreaView>
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Once per day</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        notifications_summary_frequency_minutes: 1440
+                      });
+                  }}
+                  style={[
+                    styles.centerContent,
+                    {
+                      backgroundColor:
+                        this.state.notifications_summary_frequency_minutes == 1
+                          ? '#fb1b2f'
+                          : colors.secondBackground,
+                      borderRadius: 100,
+                      width: 27.5 * factorRatio,
+                      height: 27.5 * factorRatio
+                    }
+                  ]}
+                >
+                  {this.state.notifications_summary_frequency_minutes == 1440 && (
+                    <FontIcon
+                      name={'check'}
+                      size={20 * factorRatio}
+                      color={'white'}
+                    />
+                  )}
+                  {this.state.notifications_summary_frequency_minutes !==
+                    1440 && (
+                    <EntypoIcon
+                      name={'cross'}
+                      size={22.5 * factorRatio}
+                      color={'white'}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+
+              <View style={localStyles.textContainer}>
+                <Text style={localStyles.text}>Never</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.changeNotificationStatus(),
+                      this.setState({
+                        notifications_summary_frequency_minutes: 0
+                      });
+                  }}
+                  style={[
+                    styles.centerContent,
+                    {
+                      backgroundColor:
+                        this.state.notifications_summary_frequency_minutes == 0 ||
+                        this.state.notifications_summary_frequency_minutes == null
+                          ? '#fb1b2f'
+                          : colors.secondBackground,
+                      borderRadius: 100,
+                      width: 27.5 * factorRatio,
+                      height: 27.5 * factorRatio
+                    }
+                  ]}
+                >
+                  {(this.state.notifications_summary_frequency_minutes == 0 ||
+                    this.state.notifications_summary_frequency_minutes ==
+                      null) && (
+                    <FontIcon
+                      name={'check'}
+                      size={20 * factorRatio}
+                      color={'white'}
+                    />
+                  )}
+                  {this.state.notifications_summary_frequency_minutes !== 0 &&
+                    this.state.notifications_summary_frequency_minutes !==
+                      null && (
+                      <EntypoIcon
+                        name={'cross'}
+                        size={22.5 * factorRatio}
+                        color={'white'}
+                      />
+                    )}
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          )}
+
+          <NavigationBar currentPage={'PROFILE'} pad={true} />
+        </SafeAreaView>
+      </View>
     );
   }
 }

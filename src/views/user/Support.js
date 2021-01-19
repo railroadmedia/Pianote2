@@ -72,194 +72,197 @@ export default class Support extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.mainContainer}>
-        <StatusBar
-          backgroundColor={colors.thirdBackground}
-          barStyle={'light-content'}
-        />
-        <View
-          key={'header'}
-          style={{
-            backgroundColor: colors.thirdBackground,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 15
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => this.props.navigation.goBack()}
-            style={{ flex: 1 }}
-          >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
-            />
-          </TouchableOpacity>
-
-          <Text
-            style={[
-              styles.childHeaderText,
-              {
-                color: colors.secondBackground,
-                textAlign: 'center'
-              }
-            ]}
-          >
-            Support
-          </Text>
-          <View style={{ flex: 1 }} />
-        </View>
-        <ScrollView
-          key={'contentContainer'}
-          style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
+      <View style={styles.container}>
+        <SafeAreaView style={{ flex: 0, backgroundColor: colors.thirdBackground }} />
+        <SafeAreaView style={styles.mainContainer}>
+          <StatusBar
+            backgroundColor={colors.thirdBackground}
+            barStyle={'light-content'}
+          />
           <View
+            key={'header'}
             style={{
-              flex: 1,
-              justifyContent: 'center'
+              backgroundColor: colors.thirdBackground,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: 15
             }}
           >
             <TouchableOpacity
-              onPress={() => this.onIntercomPress()}
-              style={[
-                styles.centerContent,
-                {
-                  borderRadius: 200,
-                  backgroundColor: '#fb1b2f',
-                  marginHorizontal: '7%',
-                  marginBottom: 10 * factorVertical
-                }
-              ]}
+              onPress={() => this.props.navigation.goBack()}
+              style={{ flex: 1 }}
             >
-              <Text
-                style={{
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factorRatio,
-                  color: 'white',
-                  paddingVertical: 15
-                }}
-              >
-                LIVE CHAT SUPPORT
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => Linking.openURL('mailto:support@musora.com')}
-              style={[
-                styles.centerContent,
-                {
-                  borderRadius: 200,
-                  backgroundColor: '#fb1b2f',
-                  marginHorizontal: '7%',
-                  marginBottom: 10 * factorVertical
-                }
-              ]}
-            >
-              <Text
-                style={{
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factorRatio,
-                  color: 'white',
-                  paddingVertical: 15
-                }}
-              >
-                EMAIL SUPPORT
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
-              style={[
-                styles.centerContent,
-                {
-                  borderRadius: 200,
-                  backgroundColor: '#fb1b2f',
-                  marginHorizontal: '7%',
-                  marginBottom: 10 * factorVertical
-                }
-              ]}
-            >
-              <Text
-                style={{
-                  fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factorRatio,
-                  color: 'white',
-                  paddingVertical: 15
-                }}
-              >
-                PHONE SUPPORT
-              </Text>
+              <EntypoIcon
+                name={'chevron-thin-left'}
+                size={22.5 * factorRatio}
+                color={colors.secondBackground}
+              />
             </TouchableOpacity>
 
             <Text
-              key={'email'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factorRatio,
-                opacity: 0.8,
-                color: colors.secondBackground,
-                textAlign: 'center',
-                marginBottom: 5 * factorRatio
-              }}
+              style={[
+                styles.childHeaderText,
+                {
+                  color: colors.secondBackground,
+                  textAlign: 'center'
+                }
+              ]}
             >
-              EMAIL
+              Support
             </Text>
-
-            <Text
-              key={'emailaddress'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factorRatio,
-                textAlign: 'center',
-                color: 'white',
-                marginBottom: 20 * factorRatio
-              }}
-            >
-              support@musora.com
-            </Text>
-            <Text
-              key={'phone'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 14 * factorRatio,
-                opacity: 0.8,
-                color: colors.secondBackground,
-                textAlign: 'center',
-                marginBottom: 5 * factorRatio
-              }}
-            >
-              PHONE
-            </Text>
-            <Text
-              key={'phoneNumber'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factorRatio,
-                textAlign: 'center',
-                color: 'white',
-                marginBottom: 5 * factorRatio
-              }}
-            >
-              1-800-439-8921
-            </Text>
-            <Text
-              key={'phoneNumber2'}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                fontSize: 13.5 * factorRatio,
-                textAlign: 'center',
-                color: 'white'
-              }}
-            >
-              1-604-921-6721
-            </Text>
+            <View style={{ flex: 1 }} />
           </View>
-        </ScrollView>
-        <NavigationBar currentPage={'PROFILE'} pad={true} />
-      </SafeAreaView>
+          <ScrollView
+            key={'contentContainer'}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center'
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => this.onIntercomPress()}
+                style={[
+                  styles.centerContent,
+                  {
+                    borderRadius: 200,
+                    backgroundColor: '#fb1b2f',
+                    marginHorizontal: '7%',
+                    marginBottom: 10 * factorVertical
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: 18 * factorRatio,
+                    color: 'white',
+                    paddingVertical: 15
+                  }}
+                >
+                  LIVE CHAT SUPPORT
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => Linking.openURL('mailto:support@musora.com')}
+                style={[
+                  styles.centerContent,
+                  {
+                    borderRadius: 200,
+                    backgroundColor: '#fb1b2f',
+                    marginHorizontal: '7%',
+                    marginBottom: 10 * factorVertical
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: 18 * factorRatio,
+                    color: 'white',
+                    paddingVertical: 15
+                  }}
+                >
+                  EMAIL SUPPORT
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
+                style={[
+                  styles.centerContent,
+                  {
+                    borderRadius: 200,
+                    backgroundColor: '#fb1b2f',
+                    marginHorizontal: '7%',
+                    marginBottom: 10 * factorVertical
+                  }
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: 18 * factorRatio,
+                    color: 'white',
+                    paddingVertical: 15
+                  }}
+                >
+                  PHONE SUPPORT
+                </Text>
+              </TouchableOpacity>
+
+              <Text
+                key={'email'}
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 14 * factorRatio,
+                  opacity: 0.8,
+                  color: colors.secondBackground,
+                  textAlign: 'center',
+                  marginBottom: 5 * factorRatio
+                }}
+              >
+                EMAIL
+              </Text>
+
+              <Text
+                key={'emailaddress'}
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 13.5 * factorRatio,
+                  textAlign: 'center',
+                  color: 'white',
+                  marginBottom: 20 * factorRatio
+                }}
+              >
+                support@musora.com
+              </Text>
+              <Text
+                key={'phone'}
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 14 * factorRatio,
+                  opacity: 0.8,
+                  color: colors.secondBackground,
+                  textAlign: 'center',
+                  marginBottom: 5 * factorRatio
+                }}
+              >
+                PHONE
+              </Text>
+              <Text
+                key={'phoneNumber'}
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 13.5 * factorRatio,
+                  textAlign: 'center',
+                  color: 'white',
+                  marginBottom: 5 * factorRatio
+                }}
+              >
+                1-800-439-8921
+              </Text>
+              <Text
+                key={'phoneNumber2'}
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: 13.5 * factorRatio,
+                  textAlign: 'center',
+                  color: 'white'
+                }}
+              >
+                1-604-921-6721
+              </Text>
+            </View>
+          </ScrollView>
+          <NavigationBar currentPage={'PROFILE'} pad={true} />
+        </SafeAreaView>
+      </View>
     );
   }
 }

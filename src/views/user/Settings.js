@@ -437,7 +437,8 @@ export default class Settings extends React.Component {
             >
               <Text
                 style={{
-                  padding: 15,
+                  paddingVertical: 10*factorVertical,
+                  marginHorizontal: 75*factorHorizontal,
                   fontSize: 15,
                   color: '#ffffff',
                   textAlign: 'center',

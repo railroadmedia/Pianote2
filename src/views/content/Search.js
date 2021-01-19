@@ -86,7 +86,7 @@ export default class Search extends React.Component {
         <View
           key={id}
           style={{
-            borderBottomWidth: 1.25,
+            borderBottomWidth: 0,
             borderTopWidth: 1.25,
             borderBottomColor: colors.thirdBackground,
             borderTopColor: colors.thirdBackground
@@ -335,250 +335,251 @@ export default class Search extends React.Component {
           backgroundColor={colors.thirdBackground}
           barStyle={'light-content'}
         />
-        <View style={[styles.child, { flex: 1 }]}>
-          <Text style={styles.childHeaderText}>Search</Text>
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
-          contentInsetAdjustmentBehavior={'never'}
-          onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
-          style={styles.mainContainer}
-        >
-          <View style={styles.searchContainer}>
-            <View style={styles.searchBox}>
-              <View
-                style={[styles.centerContent, { width: 40 * factorHorizontal }]}
-              >
-                <EvilIcons
-                  name={'search'}
-                  size={27.5 * factorRatio}
-                  color={
-                    this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
-                  }
+        <View style={styles.packsContainer}>
+          <View style={[styles.childHeader, styles.centerContent]}>
+            <Text style={styles.childHeaderText}>Search</Text>
+          </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            contentInsetAdjustmentBehavior={'never'}
+            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            style={styles.mainContainer}
+          >
+            <View style={styles.searchContainer}>
+              <View style={styles.searchBox}>
+                <View
+                  style={[styles.centerContent, { width: 40 * factorHorizontal }]}
+                >
+                  <EvilIcons
+                    name={'search'}
+                    size={27.5 * factorRatio}
+                    color={
+                      this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
+                    }
+                  />
+                </View>
+                <TextInput
+                  ref={searchTerm => (this.searchTerm = searchTerm)}
+                  placeholder={'Type your search...'}
+                  placeholderTextColor={'grey'}
+                  onChangeText={searchTerm => this.setState({ searchTerm })}
+                  returnKeyType={'search'}
+                  style={styles.searchText}
+                  onSubmitEditing={() => {
+                    this.setState({
+                      showCancel: true,
+                      searchResults: []
+                    }),
+                      this.search(this.state.searchTerm);
+                  }}
                 />
               </View>
-              <TextInput
-                ref={searchTerm => (this.searchTerm = searchTerm)}
-                placeholder={'Type your search...'}
-                placeholderTextColor={'grey'}
-                onChangeText={searchTerm => this.setState({ searchTerm })}
-                returnKeyType={'search'}
-                style={styles.searchText}
-                onSubmitEditing={() => {
-                  this.setState({
-                    showCancel: true,
-                    searchResults: []
-                  }),
-                    this.search(this.state.searchTerm);
-                }}
-              />
+              <View
+                style={[
+                  styles.centerContent,
+                  {
+                    paddingRight:
+                      this.state.showCancel || this.state.searchTerm.length > 0
+                        ? 0
+                        : 15
+                  }
+                ]}
+              >
+                {(this.state.showCancel || this.state.searchTerm.length > 0) && (
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      paddingHorizontal: 5,
+                      justifyContent: 'center'
+                    }}
+                    onPress={() => {
+                      this.searchTerm.clear();
+                      this.setState({
+                        searchTerm: '',
+                        searchResults: [],
+                        searchEntered: false,
+                        showCancel: false,
+                        noResults: false,
+                        isLoadingAll: false
+                      });
+                    }}
+                  >
+                    <Text style={styles.cancelSearch}>CANCEL</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
-            <View
-              style={[
-                styles.centerContent,
-                {
-                  paddingRight:
-                    this.state.showCancel || this.state.searchTerm.length > 0
-                      ? 0
-                      : 15
-                }
-              ]}
-            >
-              {(this.state.showCancel || this.state.searchTerm.length > 0) && (
-                <TouchableOpacity
+            <View style={[styles.centerContent, styles.recentSearches]}>
+              {(!this.state.searchEntered ||
+                this.state.searchResults.length > 0) && (
+                <Text
                   style={{
-                    flex: 1,
-                    paddingHorizontal: 5,
-                    justifyContent: 'center'
-                  }}
-                  onPress={() => {
-                    this.searchTerm.clear();
-                    this.setState({
-                      searchTerm: '',
-                      searchResults: [],
-                      searchEntered: false,
-                      showCancel: false,
-                      noResults: false,
-                      isLoadingAll: false
-                    });
+                    paddingLeft: 15 * factorRatio,
+                    fontFamily: 'OpenSans-Bold',
+                    fontSize: 18 * factorRatio,
+                    color: colors.secondBackground
                   }}
                 >
-                  <Text style={styles.cancelSearch}>CANCEL</Text>
+                  RECENT
+                </Text>
+              )}
+              {(this.state.searchTerm.length > 0 ||
+                !this.state.searchEntered ||
+                this.state.searchResults.length > 0) && (
+                <TouchableOpacity
+                  onPress={() => this.clearRecent()}
+                  style={[
+                    styles.centerContent,
+                    {
+                      paddingRight: 15
+                    }
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14 * factorRatio,
+                      color: colors.pianoteRed,
+                      textAlign: 'right',
+                      fontFamily: 'OpenSans-Regular'
+                    }}
+                  >
+                    Clear
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
-          </View>
-          <View style={[styles.centerContent, styles.recentSearches]}>
-            {(!this.state.searchEntered ||
-              this.state.searchResults.length > 0) && (
-              <Text
-                style={{
-                  paddingLeft: 15 * factorRatio,
-                  fontFamily: 'OpenSans-Bold',
-                  fontSize: 18 * factorRatio,
-                  color: colors.secondBackground
-                }}
-              >
-                RECENT
-              </Text>
-            )}
-            {(this.state.searchTerm.length > 0 ||
-              !this.state.searchEntered ||
-              this.state.searchResults.length > 0) && (
-              <TouchableOpacity
-                onPress={() => this.clearRecent()}
-                style={[
-                  styles.centerContent,
-                  {
-                    paddingRight: 15
-                  }
-                ]}
-              >
-                <Text
-                  style={{
-                    fontSize: 14 * factorRatio,
-                    color: colors.pianoteRed,
-                    textAlign: 'right',
-                    fontFamily: 'OpenSans-Regular'
-                  }}
-                >
-                  Clear
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
 
-          <View style={{ flex: 1, marginBottom: fullHeight * 0.015 }}>
-            {!this.state.searchEntered &&
-              !this.state.isLoadingAll &&
-              !this.state.noResults && <View>{this.mapRecentResults()}</View>}
-            {this.state.searchEntered &&
-              !this.state.noResults &&
-              !this.state.isLoadingAll && (
-                <View style={{ marginBottom: 10 * factorVertical }}>
-                  <VerticalVideoList
-                    items={this.state.searchResults}
-                    isLoading={this.state.isLoadingAll}
-                    title={`${
-                      this.state.searchResults.length + ' '
-                    }SEARCH RESULTS`}
-                    showFilter={false}
-                    isPaging={this.state.isPaging}
-                    showType={true}
-                    showArtist={true}
-                    showSort={false}
-                    showLength={false}
-                    filters={this.state.filters}
-                    currentSort={this.state.currentSort}
-                    changeSort={sort => this.changeSort(sort)}
-                    filterResults={() => this.setState({ showFilters: true })}
-                    containerHeight={
-                      onTablet
-                        ? fullHeight * 0.15
-                        : Platform.OS == 'android'
-                        ? fullHeight * 0.115
-                        : fullHeight * 0.0925
-                    } // height per row
-                    imageHeight={
-                      onTablet
-                        ? fullHeight * 0.12
-                        : Platform.OS == 'android'
-                        ? fullHeight * 0.09
-                        : fullHeight * 0.0825
-                    } // image height
-                    imageWidth={fullWidth * 0.26} // image width
-                    outVideos={this.state.outVideos} // if paging and out of videos
+            <View style={{ flex: 1, marginBottom: fullHeight * 0.015 }}>
+              {!this.state.searchEntered &&
+                !this.state.isLoadingAll &&
+                !this.state.noResults && <View>{this.mapRecentResults()}</View>}
+              {this.state.searchEntered &&
+                !this.state.noResults &&
+                !this.state.isLoadingAll && (
+                  <View style={{ marginBottom: 10 * factorVertical }}>
+                    <VerticalVideoList
+                      items={this.state.searchResults}
+                      isLoading={this.state.isLoadingAll}
+                      title={`${
+                        this.state.searchResults.length + ' '
+                      }SEARCH RESULTS`}
+                      showFilter={false}
+                      isPaging={this.state.isPaging}
+                      showType={true}
+                      showArtist={true}
+                      showSort={false}
+                      showLength={false}
+                      filters={this.state.filters}
+                      currentSort={this.state.currentSort}
+                      changeSort={sort => this.changeSort(sort)}
+                      filterResults={() => this.setState({ showFilters: true })}
+                      containerHeight={
+                        onTablet
+                          ? fullHeight * 0.15
+                          : Platform.OS == 'android'
+                          ? fullHeight * 0.115
+                          : fullHeight * 0.0925
+                      } // height per row
+                      imageHeight={
+                        onTablet
+                          ? fullHeight * 0.12
+                          : Platform.OS == 'android'
+                          ? fullHeight * 0.09
+                          : fullHeight * 0.0825
+                      } // image height
+                      imageWidth={fullWidth * 0.26} // image width
+                      outVideos={this.state.outVideos} // if paging and out of videos
+                    />
+                  </View>
+                )}
+              {this.state.isLoadingAll && (
+                <View
+                  style={[
+                    styles.centerContent,
+                    {
+                      flex: 1,
+                      marginTop: 15 * factorRatio
+                    }
+                  ]}
+                >
+                  <ActivityIndicator
+                    size={onTablet ? 'large' : 'small'}
+                    animating={true}
+                    color={colors.secondBackground}
                   />
                 </View>
               )}
-            {this.state.isLoadingAll && (
-              <View
-                style={[
-                  styles.centerContent,
-                  {
-                    flex: 1,
-                    marginTop: 15 * factorRatio
-                  }
-                ]}
-              >
-                <ActivityIndicator
-                  size={onTablet ? 'large' : 'small'}
-                  animating={true}
-                  color={colors.secondBackground}
-                />
-              </View>
-            )}
-            {!this.state.isLoadingAll && this.state.noResults && (
-              <View
-                key={'noResults'}
-                style={{
-                  flex: 1,
-                  borderTopWidth: 1 * factorRatio,
-                  borderTopColor: colors.secondBackground
-                }}
-              >
-                <Text
+              {!this.state.isLoadingAll && this.state.noResults && (
+                <View
+                  key={'noResults'}
                   style={{
-                    marginTop: 5 * factorVertical,
-                    fontSize: 18 * factorRatio,
-                    fontFamily: 'OpenSans-Bold',
-                    color: 'white',
-                    paddingLeft: 15 * factorRatio
+                    flex: 1,
+                    borderTopWidth: 1 * factorRatio,
+                    borderTopColor: colors.secondBackground
                   }}
                 >
-                  No Results
-                </Text>
-              </View>
-            )}
-          </View>
-        </ScrollView>
-        <Modal
-          isVisible={this.state.showFilters}
-          style={[
-            styles.centerContent,
-            {
-              margin: 0,
-              height: '100%',
-              width: '100%'
-            }
-          ]}
-          animation={'slideInUp'}
-          animationInTiming={1}
-          animationOutTiming={1}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <Filters
-            hideFilters={() => this.setState({ showFilters: false })}
-            filtersAvailable={this.state.filtersAvailable}
-            filters={this.state.filters}
-            filtering={this.state.filtering}
-            type={'Search'}
-            reset={filters => {
-              this.setState(
-                {
-                  searchResults: [],
-                  filters,
-                  page: 1
-                },
-                () => this.search()
-              );
-            }}
-            filterVideos={filters => {
-              this.setState(
-                {
-                  searchResults: [],
-                  outVideos: false,
-                  page: 1,
-                  filters
-                },
-                () => this.search()
-              );
-            }}
-          />
-        </Modal>
-
+                  <Text
+                    style={{
+                      marginTop: 5 * factorVertical,
+                      fontSize: 18 * factorRatio,
+                      fontFamily: 'OpenSans-Bold',
+                      color: 'white',
+                      paddingLeft: 15 * factorRatio
+                    }}
+                  >
+                    No Results
+                  </Text>
+                </View>
+              )}
+            </View>
+          </ScrollView>
+          <Modal
+            isVisible={this.state.showFilters}
+            style={[
+              styles.centerContent,
+              {
+                margin: 0,
+                height: '100%',
+                width: '100%'
+              }
+            ]}
+            animation={'slideInUp'}
+            animationInTiming={1}
+            animationOutTiming={1}
+            coverScreen={true}
+            hasBackdrop={true}
+          >
+            <Filters
+              hideFilters={() => this.setState({ showFilters: false })}
+              filtersAvailable={this.state.filtersAvailable}
+              filters={this.state.filters}
+              filtering={this.state.filtering}
+              type={'Search'}
+              reset={filters => {
+                this.setState(
+                  {
+                    searchResults: [],
+                    filters,
+                    page: 1
+                  },
+                  () => this.search()
+                );
+              }}
+              filterVideos={filters => {
+                this.setState(
+                  {
+                    searchResults: [],
+                    outVideos: false,
+                    page: 1,
+                    filters
+                  },
+                  () => this.search()
+                );
+              }}
+            />
+          </Modal>
+        </View>
         <NavigationBar currentPage={'SEARCH'} />
       </SafeAreaView>
     );

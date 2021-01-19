@@ -1576,9 +1576,7 @@ export default class Filters extends React.Component {
                   borderTopColor: colors.secondBackground,
                   borderTopWidth: 0.5 * factorRatio,
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: this.state.openProgress
-                    ? 0
-                    : 0.25 * factorRatio
+                  borderBottomWidth: 0.25
                 }}
               >
                 <View style={styles.centerContent}>

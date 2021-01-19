@@ -373,7 +373,7 @@ export default class Profile extends React.Component {
                     <Text style={localStyles.redXpRank}>XP</Text>
                     <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
                   </TouchableOpacity>
-                  <View style={{ width: 30 * factorHorizontal }} />
+                  <View style={{ width: 60 * factorHorizontal }} />
                   <TouchableOpacity
                     onPress={() => this.setState({ showXpRank: true })}
                   >
