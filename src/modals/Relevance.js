@@ -42,7 +42,7 @@ class Relevance extends React.Component {
             }}
           >
             <TouchableOpacity
-              style={localStyles.button}
+              style={[localStyles.button, {borderBottomColor: (this.props.isMethod) ? colors.pianoteGrey : '#445f73', borderBottomWidth: 0.25}]}
               onPress={() => {
                 this.props.hideRelevance(), this.props.changeSort('newest');
               }}
@@ -54,7 +54,7 @@ class Relevance extends React.Component {
                   color={
                     this.state.currentSort == 'newest'
                       ? 'white'
-                      : this.state.background
+                      : (this.props.isMethod) ? 'black' : colors.mainBackground
                   }
                 />
               </View>
@@ -75,7 +75,7 @@ class Relevance extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={localStyles.button}
+              style={[localStyles.button, {borderBottomColor: (this.props.isMethod) ? colors.pianoteGrey : '#445f73', borderBottomWidth: 0.25}]}
               onPress={() => {
                 this.props.hideRelevance(), this.props.changeSort('oldest');
               }}
@@ -87,7 +87,7 @@ class Relevance extends React.Component {
                   color={
                     this.state.currentSort == 'oldest'
                       ? 'white'
-                      : this.state.background
+                      : (this.props.isMethod) ? 'black' : colors.mainBackground
                   }
                 />
               </View>
@@ -122,7 +122,7 @@ class Relevance extends React.Component {
                 <Text style={localStyles.cancel}>Cancel</Text>
               </View>
             </TouchableOpacity>
-            <View style={{ flex: 0.25 }} />
+            <View style={{ flex: (isNotch) ? 0.25 : 0.025 }} />
           </View>
         </View>
       </View>
@@ -150,12 +150,6 @@ const localStyles = StyleSheet.create({
     flex: 0.4,
     paddingLeft: Dimensions.get('window').width * 0.05,
     flexDirection: 'row',
-    borderBottomColor: '#445f73',
-    borderBottomWidth:
-      (0.25 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
   },
   cancel: {
     marginLeft: (10 * Dimensions.get('window').width) / 375,
