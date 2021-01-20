@@ -1576,7 +1576,7 @@ export default class Filters extends React.Component {
                   borderTopColor: colors.secondBackground,
                   borderTopWidth: 0.5 * factorRatio,
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 0.25
+                  borderBottomWidth: !this.state.openProgress ? 0.25 : 0
                 }}
               >
                 <View style={styles.centerContent}>
@@ -1606,7 +1606,7 @@ export default class Filters extends React.Component {
                 key={'progressLevels'}
                 style={{
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 0.5 * factorRatio
+                  borderBottomWidth: 0.5 * factorRatio,
                 }}
               >
                 <View

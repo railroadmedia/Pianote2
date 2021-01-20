@@ -452,11 +452,6 @@ class Lessons extends React.Component {
                     source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                     resizeMode={FastImage.resizeMode.contain}
                   />
-                  {/* <Pianote */}
-                    {/* height={fullHeight * 0.04 * factorRatio} */}
-                    {/* width={fullWidth * 0.33 * factorRatio} */}
-                    {/* fill={colors.pianoteRed} */}
-                  {/* /> */}
                 </View>
                 <View
                   style={{

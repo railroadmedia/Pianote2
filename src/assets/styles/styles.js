@@ -104,7 +104,7 @@ module.exports = StyleSheet.create({
     color: '#445f73'
   },
   tabRightContainerText: {
-    paddingLeft: 12 * factorHorizontal,
+    paddingLeft: 15,
     fontSize: 20 * factorRatio,
     marginBottom: 5 * factorVertical,
     textAlign: 'left',

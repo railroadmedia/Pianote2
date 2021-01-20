@@ -238,10 +238,10 @@ class VerticalVideoList extends React.Component {
     }
     for (i in this.state.items) {
       if (this.state.items[i].id == contentID) {
-        this.state.items[i].isLiked = !this.state.items.isLiked;
-        this.state.items[i].like_count = this.state.items.isLiked
-          ? this.state.items.like_count + 1
-          : this.state.items.like_count - 1;
+        this.state.items[i].isLiked = !this.state.items[i].isLiked;
+        this.state.items[i].like_count = this.state.items[i].isLiked
+          ? this.state.items[i].like_count + 1
+          : this.state.items[i].like_count - 1;
       }
     }
     this.setState({ items: this.state.items });

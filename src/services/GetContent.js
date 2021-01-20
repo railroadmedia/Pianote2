@@ -162,7 +162,7 @@ export async function getMyListContent(page, filtersDict, progressState) {
   } else {
     included_types =
       included_types +
-      '&included_types[]=learning-path&included_types[]=learning-path-level&included_types[]=learning-path-course&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
+      '&included_types[]=learning-path&included_types[]=learning-path-level&included_types[]=learning-path-course&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&included_types[]=podcasts';
   }
 
   try {

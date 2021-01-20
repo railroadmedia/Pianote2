@@ -60,8 +60,6 @@ export default class NotificationSettings extends React.Component {
       return this.context.showNoConnectionAlert();
     }
 
-    console.log('Before data: ', this.state.notifications_summary_frequency_minutes)
-
     try {
       const body = {
         data: {
@@ -136,10 +134,10 @@ export default class NotificationSettings extends React.Component {
                 <CustomSwitch
                   isClicked={this.state.notify_weekly_update}
                   clicked={bool => {
-                    this.changeNotificationStatus(),
-                      this.setState({
-                        weeklyCommunityUpdatesClicked: bool
-                      });
+                    console.log('bool: ', bool),
+                    this.setState({
+                      notify_weekly_update: bool
+                    }, () => this.changeNotificationStatus())
                   }}
                 />
               </View>
@@ -149,22 +147,20 @@ export default class NotificationSettings extends React.Component {
                 <CustomSwitch
                   isClicked={this.state.notify_on_lesson_comment_reply}
                   clicked={bool => {
-                    this.changeNotificationStatus(),
-                      this.setState({
-                        notify_on_lesson_comment_reply: bool
-                      });
+                    this.setState({
+                      notify_on_lesson_comment_reply: bool
+                    }, () => this.changeNotificationStatus())
                   }}
                 />
               </View>
               <View style={localStyles.textContainer}>
                 <Text style={localStyles.text}>Comment likes</Text>
                 <CustomSwitch
-                  isClicked={this.state.commentLikesClicked}
+                  isClicked={this.state.notify_on_lesson_comment_like}
                   clicked={bool => {
-                    this.changeNotificationStatus(),
-                      this.setState({
-                        notify_on_lesson_comment_like: bool
-                      });
+                    this.setState({
+                      notify_on_lesson_comment_like: bool
+                    }, () => this.changeNotificationStatus())
                   }}
                 />
               </View>
@@ -173,11 +169,10 @@ export default class NotificationSettings extends React.Component {
                 <Text style={localStyles.text}>Forum post replies</Text>
                 <CustomSwitch
                   isClicked={this.state.notify_on_forum_post_reply}
-                  clicked={() => {
-                    this.changeNotificationStatus(),
-                      this.setState({
-                        notify_on_forum_post_reply: bool
-                      });
+                  clicked={bool => {
+                    this.setState({
+                      notify_on_forum_post_reply: bool
+                    }, () => this.changeNotificationStatus())
                   }}
                 />
               </View>
@@ -186,10 +181,9 @@ export default class NotificationSettings extends React.Component {
                 <CustomSwitch
                   isClicked={this.state.notify_on_forum_post_like}
                   clicked={bool => {
-                    this.changeNotificationStatus(),
-                      this.setState({
-                        notify_on_forum_post_like: bool
-                      });
+                    this.setState({
+                      notify_on_forum_post_like: bool
+                    }, () => this.changeNotificationStatus())
                   }}
                 />
               </View>

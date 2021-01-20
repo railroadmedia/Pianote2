@@ -114,6 +114,7 @@ class ContentModal extends React.Component {
   };
 
   like = contentID => {
+    console.log('like')
     if (this.props.data.description !== 'TBD') {
       // change data on modal
       this.state.isLiked = !this.state.isLiked;
@@ -123,13 +124,13 @@ class ContentModal extends React.Component {
         like_count: this.state.like_count
       });
       // change data on parent data
-      // ADD IN
-      // like on backend
+      this.props.like(contentID);
       likeContent(contentID);
     }
   };
 
   unlike = contentID => {
+    console.log('unlike')
     // change data on modal
     this.state.isLiked = !this.state.isLiked;
     this.state.like_count = Number(this.state.like_count) - 1;
@@ -138,8 +139,7 @@ class ContentModal extends React.Component {
       like_count: this.state.like_count
     });
     // change data on parent data
-    // ADD IN
-    // unlike on backend
+    this.props.like(contentID);
     unlikeContent(contentID);
   };
 

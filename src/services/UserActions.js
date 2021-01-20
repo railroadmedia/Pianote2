@@ -4,18 +4,22 @@ import commonService from './common.service';
 import { Platform } from 'react-native';
 
 export async function likeContent(contentID) {
-  return commonService.tryCall(
+  let x = await commonService.tryCall(
     `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
     'PUT'
   );
+  console.log(x)
+  return x
 }
 
 export async function unlikeContent(contentID) {
   try {
-    return commonService.tryCall(
+    let x = await commonService.tryCall(
       `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
       'DELETE'
     );
+    console.log(x)
+  return x
   } catch (error) {
     console.log('ERROR DISLIKING CONTENT: ', error);
     return new Error(error);
@@ -26,7 +30,7 @@ export async function addToMyList(contentID) {
   return commonService.tryCall(
     `${commonService.rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
     'PUT'
-  );
+    );
 }
 
 export async function removeFromMyList(contentID) {
