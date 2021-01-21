@@ -46,7 +46,9 @@ export default class PrivacyPolicy extends React.Component {
           </Text>
           <Text style={styles.text}>
             Musora Media Inc., (“Company”,” us", "we", or "our") operates the drumeo.com, pianote.com, and guitareo.com website (the "Service").
+            {'\n'}{'\n'}
             This page informs you of our policies regarding the collection, use, and disclosure of personal data when you elect to use our Service, along with the choices you have associated with that data.  
+            {'\n'}{'\n'}
             We use your and others’ data to provide and improve the Service. By using the Service, you agree to our collection and use of information as described in this policy.  In order for us to improve the Service, we rely on the collection and use of this information.   Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from
             <Text 
               onPress={() => Linking.openURL('https://www.pianote.com/terms')}
@@ -80,11 +82,13 @@ export default class PrivacyPolicy extends React.Component {
           <Text style={[styles.text, localStyles.subtitle]}>Data Controller</Text>
           <Text style={styles.text}>
             Data Controller means a person who (either alone or jointly or in common with other persons) determines whether and how any personal data are processed, and the purposes of such processing.
+            {'\n'}{'\n'}
             For the purpose of this Privacy Policy, we are a Data Controller of your data.
           </Text>
           <Text style={[styles.text, localStyles.subtitle]}>Data Processor (or Service Providers)</Text>
           <Text style={styles.text}>
             Data Processor (or Service Provider) means any company or person (other than an employee of the Data Controller) who processes the data on behalf of the Data Controller.
+            {'\n'}{'\n'}
             We use various Service Providers in order to process your data more effectively.
           </Text>
           <Text style={[styles.text, localStyles.subtitle]}>Data Subject</Text>
@@ -125,6 +129,7 @@ export default class PrivacyPolicy extends React.Component {
               • Music equipment preferences
               {'\n'}{'\n'}
               We may use your Personal Data to contact you with newsletters, marketing or promotional materials and other information that may be of interest to you. You may opt-out of receiving any, or all, of these communications from us by following the unsubscribe link or instructions provided in any email we send or by contacting us.
+              {'\n'}{'\n'}
               We also collect certain Personal Data from users who are accessing our Services through websites under our control offering free lessons.  This Personal Data is subject to the same terms and conditions in this Privacy Policy.  
 
           </Text>
@@ -135,13 +140,19 @@ export default class PrivacyPolicy extends React.Component {
           <Text style={[styles.text, localStyles.subtitle]}>Tracking Cookies Data</Text>
           <Text style={styles.text}>
             We use cookies and similar tracking technologies to track the activity on our Service and hold certain information.
+            {'\n'}{'\n'}
             Cookies are files with a small amount of data which may include an anonymous unique identifier. Cookies are sent to your browser from a website and stored on your device. Tracking technologies also used are beacons, tags, and scripts to collect and track information and to improve and analyze our Service.
+            {'\n'}{'\n'}
             You may instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Service.
+            {'\n'}{'\n'}
             Examples of Cookies we use:
-            Session Cookies. We use Session Cookies to operate our Service.
-            Preference Cookies. We use Preference Cookies to remember your preferences and various settings.
-            Security Cookies. We use Security Cookies for security purposes.
-            Authentication Cookies.  We use Authentication Cookies for members within our platforms.
+            • Session Cookies. We use Session Cookies to operate our Service.
+            {'\n'}{'\n'}
+            • Preference Cookies. We use Preference Cookies to remember your preferences and various settings.
+            {'\n'}{'\n'}
+            • Security Cookies. We use Security Cookies for security purposes.
+            {'\n'}{'\n'}
+            • Authentication Cookies.  We use Authentication Cookies for members within our platforms.
           </Text>
           <Text style={[styles.text, localStyles.subtitle, localStyles.mainSub]}>Use of Data</Text>
           <Text style={[styles.text]}>Company uses the collected data for various purposes:
