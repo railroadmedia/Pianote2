@@ -444,10 +444,10 @@ class Lessons extends React.Component {
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <FastImage
                     style={{
-                      width: fullWidth*0.75,
+                      width: fullWidth * 0.75,
                       height: 65 * factorRatio,
                       alignSelf: 'center',
-                      marginBottom: 12.5 * factorRatio,
+                      marginBottom: 12.5 * factorRatio
                     }}
                     source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                     resizeMode={FastImage.resizeMode.contain}

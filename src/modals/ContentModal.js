@@ -114,7 +114,7 @@ class ContentModal extends React.Component {
   };
 
   like = contentID => {
-    console.log('like')
+    console.log('like');
     if (this.props.data.description !== 'TBD') {
       // change data on modal
       this.state.isLiked = !this.state.isLiked;
@@ -130,7 +130,7 @@ class ContentModal extends React.Component {
   };
 
   unlike = contentID => {
-    console.log('unlike')
+    console.log('unlike');
     // change data on modal
     this.state.isLiked = !this.state.isLiked;
     this.state.like_count = Number(this.state.like_count) - 1;

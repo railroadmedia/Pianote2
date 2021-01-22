@@ -92,7 +92,7 @@ class HorizontalVideoList extends React.Component {
   };
 
   like = contentID => {
-    console.log(contentID)
+    console.log(contentID);
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }

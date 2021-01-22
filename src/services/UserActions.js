@@ -8,8 +8,8 @@ export async function likeContent(contentID) {
     `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
     'PUT'
   );
-  console.log(x)
-  return x
+  console.log(x);
+  return x;
 }
 
 export async function unlikeContent(contentID) {
@@ -18,8 +18,8 @@ export async function unlikeContent(contentID) {
       `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,
       'DELETE'
     );
-    console.log(x)
-  return x
+    console.log(x);
+    return x;
   } catch (error) {
     console.log('ERROR DISLIKING CONTENT: ', error);
     return new Error(error);
@@ -30,7 +30,7 @@ export async function addToMyList(contentID) {
   return commonService.tryCall(
     `${commonService.rootUrl}/api/railcontent/add-to-my-list?content_id=${contentID}`,
     'PUT'
-    );
+  );
 }
 
 export async function removeFromMyList(contentID) {

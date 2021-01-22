@@ -349,7 +349,10 @@ export default class Search extends React.Component {
             <View style={styles.searchContainer}>
               <View style={styles.searchBox}>
                 <View
-                  style={[styles.centerContent, { width: 40 * factorHorizontal }]}
+                  style={[
+                    styles.centerContent,
+                    { width: 40 * factorHorizontal }
+                  ]}
                 >
                   <EvilIcons
                     name={'search'}
@@ -386,7 +389,8 @@ export default class Search extends React.Component {
                   }
                 ]}
               >
-                {(this.state.showCancel || this.state.searchTerm.length > 0) && (
+                {(this.state.showCancel ||
+                  this.state.searchTerm.length > 0) && (
                   <TouchableOpacity
                     style={{
                       flex: 1,

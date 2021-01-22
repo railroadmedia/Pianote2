@@ -220,7 +220,7 @@ export default class Method extends React.Component {
 
   render() {
     return (
-      <View style={[styles.mainContainer, {backgroundColor: 'black'}]}>
+      <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
         <NavMenuHeaders
           isMethod={true}
           currentPage={'LESSONS'}
@@ -273,16 +273,16 @@ export default class Method extends React.Component {
               }}
             >
               <View style={styles.centerContent}>
-                  <FastImage
-                    style={{
-                      width: fullWidth*0.75,
-                      height: 65 * factorRatio,
-                      alignSelf: 'center',
-                      marginBottom: 12.5 * factorRatio,
-                    }}
-                    source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
-                    resizeMode={FastImage.resizeMode.contain}
-                  />
+                <FastImage
+                  style={{
+                    width: fullWidth * 0.75,
+                    height: 65 * factorRatio,
+                    alignSelf: 'center',
+                    marginBottom: 12.5 * factorRatio
+                  }}
+                  source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
               </View>
               <View
                 style={{

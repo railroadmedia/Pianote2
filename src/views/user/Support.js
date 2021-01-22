@@ -73,7 +73,9 @@ export default class Support extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView style={{ flex: 0, backgroundColor: colors.thirdBackground }} />
+        <SafeAreaView
+          style={{ flex: 0, backgroundColor: colors.thirdBackground }}
+        />
         <SafeAreaView style={styles.mainContainer}>
           <StatusBar
             backgroundColor={colors.thirdBackground}
