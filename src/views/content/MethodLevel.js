@@ -269,16 +269,16 @@ export default class MethodLevel extends React.Component {
               }}
             >
               <View style={styles.centerContent}>
-                  <FastImage
-                    style={{
-                      width: fullWidth*0.48,
-                      height: 49 * factorRatio,
-                      alignSelf: 'center',
-                      marginBottom: 5 * factorRatio,
-                    }}
-                    source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
-                    resizeMode={FastImage.resizeMode.contain}
-                  />
+                <FastImage
+                  style={{
+                    width: fullWidth * 0.48,
+                    height: 49 * factorRatio,
+                    alignSelf: 'center',
+                    marginBottom: 5 * factorRatio
+                  }}
+                  source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
               </View>
               <Text
                 key={'level'}

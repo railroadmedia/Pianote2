@@ -196,7 +196,7 @@ class StudentFocusShow extends React.Component {
         progress_percent: newContent[i].post.progress_percent
       });
     }
-    console.log('response', response)
+    console.log('response', response);
     this.setState(state => ({
       filtersAvailable: response.meta.filterOptions,
       allLessons: isLoadingMore ? state.allLessons.concat(items) : items,

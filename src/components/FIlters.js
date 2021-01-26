@@ -1606,7 +1606,7 @@ export default class Filters extends React.Component {
                 key={'progressLevels'}
                 style={{
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 0.5 * factorRatio,
+                  borderBottomWidth: 0.5 * factorRatio
                 }}
               >
                 <View

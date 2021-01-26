@@ -235,7 +235,7 @@ const localStyles = StyleSheet.create({
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
-    marginBottom: DeviceInfo.hasNotch() ? 0 : 5,
+    marginBottom: DeviceInfo.hasNotch() ? 0 : 5
   },
   navContainer: {
     alignSelf: 'stretch',

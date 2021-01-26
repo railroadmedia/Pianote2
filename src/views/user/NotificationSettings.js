@@ -41,11 +41,16 @@ export default class NotificationSettings extends React.Component {
   UNSAFE_componentWillMount = async () => {
     let userData = await getUserData();
 
-    console.log('original user data : ', userData.notifications_summary_frequency_minutes)
+    console.log(
+      'original user data : ',
+      userData.notifications_summary_frequency_minutes
+    );
 
     this.setState({
-      notifications_summary_frequency_minutes: userData.notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply: userData.notify_on_forum_followed_thread_reply,
+      notifications_summary_frequency_minutes:
+        userData.notifications_summary_frequency_minutes,
+      notify_on_forum_followed_thread_reply:
+        userData.notify_on_forum_followed_thread_reply,
       notify_on_forum_post_like: userData.notify_on_forum_post_like,
       notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
       notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
@@ -65,20 +70,26 @@ export default class NotificationSettings extends React.Component {
         data: {
           type: 'user',
           attributes: {
-            notifications_summary_frequency_minutes: this.state.notifications_summary_frequency_minutes,
+            notifications_summary_frequency_minutes: this.state
+              .notifications_summary_frequency_minutes,
             notify_on_forum_post_like: this.state.notify_on_forum_post_like,
             notify_on_forum_post_reply: this.state.notify_on_forum_post_reply,
-            notify_on_lesson_comment_like: this.state.notify_on_lesson_comment_like,
-            notify_on_lesson_comment_reply: this.state.notify_on_lesson_comment_reply,
+            notify_on_lesson_comment_like: this.state
+              .notify_on_lesson_comment_like,
+            notify_on_lesson_comment_reply: this.state
+              .notify_on_lesson_comment_reply,
             notify_weekly_update: this.state.notify_weekly_update
           }
         }
       };
 
-      let response = await commonService.tryCall(`${commonService.rootUrl}/usora/api/profile/update`, 'POST', body);
+      let response = await commonService.tryCall(
+        `${commonService.rootUrl}/usora/api/profile/update`,
+        'POST',
+        body
+      );
 
       console.log('response to change notification: ', response);
-
     } catch (error) {
       console.log('ERROR: ', error);
     }
@@ -87,7 +98,9 @@ export default class NotificationSettings extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView style={{ flex: 0, backgroundColor: colors.thirdBackground }} />
+        <SafeAreaView
+          style={{ flex: 0, backgroundColor: colors.thirdBackground }}
+        />
         <SafeAreaView style={styles.mainContainer}>
           <StatusBar
             backgroundColor={colors.thirdBackground}
@@ -135,9 +148,12 @@ export default class NotificationSettings extends React.Component {
                   isClicked={this.state.notify_weekly_update}
                   clicked={bool => {
                     console.log('bool: ', bool),
-                    this.setState({
-                      notify_weekly_update: bool
-                    }, () => this.changeNotificationStatus())
+                      this.setState(
+                        {
+                          notify_weekly_update: bool
+                        },
+                        () => this.changeNotificationStatus()
+                      );
                   }}
                 />
               </View>
@@ -147,9 +163,12 @@ export default class NotificationSettings extends React.Component {
                 <CustomSwitch
                   isClicked={this.state.notify_on_lesson_comment_reply}
                   clicked={bool => {
-                    this.setState({
-                      notify_on_lesson_comment_reply: bool
-                    }, () => this.changeNotificationStatus())
+                    this.setState(
+                      {
+                        notify_on_lesson_comment_reply: bool
+                      },
+                      () => this.changeNotificationStatus()
+                    );
                   }}
                 />
               </View>
@@ -158,9 +177,12 @@ export default class NotificationSettings extends React.Component {
                 <CustomSwitch
                   isClicked={this.state.notify_on_lesson_comment_like}
                   clicked={bool => {
-                    this.setState({
-                      notify_on_lesson_comment_like: bool
-                    }, () => this.changeNotificationStatus())
+                    this.setState(
+                      {
+                        notify_on_lesson_comment_like: bool
+                      },
+                      () => this.changeNotificationStatus()
+                    );
                   }}
                 />
               </View>
@@ -170,9 +192,12 @@ export default class NotificationSettings extends React.Component {
                 <CustomSwitch
                   isClicked={this.state.notify_on_forum_post_reply}
                   clicked={bool => {
-                    this.setState({
-                      notify_on_forum_post_reply: bool
-                    }, () => this.changeNotificationStatus())
+                    this.setState(
+                      {
+                        notify_on_forum_post_reply: bool
+                      },
+                      () => this.changeNotificationStatus()
+                    );
                   }}
                 />
               </View>
@@ -181,9 +206,12 @@ export default class NotificationSettings extends React.Component {
                 <CustomSwitch
                   isClicked={this.state.notify_on_forum_post_like}
                   clicked={bool => {
-                    this.setState({
-                      notify_on_forum_post_like: bool
-                    }, () => this.changeNotificationStatus())
+                    this.setState(
+                      {
+                        notify_on_forum_post_like: bool
+                      },
+                      () => this.changeNotificationStatus()
+                    );
                   }}
                 />
               </View>
@@ -198,9 +226,12 @@ export default class NotificationSettings extends React.Component {
                 <Text style={localStyles.text}>Immediate</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState({
-                      notifications_summary_frequency_minutes: 1
-                    }, () => this.changeNotificationStatus())
+                    this.setState(
+                      {
+                        notifications_summary_frequency_minutes: 1
+                      },
+                      () => this.changeNotificationStatus()
+                    );
                   }}
                   style={[
                     styles.centerContent,
@@ -236,15 +267,19 @@ export default class NotificationSettings extends React.Component {
                 <Text style={localStyles.text}>Once per day</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState({
-                      notifications_summary_frequency_minutes: 1440
-                    }, () => this.changeNotificationStatus())
+                    this.setState(
+                      {
+                        notifications_summary_frequency_minutes: 1440
+                      },
+                      () => this.changeNotificationStatus()
+                    );
                   }}
                   style={[
                     styles.centerContent,
                     {
                       backgroundColor:
-                        this.state.notifications_summary_frequency_minutes == 1440
+                        this.state.notifications_summary_frequency_minutes ==
+                        1440
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
@@ -253,7 +288,8 @@ export default class NotificationSettings extends React.Component {
                     }
                   ]}
                 >
-                  {this.state.notifications_summary_frequency_minutes == 1440 && (
+                  {this.state.notifications_summary_frequency_minutes ==
+                    1440 && (
                     <FontIcon
                       name={'check'}
                       size={20 * factorRatio}
@@ -275,16 +311,21 @@ export default class NotificationSettings extends React.Component {
                 <Text style={localStyles.text}>Never</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState({
-                      notifications_summary_frequency_minutes: 0
-                    }, () => this.changeNotificationStatus())
+                    this.setState(
+                      {
+                        notifications_summary_frequency_minutes: 0
+                      },
+                      () => this.changeNotificationStatus()
+                    );
                   }}
                   style={[
                     styles.centerContent,
                     {
                       backgroundColor:
-                        this.state.notifications_summary_frequency_minutes == 0 ||
-                        this.state.notifications_summary_frequency_minutes == null
+                        this.state.notifications_summary_frequency_minutes ==
+                          0 ||
+                        this.state.notifications_summary_frequency_minutes ==
+                          null
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,

@@ -42,7 +42,15 @@ class Relevance extends React.Component {
             }}
           >
             <TouchableOpacity
-              style={[localStyles.button, {borderBottomColor: (this.props.isMethod) ? colors.pianoteGrey : '#445f73', borderBottomWidth: 0.25}]}
+              style={[
+                localStyles.button,
+                {
+                  borderBottomColor: this.props.isMethod
+                    ? colors.pianoteGrey
+                    : '#445f73',
+                  borderBottomWidth: 0.25
+                }
+              ]}
               onPress={() => {
                 this.props.hideRelevance(), this.props.changeSort('newest');
               }}
@@ -54,7 +62,9 @@ class Relevance extends React.Component {
                   color={
                     this.state.currentSort == 'newest'
                       ? 'white'
-                      : (this.props.isMethod) ? 'black' : colors.mainBackground
+                      : this.props.isMethod
+                      ? 'black'
+                      : colors.mainBackground
                   }
                 />
               </View>
@@ -75,7 +85,15 @@ class Relevance extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[localStyles.button, {borderBottomColor: (this.props.isMethod) ? colors.pianoteGrey : '#445f73', borderBottomWidth: 0.25}]}
+              style={[
+                localStyles.button,
+                {
+                  borderBottomColor: this.props.isMethod
+                    ? colors.pianoteGrey
+                    : '#445f73',
+                  borderBottomWidth: 0.25
+                }
+              ]}
               onPress={() => {
                 this.props.hideRelevance(), this.props.changeSort('oldest');
               }}
@@ -87,7 +105,9 @@ class Relevance extends React.Component {
                   color={
                     this.state.currentSort == 'oldest'
                       ? 'white'
-                      : (this.props.isMethod) ? 'black' : colors.mainBackground
+                      : this.props.isMethod
+                      ? 'black'
+                      : colors.mainBackground
                   }
                 />
               </View>
@@ -122,7 +142,7 @@ class Relevance extends React.Component {
                 <Text style={localStyles.cancel}>Cancel</Text>
               </View>
             </TouchableOpacity>
-            <View style={{ flex: (isNotch) ? 0.25 : 0.025 }} />
+            <View style={{ flex: isNotch ? 0.25 : 0.025 }} />
           </View>
         </View>
       </View>
@@ -149,7 +169,7 @@ const localStyles = StyleSheet.create({
   button: {
     flex: 0.4,
     paddingLeft: Dimensions.get('window').width * 0.05,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   cancel: {
     marginLeft: (10 * Dimensions.get('window').width) / 375,
