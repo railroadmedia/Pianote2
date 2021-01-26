@@ -66,8 +66,7 @@ class NavigationBar extends React.Component {
           style={{
             flex: 1,
             borderRadius: 100,
-            backgroundColor: colors.secondBackground,
-            backgroundColor: 'red'
+            backgroundColor: this.props.isMethod ? colors.pianoteGrey : colors.secondBackground,
           }}
           source={{ uri: this.state.profileImage }}
           resizeMode={FastImage.resizeMode.cover}
