@@ -341,7 +341,7 @@ export default class Profile extends React.Component {
                       </TouchableOpacity>
                     </View>
                     {this.state.profileImage == '' && (
-                      <View style={styles.container}>
+                      <View style={[styles.centerContent, styles.container]}>
                         <AntIcon
                           name={'user'}
                           color={colors.pianoteRed}
