@@ -199,11 +199,11 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-google-cast')
     implementation project(':react-native-push-notification')
     implementation project(':@react-native-firebase_crashlytics')
     implementation project(':@react-native-firebase_messaging')
     implementation project(':@react-native-firebase_app')
-    implementation project(':react-native-google-cast')
     implementation project(':react-native-background-downloader')
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-fs')
@@ -216,7 +216,7 @@ dependencies {
     implementation project(':react-native-background-downloader')
     implementation project(':react-native-video')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.facebook.react:react-native:^0.61.4"  // From node_modules
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.android.gms:play-services-base:16.1.0'
