@@ -35,15 +35,14 @@ target 'Pianote2' do
   pod 'react-native-background-downloader', :path => '../node_modules/react-native-background-downloader'
   pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
   pod 'react-native-home-indicator', :path => '../node_modules/react-native-home-indicator'
-  pod 'react-native-google-cast/NoBluetooth', path: '../node_modules/react-native-google-cast/ios/'
   pod 'RNAirplay', :path => '../node_modules/react-native-airplay-ios'
   pod 'react-native-video', :path => '../node_modules/react-native-video'
   pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
   pod 'Firebase/Messaging', '~> 6.34.0'
-
+  
   use_native_modules!
-
-  pod 'react-native-google-cast', :path => '../node_modules/react-native-google-cast'
+  
+  
 
 end
 

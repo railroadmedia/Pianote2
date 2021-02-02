@@ -62,11 +62,11 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - google-cast-sdk-no-bluetooth (4.5.3):
-    - google-cast-sdk-no-bluetooth/Core (= 4.5.3)
+  - google-cast-sdk (4.5.3):
+    - google-cast-sdk/Core (= 4.5.3)
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.13)
-  - google-cast-sdk-no-bluetooth/Core (4.5.3):
+  - google-cast-sdk/Core (4.5.3):
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.13)
   - GoogleDataTransport (7.5.1):
@@ -275,12 +275,8 @@ PODS:
     - React
   - react-native-blur (0.8.0):
     - React
-  - react-native-google-cast/NoBluetooth (4.0.1):
-    - google-cast-sdk-no-bluetooth
-    - React
-    - react-native-google-cast/RNGoogleCast
-  - react-native-google-cast/RNGoogleCast (4.0.1):
-    - PromisesObjC
+  - react-native-google-cast (3.1.3):
+    - google-cast-sdk (>= 3)
     - React
   - react-native-home-indicator (0.2.6):
     - React-Core
@@ -410,7 +406,7 @@ DEPENDENCIES:
   - react-native-add-calendar-event (from `../node_modules/react-native-add-calendar-event`)
   - react-native-background-downloader (from `../node_modules/react-native-background-downloader`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
-  - react-native-google-cast/NoBluetooth (from `../node_modules/react-native-google-cast/ios/`)
+  - react-native-google-cast (from `../node_modules/react-native-google-cast/ios`)
   - react-native-home-indicator (from `../node_modules/react-native-home-indicator`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-intercom (from `../node_modules/react-native-intercom`)
@@ -460,7 +456,7 @@ SPEC REPOS:
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
-    - google-cast-sdk-no-bluetooth
+    - google-cast-sdk
     - GoogleDataTransport
     - GoogleUtilities
     - GTMSessionFetcher
@@ -510,7 +506,7 @@ EXTERNAL SOURCES:
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-google-cast:
-    :path: "../node_modules/react-native-google-cast/ios/"
+    :path: "../node_modules/react-native-google-cast/ios"
   react-native-home-indicator:
     :path: "../node_modules/react-native-home-indicator"
   react-native-image-picker:
@@ -601,7 +597,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
-  google-cast-sdk-no-bluetooth: 815df973d547e06a90768f4a72220950cd32d8cb
+  google-cast-sdk: f94c5df87564f71d4342400b8487665e9bed27c6
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
@@ -622,7 +618,7 @@ SPEC CHECKSUMS:
   react-native-add-calendar-event: e501cea7d393396ff1e798c462983c9e6d8dfc02
   react-native-background-downloader: f33bf10a731164e272c9101254f63c74b8dc09f9
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
-  react-native-google-cast: 979f76dfabac49f1dda10b784906c45a75da2606
+  react-native-google-cast: 659f8128110d93fe0a05b0c87c1ad6f580c738c4
   react-native-home-indicator: 4001d2f40e9e0d6d430a46662f3d04feee170945
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
   react-native-intercom: 25ceddd224fdf63be29d4e25e95a893e5befe18f
@@ -663,6 +659,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 9431848d3f1ff285de23146d3a0ef2f7c7ecd31f
+PODFILE CHECKSUM: 109f7907273e3364958e596b1258c77c99d279ad
 
 COCOAPODS: 1.8.4
