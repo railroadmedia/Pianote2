@@ -361,6 +361,7 @@ export default class LoginCredentials extends React.Component {
                 >
                   <Text
                     style={{
+                      fontSize: 18 * factorRatio,
                       padding: 15,
                       fontFamily: 'RobotoCondensed-Bold',
                       color:
@@ -475,16 +476,13 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
+    fontSize: (16 * Dimensions.get('window').height / 812), 
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (16 * Dimensions.get('window').height / 812),
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
@@ -523,6 +521,7 @@ const localStyles = StyleSheet.create({
     padding: 15,
     color: 'black',
     marginRight: 45,
+    fontSize: (16 * Dimensions.get('window').height / 812), 
     fontFamily: 'OpenSans-Regular'
   }
 });

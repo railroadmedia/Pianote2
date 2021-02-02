@@ -321,7 +321,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 28 * factorRatio,
+              fontSize: 24 * factorRatio,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -330,7 +330,7 @@ export default class Login extends React.Component {
               marginTop: 7.5 * factorVertical
             }}
           >
-            {'Pianote Lessons, Songs, & Support'}
+            {'Pianote Lessons, Songs, \n& Support'}
           </Text>
           <Text
             style={{
@@ -427,7 +427,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 28 * factorRatio,
+              fontSize: 24 * factorRatio,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: '500',
@@ -439,7 +439,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 28 * factorRatio,
+                fontSize: 24 * factorRatio,
                 paddingLeft: 15,
                 paddingRight: 15,
                 fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -449,14 +449,14 @@ export default class Login extends React.Component {
             >
               {' exactly '}
             </Text>
-            what to practice.
+            what to {'\n'}practice.
           </Text>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
               paddingLeft: 15,
               paddingRight: 15,
-              fontSize: 18 * factorRatio,
+              fontSize: 16 * factorRatio,
               textAlign: 'center',
               color: 'grey',
               marginTop: 20 * factorVertical
@@ -550,7 +550,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 28 * factorRatio,
+              fontSize: 24 * factorRatio,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: '500',
@@ -562,7 +562,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 28 * factorRatio,
+                fontSize: 24 * factorRatio,
                 paddingLeft: 15,
                 paddingRight: 15,
                 fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -579,7 +579,7 @@ export default class Login extends React.Component {
               fontFamily: 'OpenSans-Regular',
               paddingLeft: 15,
               paddingRight: 15,
-              fontSize: 18 * factorRatio,
+              fontSize: 16 * factorRatio,
               textAlign: 'center',
               color: 'grey'
             }}
@@ -673,7 +673,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 28 * factorRatio,
+              fontSize: 24 * factorRatio,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: '500',
@@ -685,7 +685,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 28 * factorRatio,
+                fontSize: 24 * factorRatio,
                 paddingLeft: 15,
                 paddingRight: 15,
                 fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -701,7 +701,7 @@ export default class Login extends React.Component {
               fontFamily: 'OpenSans-Regular',
               paddingLeft: 15,
               paddingRight: 15,
-              fontSize: 18 * factorRatio,
+              fontSize: 16 * factorRatio,
               textAlign: 'center',
               color: 'grey',
               marginTop: 20 * factorVertical
@@ -796,7 +796,7 @@ export default class Login extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: 28 * factorRatio,
+                  fontSize: 24 * factorRatio,
                   paddingLeft: 15,
                   paddingRight: 15,
                   fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -812,7 +812,7 @@ export default class Login extends React.Component {
                 fontFamily: 'OpenSans-Regular',
                 paddingLeft: 15,
                 paddingRight: 15,
-                fontSize: 18 * factorRatio,
+                fontSize: 16 * factorRatio,
                 textAlign: 'center',
                 color: 'grey',
                 marginTop: 10 * factorVertical

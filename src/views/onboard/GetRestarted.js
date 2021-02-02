@@ -42,7 +42,7 @@ export default class GetRestarted extends React.Component {
                   <FastImage
                     style={localStyles.image}
                     source={require('Pianote2/src/assets/img/imgs/onboarding-welcome-back.png')}
-                    resizeMode={FastImage.resizeMode.cover}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
                 </View>
               </View>
@@ -107,9 +107,8 @@ const localStyles = StyleSheet.create({
   },
   outerContainer: {
     position: 'absolute',
-    left: '10%',
-    height: '68%',
-    width: '80%',
+    height: '80%',
+    width: '100%',
     zIndex: 2
   },
   innerContainer: {

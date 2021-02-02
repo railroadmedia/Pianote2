@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   Linking,
   ScrollView,
+  Platform, 
   KeyboardAvoidingView,
   StyleSheet,
   Dimensions
@@ -78,6 +79,7 @@ export default class ForgotPassword extends React.Component {
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={`${isiOS ? 'padding' : ''}`}
+            keyboardVerticalOffset={Platform.select({ios: () => (onTablet ? 0 : -75*factorVertical), android: () => 0})()}
           >
             <ScrollView
               style={{ flex: 1 }}
@@ -158,7 +160,7 @@ export default class ForgotPassword extends React.Component {
                   </Text>
                 </TouchableHighlight>
               </View>
-              <View style={{ marginBottom: 20 * factorRatio }}>
+              <View style={{ padding: 10 }}>
                 <TouchableOpacity
                   onPress={() => {
                     this.props.navigation.navigate('LOGINCREDENTIALS');
@@ -276,17 +278,14 @@ const localStyles = StyleSheet.create({
     marginVertical: 20,
     color: 'black',
     borderRadius: 100,
+    fontSize: (16 * Dimensions.get('window').height / 812), 
     marginHorizontal: 15,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (16 * Dimensions.get('window').height / 812),
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
