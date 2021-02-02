@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo, { isTablet } from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -55,8 +56,8 @@ class HorizontalVideoList extends React.Component {
 
   decideWidth() {
     if (onTablet) {
-      if (this.props.isSquare) return 300;
-      else return 400;
+      if (this.props.isSquare) return 125;
+      else return 225;
     } else {
       if (this.props.isSquare) return Dimensions.get('window').width / 2.2;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
@@ -292,7 +293,9 @@ class HorizontalVideoList extends React.Component {
                           color: this.props.isMethod
                             ? colors.pianoteGrey
                             : colors.secondBackground,
-                          fontSize: 12 * factorRatio
+                            
+                          fontSize: onTablet ?  14 : 
+                          (12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,  
                         }}
                       >
                         {this.changeType(item.type)}/
@@ -322,7 +325,7 @@ class HorizontalVideoList extends React.Component {
                   >
                     <AntIcon
                       name={'plus'}
-                      size={25 * factorRatio}
+                      size={(onTablet) ?  15 * factorRatio :  25 * factorRatio}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey
@@ -337,7 +340,7 @@ class HorizontalVideoList extends React.Component {
                   >
                     <AntIcon
                       name={'close'}
-                      size={25 * factorRatio}
+                      size={(onTablet) ?  15 * factorRatio :  25 * factorRatio}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey
@@ -378,15 +381,16 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 15
   },
   artist: {
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet() ? 
+      14
+      : 
+      (12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,  
     fontFamily: 'OpenSans-Regular'
   },
   title: {
-    fontSize:
+    fontSize: DeviceInfo.isTablet() ? 
+      22
+      :
       (18 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
@@ -395,7 +399,9 @@ const localStyles = StyleSheet.create({
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize:
+    fontSize: DeviceInfo.isTablet() ? 
+      16 
+      :
       (14.5 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
@@ -437,11 +443,10 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   videoTitleText: {
-    fontSize:
-      (14 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet() ?  
+      16
+      : 
+      (14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
     marginTop:
       (7.5 *
         (Dimensions.get('window').height / 812 +

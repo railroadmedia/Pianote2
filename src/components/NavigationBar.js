@@ -57,7 +57,7 @@ class NavigationBar extends React.Component {
               ? 'white'
               : this.state.secondaryColor
           }
-          size={27.5 * factorRatio}
+          size={(onTablet) ? 20.625 * factorRatio : 27.5 * factorRatio}
         />
       );
     } else {
@@ -111,7 +111,7 @@ class NavigationBar extends React.Component {
           >
             <SimpleLineIcon
               name={'home'}
-              size={30 * factorRatio}
+              size={(onTablet) ? 22.5 * factorRatio : 30 * factorRatio}
               color={
                 this.props.currentPage == 'LESSONS'
                   ? this.state.primaryColor
@@ -139,7 +139,7 @@ class NavigationBar extends React.Component {
           >
             <EvilIcons
               name={'search'}
-              size={40 * factorRatio}
+              size={(onTablet) ? 30 * factorRatio : 40 * factorRatio}
               color={
                 this.props.currentPage == 'SEARCH'
                   ? this.state.primaryColor
@@ -165,7 +165,7 @@ class NavigationBar extends React.Component {
           >
             <MaterialIcon
               name={'arrow-collapse-down'}
-              size={30 * factorRatio}
+              size={(onTablet) ? 22.5 * factorRatio : 30 * factorRatio}
               color={
                 this.props.currentPage == 'DOWNLOAD'
                   ? this.state.primaryColor
@@ -219,16 +219,8 @@ class NavigationBar extends React.Component {
 const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
-    width:
-      (37.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    height:
-      (37.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    width: ( (DeviceInfo.isTablet() ? 28.125 : 37.5 ) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
+    height: ( (DeviceInfo.isTablet() ? 28.125 : 37.5 )  * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
     borderWidth:
       (2.25 *
         (Dimensions.get('window').height / 812 +

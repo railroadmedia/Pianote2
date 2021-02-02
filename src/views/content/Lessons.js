@@ -526,7 +526,7 @@ class Lessons extends React.Component {
                   />
                 </View>
               )}
-              <View style={{ height: 5 * factorRatio }} />
+              <View style={{ height: (onTablet) ? 0 : 5 * factorRatio }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

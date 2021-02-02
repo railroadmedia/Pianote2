@@ -80,13 +80,10 @@ class NavMenuHeaders extends React.Component {
             }}
             style={{
               height:
-                Platform.OS == 'ios'
-                  ? onTablet
-                    ? fullHeight * 0.05
-                    : fullHeight * 0.035
-                  : onTablet
-                  ? fullHeight * 0.1
-                  : fullHeight * 0.08,
+                Platform.OS == 'ios' ? 
+                  onTablet ? fullHeight * 0.045 : fullHeight * 0.035
+                  : 
+                  onTablet ? fullHeight * 0.1 : fullHeight * 0.08,
               width: onTablet ? 0.14 * fullWidth : 0.3 * fullWidth,
               flexDirection: 'row',
               marginRight: 5 * factorHorizontal
@@ -120,7 +117,7 @@ class NavMenuHeaders extends React.Component {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 14 * factorRatio,
+                fontSize: (onTablet) ? 22 : 14 * factorRatio,
                 fontFamily: 'OpenSans-ExtraBold',
                 color:
                   this.props.currentPage == 'LESSONS'
@@ -142,7 +139,7 @@ class NavMenuHeaders extends React.Component {
                     ? 'white'
                     : colors.secondBackground
                 }
-                size={18 * factorRatio}
+                size={16 * factorRatio}
                 style={{ marginLeft: -2.5 }}
               />
             </View>
@@ -160,7 +157,7 @@ class NavMenuHeaders extends React.Component {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 14 * factorRatio,
+                fontSize: (onTablet) ? 22 : 14 * factorRatio,
                 fontFamily: 'OpenSans-ExtraBold',
                 color:
                   this.props.currentPage == 'PACKS'
@@ -186,7 +183,7 @@ class NavMenuHeaders extends React.Component {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 14 * factorRatio,
+                fontSize: (onTablet) ? 22 : 14 * factorRatio,
                 shadowOpacity: 0.3,
                 fontFamily: 'OpenSans-Regular',
                 fontFamily: 'OpenSans-ExtraBold',
