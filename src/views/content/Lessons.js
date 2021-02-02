@@ -32,7 +32,6 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import methodService from '../../services/method.service.js';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
-import Pianote from '../../assets/img/svgs/pianote';
 import RestartCourse from '../../modals/RestartCourse';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -416,13 +415,14 @@ class Lessons extends React.Component {
               />
             )}
             <ImageBackground
+              onLayout={() => console.log(this.getAspectRatio())}
               resizeMode={'cover'}
               style={{
                 width: '100%',
                 aspectRatio: this.getAspectRatio(),
-                justifyContent: 'flex-end'
+                justifyContent: 'flex-end',
               }}
-              source={require('../../assets/img/imgs/lisamethod.png')}
+              source={require('Pianote2/src/assets/img/imgs/lisamethod.png')}
             >
               <GradientFeature
                 color={'red'}
