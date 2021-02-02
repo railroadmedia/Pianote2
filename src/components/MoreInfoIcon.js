@@ -37,7 +37,7 @@ class MoreInfoIcon extends React.Component {
             }
           ]}
         >
-          <Icon name={'arrowright'} size={23 * factorRatio} color={'white'} />
+          <Icon name={'arrowright'} size={(onTablet ? 17.5 : 23) * factorRatio} color={'white'} />
           <View style={{ flex: 0.075 }} />
           <Text style={styles.buttonText}>MORE INFO</Text>
         </TouchableOpacity>

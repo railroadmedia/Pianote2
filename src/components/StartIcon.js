@@ -37,7 +37,7 @@ class StartIcon extends React.Component {
         >
           <Icon
             name={'controller-play'}
-            size={25 * factorRatio}
+            size={(onTablet) ? 17.5 * factorRatio : 25 * factorRatio}
             color={'white'}
           />
           <View style={{ flex: 0.025 }} />

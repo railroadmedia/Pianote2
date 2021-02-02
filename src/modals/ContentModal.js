@@ -223,7 +223,7 @@ class ContentModal extends React.Component {
               >
                 <AntIcon
                   name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={25 * factorRatio}
+                  size={22.5 * factorRatio}
                 />
                 <View style={{ flex: 1 }} />
                 <Text style={localStyles.likeCount}>
@@ -252,6 +252,10 @@ class ContentModal extends React.Component {
                   content: contentService.getContent(this.state.id, true)
                 }}
                 styles={{
+                  iconSize: {
+                    width: 25 * factorRatio,
+                    height: 25 * factorRatio
+                  },
                   touchable: { flex: 1 },
                   activityIndicatorColor: colors.pianoteRed,
                   animatedProgressBackground: colors.pianoteRed,

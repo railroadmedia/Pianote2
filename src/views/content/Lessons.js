@@ -445,7 +445,7 @@ class Lessons extends React.Component {
                   <FastImage
                     style={{
                       width: fullWidth * 0.75,
-                      height: 65 * factorRatio,
+                      height: (onTablet ? 55 : 65) * factorRatio,
                       alignSelf: 'center',
                       marginBottom: 12.5 * factorRatio
                     }}
@@ -505,13 +505,7 @@ class Lessons extends React.Component {
 
             <View>
               {this.state.lessonsStarted && (
-                <View
-                  key={'progressCourses'}
-                  style={{
-                    minHeight: fullHeight * 0.225,
-                    backgroundColor: 'black'
-                  }}
-                >
+               
                   <HorizontalVideoList
                     isMethod={true}
                     Title={'IN PROGRESS'}
@@ -524,9 +518,9 @@ class Lessons extends React.Component {
                     showType={true}
                     items={this.state.progressLessons}
                   />
-                </View>
+
               )}
-              <View style={{ height: (onTablet) ? 0 : 5 * factorRatio }} />
+              <View style={{ height: (onTablet) ? -20 : 5 * factorRatio }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

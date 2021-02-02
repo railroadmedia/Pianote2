@@ -39,7 +39,7 @@ class ResetIcon extends React.Component {
         >
           <MaterialIcon
             name={'replay'}
-            size={25 * factorRatio}
+            size={(onTablet ? 21.5 : 25) * factorRatio}
             color={'white'}
           />
           <View style={{ flex: 0.075 }} />

@@ -24,7 +24,7 @@ module.exports = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 14 * factorRatio
+    fontSize: (DeviceInfo.isTablet()) ? 12 * factorRatio : 14 * factorRatio
   },
   searchContainer: {
     marginTop: fullHeight * 0.04,
