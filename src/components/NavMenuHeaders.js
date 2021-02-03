@@ -41,7 +41,7 @@ class NavMenuHeaders extends React.Component {
           backgroundColor: this.props.isMethod
             ? 'black'
             : colors.mainBackground,
-          marginTop: DeviceInfo.hasNotch() ? 0 : 5
+          paddingTop: DeviceInfo.hasNotch() ? 0 : 5
         }}
         forceInset={{ top: 'always' }}
       >

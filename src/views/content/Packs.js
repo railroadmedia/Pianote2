@@ -289,7 +289,7 @@ class Packs extends React.Component {
               style={{
                 width: '33%',
                 paddingLeft: 10,
-                paddingTop: 10
+                paddingBottom: 10
               }}
             >
               <FastImage
@@ -339,7 +339,7 @@ class Packs extends React.Component {
             </TouchableOpacity>
           )}
         />
-
+        
         <NavigationBar currentPage={'PACKS'} />
 
         <Modal
