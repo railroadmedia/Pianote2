@@ -59,7 +59,7 @@ class HorizontalVideoList extends React.Component {
       if (this.props.isSquare) return 125;
       else return 225;
     } else {
-      if (this.props.isSquare) return Dimensions.get('window').width / 2.2;
+      if (this.props.isSquare) return Dimensions.get('window').width / 3.25;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
     }
   }

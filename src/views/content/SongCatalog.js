@@ -240,6 +240,19 @@ class SongCatalog extends React.Component {
     );
   }
 
+  getSquareHeight = () => {
+    if(onTablet) {
+      return 125
+    } else {
+      if(Platform.OS == 'android') {
+        return fullHeight * 0.1375
+      }
+      else {
+        return fullHeight * 0.115
+      }
+    }
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -283,6 +296,7 @@ class SongCatalog extends React.Component {
                   isSquare={true}
                   items={this.state.progressSongs}
                 />
+                <View style={{height: 5}}/>
               </View>
             )}
             <VerticalVideoList
@@ -305,27 +319,9 @@ class SongCatalog extends React.Component {
               outVideos={this.state.outVideos} // if paging and out of videos
               filterResults={() => this.setState({ showFilters: true })} // apply from filters page
               isSquare={true}
-              containerHeight={
-                onTablet
-                  ? fullHeight * 0.14
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.1375
-                  : fullHeight * 0.1
-              } // height per row
-              imageHeight={
-                onTablet
-                  ? fullHeight * 0.14
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.125
-                  : fullHeight * 0.09
-              } // image height
-              imageWidth={
-                onTablet
-                  ? fullHeight * 0.14
-                  : Platform.OS == 'android'
-                  ? fullHeight * 0.125
-                  : fullHeight * 0.09
-              } // image height
+              containerHeight={this.getSquareHeight()} // height per row
+              imageHeight={this.getSquareHeight()} // image height
+              imageWidth={this.getSquareHeight()} // image height
             />
           </ScrollView>
         ) : (

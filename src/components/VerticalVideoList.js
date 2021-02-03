@@ -562,7 +562,7 @@ class VerticalVideoList extends React.Component {
               <Text
                 numberOfLines={2}
                 style={{
-                  fontSize: 15 * factorRatio,
+                  fontSize: onTablet ? 22 : 16 * factorRatio,
                   textAlign: 'left',
                   fontWeight: 'bold',
                   fontFamily: 'OpenSans-Regular',
@@ -642,7 +642,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: 12 * factorRatio,
+                      fontSize: onTablet ? 20 : 12 * factorRatio,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -670,7 +670,7 @@ class VerticalVideoList extends React.Component {
                       }}
                     >
                       <FontIcon
-                        size={30 * factorRatio}
+                        size={(onTablet) ?  20 * factorRatio :  30 * factorRatio}
                         name={'calendar-plus'}
                         color={
                           this.props.isMethod && !this.props.methodLevel
@@ -688,7 +688,7 @@ class VerticalVideoList extends React.Component {
                     >
                       <AntIcon
                         name={'plus'}
-                        size={30 * factorRatio}
+                        size={(onTablet) ?  25 * factorRatio :  30 * factorRatio}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
