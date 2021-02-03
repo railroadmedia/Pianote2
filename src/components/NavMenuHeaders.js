@@ -86,7 +86,8 @@ class NavMenuHeaders extends React.Component {
                   onTablet ? fullHeight * 0.1 : fullHeight * 0.08,
               width: onTablet ? 0.14 * fullWidth : 0.3 * fullWidth,
               flexDirection: 'row',
-              marginRight: 5 * factorHorizontal
+              marginRight: 5 * factorHorizontal,
+              paddingLeft: (onTablet ? 10 : 0)
             }}
           >
             <Pianote fill={'#fb1b2f'} />
