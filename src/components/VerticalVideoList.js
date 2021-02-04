@@ -332,6 +332,7 @@ class VerticalVideoList extends React.Component {
   };
 
   getImageUrl(thumbnail, publishDate) {
+    if (thumbnail.includes('data/user')) return thumbnail;
     if (thumbnail.includes('http') && thumbnail !== 'TBD') {
       return `https://cdn.musora.com/image/fetch/w_${Math.round(
         this.props.imageWidth * 2
@@ -370,7 +371,7 @@ class VerticalVideoList extends React.Component {
             style={{
               flex: 1,
               paddingLeft: 15,
-              paddingVertical: (onTablet ? 5 : 7.5)  * factorRatio,
+              paddingVertical: (onTablet ? 5 : 7.5) * factorRatio,
               flexDirection: 'row',
               borderTopColor: '#ececec'
             }}
@@ -670,7 +671,7 @@ class VerticalVideoList extends React.Component {
                       }}
                     >
                       <FontIcon
-                        size={(onTablet) ?  20 * factorRatio :  27.5 * factorRatio}
+                        size={onTablet ? 20 * factorRatio : 27.5 * factorRatio}
                         name={'calendar-plus'}
                         color={
                           this.props.isMethod && !this.props.methodLevel
@@ -705,7 +706,7 @@ class VerticalVideoList extends React.Component {
                     >
                       <AntIcon
                         name={'close'}
-                        size={(onTablet) ?  25 * factorRatio :  30 * factorRatio}
+                        size={onTablet ? 25 * factorRatio : 30 * factorRatio}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
@@ -737,14 +738,13 @@ class VerticalVideoList extends React.Component {
                       fontSize: 30 * factorRatio,
                       color: 'white',
                       fontFamily: 'OpenSans-ExtraBold'
-                      
                     }}
                   >
                     {this.props.title}
                   </Text>
                 ) : (
                   <>
-                    <View style={{flex: 1}}/>
+                    <View style={{ flex: 1 }} />
                     <Text
                       style={{
                         fontSize: onTablet ? 22 : 18 * factorRatio,
@@ -758,7 +758,7 @@ class VerticalVideoList extends React.Component {
                     >
                       {this.props.title}
                     </Text>
-                    <View style={{flex: 1}}/>
+                    <View style={{ flex: 1 }} />
                   </>
                 )}
               </View>
