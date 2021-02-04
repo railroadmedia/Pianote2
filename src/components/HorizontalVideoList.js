@@ -12,7 +12,8 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-import DeviceInfo, { isTablet } from 'react-native-device-info';
+import DeviceInfo from 'react-native-device-info';
+import FontIcon from 'react-native-vector-icons/FontAwesome5';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -192,7 +193,6 @@ class HorizontalVideoList extends React.Component {
           >
             {this.props.Title}
           </Text>
-
           {!this.props.hideSeeAll && (
             <TouchableOpacity
               key={'seeAll'}
@@ -294,8 +294,7 @@ class HorizontalVideoList extends React.Component {
                             ? colors.pianoteGrey
                             : colors.secondBackground,
                             
-                          fontSize: onTablet ?  14 : 
-                          (12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,  
+                          fontSize: onTablet ?  16 : 12 * factorRatio,  
                         }}
                       >
                         {this.changeType(item.type)}/
@@ -312,20 +311,36 @@ class HorizontalVideoList extends React.Component {
                         }
                       ]}
                     >
-                      {' '}
                       {item.artist}
                     </Text>
                   </View>
                 </View>
-
-                {!item.isAddedToList ? (
+                {(new Date(item.publishedOn) > new Date()) ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.addToCalendarLessonTitle = item.title;
+                      this.addToCalendatLessonPublishDate = item.publishedOn;
+                      this.setState({ addToCalendarModal: true });
+                    }}
+                  >
+                    <FontIcon
+                      size={(onTablet) ?  12.5 * factorRatio :  27.5 * factorRatio}
+                      name={'calendar-plus'}
+                      color={
+                        this.props.isMethod && !this.props.methodLevel
+                          ? colors.pianoteGrey
+                          : colors.pianoteRed
+                      }
+                    />
+                  </TouchableOpacity>
+                ) : !item.isAddedToList ? (
                   <TouchableOpacity
                     onPress={() => this.addToMyList(item.id)}
                     style={{ paddingRight: 5 }}
                   >
                     <AntIcon
                       name={'plus'}
-                      size={(onTablet) ?  15 * factorRatio :  25 * factorRatio}
+                      size={(onTablet) ?  17.5 * factorRatio :  25 * factorRatio}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey
@@ -340,7 +355,7 @@ class HorizontalVideoList extends React.Component {
                   >
                     <AntIcon
                       name={'close'}
-                      size={(onTablet) ?  15 * factorRatio :  25 * factorRatio}
+                      size={(onTablet) ?  17.5 * factorRatio :  25 * factorRatio}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey
@@ -382,30 +397,18 @@ const localStyles = StyleSheet.create({
   },
   artist: {
     fontSize: DeviceInfo.isTablet() ? 
-      14
+      16
       : 
       (12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,  
     fontFamily: 'OpenSans-Regular'
   },
   title: {
-    fontSize: DeviceInfo.isTablet() ? 
-      22
-      :
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet() ? 22 : (18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
     fontFamily: 'RobotoCondensed-Bold'
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: DeviceInfo.isTablet() ? 
-      16 
-      :
-      (14.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet() ? 20 : (14.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
     fontWeight: '300',
     color: '#fb1b2f'
   },
@@ -452,21 +455,12 @@ const localStyles = StyleSheet.create({
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
-    marginBottom:
-      (3 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
     fontFamily: 'OpenSans-Bold',
     color: 'white'
   },
   typeContainer: {
     flexDirection: 'row',
-    marginBottom:
-      (3 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginBottom: 3
   }
 });
 

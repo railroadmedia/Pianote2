@@ -6,7 +6,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
   Platform,
   StatusBar
 } from 'react-native';
@@ -57,7 +56,7 @@ class NavMenuHeaders extends React.Component {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: isNotch ? 5 * factorVertical : 0,
+            paddingTop: isNotch ? 5 * factorVertical : (Platform.OS == 'android') ? 0 : onTablet ? 0 : 4,
             paddingBottom: 10 * factorRatio,
             paddingRight: 10 * factorHorizontal,
             paddingLeft: 5 * factorHorizontal

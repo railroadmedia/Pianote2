@@ -152,9 +152,7 @@ class Relevance extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    minHeight:
-      Dimensions.get('window').height * 0.25 +
-      (DeviceInfo.isTablet() ? Dimensions.get('window').height * 0.1 : 0),
+    minHeight: Dimensions.get('window').height * 0.25,
     flexDirection: 'row'
   },
   word: {
