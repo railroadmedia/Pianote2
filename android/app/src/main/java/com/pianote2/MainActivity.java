@@ -5,9 +5,9 @@ import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import com.facebook.react.GoogleCastActivity;
+import com.google.android.gms.cast.framework.CastContext;
 
-public class MainActivity extends GoogleCastActivity {
+public class MainActivity extends ReactActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -20,6 +20,7 @@ public class MainActivity extends GoogleCastActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.show(this, R.style.SplashScreenTheme);
         super.onCreate(savedInstanceState);
+        CastContext.getSharedInstance(this);
     }
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
