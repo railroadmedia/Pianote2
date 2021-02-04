@@ -131,7 +131,7 @@ export default class Downloads extends React.Component {
                 style={{
                   color: colors.pianoteRed,
                   fontFamily: 'OpenSans-Bold',
-                  fontSize: 16 * factorRatio
+                  fontSize: (onTablet) ? 22 : 16 * factorRatio
                 }}
               >
                 EDIT
@@ -150,7 +150,7 @@ export default class Downloads extends React.Component {
                   padding: 20,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: 18 * factorRatio
+                  fontSize: (onTablet) ? 26 : 18 * factorRatio
                 }}
               >
                 Any lessons you download will be available here.

@@ -300,8 +300,8 @@ export default class Profile extends React.Component {
               onPress={() => this.props.navigation.navigate('SETTINGS')}
             >
               <Settings
-                height={25 * factorRatio}
-                width={25 * factorRatio}
+                height={(onTablet) ? 18 * factorRatio : 25 * factorRatio}
+                width={(onTablet) ? 18 * factorRatio : 25 * factorRatio}
                 fill={colors.pianoteRed}
                 style={{ alignSelf: 'flex-end' }}
               />
@@ -334,7 +334,7 @@ export default class Profile extends React.Component {
                         style={[styles.centerContent, styles.container]}
                       >
                         <IonIcon
-                          size={25 * factorRatio}
+                          size={(onTablet) ? 30 : 22.5 * factorRatio}
                           name={'ios-camera'}
                           color={colors.pianoteRed}
                         />
@@ -638,26 +638,10 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     elevation: 10,
-    top:
-      (-15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    right:
-      (-15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    height:
-      (35 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    width:
-      (35 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    top: (DeviceInfo.isTablet() ? -15 : -15) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    right: (DeviceInfo.isTablet() ? -15 : -15) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    height: (DeviceInfo.isTablet() ? 30 : 35) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: (DeviceInfo.isTablet() ? 30 : 35) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     borderRadius: 100,
     borderColor: '#fb1b2f',
     borderWidth:
@@ -675,9 +659,9 @@ const localStyles = StyleSheet.create({
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
     fontSize:
-      (30 *
+      30 *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
     textAlign: 'center',
     color: 'white',

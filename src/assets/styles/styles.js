@@ -100,7 +100,7 @@ module.exports = StyleSheet.create({
   },
   settingsText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 18 * factorRatio,
+    fontSize: DeviceInfo.isTablet() ? 14 * factorRatio : 18 * factorRatio,
     color: '#445f73'
   },
   tabRightContainerText: {
@@ -110,7 +110,7 @@ module.exports = StyleSheet.create({
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',
-    paddingVertical: 10 * factorVertical
+    paddingVertical: 10 * factorVertical,
   },
   tabRightContainer: {
     paddingRight: 20 * factorHorizontal,

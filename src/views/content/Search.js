@@ -119,7 +119,7 @@ export default class Search extends React.Component {
           style={{
             justifyContent: 'center',
             paddingLeft: 15 * factorRatio,
-            borderTopWidth: 1,
+            borderTopWidth: 0.5,
             borderTopColor: colors.secondBackground
           }}
         >
@@ -129,7 +129,7 @@ export default class Search extends React.Component {
               fontFamily: 'OpenSans-Regular',
               fontWeight: 'bold',
               color: 'white',
-              padding: 10
+              paddingTop: 10
             }}
           >
             No Recent Searches

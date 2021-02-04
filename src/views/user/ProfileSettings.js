@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
@@ -250,7 +251,7 @@ export default class ProfileSettings extends React.Component {
               <View style={{ flex: 1 }} />
               <AntIcon
                 name={'right'}
-                size={22.5 * factorRatio}
+                size={(onTablet ? 20 : 25) * factorRatio}
                 color={colors.secondBackground}
               />
             </TouchableOpacity>
@@ -266,7 +267,7 @@ export default class ProfileSettings extends React.Component {
               <View style={{ flex: 1 }} />
               <AntIcon
                 name={'right'}
-                size={22.5 * factorRatio}
+                size={(onTablet ? 20 : 25) * factorRatio}
                 color={colors.secondBackground}
               />
             </TouchableOpacity>
@@ -284,7 +285,7 @@ export default class ProfileSettings extends React.Component {
               onChangeText={displayName => this.setState({ displayName })}
               onSubmitEditing={() => {}}
               returnKeyType={'go'}
-              style={localStyles.textInput}
+              style={[styles.centerContent, localStyles.displayContainer, localStyles.textInput]}
             />
             <Text style={localStyles.text}>
               This is the name that will appear on your comments and forum
@@ -294,9 +295,9 @@ export default class ProfileSettings extends React.Component {
         )}
         {this.state.currentlyView == 'Profile Photo' && (
           <ScrollView style={{ flex: 1 }}>
-            <View style={localStyles.scrollContainer}>
+            <View style={[localStyles.scrollContainer, styles.centerContent]}>
               {this.state.imageURI !== '' && (
-                <>
+                <View style={{flex: 1}}>
                   <FastImage
                     style={localStyles.image}
                     source={{ uri: this.state.imageURI }}
@@ -314,11 +315,11 @@ export default class ProfileSettings extends React.Component {
                   >
                     <EntypoIcon
                       name={'cross'}
-                      size={25 * factorRatio}
+                      size={(onTablet ? 22.5 : 30) * factorRatio}
                       color={colors.secondBackground}
                     />
                   </TouchableOpacity>
-                </>
+                </View>
               )}
 
               {this.state.imageURI == '' && (
@@ -344,7 +345,7 @@ export default class ProfileSettings extends React.Component {
               style={[styles.centerContent, localStyles.imageContainer]}
             >
               <IonIcon
-                size={50 * factorRatio}
+                size={(onTablet ? 40 : 50) * factorRatio}
                 name={'ios-camera'}
                 color={colors.secondBackground}
                 style={{ padding: 10 * factorRatio }}
@@ -417,10 +418,7 @@ const localStyles = StyleSheet.create({
           Dimensions.get('window').width / 375)) /
       2,
     margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      (20 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
     height: 200,
     width: '80%'
   },
@@ -431,6 +429,7 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   save: {
+    fontSize: (DeviceInfo.isTablet()) ? 20 : 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2 ,
     fontFamily: 'OpenSans-Bold',
     color: '#fb1b2f',
     textAlign: 'right',
@@ -438,9 +437,9 @@ const localStyles = StyleSheet.create({
   },
   displayContainer: {
     height:
-      (50 *
+      (DeviceInfo.isTablet() ? 40 : 50) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
     width: '100%',
     borderBottomColor: '#445f73',
@@ -452,9 +451,9 @@ const localStyles = StyleSheet.create({
   },
   profilePhoto: {
     height:
-      (50 *
+      (DeviceInfo.isTablet() ? 40 : 50) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
     width: '100%',
     borderBottomColor: '#445f73',
@@ -464,92 +463,55 @@ const localStyles = StyleSheet.create({
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',
-    paddingLeft: 15,
-    paddingBottom: 5,
+    paddingHorizontal: (20 * Dimensions.get('window').width) / 375,
     width: '100%',
-    justifyContent: 'center',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderBottomColor: '#445f73',
-    borderBottomWidth:
-      (1 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 18) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     color: '#445f73',
-    marginBottom:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (16 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingHorizontal: (20 * Dimensions.get('window').width) / 375,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16 ) *  (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingVertical: '2%',
     color: '#445f73'
   },
   scrollContainer: {
     alignSelf: 'center',
     marginTop: 10,
-    width:
-      (225 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
   },
   image: {
     width:
-      (200 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      (DeviceInfo.isTablet() ? 150 : 200) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     aspectRatio: 1,
-    borderRadius: 200
+    borderRadius: 200,
+    marginTop: 15 * Dimensions.get('window').height / 812,
   },
   crossContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-end',
     position: 'absolute',
-    minHeight: 40,
-    minWidth: 40,
-    top: 0,
+    height: (onTablet ? 30 : 40) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: (onTablet ? 30 : 40) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    top: (onTablet ? -7.5 : -10) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    right: (onTablet ? -7.5 : -10) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     borderRadius: 100,
     borderColor: '#445f73',
-    borderWidth: 2
+    borderWidth: 2,
+    marginTop: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    padding: 15,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16 ) *  (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    padding: 30,
+    paddingHorizontal: 30 * (Dimensions.get('window').width / 375),
     color: '#445f73',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   imageContainer: {
     alignSelf: 'center',
-    height:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    width:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: (DeviceInfo.isTablet() ? 75 : 100) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    width: (DeviceInfo.isTablet() ? 75 : 100) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     borderRadius:
       (200 *
         (Dimensions.get('window').height / 812 +

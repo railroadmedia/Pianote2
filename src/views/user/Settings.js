@@ -200,7 +200,12 @@ export default class Settings extends React.Component {
 
         <ScrollView style={styles.mainContainer}>
           <TouchableOpacity
-            style={[styles.centerContent, localStyles.profileSettingsContainer]}
+            style={[
+              styles.centerContent, 
+              localStyles.container, {
+                borderTopWidth: 0.5 * factorRatio, 
+                borderTopColor: '#445f73',
+            }]}
             onPress={() => {
               this.props.navigation.navigate('PROFILESETTINGS');
             }}
@@ -210,7 +215,7 @@ export default class Settings extends React.Component {
             >
               <FeatherIcon
                 name={'user'}
-                size={25 * factorRatio}
+                size={(onTablet ? 22.5 : 25) * factorRatio}
                 color={colors.pianoteRed}
               />
             </View>
@@ -218,7 +223,7 @@ export default class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -235,14 +240,14 @@ export default class Settings extends React.Component {
               <IonIcon
                 name={'ios-notifications-outline'}
                 color={colors.pianoteRed}
-                size={35 * factorRatio}
+                size={(onTablet ? 27 : 35) * factorRatio}
               />
             </View>
             <Text style={styles.settingsText}>Notification Settings</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -255,7 +260,7 @@ export default class Settings extends React.Component {
             >
               <AntIcon
                 name={'folder1'}
-                size={25 * factorRatio}
+                size={(onTablet ? 20 : 25) * factorRatio}
                 color={colors.pianoteRed}
               />
             </View>
@@ -263,7 +268,7 @@ export default class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -277,8 +282,8 @@ export default class Settings extends React.Component {
               style={[styles.centerContent, { width: 60 * factorHorizontal }]}
             >
               <AntIcon
-                name={'folder1'}
-                size={25 * factorRatio}
+                name={'creditcard'}
+                size={(onTablet ? 20 : 25) * factorRatio}
                 color={colors.pianoteRed}
               />
             </View>
@@ -286,7 +291,7 @@ export default class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -301,7 +306,7 @@ export default class Settings extends React.Component {
             >
               <FontIcon
                 name={'support'}
-                size={25 * factorRatio}
+                size={(onTablet ? 20 : 25) * factorRatio}
                 color={colors.pianoteRed}
               />
             </View>
@@ -309,7 +314,7 @@ export default class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -324,7 +329,7 @@ export default class Settings extends React.Component {
             >
               <AntIcon
                 name={'form'}
-                size={25 * factorRatio}
+                size={(onTablet ? 20 : 25) * factorRatio}
                 color={colors.pianoteRed}
               />
             </View>
@@ -332,7 +337,7 @@ export default class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -348,14 +353,14 @@ export default class Settings extends React.Component {
               <FontIcon
                 name={'shield'}
                 color={colors.pianoteRed}
-                size={27.5 * factorRatio}
+                size={(onTablet ? 21.5 : 27.5) * factorRatio}
               />
             </View>
             <Text style={styles.settingsText}>Privacy Policy</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -371,14 +376,14 @@ export default class Settings extends React.Component {
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
-                size={23.5 * factorRatio}
+                size={(onTablet ? 18 : 23.5) * factorRatio}
               />
             </View>
             <Text style={styles.settingsText}>Log Out</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={22.5 * factorRatio}
+              size={(onTablet ? 20 : 25) * factorRatio}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -462,9 +467,9 @@ export default class Settings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     height:
-      (50 *
+      (DeviceInfo.isTablet() ? 40 : 50) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
     width: '100%',
     borderBottomColor: '#445f73',
@@ -482,28 +487,6 @@ const localStyles = StyleSheet.create({
     alignItems: 'center',
     padding: 15
   },
-  profileSettingsContainer: {
-    height:
-      (50 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    width: '100%',
-    borderBottomColor: '#445f73',
-    borderBottomWidth:
-      (1 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderTopWidth:
-      (0.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderTopColor: '#445f73',
-    flexDirection: 'row',
-    paddingRight: 15
-  },
   appText: {
     marginTop:
       (15 *
@@ -512,6 +495,7 @@ const localStyles = StyleSheet.create({
       2,
     textAlign: 'center',
     fontSize:
+    DeviceInfo.isTablet() ? 18 : 
       (12 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /

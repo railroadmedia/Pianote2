@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
@@ -241,22 +242,22 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: 27.5 * factorRatio,
-                      height: 27.5 * factorRatio
+                      width: (onTablet ? 22.5 : 27.5) * factorRatio,
+                      height: (onTablet ? 22.5 : 27.5) * factorRatio
                     }
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes == 1 && (
                     <FontIcon
                       name={'check'}
-                      size={20 * factorRatio}
+                      size={(onTablet ? 17.5 : 20) * factorRatio}
                       color={'white'}
                     />
                   )}
                   {this.state.notifications_summary_frequency_minutes !== 1 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={22.5 * factorRatio}
+                      size={(onTablet ? 18.5 : 22.5) * factorRatio}
                       color={'white'}
                     />
                   )}
@@ -283,8 +284,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: 27.5 * factorRatio,
-                      height: 27.5 * factorRatio
+                      width: (onTablet ? 22.5 : 27.5) * factorRatio,
+                      height: (onTablet ? 22.5 : 27.5) * factorRatio
                     }
                   ]}
                 >
@@ -292,7 +293,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <FontIcon
                       name={'check'}
-                      size={20 * factorRatio}
+                      size={(onTablet ? 17.5 : 20) * factorRatio}
                       color={'white'}
                     />
                   )}
@@ -300,7 +301,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={22.5 * factorRatio}
+                      size={(onTablet ? 18.5 : 22.5) * factorRatio}
                       color={'white'}
                     />
                   )}
@@ -329,8 +330,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: 27.5 * factorRatio,
-                      height: 27.5 * factorRatio
+                      width: (onTablet ? 22.5 : 27.5) * factorRatio,
+                      height: (onTablet ? 22.5 : 27.5) * factorRatio
                     }
                   ]}
                 >
@@ -339,7 +340,7 @@ export default class NotificationSettings extends React.Component {
                       null) && (
                     <FontIcon
                       name={'check'}
-                      size={20 * factorRatio}
+                      size={(onTablet ? 17.5 : 20) * factorRatio}
                       color={'white'}
                     />
                   )}
@@ -348,7 +349,7 @@ export default class NotificationSettings extends React.Component {
                       null && (
                       <EntypoIcon
                         name={'cross'}
-                        size={22.5 * factorRatio}
+                        size={(onTablet ? 18.5 : 22.5) * factorRatio}
                         color={'white'}
                       />
                     )}
@@ -408,10 +409,9 @@ const localStyles = StyleSheet.create({
           Dimensions.get('window').width / 375)) /
       2,
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (16 *
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
     color: '#445f73',
     paddingVertical: 5
@@ -425,10 +425,9 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (16 *
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
     color: '#445f73'
   },
@@ -443,7 +442,7 @@ const localStyles = StyleSheet.create({
       2
   },
   border: {
-    height: (25 * Dimensions.get('window').height) / 812,
+    height: (DeviceInfo.isTablet() ? 15 : 25) * Dimensions.get('window').height / 812,
     borderBottomColor: '#445f73',
     borderBottomWidth: 1
   }
