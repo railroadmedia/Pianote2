@@ -138,6 +138,7 @@ class HorizontalVideoList extends React.Component {
     ) {
       return;
     }
+    console.log(content.type, content.id)
     switch (content.type) {
       case 'course':
         return this.props.navigation.navigate('PATHOVERVIEW', {
@@ -252,7 +253,6 @@ class HorizontalVideoList extends React.Component {
               <View style={{ width: '100%' }}>
                 {(item.isStarted) && (
                 <View 
-                  onLayout={() => console.log(item)}
                   style={[styles.centerContent, localStyles.progressItem]}
                 >
                   <Progress
@@ -434,7 +434,7 @@ class HorizontalVideoList extends React.Component {
             hideAddToCalendar={() =>
               this.setState({ addToCalendarModal: false })
             }
-            addEventToCalendar={() => {console.log('hi'), this.addEventToCalendar()}}
+            addEventToCalendar={() => {this.addEventToCalendar()}}
           />
         </Modal>      
       </View>

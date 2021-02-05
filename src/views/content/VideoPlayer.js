@@ -116,6 +116,7 @@ export default class VideoPlayer extends React.Component {
   }
 
   componentDidMount = async () => {
+    console.log('hello')
     // get profile image
     this.limit = 10;
     let storage = await Promise.all([
@@ -124,38 +125,47 @@ export default class VideoPlayer extends React.Component {
     ]);
     if (storage[1]) this.setState({ profileImage: storage[1] });
     this.userId = JSON.parse(storage[0]);
+    console.log('hello2')
     this.getContent();
+    console.log('helloDONE')
   };
 
   getContent = async () => {
+    console.log('hello3')
     let content, comments;
     if (!this.context.isConnected) {
-      content =
-        offlineContent[this.state.id]?.lesson ||
-        offlineContent[
-          this.props.navigation.state.params.parentId
-        ]?.overview.lessons.find(l => l.id === this.state.id);
+      console.log('hello4')
+      content = offlineContent[this.state.id]?.lesson || offlineContent[this.props.navigation.state.params.parentId]?.overview.lessons.find(l => l.id === this.state.id);
       comments = content.comments;
       this.allCommentsNum = comments.length;
+      console.log('hello5')
     } else {
+      console.log('hello6')
       let result;
       if (this.props.navigation.state.params.url) {
+        console.log('hello7')
         result = await methodService.getMethodContent(this.state.url);
+        console.log('hello8')
       } else {
+        console.log('hello9')
         result = await contentService.getContent(this.state.id);
+        console.log('hello10')
       }
       if (result.title && result.message) {
+        console.log('hello11')
         return this.alert.toggle(result.title, result.message);
       }
       content = result;
       this.allCommentsNum = result.total_comments;
     }
+    console.log('hello12')
     content = new ContentModel(content);
     let relatedLessons = content.post.related_lessons?.map(rl => {
       return new ContentModel(rl);
     });
+    console.log('hello13')
     let al = [];
-
+    console.log('hello14')
     if (content.post.assignments && this.context.isConnected) {
       let assignments = content.post.assignments.map(assignment => {
         return new ContentModel(assignment);
@@ -194,6 +204,7 @@ export default class VideoPlayer extends React.Component {
         });
       }
     }
+    console.log('hello15')
     let rl = [];
     if (relatedLessons) {
       for (let i in relatedLessons) {
@@ -218,7 +229,7 @@ export default class VideoPlayer extends React.Component {
         });
       }
     }
-
+    console.log('hello16')
     this.setState(
       {
         comments: content.post.comments,
@@ -323,6 +334,7 @@ export default class VideoPlayer extends React.Component {
         }
       }
     );
+    console.log('hello17')
   };
 
   createResourcesArr() {
