@@ -1325,7 +1325,7 @@ export default class VideoPlayer extends React.Component {
                       showArtist={false}
                       showSort={false}
                       showLength={true}
-                      imageWidth={fullWidth * 0.26}
+                      imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
                       navigator={row =>
                         this.switchLesson(row.id, row.mobile_app_url)
                       }

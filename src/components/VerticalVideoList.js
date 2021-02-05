@@ -565,6 +565,7 @@ class VerticalVideoList extends React.Component {
                 style={{
                   fontSize: (onTablet ? 12 : 16) * factorRatio,
                   textAlign: 'left',
+                  paddingRight: 3,
                   fontWeight: 'bold',
                   fontFamily: 'OpenSans-Regular',
                   color: 'white'
@@ -628,7 +629,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: 12 * factorRatio,
+                      fontSize: (onTablet ? 10 : 12) * factorRatio,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -643,7 +644,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: onTablet ? 20 : 12 * factorRatio,
+                      fontSize: (onTablet ? 10.5 : 12) * factorRatio,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -747,7 +748,7 @@ class VerticalVideoList extends React.Component {
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: onTablet ? 22 : 18 * factorRatio,
+                        fontSize: onTablet ? 26 : 18 * factorRatio,
                         marginBottom: 5 * factorVertical,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',

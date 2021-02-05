@@ -104,8 +104,8 @@ module.exports = StyleSheet.create({
     color: '#445f73'
   },
   tabRightContainerText: {
-    paddingLeft: 15,
-    fontSize: 20 * factorRatio,
+    paddingLeft: 10 * factorHorizontal,
+    fontSize: DeviceInfo.isTablet() ? 26 : 20 * factorRatio,
     marginBottom: 5 * factorVertical,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
@@ -113,11 +113,11 @@ module.exports = StyleSheet.create({
     paddingVertical: 10 * factorVertical,
   },
   tabRightContainer: {
-    paddingRight: 20 * factorHorizontal,
+    paddingRight: 10 * factorHorizontal,
     width: '100%',
-    borderTopWidth: 0.25 * factorRatio,
+    borderTopWidth: 0.5 * factorRatio,
     borderTopColor: '#445f73',
-    borderBottomWidth: 0.25 * factorRatio,
+    borderBottomWidth: 0.5 * factorRatio,
     borderBottomColor: '#445f73',
     flexDirection: 'row',
     justifyContent: 'space-between',

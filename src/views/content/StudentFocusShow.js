@@ -371,21 +371,7 @@ class StudentFocusShow extends React.Component {
             currentSort={this.state.currentSort}
             changeSort={sort => this.changeSort(sort)}
             filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.0925
-            }
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.125
-                : Platform.OS == 'android'
-                ? fullHeight * 0.0925
-                : fullHeight * 0.0825
-            }
-            imageWidth={fullWidth * 0.26}
+            imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
             outVideos={this.state.outVideos}
             getVideos={() => this.getVideos()}
           />

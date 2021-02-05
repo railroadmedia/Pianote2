@@ -297,7 +297,7 @@ class HorizontalVideoList extends React.Component {
                           fontSize: onTablet ?  16 : 12 * factorRatio,  
                         }}
                       >
-                        {this.changeType(item.type)}/
+                        {this.changeType(item.type)}/{' '}
                       </Text>
                     )}
                     <Text
@@ -418,11 +418,8 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingVertical: (DeviceInfo.isTablet() ? 10 : 15) *
+        (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
   },
   progressItem: {
     position: 'absolute',
@@ -451,8 +448,8 @@ const localStyles = StyleSheet.create({
       16
       : 
       (14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
-    marginTop:
-      (7.5 *
+    marginTop: DeviceInfo.isTablet() ?  5 :
+      (7.5 * 
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
@@ -461,7 +458,6 @@ const localStyles = StyleSheet.create({
   },
   typeContainer: {
     flexDirection: 'row',
-    marginBottom: 3
   }
 });
 

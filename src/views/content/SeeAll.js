@@ -317,21 +317,7 @@ export default class SeeAll extends React.Component {
                 this.getAllLessons();
             }} // change sort and reload videos
             filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            containerHeight={
-              onTablet
-                ? fullHeight * 0.15
-                : Platform.OS == 'android'
-                ? fullHeight * 0.115
-                : fullHeight * 0.0925
-            } // height per row
-            imageHeight={
-              onTablet
-                ? fullHeight * 0.12
-                : Platform.OS == 'android'
-                ? fullHeight * 0.09
-                : fullHeight * 0.0825
-            } // image height
-            imageWidth={fullWidth * 0.26} // image width
+            imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
             outVideos={this.state.outVideos} // if paging and out of videos
           />
         </ScrollView>

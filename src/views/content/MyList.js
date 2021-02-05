@@ -245,7 +245,7 @@ class MyList extends React.Component {
           <TouchableOpacity
             style={[
               styles.tabRightContainer,
-              { marginBottom: 15 * factorVertical }
+              { marginBottom: 10 * factorVertical }
             ]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
@@ -276,7 +276,7 @@ class MyList extends React.Component {
             filterResults={() => this.setState({ showFilters: true })}
             removeItem={contentID => this.removeFromMyList(contentID)}
             outVideos={this.state.outVideos}
-            imageWidth={fullWidth * 0.26}
+            imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
           />
         </ScrollView>
         {this.state.showFilters && (

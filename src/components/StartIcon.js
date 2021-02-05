@@ -41,7 +41,7 @@ class StartIcon extends React.Component {
             color={'white'}
           />
           <View style={{ flex: 0.025 }} />
-          <Text style={[styles.buttonText, {fontSize: (this.props.isMethod && onTablet) ? 16 * factorRatio : 12 * factorRatio}]}>START</Text>
+          <Text style={[styles.buttonText, {fontSize: (this.props.isMethod && onTablet) ? 16 * factorRatio : 14 * factorRatio}]}>START</Text>
         </TouchableOpacity>
       </View>
     );
