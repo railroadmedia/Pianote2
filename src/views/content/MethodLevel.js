@@ -393,7 +393,7 @@ export default class MethodLevel extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginVertical: 15 * factorVertical,
+                  marginVertical: 20 * factorVertical,
                   fontSize: 15 * factorRatio,
                   color: 'white',
                   textAlign: 'center'

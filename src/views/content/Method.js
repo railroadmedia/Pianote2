@@ -187,9 +187,12 @@ export default class Method extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
+
     resetProgress(this.state.id);
+
     this.setState(
       {
+        methodIsStarted: false, 
         isStarted: false,
         isCompleted: false,
         showRestartCourse: false,

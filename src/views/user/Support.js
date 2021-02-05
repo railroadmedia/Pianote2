@@ -73,10 +73,10 @@ export default class Support extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView
-          style={{ flex: 0, backgroundColor: colors.thirdBackground }}
-        />
-        <SafeAreaView style={styles.mainContainer}>
+        <SafeAreaView 
+          forceInset={{top: (onTablet) ? 'never' : 'always'}} 
+          style={[styles.mainContainer, {backgroundColor: colors.thirdBackground}]}
+        >
           <StatusBar
             backgroundColor={colors.thirdBackground}
             barStyle={'light-content'}
@@ -117,7 +117,7 @@ export default class Support extends React.Component {
           </View>
           <ScrollView
             key={'contentContainer'}
-            style={{ flex: 1 }}
+            style={styles.mainContainer}
             contentContainerStyle={{ flexGrow: 1 }}
           >
             <View

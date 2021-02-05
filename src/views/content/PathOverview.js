@@ -267,14 +267,14 @@ export default class PathOverview extends React.Component {
     return (
       <View>
         <ImageBackground
-          resizeMode={'cover'}
+          resizeMode={'contain'}
           onLayout={() => console.log(this.getAspectRatio())}
           style={{
             width: '100%',
             aspectRatio: this.getAspectRatio(),
           }}
-          source={{
-            uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${(greaterWDim >> 0) * 2},ar_${this.getAspectRatio()},c_fill,g_face/${this.state.thumbnail}`
+          source={{ // TODO: fix resolution / sizing
+            uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${fullWidth},ar_${this.getAspectRatio()},c_fill,g_face/${this.state.thumbnail}`
           }}
         >
           <TouchableOpacity
@@ -687,6 +687,7 @@ export default class PathOverview extends React.Component {
     const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
       <SafeAreaView
+        forceInset={{top: (onTablet) ? 'never' : 'never'}}
         style={[
           {
             flex: 1,
@@ -702,9 +703,7 @@ export default class PathOverview extends React.Component {
           showsVerticalScrollIndicator={false} 
           showsHorizontalScrollIndicator={false}
         >
-          <View>
-          {this.renderHeader()}
-          </View>
+          {this.renderHeader()} 
           <FlatList
             style={{
               flex: 1,

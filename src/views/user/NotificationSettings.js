@@ -99,10 +99,10 @@ export default class NotificationSettings extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView
-          style={{ flex: 0, backgroundColor: colors.thirdBackground }}
-        />
-        <SafeAreaView style={styles.mainContainer}>
+        <SafeAreaView 
+          forceInset={{top: (onTablet) ? 'never' : 'always'}} 
+          style={[styles.mainContainer, {backgroundColor: colors.thirdBackground}]}
+        >
           <StatusBar
             backgroundColor={colors.thirdBackground}
             barStyle={'light-content'}
@@ -130,7 +130,7 @@ export default class NotificationSettings extends React.Component {
             <View style={{ flex: 1 }} />
           </View>
           {this.state.isLoading && (
-            <View style={[styles.centerContent, { flex: 1 }]}>
+            <View style={[styles.centerContent,  styles.mainContainer]}>
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}
                 animating={true}
@@ -139,7 +139,7 @@ export default class NotificationSettings extends React.Component {
             </View>
           )}
           {!this.state.isLoading && (
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView style={styles.mainContainer}>
               <View style={localStyles.noteTypeContainer}>
                 <Text style={localStyles.noteTypeText}>Notification Types</Text>
               </View>
@@ -386,7 +386,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#081826'
+    backgroundColor: '#081826',
   },
   title: {
     textAlign: 'center',
