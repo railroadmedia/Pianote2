@@ -41,7 +41,7 @@ class ContinueIcon extends React.Component {
             color={'white'}
           />
           <View style={{ flex: 0.025 }} />
-          <Text style={styles.buttonText}>CONTINUE</Text>
+          <Text style={[styles.buttonText, {fontSize: (this.props.isMethod && onTablet) ? 16 * factorRatio : 12 * factorRatio}]}>CONTINUE</Text>
         </TouchableOpacity>
       </View>
     );

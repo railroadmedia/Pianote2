@@ -393,7 +393,7 @@ class HorizontalVideoList extends React.Component {
 
 const localStyles = StyleSheet.create({
   listContainer: {
-    paddingHorizontal: 15
+    paddingLeft: 10 * Dimensions.get('window').width / 375
   },
   artist: {
     fontSize: DeviceInfo.isTablet() ? 
@@ -410,7 +410,8 @@ const localStyles = StyleSheet.create({
     textAlign: 'right',
     fontSize: DeviceInfo.isTablet() ? 20 : (14.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
     fontWeight: '300',
-    color: '#fb1b2f'
+    color: '#fb1b2f',
+    paddingRight: 15 * Dimensions.get('window').width / 375
   },
   titleContain: {
     flex: 1,

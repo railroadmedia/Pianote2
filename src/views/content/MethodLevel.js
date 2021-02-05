@@ -283,7 +283,7 @@ export default class MethodLevel extends React.Component {
               <Text
                 key={'level'}
                 style={{
-                  fontSize: 43 * factorRatio,
+                  fontSize: 37.5 * factorHorizontal,
                   color: 'white',
                   marginBottom: 10 * factorRatio,
                   fontFamily: 'RobotoCondensed-Bold',
@@ -333,10 +333,12 @@ export default class MethodLevel extends React.Component {
                 </TouchableOpacity>
                 {this.state.isCompleted ? (
                   <ResetIcon
+                    isMethod={true}
                     pressed={() => this.setState({ showRestartCourse: true })}
                   />
                 ) : this.state.isStarted ? (
                   <ContinueIcon
+                    isMethod={true}
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
                         url: this.state.bannerNextLessonUrl
@@ -345,6 +347,7 @@ export default class MethodLevel extends React.Component {
                   />
                 ) : !this.state.isStarted ? (
                   <StartIcon
+                    isMethod={true}
                     pressed={() =>
                       this.props.navigation.navigate('VIDEOPLAYER', {
                         url: this.state.bannerNextLessonUrl
@@ -417,7 +420,7 @@ export default class MethodLevel extends React.Component {
               showLength={false}
               showSort={false}
               showLines={true}
-              imageWidth={fullWidth * 0.3}
+              imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
             />
           </View>
         </ScrollView>

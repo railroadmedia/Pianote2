@@ -218,6 +218,14 @@ export default class Method extends React.Component {
     return this.props.navigation.navigate('VIDEOPLAYER', { url });
   }
 
+  getSquareHeight = () => {
+    if(onTablet) {
+      return 150
+    } else {
+      return fullWidth * 0.26
+    }
+  }
+
   render() {
     return (
       <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
@@ -297,6 +305,7 @@ export default class Method extends React.Component {
                 <View style={{ flex: 0.5 }} />
                 {this.state.methodIsCompleted ? (
                   <ResetIcon
+                    isMethod={true}
                     pressed={() =>
                       this.setState({
                         showRestartCourse: true
@@ -305,6 +314,7 @@ export default class Method extends React.Component {
                   />
                 ) : this.state.methodIsStarted ? (
                   <ContinueIcon
+                    isMethod={true}
                     pressed={() =>
                       this.goToLesson(this.state.bannerNextLessonUrl)
                     }
@@ -312,6 +322,7 @@ export default class Method extends React.Component {
                 ) : (
                   !this.state.methodIsStarted && (
                     <StartIcon
+                      isMethod={true}
                       pressed={() =>
                         this.goToLesson(this.state.bannerNextLessonUrl)
                       }
@@ -556,7 +567,7 @@ export default class Method extends React.Component {
               showSort={false}
               isMethodLevel={true}
               isSquare={true}
-              imageWidth={fullWidth * 0.26}
+              imageWidth={this.getSquareHeight()}
             />
           </View>
         </ScrollView>

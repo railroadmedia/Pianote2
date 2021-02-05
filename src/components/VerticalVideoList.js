@@ -370,7 +370,7 @@ class VerticalVideoList extends React.Component {
           <View
             style={{
               flex: 1,
-              paddingLeft: 15,
+              paddingLeft: 10 * factorHorizontal,
               paddingVertical: (onTablet ? 5 : 7.5) * factorRatio,
               flexDirection: 'row',
               borderTopColor: '#ececec'
@@ -550,7 +550,7 @@ class VerticalVideoList extends React.Component {
                 <Text
                   style={{
                     fontSize: 10 * factorRatio,
-                    marginBottom: 2 * factorRatio,
+                    marginBottom: 1 * factorRatio,
                     textAlign: 'left',
                     fontWeight: 'bold',
                     fontFamily: 'OpenSans-Regular',
@@ -563,7 +563,7 @@ class VerticalVideoList extends React.Component {
               <Text
                 numberOfLines={2}
                 style={{
-                  fontSize: onTablet ? 22 : 16 * factorRatio,
+                  fontSize: (onTablet ? 12 : 16) * factorRatio,
                   textAlign: 'left',
                   fontWeight: 'bold',
                   fontFamily: 'OpenSans-Regular',
@@ -577,7 +577,7 @@ class VerticalVideoList extends React.Component {
                   numberOfLines={2}
                   style={{
                     marginTop: 2 * factorRatio,
-                    fontSize: 12 * factorRatio,
+                    fontSize: (onTablet ? 10 : 12) * factorRatio,
                     color: this.props.isMethod
                       ? colors.pianoteGrey
                       : colors.secondBackground,
@@ -612,7 +612,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={1}
                     style={{
-                      fontSize: 12 * factorRatio,
+                      fontSize: (onTablet ? 10 : 12) * factorRatio,
                       color:
                         this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
@@ -731,7 +731,7 @@ class VerticalVideoList extends React.Component {
           <View style={{ height: 5 * factorVertical }} />
           {this.props.showFilter && (
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ paddingLeft: 15 }}>
+              <View style={{ paddingLeft: 10 * factorHorizontal }}>
                 {this.props.showLargeTitle ? (
                   <Text
                     style={{

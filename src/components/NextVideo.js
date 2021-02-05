@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -55,7 +56,8 @@ class NextVideo extends React.Component {
           <View style={localStyles.nextLesson}>
             <Text
               style={{
-                fontSize: 16 * factorRatio,
+                fontSize: onTablet ? 18 : 16 * factorRatio,
+                marginBottom: 5*factorVertical,
                 textAlign: 'left',
                 fontFamily: 'RobotoCondensed-Bold',
                 color: this.props.isMethod
@@ -69,6 +71,7 @@ class NextVideo extends React.Component {
               style={[
                 localStyles.typeText,
                 {
+                  fontSize: onTablet ? 18 : 14 * factorRatio,
                   color: this.props.isMethod
                     ? colors.pianoteGrey
                     : colors.secondBackground
@@ -127,13 +130,13 @@ class NextVideo extends React.Component {
               <View style={{ flex: 1 }} />
               <EntypoIcon
                 name={'controller-play'}
-                size={30 * factorRatio}
+                size={(onTablet ? 25 : 30) * factorRatio}
                 color={colors.pianoteRed}
               />
             </View>
           </View>
         </View>
-        <View style={{ height: 15 * factorVertical }} />
+        <View style={{ height: 10 * factorVertical }} />
       </TouchableOpacity>
     );
   };
@@ -142,33 +145,26 @@ class NextVideo extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height:
-      (3 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    height: (1.25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2
   },
   nextLesson: {
     marginTop: (10 * Dimensions.get('window').height) / 812,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15
+    paddingHorizontal: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
   },
   typeText: {
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
     fontFamily: 'OpenSans-Regular',
     textAlign: 'right'
   },
   videoContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 15
+    paddingHorizontal: 10 * (Dimensions.get('window').height / 812 +
+    Dimensions.get('window').width / 375) /2
   },
   image: {
-    width: Dimensions.get('window').width * 0.24,
+    width: DeviceInfo.isTablet() ? Dimensions.get('window').width * 0.15 : Dimensions.get('window').width * 0.225,
     aspectRatio: 16 / 9,
     borderRadius:
       (7 *
@@ -177,7 +173,7 @@ const localStyles = StyleSheet.create({
       2
   },
   videoTitle: {
-    fontSize:
+    fontSize: DeviceInfo.isTablet() ? 18 : 
       (15 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
@@ -194,6 +190,7 @@ const localStyles = StyleSheet.create({
   },
   videoTitleText: {
     fontSize:
+      DeviceInfo.isTablet() ? 16 : 
       (12 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
@@ -202,7 +199,7 @@ const localStyles = StyleSheet.create({
     textAlign: 'left'
   },
   titleTextContainer: {
-    paddingLeft: 15,
+    paddingHorizontal: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     alignSelf: 'center'
   }
 });

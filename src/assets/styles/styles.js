@@ -124,7 +124,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   contentPageHeader: {
-    paddingLeft: 15,
+    paddingLeft: 10 * Dimensions.get('window').width / 375,
     fontSize: 30 * factorRatio,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
