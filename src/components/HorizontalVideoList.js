@@ -14,8 +14,10 @@ import {
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
+import AddToCalendar from '../modals/AddToCalendar';
 import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 
@@ -33,7 +35,8 @@ class HorizontalVideoList extends React.Component {
     super(props);
     this.state = {
       showModal: false,
-      items: this.props.items
+      addToCalendarModal: false,
+      items: this.props.items,
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -129,6 +132,12 @@ class HorizontalVideoList extends React.Component {
 
   navigate = (content, index) => {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    if (
+      this.props.title !== 'METHOD' &&
+      new Date(content.publishedOn) > new Date()
+    ) {
+      return;
+    }
     switch (content.type) {
       case 'course':
         return this.props.navigation.navigate('PATHOVERVIEW', {
@@ -179,6 +188,23 @@ class HorizontalVideoList extends React.Component {
     }
   };
 
+  addEventToCalendar = () => {
+    const eventConfig = {
+      title: this.addToCalendarLessonTitle,
+      startDate: new Date(this.addToCalendatLessonPublishDate),
+      endDate: new Date(this.addToCalendatLessonPublishDate)
+    };
+    AddCalendarEvent.presentEventCreatingDialog(eventConfig)
+      .then(eventInfo => {
+        this.addToCalendarLessonTitle = '';
+        this.addToCalendatLessonPublishDate = '';
+        this.setState({ addToCalendarModal: false });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   render = () => {
     return (
       <View style={localStyles.listContainer}>
@@ -224,14 +250,18 @@ class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                <View style={[styles.centerContent, localStyles.progressItem]}>
+                {(item.isStarted) && (
+                <View 
+                  onLayout={() => console.log(item)}
+                  style={[styles.centerContent, localStyles.progressItem]}
+                >
                   <Progress
                     height={50}
                     width={50 * factorRatio}
                     fill={'white'}
                   />
                 </View>
-
+                )}
                 {Platform.OS === 'ios' ? (
                   <FastImage
                     style={[
@@ -386,6 +416,27 @@ class HorizontalVideoList extends React.Component {
             removeFromMyList={contentID => this.removeFromMyList(contentID)}
           />
         </Modal>
+        <Modal
+          key={'calendarModal'}
+          isVisible={this.state.addToCalendarModal}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={true}
+        >
+          <AddToCalendar
+            hideAddToCalendar={() =>
+              this.setState({ addToCalendarModal: false })
+            }
+            addEventToCalendar={() => {console.log('hi'), this.addEventToCalendar()}}
+          />
+        </Modal>      
       </View>
     );
   };

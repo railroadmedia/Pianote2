@@ -459,7 +459,8 @@ class Lessons extends React.Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingHorizontal: 25 * factorRatio
+                    paddingHorizontal: 25 * factorRatio,
+                    marginBottom: (Platform.OS == 'android') ? -5 : -1,
                   }}
                 >
                   {this.state.methodIsCompleted ? (

@@ -82,7 +82,7 @@ class NavMenuHeaders extends React.Component {
                 Platform.OS == 'ios' ? 
                   onTablet ? fullHeight * 0.045 : fullHeight * 0.035
                   : 
-                  onTablet ? fullHeight * 0.1 : fullHeight * 0.08,
+                  onTablet ? fullHeight * 0.1 : fullHeight * 0.04,
               width: onTablet ? 0.14 * fullWidth : 0.25 * fullWidth,
               flexDirection: 'row',
               marginRight: 5 * factorHorizontal,
