@@ -276,9 +276,9 @@ export default class PathOverview extends React.Component {
           source={{
             uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
               fullWidth
-            )},ar_${this.getAspectRatio()},c_pad,g_south/${
-              this.state.thumbnail
-            }`
+            )},ar_${this.getAspectRatio()},${
+              this.state.isMethod ? 'c_pad,g_south' : 'c_fill,g_face'
+            }/${this.state.thumbnail}`
           }}
         >
           <TouchableOpacity
