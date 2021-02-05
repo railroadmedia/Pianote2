@@ -249,8 +249,8 @@ export default class PathOverview extends React.Component {
   }
 
   getAspectRatio() {
-    if (onTablet && this.state.isLandscape) return 2.5;
-    if (onTablet && !this.state.isLandscape) return 2;
+    if (onTablet && this.state.isLandscape) return 2.2;
+    if (onTablet && !this.state.isLandscape) return 1.9;
     return 1.8;
   }
 
@@ -267,14 +267,18 @@ export default class PathOverview extends React.Component {
     return (
       <View>
         <ImageBackground
-          resizeMode={'contain'}
-          onLayout={() => console.log(this.getAspectRatio())}
+          resizeMethod='resize'
           style={{
             width: '100%',
             aspectRatio: this.getAspectRatio(),
+            resizeMode: 'cover'
           }}
-          source={{ // TODO: fix resolution / sizing
-            uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${fullWidth},ar_${this.getAspectRatio()},c_fill,g_face/${this.state.thumbnail}`
+          source={{
+            uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+              fullWidth
+            )},ar_${this.getAspectRatio()},${
+              this.state.isMethod ? 'c_pad,g_south' : 'c_fill,g_face'
+            }/${this.state.thumbnail}`
           }}
         >
           <TouchableOpacity
@@ -285,8 +289,8 @@ export default class PathOverview extends React.Component {
               styles.centerContent,
               {
                 position: 'absolute',
-                left: 10*factorHorizontal,
-                top: 10*factorRatio,
+                left: 10 * factorHorizontal,
+                top: 10 * factorRatio,
                 borderRadius: 100,
                 height: 35 * factorRatio,
                 width: 35 * factorRatio
@@ -334,9 +338,11 @@ export default class PathOverview extends React.Component {
                 textAlign: 'center',
                 fontSize: onTablet ? 20 : 14 * factorRatio
               },
-              onTablet ? {
-                marginTop: 15 * factorVertical,
-              } : {}
+              onTablet
+                ? {
+                    marginTop: 15 * factorVertical
+                  }
+                : {}
             ]}
           >
             {this.state.artist?.toUpperCase()} |{' '}
@@ -354,10 +360,12 @@ export default class PathOverview extends React.Component {
                 alignItems: 'center',
                 flexDirection: 'row'
               },
-              onTablet ? {
-                height: 50*factorVertical,
-                marginVertical: 5 * factorRatio,
-              } : {}
+              onTablet
+                ? {
+                    height: 50 * factorVertical,
+                    marginVertical: 5 * factorRatio
+                  }
+                : {}
             ]}
           >
             <TouchableOpacity
@@ -390,7 +398,7 @@ export default class PathOverview extends React.Component {
               />
             ) : this.state.started ? (
               <ContinueIcon
-              isMethod={true}
+                isMethod={true}
                 pressed={() =>
                   this.goToLesson(
                     this.state.isMethod
@@ -680,14 +688,14 @@ export default class PathOverview extends React.Component {
         )}
         <View style={{ height: 15 * factorVertical }} />
       </View>
-    )
-  }
+    );
+  };
 
   render() {
     const { isMethod, items, refreshing, isLandscape, nextLesson } = this.state;
     return (
       <SafeAreaView
-        forceInset={{top: (onTablet) ? 'never' : 'never'}}
+        forceInset={{ top: onTablet ? 'never' : 'never' }}
         style={[
           {
             flex: 1,
@@ -699,17 +707,17 @@ export default class PathOverview extends React.Component {
           backgroundColor={isMethod ? 'black' : colors.mainBackground}
           barStyle={'light-content'}
         />
-        <ScrollView 
-          showsVerticalScrollIndicator={false} 
+        <ScrollView
+          showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
-          {this.renderHeader()} 
+          {this.renderHeader()}
           <FlatList
             style={{
               flex: 1,
               paddingLeft: '2%',
               backgroundColor: isMethod ? 'black' : colors.mainBackground,
-              marginBottom: 10,
+              marginBottom: 10
             }}
             numColumns={onTablet ? 3 : 1}
             data={items}
@@ -730,7 +738,9 @@ export default class PathOverview extends React.Component {
                 }
                 style={[
                   {
-                    width: onTablet ? `${isLandscape ? 80 / 3 : 100 / 3}%` : '100%',
+                    width: onTablet
+                      ? `${isLandscape ? 80 / 3 : 100 / 3}%`
+                      : '100%',
                     paddingRight: '2%',
                     paddingVertical: 3.5 * factorVertical,
                     flexDirection: onTablet ? 'column' : 'row'
@@ -808,14 +818,14 @@ export default class PathOverview extends React.Component {
                     {
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
+                      justifyContent: 'space-between'
                     },
                     onTablet ? { width: '100%' } : { flex: 1 }
                   ]}
                 >
                   <View style={{ width: '80%' }}>
-                    <View style={{flex: 1}}/>
-                    <View style={{height: 5}}/>
+                    <View style={{ flex: 1 }} />
+                    <View style={{ height: 5 }} />
                     <Text
                       numberOfLines={1}
                       style={{
@@ -823,7 +833,7 @@ export default class PathOverview extends React.Component {
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Bold',
                         color: 'white',
-                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal,
+                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal
                       }}
                     >
                       {item.title}
@@ -843,14 +853,14 @@ export default class PathOverview extends React.Component {
                       {Math.floor(item.duration / 60)}{' '}
                       {Math.floor(item.duration / 60) == 1 ? 'min' : 'mins'}
                     </Text>
-                    <View style={{height: 10}}/>
-                    <View style={{flex: 1}}/>
+                    <View style={{ height: 10 }} />
+                    <View style={{ flex: 1 }} />
                   </View>
 
                   <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
                     <AntIcon
                       name={item.isAddedToList ? 'close' : 'plus'}
-                      size={(onTablet) ?  17.5 * factorRatio :  30 * factorRatio}
+                      size={onTablet ? 17.5 * factorRatio : 30 * factorRatio}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
