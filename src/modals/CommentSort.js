@@ -40,7 +40,13 @@ class CommentSort extends React.Component {
           {sortOptions.map((sortOption, index) => (
             <TouchableOpacity
               key={index}
-              style={localStyles.sortCommentContainer}
+              style={[
+                localStyles.sortCommentContainer, 
+                index == 0 ? {
+                  borderTopWidth: 0.5 * factorRatio,
+                  borderTopColor: '#445f73',
+                } : {}
+              ]}
               onPress={() => {
                 this.props.hideCommentSort();
                 this.props.changeSort(sortOption.option);
@@ -97,7 +103,7 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: '#445f73',
     borderBottomWidth:
-      (0.25 *
+      (0.5 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,

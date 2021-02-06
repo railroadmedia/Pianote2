@@ -14,7 +14,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
-
+import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
@@ -90,7 +90,7 @@ class Replies extends React.Component {
                 >
                   <AntIcon
                     name={reply.is_liked ? 'like1' : 'like2'}
-                    size={20 * factorRatio}
+                    size={(onTablet ? 17.5 : 22.5) * factorRatio}
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
@@ -207,7 +207,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={comment.is_liked ? 'like1' : 'like2'}
-                                  size={20 * factorRatio}
+                                  size={(onTablet ? 17.5 : 22.5) * factorRatio}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -309,7 +309,7 @@ class Replies extends React.Component {
                   >
                     <View style={localStyles.replierContainer}>
                       <FastImage
-                        style={[localStyles.profileImage, { marginRight: 15 }]}
+                        style={[localStyles.profileImage, { marginRight: 10 * factorHorizontal }]}
                         source={{
                           uri:
                             me.profileImage ||
@@ -359,14 +359,15 @@ class Replies extends React.Component {
 
 const localStyles = StyleSheet.create({
   replyContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10 * Dimensions.get('window').width / 375,
     minHeight: (30 * Dimensions.get('window').height) / 812,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingTop: 15 * Dimensions.get('window').height / 812,
   },
   profileImage: {
-    height: (40 * Dimensions.get('window').width) / 375,
-    width: (40 * Dimensions.get('window').width) / 375,
+    height: (DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width / 375,
+    width: (DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width / 375,
+    paddingVertical: 10 * Dimensions.get('window').height / 812,
     borderRadius: 100
   },
   replyName: {
@@ -385,7 +386,7 @@ const localStyles = StyleSheet.create({
   },
   commentContainer: {
     flex: 1,
-    paddingLeft: 15,
+    paddingLeft: 10 * Dimensions.get('window').width / 375,
     marginTop: 3
   },
   displayNameText: {
@@ -403,12 +404,9 @@ const localStyles = StyleSheet.create({
     color: 'grey'
   },
   comment: {
+    paddingTop: 10 * Dimensions.get('window').height / 812,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 13) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (13 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
     color: 'white'
   },
   likeContainer: {
@@ -447,12 +445,11 @@ const localStyles = StyleSheet.create({
     marginTop: 10
   },
   replyText: {
-    fontSize:
-      (18 *
+    fontSize: DeviceInfo.isTablet() ? 26 : 18 *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
-    marginBottom: (5 * Dimensions.get('window').height) / 812,
+    marginVertical: (5 * Dimensions.get('window').height) / 812,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73'
@@ -469,30 +466,15 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   replierImage: {
-    height:
-      (40 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    width:
-      (40 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: (DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width / 375,
+    width: (DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width / 375,
+    paddingVertical: 10 * Dimensions.get('window').height / 812,
     borderRadius: 100
   },
   opXP: {
     fontFamily: 'OpenSans-Bold',
-    fontSize:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginTop:
-      (2 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet() ? 15 : 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    marginTop: 5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     color: 'grey'
   },
   commentText: {
@@ -522,7 +504,7 @@ const localStyles = StyleSheet.create({
   addComment: {
     width: '100%',
     flexDirection: 'row',
-    paddingLeft: 15,
+    paddingLeft: 10 * Dimensions.get('window').width / 375,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderBottomColor: '#445f73',
@@ -536,21 +518,20 @@ const localStyles = StyleSheet.create({
   addReplyText: {
     textAlign: 'left',
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (13 *
+    fontSize: (DeviceInfo.isTablet() ? 10 : 13) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
+          Dimensions.get('window').width / 375) /
       2,
     color: 'white',
-    paddingLeft: 15,
+    paddingLeft: 10 * Dimensions.get('window').width / 375,
     paddingVertical:
-      (30 *
+      (20 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2
   },
   replierContainer: {
-    padding: 10,
+    padding: 10 * Dimensions.get('window').width / 375,
     alignItems: 'center',
     flexDirection: 'row',
     borderTopWidth:
