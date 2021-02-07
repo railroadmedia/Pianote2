@@ -39,91 +39,122 @@ class Replies extends React.Component {
     };
   }
 
-  toggle = callback =>
-    this.setState(
-      ({ showReplies }) => ({ showReplies: !showReplies }),
-      () => setTimeout(callback || (() => {}), 0)
-    );
-
-  mapReplies = () =>
-    this.props.comment.replies.map((reply, index) => {
-      return (
-        <View key={index} style={localStyles.replyContainer}>
-          <View style={{ alignItems: 'center' }}>
-            <FastImage
-              style={localStyles.profileImage}
-              source={{
-                uri: reply.user['fields.profile_picture_image_url']
-              }}
-              resizeMode={FastImage.resizeMode.stretch}
-            />
-            <Text
-              style={[
-                localStyles.replyName,
-                {
-                  fontWeight: Platform.OS == 'ios' ? '700' : 'bold'
-                }
-              ]}
-            >
-              {reply.user.display_name}
-            </Text>
-          </View>
-
-          <View style={localStyles.commentContainer}>
-            <Text style={localStyles.comment}>{reply.comment}</Text>
-            <Text style={localStyles.displayNameText}>
-              {reply.user['display_name']} | {reply.user.rank} |{' '}
-              {moment.utc(reply.created_on).local().fromNow()}
-            </Text>
-            <View style={localStyles.likeContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity
-                  style={{ marginRight: 10 }}
-                  onPress={() => {
-                    if (!this.context.isConnected)
-                      return this.context.showNoConnectionAlert();
-                    this.props.toggleReplyLike(
-                      reply.id,
-                      reply.is_liked ? 'dislikeComment' : 'likeComment'
-                    );
-                  }}
-                >
-                  <AntIcon
-                    name={reply.is_liked ? 'like1' : 'like2'}
-                    size={(onTablet ? 17.5 : 22.5) * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                </TouchableOpacity>
-                {reply.like_count > 0 && (
-                  <View style={localStyles.likeCountContainer}>
-                    <Text style={localStyles.likeCount}>
-                      {reply.like_count}{' '}
-                      {reply.like_count === 1 ? 'LIKE' : 'LIKES'}
-                    </Text>
+  toggle = callback => this.setState(({ showReplies }) => ({ showReplies: !showReplies }),() => setTimeout(callback || (() => {}), 0));
+    
+  mapReplies = () => {
+    return (
+      this.props.comment.replies.map((reply, index) => {
+        return (
+          <View
+            key={index}
+            style={{
+              backgroundColor: colors.mainBackground,
+              borderTopColor: colors.secondBackground,
+              flex: 1,
+              borderTopWidth: 0.25,
+              flexDirection: 'row',
+              paddingTop: 10 * factorVertical,
+              paddingBottom: 0 * factorVertical,
+              paddingHorizontal: 10 * factorHorizontal,
+            }}
+          >
+            <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10 * factorVertical }}>
+              <FastImage
+                style={{
+                  height: (onTablet ? 30 : 40) * factorHorizontal,
+                  width: (onTablet ? 30 : 40) * factorHorizontal,
+                  borderRadius: 100
+                }}
+                source={{uri: reply.user['fields.profile_picture_image_url']}}
+                resizeMode={FastImage.resizeMode.stretch}
+              />
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: onTablet ? 15 : 10 * factorRatio,
+                  marginTop: 5 * factorRatio,
+                  fontWeight: 'bold',
+                  color: colors.pianoteGrey,
+                }}
+              >
+                {reply.user.display_name}
+              </Text>
+            </View>
+            <View style={{ flex: 1, paddingLeft: 10 * factorHorizontal }}>
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: (onTablet ? 10 : 13) * factorRatio,
+                  color: 'white',
+                  paddingTop: 10 * factorVertical,
+                }}
+              >
+                {reply.comment}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  fontSize: (onTablet ? 9 : 10) * factorRatio,
+                  color: colors.secondBackground,
+                  paddingTop: 5 * factorVertical,
+                  paddingBottom: 10 * factorVertical,
+                }}
+              >
+                {reply.user['display_name']} | {reply.user.rank} |{' '}{moment.utc(reply.created_on).local().fromNow()}
+              </Text>
+              <View style={{ paddingBottom: 15 * factorVertical,paddingTop: 5 * factorVertical, }}>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flexDirection: 'row', marginRight: 15 }}>
+                    <TouchableOpacity
+                      style={{ marginRight: 10 }}
+                      onPress={() => {
+                        if (!this.context.isConnected)
+                          return this.context.showNoConnectionAlert();
+                        this.props.toggleReplyLike(
+                          reply.id,
+                          reply.is_liked ? 'dislikeComment' : 'likeComment'
+                        );
+                      }}
+                    >
+                      <AntIcon
+                        name={reply.is_liked ? 'like1' : 'like2'}
+                        size={(onTablet ? 17.5 : 22.5) * factorRatio}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
+                    {reply.like_count > 0 && (
+                      <View style={{ borderRadius: 40, backgroundColor: colors.notificationColor, alignItems: 'center', justifyContent: 'center'}}>
+                        <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: (onTablet ? 8 : 10) * factorRatio, color: colors.pianoteRed, paddingHorizontal: 5 * factorHorizontal}}>
+                          {reply.like_count}{' '}
+                          {reply.like_count === 1 ? 'LIKE' : 'LIKES'}
+                        </Text>
+                      </View>
+                    )}
                   </View>
-                )}
+
+                  {this.props.me.userId === reply.user_id && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (!this.context.isConnected)
+                          return this.context.showNoConnectionAlert();
+                        this.props.deleteReply(reply.id);
+                      }}
+                    >
+                      <AntIcon
+                        name={'delete'}
+                        size={(onTablet ? 15 : 20) * factorRatio}
+                        color={colors.pianoteRed}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
-              {this.props.me.userId === reply.user_id && (
-                <TouchableOpacity
-                  style={{ marginLeft: 10 }}
-                  onPress={() => {
-                    if (!this.context.isConnected)
-                      return this.context.showNoConnectionAlert();
-                    this.props.deleteReply(reply.id);
-                  }}
-                >
-                  <AntIcon
-                    name={'delete'}
-                    size={20 * factorRatio}
-                    color={colors.pianoteRed}
-                  />
-                </TouchableOpacity>
-              )}
             </View>
           </View>
-        </View>
-      );
-    });
+        )
+      })
+    )
+  }
 
   changeXP = num => {
     if (num !== '') {
@@ -158,40 +189,71 @@ class Replies extends React.Component {
                       <Text style={localStyles.replyText}>REPLIES</Text>
                       <TouchableOpacity onPress={this.props.close}>
                         <EntypoIcon
-                          size={27.5 * factorRatio}
+                          size={(onTablet ? 22.5 : 27.5) * factorRatio}
                           name={'cross'}
                           color={'#c2c2c2'}
                         />
                       </TouchableOpacity>
                     </View>
-                    <View style={localStyles.originalReply}>
-                      <View>
-                        <View style={{ alignItems: 'center' }}>
+                    <View 
+                      style={{
+                        backgroundColor: colors.mainBackground,
+                        flex: 1,
+                        flexDirection: 'row',
+                        paddingTop: 10 * factorVertical,
+                        paddingHorizontal: 10 * factorHorizontal,
+                      }}
+                    >
+                      <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10 * factorVertical }}>
                           <FastImage
-                            style={localStyles.replierImage}
-                            source={{
-                              uri: user['fields.profile_picture_image_url']
+                            style={{
+                              height: (onTablet ? 30 : 40) * factorHorizontal,
+                              width: (onTablet ? 30 : 40) * factorHorizontal,
+                              borderRadius: 100
                             }}
+                            source={{uri: user['fields.profile_picture_image_url']}}
                             resizeMode={FastImage.resizeMode.stretch}
                           />
-                          <Text style={localStyles.opXP}>
+                          <Text 
+                            style={{
+                              fontFamily: 'OpenSans-Regular',
+                              fontSize: onTablet ? 15 : 10 * factorRatio,
+                              marginTop: 5 * factorRatio,
+                              fontWeight: 'bold',
+                              color: colors.pianoteGrey,
+                            }}
+                          >
                             {this.changeXP(user.xp)}
                           </Text>
-                        </View>
                       </View>
-                      <View style={localStyles.commentContainer}>
-                        <Text style={localStyles.commentText}>
+                      
+
+                      <View style={{ flex: 1, paddingLeft: 10 * factorHorizontal }}>
+                        <Text
+                          style={{
+                            fontFamily: 'OpenSans-Regular',
+                            fontSize: (onTablet ? 10 : 13) * factorRatio,
+                            color: 'white',
+                            paddingTop: 10 * factorVertical,
+                          }}
+                        >
                           {comment.comment}
                         </Text>
-                        <Text style={localStyles.userStats}>
+                        <Text 
+                          style={{
+                            fontFamily: 'OpenSans-Regular',
+                            fontSize: (onTablet ? 9 : 10) * factorRatio,
+                            color: colors.secondBackground,
+                            paddingTop: 5 * factorVertical,
+                            paddingBottom: 10 * factorVertical,
+                          }}
+                        >
                           {user.display_name} | {user.rank} |{' '}
                           {moment.utc(comment.created_on).local().fromNow()}
                         </Text>
-                        <View style={localStyles.iconContainer}>
+                        <View style={{ paddingBottom: 15 * factorVertical,paddingTop: 5 * factorVertical, }}>
                           <View style={{ flexDirection: 'row' }}>
-                            <View
-                              style={{ flexDirection: 'row', marginRight: 15 }}
-                            >
+                            <View style={{ flexDirection: 'row', marginRight: 15 }}>
                               <TouchableOpacity
                                 style={{ marginRight: 10 }}
                                 onPress={() => {
@@ -212,17 +274,14 @@ class Replies extends React.Component {
                                 />
                               </TouchableOpacity>
                               {comment.like_count > 0 && (
-                                <View style={localStyles.likeCountContainer}>
-                                  <Text style={localStyles.likeCount}>
-                                    {comment.like_count}{' '}
-                                    {comment.like_count === 1
-                                      ? 'LIKE'
-                                      : 'LIKES'}
+                                <View style={{ borderRadius: 40, backgroundColor: colors.notificationColor, alignItems: 'center', justifyContent: 'center'}}>
+                                  <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: (onTablet ? 8 : 10) * factorRatio, color: colors.pianoteRed, paddingHorizontal: 5 * factorHorizontal}}>
+                                    {comment.like_count}{' '}{comment.like_count === 1 ? 'LIKE' : 'LIKES'}
                                   </Text>
                                 </View>
                               )}
                             </View>
-
+                            
                             <View style={{ flexDirection: 'row' }}>
                               <MaterialIcon
                                 name={'comment-text-outline'}
@@ -252,7 +311,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={'delete'}
-                                  size={20 * factorRatio}
+                                  size={(onTablet ? 15 : 20) * factorRatio}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -263,16 +322,13 @@ class Replies extends React.Component {
                     </View>
                     {!this.state.showMakeReply && (
                       <View style={localStyles.addComment}>
-                        <FastImage
-                          style={localStyles.profileImage}
-                          source={{
-                            uri:
-                              me.profileImage ||
-                              'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                          }}
-                          resizeMode={FastImage.resizeMode.stretch}
-                        />
-
+                        <View style={{flexDirection: 'row', }}>
+                          <FastImage
+                            style={localStyles.profileImage}
+                            source={{uri: me.profileImage || 'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'}}
+                            resizeMode={FastImage.resizeMode.stretch}
+                          />
+                        </View>
                         <TouchableOpacity
                           onPress={() => this.setState({ showMakeReply: true })}
                           style={localStyles.makeReplyContainer}
@@ -309,7 +365,7 @@ class Replies extends React.Component {
                   >
                     <View style={localStyles.replierContainer}>
                       <FastImage
-                        style={[localStyles.profileImage, { marginRight: 10 * factorHorizontal }]}
+                        style={[localStyles.profileImage, { marginRight: 10 * factorHorizontal, }]}
                         source={{
                           uri:
                             me.profileImage ||
@@ -362,7 +418,6 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 10 * Dimensions.get('window').width / 375,
     minHeight: (30 * Dimensions.get('window').height) / 812,
     flexDirection: 'row',
-    paddingTop: 15 * Dimensions.get('window').height / 812,
   },
   profileImage: {
     height: (DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width / 375,
@@ -390,24 +445,20 @@ const localStyles = StyleSheet.create({
     marginTop: 3
   },
   displayNameText: {
-    marginTop:
-      (7.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    fontSize:
-      (11 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
     fontFamily: 'OpenSans-Regular',
-    color: 'grey'
+    fontSize:
+      ((DeviceInfo.isTablet() ? 9 : 10) *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    color: '#445f73',
+    paddingVertical: 5 * Dimensions.get('window').height / 812,
   },
   comment: {
     paddingTop: 10 * Dimensions.get('window').height / 812,
     fontSize: (DeviceInfo.isTablet() ? 10 : 13) * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
     fontFamily: 'OpenSans-Regular',
-    color: 'white'
+    color: 'white',
   },
   likeContainer: {
     flexDirection: 'row',
@@ -423,12 +474,12 @@ const localStyles = StyleSheet.create({
   likeCount: {
     fontFamily: 'OpenSans-Regular',
     fontSize:
-      (9.5 *
+      (10 *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
     color: '#fb1b2f',
-    paddingHorizontal: 10
+    paddingHorizontal: 7.5 * Dimensions.get('window').width / 375
   },
   componentContainer: {
     zIndex: 2,
@@ -456,7 +507,7 @@ const localStyles = StyleSheet.create({
   },
   originalReply: {
     paddingTop: 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10 * Dimensions.get('window').width / 375,
     marginBottom:
       (10 *
         (Dimensions.get('window').height / 812 +
@@ -490,11 +541,13 @@ const localStyles = StyleSheet.create({
   userStats: {
     fontFamily: 'OpenSans-Regular',
     fontSize:
-      (11 *
+      ((DeviceInfo.isTablet() ? 9 : 10) *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
-    color: '#445f73'
+    color: '#445f73',
+    paddingTop: 5 * Dimensions.get('window').height / 812,
+    paddingBottom: 10 * Dimensions.get('window').height / 812,
   },
   iconContainer: {
     flexDirection: 'row',
@@ -506,13 +559,14 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     paddingLeft: 10 * Dimensions.get('window').width / 375,
     borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: '#445f73',
     borderTopColor: '#445f73',
     alignItems: 'center'
   },
   makeReplyContainer: {
     width: '80%',
+    paddingVertical: 5 * Dimensions.get('window').height / 812, 
     justifyContent: 'center'
   },
   addReplyText: {
@@ -524,21 +578,13 @@ const localStyles = StyleSheet.create({
       2,
     color: 'white',
     paddingLeft: 10 * Dimensions.get('window').width / 375,
-    paddingVertical:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingVertical: 25 * Dimensions.get('window').height / 812
   },
   replierContainer: {
     padding: 10 * Dimensions.get('window').width / 375,
     alignItems: 'center',
     flexDirection: 'row',
-    borderTopWidth:
-      (0.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderTopWidth: 0.5,
     backgroundColor: '#00101d',
     borderTopColor: '#445f73'
   },

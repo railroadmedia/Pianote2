@@ -479,12 +479,12 @@ export default class VideoPlayer extends React.Component {
           flex: 1,
           borderTopWidth: 0.25,
           flexDirection: 'row',
-          paddingTop: 15 * factorVertical,
+          paddingTop: 10 * factorVertical,
           paddingBottom: 0 * factorVertical,
           paddingHorizontal: 10 * factorHorizontal,
         }}
       >
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10 * factorVertical }}>
           <FastImage
             style={{
               height: (onTablet ? 30 : 40) * factorHorizontal,
@@ -526,7 +526,8 @@ export default class VideoPlayer extends React.Component {
               fontFamily: 'OpenSans-Regular',
               fontSize: (onTablet ? 9 : 10) * factorRatio,
               color: colors.secondBackground,
-              paddingVertical: 10 * factorVertical,
+              paddingTop: 5 * factorVertical,
+              paddingBottom: 10 * factorVertical,
             }}
           >
             {item.user['display_name']} | {item.user.rank} |{' '}
@@ -562,9 +563,9 @@ export default class VideoPlayer extends React.Component {
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
-                        fontSize: 10 * factorRatio,
+                        fontSize: (onTablet ? 8 : 10) * factorRatio,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 7.5 * factorHorizontal
+                        paddingHorizontal: 5 * factorHorizontal
                       }}
                     >
                       {item.like_count}{' '}
@@ -600,9 +601,9 @@ export default class VideoPlayer extends React.Component {
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
-                        fontSize: 10 * factorRatio,
+                        fontSize: (onTablet ? 8 : 10) * factorRatio,
                         color: colors.pianoteRed,
-                        paddingHorizontal: 10
+                        paddingHorizontal: 5 * factorHorizontal
                       }}
                     >
                       {item.replies?.length}{' '}
@@ -636,9 +637,9 @@ export default class VideoPlayer extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: 12 * factorRatio,
+                  fontSize: (onTablet ? 9 : 10) * factorRatio,
                   color: colors.secondBackground,
-                  paddingBottom: 10
+                  marginBottom: 10 * factorVertical
                 }}
               >
                 VIEW {item.replies?.length}{' '}
