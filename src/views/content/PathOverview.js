@@ -257,13 +257,18 @@ export default class PathOverview extends React.Component {
   goToLesson(lesson) {
     if (this.state.isMethod) {
       return this.props.navigation.navigate('VIDEOPLAYER', {
-        url: lesson
+        url: lesson,
+        parentId: this.state.data?.id
       });
     }
-    return this.props.navigation.navigate('VIDEOPLAYER', { id: lesson });
+    return this.props.navigation.navigate('VIDEOPLAYER', {
+      id: lesson,
+      parentId: this.state.data?.id
+    });
   }
 
   renderHeader = () => {
+    let { thumbnail } = this.state;
     return (
       <View>
         <ImageBackground
@@ -274,11 +279,13 @@ export default class PathOverview extends React.Component {
             resizeMode: 'cover'
           }}
           source={{
-            uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-              fullWidth
-            )},ar_${this.getAspectRatio()},${
-              this.state.isMethod ? 'c_pad,g_south' : 'c_fill,g_face'
-            }/${this.state.thumbnail}`
+            uri: thumbnail.includes('https')
+              ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
+                  fullWidth
+                )},ar_${this.getAspectRatio()},${
+                  this.state.isMethod ? 'c_pad,g_south' : 'c_fill,g_face'
+                }/${this.state.thumbnail}`
+              : thumbnail
           }}
         >
           <TouchableOpacity
@@ -761,11 +768,13 @@ export default class PathOverview extends React.Component {
                     aspectRatio: 16 / 9
                   }}
                   source={{
-                    uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                      fullWidth
-                    )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
-                      item.thumbnail
-                    }`
+                    uri: item.thumbnail.includes('https')
+                      ? `https://cdn.musora.com/image/fetch/w_${Math.round(
+                          fullWidth
+                        )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
+                          item.thumbnail
+                        }`
+                      : item.thumbnail
                   }}
                   resizeMode='cover'
                 >

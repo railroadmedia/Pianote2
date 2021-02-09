@@ -332,8 +332,9 @@ class VerticalVideoList extends React.Component {
   };
 
   getImageUrl(thumbnail, publishDate) {
-    if (thumbnail.includes('data/user')) return thumbnail;
-    if (thumbnail.includes('http') && thumbnail !== 'TBD') {
+    if (thumbnail.includes('var/mobile') || thumbnail.includes('data/user'))
+      return thumbnail;
+    if (thumbnail.includes('http')) {
       return `https://cdn.musora.com/image/fetch/w_${Math.round(
         this.props.imageWidth * 2
       )},ar_${
