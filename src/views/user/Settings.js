@@ -17,6 +17,8 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
 import Modal from 'react-native-modal';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import LogOut from '../../modals/LogOut.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -36,7 +38,16 @@ import {
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import commonService from '../../services/common.service.js';
 
-export default class Settings extends React.Component {
+import { cacheAndWriteCourses } from '../../redux/CoursesCacheActions';
+import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
+import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
+import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
+import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
+import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
+import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
+import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+
+class Settings extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
   constructor(props) {
@@ -433,6 +444,18 @@ export default class Settings extends React.Component {
           hasBackdrop={true}
         >
           <LogOut
+            onLogout={() =>
+              [
+                'cacheAndWriteCourses',
+                'cacheAndWriteLessons',
+                'cacheAndWriteMyList',
+                'cacheAndWritePacks',
+                'cacheAndWritePodcasts',
+                'cacheAndWriteQuickTips',
+                'cacheAndWriteSongs',
+                'cacheAndWriteStudentFocus'
+              ].map(redux => this.props[redux]({}))
+            }
             hideLogOut={() => {
               this.setState({ showLogOut: false });
             }}
@@ -536,3 +559,19 @@ const localStyles = StyleSheet.create({
       2
   }
 });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      cacheAndWriteCourses,
+      cacheAndWriteLessons,
+      cacheAndWriteMyList,
+      cacheAndWritePacks,
+      cacheAndWritePodcasts,
+      cacheAndWriteQuickTips,
+      cacheAndWriteSongs,
+      cacheAndWriteStudentFocus
+    },
+    dispatch
+  );
+
+export default connect(null, mapDispatchToProps)(Settings);
