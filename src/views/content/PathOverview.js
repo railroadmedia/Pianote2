@@ -315,7 +315,8 @@ export default class PathOverview extends React.Component {
           key={'title'}
           style={[
             {
-              paddingHorizontal: 10 * factorRatio
+              paddingTop: 10 * factorVertical,
+              paddingBottom: 5 * factorVertical
             },
             this.state.isLandscape ? { marginHorizontal: '10%' } : {}
           ]}
@@ -466,7 +467,9 @@ export default class PathOverview extends React.Component {
                 : { width: '100%' }
             ]}
           >
+            {(this.state.data.description !== 'TBD') && (
             <Text
+              onLayout={() => console.log(this.state.data)}
               style={{
                 fontFamily: 'OpenSans-Regular',
                 marginTop: 5 * factorVertical,
@@ -477,6 +480,7 @@ export default class PathOverview extends React.Component {
             >
               {this.state.data.description}
             </Text>
+            )}
             <View key={'containStats'}>
               <View
                 key={'stats'}
@@ -834,7 +838,6 @@ export default class PathOverview extends React.Component {
                 >
                   <View style={{ width: '80%' }}>
                     <View style={{ flex: 1 }} />
-                    <View style={{ height: 5 }} />
                     <Text
                       numberOfLines={1}
                       style={{
@@ -842,7 +845,7 @@ export default class PathOverview extends React.Component {
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Bold',
                         color: 'white',
-                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal
+                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal,
                       }}
                     >
                       {item.title}
@@ -862,7 +865,6 @@ export default class PathOverview extends React.Component {
                       {Math.floor(item.duration / 60)}{' '}
                       {Math.floor(item.duration / 60) == 1 ? 'min' : 'mins'}
                     </Text>
-                    <View style={{ height: 10 }} />
                     <View style={{ flex: 1 }} />
                   </View>
 
