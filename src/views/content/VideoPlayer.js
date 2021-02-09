@@ -130,7 +130,11 @@ export default class VideoPlayer extends React.Component {
   getContent = async () => {
     let content, comments;
     if (!this.context.isConnected) {
-      content = offlineContent[this.state.id]?.lesson || offlineContent[this.props.navigation.state.params.parentId]?.overview.lessons.find(l => l.id === this.state.id);
+      content =
+        offlineContent[this.state.id]?.lesson ||
+        offlineContent[
+          this.props.navigation.state.params.parentId
+        ]?.overview.lessons.find(l => l.id === this.state.id);
       comments = content.comments;
       this.allCommentsNum = comments.length;
     } else {
@@ -215,6 +219,9 @@ export default class VideoPlayer extends React.Component {
     }
     this.setState(
       {
+        youtubeId: content.post.fields
+          ?.find(f => f.key === 'video')
+          ?.value?.fields?.find(f => f.key === 'youtube_video_id')?.value,
         comments: content.post.comments,
         id: content.id,
         url: content.post.mobile_app_url,
@@ -296,7 +303,7 @@ export default class VideoPlayer extends React.Component {
       },
       async () => {
         if (this.state.resources) this.createResourcesArr();
-        if (!this.state.video_playback_endpoints) {
+        if (!this.state.video_playback_endpoints && !this.state.youtubeId) {
           this.alert.toggle(
             `We're sorry, there was an issue loading this video, try reloading the lesson.`,
             `If the problem persists please contact support.`
@@ -481,10 +488,16 @@ export default class VideoPlayer extends React.Component {
           flexDirection: 'row',
           paddingTop: 10 * factorVertical,
           paddingBottom: 0 * factorVertical,
-          paddingHorizontal: 10 * factorHorizontal,
+          paddingHorizontal: 10 * factorHorizontal
         }}
       >
-        <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 10 * factorVertical }}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingBottom: 10 * factorVertical
+          }}
+        >
           <FastImage
             style={{
               height: (onTablet ? 30 : 40) * factorHorizontal,
@@ -502,7 +515,7 @@ export default class VideoPlayer extends React.Component {
               fontSize: onTablet ? 15 : 10 * factorRatio,
               marginTop: 5 * factorRatio,
               fontWeight: 'bold',
-              color: colors.pianoteGrey,
+              color: colors.pianoteGrey
             }}
           >
             {this.changeXP(item.user.xp)}
@@ -515,7 +528,7 @@ export default class VideoPlayer extends React.Component {
               fontFamily: 'OpenSans-Regular',
               fontSize: (onTablet ? 10 : 13) * factorRatio,
               color: 'white',
-              paddingTop: 10 * factorVertical,
+              paddingTop: 10 * factorVertical
             }}
           >
             {item.comment}
@@ -527,16 +540,16 @@ export default class VideoPlayer extends React.Component {
               fontSize: (onTablet ? 9 : 10) * factorRatio,
               color: colors.secondBackground,
               paddingTop: 5 * factorVertical,
-              paddingBottom: 10 * factorVertical,
+              paddingBottom: 10 * factorVertical
             }}
           >
             {item.user['display_name']} | {item.user.rank} |{' '}
             {moment.utc(item.created_on).local().fromNow()}
           </Text>
-          <View 
-            style={{ 
+          <View
+            style={{
               paddingBottom: 15 * factorVertical,
-              paddingTop: 5 * factorVertical,
+              paddingTop: 5 * factorVertical
             }}
           >
             <View style={{ flexDirection: 'row' }}>
@@ -576,7 +589,10 @@ export default class VideoPlayer extends React.Component {
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity
-                  style={{ marginRight: 10, marginLeft: -2.5 * factorHorizontal, }}
+                  style={{
+                    marginRight: 10,
+                    marginLeft: -2.5 * factorHorizontal
+                  }}
                   onPress={() =>
                     this.replies.toggle(() =>
                       this.setState({ selectedComment: item })
@@ -895,7 +911,7 @@ export default class VideoPlayer extends React.Component {
   };
 
   render() {
-    let { id, comments } = this.state;
+    let { id, comments, youtubeId } = this.state;
     return (
       <View
         style={[
@@ -909,7 +925,8 @@ export default class VideoPlayer extends React.Component {
         <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
         {this.state.showVideo && (
           <>
-            {this.state.isLoadingAll || !this.state.video_playback_endpoints ? (
+            {this.state.isLoadingAll ||
+            (!this.state.video_playback_endpoints && !youtubeId) ? (
               <SafeAreaView
                 forceInset={{ top: 'always', bottom: 'never' }}
                 style={{ backgroundColor: 'black' }}
@@ -925,13 +942,18 @@ export default class VideoPlayer extends React.Component {
                       justifyContent: 'center'
                     }}
                   >
-                    <ArrowLeft width={18*factorRatio} height={18*factorRatio} fill={'white'} />
+                    <ArrowLeft
+                      width={18 * factorRatio}
+                      height={18 * factorRatio}
+                      fill={'white'}
+                    />
                   </TouchableOpacity>
                   <ActivityIndicator size='large' color='#ffffff' />
                 </View>
               </SafeAreaView>
             ) : (
               <Video
+                youtubeId={youtubeId}
                 toSupport={() => {}}
                 onRefresh={() => {}}
                 content={this.state}
@@ -1044,7 +1066,9 @@ export default class VideoPlayer extends React.Component {
                 />
               ) : (
                 <KeyboardAwareScrollView
-                  innerRef={ref => {this.scroll = ref;}}
+                  innerRef={ref => {
+                    this.scroll = ref;
+                  }}
                   keyboardShouldPersistTaps='handled'
                   removeClippedSubviews={false}
                   showsVerticalScrollIndicator={false}
@@ -1078,12 +1102,12 @@ export default class VideoPlayer extends React.Component {
                     <Text
                       style={{
                         fontSize: (onTablet ? 15 : 20) * factorRatio,
-                        marginVertical: 10 * factorVertical, 
+                        marginVertical: 10 * factorVertical,
                         fontWeight: 'bold',
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: 'white',
-                        paddingHorizontal: 15,
+                        paddingHorizontal: 15
                       }}
                     >
                       {this.state.lessonTitle}
@@ -1094,7 +1118,7 @@ export default class VideoPlayer extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: colors.secondBackground,
-                        paddingBottom: 12.5 * factorVertical,
+                        paddingBottom: 12.5 * factorVertical
                       }}
                     >
                       {this.renderTagsDependingOnContentType()}
@@ -1123,7 +1147,9 @@ export default class VideoPlayer extends React.Component {
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isLiked ? 'like1' : 'like2'}
-                          size={(onTablet) ?  20 * factorRatio :  27.5 * factorRatio}
+                          size={
+                            onTablet ? 20 * factorRatio : 27.5 * factorRatio
+                          }
                           color={colors.pianoteRed}
                         />
                         <Text
@@ -1145,7 +1171,9 @@ export default class VideoPlayer extends React.Component {
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
-                          size={(onTablet) ?  22.5 * factorRatio :  28.5 * factorRatio}
+                          size={
+                            onTablet ? 22.5 * factorRatio : 28.5 * factorRatio
+                          }
                           color={colors.pianoteRed}
                         />
                         <Text
@@ -1171,8 +1199,12 @@ export default class VideoPlayer extends React.Component {
                         >
                           <View style={{ flex: 1 }} />
                           <Resources
-                            height={(onTablet) ?  20 * factorRatio :  27.5 * factorRatio}
-                            width={(onTablet) ?  20 * factorRatio :  27.5 * factorRatio}
+                            height={
+                              onTablet ? 20 * factorRatio : 27.5 * factorRatio
+                            }
+                            width={
+                              onTablet ? 20 * factorRatio : 27.5 * factorRatio
+                            }
                             fill={colors.pianoteRed}
                           />
                           <Text
@@ -1198,8 +1230,12 @@ export default class VideoPlayer extends React.Component {
                         styles={{
                           touchable: { flex: 1 },
                           iconSize: {
-                            height: (onTablet) ?  22.5 * factorRatio :  27.5 * factorRatio,
-                            width: (onTablet) ?  22.5 * factorRatio :  27.5 * factorRatio,
+                            height: onTablet
+                              ? 22.5 * factorRatio
+                              : 27.5 * factorRatio,
+                            width: onTablet
+                              ? 22.5 * factorRatio
+                              : 27.5 * factorRatio
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
@@ -1231,17 +1267,19 @@ export default class VideoPlayer extends React.Component {
                             showInfo: !this.state.showInfo
                           })
                         }
-                        style={{ 
-                          flex: 1, 
-                          alignItems: 'center',
+                        style={{
+                          flex: 1,
+                          alignItems: 'center'
                         }}
                       >
-                        <View style={{flex: 1}}/>
+                        <View style={{ flex: 1 }} />
                         <AntIcon
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
-                          size={(onTablet) ?  20 * factorRatio :  22.5 * factorRatio}
+                          size={
+                            onTablet ? 20 * factorRatio : 22.5 * factorRatio
+                          }
                           color={colors.pianoteRed}
                         />
                         <Text
@@ -1249,7 +1287,7 @@ export default class VideoPlayer extends React.Component {
                             textAlign: 'center',
                             fontSize: 12 * factorRatio,
                             color: 'white',
-                            marginTop: 5 * factorVertical,
+                            marginTop: 5 * factorVertical
                           }}
                         >
                           Info
@@ -1273,7 +1311,7 @@ export default class VideoPlayer extends React.Component {
                       </Text>
                     )}
                   </View>
-                  <View style={{height: 10 * factorVertical}}/>
+                  <View style={{ height: 10 * factorVertical }} />
                   {this.state.assignmentList?.length > 0 && (
                     <>
                       <View
@@ -1315,7 +1353,7 @@ export default class VideoPlayer extends React.Component {
                       showArtist={false}
                       showSort={false}
                       showLength={true}
-                      imageWidth={(onTablet) ? fullWidth * 0.2 : fullWidth * 0.28}
+                      imageWidth={onTablet ? fullWidth * 0.2 : fullWidth * 0.28}
                       navigator={row =>
                         this.switchLesson(row.id, row.mobile_app_url)
                       }
@@ -1330,7 +1368,7 @@ export default class VideoPlayer extends React.Component {
                         flex: 1,
                         width: '100%',
                         zIndex: 10,
-                        marginTop: 10 * factorVertical,
+                        marginTop: 10 * factorVertical
                       }
                     ]}
                   >
@@ -1381,7 +1419,7 @@ export default class VideoPlayer extends React.Component {
                             width: '100%',
                             flexDirection: 'row',
                             paddingHorizontal: 10 * factorHorizontal,
-                            paddingVertical: 20 * factorVertical,
+                            paddingVertical: 20 * factorVertical
                           }}
                         >
                           <TouchableOpacity
@@ -1395,7 +1433,7 @@ export default class VideoPlayer extends React.Component {
                                 height: (onTablet ? 30 : 40) * factorHorizontal,
                                 width: (onTablet ? 30 : 40) * factorHorizontal,
                                 paddingVertical: 10 * factorVertical,
-                                borderRadius: 100,
+                                borderRadius: 100
                               }}
                               source={{
                                 uri:
@@ -1580,7 +1618,7 @@ export default class VideoPlayer extends React.Component {
               style={{
                 backgroundColor: colors.mainBackground,
                 height: 2 * factorVertical,
-                width: '100%',
+                width: '100%'
               }}
             >
               {!!this.state.progress && (
@@ -1606,7 +1644,7 @@ export default class VideoPlayer extends React.Component {
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
                 paddingVertical: 5 * factorRatio,
-                paddingHorizontal: 10 * factorHorizontal,
+                paddingHorizontal: 10 * factorHorizontal
               }}
             >
               <TouchableOpacity
@@ -1632,7 +1670,7 @@ export default class VideoPlayer extends React.Component {
                 <EntypoIcon
                   name={'chevron-thin-left'}
                   size={(onTablet ? 17.5 : 22.5) * factorRatio}
-                  style={{ padding: (onTablet ? 5 : 7.5 ) * factorRatio }}
+                  style={{ padding: (onTablet ? 5 : 7.5) * factorRatio }}
                   color={
                     this.state.previousLesson
                       ? colors.pianoteRed
@@ -1691,7 +1729,7 @@ export default class VideoPlayer extends React.Component {
                 <EntypoIcon
                   name={'chevron-thin-right'}
                   size={(onTablet ? 17.5 : 22.5) * factorRatio}
-                  style={{ padding: (onTablet ? 5 : 7.5 ) * factorRatio }}
+                  style={{ padding: (onTablet ? 5 : 7.5) * factorRatio }}
                   color={
                     this.state.nextLesson
                       ? colors.pianoteRed
@@ -1986,7 +2024,7 @@ export default class VideoPlayer extends React.Component {
                     multiline={true}
                     style={{
                       fontFamily: 'OpenSans-Regular',
-                      fontSize: (onTablet ? 10 : 14 ) * factorRatio,
+                      fontSize: (onTablet ? 10 : 14) * factorRatio,
                       width: onTablet ? '80%' : '70%',
                       backgroundColor: colors.mainBackground,
                       color: colors.secondBackground,
@@ -2004,13 +2042,13 @@ export default class VideoPlayer extends React.Component {
                     style={{
                       marginBottom:
                         Platform.OS == 'android' ? 10 * factorVertical : 0,
-                        marginLeft: 20,
+                      marginLeft: 20
                     }}
                     onPress={() => this.makeComment()}
                   >
                     <IonIcon
                       name={'md-send'}
-                      size={(onTablet ? 17.5 : 25 ) * factorRatio}
+                      size={(onTablet ? 17.5 : 25) * factorRatio}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
