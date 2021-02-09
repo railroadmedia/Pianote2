@@ -127,7 +127,13 @@ export async function logOut() {
   }
 }
 
-export async function signUp(email, password, purchase, oldToken) {
+export async function signUp(
+  email,
+  password,
+  purchase,
+  oldToken,
+  selectedPlan
+) {
   console.log('signup', email, password, purchase);
   let platform = '';
   let receiptType = '';
@@ -135,7 +141,13 @@ export async function signUp(email, password, purchase, oldToken) {
   if (Platform.OS === 'ios') {
     platform = 'apple';
     receiptType = 'appleReceipt';
-    attributes = { email, password, receipt: purchase.transactionReceipt };
+    attributes = {
+      email,
+      password,
+      receipt: purchase.transactionReceipt,
+      price: selectedPlan.price,
+      currency: selectedPlan.currency
+    };
   } else {
     platform = 'google';
     receiptType = 'googleReceipt';
@@ -144,7 +156,9 @@ export async function signUp(email, password, purchase, oldToken) {
       password,
       package_name: `com.pianote2`,
       product_id: purchase.productId || purchase.product_id,
-      purchase_token: purchase.purchaseToken || purchase.purchase_token
+      purchase_token: purchase.purchaseToken || purchase.purchase_token,
+      price: selectedPlan.price,
+      currency: selectedPlan.currency
     };
   }
   let headers;
@@ -157,8 +171,6 @@ export async function signUp(email, password, purchase, oldToken) {
     headers = { 'Content-Type': 'application/json' };
   }
 
-  console.log('signup token', token, headers);
-  console.log(attributes);
   try {
     let response = await fetch(
       `${commonService.rootUrl}/mobile-app/${platform}/verify-receipt-and-process-payment`,

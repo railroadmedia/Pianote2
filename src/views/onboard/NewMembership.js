@@ -54,7 +54,7 @@ const height =
 const fontIndex = width / 50;
 
 export default class NewMembership extends React.Component {
-  static navigationOptions = { header: null };
+  static navigationOptions = { header: null, subscriptions: [] };
   constructor(props) {
     super(props);
     Orientation.lockToPortrait();
@@ -79,14 +79,22 @@ export default class NewMembership extends React.Component {
     });
     try {
       this.loadingRef.toggleLoading(true);
-      const subscriptions = await RNIap.getSubscriptions(skus);
-      this.loadingRef.toggleLoading(false);
+      const subscriptions = (await RNIap.getSubscriptions(skus)).sort((a, b) =>
+        a.price > b.price ? 1 : -1
+      );
+      this.loadingRef.toggleLoading();
+      this.setState({ subscriptions });
     } catch (e) {}
   }
 
   startPlan = async plan => {
+    this.selectedPlan = {
+      price: plan.price,
+      currency: plan.currency
+    };
+    this.loadingRef.toggleLoading();
     try {
-      await RNIap.requestSubscription(plan, false);
+      await RNIap.requestSubscription(plan.productId, false);
     } catch (e) {}
   };
 
@@ -97,7 +105,8 @@ export default class NewMembership extends React.Component {
         this.state.email,
         this.state.password,
         purchase,
-        this.state.token
+        this.state.token,
+        this.selectedPlan
       );
 
       if (response.meta) {
@@ -181,6 +190,7 @@ export default class NewMembership extends React.Component {
   };
 
   render() {
+    let { subscriptions } = this.state;
     return (
       <>
         <SafeAreaView
@@ -270,16 +280,22 @@ export default class NewMembership extends React.Component {
                         windowDim.height * PixelRatio.get() < 900 ? 5 : 10
                     }}
                   >
-                    <View
-                      style={{ flexDirection: 'row', alignItems: 'flex-end' }}
-                    >
-                      <Text style={styles.planPrice}>$29.99</Text>
-                      <Text style={styles.planSubtitle}>/mo</Text>
-                    </View>
+                    {subscriptions && (
+                      <View
+                        style={{ flexDirection: 'row', alignItems: 'flex-end' }}
+                      >
+                        <Text style={styles.planPrice}>
+                          {subscriptions?.[0]?.localizedPrice}
+                        </Text>
+                        {!!subscriptions[0]?.localizedPrice && (
+                          <Text style={styles.planSubtitle}>/mo</Text>
+                        )}
+                      </View>
+                    )}
                   </View>
                   <TouchableOpacity
                     style={styles.planBtn}
-                    onPress={() => this.startPlan(skus[0])}
+                    onPress={() => this.startPlan(subscriptions[0])}
                   >
                     <Text style={styles.planBtnText}>
                       {`START YOUR\n7-DAY FREE TRIAL`}
@@ -331,20 +347,26 @@ export default class NewMembership extends React.Component {
                         windowDim.height * PixelRatio.get() < 900 ? 5 : 10
                     }}
                   >
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'flex-end'
-                      }}
-                    >
-                      <Text style={styles.planPrice}>$199.99</Text>
-                      <Text style={styles.planSubtitle}>/yr</Text>
-                    </View>
+                    {subscriptions && (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'flex-end'
+                        }}
+                      >
+                        <Text style={styles.planPrice}>
+                          {subscriptions?.[1]?.localizedPrice}
+                        </Text>
+                        {!!subscriptions[1]?.localizedPrice && (
+                          <Text style={styles.planSubtitle}>/yr</Text>
+                        )}
+                      </View>
+                    )}
                   </View>
 
                   <TouchableOpacity
                     style={styles.planBtn}
-                    onPress={() => this.startPlan(skus[1])}
+                    onPress={() => this.startPlan(subscriptions[1])}
                   >
                     <Text style={styles.planBtnText}>
                       {`START YOUR\n7-DAY FREE TRIAL`}
