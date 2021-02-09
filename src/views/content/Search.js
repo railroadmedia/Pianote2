@@ -68,12 +68,14 @@ export default class Search extends React.Component {
   }
 
   async componentDidMount() {
+    console.log(await AsyncStorage.getItem('recentSearches'))
     // get recent searches from memory
     let recentSearchResults = await AsyncStorage.getItem('recentSearches');
     if (recentSearchResults) {
       recentSearchResults = await JSON.parse(recentSearchResults);
       this.setState({ recentSearchResults });
     }
+    console.log(await AsyncStorage.getItem('recentSearches'))
   }
 
   mapRecentResults() {
@@ -283,11 +285,13 @@ export default class Search extends React.Component {
   };
 
   async clearRecent() {
-    this.setState({ recentSearchResults: [] });
+    console.log(await AsyncStorage.getItem('recentSearches'))
+    await this.setState({ recentSearchResults: [] });
     await AsyncStorage.setItem(
       'recentSearches',
       JSON.stringify(this.state.recentSearchResults)
     );
+    console.log(await AsyncStorage.getItem('recentSearches'))
   }
 
   clickSearchRecent = searchTerm => {
@@ -393,11 +397,11 @@ export default class Search extends React.Component {
                   <TouchableOpacity
                     style={{
                       flex: 1,
-                      paddingHorizontal: 5,
+                      paddingHorizontal: 15 * factorHorizontal,
                       justifyContent: 'center'
                     }}
                     onPress={() => {
-                      this.searchTerm.clear();
+                      this.searchTerm.clear()
                       this.setState({
                         searchTerm: '',
                         searchResults: [],
@@ -419,7 +423,7 @@ export default class Search extends React.Component {
                 this.state.searchResults.length > 0) && (
                 <Text
                   style={{
-                    paddingLeft: 15 * factorRatio,
+                    paddingLeft: 15 * factorHorizontal,
                     fontFamily: 'OpenSans-Bold',
                     fontSize: 18 * factorRatio,
                     color: colors.secondBackground
@@ -436,7 +440,7 @@ export default class Search extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      paddingRight: 15
+                      paddingRight: 15 * factorHorizontal
                     }
                   ]}
                 >
@@ -515,7 +519,7 @@ export default class Search extends React.Component {
                       fontSize: 18 * factorRatio,
                       fontFamily: 'OpenSans-Bold',
                       color: 'white',
-                      paddingLeft: 15 * factorRatio
+                      paddingLeft: 15 * factorHorizontal
                     }}
                   >
                     No Results

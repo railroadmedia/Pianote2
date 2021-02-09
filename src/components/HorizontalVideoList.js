@@ -323,7 +323,8 @@ class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
                           
-                        fontSize: (onTablet ?  9.5 : 12) * factorRatio,  
+                        fontSize: (onTablet ?  9.5 : 12) * factorRatio,
+                        marginTop: 1.5 * factorVertical,  
                       }}
                     >
                       {this.props.showType && (
