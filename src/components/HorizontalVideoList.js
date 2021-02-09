@@ -306,7 +306,7 @@ class HorizontalVideoList extends React.Component {
               </View>
 
               <View style={localStyles.videoTitle}>
-                <View style={{ width: '80%' }}>
+                <View style={{ width: '80%', }}>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode='tail'
@@ -315,33 +315,20 @@ class HorizontalVideoList extends React.Component {
                     {item.title}
                   </Text>
                   <View style={localStyles.typeContainer}>
-                    {this.props.showType && (
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          color: this.props.isMethod
-                            ? colors.pianoteGrey
-                            : colors.secondBackground,
-                            
-                          fontSize: onTablet ?  16 : 12 * factorRatio,  
-                        }}
-                      >
-                        {this.changeType(item.type)}/{' '}
-                      </Text>
-                    )}
                     <Text
                       numberOfLines={1}
-                      style={[
-                        localStyles.artist,
-                        {
-                          color: this.props.isMethod
-                            ? colors.pianoteGrey
-                            : colors.secondBackground
-                        }
-                      ]}
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: this.props.isMethod
+                          ? colors.pianoteGrey
+                          : colors.secondBackground,
+                          
+                        fontSize: (onTablet ?  9.5 : 12) * factorRatio,  
+                      }}
                     >
-                      {item.artist}
+                      {this.props.showType && (
+                        this.changeType(item.type)
+                      )}{this.props.showType && ("/ ")}{item.artist}
                     </Text>
                   </View>
                 </View>
@@ -447,11 +434,8 @@ const localStyles = StyleSheet.create({
     paddingLeft: 10 * Dimensions.get('window').width / 375
   },
   artist: {
-    fontSize: DeviceInfo.isTablet() ? 
-      16
-      : 
-      (12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,  
-    fontFamily: 'OpenSans-Regular'
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * ((Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,  
+    fontFamily: 'OpenSans-Regular',
   },
   title: {
     fontSize: DeviceInfo.isTablet() ? 22 : (18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
