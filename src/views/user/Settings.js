@@ -11,7 +11,8 @@ import {
   Alert,
   StatusBar,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  Linking
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import RNIap from 'react-native-iap';
@@ -56,7 +57,15 @@ export default class Settings extends React.Component {
         Alert.alert(
           'Manage Subscription',
           'You have an Apple App Store subscription that can only be managed through the Apple I.D. used to purchase it.',
-          [{ text: 'View Subscriptions' }],
+          [
+            {
+              text: 'View Subscriptions',
+              onPress: () =>
+                Linking.openURL(
+                  'itms-apps://apps.apple.com/account/subscriptions'
+                )
+            }
+          ],
           {
             cancelable: false
           }
@@ -76,7 +85,15 @@ export default class Settings extends React.Component {
         Alert.alert(
           'Manage Subscription',
           'You have a Google Play subscription that can only be managed through the Google Account used to purchase it.',
-          [{ text: 'View Subscriptions' }],
+          [
+            {
+              text: 'View Subscriptions',
+              onPress: () =>
+                Linking.openURL(
+                  'https://play.google.com/store/account/subscriptions'
+                )
+            }
+          ],
           {
             cancelable: false
           }
@@ -201,11 +218,13 @@ export default class Settings extends React.Component {
         <ScrollView style={styles.mainContainer}>
           <TouchableOpacity
             style={[
-              styles.centerContent, 
-              localStyles.container, {
-                borderTopWidth: 0.5 * factorRatio, 
-                borderTopColor: '#445f73',
-            }]}
+              styles.centerContent,
+              localStyles.container,
+              {
+                borderTopWidth: 0.5 * factorRatio,
+                borderTopColor: '#445f73'
+              }
+            ]}
             onPress={() => {
               this.props.navigation.navigate('PROFILESETTINGS');
             }}
@@ -467,9 +486,9 @@ export default class Settings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     height:
-      (DeviceInfo.isTablet() ? 40 : 50) *
+      ((DeviceInfo.isTablet() ? 40 : 50) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375) /
+          Dimensions.get('window').width / 375)) /
       2,
     width: '100%',
     borderBottomColor: '#445f73',
@@ -494,12 +513,12 @@ const localStyles = StyleSheet.create({
           Dimensions.get('window').width / 375)) /
       2,
     textAlign: 'center',
-    fontSize:
-    DeviceInfo.isTablet() ? 18 : 
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    fontSize: DeviceInfo.isTablet()
+      ? 18
+      : (12 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2
   },
   buildText: {
     fontFamily: 'OpenSans-Regular',
