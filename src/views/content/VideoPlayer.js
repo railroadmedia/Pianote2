@@ -1398,7 +1398,7 @@ export default class VideoPlayer extends React.Component {
                           >
                             {this.allCommentsNum + ' COMMENTS'}
                           </Text>
-
+                          {global.isConnected && (
                           <TouchableOpacity
                             style={{ marginRight: factorHorizontal * 10 }}
                             onPress={() =>
@@ -1411,6 +1411,7 @@ export default class VideoPlayer extends React.Component {
                               color={colors.pianoteRed}
                             />
                           </TouchableOpacity>
+                          )}
                         </View>
 
                         <View
