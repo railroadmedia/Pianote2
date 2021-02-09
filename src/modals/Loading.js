@@ -25,7 +25,7 @@ class Loading extends React.Component {
           <View style={localStyles.container}>
             <View style={{ flex: 1 }} />
             <ActivityIndicator
-              size={'large'}
+              size={onTablet ? 'large' : 'small'}
               color={colors.pianoteRed}
               animating={true}
             />
@@ -39,7 +39,6 @@ class Loading extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     borderRadius:
       (15 *
         (Dimensions.get('window').height / 812 +
@@ -51,7 +50,7 @@ const localStyles = StyleSheet.create({
           Dimensions.get('window').width / 375)) /
       2,
     height: 200,
-    width: '80%'
+    width: '100%'
   }
 });
 

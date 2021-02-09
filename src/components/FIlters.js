@@ -11,6 +11,7 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native';
+import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Loading from 'Pianote2/src/modals/Loading.js';
@@ -2217,24 +2218,21 @@ export default class Filters extends React.Component {
             </View>
             <View style={{ height: isNotch ? fullHeight * 0.035 : 0 }} />
           </View>
-
-          {this.state.showLoading && (
-            <View
-              style={[
-                styles.centerContent,
-                {
-                  position: 'absolute',
-                  zIndex: 50,
-                  elevation: 50,
-                  margin: 0,
-                  height: '100%',
-                  width: '100%'
-                }
-              ]}
-            >
-              <Loading />
-            </View>
-          )}
+          <Modal
+            isVisible={this.state.showLoading}
+            style={{
+              margin: 0,
+              height: '100%',
+              width: '100%'
+            }}
+            animation={'slideInUp'}
+            animationInTiming={25}
+            animationOutTiming={25}
+            coverScreen={true}
+            hasBackdrop={true}
+          >
+            <Loading />
+          </Modal>
         </SafeAreaView>
       </View>
     );

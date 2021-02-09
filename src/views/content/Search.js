@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  Platform,
   StatusBar
 } from 'react-native';
 import { ContentModel } from '@musora/models';
@@ -179,7 +178,7 @@ export default class Search extends React.Component {
         this.state.page,
         this.state.filters
       );
-
+      console.log(response)
       if (response.data.length == 0) {
         this.setState({
           searchEntered: false,
@@ -414,6 +413,7 @@ export default class Search extends React.Component {
                 )}
               </View>
             </View>
+            {(this.state.searchResults.length == 0) && (
             <View style={[styles.centerContent, styles.recentSearches]}>
               {(!this.state.searchEntered ||
                 this.state.searchResults.length > 0) && (
@@ -453,7 +453,7 @@ export default class Search extends React.Component {
                 </TouchableOpacity>
               )}
             </View>
-
+            )}
             <View style={{ flex: 1, marginBottom: fullHeight * 0.015 }}>
               {!this.state.searchEntered &&
                 !this.state.isLoadingAll &&
@@ -461,7 +461,7 @@ export default class Search extends React.Component {
               {this.state.searchEntered &&
                 !this.state.noResults &&
                 !this.state.isLoadingAll && (
-                  <View style={{ marginBottom: 10 * factorVertical }}>
+                  <View style={{ marginBottom: 10 * factorVertical, marginTop: 15 * factorVertical }}>
                     <VerticalVideoList
                       items={this.state.searchResults}
                       isLoading={this.state.isLoadingAll}

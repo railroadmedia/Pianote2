@@ -198,7 +198,6 @@ class NavigationBar extends React.Component {
                   ? null
                   : styles.centerContent,
                 {
-                  paddingTop: isNotch ? 2 : 0,
                   borderColor:
                     this.props.currentPage == 'PROFILE' &&
                     this.state.profileImage.length > 0
