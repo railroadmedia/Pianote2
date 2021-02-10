@@ -109,6 +109,7 @@ export default class Method extends React.Component {
     const newContent = response.post.levels.map(data => {
       return new ContentModel(data);
     });
+
     let items = [];
     for (let i in newContent) {
       items.push({
@@ -121,10 +122,8 @@ export default class Method extends React.Component {
           .reduce((r, obj) => r.concat(obj.value, '  '), []),
         thumbnail: newContent[i].getData('thumbnail_url'),
         type: newContent[i].post.type,
-        publishedOn:
-          newContent[i].publishedOn.slice(0, 10) +
-          'T' +
-          newContent[i].publishedOn.slice(11, 16),
+        isStarted: newContent[i].isStarted,
+        publishedOn: newContent[i].publishedOn.slice(0, 10) + 'T' + newContent[i].publishedOn.slice(11, 16),
         description: newContent[i]
           .getData('description')
           .replace(/(<([^>]+)>)/g, '')
@@ -164,6 +163,8 @@ export default class Method extends React.Component {
       nextLesson: new ContentModel(response.post.next_lesson),
       refreshing: false
     });
+
+    console.log(this.state.items)
   };
 
   toggleLike = () => {

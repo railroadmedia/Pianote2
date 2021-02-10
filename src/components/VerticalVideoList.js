@@ -409,24 +409,23 @@ class VerticalVideoList extends React.Component {
                     styles.centerContent,
                     {
                       position: 'absolute',
-                      top: 0,
-                      left: 0,
                       width: '100%',
                       aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                      zIndex: 2
+                      zIndex: 20,
+                      paddingBottom: 10 * factorVertical,
                     }
                   ]}
                 >
                   {row.isStarted ? (
                     <Progress
-                      height={40 * factorRatio}
-                      width={40 * factorRatio}
+                      height={(onTablet ? 32.5 : 40) * factorRatio}
+                      width={(onTablet ? 32.5 : 40) * factorRatio}
                       fill={'white'}
                     />
                   ) : row.isCompleted ? (
                     <ApprovedTeacher
-                      height={50 * factorRatio}
-                      width={50 * factorRatio}
+                      height={(onTablet ? 42.5 : 50) * factorRatio}
+                      width={(onTablet ? 42.5 : 50) * factorRatio}
                       fill={'white'}
                     />
                   ) : null}
@@ -517,7 +516,7 @@ class VerticalVideoList extends React.Component {
                     >
                       LEVEL {index + 1}
                     </Text>
-                    <View style={{ flex: 0.5 }} />
+                    <View style={{ height: 5 * factorVertical }} />
                   </View>
                 )}
                 {Platform.OS === 'ios' ? (
