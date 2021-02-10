@@ -211,13 +211,15 @@ class LoadPage extends React.Component {
     });
   }
 
-  loadCache = () =>
+  loadCache = () => {
+    let { dirs } = RNFetchBlob.fs;
     cache.map(c =>
       RNFetchBlob.fs
-        .readFile(`${RNFetchBlob.fs.dirs.DocumentDir}/${c}`, 'utf8')
+        .readFile(`${dirs.LibraryDir || dirs.DocumentDir}/${c}`, 'utf8')
         .then(stream => this.props[c]?.(JSON.parse(stream)))
         .catch(() => {})
     );
+  };
 
   async handleNoConnection() {
     let isLoggedIn = await AsyncStorage.getItem('loggedIn');

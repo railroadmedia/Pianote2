@@ -80,7 +80,7 @@ export default class NewMembership extends React.Component {
     try {
       this.loadingRef.toggleLoading(true);
       const subscriptions = (await RNIap.getSubscriptions(skus)).sort((a, b) =>
-        a.price > b.price ? 1 : -1
+        parseFloat(a.price) > parseFloat(b.price) ? 1 : -1
       );
       this.loadingRef.toggleLoading();
       this.setState({ subscriptions });

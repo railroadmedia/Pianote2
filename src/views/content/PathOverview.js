@@ -61,10 +61,10 @@ export default class PathOverview extends React.Component {
       totalLength: 0,
       isLiked: false,
       likeCount: 0,
-      started: false,
-      completed: false,
+      started: this.props.navigation.state.params.data.started,
+      completed: this.props.navigation.state.params.data.completed,
       showRestartCourse: false,
-      nextLesson: null,
+      nextLesson: this.props.navigation.state.params.data.next_lesson,
       progress: 0,
       isLoadingAll: this.props.navigation.state.params.items?.length
         ? false
@@ -467,19 +467,19 @@ export default class PathOverview extends React.Component {
                 : { width: '100%' }
             ]}
           >
-            {(this.state.data.description !== 'TBD') && (
-            <Text
-              onLayout={() => console.log(this.state.data)}
-              style={{
-                fontFamily: 'OpenSans-Regular',
-                marginTop: 5 * factorVertical,
-                fontSize: 15 * factorRatio,
-                color: 'white',
-                textAlign: 'center'
-              }}
-            >
-              {this.state.data.description}
-            </Text>
+            {this.state.data.description !== 'TBD' && (
+              <Text
+                onLayout={() => console.log(this.state.data)}
+                style={{
+                  fontFamily: 'OpenSans-Regular',
+                  marginTop: 5 * factorVertical,
+                  fontSize: 15 * factorRatio,
+                  color: 'white',
+                  textAlign: 'center'
+                }}
+              >
+                {this.state.data.description}
+              </Text>
             )}
             <View key={'containStats'}>
               <View
@@ -721,6 +721,13 @@ export default class PathOverview extends React.Component {
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              colors={[colors.pianoteRed]}
+              refreshing={refreshing}
+              onRefresh={() => this.refresh()}
+            />
+          }
         >
           {this.renderHeader()}
           <FlatList
@@ -735,13 +742,6 @@ export default class PathOverview extends React.Component {
             keyboardShouldPersistTaps='handled'
             keyExtractor={content => content.id.toString()}
             removeClippedSubviews={true}
-            refreshControl={
-              <RefreshControl
-                colors={[colors.pianoteRed]}
-                refreshing={refreshing}
-                onRefresh={() => this.refresh()}
-              />
-            }
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 onPress={() =>
@@ -845,7 +845,7 @@ export default class PathOverview extends React.Component {
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Bold',
                         color: 'white',
-                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal,
+                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal
                       }}
                     >
                       {item.title}

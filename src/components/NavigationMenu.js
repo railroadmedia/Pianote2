@@ -177,7 +177,7 @@ const localStyles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 30,
+    paddingTop: 30,
     paddingVertical:
       (30 *
         (Dimensions.get('window').height / 812 +

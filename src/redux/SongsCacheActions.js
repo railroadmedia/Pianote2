@@ -1,8 +1,9 @@
 import RNFetchBlob from 'rn-fetch-blob';
 
 export const cacheAndWriteSongs = songs => {
+  let { dirs } = RNFetchBlob.fs;
   RNFetchBlob.fs.writeFile(
-    `${RNFetchBlob.fs.dirs.DocumentDir}/cacheSongs`,
+    `${dirs.LibraryDir || dirs.DocumentDir}/cacheSongs`,
     JSON.stringify(songs),
     'utf8'
   );
