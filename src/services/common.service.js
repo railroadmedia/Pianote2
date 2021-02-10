@@ -3,7 +3,7 @@ import { updateFcmToken } from 'Pianote2/src/services/notification.service.js';
 
 export let cache = {};
 export default {
-  rootUrl: 'https://staging.pianote.com',
+  rootUrl: 'https://www.pianote.com',
   tryCall: async function (url, method, body) {
     try {
       //
