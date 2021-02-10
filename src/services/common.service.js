@@ -1,8 +1,13 @@
+import { getToken } from 'Pianote2/src/services/UserDataAuth.js';
+import { updateFcmToken } from 'Pianote2/src/services/notification.service.js';
+
 export let cache = {};
 export default {
   rootUrl: 'https://www.pianote.com',
   tryCall: async function (url, method, body) {
     try {
+
+      // 
       if (body) body = body ? JSON.stringify(body) : null;
       let headers = body
         ? {
@@ -10,31 +15,34 @@ export default {
             'Content-Type': 'application/json'
           }
         : {
-            Authorization: `Bearer ${token}`
-          };
-      let newUrl = url;
-      if (!url.includes('https')) {
-        newUrl = url.replace('http', 'https');
-      }
-      let response = await fetch(newUrl, {
-        body,
-        headers,
-        method: method || 'GET'
-      });
-      let json = await response.json();
+          Authorization: `Bearer ${token}`
+        };
 
-      if (
-        json.error === 'TOKEN_EXPIRED' ||
-        json.error === 'Token not provided'
-      ) {
-        response = await fetch(newUrl, {
-          body,
-          headers,
-          method: method || 'GET'
-        });
-        return await response.json();
+      // URL calling --> change to https
+      let newUrl = url;
+      if (!url.includes('https')) {newUrl = url.replace('http', 'https');}
+
+      // make call
+      let response = await fetch(newUrl, {body, headers, method: method || 'GET'});
+
+      // if error, get new token call again
+      if (response.error == 'TOKEN_EXPIRED' || response.error == 'Token not provided') {
+        // reset global token
+        await getToken()
+        updateFcmToken();
+
+        // remake headers w new GLOBAL TOKEN
+        let headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+
+        // new call
+        let res = await fetch(newUrl, {body, headers, method: method || 'GET'});
+
+        // return new call
+        return await res.json();
       }
-      return json;
+
+      // if no error send initial result
+      return await response.json();
     } catch (error) {
       return {
         title: 'Something went wrong...',

@@ -1763,6 +1763,7 @@ export default class VideoPlayer extends React.Component {
           </Modal>
         )}
         <Modal
+          onLayout={() => console.log(this.state.resources, this.state.lessonTitle)}
           key={'resourceDownload'}
           isVisible={this.state.showResDownload}
           onDismiss={() => this.modalDismissed()}
@@ -2019,7 +2020,6 @@ export default class VideoPlayer extends React.Component {
                     }}
                     resizeMode={FastImage.resizeMode.stretch}
                   />
-
                   <TextInput
                     autoFocus={true}
                     multiline={true}

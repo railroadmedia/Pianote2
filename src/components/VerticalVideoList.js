@@ -894,13 +894,13 @@ class VerticalVideoList extends React.Component {
             !this.state.isLoading && (
               <View
                 style={{
-                  marginTop: 7.5 * factorRatio,
-                  paddingHorizontal: 15
+                  marginTop: 5 * factorVertical,
+                  paddingHorizontal: 10 * factorHorizontal
                 }}
               >
                 <Text
                   style={{
-                    fontSize: 12 * factorRatio,
+                    fontSize: (onTablet ? 12 : 14) * factorRatio,
                     color: this.props.isMethod
                       ? 'white'
                       : colors.secondBackground,
