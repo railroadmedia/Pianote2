@@ -1,8 +1,9 @@
 import RNFetchBlob from 'rn-fetch-blob';
 
 export const cacheAndWriteStudentFocus = studentFocus => {
+  let { dirs } = RNFetchBlob.fs;
   RNFetchBlob.fs.writeFile(
-    `${RNFetchBlob.fs.dirs.DocumentDir}/cacheStudentFocus`,
+    `${dirs.LibraryDir || dirs.DocumentDir}/cacheStudentFocus`,
     JSON.stringify(studentFocus),
     'utf8'
   );
