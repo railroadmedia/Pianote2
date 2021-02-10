@@ -123,7 +123,11 @@ export default class Method extends React.Component {
         thumbnail: newContent[i].getData('thumbnail_url'),
         type: newContent[i].post.type,
         isStarted: newContent[i].isStarted,
-        publishedOn: newContent[i].publishedOn.slice(0, 10) + 'T' + newContent[i].publishedOn.slice(11, 16),
+        isCompleted: newContent[i].isCompleted,
+        publishedOn:
+          newContent[i].publishedOn.slice(0, 10) +
+          'T' +
+          newContent[i].publishedOn.slice(11, 16),
         description: newContent[i]
           .getData('description')
           .replace(/(<([^>]+)>)/g, '')
@@ -163,8 +167,6 @@ export default class Method extends React.Component {
       nextLesson: new ContentModel(response.post.next_lesson),
       refreshing: false
     });
-
-    console.log(this.state.items)
   };
 
   toggleLike = () => {
@@ -193,7 +195,7 @@ export default class Method extends React.Component {
 
     this.setState(
       {
-        methodIsStarted: false, 
+        methodIsStarted: false,
         isStarted: false,
         isCompleted: false,
         showRestartCourse: false,
@@ -223,12 +225,12 @@ export default class Method extends React.Component {
   }
 
   getSquareHeight = () => {
-    if(onTablet) {
-      return 150
+    if (onTablet) {
+      return 150;
     } else {
-      return fullWidth * 0.26
+      return fullWidth * 0.26;
     }
-  }
+  };
 
   render() {
     return (
