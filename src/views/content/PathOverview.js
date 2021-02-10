@@ -61,10 +61,10 @@ export default class PathOverview extends React.Component {
       totalLength: 0,
       isLiked: false,
       likeCount: 0,
-      started: false,
-      completed: false,
+      started: this.props.navigation.state.params.data.started,
+      completed: this.props.navigation.state.params.data.completed,
       showRestartCourse: false,
-      nextLesson: null,
+      nextLesson: this.props.navigation.state.params.data.next_lesson,
       progress: 0,
       isLoadingAll: this.props.navigation.state.params.items?.length
         ? false

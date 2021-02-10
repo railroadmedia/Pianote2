@@ -64,7 +64,10 @@ export default class Downloads extends React.Component {
           xp: item.post.xp,
           description: item.getData('description'),
           like_count: item.post.like_count,
-          isAddedToList: item.post.is_added_to_primary_playlist
+          isAddedToList: item.post.is_added_to_primary_playlist,
+          next_lesson: new ContentModel(item.post.next_lesson),
+          started: item.post.started,
+          started: item.post.completed
         },
         items: item.post.lessons
           .map(l => new ContentModel(l))
@@ -131,7 +134,7 @@ export default class Downloads extends React.Component {
                 style={{
                   color: colors.pianoteRed,
                   fontFamily: 'OpenSans-Bold',
-                  fontSize: (onTablet) ? 22 : 16 * factorRatio
+                  fontSize: onTablet ? 22 : 16 * factorRatio
                 }}
               >
                 EDIT
@@ -150,7 +153,7 @@ export default class Downloads extends React.Component {
                   padding: 20,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: (onTablet) ? 26 : 18 * factorRatio
+                  fontSize: onTablet ? 26 : 18 * factorRatio
                 }}
               >
                 Any lessons you download will be available here.
