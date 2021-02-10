@@ -109,7 +109,7 @@ export default class Login extends React.Component {
       let resp = await validateSignUp(purchases);
       console.log('validateSignUp resp', resp);
       if (resp.shouldSignup) {
-        return true;
+        return false;
       } else if (resp.message) {
         this.subscriptionExists.toggle(`Signup Blocked`, resp.message);
         this.setState({
