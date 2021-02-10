@@ -14,6 +14,7 @@ import { withNavigation } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Intercom from 'react-native-intercom';
+import { logOut } from '../services/UserDataAuth';
 
 const resetAction = StackActions.reset({
   index: 0,
@@ -30,6 +31,7 @@ class LogOut extends React.Component {
   }
 
   logOut = async () => {
+    logOut();
     Intercom.logout();
     await AsyncStorage.clear();
     await AsyncStorage.setItem('loggedIn', 'false');
