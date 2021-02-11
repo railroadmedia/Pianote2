@@ -52,6 +52,8 @@ export default class CreateAccount extends React.Component {
           let response = await signUp(
             this.state.email,
             this.state.password,
+            this.props.navigation.state.params?.purchase,
+            null,
             this.props.navigation.state.params?.purchase
           );
           console.log(response);

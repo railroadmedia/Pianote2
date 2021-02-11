@@ -156,7 +156,7 @@ export default class AssignmentResource extends React.Component {
           }}
         >
           {this.props.data?.map((sheet, i) => {
-            let sourceUri = dldService.manageOfflinePath(sheet.value);
+            let sourceUri = sheet.value;
             if (sheet.value.indexOf('.pdf') < 0) {
               return (
                 <View

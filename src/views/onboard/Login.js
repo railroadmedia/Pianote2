@@ -152,10 +152,15 @@ export default class Login extends React.Component {
         !restoreResponse.email &&
         ((Platform.OS === 'android' && restoreResponse.purchase) ||
           (Platform.OS === 'ios' && purchases[0]))
-      )
+      ) {
+        let purchase = restoreResponse.purchase || purchases[0];
+        const product = await RNIap.getSubscriptions([purchase.product_id]);
+        purchase.price = product[0].price;
+        purchase.currency = product[0].currency;
         return this.props.navigation.navigate('CREATEACCOUNT', {
-          purchase: restoreResponse.purchase || purchases[0]
+          purchase
         });
+      }
     } catch (err) {
       console.log('restore err', err);
       if (this.loadingRef) this.loadingRef.toggleLoading();

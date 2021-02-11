@@ -14,8 +14,10 @@ import SoundSlice from '../../components/SoundSlice.js';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AssignmentResource from './AssignmentResource.js';
 import downloadService from '../../services/download.service.js';
+import { NetworkContext } from '../../context/NetworkProvider';
 
 export default class VideoPlayerSong extends React.Component {
+  static contextType = NetworkContext;
   static navigationOptions = { header: null };
   constructor(props) {
     super(props);
@@ -28,12 +30,14 @@ export default class VideoPlayerSong extends React.Component {
   }
 
   componentDidMount() {
-    downloadService.getAssignWHRatio([this.state.assignment]).then(sheets =>
-      this.setState({
-        assignment: { ...this.state.assignment, sheets },
-        showSheets: true
-      })
-    );
+    if (this.context.isConnected)
+      downloadService.getAssignWHRatio([this.state.assignment]).then(sheets =>
+        this.setState({
+          assignment: { ...this.state.assignment, sheets },
+          showSheets: true
+        })
+      );
+    else this.setState({ showSheets: true });
   }
 
   render() {
@@ -186,7 +190,7 @@ export default class VideoPlayerSong extends React.Component {
             <ActivityIndicator size='large' color={colors.secondBackground} />
           )}
         </ScrollView>
-        {!this.state.hideTitles && (
+        {!this.state.hideTitles && this.context.isConnected && (
           <View style={{ backgroundColor: colors.mainBackground }}>
             {slug && (
               <TouchableOpacity

@@ -61,6 +61,7 @@ class SoundSlice extends React.Component {
             allowsInlineMediaPlayback={true}
             automaticallyAdjustContentInsets={true}
             mediaPlaybackRequiresUserAction={false}
+            ignoreSilentHardwareSwitch={true}
             source={{
               uri: `https://www.soundslice.com/${
                 /^\d+$/.test(this.props.slug) ? 'scores' : 'slices'
