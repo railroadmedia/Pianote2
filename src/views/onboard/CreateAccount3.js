@@ -18,7 +18,6 @@ import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-picker';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NavigationActions, StackActions } from 'react-navigation';
 
@@ -29,6 +28,7 @@ import Support from 'Pianote2/src/assets/img/svgs/support.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
 import LearningPaths from 'Pianote2/src/assets/img/svgs/learningPaths.svg';
 
+import ProfileImage from '../../modals/ProfileImage.js';
 import DisplayName from '../../modals/DisplayName.js';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
@@ -61,6 +61,7 @@ export default class CreateAccount3 extends React.Component {
       page: 1,
       pianoteYdelta: new Animated.Value(0.01),
       showDisplayName: false,
+      showProfileImage: false,
       showImage: false,
       canScroll: false,
       displayNameValid: false,
@@ -227,35 +228,45 @@ export default class CreateAccount3 extends React.Component {
     } else {
       // if there is profile image upload it
       let url;
-      console.log(data);
-      if (data) {
-        try {
-          let response = await fetch(
-            `${commonService.rootUrl}/api/avatar/upload`,
-            {
-              method: 'POST',
-              headers: { Authorization: `Bearer ${token}` },
-              body: data
+
+      try {
+        if (data) {
+          try {
+            let response = await fetch(
+              `${commonService.rootUrl}/api/avatar/upload`,
+              {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+                body: data
+              }
+            );
+
+            // if image is too large
+            if (response.status == 413) {
+              this.setState({ showProfileImage: true });
+              return;
             }
-          );
-          url = await response.json();
-          console.log(url);
-        } catch (e) {
-          console.log(e);
+
+            url = await response.json();
+
+            await commonService.tryCall(
+              `${commonService.rootUrl}/api/profile/update`,
+              'POST',
+              {
+                file: url?.data?.[0]?.url,
+                display_name: this.state.displayName
+              }
+            );
+
+            // send to loadpage to update asyncstorage with new data
+            await this.props.navigation.dispatch(resetAction);
+          } catch (e) {
+            console.log('ERROR: ', e);
+          }
         }
+      } catch (e) {
+        console.log('ERROR: ', e);
       }
-
-      await commonService.tryCall(
-        `${commonService.rootUrl}/api/profile/update`,
-        'POST',
-        {
-          file: url?.data?.[0]?.url,
-          display_name: this.state.displayName
-        }
-      );
-
-      // send to loadpage to update asyncstorage with new data
-      await this.props.navigation.dispatch(resetAction);
     }
   };
 
@@ -288,15 +299,7 @@ export default class CreateAccount3 extends React.Component {
                     flex: 1,
                     justifyContent: 'center'
                   }}
-                >
-                  {false && (
-                    <EntypoIcon
-                      name={'chevron-thin-left'}
-                      size={22.5 * factorRatio}
-                      color={'black'}
-                    />
-                  )}
-                </TouchableOpacity>
+                />
                 <Text
                   style={[
                     styles.modalHeaderText,
@@ -882,7 +885,29 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                 </View>
               </View>
-
+              <Modal
+                isVisible={this.state.showProfileImage}
+                style={[
+                  styles.centerContent,
+                  {
+                    margin: 0,
+                    flex: 1
+                  }
+                ]}
+                animation={'slideInUp'}
+                animationInTiming={350}
+                animationOutTiming={350}
+                coverScreen={true}
+                hasBackdrop={true}
+              >
+                <ProfileImage
+                  hideProfileImage={() => {
+                    this.setState({
+                      showProfileImage: false
+                    });
+                  }}
+                />
+              </Modal>
               <Modal
                 isVisible={this.state.showDisplayName}
                 style={[
