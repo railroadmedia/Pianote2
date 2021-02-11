@@ -181,7 +181,7 @@ export async function getMyListContent(page, filtersDict, progressState) {
 }
 
 export async function seeAllContent(contentType, type, page, filtersDict) {
-  let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&sort=-published_on&page=${page}`;
+  let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&page=${page}`;
 
   if (contentType == 'lessons') {
     // add types
@@ -204,7 +204,9 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
     url = url + `&included_types[]=song`;
   }
   if (type == 'continue') {
-    url = url + `&required_user_states[]=started`;
+    url = url + `&required_user_states[]=started&sort=-progress`;
+  } else {
+    url = url + `&sort=-published_on`;
   }
   try {
     let x = await commonService.tryCall(url);

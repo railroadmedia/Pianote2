@@ -1674,7 +1674,7 @@ export default class VideoPlayer extends React.Component {
                   size={(onTablet ? 17.5 : 22.5) * factorRatio}
                   style={{ padding: (onTablet ? 5 : 7.5) * factorRatio }}
                   color={
-                    this.state.nextLesson
+                    this.state.previousLesson
                       ? colors.pianoteRed
                       : colors.secondBackground
                   }
