@@ -230,8 +230,10 @@ export default class CreateAccount3 extends React.Component {
       let url;
 
       try {
-        if (data) {
+        // if has image
+        if (data._parts.length > 0) {
           try {
+            // upload file
             let response = await fetch(
               `${commonService.rootUrl}/api/avatar/upload`,
               {
@@ -241,14 +243,14 @@ export default class CreateAccount3 extends React.Component {
               }
             );
 
-            // if image is too large
+            // if image is too large 
             if (response.status == 413) {
               this.setState({ showProfileImage: true });
               return;
             }
 
+            // get data back, put image URL & display name in user details
             url = await response.json();
-
             await commonService.tryCall(
               `${commonService.rootUrl}/api/profile/update`,
               'POST',
@@ -263,6 +265,19 @@ export default class CreateAccount3 extends React.Component {
           } catch (e) {
             console.log('ERROR: ', e);
           }
+        } else {
+          console.log(url?.data?.[0]?.url)
+          await commonService.tryCall(
+            `${commonService.rootUrl}/api/profile/update`,
+            'POST',
+            {
+              file: url?.data?.[0]?.url,
+              display_name: this.state.displayName
+            }
+          );
+
+          // send to loadpage to update asyncstorage with new data
+          await this.props.navigation.dispatch(resetAction);
         }
       } catch (e) {
         console.log('ERROR: ', e);
@@ -526,6 +541,7 @@ export default class CreateAccount3 extends React.Component {
                       alignItems: 'center'
                     }}
                   >
+                    {false && (
                     <TouchableOpacity
                       onPress={() => {
                         this.createAccount();
@@ -542,6 +558,7 @@ export default class CreateAccount3 extends React.Component {
                         SKIP
                       </Text>
                     </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               </Animated.View>
