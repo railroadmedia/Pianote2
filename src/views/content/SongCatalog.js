@@ -241,17 +241,16 @@ class SongCatalog extends React.Component {
   }
 
   getSquareHeight = () => {
-    if(onTablet) {
-      return 125
+    if (onTablet) {
+      return 125;
     } else {
-      if(Platform.OS == 'android') {
-        return fullHeight * 0.1375
-      }
-      else {
-        return fullHeight * 0.115
+      if (Platform.OS == 'android') {
+        return fullHeight * 0.1375;
+      } else {
+        return fullHeight * 0.115;
       }
     }
-  }
+  };
 
   render() {
     return (
@@ -296,7 +295,7 @@ class SongCatalog extends React.Component {
                   isSquare={true}
                   items={this.state.progressSongs}
                 />
-                <View style={{height: 5}}/>
+                <View style={{ height: 5 }} />
               </View>
             )}
             <VerticalVideoList

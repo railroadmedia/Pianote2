@@ -34,7 +34,7 @@ export default class NetworkProvider extends React.PureComponent {
   }
 
   handleConnectivityChange = state => {
-    global.isConnected = state.isConnected
+    global.isConnected = state.isConnected;
     this.setState({ isConnected: state.isConnected });
   };
 

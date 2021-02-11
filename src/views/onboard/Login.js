@@ -174,12 +174,12 @@ export default class Login extends React.Component {
     <View
       key={'buttons'}
       style={{
-        width: '80%',
+        width: onTablet ? '80%' : '95%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: '10%',
-        marginRight: '10%'
+        marginLeft: onTablet ? '10%' : '2.5%',
+        marginRight: onTablet ? '10%' : '2.5%'
       }}
     >
       <TouchableOpacity

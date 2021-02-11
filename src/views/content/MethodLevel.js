@@ -420,7 +420,7 @@ export default class MethodLevel extends React.Component {
               showLength={false}
               showSort={false}
               showLines={true}
-              imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
+              imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
             />
           </View>
         </ScrollView>

@@ -73,9 +73,12 @@ export default class Support extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView 
-          forceInset={{top: (onTablet) ? 'never' : 'always'}} 
-          style={[styles.mainContainer, {backgroundColor: colors.thirdBackground}]}
+        <SafeAreaView
+          forceInset={{ top: onTablet ? 'never' : 'always' }}
+          style={[
+            styles.mainContainer,
+            { backgroundColor: colors.thirdBackground }
+          ]}
         >
           <StatusBar
             backgroundColor={colors.thirdBackground}

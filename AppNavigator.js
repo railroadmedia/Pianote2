@@ -48,7 +48,7 @@ import Terms from './src/views/user/Terms';
 
 const AppNavigator = createStackNavigator(
   {
-    initialRoute: LoadPage,
+    initialRoute: CreateAccount,
 
     // user
     NOTIFICATIONSETTINGS: { screen: NotificationSettings },
@@ -88,7 +88,12 @@ const AppNavigator = createStackNavigator(
     SUPPORTSIGNUP: { screen: SupportSignUp },
     FORGOTPASSWORD: { screen: ForgotPassword },
     CREATEACCOUNT2: { screen: CreateAccount2 },
-    CREATEACCOUNT3: { screen: CreateAccount3 },
+    CREATEACCOUNT3: {
+      screen: CreateAccount3,
+      navigationOptions: {
+        gesturesEnabled: false
+      }
+    },
     NEWMEMBERSHIP: { screen: NewMembership },
     CREATEACCOUNT: { screen: CreateAccount },
     GETRESTARTED: { screen: GetRestarted },

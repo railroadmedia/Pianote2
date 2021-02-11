@@ -18,10 +18,20 @@ export default class CreateAccountStepCounter extends React.Component {
             paddingVertical: 7 * factorRatio
           }}
         >
-          <Text style={[styles.text, { fontSize: 10 * factorRatio }]}>
+          <Text
+            style={[
+              styles.text,
+              { fontSize: (onTablet ? 10 : 10) * factorRatio }
+            ]}
+          >
             Step 1:
           </Text>
-          <Text style={[styles.boldText, { fontSize: 12 * factorRatio }]}>
+          <Text
+            style={[
+              styles.boldText,
+              { fontSize: (onTablet ? 10 : 12) * factorRatio }
+            ]}
+          >
             EMAIL ADDRESS
           </Text>
         </View>
@@ -39,10 +49,20 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text style={[styles.text, { fontSize: 10 * factorRatio }]}>
+          <Text
+            style={[
+              styles.text,
+              { fontSize: (onTablet ? 10 : 10) * factorRatio }
+            ]}
+          >
             Step 2:
           </Text>
-          <Text style={[styles.boldText, { fontSize: 12 * factorRatio }]}>
+          <Text
+            style={[
+              styles.boldText,
+              { fontSize: (onTablet ? 10 : 12) * factorRatio }
+            ]}
+          >
             SET A PASSWORD
           </Text>
         </View>
@@ -60,10 +80,20 @@ export default class CreateAccountStepCounter extends React.Component {
             }
           ]}
         >
-          <Text style={[styles.text, { fontSize: 10 * factorRatio }]}>
+          <Text
+            style={[
+              styles.text,
+              { fontSize: (onTablet ? 10 : 10) * factorRatio }
+            ]}
+          >
             Step 3:
           </Text>
-          <Text style={[styles.boldText, { fontSize: 12 * factorRatio }]}>
+          <Text
+            style={[
+              styles.boldText,
+              { fontSize: (onTablet ? 10 : 12) * factorRatio }
+            ]}
+          >
             CHOOSE A PLAN
           </Text>
         </View>

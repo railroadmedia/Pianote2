@@ -552,7 +552,7 @@ export default class SinglePack extends React.Component {
                 showArtist={this.state.isDisplayingLessons ? false : true} // show artist name
                 showLength={this.state.isDisplayingLessons ? true : false}
                 showLines={!this.state.isDisplayingLessons}
-                imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
+                imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
                 outVideos={this.state.outVideos} // if paging and out of videos
                 navigator={row => this.navigate(row)}
               />

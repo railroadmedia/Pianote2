@@ -23,6 +23,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import { NavigationActions, StackActions } from 'react-navigation';
 
 import X from 'Pianote2/src/assets/img/svgs/X.svg';
+import Back from '../../assets/img/svgs/back';
 import Courses from 'Pianote2/src/assets/img/svgs/courses.svg';
 import Support from 'Pianote2/src/assets/img/svgs/support.svg';
 import Songs from 'Pianote2/src/assets/img/svgs/headphones.svg';
@@ -41,7 +42,7 @@ var data = new FormData();
 
 const resetAction = StackActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'LESSONS' })]
+  actions: [NavigationActions.navigate({ routeName: 'LOADPAGE' })]
 });
 
 const windowDim = Dimensions.get('window');
@@ -63,6 +64,7 @@ export default class CreateAccount3 extends React.Component {
       showImage: false,
       canScroll: false,
       displayNameValid: false,
+      pageNum: 0,
       displayName: '',
       imageURI: '',
       email: this.props.navigation.state.params.email,
@@ -172,6 +174,7 @@ export default class CreateAccount3 extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     if (this.state.displayName.length > 0) {
+      Keyboard.dismiss();
       // check if valid
       let response = await fetch(
         `${commonService.rootUrl}/usora/api/is-display-name-unique?display_name=${this.state.displayName}`
@@ -268,13 +271,16 @@ export default class CreateAccount3 extends React.Component {
             keyboardShouldPersistTaps='handled'
             pagingEnabled={true}
             scrollEnabled={this.state.canScroll}
-            onMomentumScrollEnd={e => this.changeColor(e)}
+            onMomentumScrollEnd={e => {
+              this.setState({ pageNum: e });
+              this.changeColor(e);
+            }}
             contentContainerStyle={{ flexGrow: 1 }}
           >
             <View style={styles.centerContent}>
               <View style={[styles.centerContent, localStyles.container1]}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}
+                  onPress={() => this.changeColor(this.state.pageNum - 1)}
                   style={{
                     paddingLeft: 12.5 * factorHorizontal,
                     height: '100%',
@@ -294,7 +300,10 @@ export default class CreateAccount3 extends React.Component {
                 <Text
                   style={[
                     styles.modalHeaderText,
-                    { color: 'white', fontSize: 24 * factorRatio }
+                    {
+                      fontSize: 24 * factorRatio,
+                      fontFamily: 'OpenSans-Bold'
+                    }
                   ]}
                 >
                   Create Account
@@ -362,6 +371,7 @@ export default class CreateAccount3 extends React.Component {
                       returnKeyType={'go'}
                       placeholder={'Display name'}
                       keyboardType={'email-address'}
+                      onSubmitEditing={() => Keyboard.dismiss()}
                       onChangeText={displayName => {
                         this.typingDisplayName(displayName);
                       }}
@@ -558,27 +568,12 @@ export default class CreateAccount3 extends React.Component {
                 />
               </Modal>
             </View>
-            <View
-              style={[
-                styles.centerContent,
-                {
-                  height: height,
-                  width: width,
-                  alignSelf: 'stretch'
-                }
-              ]}
-            >
+            <View style={styles.centerContent}>
               <View
-                key={'CreateAccount2'}
                 style={[
                   styles.centerContent,
-                  {
-                    height: height * 0.05,
-                    width: width,
-                    zIndex: 5,
-                    elevation: 5,
-                    flexDirection: 'row'
-                  }
+                  localStyles.container1,
+                  { flexDirection: 'row' }
                 ]}
               >
                 <TouchableOpacity
@@ -590,27 +585,30 @@ export default class CreateAccount3 extends React.Component {
                     });
                   }}
                   style={{
-                    paddingLeft: 12.5 * factorHorizontal,
-                    flex: 1
+                    paddingLeft: 15 * factorHorizontal,
+                    flex: 1,
+                    justifyContent: 'center'
                   }}
                 >
-                  <EntypoIcon
-                    name={'chevron-thin-left'}
-                    size={22.5 * factorRatio}
-                    color={'black'}
+                  <Back
+                    width={(onTablet ? 17.5 : 25) * factorRatio}
+                    height={(onTablet ? 17.5 : 22.5) * factorRatio}
+                    fill={'black'}
                   />
                 </TouchableOpacity>
                 <Text
-                  style={{
-                    fontFamily: 'OpenSans-Regular',
-                    fontSize: 24 * factorRatio,
-                    fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
-                  }}
+                  style={[
+                    styles.modalHeaderText,
+                    { fontSize: 24 * factorRatio, fontFamily: 'OpenSans-Bold' }
+                  ]}
                 >
                   Create Account
                 </Text>
-                <View style={{ flex: 1 }} />
+                <View
+                  style={{ flex: 1, paddingRight: 15 * factorHorizontal }}
+                />
               </View>
+
               <View
                 key={'items'}
                 style={{
@@ -884,6 +882,7 @@ export default class CreateAccount3 extends React.Component {
                   </View>
                 </View>
               </View>
+
               <Modal
                 isVisible={this.state.showDisplayName}
                 style={[
@@ -919,10 +918,9 @@ export default class CreateAccount3 extends React.Component {
             >
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
-                  fontSize: 24 * factorRatio,
-                  fontWeight: Platform.OS == 'ios' ? '600' : 'bold'
+                  fontSize: 24 * factorRatio
                 }}
               >
                 Here's what is included{'\n'}in the Pianote App!
@@ -1372,10 +1370,9 @@ export default class CreateAccount3 extends React.Component {
             >
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
+                  fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
-                  fontSize: 25 * factorRatio,
-                  fontWeight: '700'
+                  fontSize: 25 * factorRatio
                 }}
               >
                 You should start with{'\n'}The Pianote Method!

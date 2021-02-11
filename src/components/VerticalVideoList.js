@@ -412,7 +412,7 @@ class VerticalVideoList extends React.Component {
                       width: '100%',
                       aspectRatio: this.props.isSquare ? 1 : 16 / 9,
                       zIndex: 20,
-                      paddingBottom: 10 * factorVertical,
+                      paddingBottom: 10 * factorVertical
                     }
                   ]}
                 >

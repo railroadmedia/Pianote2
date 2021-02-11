@@ -25,14 +25,16 @@ export async function getToken(userEmail, userPass, purchases) {
       body: purchases ? JSON.stringify(purchases) : {}
     }
   );
-  
+
   if (response.status == 500) {
     return 500;
   } else {
     response = await response.json();
     if (response.success) {
       token = response.token;
-      await AsyncStorage.multiSet([['userId', JSON.stringify(response.userId)]]);
+      await AsyncStorage.multiSet([
+        ['userId', JSON.stringify(response.userId)]
+      ]);
     }
     return response;
   }

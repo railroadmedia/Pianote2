@@ -36,7 +36,7 @@ class HorizontalVideoList extends React.Component {
     this.state = {
       showModal: false,
       addToCalendarModal: false,
-      items: this.props.items,
+      items: this.props.items
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
@@ -138,7 +138,7 @@ class HorizontalVideoList extends React.Component {
     ) {
       return;
     }
-    console.log(content.type, content.id)
+    console.log(content.type, content.id);
     switch (content.type) {
       case 'course':
         return this.props.navigation.navigate('PATHOVERVIEW', {
@@ -251,16 +251,16 @@ class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                {(item.isStarted) && (
-                <View 
-                  style={[styles.centerContent, localStyles.progressItem]}
-                >
-                  <Progress
-                    height={50}
-                    width={50 * factorRatio}
-                    fill={'white'}
-                  />
-                </View>
+                {item.isStarted && (
+                  <View
+                    style={[styles.centerContent, localStyles.progressItem]}
+                  >
+                    <Progress
+                      height={50}
+                      width={50 * factorRatio}
+                      fill={'white'}
+                    />
+                  </View>
                 )}
                 {Platform.OS === 'ios' ? (
                   <FastImage
@@ -306,7 +306,7 @@ class HorizontalVideoList extends React.Component {
               </View>
 
               <View style={localStyles.videoTitle}>
-                <View style={{ width: '80%', }}>
+                <View style={{ width: '80%' }}>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode='tail'
@@ -322,18 +322,18 @@ class HorizontalVideoList extends React.Component {
                         color: this.props.isMethod
                           ? colors.pianoteGrey
                           : colors.secondBackground,
-                          
-                        fontSize: (onTablet ?  9.5 : 12) * factorRatio,
-                        marginTop: 1.5 * factorVertical,  
+
+                        fontSize: (onTablet ? 9.5 : 12) * factorRatio,
+                        marginTop: 1.5 * factorVertical
                       }}
                     >
-                      {this.props.showType && (
-                        this.changeType(item.type)
-                      )}{this.props.showType && ("/ ")}{item.artist}
+                      {this.props.showType && this.changeType(item.type)}
+                      {this.props.showType && '/ '}
+                      {item.artist}
                     </Text>
                   </View>
                 </View>
-                {(new Date(item.publishedOn) > new Date()) ? (
+                {new Date(item.publishedOn) > new Date() ? (
                   <TouchableOpacity
                     onPress={() => {
                       this.addToCalendarLessonTitle = item.title;
@@ -342,7 +342,7 @@ class HorizontalVideoList extends React.Component {
                     }}
                   >
                     <FontIcon
-                      size={(onTablet) ?  12.5 * factorRatio :  27.5 * factorRatio}
+                      size={onTablet ? 12.5 * factorRatio : 27.5 * factorRatio}
                       name={'calendar-plus'}
                       color={
                         this.props.isMethod && !this.props.methodLevel
@@ -358,7 +358,7 @@ class HorizontalVideoList extends React.Component {
                   >
                     <AntIcon
                       name={'plus'}
-                      size={(onTablet) ?  17.5 * factorRatio :  25 * factorRatio}
+                      size={onTablet ? 17.5 * factorRatio : 25 * factorRatio}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey
@@ -373,7 +373,7 @@ class HorizontalVideoList extends React.Component {
                   >
                     <AntIcon
                       name={'close'}
-                      size={(onTablet) ?  17.5 * factorRatio :  25 * factorRatio}
+                      size={onTablet ? 17.5 * factorRatio : 25 * factorRatio}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey
@@ -422,9 +422,11 @@ class HorizontalVideoList extends React.Component {
             hideAddToCalendar={() =>
               this.setState({ addToCalendarModal: false })
             }
-            addEventToCalendar={() => {this.addEventToCalendar()}}
+            addEventToCalendar={() => {
+              this.addEventToCalendar();
+            }}
           />
-        </Modal>      
+        </Modal>
       </View>
     );
   };
@@ -432,30 +434,47 @@ class HorizontalVideoList extends React.Component {
 
 const localStyles = StyleSheet.create({
   listContainer: {
-    paddingLeft: 10 * Dimensions.get('window').width / 375
+    paddingLeft: (10 * Dimensions.get('window').width) / 375
   },
   artist: {
-    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * ((Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,  
-    fontFamily: 'OpenSans-Regular',
+    fontSize:
+      ((DeviceInfo.isTablet() ? 12 : 16) *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
+    fontFamily: 'OpenSans-Regular'
   },
   title: {
-    fontSize: DeviceInfo.isTablet() ? 22 : (18 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
+    fontSize: DeviceInfo.isTablet()
+      ? 22
+      : (18 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
     fontFamily: 'RobotoCondensed-Bold'
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: DeviceInfo.isTablet() ? 20 : (14.5 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
+    fontSize: DeviceInfo.isTablet()
+      ? 20
+      : (14.5 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
     fontWeight: '300',
     color: '#fb1b2f',
-    paddingRight: 15 * Dimensions.get('window').width / 375
+    paddingRight: (15 * Dimensions.get('window').width) / 375
   },
   titleContain: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: (DeviceInfo.isTablet() ? 10 : 15) *
-        (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2
+    paddingVertical:
+      ((DeviceInfo.isTablet() ? 10 : 15) *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   progressItem: {
     position: 'absolute',
@@ -480,20 +499,23 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   videoTitleText: {
-    fontSize: DeviceInfo.isTablet() ?  
-      16
-      : 
-      (14 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
-    marginTop: DeviceInfo.isTablet() ?  5 :
-      (7.5 * 
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet()
+      ? 16
+      : (14 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
+    marginTop: DeviceInfo.isTablet()
+      ? 5
+      : (7.5 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
     fontFamily: 'OpenSans-Bold',
     color: 'white'
   },
   typeContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   }
 });
 

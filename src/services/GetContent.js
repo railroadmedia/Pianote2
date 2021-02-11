@@ -170,7 +170,10 @@ export async function getMyListContent(page, filtersDict, progressState) {
       `${commonService.rootUrl}/api/railcontent/my-list?brand=pianote&limit=20&statuses[]=published&sort=${sort}&page=${page}` +
       included_types +
       progress_types;
-    return commonService.tryCall(url);
+
+    let x = await commonService.tryCall(url);
+    console.log(x);
+    return x;
   } catch (error) {
     console.log('Error: ', error);
     return new Error(error);

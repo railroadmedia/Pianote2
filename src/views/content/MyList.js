@@ -85,63 +85,87 @@ class MyList extends React.Component {
       this.state.filters,
       ''
     );
+    console.log('RESPONE1');
     this.props.cacheAndWriteMyList(response);
+    console.log('here');
     this.setState(this.initialValidData(response, loadMore));
   };
 
   initialValidData = (content, loadMore, fromCache) => {
-    try {
-      const newContent = content.data.map(data => {
-        return new ContentModel(data);
-      });
-
-      let items = [];
-      for (let i in newContent) {
-        items.push({
-          title: newContent[i].getField('title'),
-          artist: this.getArtist(newContent[i]),
-          thumbnail: newContent[i].getData('thumbnail_url'),
-          type: newContent[i].post.type,
-          publishedOn:
-            newContent[i].publishedOn.slice(0, 10) +
-            'T' +
-            newContent[i].publishedOn.slice(11, 16),
-          description: newContent[i]
-            .getData('description')
-            .replace(/(<([^>]+)>)/g, '')
-            .replace(/&nbsp;/g, '')
-            .replace(/&amp;/g, '&')
-            .replace(/&#039;/g, "'")
-            .replace(/&quot;/g, '"')
-            .replace(/&gt;/g, '>')
-            .replace(/&lt;/g, '<'),
-          xp: newContent[i].post.xp,
-          id: newContent[i].id,
-          mobile_app_url: newContent[i].post.mobile_app_url,
-          lesson_count: newContent[i].post.lesson_count,
-          currentLessonId: newContent[i].post?.song_part_id,
-          like_count: newContent[i].post.like_count,
-          duration: i,
-          isLiked: newContent[i].post.is_liked_by_current_user,
-          isAddedToList: newContent[i].isAddedToList,
-          isStarted: newContent[i].isStarted,
-          isCompleted: newContent[i].isCompleted,
-          bundle_count: newContent[i].post.bundle_count,
-          progress_percent: newContent[i].post.progress_percent
-        });
-      }
-      return {
-        allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
-        filtersAvailable: content.meta.filterOptions,
-        outVideos: items.length == 0 || content.data.length < 20 ? true : false,
-        page: this.state?.page + 1 || 1,
+    console.log(content, loadMore, fromCache);
+    if (typeof loadMore == 'undefined' || typeof fromCache == 'undefined') {
+      this.setState({
+        filtersAvailable: {
+          displayTopics: [],
+          topics: [],
+          content_type: [],
+          level: [],
+          progress: [],
+          instructors: []
+        },
+        outVideos: true,
+        page: 1,
         isLoadingAll: false,
         filtering: false,
         isPaging: false,
-        refreshing: fromCache
-      };
-    } catch (e) {
-      return {};
+        refreshing: false
+      });
+    } else {
+      try {
+        const newContent = content.data.map(data => {
+          return new ContentModel(data);
+        });
+
+        let items = [];
+        for (let i in newContent) {
+          items.push({
+            title: newContent[i].getField('title'),
+            artist: this.getArtist(newContent[i]),
+            thumbnail: newContent[i].getData('thumbnail_url'),
+            type: newContent[i].post.type,
+            publishedOn:
+              newContent[i].publishedOn.slice(0, 10) +
+              'T' +
+              newContent[i].publishedOn.slice(11, 16),
+            description: newContent[i]
+              .getData('description')
+              .replace(/(<([^>]+)>)/g, '')
+              .replace(/&nbsp;/g, '')
+              .replace(/&amp;/g, '&')
+              .replace(/&#039;/g, "'")
+              .replace(/&quot;/g, '"')
+              .replace(/&gt;/g, '>')
+              .replace(/&lt;/g, '<'),
+            xp: newContent[i].post.xp,
+            id: newContent[i].id,
+            mobile_app_url: newContent[i].post.mobile_app_url,
+            lesson_count: newContent[i].post.lesson_count,
+            currentLessonId: newContent[i].post?.song_part_id,
+            like_count: newContent[i].post.like_count,
+            duration: i,
+            isLiked: newContent[i].post.is_liked_by_current_user,
+            isAddedToList: newContent[i].isAddedToList,
+            isStarted: newContent[i].isStarted,
+            isCompleted: newContent[i].isCompleted,
+            bundle_count: newContent[i].post.bundle_count,
+            progress_percent: newContent[i].post.progress_percent
+          });
+        }
+        return {
+          allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
+          filtersAvailable: content.meta.filterOptions,
+          outVideos:
+            items.length == 0 || content.data.length < 20 ? true : false,
+          page: this.state?.page + 1 || 1,
+          isLoadingAll: false,
+          filtering: false,
+          isPaging: false,
+          refreshing: fromCache
+        };
+      } catch (e) {
+        console.log('error: ', e);
+        return {};
+      }
     }
   };
 
@@ -276,7 +300,7 @@ class MyList extends React.Component {
             filterResults={() => this.setState({ showFilters: true })}
             removeItem={contentID => this.removeFromMyList(contentID)}
             outVideos={this.state.outVideos}
-            imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
+            imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
           />
         </ScrollView>
         {this.state.showFilters && (

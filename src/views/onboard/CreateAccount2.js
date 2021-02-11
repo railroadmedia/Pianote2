@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import DeviceInfo from 'react-native-device-info';
 import PasswordMatch from '../../modals/PasswordMatch';
 import Back from '../../assets/img/svgs/back';
 import GradientFeature from 'Pianote2/src/components/GradientFeature.js';
@@ -128,7 +128,11 @@ export default class CreateAccount extends React.Component {
               onPress={() => this.props.navigation.goBack()}
               style={localStyles.createAccountContainer}
             >
-              <Back width={25} height={25} fill={'white'} />
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={'white'}
+              />
               <Text
                 style={[styles.modalHeaderText, localStyles.createAccountText]}
               >
@@ -146,6 +150,7 @@ export default class CreateAccount extends React.Component {
                 <Text style={localStyles.createPasswordText}>
                   Create a password
                 </Text>
+                <View style={{ height: 7.5 * factorVertical }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
@@ -171,7 +176,11 @@ export default class CreateAccount extends React.Component {
                           showPassword: true
                         })
                       }
-                      style={localStyles.showPassword}
+                      style={{
+                        width: onTablet ? '30%' : '50%',
+                        marginTop: 15 * factorVertical,
+                        backgroundColor: '#fb1b2f'
+                      }}
                     >
                       <Text>{this.state.password}</Text>
                     </TouchableOpacity>
@@ -191,9 +200,11 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
+                <View style={{ height: 17.5 * factorVertical }} />
                 <Text style={localStyles.createPasswordText}>
                   Confirm password
                 </Text>
+                <View style={{ height: 7.5 * factorVertical }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     style={localStyles.textinput}
@@ -241,10 +252,10 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
+                <View style={{ height: 10 * factorVertical }} />
                 <Text style={localStyles.characters}>
                   Use at least 8 characters
                 </Text>
-
                 <TouchableOpacity
                   onPress={() => this.savePassword()}
                   style={[
@@ -265,13 +276,16 @@ export default class CreateAccount extends React.Component {
                     style={[
                       styles.modalButtonText,
                       {
-                        padding: 15,
                         color:
                           this.state.password.length > 0 &&
                           this.state.confirmPassword.length > 0 &&
                           this.state.password == this.state.confirmPassword
                             ? 'white'
-                            : '#fb1b2f'
+                            : '#fb1b2f',
+                        fontFamily: 'RobotoCondensed-Bold',
+                        fontSize: 18 * factorRatio,
+                        textAlign: 'center',
+                        padding: 10
                       }
                     ]}
                   >
@@ -353,7 +367,7 @@ const localStyles = StyleSheet.create({
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
     fontSize:
-      (19 *
+      ((DeviceInfo.isTablet() ? 17.5 : 20) *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
@@ -362,27 +376,17 @@ const localStyles = StyleSheet.create({
     paddingLeft: 15
   },
   passInput: {
-    marginBottom: 20,
     borderRadius: 100,
-    marginVertical: 10,
     marginHorizontal: 15,
     justifyContent: 'center',
     backgroundColor: 'white'
   },
   textinput: {
-    marginVertical:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    paddingVertical: 15,
     color: 'black',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
     borderRadius: 100,
     marginHorizontal: 15,
+    fontSize: (16 * Dimensions.get('window').height) / 812,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
@@ -406,7 +410,7 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
     fontSize:
-      (14 *
+      ((DeviceInfo.isTablet() ? 12 : 14) *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,

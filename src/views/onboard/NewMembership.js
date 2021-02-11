@@ -470,7 +470,7 @@ export default class NewMembership extends React.Component {
                 position: 'absolute',
                 alignSelf: 'center',
                 height: height,
-                borderRadius: height / 4,
+                borderRadius: onTablet ? 0 : height / 4,
                 aspectRatio: 1,
                 top: '50%'
               }}

@@ -339,7 +339,7 @@ class Packs extends React.Component {
             </TouchableOpacity>
           )}
         />
-        
+
         <NavigationBar currentPage={'PACKS'} />
 
         <Modal
