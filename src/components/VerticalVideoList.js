@@ -727,7 +727,7 @@ class VerticalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={styles.container}>
+      <View>
         <View>
           <View style={{ height: 5 * factorVertical }} />
           {this.props.showFilter && (

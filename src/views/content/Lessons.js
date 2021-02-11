@@ -474,6 +474,9 @@ class Lessons extends React.Component {
                   ) : !this.state.methodIsStarted ? (
                     <StartIcon
                       pressed={() => {
+                        if (!this.context.isConnected) {
+                          return this.context.showNoConnectionAlert();
+                        }
                         if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
                             url: this.state.methodNextLessonUrl
@@ -483,6 +486,9 @@ class Lessons extends React.Component {
                   ) : (
                     <ContinueIcon
                       pressed={() => {
+                        if (!this.context.isConnected) {
+                          return this.context.showNoConnectionAlert();
+                        }
                         if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
                             url: this.state.methodNextLessonUrl
