@@ -145,8 +145,8 @@ export async function signUp(
       email,
       password,
       receipt: purchase.transactionReceipt,
-      price: selectedPlan.price,
-      currency: selectedPlan.currency
+      price: selectedPlan?.price,
+      currency: selectedPlan?.currency
     };
   } else {
     platform = 'google';
@@ -157,8 +157,8 @@ export async function signUp(
       package_name: `com.pianote2`,
       product_id: purchase.productId || purchase.product_id,
       purchase_token: purchase.purchaseToken || purchase.purchase_token,
-      price: selectedPlan.price,
-      currency: selectedPlan.currency
+      price: selectedPlan?.price,
+      currency: selectedPlan?.currency
     };
   }
   let headers;
