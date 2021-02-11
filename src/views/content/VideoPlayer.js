@@ -1669,11 +1669,12 @@ export default class VideoPlayer extends React.Component {
                   )
                 }
               >
-                <Back
-                  width={(onTablet ? 17.5 : 25) * factorRatio}
-                  height={(onTablet ? 17.5 : 25) * factorRatio}
-                  fill={
-                    this.state.previousLesson
+                <EntypoIcon
+                  name={'chevron-thin-left'}
+                  size={(onTablet ? 17.5 : 22.5) * factorRatio}
+                  style={{ padding: (onTablet ? 5 : 7.5) * factorRatio }}
+                  color={
+                    this.state.nextLesson
                       ? colors.pianoteRed
                       : colors.secondBackground
                   }
