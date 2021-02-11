@@ -156,7 +156,7 @@ export default class VideoPlayer extends React.Component {
       return new ContentModel(rl);
     });
     let al = [];
-    if (content.post.assignments && this.context.isConnected) {
+    if (content.post.assignments) {
       let assignments = content.post.assignments.map(assignment => {
         return new ContentModel(assignment);
       });
@@ -1764,9 +1764,6 @@ export default class VideoPlayer extends React.Component {
           </Modal>
         )}
         <Modal
-          onLayout={() =>
-            console.log(this.state.resources, this.state.lessonTitle)
-          }
           key={'resourceDownload'}
           isVisible={this.state.showResDownload}
           onDismiss={() => this.modalDismissed()}
