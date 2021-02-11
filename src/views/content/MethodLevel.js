@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-navigation';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import Orientation from 'react-native-orientation-locker';
 
@@ -228,10 +228,10 @@ export default class MethodLevel extends React.Component {
               }
             ]}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={'white'}
+            <Back
+              width={(onTablet ? 17.5 : 25) * factorRatio}
+              height={(onTablet ? 17.5 : 25) * factorRatio}
+              fill={'white'}
             />
           </TouchableOpacity>
           <ImageBackground

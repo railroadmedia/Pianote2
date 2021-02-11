@@ -13,7 +13,7 @@ import {
   PixelRatio,
   StyleSheet
 } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
@@ -214,10 +214,10 @@ export default class NewMembership extends React.Component {
                   : this.props.navigation.navigate('LOGINCREDENTIALS');
               }}
             >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={25 * factorRatio}
-                color={'white'}
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={'white'}
               />
             </TouchableOpacity>
             <View

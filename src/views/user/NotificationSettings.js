@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
@@ -121,10 +122,10 @@ export default class NotificationSettings extends React.Component {
                     });
               }}
             >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={colors.secondBackground}
               />
             </TouchableOpacity>
             <Text style={[styles.childHeaderText, localStyles.title]}>

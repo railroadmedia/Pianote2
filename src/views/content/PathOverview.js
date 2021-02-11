@@ -17,7 +17,7 @@ import { ContentModel } from '@musora/models';
 import Modal from 'react-native-modal';
 import { Download_V2 } from 'RNDownload';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
 
@@ -304,10 +304,10 @@ export default class PathOverview extends React.Component {
               }
             ]}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={'white'}
+            <Back
+              width={(onTablet ? 17.5 : 25) * factorRatio}
+              height={(onTablet ? 17.5 : 25) * factorRatio}
+              fill={'white'}
             />
           </TouchableOpacity>
         </ImageBackground>
@@ -469,7 +469,6 @@ export default class PathOverview extends React.Component {
           >
             {this.state.data.description !== 'TBD' && (
               <Text
-                onLayout={() => console.log(this.state.data)}
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   marginTop: 5 * factorVertical,

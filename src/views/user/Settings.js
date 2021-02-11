@@ -22,7 +22,7 @@ import { bindActionCreators } from 'redux';
 import LogOut from '../../modals/LogOut.js';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -211,10 +211,10 @@ class Settings extends React.Component {
               this.props.navigation.goBack();
             }}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={colors.secondBackground}
+            <Back
+              width={(onTablet ? 17.5 : 25) * factorRatio}
+              height={(onTablet ? 17.5 : 25) * factorRatio}
+              fill={colors.secondBackground}
             />
           </TouchableOpacity>
 

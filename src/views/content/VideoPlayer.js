@@ -33,6 +33,7 @@ import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
 
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import CommentSort from '../../modals/CommentSort';
 import CustomModal from '../../modals/CustomModal';
 import RestartCourse from '../../modals/RestartCourse';
@@ -1668,11 +1669,10 @@ export default class VideoPlayer extends React.Component {
                   )
                 }
               >
-                <EntypoIcon
-                  name={'chevron-thin-left'}
-                  size={(onTablet ? 17.5 : 22.5) * factorRatio}
-                  style={{ padding: (onTablet ? 5 : 7.5) * factorRatio }}
-                  color={
+                <Back
+                  width={(onTablet ? 17.5 : 25) * factorRatio}
+                  height={(onTablet ? 17.5 : 25) * factorRatio}
+                  fill={
                     this.state.previousLesson
                       ? colors.pianoteRed
                       : colors.secondBackground

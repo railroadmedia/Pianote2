@@ -10,7 +10,7 @@ import {
   Linking
 } from 'react-native';
 import Intercom from 'react-native-intercom';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 
 export default class SupportSignUp extends React.Component {
@@ -71,10 +71,10 @@ export default class SupportSignUp extends React.Component {
                   }
                 ]}
               >
-                <EntypoIcon
-                  name={'chevron-thin-left'}
-                  size={25 * factorRatio}
-                  color={colors.secondBackground}
+                <Back
+                  width={(onTablet ? 17.5 : 25) * factorRatio}
+                  height={(onTablet ? 17.5 : 25) * factorRatio}
+                  fill={'white'}
                 />
               </TouchableOpacity>
             </View>

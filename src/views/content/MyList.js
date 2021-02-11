@@ -85,14 +85,11 @@ class MyList extends React.Component {
       this.state.filters,
       ''
     );
-    console.log('RESPONE1');
     this.props.cacheAndWriteMyList(response);
-    console.log('here');
     this.setState(this.initialValidData(response, loadMore));
   };
 
   initialValidData = (content, loadMore, fromCache) => {
-    console.log(content, loadMore, fromCache);
     if (typeof loadMore == 'undefined' || typeof fromCache == 'undefined') {
       this.setState({
         filtersAvailable: {
