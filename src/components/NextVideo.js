@@ -57,7 +57,7 @@ class NextVideo extends React.Component {
             <Text
               style={{
                 fontSize: onTablet ? 18 : 16 * factorRatio,
-                marginBottom: 5*factorVertical,
+                marginBottom: 5 * factorVertical,
                 textAlign: 'left',
                 fontFamily: 'RobotoCondensed-Bold',
                 color: this.props.isMethod
@@ -145,26 +145,43 @@ class NextVideo extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: (1.25 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2
+    height:
+      (1.25 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   nextLesson: {
     marginTop: (10 * Dimensions.get('window').height) / 812,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingHorizontal:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   typeText: {
-    fontSize: (12 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375)) / 2,
+    fontSize:
+      (12 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     fontFamily: 'OpenSans-Regular',
     textAlign: 'right'
   },
   videoContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 10 * (Dimensions.get('window').height / 812 +
-    Dimensions.get('window').width / 375) /2
+    paddingHorizontal:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2
   },
   image: {
-    width: DeviceInfo.isTablet() ? Dimensions.get('window').width * 0.15 : Dimensions.get('window').width * 0.225,
+    width: DeviceInfo.isTablet()
+      ? Dimensions.get('window').width * 0.15
+      : Dimensions.get('window').width * 0.225,
     aspectRatio: 16 / 9,
     borderRadius:
       (7 *
@@ -173,11 +190,12 @@ const localStyles = StyleSheet.create({
       2
   },
   videoTitle: {
-    fontSize: DeviceInfo.isTablet() ? 18 : 
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet()
+      ? 18
+      : (15 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
     marginBottom: 2,
     textAlign: 'left',
     fontWeight: 'bold',
@@ -189,17 +207,21 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   videoTitleText: {
-    fontSize:
-      DeviceInfo.isTablet() ? 16 : 
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: DeviceInfo.isTablet()
+      ? 16
+      : (12 *
+          (Dimensions.get('window').height / 812 +
+            Dimensions.get('window').width / 375)) /
+        2,
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left'
   },
   titleTextContainer: {
-    paddingHorizontal: 10 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,
+    paddingHorizontal:
+      (10 *
+        (Dimensions.get('window').height / 812 +
+          Dimensions.get('window').width / 375)) /
+      2,
     alignSelf: 'center'
   }
 });

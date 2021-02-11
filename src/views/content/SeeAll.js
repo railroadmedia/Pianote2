@@ -11,7 +11,7 @@ import {
   StatusBar
 } from 'react-native';
 import { ContentModel } from '@musora/models';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 import Modal from 'react-native-modal';
 import Filters from '../../components/FIlters.js';
@@ -271,10 +271,10 @@ export default class SeeAll extends React.Component {
             style={{ flex: 1 }}
             onPress={() => this.props.navigation.goBack()}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={25 * factorRatio}
-              color={'white'}
+            <Back
+              width={(onTablet ? 17.5 : 25) * factorRatio}
+              height={(onTablet ? 17.5 : 25) * factorRatio}
+              fill={'white'}
             />
           </TouchableOpacity>
           <Text style={styles.childHeaderText}>{this.state.parent}</Text>
@@ -317,7 +317,7 @@ export default class SeeAll extends React.Component {
                 this.getAllLessons();
             }} // change sort and reload videos
             filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
+            imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
             outVideos={this.state.outVideos} // if paging and out of videos
           />
         </ScrollView>

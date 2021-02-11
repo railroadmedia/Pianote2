@@ -41,11 +41,13 @@ class CommentSort extends React.Component {
             <TouchableOpacity
               key={index}
               style={[
-                localStyles.sortCommentContainer, 
-                index == 0 ? {
-                  borderTopWidth: 0.5 * factorRatio,
-                  borderTopColor: '#445f73',
-                } : {}
+                localStyles.sortCommentContainer,
+                index == 0
+                  ? {
+                      borderTopWidth: 0.5 * factorRatio,
+                      borderTopColor: '#445f73'
+                    }
+                  : {}
               ]}
               onPress={() => {
                 this.props.hideCommentSort();

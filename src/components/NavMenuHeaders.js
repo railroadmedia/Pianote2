@@ -56,7 +56,13 @@ class NavMenuHeaders extends React.Component {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: isNotch ? 5 * factorVertical : (Platform.OS == 'android') ? 0 : onTablet ? 0 : 4,
+            paddingTop: isNotch
+              ? 5 * factorVertical
+              : Platform.OS == 'android'
+              ? 0
+              : onTablet
+              ? 0
+              : 4,
             paddingBottom: 10 * factorRatio,
             paddingRight: 10 * factorHorizontal,
             paddingLeft: 5 * factorHorizontal
@@ -79,14 +85,17 @@ class NavMenuHeaders extends React.Component {
             }}
             style={{
               height:
-                Platform.OS == 'ios' ? 
-                  onTablet ? fullHeight * 0.045 : fullHeight * 0.035
-                  : 
-                  onTablet ? fullHeight * 0.1 : fullHeight * 0.04,
+                Platform.OS == 'ios'
+                  ? onTablet
+                    ? fullHeight * 0.045
+                    : fullHeight * 0.035
+                  : onTablet
+                  ? fullHeight * 0.1
+                  : fullHeight * 0.04,
               width: onTablet ? 0.14 * fullWidth : 0.25 * fullWidth,
               flexDirection: 'row',
               marginRight: 5 * factorHorizontal,
-              paddingLeft: (onTablet ? 10 : 0)
+              paddingLeft: onTablet ? 10 : 0
             }}
           >
             <Pianote fill={'#fb1b2f'} />
@@ -117,7 +126,7 @@ class NavMenuHeaders extends React.Component {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: (onTablet) ? 22 : 14 * factorRatio,
+                fontSize: onTablet ? 22 : 14 * factorRatio,
                 fontFamily: 'OpenSans-ExtraBold',
                 color:
                   this.props.currentPage == 'LESSONS'
@@ -157,7 +166,7 @@ class NavMenuHeaders extends React.Component {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: (onTablet) ? 22 : 14 * factorRatio,
+                fontSize: onTablet ? 22 : 14 * factorRatio,
                 fontFamily: 'OpenSans-ExtraBold',
                 color:
                   this.props.currentPage == 'PACKS'
@@ -183,7 +192,7 @@ class NavMenuHeaders extends React.Component {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: (onTablet) ? 22 : 14 * factorRatio,
+                fontSize: onTablet ? 22 : 14 * factorRatio,
                 shadowOpacity: 0.3,
                 fontFamily: 'OpenSans-Regular',
                 fontFamily: 'OpenSans-ExtraBold',

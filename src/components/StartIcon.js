@@ -37,11 +37,23 @@ class StartIcon extends React.Component {
         >
           <Icon
             name={'controller-play'}
-            size={(onTablet) ? 17.5 * factorRatio : 25 * factorRatio}
+            size={onTablet ? 17.5 * factorRatio : 25 * factorRatio}
             color={'white'}
           />
           <View style={{ flex: 0.025 }} />
-          <Text style={[styles.buttonText, {fontSize: (this.props.isMethod && onTablet) ? 16 * factorRatio : 14 * factorRatio}]}>START</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                fontSize:
+                  this.props.isMethod && onTablet
+                    ? 16 * factorRatio
+                    : 14 * factorRatio
+              }
+            ]}
+          >
+            START
+          </Text>
         </TouchableOpacity>
       </View>
     );

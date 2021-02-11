@@ -18,7 +18,7 @@ import { Download_V2 } from 'RNDownload';
 import { SafeAreaView } from 'react-navigation';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
@@ -238,10 +238,10 @@ export default class SinglePack extends React.Component {
                 }
               ]}
             >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={22.5 * factorRatio}
-                color={'white'}
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={'white'}
               />
             </TouchableOpacity>
 
@@ -552,7 +552,7 @@ export default class SinglePack extends React.Component {
                 showArtist={this.state.isDisplayingLessons ? false : true} // show artist name
                 showLength={this.state.isDisplayingLessons ? true : false}
                 showLines={!this.state.isDisplayingLessons}
-                imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
+                imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
                 outVideos={this.state.outVideos} // if paging and out of videos
                 navigator={row => this.navigate(row)}
               />

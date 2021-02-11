@@ -24,7 +24,7 @@ module.exports = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: (DeviceInfo.isTablet()) ? 12 * factorRatio : 14 * factorRatio
+    fontSize: DeviceInfo.isTablet() ? 12 * factorRatio : 14 * factorRatio
   },
   searchContainer: {
     marginTop: fullHeight * 0.04,
@@ -110,7 +110,7 @@ module.exports = StyleSheet.create({
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',
-    paddingVertical: 10 * factorVertical,
+    paddingVertical: 10 * factorVertical
   },
   tabRightContainer: {
     paddingRight: 10 * factorHorizontal,
@@ -124,7 +124,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   contentPageHeader: {
-    paddingLeft: 10 * Dimensions.get('window').width / 375,
+    paddingLeft: (10 * Dimensions.get('window').width) / 375,
     fontSize: 30 * factorRatio,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'

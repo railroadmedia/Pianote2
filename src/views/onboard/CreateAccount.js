@@ -19,11 +19,13 @@ import FastImage from 'react-native-fast-image';
 
 import Back from '../../assets/img/svgs/back';
 import CheckEmail from '../../modals/CheckEmail.js';
+import ValidateEmail from '../../modals/ValidateEmail.js';
 import GradientFeature from '../../components/GradientFeature.js';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
+import DeviceInfo from 'react-native-device-info';
 
 export default class CreateAccount extends React.Component {
   static navigationOptions = { header: null };
@@ -34,6 +36,7 @@ export default class CreateAccount extends React.Component {
     else Orientation.lockToPortrait();
     this.state = {
       showCheckEmail: false,
+      showValidateEmail: false,
       email: '',
       scrollViewContentFlex: { flex: 1 }
     };
@@ -52,6 +55,11 @@ export default class CreateAccount extends React.Component {
           console.log(response);
           if (response?.exists) {
             this.setState({ showCheckEmail: true });
+          } else if (
+            response?.errors?.email ==
+            'The email must be a valid email address.'
+          ) {
+            this.setState({ showValidateEmail: true });
           } else {
             this.props.navigation.navigate('CREATEACCOUNT2', {
               email: this.state.email,
@@ -89,7 +97,11 @@ export default class CreateAccount extends React.Component {
               onPress={() => this.props.navigation.navigate('LOGINCREDENTIALS')}
               style={localStyles.createAccountContainer}
             >
-              <Back width={25} height={25} fill={'white'} />
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={'white'}
+              />
               <Text
                 style={[styles.modalHeaderText, localStyles.createAccountText]}
               >
@@ -138,6 +150,7 @@ export default class CreateAccount extends React.Component {
                       localStyles.verifyContainer,
                       {
                         width: onTablet ? '30%' : '50%',
+                        marginTop: (15 * Dimensions.get('window').height) / 812,
                         backgroundColor:
                           this.state.email.length > 0
                             ? '#fb1b2f'
@@ -149,9 +162,12 @@ export default class CreateAccount extends React.Component {
                       style={[
                         styles.modalButtonText,
                         {
-                          padding: 15,
                           color:
-                            this.state.email.length > 0 ? 'white' : '#fb1b2f'
+                            this.state.email.length > 0 ? 'white' : '#fb1b2f',
+                          fontFamily: 'RobotoCondensed-Bold',
+                          fontSize: 18 * factorRatio,
+                          textAlign: 'center',
+                          padding: 10
                         }
                       ]}
                     >
@@ -188,6 +204,32 @@ export default class CreateAccount extends React.Component {
                 }}
               />
             </Modal>
+            <Modal
+              key={'entervalid'}
+              isVisible={this.state.showValidateEmail}
+              style={[
+                styles.centerContent,
+                {
+                  margin: 0,
+                  height: '100%',
+                  width: '100%'
+                }
+              ]}
+              d
+              animation={'slideInUp'}
+              animationInTiming={350}
+              animationOutTiming={350}
+              coverScreen={true}
+              hasBackdrop={true}
+            >
+              <ValidateEmail
+                hideValidateEmail={() => {
+                  this.setState({
+                    showValidateEmail: false
+                  });
+                }}
+              />
+            </Modal>
           </KeyboardAvoidingView>
         </SafeAreaView>
       </FastImage>
@@ -214,7 +256,7 @@ const localStyles = StyleSheet.create({
   emailText: {
     fontFamily: 'OpenSans-Bold',
     fontSize:
-      (20 *
+      ((DeviceInfo.isTablet() ? 17.5 : 20) *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
@@ -246,24 +288,12 @@ const localStyles = StyleSheet.create({
     width: '80%'
   },
   textInput: {
-    padding:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginVertical:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    padding: 15,
+    marginTop: (15 * Dimensions.get('window').height) / 812,
     color: 'black',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
     borderRadius: 100,
     marginHorizontal: 15,
+    fontSize: (16 * Dimensions.get('window').height) / 812,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },

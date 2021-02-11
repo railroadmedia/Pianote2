@@ -10,7 +10,7 @@ import {
   ScrollView,
   StatusBar
 } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import Intercom from 'react-native-intercom';
 import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import NavigationBar from 'Pianote2/src/components/NavigationBar.js';
@@ -73,9 +73,12 @@ export default class Support extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView 
-          forceInset={{top: (onTablet) ? 'never' : 'always'}} 
-          style={[styles.mainContainer, {backgroundColor: colors.thirdBackground}]}
+        <SafeAreaView
+          forceInset={{ top: onTablet ? 'never' : 'always' }}
+          style={[
+            styles.mainContainer,
+            { backgroundColor: colors.thirdBackground }
+          ]}
         >
           <StatusBar
             backgroundColor={colors.thirdBackground}
@@ -95,10 +98,10 @@ export default class Support extends React.Component {
               onPress={() => this.props.navigation.goBack()}
               style={{ flex: 1 }}
             >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={colors.secondBackground}
               />
             </TouchableOpacity>
 

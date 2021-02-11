@@ -12,7 +12,7 @@ import {
   Dimensions,
   Linking
 } from 'react-native';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 
 export default class PrivacyPolicy extends React.Component {
@@ -31,10 +31,10 @@ export default class PrivacyPolicy extends React.Component {
             onPress={() => this.props.navigation.goBack()}
             style={{ flex: 1 }}
           >
-            <EntypoIcon
-              name={'chevron-thin-left'}
-              size={22.5 * factorRatio}
-              color={'black'}
+            <Back
+              width={(onTablet ? 17.5 : 25) * factorRatio}
+              height={(onTablet ? 17.5 : 25) * factorRatio}
+              fill={'black'}
             />
           </TouchableOpacity>
           <Text style={localStyles.title}>Privacy Policy</Text>

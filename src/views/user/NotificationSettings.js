@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import DeviceInfo from 'react-native-device-info';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontIcon from 'react-native-vector-icons/FontAwesome';
@@ -99,9 +100,12 @@ export default class NotificationSettings extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView 
-          forceInset={{top: (onTablet) ? 'never' : 'always'}} 
-          style={[styles.mainContainer, {backgroundColor: colors.thirdBackground}]}
+        <SafeAreaView
+          forceInset={{ top: onTablet ? 'never' : 'always' }}
+          style={[
+            styles.mainContainer,
+            { backgroundColor: colors.thirdBackground }
+          ]}
         >
           <StatusBar
             backgroundColor={colors.thirdBackground}
@@ -118,10 +122,10 @@ export default class NotificationSettings extends React.Component {
                     });
               }}
             >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={22.5 * factorRatio}
-                color={colors.secondBackground}
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={colors.secondBackground}
               />
             </TouchableOpacity>
             <Text style={[styles.childHeaderText, localStyles.title]}>
@@ -130,7 +134,7 @@ export default class NotificationSettings extends React.Component {
             <View style={{ flex: 1 }} />
           </View>
           {this.state.isLoading && (
-            <View style={[styles.centerContent,  styles.mainContainer]}>
+            <View style={[styles.centerContent, styles.mainContainer]}>
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}
                 animating={true}
@@ -386,7 +390,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#081826',
+    backgroundColor: '#081826'
   },
   title: {
     textAlign: 'center',
@@ -409,9 +413,10 @@ const localStyles = StyleSheet.create({
           Dimensions.get('window').width / 375)) /
       2,
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) *
+    fontSize:
+      ((DeviceInfo.isTablet() ? 14 : 16) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375) /
+          Dimensions.get('window').width / 375)) /
       2,
     color: '#445f73',
     paddingVertical: 5
@@ -425,9 +430,10 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) *
+    fontSize:
+      ((DeviceInfo.isTablet() ? 14 : 16) *
         (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375) /
+          Dimensions.get('window').width / 375)) /
       2,
     color: '#445f73'
   },
@@ -442,7 +448,9 @@ const localStyles = StyleSheet.create({
       2
   },
   border: {
-    height: (DeviceInfo.isTablet() ? 15 : 25) * Dimensions.get('window').height / 812,
+    height:
+      ((DeviceInfo.isTablet() ? 15 : 25) * Dimensions.get('window').height) /
+      812,
     borderBottomColor: '#445f73',
     borderBottomWidth: 1
   }

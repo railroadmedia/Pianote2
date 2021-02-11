@@ -25,14 +25,16 @@ export async function getToken(userEmail, userPass, purchases) {
       body: purchases ? JSON.stringify(purchases) : {}
     }
   );
-  
+
   if (response.status == 500) {
     return 500;
   } else {
     response = await response.json();
     if (response.success) {
       token = response.token;
-      await AsyncStorage.multiSet([['userId', JSON.stringify(response.userId)]]);
+      await AsyncStorage.multiSet([
+        ['userId', JSON.stringify(response.userId)]
+      ]);
     }
     return response;
   }
@@ -143,8 +145,8 @@ export async function signUp(
       email,
       password,
       receipt: purchase.transactionReceipt,
-      price: selectedPlan.price,
-      currency: selectedPlan.currency
+      price: selectedPlan?.price,
+      currency: selectedPlan?.currency
     };
   } else {
     platform = 'google';
@@ -155,8 +157,8 @@ export async function signUp(
       package_name: `com.pianote2`,
       product_id: purchase.productId || purchase.product_id,
       purchase_token: purchase.purchaseToken || purchase.purchase_token,
-      price: selectedPlan.price,
-      currency: selectedPlan.currency
+      price: selectedPlan?.price,
+      currency: selectedPlan?.currency
     };
   }
   let headers;

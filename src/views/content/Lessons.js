@@ -420,7 +420,7 @@ class Lessons extends React.Component {
               style={{
                 width: '100%',
                 aspectRatio: this.getAspectRatio(),
-                justifyContent: 'flex-end',
+                justifyContent: 'flex-end'
               }}
               source={require('Pianote2/src/assets/img/imgs/lisamethod.png')}
             >
@@ -460,7 +460,7 @@ class Lessons extends React.Component {
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
                     paddingHorizontal: 25 * factorRatio,
-                    marginBottom: (Platform.OS == 'android') ? -5 : -1,
+                    marginBottom: Platform.OS == 'android' ? -5 : -1
                   }}
                 >
                   {this.state.methodIsCompleted ? (
@@ -474,6 +474,9 @@ class Lessons extends React.Component {
                   ) : !this.state.methodIsStarted ? (
                     <StartIcon
                       pressed={() => {
+                        if (!this.context.isConnected) {
+                          return this.context.showNoConnectionAlert();
+                        }
                         if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
                             url: this.state.methodNextLessonUrl
@@ -483,6 +486,9 @@ class Lessons extends React.Component {
                   ) : (
                     <ContinueIcon
                       pressed={() => {
+                        if (!this.context.isConnected) {
+                          return this.context.showNoConnectionAlert();
+                        }
                         if (this.state.methodNextLessonUrl)
                           this.props.navigation.navigate('VIDEOPLAYER', {
                             url: this.state.methodNextLessonUrl
@@ -506,22 +512,20 @@ class Lessons extends React.Component {
 
             <View>
               {this.state.lessonsStarted && (
-               
-                  <HorizontalVideoList
-                    isMethod={true}
-                    Title={'IN PROGRESS'}
-                    seeAll={() =>
-                      this.props.navigation.navigate('SEEALL', {
-                        title: 'Continue',
-                        parent: 'Lessons'
-                      })
-                    }
-                    showType={true}
-                    items={this.state.progressLessons}
-                  />
-
+                <HorizontalVideoList
+                  isMethod={true}
+                  Title={'IN PROGRESS'}
+                  seeAll={() =>
+                    this.props.navigation.navigate('SEEALL', {
+                      title: 'Continue',
+                      parent: 'Lessons'
+                    })
+                  }
+                  showType={true}
+                  items={this.state.progressLessons}
+                />
               )}
-              <View style={{ height: (onTablet) ? -20 : 5 * factorRatio }} />
+              <View style={{ height: onTablet ? -20 : 5 * factorRatio }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

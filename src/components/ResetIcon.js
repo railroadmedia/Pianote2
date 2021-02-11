@@ -43,7 +43,19 @@ class ResetIcon extends React.Component {
             color={'white'}
           />
           <View style={{ flex: 0.075 }} />
-          <Text style={[styles.buttonText, {fontSize: (this.props.isMethod && onTablet) ? 16 * factorRatio : 14 * factorRatio}]}>RESET</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                fontSize:
+                  this.props.isMethod && onTablet
+                    ? 16 * factorRatio
+                    : 14 * factorRatio
+              }
+            ]}
+          >
+            RESET
+          </Text>
         </TouchableOpacity>
       </View>
     );

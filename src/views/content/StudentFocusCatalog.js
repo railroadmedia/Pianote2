@@ -127,8 +127,8 @@ class StudentFocusCatalog extends React.Component {
         style={{
           width: '50%',
           marginTop: '3%',
-          paddingLeft: (index % 2 == 0) ? 12 * factorHorizontal : '1%', //(12 * factorHorizontal) / (index % 2 === 0 ? 1 : 2),
-          paddingRight: (index % 2 == 0) ? '1%' : 12 * factorHorizontal, //(12 * factorHorizontal) / (index % 2 === 0 ? 2 : 1)
+          paddingLeft: index % 2 == 0 ? 12 * factorHorizontal : '1%', //(12 * factorHorizontal) / (index % 2 === 0 ? 1 : 2),
+          paddingRight: index % 2 == 0 ? '1%' : 12 * factorHorizontal //(12 * factorHorizontal) / (index % 2 === 0 ? 2 : 1)
         }}
       >
         <FastImage

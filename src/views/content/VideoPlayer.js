@@ -33,6 +33,7 @@ import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
 
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import CommentSort from '../../modals/CommentSort';
 import CustomModal from '../../modals/CustomModal';
 import RestartCourse from '../../modals/RestartCourse';
@@ -1399,18 +1400,18 @@ export default class VideoPlayer extends React.Component {
                             {this.allCommentsNum + ' COMMENTS'}
                           </Text>
                           {global.isConnected && (
-                          <TouchableOpacity
-                            style={{ marginRight: factorHorizontal * 10 }}
-                            onPress={() =>
-                              this.setState({ showCommentSort: true })
-                            }
-                          >
-                            <FontIcon
-                              size={(onTablet ? 18 : 20) * factorRatio}
-                              name={'sort-amount-down'}
-                              color={colors.pianoteRed}
-                            />
-                          </TouchableOpacity>
+                            <TouchableOpacity
+                              style={{ marginRight: factorHorizontal * 10 }}
+                              onPress={() =>
+                                this.setState({ showCommentSort: true })
+                              }
+                            >
+                              <FontIcon
+                                size={(onTablet ? 18 : 20) * factorRatio}
+                                name={'sort-amount-down'}
+                                color={colors.pianoteRed}
+                              />
+                            </TouchableOpacity>
                           )}
                         </View>
 
@@ -1763,7 +1764,9 @@ export default class VideoPlayer extends React.Component {
           </Modal>
         )}
         <Modal
-          onLayout={() => console.log(this.state.resources, this.state.lessonTitle)}
+          onLayout={() =>
+            console.log(this.state.resources, this.state.lessonTitle)
+          }
           key={'resourceDownload'}
           isVisible={this.state.showResDownload}
           onDismiss={() => this.modalDismissed()}

@@ -412,7 +412,7 @@ class VerticalVideoList extends React.Component {
                       width: '100%',
                       aspectRatio: this.props.isSquare ? 1 : 16 / 9,
                       zIndex: 20,
-                      paddingBottom: 10 * factorVertical,
+                      paddingBottom: 10 * factorVertical
                     }
                   ]}
                 >
@@ -727,7 +727,7 @@ class VerticalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={styles.container}>
+      <View>
         <View>
           <View style={{ height: 5 * factorVertical }} />
           {this.props.showFilter && (

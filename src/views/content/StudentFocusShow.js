@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 
 import { NetworkContext } from '../../context/NetworkProvider';
@@ -316,10 +316,10 @@ class StudentFocusShow extends React.Component {
                 // top: 0
               }}
             >
-              <EntypoIcon
-                name={'chevron-thin-left'}
-                size={25 * factorRatio}
-                color={'white'}
+              <Back
+                width={(onTablet ? 17.5 : 25) * factorRatio}
+                height={(onTablet ? 17.5 : 25) * factorRatio}
+                fill={'white'}
               />
             </TouchableOpacity>
 
@@ -371,7 +371,7 @@ class StudentFocusShow extends React.Component {
             currentSort={this.state.currentSort}
             changeSort={sort => this.changeSort(sort)}
             filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            imageWidth={(onTablet) ? fullWidth * 0.225 : fullWidth * 0.3}
+            imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
             outVideos={this.state.outVideos}
             getVideos={() => this.getVideos()}
           />
