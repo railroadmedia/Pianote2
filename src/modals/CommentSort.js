@@ -12,6 +12,11 @@ import {
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 const sortOptions = [
   { title: 'Most Liked', option: 'Popular' },
   { title: 'My Comments', option: 'Mine' },
@@ -44,7 +49,7 @@ class CommentSort extends React.Component {
                 localStyles.sortCommentContainer,
                 index == 0
                   ? {
-                      borderTopWidth: 0.5 * factorRatio,
+                      borderTopWidth: 0.5 * factor,
                       borderTopColor: '#445f73'
                     }
                   : {}
@@ -56,7 +61,7 @@ class CommentSort extends React.Component {
             >
               <EntypoIcon
                 name={'check'}
-                size={20 * factorRatio}
+                size={20 * factor}
                 color={
                   this.state.currentSort == sortOption.option
                     ? 'white'
@@ -84,7 +89,7 @@ class CommentSort extends React.Component {
           >
             <EntypoIcon
               name={'cross'}
-              size={25 * factorRatio}
+              size={25 * factor}
               color={'white'}
             />
             <Text style={localStyles.cancel}>Cancel</Text>

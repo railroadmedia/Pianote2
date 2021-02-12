@@ -16,6 +16,10 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import Intercom from 'react-native-intercom';
 import { logOut } from '../services/UserDataAuth';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const resetAction = StackActions.reset({
   index: 0,
   actions: [NavigationActions.navigate({ routeName: 'LOGIN' })]
@@ -79,37 +83,17 @@ class LogOut extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 15 * factor,
+    margin: 20 * factor
   },
   title: {
-    marginTop:
-      (25 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    marginTop: 25 * factor,
     paddingHorizontal: 40
   },
   description: {
     paddingHorizontal: 40,
-    marginVertical:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginBottom:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 10 * factor,
+    marginBottom: 10 * factor
   },
   logoutText: {
     backgroundColor: '#fb1b2f',
@@ -118,27 +102,15 @@ const localStyles = StyleSheet.create({
   },
   logout: {
     color: 'white',
-    paddingVertical:
-      (12.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingVertical: 12.5 * factor
   },
   cancelContainter: {
     paddingHorizontal: 40,
-    marginVertical:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 15 * factor
   },
   cancel: {
     color: 'grey',
-    marginBottom:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginBottom: 10 * factor
   }
 });
 

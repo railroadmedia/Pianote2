@@ -15,6 +15,11 @@ import { withNavigation } from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class LessonComplete extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -54,11 +59,11 @@ class LessonComplete extends React.Component {
         style={styles.container}
       >
         <View style={[styles.centerContent, styles.container]}>
-          <View style={localStyles.container}>
+          <View style={[localStyles.container, {width: width * 0.8 }]}>
             <View style={styles.centerContent}>
               <IonIcon
                 name={'ios-trophy'}
-                size={32.5 * factorRatio}
+                size={32.5 * factor}
                 color={'#fb1b2f'}
               />
             </View>
@@ -72,7 +77,7 @@ class LessonComplete extends React.Component {
                 resizeMode={FastImage.resizeMode.cover}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    fullWidth * 0.55 * 2
+                    width * 0.55 * 2
                   )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${completedLessonImg}`
                 }}
               >
@@ -83,8 +88,8 @@ class LessonComplete extends React.Component {
                   ]}
                 />
                 <ApprovedTeacher
-                  height={47 * factorRatio}
-                  width={47 * factorRatio}
+                  height={47 * factor}
+                  width={47 * factor}
                   fill={'white'}
                 />
               </FastImage>
@@ -110,7 +115,7 @@ class LessonComplete extends React.Component {
                 resizeMode={FastImage.resizeMode.cover}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    fullWidth * 0.55 * 2
+                    width * 0.55 * 2
                   )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${nextLesson.getData(
                     'thumbnail_url'
                   )}`
@@ -129,41 +134,25 @@ class LessonComplete extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 10 * factor,
+    margin: 20 * factor,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center'
   },
   headerText: {
-    marginVertical: (10 * Dimensions.get('window').height) / 812
+    marginVertical: 10 * factor
   },
   imageContainer: {
     height: '20%',
     width: '100%',
     alignSelf: 'center',
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 10 * factor
   },
   image: {
     height: '100%',
     aspectRatio: 16 / 9,
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 10 * factor,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -173,30 +162,26 @@ const localStyles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 10 * factor,
     opacity: 0.2,
     backgroundColor: 'red'
   },
   youEarnedText: {
     fontWeight: 'bold',
-    marginTop: (10 * Dimensions.get('window').height) / 812,
+    marginTop: 10 * factor,
     color: '#fb1b2f'
   },
   congratsText: {
-    marginHorizontal: (20 * Dimensions.get('window').width) / 375,
+    marginHorizontal: 20 * factor,
     marginTop: 10
   },
   completeLesson: {
     fontWeight: 'bold',
-    marginHorizontal: (20 * Dimensions.get('window').width) / 375
+    marginHorizontal: 20 * factor
   },
   upNextText: {
-    marginTop: (5 * Dimensions.get('window').height) / 812,
-    marginBottom: (10 * Dimensions.get('window').height) / 812,
+    marginTop: 5 * factor,
+    marginBottom: 10 * factor,
     color: '#a8a8a8',
     paddingHorizontal: 20
   },
@@ -204,20 +189,12 @@ const localStyles = StyleSheet.create({
     height: '20%',
     width: '100%',
     alignSelf: 'center',
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 10 * factor
   },
   image2: {
     height: '100%',
     aspectRatio: 16 / 9,
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 10 * factor
   },
   videoTitle: {
     paddingHorizontal: 20,

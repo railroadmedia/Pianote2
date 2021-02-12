@@ -12,6 +12,11 @@ import {
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class PasswordEmailMatch extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -56,41 +61,21 @@ class PasswordEmailMatch extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 15 * factor,
+    margin: 20 * factor
   },
   errorMessage: {
     paddingHorizontal: 40,
-    marginTop:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginBottom:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 20 * factor,
+    marginBottom: 10 * factor
   },
   tryAgainText: {
     paddingHorizontal: 40,
-    marginVertical:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 10 * factor
   },
   tryAgain: {
     color: '#fb1b2f',
-    marginBottom: (10 * Dimensions.get('window').height) / 812
+    marginBottom: (10 * factor)
   }
 });
 

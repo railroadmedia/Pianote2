@@ -12,6 +12,11 @@ import {
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class CheckEmail extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -64,49 +69,21 @@ class CheckEmail extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    paddingBottom:
-      (5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    paddingTop:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
+    paddingBottom: 5 * factor,
+    paddingTop: 20 * factor,
     backgroundColor: 'white'
   },
   title: {
     paddingHorizontal: 40,
-    marginBottom:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginBottom: 10 * factor
   },
   loginContainer: {
-    borderRadius:
-      (45 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 45 * factor,
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
-    marginVertical:
-      (5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 5 * factor
   },
   loginText: {
     color: 'white',
@@ -114,11 +91,7 @@ const localStyles = StyleSheet.create({
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginVertical:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 10 * factor
   },
   tryAgainText: {
     color: '#fb1b2f'

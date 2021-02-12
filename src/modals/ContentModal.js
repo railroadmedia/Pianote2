@@ -20,7 +20,13 @@ import FastImage from 'react-native-fast-image';
 import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { Download_V2 } from 'RNDownload';
+import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 class ContentModal extends React.Component {
   static navigationOptions = { header: null };
@@ -184,7 +190,7 @@ class ContentModal extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      width: 70 * factorRatio
+                      width: 70 * factor
                     }
                   ]}
                 >
@@ -203,7 +209,7 @@ class ContentModal extends React.Component {
                 style={[
                   styles.centerContent,
                   {
-                    width: 70 * factorRatio
+                    width: 70 * factor
                   }
                 ]}
               >
@@ -223,7 +229,7 @@ class ContentModal extends React.Component {
               >
                 <AntIcon
                   name={this.state.isLiked ? 'like1' : 'like2'}
-                  size={22.5 * factorRatio}
+                  size={22.5 * factor}
                 />
                 <View style={{ flex: 1 }} />
                 <Text style={localStyles.likeCount}>
@@ -239,7 +245,7 @@ class ContentModal extends React.Component {
                 }}
               >
                 <AntIcon
-                  size={25 * factorRatio}
+                  size={25 * factor}
                   name={this.state.isAddedToList ? 'close' : 'plus'}
                   color={'black'}
                 />
@@ -253,17 +259,17 @@ class ContentModal extends React.Component {
                 }}
                 styles={{
                   iconSize: {
-                    width: 25 * factorRatio,
-                    height: 25 * factorRatio
+                    width: 25 * factor,
+                    height: 25 * factor
                   },
                   touchable: { flex: 1 },
                   activityIndicatorColor: colors.pianoteRed,
                   animatedProgressBackground: colors.pianoteRed,
                   textStatus: {
                     color: 'black',
-                    fontSize: 12 * factorRatio,
+                    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
                     fontFamily: 'OpenSans-Regular',
-                    marginTop: 7.5 * factorVertical
+                    marginTop: 7.5 * factor
                   },
                   alert: {
                     alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -289,27 +295,11 @@ class ContentModal extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    margin:
-      (40 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    margin: 40 * factor,
+    borderRadius: 10 * factor,
     shadowOffset: {
-      width:
-        (5 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
-      height:
-        (10 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2
+      width: 5 * factor,
+      height: 10 * factor
     },
     shadowColor: 'black',
     shadowOpacity: 0.1,
@@ -317,81 +307,48 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white'
   },
   imageContainer: {
-    height:
-      (180 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: 180 * factor,
     backgroundColor: 'white',
     zIndex: 10,
-    marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginHorizontal:
-      (12.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 10 * factor,
+    marginHorizontal: 12.5 * factor
   },
   title: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize:
-      (22 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    textAlign: 'center'
+    fontSize: 22 * factor,
+    textAlign: 'center',
+    marginTop: 5
   },
   type: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    color: 'grey'
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
+    color: 'grey',
+    marginVertical: 5, 
   },
   image: {
     flex: 1,
     borderRadius: 10
   },
   description: {
-    marginHorizontal:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    marginHorizontal: 10 * factor,
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (14 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    paddingHorizontal: 5,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     textAlign: 'center'
   },
   myList: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     textAlign: 'left',
-    marginTop: 10 * (Dimensions.get('window').height / 812)
+    marginTop: 10 * factor
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     textAlign: 'left',
-    marginTop: 15 * (Dimensions.get('window').height / 812)
+    marginTop: 15 * factor
   },
   likeContainer: {
     flex: 1,
@@ -403,45 +360,29 @@ const localStyles = StyleSheet.create({
   },
   XPtext: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     textAlign: 'left',
-    marginTop: (5 * Dimensions.get('window').height) / 812
+    marginTop: 5 * factor
   },
   xp: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     textAlign: 'left',
-    marginTop: 10 * (Dimensions.get('window').height / 812)
+    marginTop: 10 * factor
   },
   lessonCount: {
     fontFamily: 'OpenSans-Regular',
     fontWeight: 'bold',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     textAlign: 'left',
-    marginTop: 10 * (Dimensions.get('window').height / 812)
+    marginTop: 10 * factor
   },
   lessons: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     textAlign: 'left',
-    marginTop: 5 * (Dimensions.get('window').height / 812)
+    marginTop: 5 * factor
   }
 });
 export default withNavigation(ContentModal);

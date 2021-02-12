@@ -1106,6 +1106,7 @@ export default class VideoPlayer extends React.Component {
                   style={{ flex: 1, backgroundColor: colors.mainBackground }}
                 >
                   <View key={'lessonTitle'}>
+                    <View style={{height: 5}}/>
                     <Text
                       style={{
                         fontSize: (onTablet ? 15 : 20) * factor,
@@ -1311,6 +1312,7 @@ export default class VideoPlayer extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           fontSize: 14 * factor,
                           textAlign: 'center',
+                          marginVertical: 7.5 * factor, 
                           color: 'white'
                         }}
                       >
@@ -1348,6 +1350,7 @@ export default class VideoPlayer extends React.Component {
                       </View>
                     </>
                   )}
+                  <View style={{height: 5}}/>
                   {this.state.relatedLessons.length > 0 && (
                     <VerticalVideoList
                       title={'RELATED LESSONS'}
@@ -1646,6 +1649,7 @@ export default class VideoPlayer extends React.Component {
                 />
               )}
             </View>
+            <View style={{height: 5}}/>
             <View
               style={{
                 flexDirection: 'row',

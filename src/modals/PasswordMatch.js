@@ -12,6 +12,11 @@ import {
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class PasswordMatch extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -51,40 +56,20 @@ class PasswordMatch extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 15 * factor,
+    margin: 20 * factor
   },
   text: {
     paddingHorizontal: 40,
-    marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 10 * factor
   },
   tryAgainContainer: {
     paddingHorizontal: 40,
-    marginVertical:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 10 * factor
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginBottom:
-      (7.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginBottom: 7.5 * factor
   }
 });
 

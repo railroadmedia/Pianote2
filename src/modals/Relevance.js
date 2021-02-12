@@ -13,6 +13,11 @@ import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class Relevance extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -152,30 +157,24 @@ class Relevance extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    minHeight: Dimensions.get('window').height * 0.25,
+    minHeight: height * 0.25,
     flexDirection: 'row'
   },
   word: {
-    marginLeft: (15 * Dimensions.get('window').width) / 375,
+    marginLeft: (15 * factor),
     fontSize:
-      (16 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      16 * factor,
     fontFamily: 'OpenSans-Regular'
   },
   button: {
     flex: 0.4,
-    paddingLeft: Dimensions.get('window').width * 0.05,
+    paddingLeft: width * 0.05,
     flexDirection: 'row'
   },
   cancel: {
-    marginLeft: (10 * Dimensions.get('window').width) / 375,
+    marginLeft: (10 * factor),
     fontSize:
-      (16 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      16 * factor,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   }

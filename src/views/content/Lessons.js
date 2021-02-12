@@ -529,7 +529,7 @@ class Lessons extends React.Component {
                   items={this.state.progressLessons}
                 />
               )}
-              <View style={{ height: onTablet ? -20 : 5 * factor }} />
+              <View style={{ height: onTablet ? -10 : 10 * factor }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

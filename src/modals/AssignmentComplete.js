@@ -13,6 +13,11 @@ import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class AssignmentComplete extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -64,32 +69,24 @@ class AssignmentComplete extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 10 * factor,
     padding: 30
   },
   assignmentCompleteContainer: {
-    padding:
-      (5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginBottom: 7.5 * (Dimensions.get('window').height / 812)
+    padding: 5 * factor,
+    marginBottom: 7.5 * factor
   },
   xpText: {
     color: '#fb1b2f',
-    marginTop: 15 * (Dimensions.get('window').height / 812),
-    marginBottom: 10 * (Dimensions.get('window').height / 812)
+    marginTop: 15 * factor,
+    marginBottom: 10 * factor
   },
   assignmentTitle: {
-    marginHorizontal: 20 * (Dimensions.get('window').width / 375),
+    marginHorizontal: 20 * factor,
     fontWeight: 'bold'
   },
   congratsText: {
-    marginHorizontal: 20 * (Dimensions.get('window').width / 375)
+    marginHorizontal: 20 * factor
   }
 });
 

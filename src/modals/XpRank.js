@@ -12,6 +12,10 @@ import {
 import { withNavigation } from 'react-navigation';
 import ProgressCircle from 'react-native-progress-circle';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const ranks = [
   0,
   100,
@@ -82,7 +86,7 @@ class XpRank extends React.Component {
               >
                 <ProgressCircle
                   percent={this.state.rankProgress}
-                  radius={fullWidth * 0.27}
+                  radius={width * 0.27}
                   borderWidth={4 * factorRatio}
                   shadowColor={'pink'}
                   color={'red'}
@@ -109,29 +113,17 @@ class XpRank extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
     backgroundColor: 'white',
     elevation: 10
   },
   title: {
     paddingHorizontal: 40,
-    marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 15 * factor
   },
   description: {
     paddingHorizontal: 40,
-    marginVertical:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 10 * factor
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -139,29 +131,17 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize:
-      (34 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    fontSize: 34 * factor
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize:
-      (24 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    fontSize: 24 * factor
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
-    marginVertical:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 10 * factor
   }
 });
 

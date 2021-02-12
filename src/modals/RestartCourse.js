@@ -12,6 +12,11 @@ import {
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class RestartCourse extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -80,59 +85,35 @@ class RestartCourse extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 10 * factor,
+    margin: 20 * factor,
     backgroundColor: 'white',
     elevation: 2,
-    paddingTop:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingTop: 15 * factor
   },
   descriptionText: {
-    marginTop: (10 * Dimensions.get('window').height) / 812,
+    marginTop: 10 * factor,
     textAlign: 'center',
     paddingHorizontal: 20
   },
   restartContainer: {
     backgroundColor: '#fb1b2f',
-    marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderRadius:
-      (40 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    marginTop: 10 * factor,
+    borderRadius: 40 * factor,
     paddingHorizontal: 20,
     alignSelf: 'center'
   },
   restartText: {
     color: 'white',
-    padding: (12.5 * Dimensions.get('window').height) / 812
+    padding: 12.5 * factor
   },
   cancelContainer: {
-    marginTop: (10 * Dimensions.get('window').height) / 812,
+    marginTop: 10 * factor,
     paddingHorizontal: 20
   },
   cancelText: {
     color: 'grey',
-    marginBottom:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginBottom: 10 * factor
   }
 });
 

@@ -19,6 +19,10 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const messageDict = {
   'lesson comment reply': [
     'replied to your comment.',
@@ -194,7 +198,7 @@ class ReplyNotification extends React.Component {
                 <View style={localStyles.crossContainer}>
                   <EntypoIcon
                     name={'cross'}
-                    size={26 * factorRatio}
+                    size={26 * factor}
                     color={colors.pianoteRed}
                   />
                   <Text style={localStyles.removeText}>
@@ -215,10 +219,10 @@ class ReplyNotification extends React.Component {
                 <View style={localStyles.notificationContainer}>
                   <IonIcon
                     name={'ios-notifications-outline'}
-                    size={26 * factorRatio}
+                    size={26 * factor}
                     color={colors.pianoteRed}
                   />
-                  <View style={{ width: 5 * factorRatio }} />
+                  <View style={{ width: 5 * factor }} />
                   <Text style={localStyles.removeText}>
                     Turn {this.state.notificationStatus ? 'off' : 'on'}{' '}
                     {messageDict[this.props.data.type][3]}
@@ -236,137 +240,97 @@ class ReplyNotification extends React.Component {
 
 const localStyles = StyleSheet.create({
   profileContainer: {
-    marginTop: Dimensions.get('window').height * 0.0175,
+    marginTop: height * 0.0175,
     flexDirection: 'row',
     height: '30%',
-    marginBottom: (7.5 * Dimensions.get('window').height) / 812
+    marginBottom: 7.5 * factor
   },
   container: {
     height: DeviceInfo.isTablet()
-      ? Dimensions.get('window').height * 0.45
-      : Dimensions.get('window').height * 0.35,
+      ? height * 0.45
+      : height * 0.35,
     width: '100%',
     flexDirection: 'row',
     backgroundColor: '#00101d'
   },
   profileContainer2: {
-    height: Dimensions.get('window').width * 0.165,
-    width: Dimensions.get('window').width * 0.165,
-    borderRadius:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: width * 0.165,
+    width: width * 0.165,
+    borderRadius: 100 * factor,
     backgroundColor: '#445f73'
   },
   videoContainer: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    height: Dimensions.get('window').width * 0.075,
-    width: Dimensions.get('window').width * 0.075,
+    height: width * 0.075,
+    width: width * 0.075,
     backgroundColor: 'red',
-    borderRadius:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 100 * factor,
     zIndex: 5
   },
   chatContainer: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    height: Dimensions.get('window').width * 0.075,
-    width: Dimensions.get('window').width * 0.075,
+    height: width * 0.075,
+    width: width * 0.075,
     backgroundColor: 'orange',
-    borderRadius:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 100 * factor,
     zIndex: 5
   },
   likeContainer: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    height: Dimensions.get('window').width * 0.075,
-    width: Dimensions.get('window').width * 0.075,
+    height: width * 0.075,
+    width: width * 0.075,
     backgroundColor: 'blue',
-    borderRadius:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 100 * factor,
     zIndex: 5
   },
   image: {
     flex: 1,
-    borderRadius:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 100 * factor
   },
   replyUser: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (14 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 14 * factor,
     textAlign: 'center',
     color: '#445f73'
   },
   user: {
     fontFamily: 'OpenSans-Bold',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 15 * factor,
     textAlign: 'center'
   },
   removeContainer: {
     height: '18.5%',
     width: '100%',
-    borderTopWidth:
-      (0.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderTopWidth: 0.5 * factor,
     borderTopColor: '#445f73'
   },
   crossContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: Dimensions.get('window').width * 0.035
+    paddingLeft: width * 0.035
   },
   removeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (17 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 17 * factor,
     color: '#445f73'
   },
   muteContainer: {
     height: '18.5%',
     width: '100%',
     marginBottom: '10%',
-    borderTopWidth:
-      (0.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderTopWidth: 0.5 * factor,
     borderTopColor: '#445f73'
   },
   notificationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: Dimensions.get('window').width * 0.035
+    paddingLeft: width * 0.035
   }
 });
 

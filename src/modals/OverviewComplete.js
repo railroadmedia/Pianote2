@@ -13,6 +13,11 @@ import { withNavigation } from 'react-navigation';
 import { BlurView } from '@react-native-community/blur';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class OverviewComplete extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -48,11 +53,11 @@ class OverviewComplete extends React.Component {
             <View style={[styles.centerContent]}>
               <IonIcon
                 name={'ios-trophy'}
-                size={36 * factorRatio}
+                size={36 * factor}
                 color={'#fb1b2f'}
               />
             </View>
-            <View style={[styles.centerContent, { padding: 5 * factorRatio }]}>
+            <View style={[styles.centerContent, { padding: 5 * factor }]}>
               <Text style={[styles.modalHeaderText]}>
                 {this.changeType(this.props.type).toUpperCase()}
                 {'\n'}Complete
@@ -77,30 +82,18 @@ class OverviewComplete extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 10 * factor,
     marginHorizontal: 30,
     paddingVertical: 30
   },
   congrats: {
     textAlign: 'center',
-    marginVertical:
-      (5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginHorizontal: (20 * Dimensions.get('window').width) / 375
+    marginVertical: 5 * factor,
+    marginHorizontal: 20 * factor
   },
   title: {
-    marginHorizontal: (20 * Dimensions.get('window').width) / 375,
-    marginBottom:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    marginHorizontal: 20 * factor,
+    marginBottom: 15 * factor,
     fontWeight: 'bold'
   },
   xp: {

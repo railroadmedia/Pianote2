@@ -13,6 +13,11 @@ import {
 
 import { withNavigation } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class DisplayName extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -68,40 +73,20 @@ const localStyles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 15 * factor,
+    margin: 20 * factor
   },
   displayText: {
     paddingHorizontal: 40,
-    marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 10 * factor
   },
   pleaseTryAgain: {
     paddingHorizontal: 20,
-    marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 10 * factor
   },
   tryAgainContainer: {
     paddingHorizontal: 20,
-    marginVertical:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginVertical: 20 * factor
   }
 });
 
