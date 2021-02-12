@@ -74,6 +74,7 @@ export default class NewMembership extends React.Component {
     } catch (e) {}
     purchaseUpdateSubscription = purchaseUpdatedListener(this.pulCallback);
     purchaseErrorSubscription = purchaseErrorListener(e => {
+      this.loadingRef?.toggleLoading(false);
       Alert.alert('Something went wrong', e.message, [{ text: 'OK' }], {
         cancelable: false
       });

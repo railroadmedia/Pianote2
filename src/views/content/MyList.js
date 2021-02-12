@@ -97,93 +97,71 @@ class MyList extends React.Component {
   };
 
   initialValidData = (content, loadMore, fromCache) => {
-    if (typeof loadMore == 'undefined' || typeof fromCache == 'undefined') {
-      this.setState({
-        filtersAvailable: {
-          displayTopics: [],
-          topics: [],
-          content_type: [],
-          level: [],
-          progress: [],
-          instructors: []
-        },
-        outVideos: true,
-        page: 1,
+    try {
+      const newContent = content.data.map(data => {
+        return new ContentModel(data);
+      });
+
+      let items = [];
+      for (let i in newContent) {
+        items.push({
+          title: newContent[i].getField('title'),
+          artist: this.getArtist(newContent[i]),
+          thumbnail: newContent[i].getData('thumbnail_url'),
+          type: newContent[i].post.type,
+          publishedOn:
+            newContent[i].publishedOn.slice(0, 10) +
+            'T' +
+            newContent[i].publishedOn.slice(11, 16),
+          description: newContent[i]
+            .getData('description')
+            .replace(/(<([^>]+)>)/g, '')
+            .replace(/&nbsp;/g, '')
+            .replace(/&amp;/g, '&')
+            .replace(/&#039;/g, "'")
+            .replace(/&quot;/g, '"')
+            .replace(/&gt;/g, '>')
+            .replace(/&lt;/g, '<'),
+          xp: newContent[i].post.xp,
+          id: newContent[i].id,
+          mobile_app_url: newContent[i].post.mobile_app_url,
+          lesson_count: newContent[i].post.lesson_count,
+          currentLessonId: newContent[i].post?.song_part_id,
+          like_count: newContent[i].post.like_count,
+          duration: i,
+          isLiked: newContent[i].post.is_liked_by_current_user,
+          isAddedToList: newContent[i].isAddedToList,
+          isStarted: newContent[i].isStarted,
+          isCompleted: newContent[i].isCompleted,
+          bundle_count: newContent[i].post.bundle_count,
+          progress_percent: newContent[i].post.progress_percent
+        });
+      }
+      return {
+        allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
+        filtersAvailable: content.meta.filterOptions,
+        outVideos: items.length == 0 || content.data.length < 20 ? true : false,
+        page: this.state?.page + 1 || 1,
         isLoadingAll: false,
         filtering: false,
         isPaging: false,
-        refreshing: false
-      });
-    } else {
-      try {
-        const newContent = content.data.map(data => {
-          return new ContentModel(data);
-        });
-
-        let items = [];
-        for (let i in newContent) {
-          items.push({
-            title: newContent[i].getField('title'),
-            artist: this.getArtist(newContent[i]),
-            thumbnail: newContent[i].getData('thumbnail_url'),
-            type: newContent[i].post.type,
-            publishedOn:
-              newContent[i].publishedOn.slice(0, 10) +
-              'T' +
-              newContent[i].publishedOn.slice(11, 16),
-            description: newContent[i]
-              .getData('description')
-              .replace(/(<([^>]+)>)/g, '')
-              .replace(/&nbsp;/g, '')
-              .replace(/&amp;/g, '&')
-              .replace(/&#039;/g, "'")
-              .replace(/&quot;/g, '"')
-              .replace(/&gt;/g, '>')
-              .replace(/&lt;/g, '<'),
-            xp: newContent[i].post.xp,
-            id: newContent[i].id,
-            mobile_app_url: newContent[i].post.mobile_app_url,
-            lesson_count: newContent[i].post.lesson_count,
-            currentLessonId: newContent[i].post?.song_part_id,
-            like_count: newContent[i].post.like_count,
-            duration: i,
-            isLiked: newContent[i].post.is_liked_by_current_user,
-            isAddedToList: newContent[i].isAddedToList,
-            isStarted: newContent[i].isStarted,
-            isCompleted: newContent[i].isCompleted,
-            bundle_count: newContent[i].post.bundle_count,
-            progress_percent: newContent[i].post.progress_percent
-          });
-        }
-        return {
-          allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
-          filtersAvailable: content.meta.filterOptions,
-          outVideos:
-            items.length == 0 || content.data.length < 20 ? true : false,
-          page: this.state?.page + 1 || 1,
-          isLoadingAll: false,
-          filtering: false,
-          isPaging: false,
-          refreshing: fromCache
-        };
-      } catch (e) {
-        console.log('error: ', e);
-        return {};
-      }
+        refreshing: fromCache
+      };
+    } catch (e) {
+      return {};
     }
   };
 
   removeFromMyList = contentID => {
-    if (!this.context.isConnected) {
-      return this.context.showNoConnectionAlert();
-    }
-    for (i in this.state.allLessons) {
-      // remove if ID matches
-      if (this.state.allLessons[i].id == contentID) {
-        this.state.allLessons.splice(i, 1);
-      }
-    }
-    this.setState({ allLessons: this.state.allLessons });
+    let { myListCache } = this.props;
+    this.props.cacheAndWriteMyList({
+      ...myListCache,
+      data: myListCache.data.filter(d => d.id !== contentID)
+    });
+    if (!this.context.isConnected) return this.context.showNoConnectionAlert();
+    this.setState({
+      allLessons: this.state.allLessons.filter(al => al.id !== contentID)
+    });
   };
 
   getArtist = newContent => {
