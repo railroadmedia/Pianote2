@@ -79,7 +79,7 @@ export default class ProfileSettings extends React.Component {
   };
 
   async save() {
-    this.loadingRef?.toggleLoading();
+    this.loadingRef?.toggleLoading(true);
     if (this.state.currentlyView == 'Display Name') {
       await this.changeName();
     } else if (this.state.currentlyView == 'Profile Photo') {
@@ -87,7 +87,7 @@ export default class ProfileSettings extends React.Component {
     } else if (this.state.currentlyView == 'Password') {
       await this.changePassword();
     }
-    this.loadingRef?.toggleLoading();
+    this.loadingRef?.toggleLoading(false);
   }
 
   changePassword = async () => {
