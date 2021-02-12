@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
@@ -27,6 +27,11 @@ import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 class StudentFocusCatalog extends React.Component {
   static navigationOptions = { header: null };
@@ -127,8 +132,8 @@ class StudentFocusCatalog extends React.Component {
         style={{
           width: '50%',
           marginTop: '3%',
-          paddingLeft: index % 2 == 0 ? 12 * factorHorizontal : '1%', //(12 * factorHorizontal) / (index % 2 === 0 ? 1 : 2),
-          paddingRight: index % 2 == 0 ? '1%' : 12 * factorHorizontal //(12 * factorHorizontal) / (index % 2 === 0 ? 2 : 1)
+          paddingLeft: index % 2 == 0 ? 12 * factor : '1%', //(12 * factor) / (index % 2 === 0 ? 1 : 2),
+          paddingRight: index % 2 == 0 ? '1%' : 12 * factor //(12 * factor) / (index % 2 === 0 ? 2 : 1)
         }}
       >
         <FastImage
@@ -136,7 +141,7 @@ class StudentFocusCatalog extends React.Component {
             aspectRatio: 1,
             borderWidth: 0.3,
             borderColor: colors.pianoteRed,
-            borderRadius: 10 * factorRatio
+            borderRadius: 10 * factor
           }}
           source={{ uri: item.thumbnailUrl }}
           resizeMode={FastImage.resizeMode.cover}

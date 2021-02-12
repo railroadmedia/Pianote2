@@ -39,6 +39,10 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 
 let greaterWDim;
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 export default class Method extends React.Component {
   static navigationOptions = { header: null };
@@ -228,7 +232,7 @@ export default class Method extends React.Component {
     if (onTablet) {
       return 150;
     } else {
-      return fullWidth * 0.26;
+      return width * 0.26;
     }
   };
 
@@ -289,10 +293,10 @@ export default class Method extends React.Component {
               <View style={styles.centerContent}>
                 <FastImage
                   style={{
-                    width: fullWidth * 0.75,
-                    height: 65 * factorRatio,
+                    width: width * 0.75,
+                    height: 65 * factor,
                     alignSelf: 'center',
-                    marginBottom: 12.5 * factorRatio
+                    marginBottom: 12.5 * factor
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -300,9 +304,9 @@ export default class Method extends React.Component {
               </View>
               <View
                 style={{
-                  marginBottom: 10 * factorVertical,
-                  marginTop: 0 * factorRatio,
-                  height: 40 * factorRatio,
+                  marginBottom: 10 * factor,
+                  marginTop: 0 * factor,
+                  height: 40 * factor,
                   justifyContent: 'space-evenly',
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -346,15 +350,15 @@ export default class Method extends React.Component {
                 >
                   <AntIcon
                     name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factorRatio}
+                    size={22 * factor}
                     color={colors.pianoteRed}
                   />
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
                       color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 12 * factorRatio
+                      marginTop: 3 * factor,
+                      fontSize: 12 * factor
                     }}
                   >
                     Info
@@ -371,16 +375,16 @@ export default class Method extends React.Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingTop: 20 * factorVertical
+                paddingTop: 20 * factor
               }}
             >
               <FastImage
                 style={{
-                  height: 50 * factorRatio,
+                  height: 50 * factor,
                   aspectRatio: 1,
                   borderRadius: 100,
                   backgroundColor: 'white',
-                  borderWidth: 3 * factorRatio,
+                  borderWidth: 3 * factor,
                   borderColor: 'white',
                   marginRight: 5
                 }}
@@ -395,7 +399,7 @@ export default class Method extends React.Component {
               <Text
                 style={{
                   color: 'white',
-                  fontSize: 35 * factorRatio,
+                  fontSize: 35 * factor,
                   fontFamily: 'OpenSans-ExtraBold',
                   textAlign: 'center',
                   marginLeft: 5
@@ -417,8 +421,8 @@ export default class Method extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 5 * factorVertical,
-                  fontSize: 15 * factorRatio,
+                  marginTop: 5 * factor,
+                  fontSize: 15 * factor,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -431,7 +435,7 @@ export default class Method extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      marginTop: 10 * factorVertical,
+                      marginTop: 10 * factor,
                       flex: 0.22,
                       flexDirection: 'row'
                     }
@@ -442,29 +446,29 @@ export default class Method extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        width: 70 * factorRatio,
-                        marginRight: 15 * factorRatio
+                        width: 70 * factor,
+                        marginRight: 15 * factor
                       }
                     ]}
                   >
                     <Text
                       style={{
-                        fontSize: 17 * factorRatio,
+                        fontSize: 17 * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       {this.state.items.length}
                     </Text>
                     <Text
                       style={{
-                        fontSize: 13 * factorRatio,
+                        fontSize: 13 * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       LEVELS
@@ -474,29 +478,29 @@ export default class Method extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        width: 70 * factorRatio
+                        width: 70 * factor
                       }
                     ]}
                   >
                     <Text
                       style={{
                         fontWeight: '700',
-                        fontSize: 17 * factorRatio,
+                        fontSize: 17 * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       {this.state.xp}
                     </Text>
                     <Text
                       style={{
-                        fontSize: 13 * factorRatio,
+                        fontSize: 13 * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       XP
@@ -504,7 +508,7 @@ export default class Method extends React.Component {
                   </View>
                   <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ height: 15 * factorVertical }} />
+                <View style={{ height: 15 * factor }} />
                 <View
                   key={'buttons'}
                   style={[
@@ -525,25 +529,25 @@ export default class Method extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        marginLeft: 15 * factorRatio,
-                        marginBottom: 30 * factorVertical,
-                        width: 70 * factorRatio
+                        marginLeft: 15 * factor,
+                        marginBottom: 30 * factor,
+                        width: 70 * factor
                       }
                     ]}
                   >
                     <View style={{ flex: 1 }} />
                     <MaterialIcon
                       name={'replay'}
-                      size={27.5 * factorRatio}
+                      size={27.5 * factor}
                       color={colors.pianoteRed}
                     />
                     <Text
                       style={{
-                        fontSize: 13 * factorRatio,
+                        fontSize: 13 * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       Restart
@@ -557,7 +561,7 @@ export default class Method extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10 * factorVertical
+              marginBottom: 10 * factor
             }}
           >
             <VerticalVideoList

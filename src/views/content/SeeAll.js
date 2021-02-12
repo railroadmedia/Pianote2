@@ -6,6 +6,7 @@ import {
   View,
   Text,
   ScrollView,
+  Dimensions,
   TouchableOpacity,
   RefreshControl,
   StatusBar
@@ -24,6 +25,11 @@ import {
   getStartedContent
 } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 // correlates to filters
 const typeDict = {
@@ -272,8 +278,8 @@ export default class SeeAll extends React.Component {
             onPress={() => this.props.navigation.goBack()}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factorRatio}
-              height={(onTablet ? 17.5 : 25) * factorRatio}
+              width={(onTablet ? 17.5 : 25) * factor}
+              height={(onTablet ? 17.5 : 25) * factor}
               fill={'white'}
             />
           </TouchableOpacity>
@@ -317,7 +323,7 @@ export default class SeeAll extends React.Component {
                 this.getAllLessons();
             }} // change sort and reload videos
             filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
+            imageWidth={onTablet ? width * 0.225 : width * 0.3}
             outVideos={this.state.outVideos} // if paging and out of videos
           />
         </ScrollView>

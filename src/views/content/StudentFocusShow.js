@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StatusBar,
   ScrollView,
+  Dimensions,
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
@@ -28,6 +29,11 @@ import { getAllContent, getStudentFocusTypes } from '../../services/GetContent';
 
 import { cacheAndWritePodcasts } from '../../redux/PodcastsCacheActions';
 import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -317,8 +323,8 @@ class StudentFocusShow extends React.Component {
               }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factorRatio}
-                height={(onTablet ? 17.5 : 25) * factorRatio}
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
                 fill={'white'}
               />
             </TouchableOpacity>
@@ -338,7 +344,7 @@ class StudentFocusShow extends React.Component {
                   maxWidth: 400,
                   maxHeight: 400,
                   aspectRatio: 1,
-                  borderRadius: 10 * factorRatio,
+                  borderRadius: 10 * factor,
                   borderColor: colors.thirdBackground,
                   borderWidth: 5
                 }}
@@ -347,7 +353,7 @@ class StudentFocusShow extends React.Component {
               />
             </View>
           </View>
-          <View style={{ height: 25 * factorVertical }} />
+          <View style={{ height: 25 * factor }} />
           <VerticalVideoList
             items={this.state.allLessons}
             title={'EPISODES'}
@@ -371,7 +377,7 @@ class StudentFocusShow extends React.Component {
             currentSort={this.state.currentSort}
             changeSort={sort => this.changeSort(sort)}
             filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-            imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
+            imageWidth={onTablet ? width * 0.225 : width * 0.3}
             outVideos={this.state.outVideos}
             getVideos={() => this.getVideos()}
           />

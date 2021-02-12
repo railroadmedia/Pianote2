@@ -7,7 +7,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native';
 import Modal from 'react-native-modal';
 import SoundSlice from '../../components/SoundSlice.js';
@@ -15,6 +16,11 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import AssignmentResource from './AssignmentResource.js';
 import downloadService from '../../services/download.service.js';
 import { NetworkContext } from '../../context/NetworkProvider';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 export default class VideoPlayerSong extends React.Component {
   static contextType = NetworkContext;
@@ -55,7 +61,7 @@ export default class VideoPlayerSong extends React.Component {
             backgroundColor: colors.mainBackground
           }}
         >
-          <View style={{ height: 25 * factorVertical }} />
+          <View style={{ height: 25 * factor }} />
           {!this.state.hideTitles && (
             <>
               <TouchableOpacity
@@ -69,7 +75,7 @@ export default class VideoPlayerSong extends React.Component {
               >
                 <AntIcon
                   name={'close'}
-                  size={30 * factorRatio}
+                  size={30 * factor}
                   color={'#ffffff'}
                 />
               </TouchableOpacity>
@@ -77,7 +83,7 @@ export default class VideoPlayerSong extends React.Component {
                 key={'assignmentNumber'}
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factorRatio,
+                  fontSize: 16 * factor,
                   fontWeight: '700',
                   textAlign: 'center',
                   color: colors.secondBackground
@@ -85,12 +91,12 @@ export default class VideoPlayerSong extends React.Component {
               >
                 ASSIGNMENT #{index}
               </Text>
-              <View style={{ height: 10 * factorVertical }} />
+              <View style={{ height: 10 * factor }} />
               <Text
                 key={'assignmentName'}
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: 28 * factorRatio,
+                  fontSize: 28 * factor,
                   fontWeight: '700',
                   textAlign: 'center',
                   color: '#ffffff'
@@ -98,14 +104,14 @@ export default class VideoPlayerSong extends React.Component {
               >
                 {title}
               </Text>
-              <View style={{ height: 10 * factorVertical }} />
+              <View style={{ height: 10 * factor }} />
               {timeCodes?.map(tc => (
                 <View
                   key={'skipTo'}
                   style={[
                     styles.centerContent,
                     {
-                      height: fullHeight * 0.025,
+                      height: height * 0.025,
                       width: '100%'
                     }
                   ]}
@@ -116,7 +122,7 @@ export default class VideoPlayerSong extends React.Component {
                       {
                         width: '40%',
                         height: '100%',
-                        borderRadius: 30 * factorRatio,
+                        borderRadius: 30 * factor,
                         backgroundColor: '#ececec',
                         alignSelf: 'center'
                       }
@@ -138,7 +144,7 @@ export default class VideoPlayerSong extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           fontWeight: '700',
                           color: 'grey',
-                          fontSize: 12 * factorRatio,
+                          fontSize: 12 * factor,
                           alignSelf: 'center'
                         }}
                       >
@@ -151,9 +157,9 @@ export default class VideoPlayerSong extends React.Component {
 
               <View
                 style={{
-                  height: 25 * factorVertical,
+                  height: 25 * factor,
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 1 * factorRatio
+                  borderBottomWidth: 1 * factor
                 }}
               />
               {description !== 'TBD' && (
@@ -164,7 +170,7 @@ export default class VideoPlayerSong extends React.Component {
                       paddingBottom: '5%',
                       paddingLeft: '5%',
                       paddingRight: '5%',
-                      fontSize: 16 * factorRatio,
+                      fontSize: 16 * factor,
                       fontFamily: 'OpenSans-Regular',
                       color: '#ffffff'
                     }}
@@ -198,19 +204,19 @@ export default class VideoPlayerSong extends React.Component {
                 style={[
                   styles.centerContent,
                   {
-                    borderWidth: 2.5 * factorRatio,
+                    borderWidth: 2.5 * factor,
                     borderColor: '#fb1b2f',
                     width: '90%',
                     alignSelf: 'center',
-                    borderRadius: 100 * factorRatio,
-                    marginTop: 10 * factorRatio,
-                    marginBottom: 5 * factorRatio
+                    borderRadius: 100 * factor,
+                    marginTop: 10 * factor,
+                    marginBottom: 5 * factor
                   }
                 ]}
               >
                 <Text
                   style={{
-                    fontSize: 16 * factorRatio,
+                    fontSize: 16 * factor,
                     fontFamily: 'OpenSans-Regular',
                     fontWeight: '800',
                     color: '#fb1b2f',
@@ -226,20 +232,20 @@ export default class VideoPlayerSong extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  borderWidth: 2.5 * factorRatio,
+                  borderWidth: 2.5 * factor,
                   borderColor: '#fb1b2f',
                   backgroundColor: '#fb1b2f',
                   width: '90%',
                   alignSelf: 'center',
-                  borderRadius: 100 * factorRatio,
-                  marginTop: 5 * factorRatio,
-                  marginBottom: 10 * factorRatio
+                  borderRadius: 100 * factor,
+                  marginTop: 5 * factor,
+                  marginBottom: 10 * factor
                 }
               ]}
             >
               <Text
                 style={{
-                  fontSize: 16 * factorRatio,
+                  fontSize: 16 * factor,
                   fontFamily: 'OpenSans-Regular',
                   fontWeight: '800',
                   color: 'white',

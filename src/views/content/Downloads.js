@@ -7,6 +7,7 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
+  Dimensions,
   StatusBar
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -16,6 +17,11 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import { SafeAreaView } from 'react-navigation';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { ContentModel } from '@musora/models';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 export default class Downloads extends React.Component {
   static contextType = NetworkContext;
@@ -134,7 +140,7 @@ export default class Downloads extends React.Component {
                 style={{
                   color: colors.pianoteRed,
                   fontFamily: 'OpenSans-Bold',
-                  fontSize: onTablet ? 22 : 16 * factorRatio
+                  fontSize: onTablet ? 22 : 16 * factor
                 }}
               >
                 EDIT
@@ -153,7 +159,7 @@ export default class Downloads extends React.Component {
                   padding: 20,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: onTablet ? 26 : 18 * factorRatio
+                  fontSize: onTablet ? 26 : 18 * factor
                 }}
               >
                 Any lessons you download will be available here.
@@ -228,7 +234,7 @@ export default class Downloads extends React.Component {
                     <View style={{ justifyContent: 'center' }}>
                       <IconFeather
                         name={'chevron-right'}
-                        size={25 * factorRatio}
+                        size={25 * factor}
                         color={'white'}
                       />
                     </View>

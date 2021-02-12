@@ -42,6 +42,10 @@ import NextVideo from '../../components/NextVideo';
 import { ScrollView } from 'react-native-gesture-handler';
 
 let greaterWDim;
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 export default class PathOverview extends React.Component {
   static contextType = NetworkContext;
@@ -281,7 +285,7 @@ export default class PathOverview extends React.Component {
           source={{
             uri: thumbnail.includes('https')
               ? `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
-                  fullWidth
+                  width
                 )},ar_${this.getAspectRatio()},${
                   this.state.isMethod ? 'c_pad,g_south' : 'c_fill,g_face'
                 }/${this.state.thumbnail}`
@@ -296,17 +300,17 @@ export default class PathOverview extends React.Component {
               styles.centerContent,
               {
                 position: 'absolute',
-                left: 10 * factorHorizontal,
-                top: 10 * factorRatio,
+                left: 10 * factor,
+                top: 10 * factor,
                 borderRadius: 100,
-                height: 35 * factorRatio,
-                width: 35 * factorRatio
+                height: 35 * factor,
+                width: 35 * factor
               }
             ]}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factorRatio}
-              height={(onTablet ? 17.5 : 25) * factorRatio}
+              width={(onTablet ? 17.5 : 25) * factor}
+              height={(onTablet ? 17.5 : 25) * factor}
               fill={'white'}
             />
           </TouchableOpacity>
@@ -315,8 +319,8 @@ export default class PathOverview extends React.Component {
           key={'title'}
           style={[
             {
-              paddingTop: 10 * factorVertical,
-              paddingBottom: 5 * factorVertical
+              paddingTop: 10 * factor,
+              paddingBottom: 5 * factor
             },
             this.state.isLandscape ? { marginHorizontal: '10%' } : {}
           ]}
@@ -328,7 +332,7 @@ export default class PathOverview extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 color: 'white',
                 textAlign: 'center',
-                fontSize: 24 * factorRatio
+                fontSize: 24 * factor
               }}
             >
               {this.state.data.title}
@@ -338,17 +342,17 @@ export default class PathOverview extends React.Component {
             numberOfLines={2}
             style={[
               {
-                marginVertical: 10 * factorVertical,
+                marginVertical: 10 * factor,
                 fontFamily: 'OpenSans-Regular',
                 color: this.state.isMethod
                   ? colors.pianoteGrey
                   : colors.secondBackground,
                 textAlign: 'center',
-                fontSize: onTablet ? 20 : 14 * factorRatio
+                fontSize: onTablet ? 20 : 14 * factor
               },
               onTablet
                 ? {
-                    marginTop: 15 * factorVertical
+                    marginTop: 15 * factor
                   }
                 : {}
             ]}
@@ -370,8 +374,8 @@ export default class PathOverview extends React.Component {
               },
               onTablet
                 ? {
-                    height: 50 * factorVertical,
-                    marginVertical: 5 * factorRatio
+                    height: 50 * factor,
+                    marginVertical: 5 * factor
                   }
                 : {}
             ]}
@@ -385,14 +389,14 @@ export default class PathOverview extends React.Component {
             >
               <AntIcon
                 name={this.state.isAddedToList ? 'close' : 'plus'}
-                size={22 * factorRatio}
+                size={22 * factor}
                 color={colors.pianoteRed}
               />
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   color: 'white',
-                  fontSize: 12 * factorRatio
+                  fontSize: 12 * factor
                 }}
               >
                 {!this.state.isAddedToList ? 'My List' : 'Added'}
@@ -437,7 +441,7 @@ export default class PathOverview extends React.Component {
             >
               <AntIcon
                 name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                size={20 * factorRatio}
+                size={20 * factor}
                 color={colors.pianoteRed}
               />
               <Text
@@ -445,7 +449,7 @@ export default class PathOverview extends React.Component {
                   fontFamily: 'OpenSans-Regular',
                   color: 'white',
                   marginTop: 2.5,
-                  fontSize: 12 * factorRatio
+                  fontSize: 12 * factor
                 }}
               >
                 Info
@@ -459,8 +463,8 @@ export default class PathOverview extends React.Component {
             key={'info'}
             style={[
               {
-                paddingHorizontal: 20 * factorRatio,
-                marginTop: 10 * factorVertical
+                paddingHorizontal: 20 * factor,
+                marginTop: 10 * factor
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }
@@ -471,8 +475,8 @@ export default class PathOverview extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 5 * factorVertical,
-                  fontSize: 15 * factorRatio,
+                  marginTop: 5 * factor,
+                  fontSize: 15 * factor,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -485,7 +489,7 @@ export default class PathOverview extends React.Component {
                 key={'stats'}
                 style={[
                   styles.centerContent,
-                  { marginTop: 10 * factorVertical, flexDirection: 'row' }
+                  { marginTop: 10 * factor, flexDirection: 'row' }
                 ]}
               >
                 <View
@@ -499,22 +503,22 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 17 * factorRatio,
+                      fontSize: 17 * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Bold',
-                      marginTop: 10 * factorVertical
+                      marginTop: 10 * factor
                     }}
                   >
                     {this.state.items.length}
                     {`\n`}
                     <Text
                       style={{
-                        fontSize: 13 * factorRatio,
+                        fontSize: 13 * factor,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       LESSONS
@@ -531,22 +535,22 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 17 * factorRatio,
+                      fontSize: 17 * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Bold',
-                      marginTop: 10 * factorVertical
+                      marginTop: 10 * factor
                     }}
                   >
                     {Math.floor(this.state.totalLength / 60)}
                     {`\n`}
                     <Text
                       style={{
-                        fontSize: 13 * factorRatio,
+                        fontSize: 13 * factor,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       MINS
@@ -564,22 +568,22 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 17 * factorRatio,
+                      fontSize: 17 * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Bold',
-                      marginTop: 10 * factorVertical
+                      marginTop: 10 * factor
                     }}
                   >
                     {this.state.xp}
                     {`\n`}
                     <Text
                       style={{
-                        fontSize: 13 * factorRatio,
+                        fontSize: 13 * factor,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factorVertical
+                        marginTop: 10 * factor
                       }}
                     >
                       XP
@@ -593,7 +597,7 @@ export default class PathOverview extends React.Component {
                   styles.centerContent,
                   {
                     flexDirection: 'row',
-                    marginTop: 15 * factorVertical
+                    marginTop: 15 * factor
                   }
                 ]}
               >
@@ -609,7 +613,7 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 13 * factorRatio,
+                      fontSize: 13 * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
@@ -618,7 +622,7 @@ export default class PathOverview extends React.Component {
                   >
                     <AntIcon
                       name={this.state.isLiked ? 'like1' : 'like2'}
-                      size={27.5 * factorRatio}
+                      size={27.5 * factor}
                       color={colors.pianoteRed}
                     />
                     {`\n`}
@@ -633,15 +637,15 @@ export default class PathOverview extends React.Component {
                   styles={{
                     touchable: { flex: 1 },
                     iconSize: {
-                      width: 27.5 * factorRatio,
-                      height: 27.5 * factorRatio
+                      width: 27.5 * factor,
+                      height: 27.5 * factor
                     },
                     iconDownloadColor: colors.pianoteRed,
                     activityIndicatorColor: colors.pianoteRed,
                     animatedProgressBackground: colors.pianoteRed,
                     textStatus: {
                       color: '#ffffff',
-                      fontSize: 13 * factorRatio,
+                      fontSize: 13 * factor,
                       fontFamily: 'OpenSans-Regular',
                       marginTop: 5
                     },
@@ -675,7 +679,7 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 13 * factorRatio,
+                      fontSize: 13 * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
@@ -684,7 +688,7 @@ export default class PathOverview extends React.Component {
                   >
                     <MaterialIcon
                       name={'replay'}
-                      size={27.5 * factorRatio}
+                      size={27.5 * factor}
                       color={colors.pianoteRed}
                     />
                     {`\n`}
@@ -692,11 +696,11 @@ export default class PathOverview extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ height: 30 * factorVertical }} />
+              <View style={{ height: 30 * factor }} />
             </View>
           </View>
         )}
-        <View style={{ height: 15 * factorVertical }} />
+        <View style={{ height: 15 * factor }} />
       </View>
     );
   };
@@ -752,7 +756,7 @@ export default class PathOverview extends React.Component {
                       ? `${isLandscape ? 80 / 3 : 100 / 3}%`
                       : '100%',
                     paddingRight: '2%',
-                    paddingVertical: 3.5 * factorVertical,
+                    paddingVertical: 3.5 * factor,
                     flexDirection: onTablet ? 'column' : 'row'
                   },
                   isLandscape
@@ -765,15 +769,15 @@ export default class PathOverview extends React.Component {
                 ]}
               >
                 <ImageBackground
-                  imageStyle={{ borderRadius: 5 * factorRatio }}
+                  imageStyle={{ borderRadius: 5 * factor }}
                   style={{
-                    width: onTablet ? '100%' : fullWidth * 0.26,
+                    width: onTablet ? '100%' : width * 0.26,
                     aspectRatio: 16 / 9
                   }}
                   source={{
                     uri: item.thumbnail.includes('https')
                       ? `https://cdn.musora.com/image/fetch/w_${Math.round(
-                          fullWidth
+                          width
                         )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${
                           item.thumbnail
                         }`
@@ -789,7 +793,7 @@ export default class PathOverview extends React.Component {
                         left: 0,
                         width: '100%',
                         aspectRatio: 16 / 9,
-                        borderRadius: 5 * factorRatio,
+                        borderRadius: 5 * factor,
                         zIndex: 1,
                         opacity: 0.2,
                         backgroundColor: colors.pianoteRed
@@ -812,14 +816,14 @@ export default class PathOverview extends React.Component {
                   >
                     {item.isStarted ? (
                       <Progress
-                        height={40 * factorRatio}
-                        width={40 * factorRatio}
+                        height={40 * factor}
+                        width={40 * factor}
                         fill={'white'}
                       />
                     ) : item.isCompleted ? (
                       <ApprovedTeacher
-                        height={50 * factorRatio}
-                        width={50 * factorRatio}
+                        height={50 * factor}
+                        width={50 * factor}
                         fill={'white'}
                       />
                     ) : null}
@@ -840,11 +844,11 @@ export default class PathOverview extends React.Component {
                     <Text
                       numberOfLines={1}
                       style={{
-                        fontSize: onTablet ? 15 : 15 * factorRatio,
+                        fontSize: onTablet ? 15 : 15 * factor,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Bold',
                         color: 'white',
-                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal
+                        paddingHorizontal: onTablet ? 0 : 7.5 * factor
                       }}
                     >
                       {item.title}
@@ -852,13 +856,13 @@ export default class PathOverview extends React.Component {
                     <Text
                       numberOfLines={1}
                       style={{
-                        fontSize: onTablet ? 13 : 12 * factorRatio,
+                        fontSize: onTablet ? 13 : 12 * factor,
                         color: this.props.isMethod
                           ? colors.pianoteGrey
                           : colors.secondBackground,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular',
-                        paddingHorizontal: onTablet ? 0 : 7.5 * factorHorizontal
+                        paddingHorizontal: onTablet ? 0 : 7.5 * factor
                       }}
                     >
                       {Math.floor(item.duration / 60)}{' '}
@@ -870,7 +874,7 @@ export default class PathOverview extends React.Component {
                   <TouchableOpacity onPress={() => this.toggleMyList(item.id)}>
                     <AntIcon
                       name={item.isAddedToList ? 'close' : 'plus'}
-                      size={onTablet ? 17.5 * factorRatio : 30 * factorRatio}
+                      size={onTablet ? 17.5 * factor : 30 * factor}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>

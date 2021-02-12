@@ -32,6 +32,11 @@ import Orientation from 'react-native-orientation-locker';
 
 import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 let greaterWDim;
 class Packs extends React.Component {
   static navigationOptions = { header: null };
@@ -238,7 +243,7 @@ class Packs extends React.Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingHorizontal: 25 * factorRatio,
+                    paddingHorizontal: 25 * factor,
                     marginVertical: 15
                   }}
                 >
@@ -294,7 +299,7 @@ class Packs extends React.Component {
             >
               <FastImage
                 style={{
-                  borderRadius: 7.5 * factorRatio,
+                  borderRadius: 7.5 * factor,
                   width: '100%',
                   aspectRatio: 0.7,
                   alignItems: 'center',

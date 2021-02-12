@@ -9,6 +9,7 @@ import {
   Animated,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
   ActivityIndicator,
   StatusBar
 } from 'react-native';
@@ -23,6 +24,10 @@ import VerticalVideoList from '../../components/VerticalVideoList';
 import { searchContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -37,7 +42,7 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterSize: new Animated.Value(fullHeight * 0.225),
+      filterSize: new Animated.Value(height* 0.225),
       recentSearchResults: [],
 
       searchResults: [],
@@ -97,13 +102,13 @@ export default class Search extends React.Component {
             onPress={() => this.clickSearchRecent(row[0])}
             style={{
               justifyContent: 'center',
-              paddingLeft: 15 * factorRatio
+              paddingLeft: 15 * factor
             }}
           >
             <Text
               style={{
                 color: 'white',
-                fontSize: 18 * factorRatio,
+                fontSize: 18 * factor,
                 fontFamily: 'OpenSans-Bold',
                 paddingVertical: 10
               }}
@@ -119,14 +124,14 @@ export default class Search extends React.Component {
           key={'noResults'}
           style={{
             justifyContent: 'center',
-            paddingLeft: 15 * factorRatio,
+            paddingLeft: 15 * factor,
             borderTopWidth: 0.5,
             borderTopColor: colors.secondBackground
           }}
         >
           <Text
             style={{
-              fontSize: 18 * factorRatio,
+              fontSize: 18 * factor,
               fontFamily: 'OpenSans-Regular',
               fontWeight: 'bold',
               color: 'white',
@@ -354,12 +359,12 @@ export default class Search extends React.Component {
                 <View
                   style={[
                     styles.centerContent,
-                    { width: 40 * factorHorizontal }
+                    { width: 40 * factor }
                   ]}
                 >
                   <EvilIcons
                     name={'search'}
-                    size={27.5 * factorRatio}
+                    size={27.5 * factor}
                     color={
                       this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
                     }
@@ -397,7 +402,7 @@ export default class Search extends React.Component {
                   <TouchableOpacity
                     style={{
                       flex: 1,
-                      paddingHorizontal: 15 * factorHorizontal,
+                      paddingHorizontal: 15 * factor,
                       justifyContent: 'center'
                     }}
                     onPress={() => {
@@ -423,9 +428,9 @@ export default class Search extends React.Component {
                   this.state.searchResults.length > 0) && (
                   <Text
                     style={{
-                      paddingLeft: 15 * factorHorizontal,
+                      paddingLeft: 15 * factor,
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: 18 * factorRatio,
+                      fontSize: 18 * factor,
                       color: colors.secondBackground
                     }}
                   >
@@ -440,13 +445,13 @@ export default class Search extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        paddingRight: 15 * factorHorizontal
+                        paddingRight: 15 * factor
                       }
                     ]}
                   >
                     <Text
                       style={{
-                        fontSize: 14 * factorRatio,
+                        fontSize: 14 * factor,
                         color: colors.pianoteRed,
                         textAlign: 'right',
                         fontFamily: 'OpenSans-Regular'
@@ -458,7 +463,7 @@ export default class Search extends React.Component {
                 )}
               </View>
             )}
-            <View style={{ flex: 1, marginBottom: fullHeight * 0.015 }}>
+            <View style={{ flex: 1, marginBottom: '2%'}}>
               {!this.state.searchEntered &&
                 !this.state.isLoadingAll &&
                 !this.state.noResults && <View>{this.mapRecentResults()}</View>}
@@ -467,8 +472,8 @@ export default class Search extends React.Component {
                 !this.state.isLoadingAll && (
                   <View
                     style={{
-                      marginBottom: 10 * factorVertical,
-                      marginTop: 15 * factorVertical
+                      marginBottom: 10 * factor,
+                      marginTop: 15 * factor
                     }}
                   >
                     <VerticalVideoList
@@ -488,7 +493,7 @@ export default class Search extends React.Component {
                       changeSort={sort => this.changeSort(sort)}
                       filterResults={() => this.setState({ showFilters: true })}
                       imageWidth={
-                        onTablet ? fullWidth * 0.225 : fullWidth * 0.3
+                        onTablet ? width * 0.225 : width * 0.3
                       }
                       outVideos={this.state.outVideos} // if paging and out of videos
                     />
@@ -500,7 +505,7 @@ export default class Search extends React.Component {
                     styles.centerContent,
                     {
                       flex: 1,
-                      marginTop: 15 * factorRatio
+                      marginTop: 15 * factor
                     }
                   ]}
                 >
@@ -516,17 +521,17 @@ export default class Search extends React.Component {
                   key={'noResults'}
                   style={{
                     flex: 1,
-                    borderTopWidth: 1 * factorRatio,
+                    borderTopWidth: 1 * factor,
                     borderTopColor: colors.secondBackground
                   }}
                 >
                   <Text
                     style={{
-                      marginTop: 5 * factorVertical,
-                      fontSize: 18 * factorRatio,
+                      marginTop: 5 * factor,
+                      fontSize: 18 * factor,
                       fontFamily: 'OpenSans-Bold',
                       color: 'white',
-                      paddingLeft: 15 * factorHorizontal
+                      paddingLeft: 15 * factor
                     }}
                   >
                     No Results

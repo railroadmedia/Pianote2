@@ -36,6 +36,10 @@ import RestartCourse from '../../modals/RestartCourse';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -444,10 +448,10 @@ class Lessons extends React.Component {
                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                   <FastImage
                     style={{
-                      width: fullWidth * 0.75,
-                      height: (onTablet ? 55 : 65) * factorRatio,
+                      width: width * 0.75,
+                      height: (onTablet ? 55 : 65) * factor,
                       alignSelf: 'center',
-                      marginBottom: 12.5 * factorRatio
+                      marginBottom: 12.5 * factor
                     }}
                     source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                     resizeMode={FastImage.resizeMode.contain}
@@ -459,7 +463,7 @@ class Lessons extends React.Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingHorizontal: 25 * factorRatio,
+                    paddingHorizontal: 25 * factor,
                     marginBottom: Platform.OS == 'android' ? -5 : -1
                   }}
                 >
@@ -525,7 +529,7 @@ class Lessons extends React.Component {
                   items={this.state.progressLessons}
                 />
               )}
-              <View style={{ height: onTablet ? -20 : 5 * factorRatio }} />
+              <View style={{ height: onTablet ? -20 : 5 * factor }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}
@@ -556,7 +560,7 @@ class Lessons extends React.Component {
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                   filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                  imageWidth={fullWidth * 0.26} // image width
+                  imageWidth={width * 0.26} // image width
                   outVideos={this.state.outVideos} // if paging and out of videos
                   getVideos={() => this.getVideos()}
                 />

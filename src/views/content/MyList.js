@@ -7,6 +7,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
   RefreshControl
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -26,6 +27,10 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { ActivityIndicator } from 'react-native';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
   return (
@@ -246,7 +251,7 @@ class MyList extends React.Component {
               styles.tabRightContainer,
               {
                 borderBottomWidth: 0,
-                marginTop: 20 * factorVertical
+                marginTop: 20 * factor
               }
             ]}
             onPress={() => {
@@ -259,14 +264,14 @@ class MyList extends React.Component {
             <Text style={styles.tabRightContainerText}>In Progress</Text>
             <EntypoIcon
               name={'chevron-thin-right'}
-              size={22.5 * factorRatio}
+              size={22.5 * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.tabRightContainer,
-              { marginBottom: 10 * factorVertical }
+              { marginBottom: 10 * factor }
             ]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
@@ -278,7 +283,7 @@ class MyList extends React.Component {
             <Text style={styles.tabRightContainerText}>Completed</Text>
             <EntypoIcon
               name={'chevron-thin-right'}
-              size={22.5 * factorRatio}
+              size={22.5 * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -297,7 +302,7 @@ class MyList extends React.Component {
             filterResults={() => this.setState({ showFilters: true })}
             removeItem={contentID => this.removeFromMyList(contentID)}
             outVideos={this.state.outVideos}
-            imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
+            imageWidth={onTablet ? width * 0.225 : width * 0.3}
           />
         </ScrollView>
         {this.state.showFilters && (

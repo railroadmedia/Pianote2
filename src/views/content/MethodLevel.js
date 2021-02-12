@@ -37,6 +37,11 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 
 let greaterWDim;
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 
 export default class MethodLevel extends React.Component {
   static navigationOptions = { header: null };
@@ -218,19 +223,19 @@ export default class MethodLevel extends React.Component {
               styles.centerContent,
               {
                 position: 'absolute',
-                height: 35 * factorRatio,
-                width: 35 * factorRatio,
+                height: 35 * factor,
+                width: 35 * factor,
                 borderRadius: 100,
                 position: 'absolute',
-                left: 7.5 * factorHorizontal,
-                top: 10 * factorVertical,
+                left: 7.5 * factor,
+                top: 10 * factor,
                 zIndex: 4
               }
             ]}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factorRatio}
-              height={(onTablet ? 17.5 : 25) * factorRatio}
+              width={(onTablet ? 17.5 : 25) * factor}
+              height={(onTablet ? 17.5 : 25) * factor}
               fill={'white'}
             />
           </TouchableOpacity>
@@ -271,10 +276,10 @@ export default class MethodLevel extends React.Component {
               <View style={styles.centerContent}>
                 <FastImage
                   style={{
-                    width: fullWidth * 0.48,
-                    height: 49 * factorRatio,
+                    width: width * 0.48 * factor,
+                    height: 49 * factor,
                     alignSelf: 'center',
-                    marginBottom: 5 * factorRatio
+                    marginBottom: 5 * factor
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -283,9 +288,9 @@ export default class MethodLevel extends React.Component {
               <Text
                 key={'level'}
                 style={{
-                  fontSize: 37.5 * factorHorizontal,
+                  fontSize: 42.5 * factor,
                   color: 'white',
-                  marginBottom: 10 * factorRatio,
+                  marginBottom: 10 * factor,
                   fontFamily: 'RobotoCondensed-Bold',
                   textAlign: 'center'
                 }}
@@ -295,11 +300,11 @@ export default class MethodLevel extends React.Component {
               <View
                 key={'startIcon'}
                 style={{
-                  height: 40 * factorRatio,
+                  height: 40 * factor,
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-evenly',
-                  marginBottom: 15 * factorVertical
+                  marginBottom: 15 * factor
                 }}
               >
                 <TouchableOpacity
@@ -311,13 +316,13 @@ export default class MethodLevel extends React.Component {
                   {!this.state.isAddedToList ? (
                     <AntIcon
                       name={'plus'}
-                      size={27.5 * factorRatio}
+                      size={27.5 * factor}
                       color={colors.pianoteRed}
                     />
                   ) : (
                     <AntIcon
                       name={'close'}
-                      size={27.5 * factorRatio}
+                      size={27.5 * factor}
                       color={colors.pianoteRed}
                     />
                   )}
@@ -325,7 +330,7 @@ export default class MethodLevel extends React.Component {
                     style={{
                       fontFamily: 'OpenSans-Regular',
                       color: 'white',
-                      fontSize: 12 * factorRatio
+                      fontSize: 12 * factor
                     }}
                   >
                     {this.state.isAddedToList ? 'Added' : 'My List'}
@@ -365,15 +370,15 @@ export default class MethodLevel extends React.Component {
                 >
                   <AntIcon
                     name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factorRatio}
+                    size={22 * factor}
                     color={colors.pianoteRed}
                   />
                   <Text
                     style={{
                       fontFamily: 'OpenSans-Regular',
                       color: 'white',
-                      marginTop: 3 * factorRatio,
-                      fontSize: 13 * factorRatio
+                      marginTop: 3 * factor,
+                      fontSize: 13 * factor
                     }}
                   >
                     Info
@@ -393,8 +398,8 @@ export default class MethodLevel extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginVertical: 20 * factorVertical,
-                  fontSize: 15 * factorRatio,
+                  marginVertical: 20 * factor,
+                  fontSize: 15 * factor,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -406,7 +411,7 @@ export default class MethodLevel extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10 * factorVertical
+              marginBottom: 10 * factor
             }}
           >
             <VerticalVideoList
@@ -420,7 +425,7 @@ export default class MethodLevel extends React.Component {
               showLength={false}
               showSort={false}
               showLines={true}
-              imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
+              imageWidth={onTablet ? width * 0.225 : width * 0.3}
             />
           </View>
         </ScrollView>

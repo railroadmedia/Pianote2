@@ -37,6 +37,11 @@ import {
 } from '../../services/UserActions';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 let greaterWDim;
 export default class SinglePack extends React.Component {
   static navigationOptions = { header: null };
@@ -228,19 +233,19 @@ export default class SinglePack extends React.Component {
                 styles.centerContent,
                 {
                   position: 'absolute',
-                  height: 35 * factorRatio,
-                  width: 35 * factorRatio,
+                  height: 35 * factor,
+                  width: 35 * factor,
                   borderRadius: 100,
                   position: 'absolute',
-                  left: 7.5 * factorHorizontal,
-                  top: 10 * factorVertical,
+                  left: 7.5 * factor,
+                  top: 10 * factor,
                   zIndex: 4
                 }
               ]}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factorRatio}
-                height={(onTablet ? 17.5 : 25) * factorRatio}
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
                 fill={'white'}
               />
             </TouchableOpacity>
@@ -287,7 +292,7 @@ export default class SinglePack extends React.Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-evenly',
-                    paddingVertical: 15 * factorRatio
+                    paddingVertical: 15 * factor
                   }}
                 >
                   <TouchableOpacity
@@ -301,15 +306,15 @@ export default class SinglePack extends React.Component {
                   >
                     <AntIcon
                       name={this.state.isAddedToList ? 'close' : 'plus'}
-                      size={22 * factorRatio}
+                      size={22 * factor}
                       color={colors.pianoteRed}
                     />
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
-                        marginTop: 3 * factorRatio,
-                        fontSize: 13 * factorRatio
+                        marginTop: 3 * factor,
+                        fontSize: 13 * factor
                       }}
                     >
                       {this.state.isAddedToList ? 'Added' : 'My List'}
@@ -357,15 +362,15 @@ export default class SinglePack extends React.Component {
                   >
                     <AntIcon
                       name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={22 * factorRatio}
+                      size={22 * factor}
                       color={colors.pianoteRed}
                     />
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
-                        marginTop: 3 * factorRatio,
-                        fontSize: 13 * factorRatio
+                        marginTop: 3 * factor,
+                        fontSize: 13 * factor
                       }}
                     >
                       Info
@@ -387,8 +392,8 @@ export default class SinglePack extends React.Component {
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
-                    marginTop: 5 * factorVertical,
-                    fontSize: 15 * factorRatio,
+                    marginTop: 5 * factor,
+                    fontSize: 15 * factor,
                     color: 'white',
                     textAlign: 'center'
                   }}
@@ -408,7 +413,7 @@ export default class SinglePack extends React.Component {
                       <Text
                         style={{
                           color: 'white',
-                          fontSize: 17 * factorRatio,
+                          fontSize: 17 * factor,
                           fontFamily: 'OpenSans-Bold'
                         }}
                       >
@@ -417,7 +422,7 @@ export default class SinglePack extends React.Component {
                       <Text
                         style={{
                           color: 'white',
-                          fontSize: 13 * factorRatio,
+                          fontSize: 13 * factor,
                           fontFamily: 'OpenSans-Regular'
                         }}
                       >
@@ -437,7 +442,7 @@ export default class SinglePack extends React.Component {
                       <Text
                         style={{
                           color: 'white',
-                          fontSize: 17 * factorRatio,
+                          fontSize: 17 * factor,
                           fontFamily: 'OpenSans-Bold'
                         }}
                       >
@@ -446,7 +451,7 @@ export default class SinglePack extends React.Component {
                       <Text
                         style={{
                           color: 'white',
-                          fontSize: 13 * factorRatio,
+                          fontSize: 13 * factor,
                           fontFamily: 'OpenSans-Regular'
                         }}
                       >
@@ -473,15 +478,15 @@ export default class SinglePack extends React.Component {
                         styles={{
                           touchable: { flex: 1 },
                           iconSize: {
-                            width: 27.5 * factorRatio,
-                            height: 27.5 * factorRatio
+                            width: 27.5 * factor,
+                            height: 27.5 * factor
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
                           textStatus: {
                             color: '#ffffff',
-                            fontSize: 13 * factorRatio,
+                            fontSize: 13 * factor,
                             fontFamily: 'OpenSans-Regular',
                             marginTop: 5
                           },
@@ -518,14 +523,14 @@ export default class SinglePack extends React.Component {
                       }}
                     >
                       <MaterialIcon
-                        size={27.5 * factorRatio}
+                        size={27.5 * factor}
                         name={'replay'}
                         color={colors.pianoteRed}
                       />
                       <Text
                         style={{
                           color: 'white',
-                          fontSize: 13 * factorRatio,
+                          fontSize: 13 * factor,
                           fontFamily: 'OpenSans-Regular',
                           marginTop: 5
                         }}
@@ -537,7 +542,7 @@ export default class SinglePack extends React.Component {
                 </View>
               </View>
             )}
-            <View style={{ height: 5 * factorVertical }} />
+            <View style={{ height: 5 * factor }} />
             <View
               key={'verticalVideoList'}
               style={this.state.isLandscape ? { marginHorizontal: '10%' } : {}}
@@ -552,12 +557,12 @@ export default class SinglePack extends React.Component {
                 showArtist={this.state.isDisplayingLessons ? false : true} // show artist name
                 showLength={this.state.isDisplayingLessons ? true : false}
                 showLines={!this.state.isDisplayingLessons}
-                imageWidth={onTablet ? fullWidth * 0.225 : fullWidth * 0.3}
+                imageWidth={onTablet ? width* 0.225 : width * 0.3}
                 outVideos={this.state.outVideos} // if paging and out of videos
                 navigator={row => this.navigate(row)}
               />
             </View>
-            <View style={{ height: 15 * factorVertical }} />
+            <View style={{ height: 15 * factor }} />
           </ScrollView>
         ) : (
           <View

@@ -6,6 +6,7 @@ import {
   View,
   Text,
   ScrollView,
+  Dimensions,
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
@@ -22,6 +23,11 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -245,9 +251,9 @@ class SongCatalog extends React.Component {
       return 125;
     } else {
       if (Platform.OS == 'android') {
-        return fullHeight * 0.1375;
+        return height * 0.1375;
       } else {
-        return fullHeight * 0.115;
+        return height * 0.115;
       }
     }
   };
@@ -310,9 +316,9 @@ class SongCatalog extends React.Component {
               showSort={true}
               isPaging={this.state.isPaging}
               filters={this.state.filters} // show filter list
-              imageRadius={5 * factorRatio} // radius of image shown
+              imageRadius={5 * factor} // radius of image shown
               containerBorderWidth={0} // border of box
-              containerWidth={fullWidth} // width of list
+              containerWidth={width} // width of list
               currentSort={this.state.currentSort}
               changeSort={sort => this.changeSort(sort)} // change sort and reload videos
               outVideos={this.state.outVideos} // if paging and out of videos
