@@ -25,6 +25,11 @@ import CustomModal from '../../modals/CustomModal';
 import { changePassword } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class ResetPassword extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -101,11 +106,15 @@ export default class ResetPassword extends React.Component {
                 justifyContent: 'space-between'
               }}
             >
-              <Back width={25} height={25} fill={'white'} />
+              <Back 
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
+                fill={'white'} 
+                />
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: 24 * factorRatio,
+                  fontSize: 24 * factor,
                   fontWeight: Platform.OS == 'ios' ? '700' : 'bold',
                   color: 'white'
                 }}
@@ -130,7 +139,7 @@ export default class ResetPassword extends React.Component {
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
-                    fontSize: 19 * factorRatio,
+                    fontSize: 19 * factor,
                     fontWeight: '600',
                     textAlign: 'left',
                     color: 'white',
@@ -225,7 +234,7 @@ export default class ResetPassword extends React.Component {
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
-                    fontSize: 19 * factorRatio,
+                    fontSize: 19 * factor,
                     fontWeight: '600',
                     textAlign: 'left',
                     color: 'white',
@@ -309,7 +318,7 @@ export default class ResetPassword extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     textAlign: 'left',
-                    fontSize: 14 * factorRatio,
+                    fontSize: 14 * factor,
                     color: 'white',
                     paddingLeft: 15,
                     marginBottom: 40
@@ -341,7 +350,7 @@ export default class ResetPassword extends React.Component {
                   <Text
                     style={{
                       padding: 15,
-                      fontSize: 15 * factorRatio,
+                      fontSize: 15 * factor,
                       fontFamily: 'RobotoCondensed-Bold',
                       color:
                         this.state.password.length > 0 &&
@@ -424,16 +433,8 @@ export default class ResetPassword extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
     height: 200,
     width: '80%'
   }

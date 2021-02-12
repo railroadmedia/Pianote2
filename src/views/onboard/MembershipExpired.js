@@ -15,6 +15,11 @@ import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class MembershipExpired extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -85,11 +90,7 @@ const localStyles = StyleSheet.create({
     height: '70%'
   },
   buttonText: {
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     textAlign: 'center',
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
@@ -103,27 +104,15 @@ const localStyles = StyleSheet.create({
   },
   title: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize:
-      (30 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 25 : 30) * factor,
     paddingHorizontal: 15,
     textAlign: 'center',
     color: 'white'
   },
   description: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    padding:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
+    padding: 15 * factor,
     textAlign: 'center',
     color: 'white'
   },
@@ -132,11 +121,7 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     justifyContent: 'center',
     marginHorizontal: '5%',
-    marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 10 * factor
   }
 });
 // borderRadius: 15 * (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2,

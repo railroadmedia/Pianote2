@@ -2,7 +2,7 @@
  * LoadPage
  */
 import React from 'react';
-import { Linking, View } from 'react-native';
+import { Linking, View, Dimensions, Platform } from 'react-native';
 
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
@@ -30,6 +30,12 @@ import NoConnection from '../../modals/NoConnection';
 
 import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
+const factorHorizontal = windowDim.width < windowDim.height ? width/375 : height/812;
+const factorVertical = windowDim.width < windowDim.height ? height/812 : width/375;
 
 const cache = [
   'cachePacks',
@@ -261,8 +267,8 @@ class LoadPage extends React.Component {
               position: 'absolute',
               top: 0,
               left: 0,
-              height: fullHeight,
-              width: fullWidth,
+              height: '100%',
+              width: '100%',
               zIndex: 4,
               elevation: Platform.OS == 'android' ? 4 : 0,
               backgroundColor: 'black'
@@ -270,8 +276,8 @@ class LoadPage extends React.Component {
           ]}
         >
           <Pianote
-            height={77.5 * factorRatio}
-            width={190 * factorHorizontal}
+            height={77.5 * (windowDim.width < windowDim.height ? factorVertical : factorHorizontal)}
+            width={190 * (windowDim.width < windowDim.height ? factorHorizontal : factorVertical)}
             fill={'#fb1b2f'}
           />
         </View>

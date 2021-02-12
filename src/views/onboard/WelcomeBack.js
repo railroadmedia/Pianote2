@@ -16,10 +16,9 @@ import SwipeLeft from 'Pianote2/src/assets/img/svgs/swipe-left.svg';
 import Orientation from 'react-native-orientation-locker';
 
 const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;;
 const marginBottom = 0.02 * (width < height ? height : width);
 
 export default class WelcomeBack extends React.Component {
@@ -50,7 +49,7 @@ export default class WelcomeBack extends React.Component {
           <View
             key={dot}
             style={{
-              width: 10 * factorRatio,
+              width: 10 * factor,
               margin: 5,
               aspectRatio: 1,
               borderWidth: 1,
@@ -74,7 +73,7 @@ export default class WelcomeBack extends React.Component {
           style={{
             height: '100%',
             flex: 1,
-            borderRadius: 15 * factorRatio
+            borderRadius: 15 * factor
           }}
           source={require('Pianote2/src/assets/img/imgs/onboarding-lisa.png')}
           resizeMode={FastImage.resizeMode.contain}
@@ -87,7 +86,7 @@ export default class WelcomeBack extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 18 * factorRatio,
+              fontSize: 18 * factor,
               margin: 30,
               textAlign: 'center'
             }}
@@ -102,7 +101,7 @@ export default class WelcomeBack extends React.Component {
             paddingTop: 10
           }}
         >
-          <SwipeLeft height={65 * factorRatio} width={100 * factorRatio} />
+          <SwipeLeft height={65 * factor} width={100 * factor} />
         </View>
       </View>
     );
@@ -115,7 +114,7 @@ export default class WelcomeBack extends React.Component {
           style={{
             flex: 1,
             width: '100%',
-            borderRadius: 15 * factorRatio
+            borderRadius: 15 * factor
           }}
           source={require('Pianote2/src/assets/img/imgs/onboarding-download.png')}
           resizeMode={FastImage.resizeMode.contain}
@@ -128,7 +127,7 @@ export default class WelcomeBack extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 18 * factorRatio,
+              fontSize: 18 * factor,
               margin: 30,
               textAlign: 'center'
             }}
@@ -147,7 +146,7 @@ export default class WelcomeBack extends React.Component {
           style={{
             flex: 1,
             width: '100%',
-            borderRadius: 15 * factorRatio
+            borderRadius: 15 * factor
           }}
           source={require('Pianote2/src/assets/img/imgs/onboarding-sync.png')}
           resizeMode={FastImage.resizeMode.contain}
@@ -160,7 +159,7 @@ export default class WelcomeBack extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 18 * factorRatio,
+              fontSize: 18 * factor,
               margin: 30,
               textAlign: 'center'
             }}
@@ -205,7 +204,7 @@ export default class WelcomeBack extends React.Component {
                 style={{
                   textAlign: 'center',
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 15 * factorRatio,
+                  fontSize: 15 * factor,
                   color: colors.pianoteRed
                 }}
               >
@@ -227,7 +226,7 @@ export default class WelcomeBack extends React.Component {
                 style={{
                   textAlign: 'center',
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 15 * factorRatio,
+                  fontSize: 15 * factor,
                   color: 'white'
                 }}
               >

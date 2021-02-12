@@ -89,23 +89,17 @@ PushNotification.configure({
 AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;
 
-global.token = '';
+global.token = ''
+global.onTablet = DeviceInfo.isTablet();
 global.loadedFromNotification = false;
 global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.statusBarHeight = StatusBar.statusBarHeight || 24;
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
-global.fullScreen = Dimensions.get('screen').height;
-global.navHeight =
-  Platform.OS == 'android' ? fullScreen - fullHeight - statusBarHeight : 0;
 global.factorHorizontal = Dimensions.get('window').width / 375;
 global.factorVertical = Dimensions.get('window').height / 812;
-global.factorRatio =
-  (Dimensions.get('window').height / 812 +
-    Dimensions.get('window').width / 375) /
-  2;
-global.onTablet = DeviceInfo.isTablet();
+global.factorRatio = (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2;
 global.isNotch = DeviceInfo.hasNotch();
 global.navPxFromTop = isNotch
   ? 30 * factorRatio

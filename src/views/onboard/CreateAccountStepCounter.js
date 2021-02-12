@@ -1,5 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 export default class CreateAccountStepCounter extends React.Component {
   render() {
@@ -8,20 +13,20 @@ export default class CreateAccountStepCounter extends React.Component {
         <View
           key={'step1'}
           style={{
-            borderTopLeftRadius: 40 * factorRatio,
-            borderBottomLeftRadius: 40 * factorRatio,
-            borderTopRightRadius: this.props.step == 1 ? 40 * factorRatio : 0,
+            borderTopLeftRadius: 40 * factor,
+            borderBottomLeftRadius: 40 * factor,
+            borderTopRightRadius: this.props.step == 1 ? 40 * factor : 0,
             borderBottomRightRadius:
-              this.props.step == 1 ? 40 * factorRatio : 0,
+              this.props.step == 1 ? 40 * factor : 0,
             backgroundColor: 'black',
             flex: 1,
-            paddingVertical: 7 * factorRatio
+            paddingVertical: 7 * factor
           }}
         >
           <Text
             style={[
               styles.text,
-              { fontSize: (onTablet ? 10 : 10) * factorRatio }
+              { fontSize: (onTablet ? 10 : 10) * factor }
             ]}
           >
             Step 1:
@@ -29,7 +34,7 @@ export default class CreateAccountStepCounter extends React.Component {
           <Text
             style={[
               styles.boldText,
-              { fontSize: (onTablet ? 10 : 12) * factorRatio }
+              { fontSize: (onTablet ? 10 : 12) * factor }
             ]}
           >
             EMAIL ADDRESS
@@ -41,10 +46,10 @@ export default class CreateAccountStepCounter extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              paddingVertical: 7 * factorRatio,
-              borderTopRightRadius: this.props.step == 2 ? 40 * factorRatio : 0,
+              paddingVertical: 7 * factor,
+              borderTopRightRadius: this.props.step == 2 ? 40 * factor : 0,
               borderBottomRightRadius:
-                this.props.step == 2 ? 40 * factorRatio : 0,
+                this.props.step == 2 ? 40 * factor : 0,
               backgroundColor: this.props.step > 1 ? 'black' : null
             }
           ]}
@@ -52,7 +57,7 @@ export default class CreateAccountStepCounter extends React.Component {
           <Text
             style={[
               styles.text,
-              { fontSize: (onTablet ? 10 : 10) * factorRatio }
+              { fontSize: (onTablet ? 10 : 10) * factor }
             ]}
           >
             Step 2:
@@ -60,7 +65,7 @@ export default class CreateAccountStepCounter extends React.Component {
           <Text
             style={[
               styles.boldText,
-              { fontSize: (onTablet ? 10 : 12) * factorRatio }
+              { fontSize: (onTablet ? 10 : 12) * factor }
             ]}
           >
             SET A PASSWORD
@@ -72,10 +77,10 @@ export default class CreateAccountStepCounter extends React.Component {
             styles.centerContent,
             {
               flex: 1,
-              paddingVertical: 7 * factorRatio,
-              borderTopRightRadius: this.props.step == 3 ? 40 * factorRatio : 0,
+              paddingVertical: 7 * factor,
+              borderTopRightRadius: this.props.step == 3 ? 40 * factor : 0,
               borderBottomRightRadius:
-                this.props.step == 3 ? 40 * factorRatio : 0,
+                this.props.step == 3 ? 40 * factor : 0,
               backgroundColor: this.props.step > 2 ? 'black' : null
             }
           ]}
@@ -83,7 +88,7 @@ export default class CreateAccountStepCounter extends React.Component {
           <Text
             style={[
               styles.text,
-              { fontSize: (onTablet ? 10 : 10) * factorRatio }
+              { fontSize: (onTablet ? 10 : 10) * factor }
             ]}
           >
             Step 3:
@@ -91,7 +96,7 @@ export default class CreateAccountStepCounter extends React.Component {
           <Text
             style={[
               styles.boldText,
-              { fontSize: (onTablet ? 10 : 12) * factorRatio }
+              { fontSize: (onTablet ? 10 : 12) * factor }
             ]}
           >
             CHOOSE A PLAN

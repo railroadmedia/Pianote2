@@ -22,6 +22,7 @@ import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
+import { updateDimensions } from 'Pianote2/src/services/UserActions.js';
 
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote';
@@ -42,6 +43,11 @@ import CustomModal from '../../modals/CustomModal.js';
 import PasswordEmailMatch from '../../modals/PasswordEmailMatch.js';
 import { NetworkContext } from '../../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class LoginCredentials extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -61,6 +67,8 @@ export default class LoginCredentials extends React.Component {
   }
 
   getPurchases = async () => {
+    updateDimensions()
+    this.forceUpdate()
     if (!this.context.isConnected) {
       this.context.showNoConnectionAlert();
     }
@@ -234,20 +242,20 @@ export default class LoginCredentials extends React.Component {
                 <View>
                   <Text
                     style={{
-                      fontSize: 20 * factorRatio,
+                      fontSize: 20 * factor,
                       color: 'white',
                       paddingTop: 15,
                       alignSelf: 'center',
                       textAlign: 'center',
                       fontFamily: 'OpenSans-Regular',
-                      width: onTablet ? '50%' : '50%'
+                      width: '50%'
                     }}
                   >
                     The Ultimate Online
                   </Text>
                   <Text
                     style={{
-                      fontSize: 20 * factorRatio,
+                      fontSize: 20 * factor,
                       color: 'white',
                       alignSelf: 'center',
                       textAlign: 'center',
@@ -361,7 +369,7 @@ export default class LoginCredentials extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 18 * factorRatio,
+                      fontSize: 18 * factor,
                       padding: 10,
                       fontFamily: 'RobotoCondensed-Bold',
                       color:
@@ -446,16 +454,8 @@ export default class LoginCredentials extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
     height: 200,
     width: '80%'
   },
@@ -476,13 +476,13 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (16 * Dimensions.get('window').height) / 812,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   greyText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (16 * Dimensions.get('window').height) / 812,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     color: 'grey',
     textAlign: 'center',
     textDecorationLine: 'underline'
@@ -521,7 +521,7 @@ const localStyles = StyleSheet.create({
     padding: 15,
     color: 'black',
     marginRight: 45,
-    fontSize: (16 * Dimensions.get('window').height) / 812,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
     fontFamily: 'OpenSans-Regular'
   }
 });

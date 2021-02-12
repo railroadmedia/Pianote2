@@ -27,6 +27,11 @@ import { signUp, getUserData } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class CreateAccount extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -43,6 +48,14 @@ export default class CreateAccount extends React.Component {
   }
 
   savePassword = async () => {
+    this.props.navigation.navigate('CREATEACCOUNT3', {
+      data: {
+        email: this.state.email,
+        password: this.state.password,
+        plan: ''
+      }
+    });
+    return
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -131,8 +144,8 @@ export default class CreateAccount extends React.Component {
               style={localStyles.createAccountContainer}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factorRatio}
-                height={(onTablet ? 17.5 : 25) * factorRatio}
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
                 fill={'white'}
               />
               <Text
@@ -152,7 +165,7 @@ export default class CreateAccount extends React.Component {
                 <Text style={localStyles.createPasswordText}>
                   Create a password
                 </Text>
-                <View style={{ height: 7.5 * factorVertical }} />
+                <View style={{ height: 7.5 * factor }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     autoCorrect={false}
@@ -180,7 +193,7 @@ export default class CreateAccount extends React.Component {
                       }
                       style={{
                         width: onTablet ? '30%' : '50%',
-                        marginTop: 15 * factorVertical,
+                        marginTop: 15 * factor,
                         backgroundColor: '#fb1b2f'
                       }}
                     >
@@ -202,11 +215,11 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 17.5 * factorVertical }} />
+                <View style={{ height: 17.5 * factor }} />
                 <Text style={localStyles.createPasswordText}>
                   Confirm password
                 </Text>
-                <View style={{ height: 7.5 * factorVertical }} />
+                <View style={{ height: 7.5 * factor }} />
                 <View style={localStyles.passInput}>
                   <TextInput
                     style={localStyles.textinput}
@@ -254,7 +267,7 @@ export default class CreateAccount extends React.Component {
                     )}
                   </TouchableOpacity>
                 </View>
-                <View style={{ height: 10 * factorVertical }} />
+                <View style={{ height: 10 * factor }} />
                 <Text style={localStyles.characters}>
                   Use at least 8 characters
                 </Text>
@@ -285,7 +298,7 @@ export default class CreateAccount extends React.Component {
                             ? 'white'
                             : '#fb1b2f',
                         fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 18 * factorRatio,
+                        fontSize: 18 * factor,
                         textAlign: 'center',
                         padding: 10
                       }
@@ -340,24 +353,12 @@ const localStyles = StyleSheet.create({
   },
   createAccountText: {
     color: 'white',
-    fontSize:
-      (24 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    fontSize: 24 * factor
   },
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
     height: 200,
     width: '80%'
   },
@@ -368,11 +369,7 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 17.5 : 20) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: ((DeviceInfo.isTablet() ? 17.5 : 20) * factor),
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
@@ -388,7 +385,7 @@ const localStyles = StyleSheet.create({
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (16 * Dimensions.get('window').height) / 812,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
@@ -411,11 +408,7 @@ const localStyles = StyleSheet.create({
   characters: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'left',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 12 : 14) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 40

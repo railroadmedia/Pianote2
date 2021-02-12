@@ -11,6 +11,11 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class GetRestarted extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -23,8 +28,8 @@ export default class GetRestarted extends React.Component {
       <View style={styles.centerContent}>
         <View
           style={{
-            height: fullHeight,
-            width: fullWidth
+            height: height,
+            width: width
           }}
         >
           <View
@@ -82,28 +87,16 @@ export default class GetRestarted extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
     height: 200,
     width: '80%'
   },
   pianoteText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     textAlign: 'center',
-    marginBottom: (20 * Dimensions.get('window').height) / 812
+    marginBottom: 20 * factor
   },
   outerContainer: {
     position: 'absolute',
@@ -116,30 +109,18 @@ const localStyles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
     flexDirection: 'row',
     zIndex: 5
   },
   image: {
     height: '100%',
     width: '100%',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 15 * factor
   },
   description: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     textAlign: 'center',
     marginBottom: (155 * Dimensions.get('window').height) / 812
   },
@@ -148,30 +129,18 @@ const localStyles = StyleSheet.create({
     height: '13.5%',
     alignItems: 'center',
     flexDirection: 'row',
-    borderRadius:
-      (30 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderRadius: 30 * factor
   },
   getStartedContainer: {
     width: '85%',
     height: '100%',
-    borderRadius:
-      (30 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 30 * factor,
     backgroundColor: '#fb1b2f',
     zIndex: 5
   },
   getStarted: {
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     color: 'white'
   }
 });

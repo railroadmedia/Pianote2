@@ -52,6 +52,7 @@ const width =
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const fontIndex = width / 50;
+const factor = (height / 812 + width / 375) / 2;
 
 export default class NewMembership extends React.Component {
   static navigationOptions = { header: null, subscriptions: [] };
@@ -215,8 +216,8 @@ export default class NewMembership extends React.Component {
               }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factorRatio}
-                height={(onTablet ? 17.5 : 25) * factorRatio}
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
                 fill={'white'}
               />
             </TouchableOpacity>

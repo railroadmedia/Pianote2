@@ -2,7 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { combineReducers } from 'redux';
-import { Text, Linking, StatusBar } from 'react-native';
+import { Text, Linking, StatusBar, Dimensions, Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
@@ -39,8 +39,22 @@ export default class App extends React.Component {
     Text.defaultProps = {};
     Text.defaultProps.maxFontSizeMultiplier = 1;
     super(props);
+    this._onOrientationDidChange = this._onOrientationDidChange.bind(this);
     if (DeviceInfo.isTablet()) Orientation.unlockAllOrientations();
     else Orientation.lockToPortrait();
+  }
+
+  componentWillMount = () => Orientation.addOrientationListener(this._onOrientationDidChange);
+
+  _onOrientationDidChange = () => {
+    global.fullWidth = Dimensions.get('window').width;
+    global.fullHeight = Dimensions.get('window').height;
+    global.fullScreen = Dimensions.get('screen').height;
+    global.navHeight = Platform.OS == 'android' ? fullScreen - fullHeight - statusBarHeight : 0;
+    global.factorHorizontal = Dimensions.get('window').width / 375;
+    global.factorVertical = Dimensions.get('window').height / 812;
+    global.factorRatio = (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2;
+    this.forceUpdate()
   }
 
   componentDidMount() {

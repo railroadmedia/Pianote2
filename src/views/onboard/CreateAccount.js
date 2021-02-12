@@ -27,6 +27,11 @@ import CreateAccountStepCounter from './CreateAccountStepCounter';
 import Orientation from 'react-native-orientation-locker';
 import DeviceInfo from 'react-native-device-info';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class CreateAccount extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -98,8 +103,8 @@ export default class CreateAccount extends React.Component {
               style={localStyles.createAccountContainer}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factorRatio}
-                height={(onTablet ? 17.5 : 25) * factorRatio}
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
                 fill={'white'}
               />
               <Text
@@ -150,7 +155,7 @@ export default class CreateAccount extends React.Component {
                       localStyles.verifyContainer,
                       {
                         width: onTablet ? '30%' : '50%',
-                        marginTop: (15 * Dimensions.get('window').height) / 812,
+                        marginTop: 15 * factor,
                         backgroundColor:
                           this.state.email.length > 0
                             ? '#fb1b2f'
@@ -165,7 +170,7 @@ export default class CreateAccount extends React.Component {
                           color:
                             this.state.email.length > 0 ? 'white' : '#fb1b2f',
                           fontFamily: 'RobotoCondensed-Bold',
-                          fontSize: 18 * factorRatio,
+                          fontSize: 18 * factor,
                           textAlign: 'center',
                           padding: 10
                         }
@@ -247,19 +252,11 @@ const localStyles = StyleSheet.create({
   emailContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginBottom: 20 * factor
   },
   emailText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 17.5 : 20) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 17.5 : 20) * factor,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15
@@ -267,42 +264,29 @@ const localStyles = StyleSheet.create({
   createAccountText: {
     color: 'white',
     fontSize:
-      (24 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+      24 * factor
   },
   container: {
     backgroundColor: 'white',
     borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      15 * factor,
     margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      20 * factor,
     height: 200,
     width: '80%'
   },
   textInput: {
     padding: 15,
-    marginTop: (15 * Dimensions.get('window').height) / 812,
+    marginTop: (DeviceInfo.isTablet() ? 12 : 16) * factor,
     color: 'black',
     borderRadius: 100,
     marginHorizontal: 15,
-    fontSize: (16 * Dimensions.get('window').height) / 812,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
     backgroundColor: 'white',
     fontFamily: 'OpenSans-Regular'
   },
   verifyContainer: {
-    marginBottom:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    marginBottom: 20 * factor,
     borderWidth: 2,
     borderRadius: 50,
     alignSelf: 'center',

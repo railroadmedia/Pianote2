@@ -16,7 +16,6 @@ import { SafeAreaView } from 'react-navigation';
 import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
-
 import GradientFeature from '../../components/GradientFeature.js';
 import { validateSignUp, restorePurchase } from '../../services/UserDataAuth';
 import CustomModal from '../../modals/CustomModal';
@@ -24,10 +23,9 @@ import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
 
 const windowDim = Dimensions.get('window');
-const width =
-  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height =
-  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 const skus = Platform.select({
   android: ['pianote_app_1_month_member', 'pianote_app_1_year_member'],
@@ -203,7 +201,7 @@ export default class Login extends React.Component {
         <Text
           style={{
             fontFamily: 'RobotoCondensed-Bold',
-            fontSize: 18 * factorRatio,
+            fontSize: (onTablet ? 16 : 18) * factor,
             textAlign: 'center',
             color: '#fb1b2f',
             padding: 10
@@ -230,7 +228,7 @@ export default class Login extends React.Component {
         <Text
           style={{
             fontFamily: 'RobotoCondensed-Bold',
-            fontSize: 18 * factorRatio,
+            fontSize: (onTablet ? 16 : 18) * factor,
             textAlign: 'center',
             color: 'white',
             padding: 10
@@ -248,8 +246,8 @@ export default class Login extends React.Component {
         {[1, 2, 3, 4, 5].map(dot => (
           <View
             style={{
-              height: 10 * factorRatio,
-              width: 10 * factorRatio,
+              height: 10 * factor,
+              width: 10 * factor,
               margin: 5,
               borderRadius: 100,
               backgroundColor:
@@ -270,18 +268,15 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top:
-              (Platform.OS === 'ios' && height > 811) || onTablet
-                ? height * 0.03
-                : height * 0.015,
+            top: isNotch ? '3%':'1.5%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
           }}
         >
           <Pianote
-            height={75 * factorRatio}
-            width={125 * factorRatio}
+            height={75 * factor}
+            width={125 * factor}
             fill={'#fb1b2f'}
             style={{ alignSelf: 'center' }}
           />
@@ -309,7 +304,7 @@ export default class Login extends React.Component {
           key={'content1'}
           style={{
             position: 'absolute',
-            bottom: height * 0.23,
+            bottom: '23%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
@@ -318,8 +313,8 @@ export default class Login extends React.Component {
           <View style={styles.centerContent}>
             <FastImage
               style={{
-                height: 120 * factorRatio,
-                width: width * 0.75
+                height: 120 * factor,
+                width: '100%'
               }}
               source={require('Pianote2/src/assets/img/imgs/devices.png')}
               resizeMode={FastImage.resizeMode.contain}
@@ -328,13 +323,13 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 24 * factorRatio,
+              fontSize: 24 * factor,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
               textAlign: 'center',
               color: 'white',
-              marginTop: 7.5 * factorVertical
+              marginTop: 5 * factor
             }}
           >
             {'Pianote Lessons, Songs, \n& Support'}
@@ -342,10 +337,10 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 18 * factorRatio,
+              fontSize: 18 * factor,
               textAlign: 'center',
               color: 'grey',
-              marginTop: 10 * factorVertical
+              marginTop: 10 * factor
             }}
           >
             Everywhere you go.
@@ -355,14 +350,14 @@ export default class Login extends React.Component {
           key={'content1b'}
           style={{
             position: 'absolute',
-            bottom: height * 0.055,
+            bottom: '5.5%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }} />
+          <View style={{ height: '20%' }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -376,18 +371,15 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top:
-              (Platform.OS === 'ios' && height > 811) || onTablet
-                ? height * 0.03
-                : height * 0.015,
+            top: isNotch ? '3%':'1.5%',
             zIndex: 2,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
           }}
         >
           <Pianote
-            height={75 * factorRatio}
-            width={125 * factorRatio}
+            height={75 * factor}
+            width={125 * factor}
             fill={'#fb1b2f'}
             style={{ alignSelf: 'center' }}
           />
@@ -415,7 +407,7 @@ export default class Login extends React.Component {
           key={'content1'}
           style={{
             position: 'absolute',
-            bottom: height * 0.215,
+            bottom: '21.5%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
@@ -424,7 +416,7 @@ export default class Login extends React.Component {
           <View style={styles.centerContent}>
             <FastImage
               style={{
-                height: 120 * factorRatio,
+                height: 120 * factor,
                 width: '100%'
               }}
               source={require('Pianote2/src/assets/img/imgs/practice.png')}
@@ -434,7 +426,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 24 * factorRatio,
+              fontSize: 24 * factor,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: '500',
@@ -446,7 +438,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 24 * factorRatio,
+                fontSize: 24 * factor,
                 paddingLeft: 15,
                 paddingRight: 15,
                 fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -463,10 +455,10 @@ export default class Login extends React.Component {
               fontFamily: 'OpenSans-Regular',
               paddingLeft: 15,
               paddingRight: 15,
-              fontSize: 16 * factorRatio,
+              fontSize: 16 * factor,
               textAlign: 'center',
               color: 'grey',
-              marginTop: 20 * factorVertical
+              marginTop: 20 * factor
             }}
           >
             Unlike "video game" learning where you only learn what keys to hit,
@@ -478,14 +470,14 @@ export default class Login extends React.Component {
           key={'content1b'}
           style={{
             position: 'absolute',
-            bottom: height * 0.055,
+            bottom: '5.5%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }} />
+          <View key={'buff'} style={{ height: '20%' }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -499,18 +491,15 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top:
-              (Platform.OS === 'ios' && height > 811) || onTablet
-                ? height * 0.03
-                : height * 0.015,
+            top: isNotch ? '3%':'1.5%',
             zIndex: 2,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
           }}
         >
           <Pianote
-            height={75 * factorRatio}
-            width={125 * factorRatio}
+            height={75 * factor}
+            width={125 * factor}
             fill={'#fb1b2f'}
             style={{ alignSelf: 'center' }}
           />
@@ -538,7 +527,7 @@ export default class Login extends React.Component {
           key={'content1'}
           style={{
             position: 'absolute',
-            bottom: height * 0.22,
+            bottom: '22%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
@@ -547,7 +536,7 @@ export default class Login extends React.Component {
           <View style={styles.centerContent}>
             <FastImage
               style={{
-                height: 120 * factorRatio,
+                height: 120 * factor,
                 width: '100%'
               }}
               source={require('Pianote2/src/assets/img/imgs/favorite-songs.png')}
@@ -557,7 +546,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 24 * factorRatio,
+              fontSize: 24 * factor,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: '500',
@@ -569,7 +558,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 24 * factorRatio,
+                fontSize: 24 * factor,
                 paddingLeft: 15,
                 paddingRight: 15,
                 fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -580,13 +569,13 @@ export default class Login extends React.Component {
               {' Favorite Songs'}
             </Text>
           </Text>
-          <View style={{ height: 20 * factorVertical }} />
+          <View style={{ height: 15 * factor }} />
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
               paddingLeft: 15,
               paddingRight: 15,
-              fontSize: 16 * factorRatio,
+              fontSize: 16 * factor,
               textAlign: 'center',
               color: 'grey'
             }}
@@ -600,14 +589,14 @@ export default class Login extends React.Component {
           key={'content1b'}
           style={{
             position: 'absolute',
-            bottom: height * 0.055,
+            bottom: '5.5%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }} />
+          <View key={'buff'} style={{ height: '20%' }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -621,18 +610,15 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top:
-              (Platform.OS === 'ios' && height > 811) || onTablet
-                ? height * 0.03
-                : height * 0.015,
+            top: isNotch ? '3%':'1.5%',
             zIndex: 2,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
           }}
         >
           <Pianote
-            height={75 * factorRatio}
-            width={125 * factorRatio}
+            height={75 * factor}
+            width={125 * factor}
             fill={'#fb1b2f'}
             style={{ alignSelf: 'center' }}
           />
@@ -661,7 +647,7 @@ export default class Login extends React.Component {
           key={'content1'}
           style={{
             position: 'absolute',
-            bottom: height * 0.22,
+            bottom: '22%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
@@ -670,7 +656,7 @@ export default class Login extends React.Component {
           <View style={styles.centerContent}>
             <FastImage
               style={{
-                height: 120 * factorRatio,
+                height: 120 * factor,
                 width: '100%'
               }}
               source={require('Pianote2/src/assets/img/imgs/support.png')}
@@ -680,7 +666,7 @@ export default class Login extends React.Component {
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
-              fontSize: 24 * factorRatio,
+              fontSize: 24 * factor,
               paddingLeft: 15,
               paddingRight: 15,
               fontWeight: '500',
@@ -692,7 +678,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 24 * factorRatio,
+                fontSize: 24 * factor,
                 paddingLeft: 15,
                 paddingRight: 15,
                 fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -708,10 +694,10 @@ export default class Login extends React.Component {
               fontFamily: 'OpenSans-Regular',
               paddingLeft: 15,
               paddingRight: 15,
-              fontSize: 16 * factorRatio,
+              fontSize: 16 * factor,
               textAlign: 'center',
               color: 'grey',
-              marginTop: 20 * factorVertical
+              marginTop: '2.5%'
             }}
           >
             Get direct acces to real teachers any time you have a question,
@@ -723,14 +709,14 @@ export default class Login extends React.Component {
           key={'content1b'}
           style={{
             position: 'absolute',
-            bottom: height * 0.055,
+            bottom: '5.5%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }} />
+          <View key={'buff'} style={{ height: '20%' }} />
           {this.renderButtons()}
         </View>
       </View>
@@ -744,18 +730,15 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top:
-              (Platform.OS === 'ios' && height > 811) || onTablet
-                ? height * 0.03
-                : height * 0.015,
+            top: isNotch ? '3%':'1.5%',
             zIndex: 4,
             elevation: Platform.OS === 'android' ? 4 : 0,
             width: '100%'
           }}
         >
           <Pianote
-            height={75 * factorRatio}
-            width={125 * factorRatio}
+            height={75 * factor}
+            width={125 * factor}
             fill={'#fb1b2f'}
             style={{ alignSelf: 'center' }}
           />
@@ -774,7 +757,7 @@ export default class Login extends React.Component {
               backgroundColor: 'rgba(23, 26, 26, 1)',
               alignSelf: 'stretch',
               zIndex: 3,
-              marginBottom: 60 * factorVertical
+              marginBottom: '7.5%'
             }
           ]}
         >
@@ -792,7 +775,7 @@ export default class Login extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: 28 * factorRatio,
+                fontSize: 28 * factor,
                 paddingLeft: 15,
                 paddingRight: 15,
                 fontWeight: '500',
@@ -803,7 +786,7 @@ export default class Login extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  fontSize: 24 * factorRatio,
+                  fontSize: 24 * factor,
                   paddingLeft: 15,
                   paddingRight: 15,
                   fontWeight: Platform.OS == 'ios' ? '800' : 'bold',
@@ -819,10 +802,10 @@ export default class Login extends React.Component {
                 fontFamily: 'OpenSans-Regular',
                 paddingLeft: 15,
                 paddingRight: 15,
-                fontSize: 16 * factorRatio,
+                fontSize: 16 * factor,
                 textAlign: 'center',
                 color: 'grey',
-                marginTop: 10 * factorVertical
+                marginTop: '1.25%'
               }}
             >
               Try it for free for 7-days when you click the sign up button below
@@ -834,14 +817,14 @@ export default class Login extends React.Component {
           key={'content1b'}
           style={{
             position: 'absolute',
-            bottom: height * 0.055,
+            bottom: '5.5%',
             width: '100%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0
           }}
         >
           {this.renderDots()}
-          <View key={'buff'} style={{ height: height * 0.02 }} />
+          <View key={'buff'} style={{ height: '20%' }} />
           {this.renderButtons()}
         </View>
       </View>
