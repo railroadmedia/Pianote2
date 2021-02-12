@@ -24,6 +24,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Orientation from 'react-native-orientation-locker';
 
 import StartIcon from '../../components/StartIcon';
+import ResetIcon from '../../components/ResetIcon';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import GradientFeature from '../../components/GradientFeature';

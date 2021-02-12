@@ -31,6 +31,7 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import Orientation from 'react-native-orientation-locker';
 
 import { cacheAndWritePacks } from '../../redux/PacksCacheActions';
+import ResetIcon from '../../components/ResetIcon';
 
 const windowDim = Dimensions.get('window');
 const width =
