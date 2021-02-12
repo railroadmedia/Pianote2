@@ -23,6 +23,11 @@ import commonService from '../../services/common.service';
 import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class NotificationSettings extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -123,8 +128,8 @@ export default class NotificationSettings extends React.Component {
               }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factorRatio}
-                height={(onTablet ? 17.5 : 25) * factorRatio}
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
                 fill={colors.secondBackground}
               />
             </TouchableOpacity>
@@ -246,22 +251,22 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factorRatio,
-                      height: (onTablet ? 22.5 : 27.5) * factorRatio
+                      width: (onTablet ? 22.5 : 27.5) * factor,
+                      height: (onTablet ? 22.5 : 27.5) * factor
                     }
                   ]}
                 >
                   {this.state.notifications_summary_frequency_minutes == 1 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factorRatio}
+                      size={(onTablet ? 17.5 : 20) * factor}
                       color={'white'}
                     />
                   )}
                   {this.state.notifications_summary_frequency_minutes !== 1 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 18.5 : 22.5) * factorRatio}
+                      size={(onTablet ? 18.5 : 22.5) * factor}
                       color={'white'}
                     />
                   )}
@@ -288,8 +293,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factorRatio,
-                      height: (onTablet ? 22.5 : 27.5) * factorRatio
+                      width: (onTablet ? 22.5 : 27.5) * factor,
+                      height: (onTablet ? 22.5 : 27.5) * factor
                     }
                   ]}
                 >
@@ -297,7 +302,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factorRatio}
+                      size={(onTablet ? 17.5 : 20) * factor}
                       color={'white'}
                     />
                   )}
@@ -305,7 +310,7 @@ export default class NotificationSettings extends React.Component {
                     1440 && (
                     <EntypoIcon
                       name={'cross'}
-                      size={(onTablet ? 18.5 : 22.5) * factorRatio}
+                      size={(onTablet ? 18.5 : 22.5) * factor}
                       color={'white'}
                     />
                   )}
@@ -334,8 +339,8 @@ export default class NotificationSettings extends React.Component {
                           ? '#fb1b2f'
                           : colors.secondBackground,
                       borderRadius: 100,
-                      width: (onTablet ? 22.5 : 27.5) * factorRatio,
-                      height: (onTablet ? 22.5 : 27.5) * factorRatio
+                      width: (onTablet ? 22.5 : 27.5) * factor,
+                      height: (onTablet ? 22.5 : 27.5) * factor
                     }
                   ]}
                 >
@@ -344,7 +349,7 @@ export default class NotificationSettings extends React.Component {
                       null) && (
                     <FontIcon
                       name={'check'}
-                      size={(onTablet ? 17.5 : 20) * factorRatio}
+                      size={(onTablet ? 17.5 : 20) * factor}
                       color={'white'}
                     />
                   )}
@@ -353,7 +358,7 @@ export default class NotificationSettings extends React.Component {
                       null && (
                       <EntypoIcon
                         name={'cross'}
-                        size={(onTablet ? 18.5 : 22.5) * factorRatio}
+                        size={(onTablet ? 18.5 : 22.5) * factor}
                         color={'white'}
                       />
                     )}
@@ -372,16 +377,8 @@ export default class NotificationSettings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
     height: 200,
     width: '80%'
   },
@@ -389,40 +386,29 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#081826'
+    backgroundColor: '#081826',
+    padding: (DeviceInfo.isTablet()  ? 15 : 20) * factor,
   },
   title: {
     textAlign: 'center',
     color: '#445f73'
   },
   noteTypeContainer: {
-    paddingLeft: 15,
+    paddingLeft: 10 * factor,
     width: '100%',
     justifyContent: 'center',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    fontSize: 18 * factor
   },
   noteTypeText: {
     marginTop:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      10 * factor,
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 14 : 16) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor,
     color: '#445f73',
     paddingVertical: 5
   },
   textContainer: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10 * factor,
     paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -430,27 +416,18 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      ((DeviceInfo.isTablet() ? 14 : 16) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
     color: '#445f73'
   },
   emailNotificationFrequency: {
-    paddingLeft: 15,
+    paddingLeft: 10 * factor,
+    paddingTop: 10 * factor,
     width: '100%',
     justifyContent: 'center',
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor,
   },
   border: {
-    height:
-      ((DeviceInfo.isTablet() ? 15 : 25) * Dimensions.get('window').height) /
-      812,
+    height: (DeviceInfo.isTablet() ? 15 : 25) * factor,
     borderBottomColor: '#445f73',
     borderBottomWidth: 1
   }

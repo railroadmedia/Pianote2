@@ -22,7 +22,6 @@ import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
-import { updateDimensions } from 'Pianote2/src/services/UserActions.js';
 
 import Back from '../../assets/img/svgs/back';
 import Pianote from '../../assets/img/svgs/pianote';
@@ -67,8 +66,6 @@ export default class LoginCredentials extends React.Component {
   }
 
   getPurchases = async () => {
-    updateDimensions()
-    this.forceUpdate()
     if (!this.context.isConnected) {
       this.context.showNoConnectionAlert();
     }

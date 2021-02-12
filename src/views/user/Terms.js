@@ -14,6 +14,11 @@ import {
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class Terms extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -31,8 +36,8 @@ export default class Terms extends React.Component {
             style={{ flex: 1 }}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factorRatio}
-              height={(onTablet ? 17.5 : 25) * factorRatio}
+              width={(onTablet ? 17.5 : 25) * factor}
+              height={(onTablet ? 17.5 : 25) * factor}
               fill={'black'}
             />
           </TouchableOpacity>
@@ -383,7 +388,7 @@ export default class Terms extends React.Component {
               support@pianote.com.
             </Text>
           </Text>
-          <View style={{ height: 25 * factorRatio }} />
+          <View style={{ height: 25 * factor }} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -392,11 +397,7 @@ export default class Terms extends React.Component {
 
 const localStyles = StyleSheet.create({
   mainSub: {
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     fontStyle: 'italic'
   },
   header: {
@@ -407,11 +408,7 @@ const localStyles = StyleSheet.create({
   },
   title: {
     fontWeight: Platform.OS == 'android' ? 'bold' : '800',
-    fontSize:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 20 * factor,
     alignSelf: 'center',
     textAlign: 'center'
   },
@@ -420,16 +417,8 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 15
   },
   subtitle: {
-    paddingBottom:
-      (5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    marginTop:
-      (25 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    paddingBottom: 5 * factor,
+    marginTop: 25 * factor,
     fontWeight: 'bold',
     marginBottom: 0
   }

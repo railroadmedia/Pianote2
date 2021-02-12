@@ -47,6 +47,11 @@ import { cacheAndWriteQuickTips } from '../../redux/QuickTipsCacheActions';
 import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class Settings extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -212,8 +217,8 @@ class Settings extends React.Component {
             }}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factorRatio}
-              height={(onTablet ? 17.5 : 25) * factorRatio}
+              width={(onTablet ? 17.5 : 25) * factor}
+              height={(onTablet ? 17.5 : 25) * factor}
               fill={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -232,7 +237,7 @@ class Settings extends React.Component {
               styles.centerContent,
               localStyles.container,
               {
-                borderTopWidth: 0.5 * factorRatio,
+                borderTopWidth: 0.5 * factor,
                 borderTopColor: '#445f73'
               }
             ]}
@@ -241,11 +246,11 @@ class Settings extends React.Component {
             }}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <FeatherIcon
                 name={'user'}
-                size={(onTablet ? 22.5 : 25) * factorRatio}
+                size={(onTablet ? 22.5 : 25) * factor}
                 color={colors.pianoteRed}
               />
             </View>
@@ -253,7 +258,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -265,19 +270,19 @@ class Settings extends React.Component {
             style={[styles.centerContent, localStyles.container]}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <IonIcon
                 name={'ios-notifications-outline'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 27 : 35) * factorRatio}
+                size={(onTablet ? 27 : 35) * factor}
               />
             </View>
             <Text style={styles.settingsText}>Notification Settings</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -286,11 +291,11 @@ class Settings extends React.Component {
             onPress={this.manageSubscriptions}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <AntIcon
                 name={'folder1'}
-                size={(onTablet ? 20 : 25) * factorRatio}
+                size={(onTablet ? 20 : 25) * factor}
                 color={colors.pianoteRed}
               />
             </View>
@@ -298,7 +303,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -309,11 +314,11 @@ class Settings extends React.Component {
             style={[styles.centerContent, localStyles.container]}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <AntIcon
                 name={'creditcard'}
-                size={(onTablet ? 20 : 25) * factorRatio}
+                size={(onTablet ? 20 : 25) * factor}
                 color={colors.pianoteRed}
               />
             </View>
@@ -321,7 +326,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -332,11 +337,11 @@ class Settings extends React.Component {
             }}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <FontIcon
                 name={'support'}
-                size={(onTablet ? 20 : 25) * factorRatio}
+                size={(onTablet ? 20 : 25) * factor}
                 color={colors.pianoteRed}
               />
             </View>
@@ -344,7 +349,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -355,11 +360,11 @@ class Settings extends React.Component {
             }}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <AntIcon
                 name={'form'}
-                size={(onTablet ? 20 : 25) * factorRatio}
+                size={(onTablet ? 20 : 25) * factor}
                 color={colors.pianoteRed}
               />
             </View>
@@ -367,7 +372,7 @@ class Settings extends React.Component {
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -378,19 +383,19 @@ class Settings extends React.Component {
             }}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <FontIcon
                 name={'shield'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 21.5 : 27.5) * factorRatio}
+                size={(onTablet ? 21.5 : 27.5) * factor}
               />
             </View>
             <Text style={styles.settingsText}>Privacy Policy</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -401,19 +406,19 @@ class Settings extends React.Component {
             }}
           >
             <View
-              style={[styles.centerContent, { width: 60 * factorHorizontal }]}
+              style={[styles.centerContent, { width: 60 * factor }]}
             >
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
-                size={(onTablet ? 18 : 23.5) * factorRatio}
+                size={(onTablet ? 18 : 23.5) * factor}
               />
             </View>
             <Text style={styles.settingsText}>Log Out</Text>
             <View style={{ flex: 1 }} />
             <AntIcon
               name={'right'}
-              size={(onTablet ? 20 : 25) * factorRatio}
+              size={(onTablet ? 20 : 25) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
@@ -484,8 +489,8 @@ class Settings extends React.Component {
             >
               <Text
                 style={{
-                  paddingVertical: 10 * factorVertical,
-                  marginHorizontal: 75 * factorHorizontal,
+                  paddingVertical: 10 * factor,
+                  marginHorizontal: (onTablet ? 50 : 75) * factor,
                   fontSize: 15,
                   color: '#ffffff',
                   textAlign: 'center',
@@ -508,18 +513,10 @@ class Settings extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    height:
-      ((DeviceInfo.isTablet() ? 40 : 50) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
     width: '100%',
     borderBottomColor: '#445f73',
-    borderBottomWidth:
-      (1 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderBottomWidth: 1,
     flexDirection: 'row',
     paddingRight: 15
   },
@@ -530,33 +527,16 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   appText: {
-    marginTop:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    marginTop: 10 * factor,
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet()
-      ? 18
-      : (12 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2
+    fontSize: DeviceInfo.isTablet() ? 18 : (12 * factor)
   },
   buildText: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     color: '#445f73',
-    marginTop:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 10 * factor,
+    fontSize: DeviceInfo.isTablet() ? 18 : (12 * factor)
   }
 });
 const mapDispatchToProps = dispatch =>

@@ -75,6 +75,11 @@ const messageDict = {
   ] // notify_weekly_update: this.state.notify_weekly_update,
 };
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 export default class Profile extends React.Component {
   static navigationOptions = { header: null };
   static contextType = NetworkContext;
@@ -300,8 +305,8 @@ export default class Profile extends React.Component {
               onPress={() => this.props.navigation.navigate('SETTINGS')}
             >
               <Settings
-                height={onTablet ? 18 * factorRatio : 25 * factorRatio}
-                width={onTablet ? 18 * factorRatio : 25 * factorRatio}
+                height={onTablet ? 18 * factor : 25 * factor}
+                width={onTablet ? 18 * factor : 25 * factor}
                 fill={colors.pianoteRed}
                 style={{ alignSelf: 'flex-end' }}
               />
@@ -318,7 +323,7 @@ export default class Profile extends React.Component {
                 <View
                   style={[
                     styles.centerContent,
-                    { marginTop: 20 * factorVertical }
+                    { marginTop: 20 * factor }
                   ]}
                 >
                   <View style={localStyles.imageContainer}>
@@ -334,7 +339,7 @@ export default class Profile extends React.Component {
                         style={[styles.centerContent, styles.container]}
                       >
                         <IonIcon
-                          size={onTablet ? 30 : 22.5 * factorRatio}
+                          size={onTablet ? 30 : 22.5 * factor}
                           name={'ios-camera'}
                           color={colors.pianoteRed}
                         />
@@ -345,7 +350,7 @@ export default class Profile extends React.Component {
                         <AntIcon
                           name={'user'}
                           color={colors.pianoteRed}
-                          size={85 * factorRatio}
+                          size={85 * factor}
                         />
                       </View>
                     )}
@@ -373,7 +378,7 @@ export default class Profile extends React.Component {
                     <Text style={localStyles.redXpRank}>XP</Text>
                     <Text style={localStyles.whiteXpRank}>{this.state.xp}</Text>
                   </TouchableOpacity>
-                  <View style={{ width: 60 * factorHorizontal }} />
+                  <View style={{ width: 60 * factor }} />
                   <TouchableOpacity
                     onPress={() => this.setState({ showXpRank: true })}
                   >
@@ -440,7 +445,7 @@ export default class Profile extends React.Component {
                         ]}
                       >
                         <FontAwesome
-                          size={fullWidth * 0.045 * factorRatio}
+                          size={width * 0.045 * factor}
                           color={'white'}
                           name={'video-camera'}
                         />
@@ -455,8 +460,8 @@ export default class Profile extends React.Component {
                         ]}
                       >
                         <Chat
-                          height={fullWidth * 0.05}
-                          width={fullWidth * 0.05}
+                          height={width * 0.05}
+                          width={width * 0.05}
                           fill={'white'}
                         />
                       </View>
@@ -470,7 +475,7 @@ export default class Profile extends React.Component {
                         ]}
                       >
                         <AntIcon
-                          size={fullWidth * 0.045}
+                          size={width * 0.045}
                           color={'white'}
                           name={'like1'}
                         />
@@ -520,7 +525,7 @@ export default class Profile extends React.Component {
                       }}
                     >
                       <EntypoIcon
-                        size={20 * factorRatio}
+                        size={20 * factor}
                         name={'dots-three-horizontal'}
                         color={colors.secondBackground}
                       />
@@ -601,26 +606,14 @@ const localStyles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    borderRadius:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    margin:
-      (20 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
     height: 200,
     width: '80%'
   },
   imageContainer: {
     borderRadius: 250,
-    borderWidth:
-      (2 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderWidth: 2 * factor,
     borderColor: '#fb1b2f',
     height: DeviceInfo.isTablet()
       ? (112 *
@@ -638,33 +631,13 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     elevation: 10,
-    top:
-      ((DeviceInfo.isTablet() ? -15 : -15) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    right:
-      ((DeviceInfo.isTablet() ? -15 : -15) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    height:
-      ((DeviceInfo.isTablet() ? 30 : 35) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    width:
-      ((DeviceInfo.isTablet() ? 30 : 35) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    top: (DeviceInfo.isTablet() ? -15 : -15) * factor,
+    right: (DeviceInfo.isTablet() ? -15 : -15) * factor,
+    height: (DeviceInfo.isTablet() ? 30 : 35) * factor,
+    width: (DeviceInfo.isTablet() ? 30 : 35) * factor,
     borderRadius: 100,
     borderColor: '#fb1b2f',
-    borderWidth:
-      (1.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    borderWidth: 1.5 * factor
   },
   profileImageBackground: {
     height: '100%',
@@ -674,22 +647,14 @@ const localStyles = StyleSheet.create({
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize:
-      (30 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 30 * factor,
     textAlign: 'center',
     color: 'white',
     marginBottom: (10 * Dimensions.get('window').height) / 812
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (14 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 14 * factor,
     textAlign: 'center',
     color: '#445f73'
   },
@@ -707,21 +672,13 @@ const localStyles = StyleSheet.create({
   },
   redXpRank: {
     color: '#fb1b2f',
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 12 * factor,
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center'
   },
   whiteXpRank: {
     color: 'white',
-    fontSize:
-      (24 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 24 * factor,
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center'
   },
@@ -731,29 +688,17 @@ const localStyles = StyleSheet.create({
   },
   activityContainer: {
     flex: 1,
-    marginTop:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    marginTop: 15 * factor
   },
   noNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 15 * factor,
     textAlign: 'left',
     paddingLeft: 15,
     color: 'white'
   },
   notification: {
-    height:
-      (90 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: 90 * factor,
     flexDirection: 'row'
   },
   innerNotificationContainer: {
@@ -763,91 +708,43 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   messageContainer: {
-    height:
-      (Dimensions.get('window').width *
-        0.175 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    width:
-      (Dimensions.get('window').width *
-        0.175 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderRadius:
-      (150 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: width * 0.175 * factor,
+    width:  width * 0.175 * factor,
+    borderRadius: 150 * factor,
     backgroundColor: '#ececec'
   },
   iconContainer: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    height:
-      (Dimensions.get('window').width *
-        0.075 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    width:
-      (Dimensions.get('window').width *
-        0.075 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
-    borderRadius:
-      (100 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: width * 0.075 * factor,
+    width: width * 0.075 * factor,
+    borderRadius: 100 * factor,
     zIndex: 5
   },
   boldNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize:
-      (15 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 15 * factor,
     color: 'white'
   },
   messageTypeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (14 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    fontSize: 14 * factor
   },
   notificationText: {
     paddingLeft: 15,
-    fontSize:
-      (18 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 18 * factor,
     fontFamily: 'OpenSans-ExtraBold',
     color: '#445f73'
   },
   createdAtText: {
     marginTop: (5 * Dimensions.get('window').height) / 812,
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (13 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: 13 * factor,
     color: '#445f73'
   },
   threeDotsContainer: {
-    height:
-      (35 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    height: 35 * factor,
     justifyContent: 'center'
   }
 });

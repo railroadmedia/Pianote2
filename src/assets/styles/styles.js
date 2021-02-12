@@ -5,14 +5,10 @@ import DeviceInfo from 'react-native-device-info';
 
 var React = require('react-native');
 
-const fullWidth = Dimensions.get('window').width;
-const fullHeight = Dimensions.get('window').height;
-const factorHorizontal = Dimensions.get('window').width / 375;
-const factorVertical = Dimensions.get('window').height / 812;
-const factorRatio =
-  (Dimensions.get('window').height / 812 +
-    Dimensions.get('window').width / 375) /
-  2;
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 var { StyleSheet } = React;
 
@@ -24,39 +20,38 @@ module.exports = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: DeviceInfo.isTablet() ? 12 * factorRatio : 14 * factorRatio
+    fontSize: DeviceInfo.isTablet() ? 12 * factor : 14 * factor
   },
   searchContainer: {
-    marginTop: fullHeight * 0.04,
+    marginTop: height * 0.04,
     flexDirection: 'row',
     paddingLeft: 15
   },
   searchBox: {
     flex: 1,
     backgroundColor: '#f3f6f6',
-    borderRadius: 60 * factorHorizontal,
+    borderRadius: 60 * factor,
     flexDirection: 'row'
   },
   recentSearches: {
-    marginTop: fullHeight * 0.02,
+    marginTop: height * 0.02,
     flexDirection: 'row',
-    marginBottom: 10 * factorRatio,
+    marginBottom: 10 * factor,
     justifyContent: 'space-between'
   },
   cancelSearch: {
     textAlign: 'center',
-    fontSize: 12 * factorRatio,
+    fontSize: 12 * factor,
     color: '#fb1b2f',
     fontFamily: 'OpenSans-Bold'
   },
   searchText: {
     flex: 0.9,
     color: 'grey',
-    marginTop: 12.5 * factorVertical,
-    paddingBottom: 12.5 * factorVertical,
+    paddingVertical: 12.5 * factor,
     justifyContent: 'center',
     fontFamily: 'OpenSans-Regular',
-    fontSize: 16 * factorRatio
+    fontSize: 16 * factor
   },
   mainContainer: {
     backgroundColor: '#00101d',
@@ -72,7 +67,7 @@ module.exports = StyleSheet.create({
   },
   childHeaderText: {
     // used on search, see all, downloads,
-    fontSize: 22 * factorRatio,
+    fontSize: 22 * factor,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold',
     alignSelf: 'center',
@@ -83,16 +78,16 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: 15 * factorRatio
+    padding: 15 * factor
   },
   filterHeader: {
-    fontSize: 18 * factorRatio,
-    marginBottom: 12.5 * factorVertical,
-    marginTop: 12.5 * factorVertical,
+    fontSize: 18 * factor,
+    marginBottom: 12.5 * factor,
+    marginTop: 12.5 * factor,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',
-    paddingLeft: fullWidth * 0.035
+    paddingLeft: width * 0.035
   },
   container: {
     flex: 1,
@@ -100,54 +95,54 @@ module.exports = StyleSheet.create({
   },
   settingsText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: DeviceInfo.isTablet() ? 14 * factorRatio : 18 * factorRatio,
+    fontSize: DeviceInfo.isTablet() ? 14 * factor : 18 * factor,
     color: '#445f73'
   },
   tabRightContainerText: {
-    paddingLeft: 10 * factorHorizontal,
-    fontSize: DeviceInfo.isTablet() ? 26 : 20 * factorRatio,
-    marginBottom: 5 * factorVertical,
+    paddingLeft: 10 * factor,
+    fontSize: DeviceInfo.isTablet() ? 26 : 20 * factor,
+    marginBottom: 5 * factor,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',
-    paddingVertical: 10 * factorVertical
+    paddingVertical: 10 * factor
   },
   tabRightContainer: {
-    paddingRight: 10 * factorHorizontal,
+    paddingRight: 10 * factor,
     width: '100%',
-    borderTopWidth: 0.5 * factorRatio,
+    borderTopWidth: 0.5 * factor,
     borderTopColor: '#445f73',
-    borderBottomWidth: 0.5 * factorRatio,
+    borderBottomWidth: 0.5 * factor,
     borderBottomColor: '#445f73',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
   contentPageHeader: {
-    paddingLeft: (10 * Dimensions.get('window').width) / 375,
-    fontSize: 30 * factorRatio,
+    paddingLeft: 10 * factor,
+    fontSize: 30 * factor,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
   },
   modalHeaderText: {
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center',
-    fontSize: 18 * factorRatio
+    fontSize: 18 * factor
   },
   modalCancelButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 12 * factorRatio
+    fontSize: 12 * factor
   },
   modalButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 15 * factorRatio
+    fontSize: 15 * factor
   },
   modalBodyText: {
     textAlign: 'center',
     fontFamily: 'OpenSans-Regular',
-    fontSize: 15 * factorRatio
+    fontSize: 15 * factor
   },
   centerContent: {
     justifyContent: 'center',
@@ -155,25 +150,21 @@ module.exports = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch'
   },
-  fullScreenPortrait: {
-    height: global.fullHeight,
-    width: global.fullWidth
-  },
   redButton: {
     zIndex: 5,
     backgroundColor: '#fb1b2f',
     borderRadius: 200
   },
   innerRedButton: {
-    width: DeviceInfo.isTablet() ? fullWidth * 0.15 : fullWidth * 0.225,
-    height: DeviceInfo.isTablet() ? fullWidth * 0.15 : fullWidth * 0.225
+    width: DeviceInfo.isTablet() ? width * 0.15 : width * 0.225,
+    height: DeviceInfo.isTablet() ? width * 0.15 : width * 0.225
   },
   buttonContainer: {
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
     left: 0,
-    height: fullHeight * 0.175,
-    width: fullWidth
+    height: height * 0.175,
+    width: width
   }
 });
