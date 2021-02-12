@@ -125,7 +125,7 @@ global.maxLevel = {
   studentFocus: null
 };
 global.isConnected = true;
-global.serverLocation = 'https://staging.pianote.com';
+global.serverLocation = 'https://www.pianote.com';
 global.isPackOnly = false;
 global.versionNumber = '1.0.11';
 global.fallbackThumb =
