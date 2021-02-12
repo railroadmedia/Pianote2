@@ -265,7 +265,10 @@ export default class Login extends React.Component {
 
   renderFirstPage() {
     return (
-      <View key={'loginSignup'} style={{ flex: 1, width }}>
+      <View
+        key={'loginSignup'}
+        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
+      >
         <View
           key={'pianote1'}
           style={{
@@ -368,7 +371,10 @@ export default class Login extends React.Component {
 
   renderSecondPage() {
     return (
-      <View key={'whatToPractive'} style={{ flex: 1, width }}>
+      <View
+        key={'whatToPractive'}
+        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
+      >
         <View
           key={'pianote1'}
           style={{
@@ -488,7 +494,10 @@ export default class Login extends React.Component {
 
   renderThirdpage() {
     return (
-      <View key={'favSongs'} style={{ flex: 1, width }}>
+      <View
+        key={'favSongs'}
+        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
+      >
         <View
           key={'pianote1'}
           style={{
@@ -607,7 +616,10 @@ export default class Login extends React.Component {
 
   renderFourthPage() {
     return (
-      <View key={'lessonSupport'} style={{ flex: 1, width }}>
+      <View
+        key={'lessonSupport'}
+        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
+      >
         <View
           key={'pianote1'}
           style={{
@@ -727,7 +739,10 @@ export default class Login extends React.Component {
 
   renderFifthPage() {
     return (
-      <View key={'done'} style={{ flex: 1, width }}>
+      <View
+        key={'done'}
+        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
+      >
         <View
           key={'pianote1'}
           style={{
