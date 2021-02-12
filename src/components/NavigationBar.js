@@ -18,6 +18,11 @@ import {
 } from 'react-navigation';
 import { NetworkContext } from '../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class NavigationBar extends React.Component {
   static contextType = NetworkContext;
   static navigationOptions = { header: null };
@@ -57,7 +62,7 @@ class NavigationBar extends React.Component {
               ? 'white'
               : this.state.secondaryColor
           }
-          size={onTablet ? 20.625 * factorRatio : 27.5 * factorRatio}
+          size={onTablet ? 20.625 * factor : 27.5 * factor}
         />
       );
     } else {
@@ -113,7 +118,7 @@ class NavigationBar extends React.Component {
           >
             <SimpleLineIcon
               name={'home'}
-              size={onTablet ? 22.5 * factorRatio : 30 * factorRatio}
+              size={onTablet ? 22.5 * factor : 30 * factor}
               color={
                 this.props.currentPage == 'LESSONS'
                   ? this.state.primaryColor
@@ -141,7 +146,7 @@ class NavigationBar extends React.Component {
           >
             <EvilIcons
               name={'search'}
-              size={onTablet ? 30 * factorRatio : 40 * factorRatio}
+              size={onTablet ? 30 * factor : 40 * factor}
               color={
                 this.props.currentPage == 'SEARCH'
                   ? this.state.primaryColor
@@ -167,7 +172,7 @@ class NavigationBar extends React.Component {
           >
             <MaterialIcon
               name={'arrow-collapse-down'}
-              size={onTablet ? 22.5 * factorRatio : 30 * factorRatio}
+              size={onTablet ? 22.5 * factor : 30 * factor}
               color={
                 this.props.currentPage == 'DOWNLOAD'
                   ? this.state.primaryColor

@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Dimensions,
   TouchableOpacity
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
@@ -17,6 +18,10 @@ import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Loading from 'Pianote2/src/modals/Loading.js';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const messageDict = {
   1: 'A level 1 pianist is just beginning and might not yet have any skills yet. A level 1 pianist will learn how to navigate the keyboard, play a C scale, chords and begin to build dexterity and control in their hands.',
   2: 'A level 2 pianist can play a C scale hands together, a chord progression in the key of C and understands basic rhythm.',
@@ -268,8 +273,8 @@ export default class Filters extends React.Component {
               onPress={() => this.props.hideFilters()}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factorRatio}
-                height={(onTablet ? 17.5 : 25) * factorRatio}
+                width={(onTablet ? 17.5 : 25) * factor}
+                height={(onTablet ? 17.5 : 25) * factor}
                 fill={'white'}
               />
             </TouchableOpacity>
@@ -291,8 +296,8 @@ export default class Filters extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      paddingHorizontal: fullWidth * 0.035,
-                      marginBottom: 10 * factorRatio
+                      paddingHorizontal: width * 0.035,
+                      marginBottom: 10 * factor
                     }
                   ]}
                 >
@@ -300,8 +305,8 @@ export default class Filters extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        marginVertical: 10 * factorVertical,
-                        height: 10 * factorVertical,
+                        marginVertical: 10 * factor,
+                        height: 10 * factor,
                         width: `100%`
                       }
                     ]}
@@ -333,8 +338,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -358,8 +363,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -383,8 +388,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -408,8 +413,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -433,8 +438,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -458,8 +463,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -483,8 +488,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -508,8 +513,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -533,8 +538,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                       <TouchableOpacity
@@ -558,8 +563,8 @@ export default class Filters extends React.Component {
                             ? colors.pianoteRed
                             : colors.secondBackground,
                           borderWidth: 1.25,
-                          borderRadius: 5 * factorRatio,
-                          marginRight: 2.5 * factorHorizontal
+                          borderRadius: 5 * factor,
+                          marginRight: 2.5 * factor
                         }}
                       />
                     </View>
@@ -568,10 +573,10 @@ export default class Filters extends React.Component {
                 <Text
                   style={{
                     textAlign: 'center',
-                    fontSize: 24 * factorRatio,
+                    fontSize: 24 * factor,
                     fontFamily: 'OpenSans-Bold',
                     color: 'white',
-                    marginBottom: 10 * factorRatio
+                    marginBottom: 10 * factor
                   }}
                 >
                   {this.state.allLevels
@@ -581,11 +586,11 @@ export default class Filters extends React.Component {
                 <Text
                   style={{
                     textAlign: 'center',
-                    fontSize: 14 * factorRatio,
+                    fontSize: 14 * factor,
                     fontFamily: 'OpenSans-Regular',
                     color: 'white',
-                    paddingHorizontal: fullWidth * 0.1,
-                    marginBottom: 15 * factorRatio
+                    paddingHorizontal: width * 0.1,
+                    marginBottom: 15 * factor
                   }}
                 >
                   {this.state.level == null || this.state.allLevels
@@ -595,14 +600,14 @@ export default class Filters extends React.Component {
                 <View
                   key={'allLevels'}
                   style={{
-                    height: 60 * factorVertical,
-                    borderBottomWidth: 0.5 * factorRatio,
+                    height: 60 * factor,
+                    borderBottomWidth: 0.5 * factor,
                     borderBottomColor: colors.secondBackground
                   }}
                 >
                   <View
                     style={{
-                      height: 30 * factorVertical,
+                      height: 30 * factor,
                       justifyContent: 'space-around',
                       alignContent: 'space-around',
                       flexDirection: 'row'
@@ -617,11 +622,11 @@ export default class Filters extends React.Component {
                       style={[
                         styles.centerContent,
                         {
-                          height: 30 * factorRatio,
-                          width: fullWidth * 0.3,
-                          marginRight: fullWidth * 0.01,
-                          marginLeft: fullWidth * 0.01,
-                          borderWidth: 0.5 * factorRatio,
+                          height: 30 * factor,
+                          width: width * 0.3,
+                          marginRight: width * 0.01,
+                          marginLeft: width * 0.01,
+                          borderWidth: 0.5 * factor,
                           borderColor:
                             !this.state.selected && this.state.allLevels
                               ? 'transparent'
@@ -637,7 +642,7 @@ export default class Filters extends React.Component {
                       <Text
                         style={{
                           textAlign: 'center',
-                          fontSize: 12 * factorRatio,
+                          fontSize: 12 * factor,
                           fontFamily: 'OpenSans-ExtraBold',
                           color:
                             !this.state.selected && this.state.allLevels
@@ -662,15 +667,15 @@ export default class Filters extends React.Component {
 
                     <View
                       style={{
-                        minHeight: 160 * factorRatio,
+                        minHeight: 160 * factor,
                         width: '100%'
                       }}
                     >
                       <ScrollView
                         style={{
                           height: this.state.filterType
-                            ? 350 * factorVertical
-                            : 40 * factorRatio + 90 * factorVertical,
+                            ? 350 * factor
+                            : 40 * factor + 90 * factor,
                           width: '100%'
                         }}
                       >
@@ -680,7 +685,7 @@ export default class Filters extends React.Component {
                               return (
                                 <View
                                   style={{
-                                    height: 40 * factorRatio,
+                                    height: 40 * factor,
                                     width: '100%',
                                     flexDirection: 'row',
                                     padding: 5
@@ -703,9 +708,9 @@ export default class Filters extends React.Component {
                                         flex: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        marginLeft: 5 * factorRatio,
-                                        marginRight: 5 * factorRatio,
-                                        borderWidth: 1 * factorRatio,
+                                        marginLeft: 5 * factor,
+                                        marginRight: 5 * factor,
+                                        borderWidth: 1 * factor,
                                         borderColor: this.state.displayTopics.includes(
                                           this.state.filtersAvailable.topic[
                                             index
@@ -734,9 +739,9 @@ export default class Filters extends React.Component {
                                           )
                                             ? 'white'
                                             : colors.secondBackground,
-                                          fontSize: 0.035 * fullWidth,
-                                          marginLeft: 5 * factorHorizontal,
-                                          marginRight: 5 * factorHorizontal,
+                                          fontSize: 0.035 * width,
+                                          marginLeft: 5 * factor,
+                                          marginRight: 5 * factor,
                                           fontFamily: 'RobotoCondensed-Bold'
                                         }}
                                       >
@@ -770,9 +775,9 @@ export default class Filters extends React.Component {
                                         flex: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        marginLeft: 5 * factorRatio,
-                                        marginRight: 5 * factorRatio,
-                                        borderWidth: 1 * factorRatio,
+                                        marginLeft: 5 * factor,
+                                        marginRight: 5 * factor,
+                                        borderWidth: 1 * factor,
                                         borderColor: this.state.displayTopics.includes(
                                           this.state.filtersAvailable.topic[
                                             index + 1
@@ -801,9 +806,9 @@ export default class Filters extends React.Component {
                                           )
                                             ? 'white'
                                             : colors.secondBackground,
-                                          fontSize: 0.035 * fullWidth,
-                                          marginLeft: 5 * factorHorizontal,
-                                          marginRight: 5 * factorHorizontal,
+                                          fontSize: 0.035 * width,
+                                          marginLeft: 5 * factor,
+                                          marginRight: 5 * factor,
                                           fontFamily: 'RobotoCondensed-Bold'
                                         }}
                                       >
@@ -837,9 +842,9 @@ export default class Filters extends React.Component {
                                         flex: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        marginLeft: 5 * factorRatio,
-                                        marginRight: 5 * factorRatio,
-                                        borderWidth: 1 * factorRatio,
+                                        marginLeft: 5 * factor,
+                                        marginRight: 5 * factor,
+                                        borderWidth: 1 * factor,
                                         borderColor: this.state.displayTopics.includes(
                                           this.state.filtersAvailable.topic[
                                             index + 2
@@ -868,9 +873,9 @@ export default class Filters extends React.Component {
                                           )
                                             ? 'white'
                                             : colors.secondBackground,
-                                          fontSize: 0.035 * fullWidth,
-                                          marginLeft: 5 * factorHorizontal,
-                                          marginRight: 5 * factorHorizontal,
+                                          fontSize: 0.035 * width,
+                                          marginLeft: 5 * factor,
+                                          marginRight: 5 * factor,
                                           fontFamily: 'RobotoCondensed-Bold'
                                         }}
                                       >
@@ -903,15 +908,15 @@ export default class Filters extends React.Component {
                     </Text>
                     <View
                       style={{
-                        minHeight: 160 * factorRatio,
+                        minHeight: 160 * factor,
                         width: '100%'
                       }}
                     >
                       <ScrollView
                         style={{
                           height: !this.state.filterType
-                            ? 40 * factorRatio + 90 * factorVertical
-                            : 350 * factorVertical,
+                            ? 40 * factor + 90 * factor
+                            : 350 * factor,
                           width: '100%'
                         }}
                       >
@@ -921,7 +926,7 @@ export default class Filters extends React.Component {
                               return (
                                 <View
                                   style={{
-                                    height: 40 * factorRatio,
+                                    height: 40 * factor,
                                     width: '100%',
                                     flexDirection: 'row',
                                     padding: 5
@@ -941,9 +946,9 @@ export default class Filters extends React.Component {
                                         flex: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        marginLeft: 5 * factorRatio,
-                                        marginRight: 5 * factorRatio,
-                                        borderWidth: 1 * factorRatio,
+                                        marginLeft: 5 * factor,
+                                        marginRight: 5 * factor,
+                                        borderWidth: 1 * factor,
                                         borderColor: this.state.displayTopics.includes(
                                           this.state.filtersAvailable
                                             .content_type[index]
@@ -969,9 +974,9 @@ export default class Filters extends React.Component {
                                           )
                                             ? 'white'
                                             : colors.secondBackground,
-                                          fontSize: 0.035 * fullWidth,
-                                          marginLeft: 5 * factorHorizontal,
-                                          marginRight: 5 * factorHorizontal,
+                                          fontSize: 0.035 * width,
+                                          marginLeft: 5 * factor,
+                                          marginRight: 5 * factor,
                                           fontFamily: 'RobotoCondensed-Bold'
                                         }}
                                       >
@@ -1000,9 +1005,9 @@ export default class Filters extends React.Component {
                                         flex: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        marginLeft: 5 * factorRatio,
-                                        marginRight: 5 * factorRatio,
-                                        borderWidth: 1 * factorRatio,
+                                        marginLeft: 5 * factor,
+                                        marginRight: 5 * factor,
+                                        borderWidth: 1 * factor,
                                         borderColor: this.state.displayTopics.includes(
                                           this.state.filtersAvailable
                                             .content_type[index + 1]
@@ -1028,9 +1033,9 @@ export default class Filters extends React.Component {
                                           )
                                             ? 'white'
                                             : colors.secondBackground,
-                                          fontSize: 0.035 * fullWidth,
-                                          marginLeft: 5 * factorHorizontal,
-                                          marginRight: 5 * factorHorizontal,
+                                          fontSize: 0.035 * width,
+                                          marginLeft: 5 * factor,
+                                          marginRight: 5 * factor,
                                           fontFamily: 'RobotoCondensed-Bold'
                                         }}
                                       >
@@ -1059,9 +1064,9 @@ export default class Filters extends React.Component {
                                         flex: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        marginLeft: 5 * factorRatio,
-                                        marginRight: 5 * factorRatio,
-                                        borderWidth: 1 * factorRatio,
+                                        marginLeft: 5 * factor,
+                                        marginRight: 5 * factor,
+                                        borderWidth: 1 * factor,
                                         borderColor: this.state.displayTopics.includes(
                                           this.state.filtersAvailable
                                             .content_type[index + 2]
@@ -1087,9 +1092,9 @@ export default class Filters extends React.Component {
                                           )
                                             ? 'white'
                                             : colors.secondBackground,
-                                          fontSize: 0.035 * fullWidth,
-                                          marginLeft: 5 * factorHorizontal,
-                                          marginRight: 5 * factorHorizontal,
+                                          fontSize: 0.035 * width,
+                                          marginLeft: 5 * factor,
+                                          marginRight: 5 * factor,
                                           fontFamily: 'RobotoCondensed-Bold'
                                         }}
                                       >
@@ -1123,15 +1128,15 @@ export default class Filters extends React.Component {
                   </Text>
                   <View
                     style={{
-                      minHeight: 160 * factorRatio,
+                      minHeight: 160 * factor,
                       width: '100%'
                     }}
                   >
                     <ScrollView
                       style={{
                         height: !this.state.filterType
-                          ? 40 * factorRatio + 90 * factorVertical
-                          : 350 * factorVertical,
+                          ? 40 * factor + 90 * factor
+                          : 350 * factor,
                         width: '100%'
                       }}
                     >
@@ -1140,7 +1145,7 @@ export default class Filters extends React.Component {
                           return (
                             <View
                               style={{
-                                height: 40 * factorRatio,
+                                height: 40 * factor,
                                 width: '100%',
                                 flexDirection: 'row',
                                 padding: 5
@@ -1162,9 +1167,9 @@ export default class Filters extends React.Component {
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginLeft: 5 * factorRatio,
-                                    marginRight: 5 * factorRatio,
-                                    borderWidth: 1 * factorRatio,
+                                    marginLeft: 5 * factor,
+                                    marginRight: 5 * factor,
+                                    borderWidth: 1 * factor,
                                     borderColor: this.state.displayTopics.includes(
                                       this.state.filtersAvailable.style[index]
                                     )
@@ -1187,10 +1192,10 @@ export default class Filters extends React.Component {
                                       )
                                         ? 'white'
                                         : colors.secondBackground,
-                                      fontSize: 0.035 * fullWidth,
+                                      fontSize: 0.035 * width,
                                       fontFamily: 'RobotoCondensed-Bold',
-                                      marginLeft: 5 * factorHorizontal,
-                                      marginRight: 5 * factorHorizontal
+                                      marginLeft: 5 * factor,
+                                      marginRight: 5 * factor
                                     }}
                                   >
                                     {this.state.filtersAvailable.style[index]}
@@ -1217,9 +1222,9 @@ export default class Filters extends React.Component {
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginLeft: 5 * factorRatio,
-                                    marginRight: 5 * factorRatio,
-                                    borderWidth: 1 * factorRatio,
+                                    marginLeft: 5 * factor,
+                                    marginRight: 5 * factor,
+                                    borderWidth: 1 * factor,
                                     borderColor: this.state.displayTopics.includes(
                                       this.state.filtersAvailable.style[
                                         index + 1
@@ -1248,9 +1253,9 @@ export default class Filters extends React.Component {
                                       )
                                         ? 'white'
                                         : colors.secondBackground,
-                                      fontSize: 0.035 * fullWidth,
-                                      marginLeft: 5 * factorHorizontal,
-                                      marginRight: 5 * factorHorizontal,
+                                      fontSize: 0.035 * width,
+                                      marginLeft: 5 * factor,
+                                      marginRight: 5 * factor,
                                       fontFamily: 'RobotoCondensed-Bold'
                                     }}
                                   >
@@ -1282,9 +1287,9 @@ export default class Filters extends React.Component {
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginLeft: 5 * factorRatio,
-                                    marginRight: 5 * factorRatio,
-                                    borderWidth: 1 * factorRatio,
+                                    marginLeft: 5 * factor,
+                                    marginRight: 5 * factor,
+                                    borderWidth: 1 * factor,
                                     borderColor: this.state.displayTopics.includes(
                                       this.state.filtersAvailable.style[
                                         index + 2
@@ -1313,9 +1318,9 @@ export default class Filters extends React.Component {
                                       )
                                         ? 'white'
                                         : colors.secondBackground,
-                                      fontSize: 0.035 * fullWidth,
-                                      marginLeft: 5 * factorHorizontal,
-                                      marginRight: 5 * factorHorizontal,
+                                      fontSize: 0.035 * width,
+                                      marginLeft: 5 * factor,
+                                      marginRight: 5 * factor,
                                       fontFamily: 'RobotoCondensed-Bold'
                                     }}
                                   >
@@ -1343,18 +1348,18 @@ export default class Filters extends React.Component {
               <View key={'artists'}>
                 <View key={'artists'}>
                   <Text style={styles.filterHeader}>CHOOSE YOUR ARTISTS</Text>
-                  <View style={{ height: 5 * factorVertical }} />
+                  <View style={{ height: 5 * factor }} />
                   <View
                     style={{
-                      minHeight: 160 * factorRatio,
+                      minHeight: 160 * factor,
                       width: '100%'
                     }}
                   >
                     <ScrollView
                       style={{
                         height: !this.state.filterType
-                          ? 40 * factorRatio + 90 * factorVertical
-                          : 350 * factorVertical,
+                          ? 40 * factor + 90 * factor
+                          : 350 * factor,
                         width: '100%'
                       }}
                     >
@@ -1363,7 +1368,7 @@ export default class Filters extends React.Component {
                           return (
                             <View
                               style={{
-                                height: 40 * factorRatio,
+                                height: 40 * factor,
                                 width: '100%',
                                 flexDirection: 'row',
                                 padding: 5
@@ -1385,9 +1390,9 @@ export default class Filters extends React.Component {
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginLeft: 5 * factorRatio,
-                                    marginRight: 5 * factorRatio,
-                                    borderWidth: 1 * factorRatio,
+                                    marginLeft: 5 * factor,
+                                    marginRight: 5 * factor,
+                                    borderWidth: 1 * factor,
                                     borderColor: this.state.displayTopics.includes(
                                       this.state.filtersAvailable.artist[index]
                                     )
@@ -1412,10 +1417,10 @@ export default class Filters extends React.Component {
                                       )
                                         ? 'white'
                                         : colors.secondBackground,
-                                      fontSize: 0.035 * fullWidth,
+                                      fontSize: 0.035 * width,
                                       fontFamily: 'RobotoCondensed-Bold',
-                                      marginLeft: 5 * factorHorizontal,
-                                      marginRight: 5 * factorHorizontal
+                                      marginLeft: 5 * factor,
+                                      marginRight: 5 * factor
                                     }}
                                   >
                                     {this.state.filtersAvailable.artist[index]}
@@ -1442,9 +1447,9 @@ export default class Filters extends React.Component {
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginLeft: 5 * factorRatio,
-                                    marginRight: 5 * factorRatio,
-                                    borderWidth: 1 * factorRatio,
+                                    marginLeft: 5 * factor,
+                                    marginRight: 5 * factor,
+                                    borderWidth: 1 * factor,
                                     borderColor: this.state.displayTopics.includes(
                                       this.state.filtersAvailable.artist[
                                         index + 1
@@ -1473,9 +1478,9 @@ export default class Filters extends React.Component {
                                       )
                                         ? 'white'
                                         : colors.secondBackground,
-                                      fontSize: 0.035 * fullWidth,
-                                      marginLeft: 5 * factorHorizontal,
-                                      marginRight: 5 * factorHorizontal,
+                                      fontSize: 0.035 * width,
+                                      marginLeft: 5 * factor,
+                                      marginRight: 5 * factor,
                                       fontFamily: 'RobotoCondensed-Bold'
                                     }}
                                   >
@@ -1507,9 +1512,9 @@ export default class Filters extends React.Component {
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginLeft: 5 * factorRatio,
-                                    marginRight: 5 * factorRatio,
-                                    borderWidth: 1 * factorRatio,
+                                    marginLeft: 5 * factor,
+                                    marginRight: 5 * factor,
+                                    borderWidth: 1 * factor,
                                     borderColor: this.state.displayTopics.includes(
                                       this.state.filtersAvailable.artist[
                                         index + 2
@@ -1538,9 +1543,9 @@ export default class Filters extends React.Component {
                                       )
                                         ? 'white'
                                         : colors.secondBackground,
-                                      fontSize: 0.035 * fullWidth,
-                                      marginLeft: 5 * factorHorizontal,
-                                      marginRight: 5 * factorHorizontal,
+                                      fontSize: 0.035 * width,
+                                      marginLeft: 5 * factor,
+                                      marginRight: 5 * factor,
                                       fontFamily: 'RobotoCondensed-Bold'
                                     }}
                                   >
@@ -1573,10 +1578,10 @@ export default class Filters extends React.Component {
                   });
                 }}
                 style={{
-                  height: fullHeight * 0.1,
+                  height: height * 0.1,
                   flexDirection: 'row',
                   borderTopColor: colors.secondBackground,
-                  borderTopWidth: 0.5 * factorRatio,
+                  borderTopWidth: 0.5 * factor,
                   borderBottomColor: colors.secondBackground,
                   borderBottomWidth: !this.state.openProgress ? 0.25 : 0
                 }}
@@ -1588,7 +1593,7 @@ export default class Filters extends React.Component {
                 <View
                   style={[
                     styles.centerContent,
-                    { paddingHorizontal: 10 * factorRatio }
+                    { paddingHorizontal: 10 * factor }
                   ]}
                 >
                   <EntypoIcon
@@ -1597,7 +1602,7 @@ export default class Filters extends React.Component {
                         ? 'chevron-thin-up'
                         : 'chevron-thin-down'
                     }
-                    size={25 * factorRatio}
+                    size={25 * factor}
                     color={colors.secondBackground}
                   />
                 </View>
@@ -1608,12 +1613,12 @@ export default class Filters extends React.Component {
                 key={'progressLevels'}
                 style={{
                   borderBottomColor: colors.secondBackground,
-                  borderBottomWidth: 0.5 * factorRatio
+                  borderBottomWidth: 0.5 * factor
                 }}
               >
                 <View
                   style={{
-                    height: 30 * factorVertical,
+                    height: 30 * factor,
                     justifyContent: 'space-around',
                     alignContent: 'space-around',
                     flexDirection: 'row'
@@ -1627,11 +1632,11 @@ export default class Filters extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        height: 30 * factorRatio,
+                        height: 30 * factor,
                         width: '30%',
-                        marginRight: fullWidth * 0.01,
-                        marginLeft: fullWidth * 0.01,
-                        borderWidth: 1 * factorRatio,
+                        marginRight: width * 0.01,
+                        marginLeft: width * 0.01,
+                        borderWidth: 1 * factor,
                         borderColor: this.state.progress.includes('all')
                           ? colors.pianoteRed
                           : colors.secondBackground,
@@ -1646,7 +1651,7 @@ export default class Filters extends React.Component {
                       style={{
                         textAlign: 'center',
                         fontWeight: 'bold',
-                        fontSize: 12 * factorRatio,
+                        fontSize: 12 * factor,
                         fontFamily: 'OpenSans-Regular',
                         color: this.state.progress.includes('all')
                           ? 'white'
@@ -1663,11 +1668,11 @@ export default class Filters extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        height: 30 * factorRatio,
+                        height: 30 * factor,
                         width: '30%',
-                        marginRight: fullWidth * 0.01,
-                        marginLeft: fullWidth * 0.01,
-                        borderWidth: 1 * factorRatio,
+                        marginRight: width * 0.01,
+                        marginLeft: width * 0.01,
+                        borderWidth: 1 * factor,
                         borderColor: this.state.progress.includes('started')
                           ? colors.pianoteRed
                           : colors.secondBackground,
@@ -1683,7 +1688,7 @@ export default class Filters extends React.Component {
                       style={{
                         textAlign: 'center',
                         fontWeight: 'bold',
-                        fontSize: 12 * factorRatio,
+                        fontSize: 12 * factor,
                         fontFamily: 'OpenSans-Regular',
                         color: this.state.progress.includes('started')
                           ? 'white'
@@ -1700,11 +1705,11 @@ export default class Filters extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        height: 30 * factorRatio,
+                        height: 30 * factor,
                         width: '30%',
-                        marginRight: fullWidth * 0.01,
-                        marginLeft: fullWidth * 0.01,
-                        borderWidth: 1 * factorRatio,
+                        marginRight: width * 0.01,
+                        marginLeft: width * 0.01,
+                        borderWidth: 1 * factor,
                         borderColor: this.state.progress.includes('completed')
                           ? colors.pianoteRed
                           : colors.secondBackground,
@@ -1722,7 +1727,7 @@ export default class Filters extends React.Component {
                       style={{
                         textAlign: 'center',
                         fontWeight: 'bold',
-                        fontSize: 12 * factorRatio,
+                        fontSize: 12 * factor,
                         fontFamily: 'OpenSans-Regular',
                         color: this.state.progress.includes('completed')
                           ? 'white'
@@ -1734,7 +1739,7 @@ export default class Filters extends React.Component {
                   </TouchableOpacity>
                   <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ height: 40 * factorVertical }} />
+                <View style={{ height: 40 * factor }} />
               </View>
             )}
             {!this.state.filterType && this.state.type !== 'Songs' && (
@@ -1746,13 +1751,13 @@ export default class Filters extends React.Component {
                   });
                 }}
                 style={{
-                  height: fullHeight * 0.1,
+                  height: height * 0.1,
                   flexDirection: 'row',
                   borderTopColor: colors.secondBackground,
                   borderBottomColor: colors.secondBackground,
                   borderBottomWidth: this.state.openInstructors
                     ? 0
-                    : 0.5 * factorRatio
+                    : 0.5 * factor
                 }}
               >
                 <View style={styles.centerContent}>
@@ -1764,7 +1769,7 @@ export default class Filters extends React.Component {
                 <View
                   style={[
                     styles.centerContent,
-                    { paddingHorizontal: 10 * factorRatio }
+                    { paddingHorizontal: 10 * factor }
                   ]}
                 >
                   <EntypoIcon
@@ -1773,7 +1778,7 @@ export default class Filters extends React.Component {
                         ? 'chevron-thin-up'
                         : 'chevron-thin-down'
                     }
-                    size={25 * factorRatio}
+                    size={25 * factor}
                     color={colors.secondBackground}
                   />
                 </View>
@@ -1786,7 +1791,7 @@ export default class Filters extends React.Component {
                   key={'instructors'}
                   style={{
                     borderBottomColor: colors.secondBackground,
-                    borderBottomWidth: 0.5 * factorRatio
+                    borderBottomWidth: 0.5 * factor
                   }}
                 >
                   <ScrollView>
@@ -1800,7 +1805,7 @@ export default class Filters extends React.Component {
                                 justifyContent: 'space-around',
                                 alignContent: 'space-around',
                                 alignSelf: 'stretch',
-                                marginBottom: 20 * factorVertical
+                                marginBottom: 20 * factor
                               }}
                             >
                               {typeof this.state.filtersAvailable.instructor[
@@ -1809,7 +1814,7 @@ export default class Filters extends React.Component {
                                 <View
                                   key={'circle7'}
                                   style={{
-                                    width: 70 * factorRatio
+                                    width: 70 * factor
                                   }}
                                 >
                                   <TouchableOpacity
@@ -1826,11 +1831,11 @@ export default class Filters extends React.Component {
                                           index
                                         ].id
                                       )
-                                        ? 2 * factorRatio
-                                        : 0 * factorRatio,
+                                        ? 2 * factor
+                                        : 0 * factor,
                                       borderColor: '#fb1b2f',
-                                      height: 70 * factorRatio,
-                                      width: 70 * factorRatio,
+                                      height: 70 * factor,
+                                      width: 70 * factor,
                                       borderRadius: 300,
                                       backgroundColor: 'white'
                                     }}
@@ -1857,8 +1862,8 @@ export default class Filters extends React.Component {
                                     numberOfLines={1}
                                     style={{
                                       fontFamily: 'OpenSans-Regular',
-                                      marginTop: 5 * factorRatio,
-                                      fontSize: 11 * factorRatio,
+                                      marginTop: 5 * factor,
+                                      fontSize: 11 * factor,
                                       textAlign: 'center',
                                       fontWeight: 'bold',
                                       color: this.state.kenny
@@ -1877,7 +1882,7 @@ export default class Filters extends React.Component {
                               {typeof this.state.filtersAvailable.instructor[
                                 index
                               ]?.id !== 'number' && (
-                                <View style={{ width: 70 * factorRatio }} />
+                                <View style={{ width: 70 * factor }} />
                               )}
 
                               {typeof this.state.filtersAvailable.instructor[
@@ -1886,7 +1891,7 @@ export default class Filters extends React.Component {
                                 <View
                                   key={'circle1'}
                                   style={{
-                                    width: 70 * factorRatio
+                                    width: 70 * factor
                                   }}
                                 >
                                   <TouchableOpacity
@@ -1903,11 +1908,11 @@ export default class Filters extends React.Component {
                                           index + 1
                                         ].id
                                       )
-                                        ? 2 * factorRatio
-                                        : 0 * factorRatio,
+                                        ? 2 * factor
+                                        : 0 * factor,
                                       borderColor: '#fb1b2f',
-                                      height: 70 * factorRatio,
-                                      width: 70 * factorRatio,
+                                      height: 70 * factor,
+                                      width: 70 * factor,
                                       borderRadius: 300,
                                       backgroundColor: 'white',
                                       zIndex: 10
@@ -1935,8 +1940,8 @@ export default class Filters extends React.Component {
                                     numberOfLines={1}
                                     style={{
                                       fontFamily: 'OpenSans-Regular',
-                                      marginTop: 5 * factorRatio,
-                                      fontSize: 10 * factorRatio,
+                                      marginTop: 5 * factor,
+                                      fontSize: 10 * factor,
                                       textAlign: 'center',
                                       fontWeight: 'bold',
                                       color: this.state.lisa
@@ -1955,7 +1960,7 @@ export default class Filters extends React.Component {
                               {typeof this.state.filtersAvailable.instructor[
                                 index + 1
                               ]?.id !== 'number' && (
-                                <View style={{ width: 70 * factorRatio }} />
+                                <View style={{ width: 70 * factor }} />
                               )}
 
                               {typeof this.state.filtersAvailable.instructor[
@@ -1964,7 +1969,7 @@ export default class Filters extends React.Component {
                                 <View
                                   key={'circle2'}
                                   style={{
-                                    width: 70 * factorRatio
+                                    width: 70 * factor
                                   }}
                                 >
                                   <TouchableOpacity
@@ -1981,11 +1986,11 @@ export default class Filters extends React.Component {
                                           index + 2
                                         ].id
                                       )
-                                        ? 2 * factorRatio
-                                        : 0 * factorRatio,
+                                        ? 2 * factor
+                                        : 0 * factor,
                                       borderColor: '#fb1b2f',
-                                      height: 70 * factorRatio,
-                                      width: 70 * factorRatio,
+                                      height: 70 * factor,
+                                      width: 70 * factor,
                                       borderRadius: 300,
                                       backgroundColor: 'white'
                                     }}
@@ -2012,8 +2017,8 @@ export default class Filters extends React.Component {
                                     numberOfLines={1}
                                     style={{
                                       fontFamily: 'OpenSans-Regular',
-                                      marginTop: 5 * factorRatio,
-                                      fontSize: 10 * factorRatio,
+                                      marginTop: 5 * factor,
+                                      fontSize: 10 * factor,
                                       textAlign: 'center',
                                       fontWeight: 'bold',
                                       color: this.state.cassi
@@ -2032,7 +2037,7 @@ export default class Filters extends React.Component {
                               {typeof this.state.filtersAvailable.instructor[
                                 index + 2
                               ]?.id !== 'number' && (
-                                <View style={{ width: 70 * factorRatio }} />
+                                <View style={{ width: 70 * factor }} />
                               )}
 
                               {typeof this.state.filtersAvailable.instructor[
@@ -2041,7 +2046,7 @@ export default class Filters extends React.Component {
                                 <View
                                   key={'circle3'}
                                   style={{
-                                    width: 70 * factorRatio
+                                    width: 70 * factor
                                   }}
                                 >
                                   <TouchableOpacity
@@ -2058,11 +2063,11 @@ export default class Filters extends React.Component {
                                           index + 3
                                         ].id
                                       )
-                                        ? 2 * factorRatio
-                                        : 0 * factorRatio,
+                                        ? 2 * factor
+                                        : 0 * factor,
                                       borderColor: '#fb1b2f',
-                                      height: 70 * factorRatio,
-                                      width: 70 * factorRatio,
+                                      height: 70 * factor,
+                                      width: 70 * factor,
                                       borderRadius: 300,
                                       backgroundColor: 'white'
                                     }}
@@ -2089,8 +2094,8 @@ export default class Filters extends React.Component {
                                     numberOfLines={1}
                                     style={{
                                       fontFamily: 'OpenSans-Regular',
-                                      marginTop: 5 * factorRatio,
-                                      fontSize: 10 * factorRatio,
+                                      marginTop: 5 * factor,
+                                      fontSize: 10 * factor,
                                       textAlign: 'center',
                                       fontWeight: 'bold',
                                       color: this.state.jordan
@@ -2109,7 +2114,7 @@ export default class Filters extends React.Component {
                               {typeof this.state.filtersAvailable.instructor[
                                 index + 3
                               ]?.id !== 'number' && (
-                                <View style={{ width: 70 * factorRatio }} />
+                                <View style={{ width: 70 * factor }} />
                               )}
                             </View>
                           );
@@ -2119,7 +2124,7 @@ export default class Filters extends React.Component {
                   </ScrollView>
                 </View>
               )}
-            <View style={{ height: 50 * factorVertical }} />
+            <View style={{ height: 50 * factor }} />
           </ScrollView>
           <View
             key={'doneApply'}
@@ -2127,7 +2132,7 @@ export default class Filters extends React.Component {
               posistion: 'absolute',
               bottom: 0,
               backgroundColor: 'orange',
-              height: 75 * factorVertical,
+              height: 75 * factor,
               backgroundColor: colors.mainBackground,
               zIndex: 3
             }}
@@ -2157,8 +2162,8 @@ export default class Filters extends React.Component {
                       styles.centerContent,
                       {
                         height: onTablet
-                          ? fullHeight * 0.07
-                          : fullHeight * 0.05,
+                          ? height * 0.07
+                          : height * 0.05,
                         width: '100%',
                         backgroundColor: colors.pianoteRed,
                         borderRadius: 200
@@ -2169,7 +2174,7 @@ export default class Filters extends React.Component {
                       style={{
                         color: 'white',
                         fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 14 * factorRatio
+                        fontSize: 14 * factor
                       }}
                     >
                       DONE & APPLY
@@ -2193,11 +2198,11 @@ export default class Filters extends React.Component {
                       styles.centerContent,
                       {
                         height: onTablet
-                          ? fullHeight * 0.07
-                          : fullHeight * 0.05,
+                          ? height * 0.07
+                          : height * 0.05,
                         width: '100%',
                         borderColor: 'white',
-                        borderWidth: 1 * factorRatio,
+                        borderWidth: 1 * factor,
                         borderRadius: 200
                       }
                     ]}
@@ -2206,7 +2211,7 @@ export default class Filters extends React.Component {
                       style={{
                         color: 'white',
                         fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 14 * factorRatio
+                        fontSize: 14 * factor
                       }}
                     >
                       RESET
@@ -2217,7 +2222,7 @@ export default class Filters extends React.Component {
               </View>
               <View style={{ flex: 1 }} />
             </View>
-            <View style={{ height: isNotch ? fullHeight * 0.035 : 0 }} />
+            <View style={{ height: isNotch ? height * 0.035 : 0 }} />
           </View>
           <Modal
             isVisible={this.state.showLoading}

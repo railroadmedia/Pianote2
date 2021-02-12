@@ -2,9 +2,14 @@
  * StartIcon
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/AntDesign';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 class MoreInfoIcon extends React.Component {
   static navigationOptions = { header: null };
@@ -20,7 +25,7 @@ class MoreInfoIcon extends React.Component {
           styles.centerContent,
           {
             flex: 1,
-            borderRadius: fullWidth * 0.1,
+            borderRadius: width * 0.1,
             backgroundColor: 'transparent',
             borderColor: 'white',
             borderWidth: 2
@@ -39,7 +44,7 @@ class MoreInfoIcon extends React.Component {
         >
           <Icon
             name={'arrowright'}
-            size={(onTablet ? 17.5 : 23) * factorRatio}
+            size={(onTablet ? 17.5 : 23) * factor}
             color={'white'}
           />
           <View style={{ flex: 0.075 }} />
@@ -49,8 +54,8 @@ class MoreInfoIcon extends React.Component {
               {
                 fontSize:
                   this.props.isMethod && onTablet
-                    ? 16 * factorRatio
-                    : 14 * factorRatio
+                    ? 16 * factor
+                    : 14 * factor
               }
             ]}
           >

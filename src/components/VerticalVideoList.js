@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
+  Dimensions,
   Image
 } from 'react-native';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
@@ -26,6 +27,11 @@ import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import { NetworkContext } from '../context/NetworkProvider';
 import AddToCalendar from '../modals/AddToCalendar';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 const sortDict = {
   newest: 'NEWEST',
@@ -94,7 +100,7 @@ class VerticalVideoList extends React.Component {
 
   showSpinner = () => {
     return (
-      <View style={[styles.centerContent, { marginTop: 15 * factorRatio }]}>
+      <View style={[styles.centerContent, { marginTop: 15 * factor }]}>
         <ActivityIndicator
           size={onTablet ? 'large' : 'small'}
           animating={true}
@@ -371,8 +377,8 @@ class VerticalVideoList extends React.Component {
           <View
             style={{
               flex: 1,
-              paddingLeft: 10 * factorHorizontal,
-              paddingVertical: (onTablet ? 5 : 7.5) * factorRatio,
+              paddingLeft: 10 * factor,
+              paddingVertical: (onTablet ? 5 : 7.5) * factor,
               flexDirection: 'row',
               borderTopColor: '#ececec'
             }}
@@ -385,7 +391,7 @@ class VerticalVideoList extends React.Component {
                 style={{
                   width: this.props.imageWidth,
                   aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                  borderRadius: 5 * factorRatio
+                  borderRadius: 5 * factor
                 }}
               >
                 {row.isCompleted && (
@@ -396,7 +402,7 @@ class VerticalVideoList extends React.Component {
                       left: 0,
                       width: '100%',
                       aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                      borderRadius: 5 * factorRatio,
+                      borderRadius: 5 * factor,
                       zIndex: 1,
                       opacity: 0.2,
                       backgroundColor: colors.pianoteRed
@@ -412,20 +418,20 @@ class VerticalVideoList extends React.Component {
                       width: '100%',
                       aspectRatio: this.props.isSquare ? 1 : 16 / 9,
                       zIndex: 20,
-                      paddingBottom: 10 * factorVertical
+                      paddingBottom: 10 * factor
                     }
                   ]}
                 >
                   {row.isStarted ? (
                     <Progress
-                      height={(onTablet ? 32.5 : 40) * factorRatio}
-                      width={(onTablet ? 32.5 : 40) * factorRatio}
+                      height={(onTablet ? 32.5 : 40) * factor}
+                      width={(onTablet ? 32.5 : 40) * factor}
                       fill={'white'}
                     />
                   ) : row.isCompleted ? (
                     <ApprovedTeacher
-                      height={(onTablet ? 42.5 : 50) * factorRatio}
-                      width={(onTablet ? 42.5 : 50) * factorRatio}
+                      height={(onTablet ? 42.5 : 50) * factor}
+                      width={(onTablet ? 42.5 : 50) * factor}
                       fill={'white'}
                     />
                   ) : null}
@@ -437,8 +443,8 @@ class VerticalVideoList extends React.Component {
                       style={[
                         styles.centerContent,
                         {
-                          top: -3.5 * factorVertical,
-                          height: 5 * factorVertical,
+                          top: -3.5 * factor,
+                          height: 5 * factor,
                           left: 0,
                           zIndex: 9,
                           width: '100%',
@@ -460,10 +466,10 @@ class VerticalVideoList extends React.Component {
                         styles.centerContent,
                         {
                           position: 'absolute',
-                          top: -7.5 * factorVertical,
+                          top: -7.5 * factor,
                           left: 0,
                           width: '100%',
-                          height: 7.5 * factorVertical,
+                          height: 7.5 * factor,
                           zIndex: 8
                         }
                       ]}
@@ -496,7 +502,7 @@ class VerticalVideoList extends React.Component {
                       color={'red'}
                       opacity={1}
                       height={'100%'}
-                      borderRadius={5 * factorRatio}
+                      borderRadius={5 * factor}
                     />
                     <View style={{ flex: 1.5 }} />
                     <View
@@ -511,19 +517,19 @@ class VerticalVideoList extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 21 * factorRatio
+                        fontSize: 21 * factor
                       }}
                     >
                       LEVEL {index + 1}
                     </Text>
-                    <View style={{ height: 5 * factorVertical }} />
+                    <View style={{ height: 5 * factor }} />
                   </View>
                 )}
                 {Platform.OS === 'ios' ? (
                   <FastImage
                     style={{
                       flex: 1,
-                      borderRadius: 5 * factorRatio
+                      borderRadius: 5 * factor
                     }}
                     source={{
                       uri: this.getImageUrl(row.thumbnail, row.publishedOn)
@@ -534,7 +540,7 @@ class VerticalVideoList extends React.Component {
                   <Image
                     style={{
                       flex: 1,
-                      borderRadius: 5 * factorRatio
+                      borderRadius: 5 * factor
                     }}
                     source={{
                       uri: this.getImageUrl(row.thumbnail, row.publishedOn)
@@ -544,13 +550,13 @@ class VerticalVideoList extends React.Component {
                 )}
               </View>
             </View>
-            <View style={{ width: 10 * factorHorizontal }} />
+            <View style={{ width: 10 * factor }} />
             <View style={{ flex: 1.5, justifyContent: 'center' }}>
               {this.props.isMethodLevel && (
                 <Text
                   style={{
-                    fontSize: 10 * factorRatio,
-                    marginBottom: 1 * factorRatio,
+                    fontSize: 10 * factor,
+                    marginBottom: 1 * factor,
                     textAlign: 'left',
                     fontWeight: 'bold',
                     fontFamily: 'OpenSans-Regular',
@@ -563,7 +569,7 @@ class VerticalVideoList extends React.Component {
               <Text
                 numberOfLines={2}
                 style={{
-                  fontSize: (onTablet ? 12 : 16) * factorRatio,
+                  fontSize: (onTablet ? 12 : 16) * factor,
                   textAlign: 'left',
                   paddingRight: 3,
                   fontWeight: 'bold',
@@ -577,8 +583,8 @@ class VerticalVideoList extends React.Component {
                 <Text
                   numberOfLines={2}
                   style={{
-                    marginTop: 2 * factorRatio,
-                    fontSize: (onTablet ? 10 : 12) * factorRatio,
+                    marginTop: 2 * factor,
+                    fontSize: (onTablet ? 10 : 12) * factor,
                     color: this.props.isMethod
                       ? colors.pianoteGrey
                       : colors.secondBackground,
@@ -590,13 +596,13 @@ class VerticalVideoList extends React.Component {
                   {row.description}
                 </Text>
               )}
-              <View style={{ height: 2 * factorVertical }} />
+              <View style={{ height: 2 * factor }} />
               <View style={{ flexDirection: 'row' }}>
                 {this.props.showLength && (
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: 12 * factorRatio,
+                      fontSize: 12 * factor,
                       color:
                         this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
@@ -613,7 +619,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={1}
                     style={{
-                      fontSize: (onTablet ? 10 : 12) * factorRatio,
+                      fontSize: (onTablet ? 10 : 12) * factor,
                       color:
                         this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
@@ -629,7 +635,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: (onTablet ? 10 : 12) * factorRatio,
+                      fontSize: (onTablet ? 10 : 12) * factor,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -644,7 +650,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: (onTablet ? 10.5 : 12) * factorRatio,
+                      fontSize: (onTablet ? 10.5 : 12) * factor,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -658,12 +664,12 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
             {!this.props.isMethodLevel && (
-              <View style={{ paddingRight: 15 * factorRatio }}>
+              <View style={{ paddingRight: 15 * factor }}>
                 <View style={[styles.centerContent, { flex: 1 }]}>
                   {new Date(row.publishedOn) > new Date() ? (
                     <TouchableOpacity
                       style={{
-                        paddingTop: 5 * factorVertical
+                        paddingTop: 5 * factor
                       }}
                       onPress={() => {
                         this.addToCalendarLessonTitle = row.title;
@@ -672,7 +678,7 @@ class VerticalVideoList extends React.Component {
                       }}
                     >
                       <FontIcon
-                        size={onTablet ? 20 * factorRatio : 27.5 * factorRatio}
+                        size={onTablet ? 20 * factor : 27.5 * factor}
                         name={'calendar-plus'}
                         color={
                           this.props.isMethod && !this.props.methodLevel
@@ -684,13 +690,13 @@ class VerticalVideoList extends React.Component {
                   ) : !row.isAddedToList ? (
                     <TouchableOpacity
                       style={{
-                        paddingTop: 5 * factorVertical
+                        paddingTop: 5 * factor
                       }}
                       onPress={() => this.addToMyList(row.id)}
                     >
                       <AntIcon
                         name={'plus'}
-                        size={(onTablet ? 25 : 30) * factorRatio}
+                        size={(onTablet ? 25 : 30) * factor}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
@@ -701,13 +707,13 @@ class VerticalVideoList extends React.Component {
                   ) : row.isAddedToList ? (
                     <TouchableOpacity
                       style={{
-                        paddingTop: 5 * factorVertical
+                        paddingTop: 5 * factor
                       }}
                       onPress={() => this.removeFromMyList(row.id)}
                     >
                       <AntIcon
                         name={'close'}
-                        size={onTablet ? 25 * factorRatio : 30 * factorRatio}
+                        size={onTablet ? 25 * factor : 30 * factor}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
@@ -729,14 +735,14 @@ class VerticalVideoList extends React.Component {
     return (
       <View>
         <View>
-          <View style={{ height: 5 * factorVertical }} />
+          <View style={{ height: 5 * factor }} />
           {this.props.showFilter && (
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ paddingLeft: 10 * factorHorizontal }}>
+              <View style={{ paddingLeft: 10 * factor }}>
                 {this.props.showLargeTitle ? (
                   <Text
                     style={{
-                      fontSize: 30 * factorRatio,
+                      fontSize: 30 * factor,
                       color: 'white',
                       fontFamily: 'OpenSans-ExtraBold'
                     }}
@@ -748,8 +754,8 @@ class VerticalVideoList extends React.Component {
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: onTablet ? 26 : 18 * factorRatio,
-                        marginBottom: 5 * factorVertical,
+                        fontSize: onTablet ? 26 : 18 * factor,
+                        marginBottom: 5 * factor,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',
                         color: this.props.isMethod
@@ -767,7 +773,7 @@ class VerticalVideoList extends React.Component {
               {!this.props.showTitleOnly && (
                 <View
                   style={{
-                    paddingRight: 15 * factorRatio,
+                    paddingRight: 15 * factor,
                     flexDirection: 'row'
                   }}
                 >
@@ -777,7 +783,7 @@ class VerticalVideoList extends React.Component {
                         styles.centerContent,
                         {
                           flexDirection: 'row',
-                          marginRight: 7.5 * factorHorizontal
+                          marginRight: 7.5 * factor
                         }
                       ]}
                       onPress={() => {
@@ -790,16 +796,16 @@ class VerticalVideoList extends React.Component {
                       <Text
                         style={{
                           color: colors.pianoteRed,
-                          fontSize: onTablet ? 20 : 14.5 * factorRatio,
+                          fontSize: onTablet ? 20 : 14.5 * factor,
                           fontFamily: 'OpenSans-Regular',
-                          marginRight: 3.5 * factorHorizontal
+                          marginRight: 3.5 * factor
                         }}
                       >
                         {sortDict[this.props.currentSort]}
                       </Text>
                       <View>
                         <FontIcon
-                          size={14 * factorRatio}
+                          size={14 * factor}
                           name={'sort-amount-down'}
                           color={colors.pianoteRed}
                         />
@@ -817,11 +823,11 @@ class VerticalVideoList extends React.Component {
                         style={[
                           styles.centerContent,
                           {
-                            borderWidth: 1.25 * factorRatio,
+                            borderWidth: 1.25 * factor,
                             borderColor: colors.pianoteRed,
-                            height: (onTablet ? 22.5 : 30) * factorRatio,
-                            width: (onTablet ? 22.5 : 30) * factorRatio,
-                            borderRadius: 30 * factorRatio
+                            height: (onTablet ? 22.5 : 30) * factor,
+                            width: (onTablet ? 22.5 : 30) * factor,
+                            borderRadius: 30 * factor
                           }
                         ]}
                       >
@@ -832,7 +838,7 @@ class VerticalVideoList extends React.Component {
                           }}
                         >
                           <IonIcon
-                            size={(onTablet ? 11.5 : 14) * factorRatio}
+                            size={(onTablet ? 11.5 : 14) * factor}
                             name={'md-options'}
                             color={colors.pianoteRed}
                           />
@@ -856,13 +862,13 @@ class VerticalVideoList extends React.Component {
                   <View
                     style={{
                       paddingHorizontal: 15,
-                      paddingTop: 5 * factorVertical
+                      paddingTop: 5 * factor
                     }}
                   >
                     <Text
                       style={{
-                        fontSize: 12 * factorRatio,
-                        marginBottom: 5 * factorVertical,
+                        fontSize: 12 * factor,
+                        marginBottom: 5 * factor,
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Regular',
                         color: this.props.isMethod
@@ -872,8 +878,8 @@ class VerticalVideoList extends React.Component {
                     >
                       <Text
                         style={{
-                          fontSize: 12 * factorRatio,
-                          marginBottom: 5 * factorVertical,
+                          fontSize: 12 * factor,
+                          marginBottom: 5 * factor,
                           textAlign: 'left',
                           fontFamily: 'OpenSans-Bold',
                           color: this.props.isMethod
@@ -894,13 +900,13 @@ class VerticalVideoList extends React.Component {
             !this.state.isLoading && (
               <View
                 style={{
-                  marginTop: 5 * factorVertical,
-                  paddingHorizontal: 10 * factorHorizontal
+                  marginTop: 5 * factor,
+                  paddingHorizontal: 10 * factor
                 }}
               >
                 <Text
                   style={{
-                    fontSize: (onTablet ? 12 : 14) * factorRatio,
+                    fontSize: (onTablet ? 12 : 14) * factor,
                     color: this.props.isMethod
                       ? 'white'
                       : colors.secondBackground,
@@ -917,7 +923,7 @@ class VerticalVideoList extends React.Component {
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
             <View
-              style={[styles.centerContent, { marginTop: 15 * factorRatio }]}
+              style={[styles.centerContent, { marginTop: 15 * factor }]}
             >
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}

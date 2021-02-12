@@ -27,6 +27,10 @@ import { NetworkContext } from '../context/NetworkProvider';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 
 let greaterWDim;
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 class HorizontalVideoList extends React.Component {
   static navigationOptions = { header: null };
@@ -256,8 +260,8 @@ class HorizontalVideoList extends React.Component {
                     style={[styles.centerContent, localStyles.progressItem]}
                   >
                     <Progress
-                      height={50}
-                      width={50 * factorRatio}
+                      height={50* factor}
+                      width={50 * factor}
                       fill={'white'}
                     />
                   </View>
@@ -323,8 +327,8 @@ class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: (onTablet ? 9.5 : 12) * factorRatio,
-                        marginTop: 1.5 * factorVertical
+                        fontSize: (onTablet ? 9.5 : 12) * factor,
+                        marginTop: 1.5 
                       }}
                     >
                       {this.props.showType && this.changeType(item.type)}
@@ -342,7 +346,7 @@ class HorizontalVideoList extends React.Component {
                     }}
                   >
                     <FontIcon
-                      size={onTablet ? 12.5 * factorRatio : 27.5 * factorRatio}
+                      size={onTablet ? 12.5 * factor : 27.5 * factor}
                       name={'calendar-plus'}
                       color={
                         this.props.isMethod && !this.props.methodLevel
@@ -358,7 +362,7 @@ class HorizontalVideoList extends React.Component {
                   >
                     <AntIcon
                       name={'plus'}
-                      size={onTablet ? 17.5 * factorRatio : 25 * factorRatio}
+                      size={onTablet ? 17.5 * factor : 25 * factor}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey
@@ -373,7 +377,7 @@ class HorizontalVideoList extends React.Component {
                   >
                     <AntIcon
                       name={'close'}
-                      size={onTablet ? 17.5 * factorRatio : 25 * factorRatio}
+                      size={onTablet ? 17.5 * factor : 25 * factor}
                       color={
                         this.props.isMethod
                           ? colors.pianoteGrey

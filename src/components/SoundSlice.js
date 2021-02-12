@@ -2,10 +2,15 @@
  * SoundSlice
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Dimensions, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { withNavigation } from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 class SoundSlice extends React.Component {
   static navigationOptions = { header: null };
@@ -29,8 +34,8 @@ class SoundSlice extends React.Component {
             <View
               style={{
                 position: 'absolute',
-                top: 50 * factorRatio,
-                left: 20 * factorRatio,
+                top: 50 * factor,
+                left: 20 * factor,
                 zIndex: 10
               }}
             >
@@ -46,7 +51,7 @@ class SoundSlice extends React.Component {
                 }}
               >
                 <FeatherIcon
-                  size={40 * factorRatio}
+                  size={40 * factor}
                   name={'x'}
                   color={'black'}
                 />
@@ -89,7 +94,7 @@ class SoundSlice extends React.Component {
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontSize: 16 * factorRatio,
+                                    fontSize: 16 * factor,
                                     fontWeight: '700',
                                     textAlign: 'center',
                                     color: '#b9b9b9',
@@ -101,7 +106,7 @@ class SoundSlice extends React.Component {
                             <Text
                                 style={{
                                     fontFamily: 'OpenSans-Regular',
-                                    fontSize: 30 * factorRatio,
+                                    fontSize: 30 * factor,
                                     fontWeight: '700',
                                     textAlign: 'center',
                                 }}

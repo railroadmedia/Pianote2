@@ -15,6 +15,11 @@ import FastImage from 'react-native-fast-image';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import { ContentModel } from '@musora/models';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class NextVideo extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
@@ -33,7 +38,7 @@ class NextVideo extends React.Component {
           borderBottomColor: this.props.isMethod
             ? colors.pianoteGrey
             : colors.secondBackground,
-          borderBottomWidth: 0.25 * factorRatio
+          borderBottomWidth: 0.25 * factor
         }}
       >
         <View style={{ width: '100%' }}>
@@ -56,8 +61,8 @@ class NextVideo extends React.Component {
           <View style={localStyles.nextLesson}>
             <Text
               style={{
-                fontSize: onTablet ? 18 : 16 * factorRatio,
-                marginBottom: 5 * factorVertical,
+                fontSize: onTablet ? 18 : 16 * factor,
+                marginBottom: 5 * factor,
                 textAlign: 'left',
                 fontFamily: 'RobotoCondensed-Bold',
                 color: this.props.isMethod
@@ -71,7 +76,7 @@ class NextVideo extends React.Component {
               style={[
                 localStyles.typeText,
                 {
-                  fontSize: onTablet ? 18 : 14 * factorRatio,
+                  fontSize: onTablet ? 18 : 14 * factor,
                   color: this.props.isMethod
                     ? colors.pianoteGrey
                     : colors.secondBackground
@@ -90,7 +95,7 @@ class NextVideo extends React.Component {
                 style={localStyles.image}
                 source={{
                   uri: `https://cdn.musora.com/image/fetch/w_${Math.round(
-                    fullWidth * 0.24 * 2
+                    width * 0.24 * 2
                   )},ar_16:9,fl_lossy,q_auto:eco,c_fill,g_face/${this.props.item.getData(
                     'thumbnail_url'
                   )}`
@@ -130,13 +135,13 @@ class NextVideo extends React.Component {
               <View style={{ flex: 1 }} />
               <EntypoIcon
                 name={'controller-play'}
-                size={(onTablet ? 25 : 30) * factorRatio}
+                size={(onTablet ? 25 : 30) * factor}
                 color={colors.pianoteRed}
               />
             </View>
           </View>
         </View>
-        <View style={{ height: 10 * factorVertical }} />
+        <View style={{ height: 10 * factor }} />
       </TouchableOpacity>
     );
   };

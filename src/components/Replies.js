@@ -25,6 +25,11 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NetworkContext } from '../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+
 class Replies extends React.Component {
   static contextType = NetworkContext;
   static navigationOptions = { header: null };
@@ -56,22 +61,22 @@ class Replies extends React.Component {
             flex: 1,
             borderTopWidth: 0.25,
             flexDirection: 'row',
-            paddingTop: 10 * factorVertical,
-            paddingBottom: 0 * factorVertical,
-            paddingHorizontal: 10 * factorHorizontal
+            paddingTop: 10 * factor,
+            paddingBottom: 0 * factor,
+            paddingHorizontal: 10 * factor
           }}
         >
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              paddingBottom: 10 * factorVertical
+              paddingBottom: 10 * factor
             }}
           >
             <FastImage
               style={{
-                height: (onTablet ? 30 : 40) * factorHorizontal,
-                width: (onTablet ? 30 : 40) * factorHorizontal,
+                height: (onTablet ? 30 : 40) * factor,
+                width: (onTablet ? 30 : 40) * factor,
                 borderRadius: 100
               }}
               source={{ uri: reply.user['fields.profile_picture_image_url'] }}
@@ -80,8 +85,8 @@ class Replies extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: onTablet ? 15 : 10 * factorRatio,
-                marginTop: 5 * factorRatio,
+                fontSize: onTablet ? 15 : 10 * factor,
+                marginTop: 5 * factor,
                 fontWeight: 'bold',
                 color: colors.pianoteGrey
               }}
@@ -89,13 +94,13 @@ class Replies extends React.Component {
               {reply.user.display_name}
             </Text>
           </View>
-          <View style={{ flex: 1, paddingLeft: 10 * factorHorizontal }}>
+          <View style={{ flex: 1, paddingLeft: 10 * factor }}>
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: (onTablet ? 10 : 13) * factorRatio,
+                fontSize: (onTablet ? 10 : 13) * factor,
                 color: 'white',
-                paddingTop: 10 * factorVertical
+                paddingTop: 10 * factor
               }}
             >
               {reply.comment}
@@ -103,10 +108,10 @@ class Replies extends React.Component {
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
-                fontSize: (onTablet ? 9 : 10) * factorRatio,
+                fontSize: (onTablet ? 9 : 10) * factor,
                 color: colors.secondBackground,
-                paddingTop: 5 * factorVertical,
-                paddingBottom: 10 * factorVertical
+                paddingTop: 5 * factor,
+                paddingBottom: 10 * factor
               }}
             >
               {reply.user['display_name']} | {reply.user.rank} |{' '}
@@ -114,8 +119,8 @@ class Replies extends React.Component {
             </Text>
             <View
               style={{
-                paddingBottom: 15 * factorVertical,
-                paddingTop: 5 * factorVertical
+                paddingBottom: 15 * factor,
+                paddingTop: 5 * factor
               }}
             >
               <View style={{ flexDirection: 'row' }}>
@@ -133,7 +138,7 @@ class Replies extends React.Component {
                   >
                     <AntIcon
                       name={reply.is_liked ? 'like1' : 'like2'}
-                      size={(onTablet ? 17.5 : 22.5) * factorRatio}
+                      size={(onTablet ? 17.5 : 22.5) * factor}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -149,9 +154,9 @@ class Replies extends React.Component {
                       <Text
                         style={{
                           fontFamily: 'OpenSans-Regular',
-                          fontSize: (onTablet ? 8 : 10) * factorRatio,
+                          fontSize: (onTablet ? 8 : 10) * factor,
                           color: colors.pianoteRed,
-                          paddingHorizontal: 5 * factorHorizontal
+                          paddingHorizontal: 5 * factor
                         }}
                       >
                         {reply.like_count}{' '}
@@ -171,7 +176,7 @@ class Replies extends React.Component {
                   >
                     <AntIcon
                       name={'delete'}
-                      size={(onTablet ? 15 : 20) * factorRatio}
+                      size={(onTablet ? 15 : 20) * factor}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -217,7 +222,7 @@ class Replies extends React.Component {
                       <Text style={localStyles.replyText}>REPLIES</Text>
                       <TouchableOpacity onPress={this.props.close}>
                         <EntypoIcon
-                          size={(onTablet ? 22.5 : 27.5) * factorRatio}
+                          size={(onTablet ? 22.5 : 27.5) * factor}
                           name={'cross'}
                           color={'#c2c2c2'}
                         />
@@ -228,21 +233,21 @@ class Replies extends React.Component {
                         backgroundColor: colors.mainBackground,
                         flex: 1,
                         flexDirection: 'row',
-                        paddingTop: 10 * factorVertical,
-                        paddingHorizontal: 10 * factorHorizontal
+                        paddingTop: 10 * factor,
+                        paddingHorizontal: 10 * factor
                       }}
                     >
                       <View
                         style={{
                           alignItems: 'center',
                           justifyContent: 'center',
-                          paddingBottom: 10 * factorVertical
+                          paddingBottom: 10 * factor
                         }}
                       >
                         <FastImage
                           style={{
-                            height: (onTablet ? 30 : 40) * factorHorizontal,
-                            width: (onTablet ? 30 : 40) * factorHorizontal,
+                            height: (onTablet ? 30 : 40) * factor,
+                            width: (onTablet ? 30 : 40) * factor,
                             borderRadius: 100
                           }}
                           source={{
@@ -253,8 +258,8 @@ class Replies extends React.Component {
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
-                            fontSize: onTablet ? 15 : 10 * factorRatio,
-                            marginTop: 5 * factorRatio,
+                            fontSize: onTablet ? 15 : 10 * factor,
+                            marginTop: 5 * factor,
                             fontWeight: 'bold',
                             color: colors.pianoteGrey
                           }}
@@ -264,14 +269,14 @@ class Replies extends React.Component {
                       </View>
 
                       <View
-                        style={{ flex: 1, paddingLeft: 10 * factorHorizontal }}
+                        style={{ flex: 1, paddingLeft: 10 * factor }}
                       >
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
-                            fontSize: (onTablet ? 10 : 13) * factorRatio,
+                            fontSize: (onTablet ? 10 : 13) * factor,
                             color: 'white',
-                            paddingTop: 10 * factorVertical
+                            paddingTop: 10 * factor
                           }}
                         >
                           {comment.comment}
@@ -279,10 +284,10 @@ class Replies extends React.Component {
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
-                            fontSize: (onTablet ? 9 : 10) * factorRatio,
+                            fontSize: (onTablet ? 9 : 10) * factor,
                             color: colors.secondBackground,
-                            paddingTop: 5 * factorVertical,
-                            paddingBottom: 10 * factorVertical
+                            paddingTop: 5 * factor,
+                            paddingBottom: 10 * factor
                           }}
                         >
                           {user.display_name} | {user.rank} |{' '}
@@ -290,8 +295,8 @@ class Replies extends React.Component {
                         </Text>
                         <View
                           style={{
-                            paddingBottom: 15 * factorVertical,
-                            paddingTop: 5 * factorVertical
+                            paddingBottom: 15 * factor,
+                            paddingTop: 5 * factor
                           }}
                         >
                           <View style={{ flexDirection: 'row' }}>
@@ -313,7 +318,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={comment.is_liked ? 'like1' : 'like2'}
-                                  size={(onTablet ? 17.5 : 22.5) * factorRatio}
+                                  size={(onTablet ? 17.5 : 22.5) * factor}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -330,9 +335,9 @@ class Replies extends React.Component {
                                     style={{
                                       fontFamily: 'OpenSans-Regular',
                                       fontSize:
-                                        (onTablet ? 8 : 10) * factorRatio,
+                                        (onTablet ? 8 : 10) * factor,
                                       color: colors.pianoteRed,
-                                      paddingHorizontal: 5 * factorHorizontal
+                                      paddingHorizontal: 5 * factor
                                     }}
                                   >
                                     {comment.like_count}{' '}
@@ -347,7 +352,7 @@ class Replies extends React.Component {
                             <View style={{ flexDirection: 'row' }}>
                               <MaterialIcon
                                 name={'comment-text-outline'}
-                                size={20 * factorRatio}
+                                size={20 * factor}
                                 color={colors.pianoteRed}
                                 style={{ marginRight: 10 }}
                               />
@@ -373,7 +378,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={'delete'}
-                                  size={(onTablet ? 15 : 20) * factorRatio}
+                                  size={(onTablet ? 15 : 20) * factor}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -433,7 +438,7 @@ class Replies extends React.Component {
                       <FastImage
                         style={[
                           localStyles.profileImage,
-                          { marginRight: 10 * factorHorizontal }
+                          { marginRight: 10 * factor }
                         ]}
                         source={{
                           uri:
@@ -456,12 +461,12 @@ class Replies extends React.Component {
                           onPress={() => this.sendReply(this.state.reply)}
                           style={{
                             marginBottom:
-                              Platform.OS == 'android' ? 10 * factorVertical : 0
+                              Platform.OS == 'android' ? 10 * factor : 0
                           }}
                         >
                           <IonIcon
                             name={'md-send'}
-                            size={25 * factorRatio}
+                            size={25 * factor}
                             color={colors.pianoteRed}
                           />
                         </TouchableOpacity>

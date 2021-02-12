@@ -14,6 +14,10 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NetworkContext } from '../context/NetworkProvider';
 
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const navigationOptions = [
   {
     title: 'Home',
@@ -115,8 +119,8 @@ class NavigationMenu extends React.Component {
                     : colors.secondBackground,
                 fontSize:
                   this.props.parentPage == nav.title.toUpperCase()
-                    ? 35 * factorVertical
-                    : 25 * factorVertical
+                    ? (onTablet ? 25 : 32.5 ) * factor
+                    : (onTablet ? 15 : 22.5 ) * factor
               }}
             >
               {nav.title}
@@ -149,15 +153,15 @@ class NavigationMenu extends React.Component {
               styles.centerContent,
               styles.redButton,
               {
-                height: 65 * factorVertical,
-                width: 65 * factorVertical,
+                height: (onTablet ? 55 : 65 ) * factor,
+                width: (onTablet ? 55 : 65 ) * factor,
                 borderRadius: 500
               }
             ]}
           >
             <View style={{ flex: 1 }} />
             <FeatherIcon
-              size={40 * factorVertical}
+              size={(onTablet ? 40 : 50 ) * factor}
               name={'x'}
               color={'white'}
               style={{ borderRadius: 500 }}
@@ -165,7 +169,7 @@ class NavigationMenu extends React.Component {
             <View style={{ flex: 1 }} />
           </TouchableOpacity>
         </View>
-        <View style={{ height: 30 * factorVertical }} />
+        <View style={{ height: 20 * factor }} />
       </View>
     );
   };
@@ -178,11 +182,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 30,
-    paddingVertical:
-      (30 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2
+    paddingVertical: 30 * factor
   }
 });
 

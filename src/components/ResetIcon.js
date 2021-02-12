@@ -2,9 +2,14 @@
  * ResetIcon
  */
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const windowDim = Dimensions.get('window');
+const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 
 class ResetIcon extends React.Component {
   static navigationOptions = { header: null };
@@ -19,7 +24,7 @@ class ResetIcon extends React.Component {
         style={[
           styles.centerContent,
           {
-            borderRadius: fullWidth * 0.1,
+            borderRadius: width * 0.1,
             flex: 1,
             backgroundColor: '#fb1b2f'
           }
@@ -39,7 +44,7 @@ class ResetIcon extends React.Component {
         >
           <MaterialIcon
             name={'replay'}
-            size={(onTablet ? 21.5 : 25) * factorRatio}
+            size={(onTablet ? 21.5 : 25) * factor}
             color={'white'}
           />
           <View style={{ flex: 0.075 }} />
@@ -49,8 +54,8 @@ class ResetIcon extends React.Component {
               {
                 fontSize:
                   this.props.isMethod && onTablet
-                    ? 16 * factorRatio
-                    : 14 * factorRatio
+                    ? 16 * factor
+                    : 14 * factor
               }
             ]}
           >
