@@ -26,8 +26,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { NetworkContext } from '../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class Replies extends React.Component {
@@ -268,9 +270,7 @@ class Replies extends React.Component {
                         </Text>
                       </View>
 
-                      <View
-                        style={{ flex: 1, paddingLeft: 10 * factor }}
-                      >
+                      <View style={{ flex: 1, paddingLeft: 10 * factor }}>
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
@@ -334,8 +334,7 @@ class Replies extends React.Component {
                                   <Text
                                     style={{
                                       fontFamily: 'OpenSans-Regular',
-                                      fontSize:
-                                        (onTablet ? 8 : 10) * factor,
+                                      fontSize: (onTablet ? 8 : 10) * factor,
                                       color: colors.pianoteRed,
                                       paddingHorizontal: 5 * factor
                                     }}

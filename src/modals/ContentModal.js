@@ -24,8 +24,10 @@ import DeviceInfo from 'react-native-device-info';
 import contentService from '../services/content.service';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class ContentModal extends React.Component {
@@ -325,7 +327,7 @@ const localStyles = StyleSheet.create({
     textAlign: 'center',
     fontSize: (DeviceInfo.isTablet() ? 12 : 14) * factor,
     color: 'grey',
-    marginVertical: 5, 
+    marginVertical: 5
   },
   image: {
     flex: 1,

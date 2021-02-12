@@ -28,8 +28,10 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import CreateAccountStepCounter from './CreateAccountStepCounter';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 export default class CreateAccount extends React.Component {
@@ -361,7 +363,7 @@ const localStyles = StyleSheet.create({
   },
   createPasswordText: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: ((DeviceInfo.isTablet() ? 17.5 : 20) * factor),
+    fontSize: (DeviceInfo.isTablet() ? 17.5 : 20) * factor,
     textAlign: 'left',
     color: 'white',
     paddingLeft: 15

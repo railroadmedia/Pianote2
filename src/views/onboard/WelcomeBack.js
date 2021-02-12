@@ -16,9 +16,11 @@ import SwipeLeft from 'Pianote2/src/assets/img/svgs/swipe-left.svg';
 import Orientation from 'react-native-orientation-locker';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
-const factor = (height / 812 + width / 375) / 2;;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
 const marginBottom = 0.02 * (width < height ? height : width);
 
 export default class WelcomeBack extends React.Component {

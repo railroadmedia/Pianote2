@@ -3,8 +3,6 @@ import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import commonService from './common.service';
 import { Platform } from 'react-native';
 
-
-
 export async function likeContent(contentID) {
   let x = await commonService.tryCall(
     `${commonService.rootUrl}/api/railcontent/content-like?content_id=${contentID}`,

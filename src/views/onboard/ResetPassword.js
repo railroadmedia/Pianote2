@@ -26,8 +26,10 @@ import { changePassword } from '../../services/UserDataAuth';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 export default class ResetPassword extends React.Component {
@@ -106,11 +108,11 @@ export default class ResetPassword extends React.Component {
                 justifyContent: 'space-between'
               }}
             >
-              <Back 
+              <Back
                 width={(onTablet ? 17.5 : 25) * factor}
                 height={(onTablet ? 17.5 : 25) * factor}
-                fill={'white'} 
-                />
+                fill={'white'}
+              />
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',

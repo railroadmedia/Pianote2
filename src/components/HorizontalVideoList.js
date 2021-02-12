@@ -28,8 +28,10 @@ import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class HorizontalVideoList extends React.Component {
@@ -260,7 +262,7 @@ class HorizontalVideoList extends React.Component {
                     style={[styles.centerContent, localStyles.progressItem]}
                   >
                     <Progress
-                      height={50* factor}
+                      height={50 * factor}
                       width={50 * factor}
                       fill={'white'}
                     />
@@ -328,7 +330,7 @@ class HorizontalVideoList extends React.Component {
                           : colors.secondBackground,
 
                         fontSize: (onTablet ? 9.5 : 12) * factor,
-                        marginTop: 1.5 
+                        marginTop: 1.5
                       }}
                     >
                       {this.props.showType && this.changeType(item.type)}

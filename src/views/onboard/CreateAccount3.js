@@ -46,8 +46,10 @@ const resetAction = StackActions.reset({
 });
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 export default class CreateAccount3 extends React.Component {
@@ -242,7 +244,7 @@ export default class CreateAccount3 extends React.Component {
               }
             );
 
-            // if image is too large 
+            // if image is too large
             if (response.status == 413) {
               this.setState({ showProfileImage: true });
               return;
@@ -265,7 +267,7 @@ export default class CreateAccount3 extends React.Component {
             console.log('ERROR: ', e);
           }
         } else {
-          console.log(url?.data?.[0]?.url)
+          console.log(url?.data?.[0]?.url);
           await commonService.tryCall(
             `${commonService.rootUrl}/api/profile/update`,
             'POST',
@@ -371,7 +373,7 @@ export default class CreateAccount3 extends React.Component {
                     key={'input'}
                     style={{
                       height: '7%',
-                      width: width - (35 * factor),
+                      width: width - 35 * factor,
                       borderRadius: 50 * factor,
                       backgroundColor: 'white',
                       justifyContent: 'center',
@@ -541,22 +543,22 @@ export default class CreateAccount3 extends React.Component {
                     }}
                   >
                     {false && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.createAccount();
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'OpenSans-Regular',
-                          fontSize: 20 * factor,
-                          fontWeight: '700',
-                          color: '#fb1b2f'
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.createAccount();
                         }}
                       >
-                        SKIP
-                      </Text>
-                    </TouchableOpacity>
+                        <Text
+                          style={{
+                            fontFamily: 'OpenSans-Regular',
+                            fontSize: 20 * factor,
+                            fontWeight: '700',
+                            color: '#fb1b2f'
+                          }}
+                        >
+                          SKIP
+                        </Text>
+                      </TouchableOpacity>
                     )}
                   </View>
                 </View>
@@ -623,9 +625,7 @@ export default class CreateAccount3 extends React.Component {
                 >
                   Create Account
                 </Text>
-                <View
-                  style={{ flex: 1, paddingRight: 15 * factor }}
-                />
+                <View style={{ flex: 1, paddingRight: 15 * factor }} />
               </View>
 
               <View
@@ -749,7 +749,7 @@ export default class CreateAccount3 extends React.Component {
                       This appears on your Pianote profile and comments.
                     </Text>
                   </View>
-                  <View style={{ height: 40 * factor}} />
+                  <View style={{ height: 40 * factor }} />
                   <View
                     key={'next'}
                     style={{
@@ -1455,7 +1455,7 @@ export default class CreateAccount3 extends React.Component {
                   <FastImage
                     style={{
                       height: onTablet ? height * 0.275 : height * 0.225,
-                      width: width*0.85,
+                      width: width * 0.85,
                       borderRadius: 10 * factor,
                       alignSelf: 'stretch'
                     }}

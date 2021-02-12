@@ -28,8 +28,10 @@ import { cacheAndWriteMyList } from '../../redux/MyListCacheActions';
 import { ActivityIndicator } from 'react-native';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -269,10 +271,7 @@ class MyList extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[
-              styles.tabRightContainer,
-              { marginBottom: 10 * factor }
-            ]}
+            style={[styles.tabRightContainer, { marginBottom: 10 * factor }]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
                 title: 'Completed',

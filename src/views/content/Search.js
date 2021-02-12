@@ -25,8 +25,10 @@ import { searchContent } from '../../services/GetContent';
 import { NetworkContext } from '../../context/NetworkProvider';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   const paddingToBottom = 20;
@@ -42,7 +44,7 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filterSize: new Animated.Value(height* 0.225),
+      filterSize: new Animated.Value(height * 0.225),
       recentSearchResults: [],
 
       searchResults: [],
@@ -356,12 +358,7 @@ export default class Search extends React.Component {
           >
             <View style={styles.searchContainer}>
               <View style={styles.searchBox}>
-                <View
-                  style={[
-                    styles.centerContent,
-                    { width: 40 * factor }
-                  ]}
-                >
+                <View style={[styles.centerContent, { width: 40 * factor }]}>
                   <EvilIcons
                     name={'search'}
                     size={27.5 * factor}
@@ -463,7 +460,7 @@ export default class Search extends React.Component {
                 )}
               </View>
             )}
-            <View style={{ flex: 1, marginBottom: '2%'}}>
+            <View style={{ flex: 1, marginBottom: '2%' }}>
               {!this.state.searchEntered &&
                 !this.state.isLoadingAll &&
                 !this.state.noResults && <View>{this.mapRecentResults()}</View>}
@@ -492,9 +489,7 @@ export default class Search extends React.Component {
                       currentSort={this.state.currentSort}
                       changeSort={sort => this.changeSort(sort)}
                       filterResults={() => this.setState({ showFilters: true })}
-                      imageWidth={
-                        onTablet ? width * 0.225 : width * 0.3
-                      }
+                      imageWidth={onTablet ? width * 0.225 : width * 0.3}
                       outVideos={this.state.outVideos} // if paging and out of videos
                     />
                   </View>

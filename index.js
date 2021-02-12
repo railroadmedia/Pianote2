@@ -89,7 +89,7 @@ PushNotification.configure({
 AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;
 
-global.token = ''
+global.token = '';
 global.onTablet = DeviceInfo.isTablet();
 global.loadedFromNotification = false;
 global.isiOS = Platform.OS === 'ios';
@@ -99,7 +99,10 @@ global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.factorHorizontal = Dimensions.get('window').width / 375;
 global.factorVertical = Dimensions.get('window').height / 812;
-global.factorRatio = (Dimensions.get('window').height / 812 + Dimensions.get('window').width / 375) / 2;
+global.factorRatio =
+  (Dimensions.get('window').height / 812 +
+    Dimensions.get('window').width / 375) /
+  2;
 global.isNotch = DeviceInfo.hasNotch();
 global.navPxFromTop = isNotch
   ? 30 * factorRatio

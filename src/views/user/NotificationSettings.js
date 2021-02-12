@@ -24,8 +24,10 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { SafeAreaView } from 'react-navigation';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 export default class NotificationSettings extends React.Component {
@@ -387,7 +389,7 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: (DeviceInfo.isTablet()  ? 15 : 20) * factor,
+    padding: (DeviceInfo.isTablet() ? 15 : 20) * factor
   },
   title: {
     textAlign: 'center',
@@ -400,8 +402,7 @@ const localStyles = StyleSheet.create({
     fontSize: 18 * factor
   },
   noteTypeText: {
-    marginTop:
-      10 * factor,
+    marginTop: 10 * factor,
     fontFamily: 'OpenSans-Regular',
     fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor,
     color: '#445f73',
@@ -424,7 +425,7 @@ const localStyles = StyleSheet.create({
     paddingTop: 10 * factor,
     width: '100%',
     justifyContent: 'center',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 20) * factor
   },
   border: {
     height: (DeviceInfo.isTablet() ? 15 : 25) * factor,

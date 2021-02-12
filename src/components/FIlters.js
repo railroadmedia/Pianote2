@@ -19,8 +19,10 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Loading from 'Pianote2/src/modals/Loading.js';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 const messageDict = {
   1: 'A level 1 pianist is just beginning and might not yet have any skills yet. A level 1 pianist will learn how to navigate the keyboard, play a C scale, chords and begin to build dexterity and control in their hands.',
@@ -2161,9 +2163,7 @@ export default class Filters extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        height: onTablet
-                          ? height * 0.07
-                          : height * 0.05,
+                        height: onTablet ? height * 0.07 : height * 0.05,
                         width: '100%',
                         backgroundColor: colors.pianoteRed,
                         borderRadius: 200
@@ -2197,9 +2197,7 @@ export default class Filters extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        height: onTablet
-                          ? height * 0.07
-                          : height * 0.05,
+                        height: onTablet ? height * 0.07 : height * 0.05,
                         width: '100%',
                         borderColor: 'white',
                         borderWidth: 1 * factor,

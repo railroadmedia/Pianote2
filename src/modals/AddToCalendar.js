@@ -14,8 +14,10 @@ import { withNavigation } from 'react-navigation';
 import FontIcon from 'react-native-vector-icons/FontAwesome5';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class AddToCalendar extends React.Component {
@@ -71,23 +73,23 @@ class AddToCalendar extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    paddingBottom: (12.5 * factor),
+    paddingBottom: 12.5 * factor,
     borderRadius: 15 * factor,
     margin: 20 * factor,
-    paddingVertical: 3.5*factor,
+    paddingVertical: 3.5 * factor
   },
   addToCalendar: {
-    marginTop: (12.5 * factor),
+    marginTop: 12.5 * factor,
     paddingHorizontal: 40
   },
   calendarIcon: {
-    paddingTop: (7.5 * factor),
+    paddingTop: 7.5 * factor,
     alignSelf: 'center',
     paddingHorizontal: 40,
     marginTop: 10 * factor
   },
   confirmAddition: {
-    marginTop: (12.5 * factor),
+    marginTop: 12.5 * factor,
     borderRadius: 100 * factor,
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40

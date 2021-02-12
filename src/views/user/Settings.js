@@ -48,8 +48,10 @@ import { cacheAndWriteSongs } from '../../redux/SongsCacheActions';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class Settings extends React.Component {
@@ -245,9 +247,7 @@ class Settings extends React.Component {
               this.props.navigation.navigate('PROFILESETTINGS');
             }}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <FeatherIcon
                 name={'user'}
                 size={(onTablet ? 22.5 : 25) * factor}
@@ -269,9 +269,7 @@ class Settings extends React.Component {
             }}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <IonIcon
                 name={'ios-notifications-outline'}
                 color={colors.pianoteRed}
@@ -290,9 +288,7 @@ class Settings extends React.Component {
             style={[styles.centerContent, localStyles.container]}
             onPress={this.manageSubscriptions}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <AntIcon
                 name={'folder1'}
                 size={(onTablet ? 20 : 25) * factor}
@@ -313,9 +309,7 @@ class Settings extends React.Component {
             onPress={this.restorePurchase}
             style={[styles.centerContent, localStyles.container]}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <AntIcon
                 name={'creditcard'}
                 size={(onTablet ? 20 : 25) * factor}
@@ -336,9 +330,7 @@ class Settings extends React.Component {
               this.props.navigation.navigate('SUPPORT');
             }}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <FontIcon
                 name={'support'}
                 size={(onTablet ? 20 : 25) * factor}
@@ -359,9 +351,7 @@ class Settings extends React.Component {
               this.props.navigation.navigate('TERMS');
             }}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <AntIcon
                 name={'form'}
                 size={(onTablet ? 20 : 25) * factor}
@@ -382,9 +372,7 @@ class Settings extends React.Component {
               this.props.navigation.navigate('PRIVACYPOLICY');
             }}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <FontIcon
                 name={'shield'}
                 color={colors.pianoteRed}
@@ -405,9 +393,7 @@ class Settings extends React.Component {
               this.setState({ showLogOut: true });
             }}
           >
-            <View
-              style={[styles.centerContent, { width: 60 * factor }]}
-            >
+            <View style={[styles.centerContent, { width: 60 * factor }]}>
               <AntIcon
                 name={'poweroff'}
                 color={colors.pianoteRed}
@@ -529,14 +515,14 @@ const localStyles = StyleSheet.create({
   appText: {
     marginTop: 10 * factor,
     textAlign: 'center',
-    fontSize: DeviceInfo.isTablet() ? 18 : (12 * factor)
+    fontSize: DeviceInfo.isTablet() ? 18 : 12 * factor
   },
   buildText: {
     fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     color: '#445f73',
     marginTop: 10 * factor,
-    fontSize: DeviceInfo.isTablet() ? 18 : (12 * factor)
+    fontSize: DeviceInfo.isTablet() ? 18 : 12 * factor
   }
 });
 const mapDispatchToProps = dispatch =>

@@ -9,7 +9,7 @@ import {
   FlatList,
   RefreshControl,
   ActivityIndicator,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -29,8 +29,10 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import { cacheAndWriteStudentFocus } from '../../redux/StudentFocusCacheActions';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class StudentFocusCatalog extends React.Component {

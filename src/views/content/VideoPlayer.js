@@ -64,8 +64,10 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import methodService from '../../services/method.service';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 export default class VideoPlayer extends React.Component {
@@ -1106,7 +1108,7 @@ export default class VideoPlayer extends React.Component {
                   style={{ flex: 1, backgroundColor: colors.mainBackground }}
                 >
                   <View key={'lessonTitle'}>
-                    <View style={{height: 5}}/>
+                    <View style={{ height: 5 }} />
                     <Text
                       style={{
                         fontSize: (onTablet ? 15 : 20) * factor,
@@ -1155,9 +1157,7 @@ export default class VideoPlayer extends React.Component {
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isLiked ? 'like1' : 'like2'}
-                          size={
-                            onTablet ? 20 * factor : 27.5 * factor
-                          }
+                          size={onTablet ? 20 * factor : 27.5 * factor}
                           color={colors.pianoteRed}
                         />
                         <Text
@@ -1179,9 +1179,7 @@ export default class VideoPlayer extends React.Component {
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
-                          size={
-                            onTablet ? 22.5 * factor : 28.5 * factor
-                          }
+                          size={onTablet ? 22.5 * factor : 28.5 * factor}
                           color={colors.pianoteRed}
                         />
                         <Text
@@ -1207,12 +1205,8 @@ export default class VideoPlayer extends React.Component {
                         >
                           <View style={{ flex: 1 }} />
                           <Resources
-                            height={
-                              onTablet ? 20 * factor : 27.5 * factor
-                            }
-                            width={
-                              onTablet ? 20 * factor : 27.5 * factor
-                            }
+                            height={onTablet ? 20 * factor : 27.5 * factor}
+                            width={onTablet ? 20 * factor : 27.5 * factor}
                             fill={colors.pianoteRed}
                           />
                           <Text
@@ -1238,12 +1232,8 @@ export default class VideoPlayer extends React.Component {
                         styles={{
                           touchable: { flex: 1 },
                           iconSize: {
-                            height: onTablet
-                              ? 22.5 * factor
-                              : 27.5 * factor,
-                            width: onTablet
-                              ? 22.5 * factor
-                              : 27.5 * factor
+                            height: onTablet ? 22.5 * factor : 27.5 * factor,
+                            width: onTablet ? 22.5 * factor : 27.5 * factor
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
@@ -1285,9 +1275,7 @@ export default class VideoPlayer extends React.Component {
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
-                          size={
-                            onTablet ? 20 * factor : 22.5 * factor
-                          }
+                          size={onTablet ? 20 * factor : 22.5 * factor}
                           color={colors.pianoteRed}
                         />
                         <Text
@@ -1312,7 +1300,7 @@ export default class VideoPlayer extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           fontSize: 14 * factor,
                           textAlign: 'center',
-                          marginVertical: 7.5 * factor, 
+                          marginVertical: 7.5 * factor,
                           color: 'white'
                         }}
                       >
@@ -1350,7 +1338,7 @@ export default class VideoPlayer extends React.Component {
                       </View>
                     </>
                   )}
-                  <View style={{height: 5}}/>
+                  <View style={{ height: 5 }} />
                   {this.state.relatedLessons.length > 0 && (
                     <VerticalVideoList
                       title={'RELATED LESSONS'}
@@ -1649,7 +1637,7 @@ export default class VideoPlayer extends React.Component {
                 />
               )}
             </View>
-            <View style={{height: 5}}/>
+            <View style={{ height: 5 }} />
             <View
               style={{
                 flexDirection: 'row',
@@ -2051,8 +2039,7 @@ export default class VideoPlayer extends React.Component {
                   />
                   <TouchableOpacity
                     style={{
-                      marginBottom:
-                        Platform.OS == 'android' ? 10 * factor : 0,
+                      marginBottom: Platform.OS == 'android' ? 10 * factor : 0,
                       marginLeft: 20
                     }}
                     onPress={() => this.makeComment()}

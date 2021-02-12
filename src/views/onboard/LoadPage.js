@@ -32,10 +32,14 @@ import { NetworkContext } from '../../context/NetworkProvider';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
-const factorHorizontal = windowDim.width < windowDim.height ? width/375 : height/812;
-const factorVertical = windowDim.width < windowDim.height ? height/812 : width/375;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width < windowDim.height ? windowDim.height : windowDim.width;
+const factorHorizontal =
+  windowDim.width < windowDim.height ? width / 375 : height / 812;
+const factorVertical =
+  windowDim.width < windowDim.height ? height / 812 : width / 375;
 
 const cache = [
   'cachePacks',
@@ -276,8 +280,18 @@ class LoadPage extends React.Component {
           ]}
         >
           <Pianote
-            height={77.5 * (windowDim.width < windowDim.height ? factorVertical : factorHorizontal)}
-            width={190 * (windowDim.width < windowDim.height ? factorHorizontal : factorVertical)}
+            height={
+              77.5 *
+              (windowDim.width < windowDim.height
+                ? factorVertical
+                : factorHorizontal)
+            }
+            width={
+              190 *
+              (windowDim.width < windowDim.height
+                ? factorHorizontal
+                : factorVertical)
+            }
             fill={'#fb1b2f'}
           />
         </View>

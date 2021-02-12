@@ -2,13 +2,15 @@
  * StartIcon
  */
 import React from 'react';
-import { View, Text, TouchableOpacity, Dimensions} from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class MoreInfoIcon extends React.Component {
@@ -53,9 +55,7 @@ class MoreInfoIcon extends React.Component {
               styles.buttonText,
               {
                 fontSize:
-                  this.props.isMethod && onTablet
-                    ? 16 * factor
-                    : 14 * factor
+                  this.props.isMethod && onTablet ? 16 * factor : 14 * factor
               }
             ]}
           >

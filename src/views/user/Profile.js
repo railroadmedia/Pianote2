@@ -76,8 +76,10 @@ const messageDict = {
 };
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 export default class Profile extends React.Component {
@@ -321,10 +323,7 @@ export default class Profile extends React.Component {
             ListHeaderComponent={() => (
               <>
                 <View
-                  style={[
-                    styles.centerContent,
-                    { marginTop: 20 * factor }
-                  ]}
+                  style={[styles.centerContent, { marginTop: 20 * factor }]}
                 >
                   <View style={localStyles.imageContainer}>
                     <View
@@ -709,7 +708,7 @@ const localStyles = StyleSheet.create({
   },
   messageContainer: {
     height: width * 0.175 * factor,
-    width:  width * 0.175 * factor,
+    width: width * 0.175 * factor,
     borderRadius: 150 * factor,
     backgroundColor: '#ececec'
   },

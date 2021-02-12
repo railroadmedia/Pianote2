@@ -23,8 +23,10 @@ import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 const skus = Platform.select({
@@ -268,7 +270,7 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top: isNotch ? '3%':'1.5%',
+            top: isNotch ? '3%' : '1.5%',
             zIndex: 3,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
@@ -371,7 +373,7 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top: isNotch ? '3%':'1.5%',
+            top: isNotch ? '3%' : '1.5%',
             zIndex: 2,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
@@ -491,7 +493,7 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top: isNotch ? '3%':'1.5%',
+            top: isNotch ? '3%' : '1.5%',
             zIndex: 2,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
@@ -610,7 +612,7 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top: isNotch ? '3%':'1.5%',
+            top: isNotch ? '3%' : '1.5%',
             zIndex: 2,
             elevation: Platform.OS === 'android' ? 3 : 0,
             width: '100%'
@@ -730,7 +732,7 @@ export default class Login extends React.Component {
           key={'pianote1'}
           style={{
             position: 'absolute',
-            top: isNotch ? '3%':'1.5%',
+            top: isNotch ? '3%' : '1.5%',
             zIndex: 4,
             elevation: Platform.OS === 'android' ? 4 : 0,
             width: '100%'

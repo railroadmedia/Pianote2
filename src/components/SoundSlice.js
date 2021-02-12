@@ -8,8 +8,10 @@ import { withNavigation } from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class SoundSlice extends React.Component {
@@ -50,11 +52,7 @@ class SoundSlice extends React.Component {
                   zIndex: 10
                 }}
               >
-                <FeatherIcon
-                  size={40 * factor}
-                  name={'x'}
-                  color={'black'}
-                />
+                <FeatherIcon size={40 * factor} name={'x'} color={'black'} />
               </TouchableOpacity>
             </View>
           </View>

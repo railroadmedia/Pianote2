@@ -33,8 +33,10 @@ import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 const resetAction = StackActions.reset({
@@ -337,11 +339,7 @@ export default class ProfileSettings extends React.Component {
                   onPress={() => this.chooseImage()}
                   style={styles.centerContent}
                 >
-                  <AntIcon
-                    name={'plus'}
-                    size={65 * factor}
-                    color={'white'}
-                  />
+                  <AntIcon name={'plus'} size={65 * factor} color={'white'} />
                 </TouchableOpacity>
               )}
             </View>
@@ -422,8 +420,8 @@ export default class ProfileSettings extends React.Component {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15 *factor,
-    margin: 20 *factor,
+    borderRadius: 15 * factor,
+    margin: 20 * factor,
     height: 200,
     width: '80%'
   },
@@ -434,9 +432,7 @@ const localStyles = StyleSheet.create({
     padding: 15
   },
   save: {
-    fontSize: DeviceInfo.isTablet()
-      ? 20
-      : (15 * factor),
+    fontSize: DeviceInfo.isTablet() ? 20 : 15 * factor,
     fontFamily: 'OpenSans-Bold',
     color: '#fb1b2f',
     textAlign: 'right',
@@ -471,7 +467,7 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
     paddingVertical: '2%',
-    paddingHorizontal: 10 * factor, 
+    paddingHorizontal: 10 * factor,
     color: '#445f73'
   },
   scrollContainer: {
@@ -490,17 +486,17 @@ const localStyles = StyleSheet.create({
     alignSelf: 'flex-end',
     position: 'absolute',
     height: (DeviceInfo.isTablet() ? 30 : 40) * factor,
-    width: (DeviceInfo.isTablet() ? 30 : 40) *factor,
-    top: (DeviceInfo.isTablet() ? -7.5 : -10) *factor,
-    right: (DeviceInfo.isTablet() ? -7.5 : -10) *factor,
+    width: (DeviceInfo.isTablet() ? 30 : 40) * factor,
+    top: (DeviceInfo.isTablet() ? -7.5 : -10) * factor,
+    right: (DeviceInfo.isTablet() ? -7.5 : -10) * factor,
     borderRadius: 100,
     borderColor: '#445f73',
     borderWidth: 2,
-    marginTop: 10 *factor
+    marginTop: 10 * factor
   },
   imageText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) *factor,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
     padding: 30,
     paddingHorizontal: 20 * factor,
     color: '#445f73',
@@ -508,10 +504,10 @@ const localStyles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: 'center',
-    height: (DeviceInfo.isTablet() ? 75 : 100) *factor,
-    width: (DeviceInfo.isTablet() ? 75 : 100) *factor,
-    borderRadius: 200 *factor,
+    height: (DeviceInfo.isTablet() ? 75 : 100) * factor,
+    width: (DeviceInfo.isTablet() ? 75 : 100) * factor,
+    borderRadius: 200 * factor,
     borderColor: '#445f73',
-    borderWidth: 2 *factor
+    borderWidth: 2 * factor
   }
 });

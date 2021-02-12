@@ -13,8 +13,10 @@ import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 const sortOptions = [
@@ -87,11 +89,7 @@ class CommentSort extends React.Component {
             style={localStyles.cancelContainer}
             onPress={() => this.props.hideCommentSort()}
           >
-            <EntypoIcon
-              name={'cross'}
-              size={25 * factor}
-              color={'white'}
-            />
+            <EntypoIcon name={'cross'} size={25 * factor} color={'white'} />
             <Text style={localStyles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>

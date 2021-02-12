@@ -20,8 +20,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 const messageDict = {
   'lesson comment reply': [
@@ -246,9 +248,7 @@ const localStyles = StyleSheet.create({
     marginBottom: 7.5 * factor
   },
   container: {
-    height: DeviceInfo.isTablet()
-      ? height * 0.45
-      : height * 0.35,
+    height: DeviceInfo.isTablet() ? height * 0.45 : height * 0.35,
     width: '100%',
     flexDirection: 'row',
     backgroundColor: '#00101d'

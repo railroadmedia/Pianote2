@@ -16,8 +16,10 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class LessonComplete extends React.Component {
@@ -59,7 +61,7 @@ class LessonComplete extends React.Component {
         style={styles.container}
       >
         <View style={[styles.centerContent, styles.container]}>
-          <View style={[localStyles.container, {width: width * 0.8 }]}>
+          <View style={[localStyles.container, { width: width * 0.8 }]}>
             <View style={styles.centerContent}>
               <IonIcon
                 name={'ios-trophy'}

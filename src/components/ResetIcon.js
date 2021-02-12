@@ -7,8 +7,10 @@ import { withNavigation } from 'react-navigation';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 class ResetIcon extends React.Component {
@@ -53,9 +55,7 @@ class ResetIcon extends React.Component {
               styles.buttonText,
               {
                 fontSize:
-                  this.props.isMethod && onTablet
-                    ? 16 * factor
-                    : 14 * factor
+                  this.props.isMethod && onTablet ? 16 * factor : 14 * factor
               }
             ]}
           >

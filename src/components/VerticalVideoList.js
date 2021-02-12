@@ -29,8 +29,10 @@ import { NetworkContext } from '../context/NetworkProvider';
 import AddToCalendar from '../modals/AddToCalendar';
 
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 
 const sortDict = {
@@ -922,9 +924,7 @@ class VerticalVideoList extends React.Component {
         <View style={{ flex: 1 }}>
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
-            <View
-              style={[styles.centerContent, { marginTop: 15 * factor }]}
-            >
+            <View style={[styles.centerContent, { marginTop: 15 * factor }]}>
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}
                 animating={true}
