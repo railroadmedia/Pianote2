@@ -48,14 +48,6 @@ export default class CreateAccount extends React.Component {
   }
 
   savePassword = async () => {
-    this.props.navigation.navigate('CREATEACCOUNT3', {
-      data: {
-        email: this.state.email,
-        password: this.state.password,
-        plan: ''
-      }
-    });
-    return
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
