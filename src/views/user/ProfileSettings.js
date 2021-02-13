@@ -53,6 +53,7 @@ export default class ProfileSettings extends React.Component {
     this.state = {
       showDisplayName: false,
       showProfileImage: false,
+      isLoading: false,
       currentlyView: 'Profile Settings',
       displayName: '',
       currentPassword: '',
@@ -79,6 +80,7 @@ export default class ProfileSettings extends React.Component {
   };
 
   async save() {
+    this.setState({ isLoading: true });
     this.loadingRef?.toggleLoading(true);
     if (this.state.currentlyView == 'Display Name') {
       await this.changeName();
@@ -88,6 +90,7 @@ export default class ProfileSettings extends React.Component {
       await this.changePassword();
     }
     this.loadingRef?.toggleLoading(false);
+    this.setState({ isLoading: false });
   }
 
   changePassword = async () => {
@@ -300,7 +303,7 @@ export default class ProfileSettings extends React.Component {
                     <TouchableOpacity
                       style={{
                         ...localStyles.crossContainer,
-                        right: -((onTablet ? 22.5 : 30) * factor + 10 + 4)
+                        right: -((onTablet ? 22.5 : 27.5) * factor)
                       }}
                       onPress={() =>
                         this.setState({
@@ -407,12 +410,11 @@ export default class ProfileSettings extends React.Component {
           <View>
             <TouchableOpacity
               onPress={() => {
-                this.loadingRef?.toggleLoading(false);
-                this.state.currentlyView == 'Profile Settings'
+                this.state.isLoading
+                  ? null
+                  : this.state.currentlyView == 'Profile Settings'
                   ? this.props.navigation.goBack()
-                  : this.setState({
-                      currentlyView: 'Profile Settings'
-                    });
+                  : this.setState({ currentlyView: 'Profile Settings' });
               }}
               style={{
                 position: 'absolute',
@@ -497,7 +499,7 @@ const localStyles = StyleSheet.create({
   },
   crossContainer: {
     position: 'absolute',
-    padding: 5,
+    padding: 3.5 * factor,
     borderColor: '#445f73',
     borderWidth: 2,
     borderRadius: 100
@@ -512,8 +514,8 @@ const localStyles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: 'center',
-    height: (DeviceInfo.isTablet() ? 75 : 100) * factor,
-    width: (DeviceInfo.isTablet() ? 75 : 100) * factor,
+    height: (DeviceInfo.isTablet() ? 75 : 90) * factor,
+    width: (DeviceInfo.isTablet() ? 75 : 90) * factor,
     borderRadius: 200 * factor,
     borderColor: '#445f73',
     borderWidth: 2 * factor
