@@ -919,7 +919,9 @@ class VerticalVideoList extends React.Component {
                     textAlign: 'left'
                   }}
                 >
-                  There are no results that match those filters.
+                  {this.props.title.includes('SEARCH RESULTS')
+                    ? ''
+                    : 'There are no results that match those filters.'}
                 </Text>
               </View>
             )}
