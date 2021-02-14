@@ -296,8 +296,8 @@ export default class CreateAccount3 extends React.Component {
                 }}
               >
                 <KeyboardAvoidingView
-                  behavior={Platform.OS == 'ios' ? "height" : ''}
-                  style={{ flex: 1 , alignItems: 'center' }}
+                  behavior={Platform.OS == 'ios' ? 'height' : ''}
+                  style={{ flex: 1, alignItems: 'center' }}
                 >
                   <View style={{ flex: 0.45 }} />
                   <View
@@ -324,7 +324,7 @@ export default class CreateAccount3 extends React.Component {
                   <View
                     key={'input'}
                     style={{
-                      height: height*0.07,
+                      height: height * 0.07,
                       width: width - 35 * factor,
                       borderRadius: 50 * factor,
                       backgroundColor: 'white',
