@@ -743,8 +743,8 @@ class VerticalVideoList extends React.Component {
               <View style={{ paddingLeft: 10 * factor }}>
                 {this.props.showLargeTitle ? (
                   <Text
-                    style={{
-                      fontSize: 30 * factor,
+                    style={{ 
+                      fontSize: (onTablet ? 25 : 30) * factor,
                       color: 'white',
                       fontFamily: 'OpenSans-ExtraBold'
                     }}
@@ -756,7 +756,7 @@ class VerticalVideoList extends React.Component {
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: onTablet ? 26 : 18 * factor,
+                        fontSize: onTablet ? 22 : 18 * factor,
                         marginBottom: 5 * factor,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',

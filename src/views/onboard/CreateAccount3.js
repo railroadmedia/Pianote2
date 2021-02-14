@@ -5,10 +5,10 @@ import React from 'react';
 import {
   View,
   Text,
-  Animated,
   Keyboard,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
   ScrollView,
   Platform,
   Dimensions,
@@ -34,10 +34,6 @@ import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Orientation from 'react-native-orientation-locker';
 
-var showListener =
-  Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-var hideListener =
-  Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 var data = new FormData();
 
 const resetAction = StackActions.reset({
@@ -60,7 +56,6 @@ export default class CreateAccount3 extends React.Component {
     Orientation.lockToPortrait();
     this.state = {
       page: 1,
-      pianoteYdelta: new Animated.Value(0.01),
       showDisplayName: false,
       showProfileImage: false,
       showImage: false,
@@ -73,43 +68,6 @@ export default class CreateAccount3 extends React.Component {
       password: this.props.navigation.state.params.password
     };
   }
-
-  componentDidMount = async () => {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      showListener,
-      this._keyboardDidShow
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      hideListener,
-      this._keyboardDidHide
-    );
-  };
-
-  componentWillUnmount = async () => {
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-  };
-
-  _keyboardDidShow = async () => {
-    if (Platform.OS == 'ios') {
-      Animated.timing(this.state.pianoteYdelta, {
-        toValue: height * 0.15,
-        duration: 250
-      }).start();
-    } else {
-      Animated.timing(this.state.pianoteYdelta, {
-        toValue: height * 0.225,
-        duration: 250
-      }).start();
-    }
-  };
-
-  _keyboardDidHide = async () => {
-    Animated.timing(this.state.pianoteYdelta, {
-      toValue: 0.01,
-      duration: 250
-    }).start();
-  };
 
   changeColor = number => {
     let index = Math.round(number.nativeEvent.contentOffset.x / width);
@@ -289,7 +247,7 @@ export default class CreateAccount3 extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.centerContent}>
+        <View style={{ flex: 1 }}>
           <ScrollView
             horizontal={true}
             ref={ref => {
@@ -329,23 +287,17 @@ export default class CreateAccount3 extends React.Component {
                 </Text>
                 <View style={{ flex: 1 }} />
               </View>
-              <Animated.View
+              <View
                 key={'items'}
                 style={{
-                  position: 'relative',
-                  bottom: this.state.pianoteYdelta,
                   height: '90%',
                   width: width,
                   zIndex: 3
                 }}
               >
-                <View
-                  key={'container'}
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    alignItems: 'center'
-                  }}
+                <KeyboardAvoidingView
+                  behavior={Platform.OS == 'ios' ? "height" : ''}
+                  style={{ flex: 1 , alignItems: 'center' }}
                 >
                   <View style={{ flex: 0.45 }} />
                   <View
@@ -372,7 +324,7 @@ export default class CreateAccount3 extends React.Component {
                   <View
                     key={'input'}
                     style={{
-                      height: '7%',
+                      height: height*0.07,
                       width: width - 35 * factor,
                       borderRadius: 50 * factor,
                       backgroundColor: 'white',
@@ -407,6 +359,7 @@ export default class CreateAccount3 extends React.Component {
                     key={'appearsOnProfile'}
                     style={{
                       width: width,
+                      height: 20 * factor,
                       paddingLeft: 20 * factor
                     }}
                   >
@@ -424,7 +377,7 @@ export default class CreateAccount3 extends React.Component {
                   <View
                     key={'next'}
                     style={{
-                      height: '6%',
+                      height: height * 0.06,
                       width: '40%',
                       borderRadius: 50 * factor,
                       borderColor: '#fb1b2f',
@@ -561,8 +514,8 @@ export default class CreateAccount3 extends React.Component {
                       </TouchableOpacity>
                     )}
                   </View>
-                </View>
-              </Animated.View>
+                </KeyboardAvoidingView>
+              </View>
               <Modal
                 key={'checkUserTakenModal'}
                 isVisible={this.state.showDisplayName}
