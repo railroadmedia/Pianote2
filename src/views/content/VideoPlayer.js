@@ -991,27 +991,22 @@ export default class VideoPlayer extends React.Component {
                   videoId,
                   id,
                   lengthInSec,
-                  currentTime
+                  currentTime,
+                  mediaCategory
                 ) => {
-                  if (this.context.isConnected) {
-                    if (!this.sessionId)
-                      try {
-                        this.sessionId = (
-                          await getMediaSessionId(
-                            videoId,
-                            id,
-                            lengthInSec,
-                            'vimeo'
-                          )
-                        ).session_id.id;
-                      } catch (e) {}
-
-                    updateUsersVideoProgress(
-                      this.sessionId,
-                      currentTime,
-                      lengthInSec
-                    );
-                  }
+                  if (!this.context.isConnected) return;
+                  updateUsersVideoProgress(
+                    (
+                      await getMediaSessionId(
+                        videoId,
+                        id,
+                        lengthInSec,
+                        mediaCategory
+                      )
+                    )?.session_id.id,
+                    currentTime,
+                    lengthInSec
+                  );
                 }}
                 styles={{
                   timerCursorBackground: colors.pianoteRed,
