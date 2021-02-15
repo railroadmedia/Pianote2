@@ -206,7 +206,7 @@ export default class ProfileSettings extends React.Component {
             backgroundColor={colors.mainBackground}
             barStyle={'light-content'}
           />
-          <View style={localStyles.myProfileSettings}>
+          <View style={[localStyles.myProfileSettings]}>
             <View style={{ flex: 1 }} />
             <Text
               style={[
@@ -406,28 +406,23 @@ export default class ProfileSettings extends React.Component {
           </Modal>
         </SafeAreaView>
         <Loading ref={ref => (this.loadingRef = ref)} />
-        <SafeAreaView style={{ position: 'absolute', zIndex: 3 }}>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                this.state.isLoading
-                  ? null
-                  : this.state.currentlyView == 'Profile Settings'
-                  ? this.props.navigation.goBack()
-                  : this.setState({ currentlyView: 'Profile Settings' });
-              }}
-              style={{
-                position: 'absolute',
-                padding: 15
-              }}
-            >
-              <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
-                fill={colors.secondBackground}
-              />
-            </TouchableOpacity>
-          </View>
+        <SafeAreaView style={{ position: 'absolute' }}>
+          <TouchableOpacity
+            onPress={() => {
+              this.state.isLoading
+                ? null
+                : this.state.currentlyView == 'Profile Settings'
+                ? this.props.navigation.goBack()
+                : this.setState({ currentlyView: 'Profile Settings' });
+            }}
+            style={{ padding: 15 }}
+          >
+            <Back
+              width={(onTablet ? 17.5 : 25) * factor}
+              height={(onTablet ? 17.5 : 25) * factor}
+              fill={colors.secondBackground}
+            />
+          </TouchableOpacity>
         </SafeAreaView>
       </>
     );

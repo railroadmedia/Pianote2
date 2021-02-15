@@ -503,7 +503,7 @@ export default class VideoPlayer extends React.Component {
         <View
           style={{
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             paddingBottom: 10 * factor
           }}
         >
@@ -511,7 +511,8 @@ export default class VideoPlayer extends React.Component {
             style={{
               height: (onTablet ? 30 : 40) * factor,
               width: (onTablet ? 30 : 40) * factor,
-              borderRadius: 100
+              borderRadius: 100,
+              marginTop: 10 * factor
             }}
             source={{
               uri: item.user['fields.profile_picture_image_url']
