@@ -889,7 +889,7 @@ export default class PathOverview extends React.Component {
           <NextVideo
             item={nextLesson}
             progress={this.state.progress}
-            type={isMethod ? 'LEVEL' : this.state.type.toUpperCase()}
+            type={isMethod ? 'COURSE' : this.state.type.toUpperCase()}
             onNextLesson={() =>
               this.goToLesson(
                 this.state.isMethod
@@ -919,7 +919,7 @@ export default class PathOverview extends React.Component {
                 showRestartCourse: false
               });
             }}
-            type='course'
+            type={this.state.type}
             onRestart={this.onRestartCourse}
           />
         </Modal>
