@@ -406,7 +406,7 @@ export default class ProfileSettings extends React.Component {
           </Modal>
         </SafeAreaView>
         <Loading ref={ref => (this.loadingRef = ref)} />
-        <SafeAreaView style={{ position: 'absolute' }}>
+        <SafeAreaView style={{ position: 'absolute', zIndex: 3 }}>
           <TouchableOpacity
             onPress={() => {
               this.state.isLoading
