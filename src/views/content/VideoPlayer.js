@@ -226,19 +226,24 @@ export default class VideoPlayer extends React.Component {
         });
       }
     }
+    let youtubeId = content.post.fields
+      ?.find(f => f.key === 'video')
+      ?.value?.fields?.find(f => f.key === 'youtube_video_id')?.value;
     this.setState(
       {
-        youtubeId: content.post.fields
-          ?.find(f => f.key === 'video')
-          ?.value?.fields?.find(f => f.key === 'youtube_video_id')?.value,
+        youtubeId,
         comments: content.post.comments,
         id: content.id,
         url: content.post.mobile_app_url,
         type: content.type,
         videoId: content.post.fields?.find(f => f.key === 'video')
-          ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
-              'vimeo_video_id'
-            )
+          ? youtubeId
+            ? new ContentModel(content.getFieldMulti('video')[0])?.getField(
+                'youtube_video_id'
+              )
+            : new ContentModel(content.getFieldMulti('video')[0])?.getField(
+                'vimeo_video_id'
+              )
           : -1,
         lessonImage: content.getData('thumbnail_url'),
         lessonTitle: content.getField('title'),
