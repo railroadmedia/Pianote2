@@ -29,12 +29,9 @@ export default {
         headers,
         method: method || 'GET'
       });
-
+      let json = await response.json();
       // if error, get new token call again
-      if (
-        response.error == 'TOKEN_EXPIRED' ||
-        response.error == 'Token not provided'
-      ) {
+      if (json.error == 'TOKEN_EXPIRED' || json.error == 'Token not provided') {
         // reset global token
         await getToken();
         updateFcmToken();
@@ -57,7 +54,7 @@ export default {
       }
 
       // if no error send initial result
-      return await response.json();
+      return json;
     } catch (error) {
       return {
         title: 'Something went wrong...',
