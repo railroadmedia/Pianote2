@@ -446,16 +446,18 @@ export default class Search extends React.Component {
                       }
                     ]}
                   >
-                    <Text
-                      style={{
-                        fontSize: 14 * factor,
-                        color: colors.pianoteRed,
-                        textAlign: 'right',
-                        fontFamily: 'OpenSans-Regular'
-                      }}
-                    >
-                      Clear
-                    </Text>
+                    {!this.state.filtering && (
+                      <Text
+                        style={{
+                          fontSize: 14 * factor,
+                          color: colors.pianoteRed,
+                          textAlign: 'right',
+                          fontFamily: 'OpenSans-Regular'
+                        }}
+                      >
+                        Clear
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 )}
               </View>

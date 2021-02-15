@@ -53,6 +53,7 @@ export default class ProfileSettings extends React.Component {
     this.state = {
       showDisplayName: false,
       showProfileImage: false,
+      isLoading: false,
       currentlyView: 'Profile Settings',
       displayName: '',
       currentPassword: '',
@@ -79,6 +80,7 @@ export default class ProfileSettings extends React.Component {
   };
 
   async save() {
+    this.setState({ isLoading: true });
     this.loadingRef?.toggleLoading(true);
     if (this.state.currentlyView == 'Display Name') {
       await this.changeName();
@@ -88,6 +90,7 @@ export default class ProfileSettings extends React.Component {
       await this.changePassword();
     }
     this.loadingRef?.toggleLoading(false);
+    this.setState({ isLoading: false });
   }
 
   changePassword = async () => {
@@ -203,7 +206,7 @@ export default class ProfileSettings extends React.Component {
             backgroundColor={colors.mainBackground}
             barStyle={'light-content'}
           />
-          <View style={localStyles.myProfileSettings}>
+          <View style={[localStyles.myProfileSettings]}>
             <View style={{ flex: 1 }} />
             <Text
               style={[
@@ -300,7 +303,7 @@ export default class ProfileSettings extends React.Component {
                     <TouchableOpacity
                       style={{
                         ...localStyles.crossContainer,
-                        right: -((onTablet ? 22.5 : 30) * factor + 10 + 4)
+                        right: -((onTablet ? 22.5 : 27.5) * factor)
                       }}
                       onPress={() =>
                         this.setState({
@@ -403,29 +406,23 @@ export default class ProfileSettings extends React.Component {
           </Modal>
         </SafeAreaView>
         <Loading ref={ref => (this.loadingRef = ref)} />
-        <SafeAreaView style={{ position: 'absolute', zIndex: 3 }}>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                this.loadingRef?.toggleLoading(false);
-                this.state.currentlyView == 'Profile Settings'
-                  ? this.props.navigation.goBack()
-                  : this.setState({
-                      currentlyView: 'Profile Settings'
-                    });
-              }}
-              style={{
-                position: 'absolute',
-                padding: 15
-              }}
-            >
-              <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
-                fill={colors.secondBackground}
-              />
-            </TouchableOpacity>
-          </View>
+        <SafeAreaView style={{ position: 'absolute' }}>
+          <TouchableOpacity
+            onPress={() => {
+              this.state.isLoading
+                ? null
+                : this.state.currentlyView == 'Profile Settings'
+                ? this.props.navigation.goBack()
+                : this.setState({ currentlyView: 'Profile Settings' });
+            }}
+            style={{ padding: 15 }}
+          >
+            <Back
+              width={(onTablet ? 17.5 : 25) * factor}
+              height={(onTablet ? 17.5 : 25) * factor}
+              fill={colors.secondBackground}
+            />
+          </TouchableOpacity>
         </SafeAreaView>
       </>
     );
@@ -497,7 +494,7 @@ const localStyles = StyleSheet.create({
   },
   crossContainer: {
     position: 'absolute',
-    padding: 5,
+    padding: 3.5 * factor,
     borderColor: '#445f73',
     borderWidth: 2,
     borderRadius: 100
@@ -512,8 +509,8 @@ const localStyles = StyleSheet.create({
   },
   imageContainer: {
     alignSelf: 'center',
-    height: (DeviceInfo.isTablet() ? 75 : 100) * factor,
-    width: (DeviceInfo.isTablet() ? 75 : 100) * factor,
+    height: (DeviceInfo.isTablet() ? 75 : 90) * factor,
+    width: (DeviceInfo.isTablet() ? 75 : 90) * factor,
     borderRadius: 200 * factor,
     borderColor: '#445f73',
     borderWidth: 2 * factor

@@ -71,9 +71,10 @@ class VerticalVideoList extends React.Component {
     this.state = {
       showModal: false,
       outVideos: this.props.outVideos,
+      isLoading: this.props.isLoading,
       showRelevance: false,
       items: this.props.items,
-      isLoading: this.props.isLoading,
+
       isPaging: false,
       addToCalendarModal: false
     };
@@ -102,7 +103,8 @@ class VerticalVideoList extends React.Component {
 
   showSpinner = () => {
     return (
-      <View style={[styles.centerContent, { marginTop: 15 * factor }]}>
+      <View style={[styles.centerContent, { minHeight: 40 }]}>
+        <View style={{ flex: 1 }} />
         <ActivityIndicator
           size={onTablet ? 'large' : 'small'}
           animating={true}
@@ -110,6 +112,7 @@ class VerticalVideoList extends React.Component {
             this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
           }
         />
+        <View style={{ flex: 1 }} />
       </View>
     );
   };
@@ -744,7 +747,7 @@ class VerticalVideoList extends React.Component {
                 {this.props.showLargeTitle ? (
                   <Text
                     style={{
-                      fontSize: 30 * factor,
+                      fontSize: (onTablet ? 25 : 30) * factor,
                       color: 'white',
                       fontFamily: 'OpenSans-ExtraBold'
                     }}
@@ -756,7 +759,7 @@ class VerticalVideoList extends React.Component {
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: onTablet ? 26 : 18 * factor,
+                        fontSize: onTablet ? 22 : 18 * factor,
                         marginBottom: 5 * factor,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',
@@ -916,7 +919,9 @@ class VerticalVideoList extends React.Component {
                     textAlign: 'left'
                   }}
                 >
-                  There are no results that match those filters.
+                  {this.props.title.includes('SEARCH RESULTS')
+                    ? ''
+                    : 'There are no results that match those filters.'}
                 </Text>
               </View>
             )}
@@ -924,7 +929,12 @@ class VerticalVideoList extends React.Component {
         <View style={{ flex: 1 }}>
           {this.renderMappedList()}
           {this.state.isPaging && !this.state.isLoading && (
-            <View style={[styles.centerContent, { marginTop: 15 * factor }]}>
+            <View
+              style={[
+                styles.centerContent,
+                { minHeight: 20, marginTop: 15 * factor }
+              ]}
+            >
               <ActivityIndicator
                 size={onTablet ? 'large' : 'small'}
                 animating={true}

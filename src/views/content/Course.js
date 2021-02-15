@@ -279,6 +279,7 @@ class Course extends React.Component {
                 }}
               >
                 <HorizontalVideoList
+                  hideFilterButton={true}
                   Title={'CONTINUE'}
                   seeAll={() =>
                     this.props.navigation.navigate('SEEALL', {
@@ -300,6 +301,27 @@ class Course extends React.Component {
                   })
                 }
                 items={this.state.allCourses}
+                // if horizontal replace vertical on tablet include below
+                hideFilterButton={false} // if on tablet & should be filter list not see all
+                isPaging={this.state.isPaging}
+                filters={this.state.filters} // show filter list
+                currentSort={this.state.currentSort}
+                changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+                outVideos={this.state.outVideos} // if paging and out of videos
+                getVideos={() => this.getVideos()}
+                callEndReached={true}
+                reachedEnd={() => {
+                  if (!this.state.isPaging && !this.state.outVideos) {
+                    this.setState(
+                      {
+                        page: this.state.page + 1,
+                        isPaging: true
+                      },
+                      () => this.getAllCourses()
+                    );
+                  }
+                }}
               />
             ) : (
               <VerticalVideoList

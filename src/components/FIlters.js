@@ -7,11 +7,11 @@ import {
   Text,
   StatusBar,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Dimensions,
   TouchableOpacity
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
@@ -288,6 +288,7 @@ export default class Filters extends React.Component {
 
           <ScrollView
             showsVerticalScrollIndicator={false}
+            nestedScrollEnabled={true}
             contentInsetAdjustmentBehavior={'never'}
             style={styles.mainContainer}
           >
@@ -674,6 +675,7 @@ export default class Filters extends React.Component {
                       }}
                     >
                       <ScrollView
+                        nestedScrollEnabled={true}
                         style={{
                           height: this.state.filterType
                             ? 350 * factor
@@ -915,6 +917,7 @@ export default class Filters extends React.Component {
                       }}
                     >
                       <ScrollView
+                        nestedScrollEnabled={true}
                         style={{
                           height: !this.state.filterType
                             ? 40 * factor + 90 * factor
@@ -1135,6 +1138,7 @@ export default class Filters extends React.Component {
                     }}
                   >
                     <ScrollView
+                      nestedScrollEnabled={true}
                       style={{
                         height: !this.state.filterType
                           ? 40 * factor + 90 * factor
@@ -1358,6 +1362,7 @@ export default class Filters extends React.Component {
                     }}
                   >
                     <ScrollView
+                      nestedScrollEnabled={true}
                       style={{
                         height: !this.state.filterType
                           ? 40 * factor + 90 * factor
@@ -1796,7 +1801,7 @@ export default class Filters extends React.Component {
                     borderBottomWidth: 0.5 * factor
                   }}
                 >
-                  <ScrollView>
+                  <ScrollView nestedScrollEnabled={true}>
                     {this.state.filtersAvailable.instructor.map(
                       (data, index) => {
                         if (index % 4 == 0) {

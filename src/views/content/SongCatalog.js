@@ -292,6 +292,7 @@ class SongCatalog extends React.Component {
             {this.state.started && (
               <View style={styles.mainContainer}>
                 <HorizontalVideoList
+                  hideFilterButton={true}
                   Title={'CONTINUE'}
                   seeAll={() =>
                     this.props.navigation.navigate('SEEALL', {

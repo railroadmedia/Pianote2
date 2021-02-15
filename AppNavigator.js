@@ -52,7 +52,12 @@ const AppNavigator = createStackNavigator(
 
     // user
     NOTIFICATIONSETTINGS: { screen: NotificationSettings },
-    PROFILESETTINGS: { screen: ProfileSettings },
+    PROFILESETTINGS: {
+      screen: ProfileSettings,
+      navigationOptions: {
+        gesturesEnabled: false
+      }
+    },
     PRIVACYPOLICY: { screen: PrivacyPolicy },
     SETTINGS: { screen: Settings },
     PROFILE: { screen: Profile },

@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   Platform,
+  ActivityIndicator,
   Image,
   StyleSheet,
   Dimensions
@@ -20,7 +21,9 @@ import FastImage from 'react-native-fast-image';
 import AddToCalendar from '../modals/AddToCalendar';
 import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
+import Relevance from '../modals/Relevance';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
@@ -33,6 +36,13 @@ const width =
 const height =
   windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
+const sortDict = {
+  newest: 'NEWEST',
+  oldest: 'OLDEST',
+  popularity: 'POPULAR',
+  trending: 'TRENDING',
+  relevance: 'RELEVANCE'
+};
 
 class HorizontalVideoList extends React.Component {
   static navigationOptions = { header: null };
@@ -42,10 +52,34 @@ class HorizontalVideoList extends React.Component {
     this.state = {
       showModal: false,
       addToCalendarModal: false,
+      showRelevance: false,
+      outVideos: this.props.outVideos,
+      isLoading: false,
       items: this.props.items
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
+
+  UNSAFE_componentWillReceiveProps = props => {
+    if (props.isPaging !== this.state.isPaging) {
+      if (!this.state.isLoading) {
+        this.setState({ isPaging: props.isPaging });
+      }
+    }
+    if (props.outVideos !== this.state.outVideos) {
+      this.setState({ outVideos: props.outVideos });
+    }
+    if (props.isLoading !== this.state.isLoading) {
+      this.setState({
+        isLoading: props.isLoading,
+        items: [...this.state.items, ...props.items]
+      });
+    } else if (props.items !== this.state.items) {
+      this.setState({
+        items: props.items
+      });
+    }
+  };
 
   componentDidUpdate(prevProps) {
     let { items: pItems } = prevProps;
@@ -212,6 +246,56 @@ class HorizontalVideoList extends React.Component {
       });
   };
 
+  listFooter = () => {
+    if (this.state.outVideos || !this.state.callEndReached) {
+      return <></>;
+    }
+
+    if (this.state.items.length > 0) {
+      return (
+        <View
+          style={[
+            styles.centerContent,
+            {
+              flex: 1,
+              marginHorizontal: 40 * factor,
+              flexDirection: 'row'
+            }
+          ]}
+        >
+          <View style={{ flex: 3 }} />
+          <ActivityIndicator
+            size={onTablet ? 'large' : 'small'}
+            animating={true}
+            color={
+              this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
+            }
+          />
+          <View style={{ flex: 0.7 }} />
+        </View>
+      );
+    } else {
+      return (
+        <View
+          style={{
+            width: width,
+            height: '100%'
+          }}
+        >
+          <View style={{ flex: 1 }} />
+          <ActivityIndicator
+            size={onTablet ? 'large' : 'small'}
+            animating={true}
+            color={
+              this.props.isMethod ? colors.pianoteGrey : colors.secondBackground
+            }
+          />
+          <View style={{ flex: 1 }} />
+        </View>
+      );
+    }
+  };
+
   render = () => {
     return (
       <View style={localStyles.listContainer}>
@@ -227,15 +311,94 @@ class HorizontalVideoList extends React.Component {
             {this.props.Title}
           </Text>
           {!this.props.hideSeeAll && (
-            <TouchableOpacity
-              key={'seeAll'}
-              onPress={() => this.props.seeAll()}
-            >
-              <Text style={localStyles.seeAllText}>See All</Text>
-            </TouchableOpacity>
+            <>
+              {(!onTablet || (onTablet && this.props.hideFilterButton)) && (
+                <TouchableOpacity
+                  key={'seeAll'}
+                  onPress={() => this.props.seeAll()}
+                >
+                  <Text style={localStyles.seeAllText}>See All</Text>
+                </TouchableOpacity>
+              )}
+              {onTablet && (
+                <>
+                  {!this.props.hideFilterButton && (
+                    <>
+                      <View style={{ flex: 1 }} />
+                      <TouchableOpacity
+                        style={[
+                          styles.centerContent,
+                          {
+                            flexDirection: 'row',
+                            marginRight: 7.5 * factor
+                          }
+                        ]}
+                        onPress={() => {
+                          this.setState({
+                            showRelevance: !this.state.showRelevance
+                          });
+                        }}
+                      >
+                        <View style={{ flex: 1 }} />
+                        <Text
+                          style={[
+                            localStyles.seeAllText,
+                            {
+                              paddingRight: 4 * factor,
+                              fontSize: 18
+                            }
+                          ]}
+                        >
+                          {sortDict[this.props.currentSort]}
+                        </Text>
+                        <View>
+                          <FontIcon
+                            size={(onTablet ? 12 : 14) * factor}
+                            name={'sort-amount-down'}
+                            color={colors.pianoteRed}
+                          />
+                        </View>
+                        <View style={{ flex: 1 }} />
+                      </TouchableOpacity>
+                    </>
+                  )}
+                  {!this.props.hideFilterButton && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.props.filterResults();
+                      }}
+                      style={[
+                        styles.centerContent,
+                        {
+                          borderWidth: 1.25 * factor,
+                          borderColor: colors.pianoteRed,
+                          height: (onTablet ? 21 : 30) * factor,
+                          width: (onTablet ? 21 : 30) * factor,
+                          borderRadius: 30 * factor,
+                          marginRight: 10 * factor
+                        }
+                      ]}
+                    >
+                      <View style={{ flex: 1 }} />
+                      <View
+                        style={{
+                          transform: [{ rotate: '90deg' }]
+                        }}
+                      >
+                        <IonIcon
+                          size={(onTablet ? 11.5 : 14) * factor}
+                          name={'md-options'}
+                          color={colors.pianoteRed}
+                        />
+                      </View>
+                      <View style={{ flex: 1 }} />
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+            </>
           )}
         </View>
-
         <FlatList
           key={'videos'}
           data={this.state.items}
@@ -243,6 +406,11 @@ class HorizontalVideoList extends React.Component {
           horizontal={true}
           style={{ width: '100%' }}
           showsHorizontalScrollIndicator={false}
+          onEndReached={() => {
+            this.props.callEndReached ? this.props.reachedEnd() : null;
+          }}
+          onEndReachedThreshold={1}
+          ListFooterComponent={() => this.listFooter()}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <TouchableOpacity
@@ -392,6 +560,7 @@ class HorizontalVideoList extends React.Component {
             </TouchableOpacity>
           )}
         />
+
         <Modal
           key={'modal'}
           isVisible={this.state.showModal}
@@ -433,6 +602,33 @@ class HorizontalVideoList extends React.Component {
             }}
           />
         </Modal>
+        <Modal
+          key={'modalRelevance'}
+          isVisible={this.state.showRelevance}
+          style={{
+            margin: 0,
+            height: '100%',
+            width: '100%'
+          }}
+          animation={'slideInUp'}
+          animationInTiming={250}
+          animationOutTiming={250}
+          coverScreen={true}
+          hasBackdrop={false}
+          backdropColor={'white'}
+          backdropOpacity={0.79}
+        >
+          <Relevance
+            hideRelevance={() => {
+              this.setState({ showRelevance: false });
+            }}
+            isMethod={this.props.isMethod}
+            currentSort={this.props.currentSort}
+            changeSort={sort => {
+              this.props.changeSort(sort);
+            }}
+          />
+        </Modal>
       </View>
     );
   };
@@ -467,9 +663,9 @@ const localStyles = StyleSheet.create({
           (Dimensions.get('window').height / 812 +
             Dimensions.get('window').width / 375)) /
         2,
-    fontWeight: '300',
+    fontWeight: DeviceInfo.isTablet() ? '500' : '300',
     color: '#fb1b2f',
-    paddingRight: (15 * Dimensions.get('window').width) / 375
+    paddingRight: 10 * factor
   },
   titleContain: {
     flex: 1,

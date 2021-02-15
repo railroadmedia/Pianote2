@@ -71,7 +71,7 @@ class Replies extends React.Component {
           <View
             style={{
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               paddingBottom: 10 * factor
             }}
           >
@@ -79,7 +79,8 @@ class Replies extends React.Component {
               style={{
                 height: (onTablet ? 30 : 40) * factor,
                 width: (onTablet ? 30 : 40) * factor,
-                borderRadius: 100
+                borderRadius: 100,
+                marginTop: 10 * factor
               }}
               source={{ uri: reply.user['fields.profile_picture_image_url'] }}
               resizeMode={FastImage.resizeMode.stretch}
@@ -242,7 +243,7 @@ class Replies extends React.Component {
                       <View
                         style={{
                           alignItems: 'center',
-                          justifyContent: 'center',
+                          justifyContent: 'flex-start',
                           paddingBottom: 10 * factor
                         }}
                       >
@@ -250,7 +251,8 @@ class Replies extends React.Component {
                           style={{
                             height: (onTablet ? 30 : 40) * factor,
                             width: (onTablet ? 30 : 40) * factor,
-                            borderRadius: 100
+                            borderRadius: 100,
+                            marginTop: 10 * factor
                           }}
                           source={{
                             uri: user['fields.profile_picture_image_url']

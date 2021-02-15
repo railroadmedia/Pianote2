@@ -321,15 +321,15 @@ class Lessons extends React.Component {
     newContent.post.fields.find(f => f.key === 'video')?.length_in_seconds;
   };
 
-  changeSort = currentSort => {
+  changeSort = async currentSort => {
     // change sort
-    this.setState(
+    await this.setState(
       {
         currentSort,
         outVideos: false,
-        isPaging: false,
+        isPaging: true,
         allLessons: [],
-        page: 1
+        page: 0
       },
       () => this.getAllLessons()
     );
@@ -410,7 +410,9 @@ class Lessons extends React.Component {
                 refreshing={isiOS ? false : this.state.refreshControl}
               />
             }
-            onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
+            onScroll={({ nativeEvent }) => {
+              onTablet ? '' : this.handleScroll(nativeEvent);
+            }}
             scrollEventThrottle={400}
           >
             {isiOS && this.state.refreshControl && (
@@ -519,6 +521,7 @@ class Lessons extends React.Component {
             <View>
               {this.state.lessonsStarted && (
                 <HorizontalVideoList
+                  hideFilterButton={true}
                   isMethod={true}
                   Title={'IN PROGRESS'}
                   seeAll={() =>
@@ -535,15 +538,36 @@ class Lessons extends React.Component {
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}
+                  items={this.state.allLessons}
                   Title={'ALL LESSONS'}
+                  showType={true}
                   seeAll={() =>
                     this.props.navigation.navigate('SEEALL', {
                       title: 'All Lessons',
                       parent: 'Lessons'
                     })
                   }
-                  showType={true}
-                  items={this.state.allLessons}
+                  // if horizontal replace vertical on tablet include below
+                  hideFilterButton={false} // if on tablet & should be filter list not see all
+                  isPaging={this.state.isPaging}
+                  filters={this.state.filters} // show filter list
+                  currentSort={this.state.currentSort}
+                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                  filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+                  outVideos={this.state.outVideos} // if paging and out of videos
+                  getVideos={() => this.getVideos()}
+                  callEndReached={true}
+                  reachedEnd={() => {
+                    if (!this.state.isPaging && !this.state.outVideos) {
+                      this.setState(
+                        {
+                          page: this.state.page + 1,
+                          isPaging: true
+                        },
+                        () => this.getAllLessons()
+                      );
+                    }
+                  }}
                 />
               ) : (
                 <VerticalVideoList
