@@ -125,14 +125,14 @@ global.maxLevel = {
   studentFocus: null
 };
 global.isConnected = true;
-global.serverLocation = 'https://www.pianote.com';
+global.serverLocation = 'https://staging.pianote.com';
 global.isPackOnly = false;
 global.versionNumber = '1.0.11';
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
 
 configure({
-  baseURL: 'https://www.pianote.com',
+  baseURL: 'https://staging.pianote.com',
   'Content-Type': 'application/x-www-form-urlencoded',
   Accept: 'application/json'
 });
