@@ -35,6 +35,7 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import RestartCourse from '../../modals/RestartCourse';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
+import Filters_V2 from '../../components/Filters_V2';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -141,6 +142,7 @@ class Lessons extends React.Component {
       ),
       getStartedContent('')
     ]);
+    this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props.cacheAndWriteLessons({
       all: content[1],
       method: content[0],
@@ -423,7 +425,6 @@ class Lessons extends React.Component {
               />
             )}
             <ImageBackground
-              onLayout={() => console.log(this.getAspectRatio())}
               resizeMode={'cover'}
               style={{
                 width: '100%',
@@ -517,7 +518,6 @@ class Lessons extends React.Component {
                 <View style={{ flex: 0.1 }} />
               </View>
             </ImageBackground>
-
             <View>
               {this.state.lessonsStarted && (
                 <HorizontalVideoList
@@ -535,6 +535,17 @@ class Lessons extends React.Component {
                 />
               )}
               <View style={{ height: onTablet ? -10 : 10 * factor }} />
+              {this.metaFilters && (
+                <Filters_V2
+                  disabled={false}
+                  onApply={a => {
+                    console.log(this.filters.filterQuery);
+                  }}
+                  meta={this.metaFilters}
+                  deepLinking={this.props.url}
+                  ref={r => (this.filters = r)}
+                />
+              )}
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

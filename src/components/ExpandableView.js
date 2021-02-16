@@ -65,9 +65,7 @@ export default class ExpandableView extends React.Component {
           style={[
             {
               flexDirection: 'row',
-              alignItems: 'center',
-              padding: 10,
-              height: 50
+              alignItems: 'center'
             },
             this.props.dropStyle
           ]}
