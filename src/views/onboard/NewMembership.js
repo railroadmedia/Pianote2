@@ -45,7 +45,6 @@ const benefits = [
   'Cancel anytime through the App Store.'
 ];
 
-let isTablet = false;
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -59,7 +58,6 @@ export default class NewMembership extends React.Component {
   constructor(props) {
     super(props);
     Orientation.lockToPortrait();
-    isTablet = DeviceInfo.isTablet();
     this.state = {
       newUser: this.props.navigation.state.params.data.type,
       email: this.props.navigation.state.params.data.email,
@@ -210,7 +208,7 @@ export default class NewMembership extends React.Component {
             <TouchableOpacity
               style={{ position: 'absolute', left: 15, padding: 5 }}
               onPress={() => {
-                if (isTablet) Orientation.unlockAllOrientations();
+                if (onTablet) Orientation.unlockAllOrientations();
                 this.props.navigation.state.params.type == 'SIGNUP'
                   ? this.props.navigation.goBack()
                   : this.props.navigation.navigate('LOGINCREDENTIALS');
@@ -245,7 +243,7 @@ export default class NewMembership extends React.Component {
               <Text
                 style={{
                   color: 'white',
-                  fontSize: isTablet ? 1.5 * fontIndex : 2 * fontIndex,
+                  fontSize: onTablet ? 1.5 * fontIndex : 2 * fontIndex,
                   fontFamily: 'OpenSans',
                   textAlign: 'center'
                 }}
@@ -264,7 +262,7 @@ export default class NewMembership extends React.Component {
                 style={[
                   styles.planContainer,
                   {
-                    marginLeft: isTablet ? '15%' : '3%',
+                    marginLeft: onTablet ? '10%' : '3%',
                     marginRight: 5
                   }
                 ]}
@@ -284,11 +282,13 @@ export default class NewMembership extends React.Component {
                   >
                     {subscriptions && (
                       <View
-                        style={{ flexDirection: 'row', alignItems: 'flex-end' }}
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'flex-end',
+                          paddingHorizontal: 10
+                        }}
                       >
-                        <Text style={styles.planPrice}>
-                          {subscriptions?.[0]?.localizedPrice}
-                        </Text>
+                        <Text style={styles.planPrice}>RON 99.99</Text>
                         {!!subscriptions[0]?.localizedPrice && (
                           <Text style={styles.planSubtitle}>/mo</Text>
                         )}
@@ -311,7 +311,7 @@ export default class NewMembership extends React.Component {
                   styles.planContainer,
                   {
                     marginLeft: 5,
-                    marginRight: isTablet ? '15%' : '3%'
+                    marginRight: onTablet ? '10%' : '3%'
                   }
                 ]}
               >
@@ -320,7 +320,7 @@ export default class NewMembership extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: 'black',
-                    height: isTablet ? 30 : 20,
+                    height: onTablet ? 30 : 20,
                     borderTopLeftRadius: 10,
                     borderTopRightRadius: 10
                   }}
@@ -329,7 +329,7 @@ export default class NewMembership extends React.Component {
                     style={{
                       fontSize: 12,
                       fontFamily: 'OpenSans-Semibold',
-                      fontSize: isTablet ? 12 : 10,
+                      fontSize: onTablet ? 12 : 10,
                       color: '#ffffff'
                     }}
                   >
@@ -353,7 +353,8 @@ export default class NewMembership extends React.Component {
                       <View
                         style={{
                           flexDirection: 'row',
-                          alignItems: 'flex-end'
+                          alignItems: 'flex-end',
+                          paddingHorizontal: 10
                         }}
                       >
                         <Text style={styles.planPrice}>
@@ -382,7 +383,7 @@ export default class NewMembership extends React.Component {
                 style={{
                   zIndex: 5,
                   marginTop: '3%',
-                  marginHorizontal: isTablet ? '15%' : '3%'
+                  marginHorizontal: onTablet ? '15%' : '3%'
                 }}
               >
                 <CreateAccountStepCounter step={3} />
@@ -408,7 +409,7 @@ export default class NewMembership extends React.Component {
                 >
                   <AntIcon
                     name={'check'}
-                    size={isTablet ? 1.3 * fontIndex : 2 * fontIndex}
+                    size={onTablet ? 1.3 * fontIndex : 2 * fontIndex}
                     color={'white'}
                   />
 
@@ -416,7 +417,7 @@ export default class NewMembership extends React.Component {
                     style={{
                       color: '#ffffff',
                       fontFamily: 'OpenSans',
-                      fontSize: isTablet ? 1.3 * fontIndex : 1.5 * fontIndex,
+                      fontSize: onTablet ? 1.3 * fontIndex : 1.5 * fontIndex,
                       marginLeft: 5
                     }}
                   >
@@ -435,7 +436,7 @@ export default class NewMembership extends React.Component {
                 <Text
                   style={[
                     styles.underlineText,
-                    { fontSize: isTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
+                    { fontSize: onTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
                   ]}
                 >
                   {this.state.newUser == 'SIGNUP'
@@ -457,7 +458,7 @@ export default class NewMembership extends React.Component {
                   <Text
                     style={[
                       styles.underlineText,
-                      { fontSize: isTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
+                      { fontSize: onTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
                     ]}
                   >
                     Terms - Privacy
@@ -522,28 +523,28 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: fontIndex,
     textAlign: 'center',
-    marginBottom: isTablet ? 15 : 5
+    marginBottom: global.onTablet ? 15 : 5
   },
   planPrice: {
     fontFamily: 'OpenSans-Bold',
     color: '#000000',
-    fontSize: 3 * fontIndex
+    fontSize: global.onTablet ? 2 * fontIndex : 3 * fontIndex
   },
   planBtn: {
     backgroundColor: '#fb1b2f',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: isTablet ? 30 : 15,
-    marginTop: isTablet ? 30 : 0,
+    marginBottom: global.onTablet ? 30 : 15,
+    marginTop: global.onTablet ? 30 : 0,
     width: '80%'
   },
   planBtnText: {
     color: '#ffffff',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: isTablet ? 16 : 12,
+    fontSize: global.onTablet ? 16 : 12,
     textAlign: 'center',
-    padding: isTablet ? 16 : 5
+    padding: global.onTablet ? 16 : 5
   },
   underlineText: {
     color: 'white',
