@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Linking
+  Linking,
+  StyleSheet
 } from 'react-native';
 import Intercom from 'react-native-intercom';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
@@ -99,120 +100,61 @@ export default class SupportSignUp extends React.Component {
             </Text>
             <View style={{ flex: 0.33 }} />
           </View>
-          <ScrollView key={'contentContainer'} style={{ flex: 1 }}>
-            <View style={{ height: '25%' }} />
-            <View style={{ paddingHorizontal: '5%' }}>
+          <ScrollView
+            key={'contentContainer'}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <View style={{ height: '15%' }} />
+
+            <TouchableOpacity
+              onPress={() => this.onIntercomPress()}
+              style={[styles.centerContent, localStyles.button]}
+            >
               <Text
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 15.5 * factor,
-                  color: colors.secondBackground
+                  fontFamily: 'RobotoCondensed-Bold',
+                  fontSize: 18 * factor,
+                  color: 'white',
+                  paddingVertical: 15
                 }}
-              ></Text>
-            </View>
-            <View style={{ height: '15%' }} />
-            <View
-              key={'chatSupport'}
-              style={{
-                height: '15%',
-                width: '100%',
-                flexDirection: 'row'
-              }}
-            >
-              <View style={{ flex: 1 }} />
-              <TouchableOpacity
-                onPress={() => this.onIntercomPress()}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '80%',
-                    borderRadius: 200,
-                    backgroundColor: '#fb1b2f'
-                  }
-                ]}
               >
-                <Text
-                  style={{
-                    fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: 18 * factor,
-                    color: 'white'
-                  }}
-                >
-                  LIVE CHAT SUPPORT
-                </Text>
-              </TouchableOpacity>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={{ height: '4%' }} />
-            <View
-              key={'emailSupport'}
-              style={{
-                height: '15%',
-                width: '100%',
-                flexDirection: 'row'
-              }}
+                LIVE CHAT SUPPORT
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => Linking.openURL('mailto:support@musora.com')}
+              style={[styles.centerContent, localStyles.button]}
             >
-              <View style={{ flex: 1 }} />
-              <TouchableOpacity
-                onPress={() => Linking.openURL('mailto:support@musora.com')}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '80%',
-                    borderRadius: 200,
-                    backgroundColor: '#fb1b2f'
-                  }
-                ]}
+              <Text
+                style={{
+                  fontFamily: 'RobotoCondensed-Bold',
+                  fontSize: 18 * factor,
+                  color: 'white',
+                  paddingVertical: 15
+                }}
               >
-                <Text
-                  style={{
-                    fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: 18 * factor,
-                    color: 'white'
-                  }}
-                >
-                  EMAIL SUPPORT
-                </Text>
-              </TouchableOpacity>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={{ height: '4%' }} />
-            <View
-              key={'phoneSupport'}
-              style={{
-                height: '15%',
-                width: '100%',
-                flexDirection: 'row'
-              }}
+                EMAIL SUPPORT
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
+              style={[styles.centerContent, localStyles.button]}
             >
-              <View style={{ flex: 1 }} />
-              <TouchableOpacity
-                onPress={() => Linking.openURL(`tel:${'18004398921'}`)}
-                style={[
-                  styles.centerContent,
-                  {
-                    height: '100%',
-                    width: '80%',
-                    borderRadius: 200,
-                    backgroundColor: '#fb1b2f'
-                  }
-                ]}
+              <Text
+                style={{
+                  fontFamily: 'RobotoCondensed-Bold',
+                  fontSize: 18 * factor,
+                  color: 'white',
+                  paddingVertical: 15
+                }}
               >
-                <Text
-                  style={{
-                    fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: 18 * factor,
-                    color: 'white'
-                  }}
-                >
-                  PHONE SUPPORT
-                </Text>
-              </TouchableOpacity>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={{ height: 20 * factor }} />
+                PHONE SUPPORT
+              </Text>
+            </TouchableOpacity>
+
             <Text
               key={'email'}
               style={{
@@ -220,12 +162,13 @@ export default class SupportSignUp extends React.Component {
                 fontSize: 14 * factor,
                 opacity: 0.8,
                 color: colors.secondBackground,
-                textAlign: 'center'
+                textAlign: 'center',
+                marginVertical: 5
               }}
             >
               EMAIL
             </Text>
-            <View style={{ height: 5 * factor }} />
+
             <Text
               key={'emailaddress'}
               style={{
@@ -237,7 +180,7 @@ export default class SupportSignUp extends React.Component {
             >
               support@musora.com
             </Text>
-            <View style={{ height: 20 * factor }} />
+
             <Text
               key={'phone'}
               style={{
@@ -245,12 +188,12 @@ export default class SupportSignUp extends React.Component {
                 fontSize: 14 * factor,
                 opacity: 0.8,
                 color: colors.secondBackground,
-                textAlign: 'center'
+                textAlign: 'center',
+                marginVertical: 5
               }}
             >
               PHONE
             </Text>
-            <View style={{ height: 5 * factor }} />
             <Text
               key={'phoneNumber'}
               style={{
@@ -262,7 +205,6 @@ export default class SupportSignUp extends React.Component {
             >
               1-800-439-8921
             </Text>
-            <View style={{ height: 5 * factor }} />
             <Text
               key={'phoneNumber2'}
               style={{
@@ -280,3 +222,13 @@ export default class SupportSignUp extends React.Component {
     );
   }
 }
+
+const localStyles = StyleSheet.create({
+  button: {
+    width: '80%',
+    borderRadius: 200,
+    backgroundColor: '#fb1b2f',
+    alignSelf: 'center',
+    marginVertical: 5
+  }
+});
