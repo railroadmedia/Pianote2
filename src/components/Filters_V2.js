@@ -56,7 +56,7 @@ export default class Filters_V2 extends React.Component {
   }
 
   componentDidMount() {
-    this.props.ref?.(this);
+    this.props.reference?.(this);
   }
 
   deepLinking = url => {

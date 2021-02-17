@@ -747,7 +747,7 @@ class VerticalVideoList extends React.Component {
                           this.props.applyFilters?.(this.filters?.filterQuery)
                         }
                         meta={this.props.filters}
-                        ref={r => (this.filters = r)}
+                        reference={r => (this.filters = r)}
                       />
                     )}
                     <View style={{ flex: 1 }} />
