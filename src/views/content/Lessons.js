@@ -63,15 +63,6 @@ class Lessons extends React.Component {
       outVideos: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       profileImage: '',
       xp: '',
       rank: '',
@@ -135,7 +126,7 @@ class Lessons extends React.Component {
         '',
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       ),
       getStartedContent('')
     ]);
@@ -180,7 +171,6 @@ class Lessons extends React.Component {
         methodIsCompleted: method.completed,
         methodNextLessonUrl: method.banner_button_url,
         allLessons: allVideos,
-        filtersAvailable: content.all.meta.filterOptions,
         progressLessons: inprogressVideos,
         outVideos:
           allVideos.length == 0 || content.all.data.length < 20 ? true : false,
@@ -213,7 +203,7 @@ class Lessons extends React.Component {
     });
   };
 
-  getAllLessons = async filters => {
+  getAllLessons = async () => {
     this.setState({ filtering: true });
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
@@ -224,16 +214,15 @@ class Lessons extends React.Component {
         '',
         this.state.currentSort,
         this.state.page,
-        filters
+        this.filterQuery
       );
+      this.metaFilters = response?.meta?.filterOptions;
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
-
       let items = this.setData(newContent);
 
       this.setState({
-        filtersAvailable: response.meta.filterOptions,
         allLessons: [...this.state.allLessons, ...items],
         outVideos:
           items.length == 0 || response.data.length < 20 ? true : false,
@@ -547,7 +536,7 @@ class Lessons extends React.Component {
                   // if horizontal replace vertical on tablet include below
                   hideFilterButton={false} // if on tablet & should be filter list not see all
                   isPaging={this.state.isPaging}
-                  filters={this.state.filtersAvailable}
+                  filters={this.metaFilters}
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)}
                   applyFilters={filters =>
@@ -557,7 +546,10 @@ class Lessons extends React.Component {
                         outVideos: false,
                         page: 1
                       },
-                      () => this.getAllLessons(filters)
+                      () => {
+                        this.filterQuery = filters;
+                        this.getAllLessons();
+                      }
                     )
                   }
                   outVideos={this.state.outVideos} // if paging and out of videos
@@ -588,7 +580,7 @@ class Lessons extends React.Component {
                   showArtist={true} // show artist name
                   showSort={true}
                   showLength={false}
-                  filters={this.state.filtersAvailable} // show filter list
+                  filters={this.metaFilters} // show filter list
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                   applyFilters={filters =>
@@ -598,7 +590,10 @@ class Lessons extends React.Component {
                         outVideos: false,
                         page: 1
                       },
-                      () => this.getAllLessons(filters)
+                      () => {
+                        this.filterQuery = filters;
+                        this.getAllLessons();
+                      }
                     )
                   }
                   imageWidth={width * 0.26} // image width

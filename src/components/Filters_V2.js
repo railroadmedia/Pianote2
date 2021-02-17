@@ -108,6 +108,7 @@ export default class Filters_V2 extends React.Component {
   };
 
   initFilters = () => {
+    console.log('if');
     topicKeys = [];
     styleKeys = [];
     instructorNames = [];
@@ -255,6 +256,7 @@ export default class Filters_V2 extends React.Component {
     let {
       state: { showModal, topicHeight, styleHeight, loading }
     } = this;
+    console.log('ff', this.props.meta);
     return (
       <>
         <View style={disabled ? { opacity: 0.3 } : { opacity: 1 }}>
