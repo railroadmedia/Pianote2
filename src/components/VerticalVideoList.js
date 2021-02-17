@@ -27,6 +27,7 @@ import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import { NetworkContext } from '../context/NetworkProvider';
 import AddToCalendar from '../modals/AddToCalendar';
+import Filters_V2 from './Filters_V2';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -147,85 +148,6 @@ class VerticalVideoList extends React.Component {
     this.setState({ items: this.state.items });
   };
 
-  topics = () => {
-    let topics = this.props.filters.displayTopics;
-    if (topics.length > 0) {
-      var topicString = '/ ';
-
-      for (i in topics) {
-        if (i == topics.length - 1) {
-          topicString = topicString + topics[i];
-        } else {
-          topicString = topicString + topics[i] + ', ';
-        }
-      }
-
-      return topicString;
-    } else {
-      return '';
-    }
-  };
-
-  instructors = () => {
-    let instructors = [];
-
-    for (i in this.props.filters.instructors) {
-      instructors.push(instructorDict[this.props.filters.instructors[i]]);
-    }
-
-    if (instructors.length > 0) {
-      var instructorString = '/ ';
-
-      for (i in instructors) {
-        if (i == instructors.length - 1) {
-          instructorString = instructorString + instructors[i];
-        } else {
-          instructorString = instructorString + instructors[i] + ', ';
-        }
-      }
-
-      return instructorString;
-    } else {
-      return '';
-    }
-  };
-
-  progress = () => {
-    if (this.props.filters.progress.length > 0) {
-      var progressString = '/ ';
-
-      for (i in this.props.filters.progress) {
-        if (i == this.props.filters.progress.length - 1) {
-          progressString = progressString + this.props.filters.progress[i];
-        } else {
-          progressString =
-            progressString + this.props.filters.progress[i] + ', ';
-        }
-      }
-
-      return progressString;
-    } else {
-      return '';
-    }
-  };
-
-  stringifyFilters = () => {
-    return (
-      (this.props.filters.level.length > 0
-        ? '/ ' +
-          this.props.filters.level[1] +
-          ' ' +
-          this.props.filters.level[0] +
-          ' '
-        : '') +
-      (typeof this.topics() !== 'undefined' ? this.topics() + ' ' : '') +
-      (typeof this.instructors() !== 'undefined'
-        ? this.instructors() + ' '
-        : '') +
-      (typeof this.progress() !== 'undefined' ? this.progress() : '')
-    );
-  };
-
   changeType = word => {
     word = word.replace(/[- )(]/g, ' ').split(' ');
     let string = '';
@@ -270,9 +192,7 @@ class VerticalVideoList extends React.Component {
         this.addToCalendatLessonPublishDate = '';
         this.setState({ addToCalendarModal: false });
       })
-      .catch(error => {
-        console.log(error);
-      });
+      .catch(e => {});
   };
 
   navigate = (content, index) => {
@@ -821,35 +741,14 @@ class VerticalVideoList extends React.Component {
                   <View>
                     <View style={{ flex: 1 }} />
                     {!this.props.hideFilterButton && (
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.props.filterResults();
-                        }}
-                        style={[
-                          styles.centerContent,
-                          {
-                            borderWidth: 1.25 * factor,
-                            borderColor: colors.pianoteRed,
-                            height: (onTablet ? 22.5 : 30) * factor,
-                            width: (onTablet ? 22.5 : 30) * factor,
-                            borderRadius: 30 * factor
-                          }
-                        ]}
-                      >
-                        <View style={{ flex: 1 }} />
-                        <View
-                          style={{
-                            transform: [{ rotate: '90deg' }]
-                          }}
-                        >
-                          <IonIcon
-                            size={(onTablet ? 11.5 : 14) * factor}
-                            name={'md-options'}
-                            color={colors.pianoteRed}
-                          />
-                        </View>
-                        <View style={{ flex: 1 }} />
-                      </TouchableOpacity>
+                      <Filters_V2
+                        disabled={this.state.isPaging}
+                        onApply={() =>
+                          this.props.applyFilters?.(this.filters?.filterQuery)
+                        }
+                        meta={this.props.filters}
+                        ref={r => (this.filters = r)}
+                      />
                     )}
                     <View style={{ flex: 1 }} />
                   </View>
@@ -857,49 +756,9 @@ class VerticalVideoList extends React.Component {
               )}
             </View>
           )}
-          {!this.props.showTitleOnly && this.props.showFilter && (
-            <View>
-              {this.props.filters !== null &&
-                (this.props.filters.topics.length > 0 ||
-                  this.props.filters.level.length > 0 ||
-                  this.props.filters.progress.length > 0 ||
-                  this.props.filters.instructors.length > 0) && (
-                  <View
-                    style={{
-                      paddingHorizontal: 15,
-                      paddingTop: 5 * factor
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 12 * factor,
-                        marginBottom: 5 * factor,
-                        textAlign: 'left',
-                        fontFamily: 'OpenSans-Regular',
-                        color: this.props.isMethod
-                          ? 'white'
-                          : colors.secondBackground
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 12 * factor,
-                          marginBottom: 5 * factor,
-                          textAlign: 'left',
-                          fontFamily: 'OpenSans-Bold',
-                          color: this.props.isMethod
-                            ? 'white'
-                            : colors.secondBackground
-                        }}
-                      >
-                        FILTERS APPLIED{' '}
-                      </Text>
-                      {this.stringifyFilters()}
-                    </Text>
-                  </View>
-                )}
-            </View>
-          )}
+          <View style={{ paddingLeft: 10 * factor }}>
+            {this.filters?.filterAppliedText}
+          </View>
           {this.state.items.length == 0 &&
             this.state.outVideos &&
             !this.state.isLoading && (

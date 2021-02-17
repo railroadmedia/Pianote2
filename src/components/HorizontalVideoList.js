@@ -28,6 +28,7 @@ import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import Filters_V2 from './Filters_V2';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -137,7 +138,6 @@ class HorizontalVideoList extends React.Component {
   };
 
   like = contentID => {
-    console.log(contentID);
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -178,7 +178,6 @@ class HorizontalVideoList extends React.Component {
     ) {
       return;
     }
-    console.log(content.type, content.id);
     switch (content.type) {
       case 'course':
         return this.props.navigation.navigate('PATHOVERVIEW', {
@@ -241,9 +240,7 @@ class HorizontalVideoList extends React.Component {
         this.addToCalendatLessonPublishDate = '';
         this.setState({ addToCalendarModal: false });
       })
-      .catch(error => {
-        console.log(error);
-      });
+      .catch(e => {});
   };
 
   listFooter = () => {
@@ -363,42 +360,23 @@ class HorizontalVideoList extends React.Component {
                     </>
                   )}
                   {!this.props.hideFilterButton && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.props.filterResults();
-                      }}
-                      style={[
-                        styles.centerContent,
-                        {
-                          borderWidth: 1.25 * factor,
-                          borderColor: colors.pianoteRed,
-                          height: (onTablet ? 21 : 30) * factor,
-                          width: (onTablet ? 21 : 30) * factor,
-                          borderRadius: 30 * factor,
-                          marginRight: 10 * factor
+                    <View style={{ marginRight: 10 * factor }}>
+                      <Filters_V2
+                        disabled={this.state.isPaging}
+                        onApply={() =>
+                          this.props.applyFilters?.(this.filters?.filterQuery)
                         }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={{
-                          transform: [{ rotate: '90deg' }]
-                        }}
-                      >
-                        <IonIcon
-                          size={(onTablet ? 11.5 : 14) * factor}
-                          name={'md-options'}
-                          color={colors.pianoteRed}
-                        />
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </TouchableOpacity>
+                        meta={this.props.filters}
+                        ref={r => (this.filters = r)}
+                      />
+                    </View>
                   )}
                 </>
               )}
             </>
           )}
         </View>
+        {this.filters?.filterAppliedText}
         <FlatList
           key={'videos'}
           data={this.state.items}

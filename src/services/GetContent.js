@@ -1,48 +1,17 @@
 import commonService from './common.service';
 
-export async function getAllContent(type, sort, page, filtersDict) {
-  let filters = ''; // instructor, topic, level
-  let required_user_states = ''; // progress
+export async function getAllContent(type, sort, page, filters = '') {
   let included_types = '';
 
-  if (type == '') {
+  if (type == '')
     included_types = `included_types[]=learning-path-course&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson&included_types[]=podcasts&`;
-  } else {
-    included_types = `included_types[]=${type}&`;
-  }
+  else included_types = `included_types[]=${type}&`;
 
-  for (i in filtersDict.topics) {
-    filters = filters + `required_fields[]=${filtersDict.topics[i]}&`;
-  }
-  for (i in filtersDict.instructors) {
-    filters =
-      filters + `required_fields[]=instructor,${filtersDict.instructors[i]}&`;
-  }
-  for (i in filtersDict.level) {
-    if (typeof filtersDict.level[i] == 'number') {
-      filters =
-        filters + `required_fields[]=difficulty,${filtersDict.level[i]}&`;
-    }
-  }
-  for (i in filtersDict.progress) {
-    if (filtersDict.progress[i] !== 'all') {
-      required_user_states =
-        required_user_states +
-        `required_user_states[]=${filtersDict.progress[i]}`;
-    }
-  }
-
-  if (sort == 'newest') {
-    sort = '-published_on';
-  } else if (sort == 'oldest') {
-    sort = 'published_on';
-  }
+  if (sort == 'newest') sort = '-published_on';
+  else if (sort == 'oldest') sort = 'published_on';
 
   try {
-    let url =
-      `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}` +
-      filters +
-      required_user_states;
+    let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=${sort}&statuses[]=published&limit=20&page=${page}&${included_types}${filters}`;
     let response = await commonService.tryCall(url);
     // if there is no filters available, then dont just show a blank array, maintain data structure
 
@@ -76,7 +45,6 @@ export async function getAllContent(type, sort, page, filtersDict) {
     }
     return response;
   } catch (error) {
-    console.log('Error: ', error);
     return new Error(error);
   }
 }
@@ -96,7 +64,6 @@ export async function getNewContent(type) {
 
     return response;
   } catch (error) {
-    console.log('Error', error);
     return new Error(error);
   }
 }
@@ -111,7 +78,6 @@ export async function getStartedContent(type) {
       `${commonService.rootUrl}/api/railcontent/content?brand=pianote&sort=-progress&statuses[]=published&limit=40&page=1&included_types[]=${type}&required_user_states[]=started`
     );
   } catch (error) {
-    console.log('Error', error);
     return new Error(error);
   }
 }
@@ -139,7 +105,6 @@ export async function searchContent(term, page, filtersDict) {
       included_types;
     return commonService.tryCall(url);
   } catch (error) {
-    console.log('Error: ', error);
     return new Error(error);
   }
 }
@@ -171,11 +136,8 @@ export async function getMyListContent(page, filtersDict, progressState) {
       included_types +
       progress_types;
 
-    let x = await commonService.tryCall(url);
-    console.log(x);
-    return x;
+    return await commonService.tryCall(url);
   } catch (error) {
-    console.log('Error: ', error);
     return new Error(error);
   }
 }
@@ -212,7 +174,6 @@ export async function seeAllContent(contentType, type, page, filtersDict) {
     let x = await commonService.tryCall(url);
     return x;
   } catch (error) {
-    console.log('Error: ', error);
     return new Error(error);
   }
 }
@@ -223,7 +184,6 @@ export async function getContentById(contentID) {
       `${commonService.rootUrl}/railcontent/content/${contentID}`
     );
   } catch (error) {
-    console.log('Get content by ID error: ', error);
     return new Error(error);
   }
 }

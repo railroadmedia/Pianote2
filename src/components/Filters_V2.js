@@ -1,9 +1,3 @@
-/*
-* props: filters, active, onFilter
-* toggleFilters() called directly from parent using ref on 'Filters' component
-
-*/
-
 import React from 'react';
 import {
   Animated,
@@ -59,6 +53,10 @@ export default class Filters_V2 extends React.Component {
     super(props);
     styles = createStyles({ colors });
     this.deepLinking(props.deepLinking);
+  }
+
+  componentDidMount() {
+    this.props.ref?.(this);
   }
 
   deepLinking = url => {
@@ -175,8 +173,8 @@ export default class Filters_V2 extends React.Component {
           ]}
         >
           FILTERS APPLIED
-        </Text>
-        /
+        </Text>{' '}
+        /{' '}
         {appliedFilters
           .map(af =>
             typeof af === 'object'
@@ -184,7 +182,7 @@ export default class Filters_V2 extends React.Component {
               : af
           )
           .map(af => (typeof af === 'object' ? af.join(', ') : af))
-          .join('/')}
+          .join(' / ')}
       </Text>
     ) : undefined;
   }
@@ -950,15 +948,13 @@ const createStyles = ({ colors }) =>
       borderColor: colors.pianoteRed,
       borderRadius: 15,
       borderWidth: 1,
-      marginRight: 15,
       padding: 5
     },
     textAppliedFilters: {
-      color: 'green',
+      color: '#445f73',
       flex: 1,
       fontFamily: 'RobotoCondensed-Regular',
-      padding: 15,
-      paddingVertical: 5,
+      paddingBottom: 5,
       textTransform: 'uppercase'
     },
     safeAreaTitleContainer: {
