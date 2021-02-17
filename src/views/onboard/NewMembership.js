@@ -209,7 +209,7 @@ export default class NewMembership extends React.Component {
               style={{ position: 'absolute', left: 15, padding: 5 }}
               onPress={() => {
                 if (onTablet) Orientation.unlockAllOrientations();
-                this.props.navigation.state.params.type == 'SIGNUP'
+                this.props.navigation.state.params.type == 'SIGNUP' || global.isPackOnly == true
                   ? this.props.navigation.goBack()
                   : this.props.navigation.navigate('LOGINCREDENTIALS');
               }}
