@@ -540,16 +540,18 @@ class Lessons extends React.Component {
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)}
                   applyFilters={filters =>
-                    this.setState(
-                      {
-                        allLessons: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllLessons();
-                      }
+                    new Promise(res =>
+                      this.setState(
+                        {
+                          allLessons: [],
+                          outVideos: false,
+                          page: 1
+                        },
+                        () => {
+                          this.filterQuery = filters;
+                          this.getAllLessons().then(res);
+                        }
+                      )
                     )
                   }
                   outVideos={this.state.outVideos} // if paging and out of videos
@@ -584,16 +586,18 @@ class Lessons extends React.Component {
                   currentSort={this.state.currentSort}
                   changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                   applyFilters={filters =>
-                    this.setState(
-                      {
-                        allLessons: [],
-                        outVideos: false,
-                        page: 1
-                      },
-                      () => {
-                        this.filterQuery = filters;
-                        this.getAllLessons();
-                      }
+                    new Promise(res =>
+                      this.setState(
+                        {
+                          allLessons: [],
+                          outVideos: false,
+                          page: 1
+                        },
+                        () => {
+                          this.filterQuery = filters;
+                          this.getAllLessons().then(res);
+                        }
+                      )
                     )
                   }
                   imageWidth={width * 0.26} // image width

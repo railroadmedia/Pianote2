@@ -296,17 +296,19 @@ class Course extends React.Component {
                 currentSort={this.state.currentSort}
                 changeSort={sort => this.changeSort(sort)} // change sort and reload videos
                 applyFilters={filters =>
-                  this.setState(
-                    {
-                      allCourses: [],
-                      outVideos: false,
-                      page: 1,
-                      filters
-                    },
-                    () => {
-                      this.filterQuery = filters;
-                      this.getAllCourses();
-                    }
+                  new Promise(res =>
+                    this.setState(
+                      {
+                        allCourses: [],
+                        outVideos: false,
+                        page: 1,
+                        filters
+                      },
+                      () => {
+                        this.filterQuery = filters;
+                        this.getAllCourses().then(res);
+                      }
+                    )
                   )
                 }
                 outVideos={this.state.outVideos} // if paging and out of videos
@@ -340,17 +342,19 @@ class Course extends React.Component {
                 currentSort={this.state.currentSort}
                 changeSort={sort => this.changeSort(sort)}
                 applyFilters={filters =>
-                  this.setState(
-                    {
-                      allCourses: [],
-                      outVideos: false,
-                      page: 1,
-                      filters
-                    },
-                    () => {
-                      this.filterQuery = filters;
-                      this.getAllCourses();
-                    }
+                  new Promise(res =>
+                    this.setState(
+                      {
+                        allCourses: [],
+                        outVideos: false,
+                        page: 1,
+                        filters
+                      },
+                      () => {
+                        this.filterQuery = filters;
+                        this.getAllCourses().then(res);
+                      }
+                    )
                   )
                 }
                 imageWidth={width * 0.26} // image width
