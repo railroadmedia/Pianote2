@@ -193,7 +193,6 @@ class StudentFocusShow extends React.Component {
         progress_percent: newContent[i].post.progress_percent
       });
     }
-    console.log('response', response);
     this.setState(state => ({
       allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
