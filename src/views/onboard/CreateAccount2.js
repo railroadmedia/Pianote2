@@ -56,9 +56,11 @@ export default class CreateAccount extends React.Component {
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
         if (this.props.navigation.state.params?.purchase) {
+          let emailEncode = encodeURIComponent(this.state.email)
+          let passwordEncode = encodeURIComponent(this.state.password)
           let response = await signUp(
-            encodeURIComponent(this.state.email),
-            encodeURIComponent(this.state.password),
+            emailEncode,
+            passwordEncode,
             this.props.navigation.state.params?.purchase,
             null,
             this.props.navigation.state.params?.purchase
@@ -68,8 +70,8 @@ export default class CreateAccount extends React.Component {
             try {
               await AsyncStorage.multiSet([
                 ['loggedIn', 'true'],
-                ['email', this.state.email],
-                ['password', this.state.password]
+                ['email', emailEncode],
+                ['password', passwordEncode]
               ]);
             } catch (e) {}
 
