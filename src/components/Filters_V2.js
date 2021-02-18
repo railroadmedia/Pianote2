@@ -29,7 +29,8 @@ let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   statusKeys = ['ALL', 'UPCOMING LIVE EVENTS', 'RECORDED EVENTS'],
   styleKeys = [],
   styles,
-  topicKeys = [];
+  topicKeys = [],
+  difficulties;
 
 export default class Filters_V2 extends React.Component {
   static contextType = NetworkContext;
@@ -57,6 +58,10 @@ export default class Filters_V2 extends React.Component {
 
   componentDidMount() {
     this.props.reference?.(this);
+  }
+
+  componentWillUnmount() {
+    difficulties = undefined;
   }
 
   deepLinking = url => {
@@ -113,9 +118,12 @@ export default class Filters_V2 extends React.Component {
     instructorNames = [];
     if (this.state.showModal) {
       setTimeout(() => {
-        let { meta: { topic, style, instructor } = {} } = this.props;
+        let {
+          meta: { topic, style, instructor, difficulty } = {}
+        } = this.props;
         if (topic) topicKeys = this.props.meta.topic?.map(t => t.toUpperCase());
         if (style) styleKeys = this.props.meta.style?.map(s => s.toUpperCase());
+        if (!difficulties) difficulties = difficulty;
         if (instructor)
           instructorNames = instructor.map(i => ({
             id: i.id,
@@ -212,11 +220,9 @@ export default class Filters_V2 extends React.Component {
   toggleItem = (filterType, item) => {
     if (!this.appliedFilters[filterType]) {
       this.appliedFilters[filterType] = [item];
-      if (filterType === 'topics' || filterType === 'styles') {
-        if (item === 'ALL') delete this.appliedFilters[filterType];
-        this.apply();
-      }
-
+      difficulties = undefined;
+      if (item === 'ALL') delete this.appliedFilters[filterType];
+      this.apply();
       return;
     }
     let regex =
@@ -235,10 +241,8 @@ export default class Filters_V2 extends React.Component {
       : this.appliedFilters[filterType].concat(item);
     if (!this.appliedFilters[filterType].length)
       delete this.appliedFilters[filterType];
-    if (filterType === 'topics' || filterType === 'styles') {
-      if (item === 'ALL') delete this.appliedFilters[filterType];
-      this.apply();
-    }
+    if (item === 'ALL') delete this.appliedFilters[filterType];
+    this.apply();
   };
 
   apply = () => {
@@ -462,6 +466,7 @@ export default class Filters_V2 extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                difficulties = undefined;
                 this.appliedFilters = {};
                 this.apply();
               }}
@@ -483,6 +488,7 @@ class SkillSection extends React.PureComponent {
     if (moveX > this.levelBarWidth || moveX < 0) return;
     let skillBarSection = this.levelBarWidth / 9;
     let level = Math.round(moveX / skillBarSection);
+    if (!difficulties?.includes(`${level + 1}`)) return;
     Animated.timing(this.skillLevelDotTranslateX, {
       duration: 0,
       useNativeDriver: true,
@@ -500,7 +506,9 @@ class SkillSection extends React.PureComponent {
   pResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onShouldBlockNativeResponder: () => true,
-    onPanResponderRelease: this.props.onApply,
+    onPanResponderRelease: () => {
+      if (difficulties?.includes(`${this.state.level}`)) this.props.onApply();
+    },
     onPanResponderTerminationRequest: () => false,
     onStartShouldSetPanResponderCapture: () => false,
     onPanResponderGrant: (_, { dx, dy }) =>
@@ -550,6 +558,7 @@ class SkillSection extends React.PureComponent {
   };
 
   onAllLevel = () => {
+    difficulties = undefined;
     this.setState(
       ({ level }) => ({
         level: level === 'ALL' ? 1 : 'ALL'
@@ -607,7 +616,8 @@ class SkillSection extends React.PureComponent {
                   borderTopLeftRadius: i === 0 ? 2.5 : 0,
                   borderTopRightRadius: i === 8 ? 2.5 : 0,
                   borderBottomLeftRadius: i === 0 ? 2.5 : 0,
-                  borderBottomRightRadius: i === 8 ? 2.5 : 0
+                  borderBottomRightRadius: i === 8 ? 2.5 : 0,
+                  opacity: difficulties?.includes(`${i + 1}`) ? 1 : 0.3
                 }}
               />
             ))}
@@ -727,7 +737,7 @@ class InstructorsSection extends React.Component {
           processType={'RAM'}
           titleStyle={styles.sectionTitleText}
           dropStyle={{ height: undefined }}
-          title={'CHOOSE YOUR DRUM TEACHER'}
+          title={'CHOOSE YOUR PIANO TEACHER'}
           iconColor={styles.sectionTitleText.color}
           expandableContStyle={{ paddingVertical: 25 }}
         >
