@@ -1133,8 +1133,7 @@ const createStyles = ({ colors }) =>
     touchableInstructor: { alignItems: 'center' },
     touchableInstructorSelected: {
       alignItems: 'center',
-      backgroundColor: colors.pianoteRed,
-      flex: 1
+      backgroundColor: colors.pianoteRed
     },
     touchableTextInstructor: {
       color: '#445f73',
