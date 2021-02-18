@@ -301,8 +301,7 @@ class Course extends React.Component {
                       {
                         allCourses: [],
                         outVideos: false,
-                        page: 1,
-                        filters
+                        page: 1
                       },
                       () => {
                         this.filterQuery = filters;
@@ -347,8 +346,7 @@ class Course extends React.Component {
                       {
                         allCourses: [],
                         outVideos: false,
-                        page: 1,
-                        filters
+                        page: 1
                       },
                       () => {
                         this.filterQuery = filters;
