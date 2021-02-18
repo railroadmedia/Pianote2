@@ -11,10 +11,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
-import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -50,19 +48,9 @@ class SongCatalog extends React.Component {
       allSongs: [],
       currentSort: 'newest',
       page: 1,
-      filtersAvailable: null,
-      showFilters: false,
       outVideos: false,
       isPaging: false,
       filtering: false,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       started: true,
       refreshing: true,
       refreshControl: false,
@@ -90,10 +78,11 @@ class SongCatalog extends React.Component {
         'song',
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       ),
       getStartedContent('song')
     ]);
+    this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteSongs({
       all: content[0],
       inProgress: content[1]
@@ -121,7 +110,6 @@ class SongCatalog extends React.Component {
       );
       return {
         allSongs: allVideos,
-        filtersAvailable: content.all.meta.filterOptions,
         outVideos:
           allVideos.length == 0 || content.all.data.length < 20 ? true : false,
         filtering: false,
@@ -145,8 +133,9 @@ class SongCatalog extends React.Component {
       'song',
       this.state.currentSort,
       this.state.page,
-      this.state.filters
+      this.filterQuery
     );
+    this.metaFilters = response?.meta?.filterOptions;
 
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
@@ -155,7 +144,6 @@ class SongCatalog extends React.Component {
     let items = this.setData(newContent);
 
     this.setState(state => ({
-      filtersAvailable: response.meta.filterOptions,
       allSongs: loadMore ? state.allSongs.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
@@ -318,18 +306,32 @@ class SongCatalog extends React.Component {
               showLength={false}
               showSort={true}
               isPaging={this.state.isPaging}
-              filters={this.state.filters} // show filter list
+              filters={this.metaFilters} // show filter list
               imageRadius={5 * factor} // radius of image shown
               containerBorderWidth={0} // border of box
               containerWidth={width} // width of list
               currentSort={this.state.currentSort}
               changeSort={sort => this.changeSort(sort)} // change sort and reload videos
               outVideos={this.state.outVideos} // if paging and out of videos
-              filterResults={() => this.setState({ showFilters: true })} // apply from filters page
               isSquare={true}
               containerHeight={this.getSquareHeight()} // height per row
               imageHeight={this.getSquareHeight()} // image height
               imageWidth={this.getSquareHeight()} // image height
+              applyFilters={filters =>
+                new Promise(res =>
+                  this.setState(
+                    {
+                      allSongs: [],
+                      outVideos: false,
+                      page: 1
+                    },
+                    () => {
+                      this.filterQuery = filters;
+                      this.getAllSongs().then(res);
+                    }
+                  )
+                )
+              }
             />
           </ScrollView>
         ) : (
@@ -338,53 +340,6 @@ class SongCatalog extends React.Component {
             style={{ flex: 1 }}
             color={colors.secondBackground}
           />
-        )}
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'Songs'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allSongs: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getAllSongs()
-                );
-              }}
-              filterVideos={filters => {
-                this.setState(
-                  {
-                    allSongs: [],
-                    outVideos: false,
-                    page: 1,
-                    filters
-                  },
-                  () => this.getAllSongs()
-                );
-              }}
-            />
-          </Modal>
         )}
         <NavigationBar currentPage={''} />
       </View>
