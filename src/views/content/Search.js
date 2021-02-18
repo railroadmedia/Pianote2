@@ -61,14 +61,12 @@ export default class Search extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(await AsyncStorage.getItem('recentSearches'));
     // get recent searches from memory
     let recentSearchResults = await AsyncStorage.getItem('recentSearches');
     if (recentSearchResults) {
       recentSearchResults = await JSON.parse(recentSearchResults);
       this.setState({ recentSearchResults });
     }
-    console.log(await AsyncStorage.getItem('recentSearches'));
   }
 
   mapRecentResults() {
@@ -173,7 +171,6 @@ export default class Search extends React.Component {
         this.state.page,
         this.filterQuery
       );
-      console.log(response);
       if (response.data.length == 0) {
         this.setState({
           searchEntered: false,
@@ -222,9 +219,6 @@ export default class Search extends React.Component {
             progress_percent: newContent[i].post.progress_percent
           });
         }
-
-        console.log(response);
-
         this.setState({
           searchResults: [...this.state.searchResults, ...items],
           outVideos:
@@ -272,19 +266,15 @@ export default class Search extends React.Component {
           }
         }
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   async clearRecent() {
-    console.log(await AsyncStorage.getItem('recentSearches'));
     await this.setState({ recentSearchResults: [] });
     await AsyncStorage.setItem(
       'recentSearches',
       JSON.stringify(this.state.recentSearchResults)
     );
-    console.log(await AsyncStorage.getItem('recentSearches'));
   }
 
   clickSearchRecent = searchTerm => {
