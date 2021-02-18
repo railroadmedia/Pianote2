@@ -11,8 +11,6 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
-import Modal from 'react-native-modal';
-import Filters from '../../components/FIlters.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
@@ -57,19 +55,9 @@ class StudentFocusShow extends React.Component {
       page: 1,
       outVideos: false,
       refreshing: false,
-      filtersAvailable: null,
-      showFilters: false,
       isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       ...this.initialValidData(
         props.navigation.state.params.type == 'quick-tips'
           ? props.quickTipsCache
@@ -100,9 +88,10 @@ class StudentFocusShow extends React.Component {
         this.props.navigation.state.params.type,
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       )
     ]);
+    this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props[
       this.props.navigation.state.params.type == 'quick-tips'
         ? 'cacheAndWriteQuickTips'
@@ -145,7 +134,6 @@ class StudentFocusShow extends React.Component {
       }
 
       return {
-        filtersAvailable: content.all.meta.filterOptions,
         thumbnailUrl:
           content.thumbnail[this.props.navigation.state.params.type]
             .thumbnailUrl,
@@ -180,8 +168,9 @@ class StudentFocusShow extends React.Component {
       this.props.navigation.state.params.type,
       this.state.currentSort,
       this.state.page,
-      this.state.filters
+      this.filterQuery
     );
+    this.metaFilters = response?.meta?.filterOptions;
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
     });
@@ -206,7 +195,6 @@ class StudentFocusShow extends React.Component {
     }
     console.log('response', response);
     this.setState(state => ({
-      filtersAvailable: response.meta.filterOptions,
       allLessons: isLoadingMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
@@ -375,49 +363,14 @@ class StudentFocusShow extends React.Component {
                 ? true
                 : false
             }
-            filters={this.state.filters}
+            filters={this.metaFilters}
             currentSort={this.state.currentSort}
             changeSort={sort => this.changeSort(sort)}
-            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
             imageWidth={onTablet ? width * 0.225 : width * 0.3}
             outVideos={this.state.outVideos}
             getVideos={() => this.getVideos()}
-          />
-        </ScrollView>
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={10}
-            animationOutTiming={10}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'Quick Tips'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getAllLessons()
-                );
-              }}
-              filterVideos={filters => {
+            applyFilters={filters =>
+              new Promise(res =>
                 this.setState(
                   {
                     allLessons: [],
@@ -425,12 +378,15 @@ class StudentFocusShow extends React.Component {
                     page: 1,
                     filters
                   },
-                  () => this.getAllLessons()
-                );
-              }}
-            />
-          </Modal>
-        )}
+                  () => {
+                    this.filterQuery = filters;
+                    this.getAllLessons().then(res);
+                  }
+                )
+              )
+            }
+          />
+        </ScrollView>
         <NavigationBar currentPage={'NONE'} />
       </SafeAreaView>
     );
