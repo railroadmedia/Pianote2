@@ -33,6 +33,7 @@ import DisplayName from '../../modals/DisplayName.js';
 import commonService from '../../services/common.service.js';
 import { NetworkContext } from '../../context/NetworkProvider.js';
 import Orientation from 'react-native-orientation-locker';
+import Loading from '../../components/Loading';
 
 var data = new FormData();
 
@@ -185,6 +186,7 @@ export default class CreateAccount3 extends React.Component {
       });
       this.setState({ page: 4 });
     } else {
+      this.loadingRef.toggleLoading();
       // if there is profile image upload it
       let url;
 
@@ -238,7 +240,9 @@ export default class CreateAccount3 extends React.Component {
           // send to loadpage to update asyncstorage with new data
           await this.props.navigation.dispatch(resetAction);
         }
+        this.loadingRef.toggleLoading();
       } catch (e) {
+        this.loadingRef.toggleLoading();
         console.log('ERROR: ', e);
       }
     }
@@ -1554,6 +1558,11 @@ export default class CreateAccount3 extends React.Component {
             </View>
           </ScrollView>
         </View>
+        <Loading
+          ref={ref => {
+            this.loadingRef = ref;
+          }}
+        />
       </SafeAreaView>
     );
   }

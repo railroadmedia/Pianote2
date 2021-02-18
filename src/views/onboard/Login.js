@@ -96,6 +96,7 @@ export default class Login extends React.Component {
   };
 
   userHasSubscription = async () => {
+    this.loadingRef.toggleLoading();
     purchases = await RNIap.getPurchaseHistory();
     console.log('purchases', purchases);
     if (purchases.some(p => skus.includes(p.productId))) {
@@ -109,6 +110,7 @@ export default class Login extends React.Component {
       let resp = await validateSignUp(purchases);
       console.log('validateSignUp resp', resp);
       if (resp.shouldSignup) {
+        this.loadingRef.toggleLoading();
         return false;
       } else if (resp.message) {
         this.subscriptionExists.toggle(`Signup Blocked`, resp.message);
@@ -128,6 +130,7 @@ export default class Login extends React.Component {
         );
         this.setState({ signupAlertText: 'Restore' });
       }
+      this.loadingRef.toggleLoading();
       return true;
     }
   };
@@ -247,6 +250,7 @@ export default class Login extends React.Component {
       <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
         {[1, 2, 3, 4, 5].map(dot => (
           <View
+            key={dot}
             style={{
               height: 10 * factor,
               width: 10 * factor,
