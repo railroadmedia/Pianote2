@@ -82,27 +82,9 @@ export async function getStartedContent(type) {
   }
 }
 
-export async function searchContent(term, page, filtersDict) {
-  let included_types = ''; // types
-  if (isPackOnly == true) {
-    included_types =
-      included_types +
-      '&included_types[]=unit&included_types[]=pack-bundle-lesson';
-  } else if (filtersDict.content_type.length > 0) {
-    for (i in filtersDict.content_type) {
-      included_types =
-        included_types + `&included_types[]=${filtersDict.content_type[i]}`;
-    }
-  } else {
-    included_types =
-      included_types +
-      '&included_types[]=learning-path&included_types[]=course&included_types[]=learning-path-level&included_types[]=course-part&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chord-and-scale&included_types[]=pack-bundle-lesson';
-  }
-
+export async function searchContent(term, page, filters = '') {
   try {
-    let url =
-      `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}` +
-      included_types;
+    let url = `${commonService.rootUrl}/api/railcontent/search?brand=pianote&limit=20&statuses[]=published&sort=-score&term=${term}&page=${page}${filters}`;
     return commonService.tryCall(url);
   } catch (error) {
     return new Error(error);
