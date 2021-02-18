@@ -14,8 +14,6 @@ import {
 import { ContentModel } from '@musora/models';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
-import Modal from 'react-native-modal';
-import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar.js';
 import VerticalVideoList from '../../components/VerticalVideoList.js';
 import {
@@ -66,17 +64,7 @@ export default class SeeAll extends React.Component {
       refreshing: false,
       isLoadingAll: true, // all lessons
       isPaging: false, // scrolling more
-      filtering: false, // filtering
-      filtersAvailable: null,
-      showFilters: false,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      }
+      filtering: false // filtering
     };
   }
 
@@ -94,7 +82,7 @@ export default class SeeAll extends React.Component {
       // use my list API call when navigating to see all from my list
       response = await getMyListContent(
         this.state.page,
-        this.state.filters,
+        this.filterQuery,
         this.state.title == 'In Progress' ? 'started' : 'completed'
       );
     } else if (this.state.parent === 'Lessons') {
@@ -104,21 +92,21 @@ export default class SeeAll extends React.Component {
           'lessons',
           'new',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else if (this.state.title.includes('All')) {
         response = await getAllContent(
           '',
           'newest',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else {
         response = await seeAllContent(
           'lessons',
           'continue',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       }
     } else if (this.state.parent === 'Courses') {
@@ -127,14 +115,14 @@ export default class SeeAll extends React.Component {
           'courses',
           'continue',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else {
         response = await getAllContent(
           'course',
           'newest',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       }
     } else if (this.state.parent === 'Songs') {
@@ -143,14 +131,14 @@ export default class SeeAll extends React.Component {
           'song',
           'continue',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       } else {
         response = await getAllContent(
           'song',
           'newest',
           this.state.page,
-          this.state.filters
+          this.filterQuery
         );
       }
     } else if (this.state.parent === 'Student Focus') {
@@ -158,7 +146,7 @@ export default class SeeAll extends React.Component {
         'quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=podcast'
       );
     }
-
+    this.metaFilters = response?.meta?.filterOptions;
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
     });
@@ -200,7 +188,6 @@ export default class SeeAll extends React.Component {
     }
 
     this.setState(state => ({
-      filtersAvailable: response.meta.filterOptions,
       allLessons: loadMore ? state.allLessons.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       page: this.state.page + 1,
@@ -315,7 +302,7 @@ export default class SeeAll extends React.Component {
             showSort={false}
             showLength={false}
             showLargeTitle={true}
-            filters={this.state.filters} // show filter list
+            filters={this.metaFilters} // show filter list
             currentSort={this.state.currentSort}
             changeSort={sort => {
               this.setState({
@@ -324,60 +311,25 @@ export default class SeeAll extends React.Component {
               }),
                 this.getAllLessons();
             }} // change sort and reload videos
-            filterResults={() => this.setState({ showFilters: true })} // apply from filters page
             imageWidth={onTablet ? width * 0.225 : width * 0.3}
             outVideos={this.state.outVideos} // if paging and out of videos
-          />
-        </ScrollView>
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => {
-                this.setState({ showFilters: false });
-              }}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'See All'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getAllLessons()
-                );
-              }}
-              filterVideos={filters => {
+            applyFilters={filters =>
+              new Promise(res =>
                 this.setState(
                   {
                     allLessons: [],
                     outVideos: false,
-                    page: 1,
-                    filters
+                    page: 1
                   },
-                  () => this.getAllLessons()
-                );
-              }}
-            />
-          </Modal>
-        )}
+                  () => {
+                    this.filterQuery = filters;
+                    this.getAllLessons().then(res);
+                  }
+                )
+              )
+            }
+          />
+        </ScrollView>
         <NavigationBar currentPage={'SEEALL'} />
       </SafeAreaView>
     );

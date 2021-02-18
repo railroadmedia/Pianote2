@@ -110,37 +110,18 @@ export async function getMyListContent(page, filters = '', progressState) {
   }
 }
 
-export async function seeAllContent(contentType, type, page, filtersDict) {
-  let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&page=${page}`;
-
-  if (contentType == 'lessons') {
-    // add types
-    if (filtersDict.content_type.length > 0) {
-      // if user filtered for types
-      for (i in filtersDict.content_type) {
-        url = url + `&included_types[]=${filtersDict.content_type[i]}`;
-      }
-    } else {
-      // if user did not filter for types use all types except 2
-      url =
-        url +
-        '&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
-    }
-    // if user clicked see all on started videos
-  } else if (contentType == 'courses') {
-    // add types
-    url = url + `&included_types[]=course`;
-  } else if (contentType == 'song') {
-    url = url + `&included_types[]=song`;
-  }
-  if (type == 'continue') {
-    url = url + `&required_user_states[]=started&sort=-progress`;
-  } else {
-    url = url + `&sort=-published_on`;
-  }
+export async function seeAllContent(contentType, type, page, filters = '') {
+  let url = `${commonService.rootUrl}/api/railcontent/content?brand=pianote&limit=20&statuses[]=published&page=${page}${filters}`;
+  if (contentType == 'lessons')
+    url +=
+      '&included_types[]=learning-path-lesson&included_types[]=course&included_types[]=song&included_types[]=quick-tips&included_types[]=question-and-answer&included_types[]=student-review&included_types[]=boot-camps&included_types[]=chords-and-scales&included_types[]=podcasts&included_types[]=pack-bundle-lesson';
+  else if (contentType == 'courses') url += `&included_types[]=course`;
+  else if (contentType == 'song') url += `&included_types[]=song`;
+  if (type == 'continue')
+    url += `&required_user_states[]=started&sort=-progress`;
+  else url += `&sort=-published_on`;
   try {
-    let x = await commonService.tryCall(url);
-    return x;
+    return await commonService.tryCall(url);
   } catch (error) {
     return new Error(error);
   }
