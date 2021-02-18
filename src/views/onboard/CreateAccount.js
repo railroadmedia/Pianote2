@@ -55,7 +55,7 @@ export default class CreateAccount extends React.Component {
     }
     if (this.state.email.length > 0) {
       fetch(
-        `${commonService.rootUrl}/usora/api/is-email-unique?email=${this.state.email}`
+        `${commonService.rootUrl}/usora/api/is-email-unique?email=${encodeURIComponent(this.state.email)}`
       )
         .then(response => response.json())
         .then(response => {
