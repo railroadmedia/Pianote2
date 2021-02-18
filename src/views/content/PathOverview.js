@@ -738,9 +738,10 @@ export default class PathOverview extends React.Component {
           <FlatList
             style={{
               flex: 1,
-              paddingLeft: '2%',
+              marginLeft: isLandscape ? '10%' : '2%',
               backgroundColor: isMethod ? 'black' : colors.mainBackground,
-              marginBottom: 10
+              marginBottom: 10,
+              alignSelf: 'center'
             }}
             numColumns={onTablet ? 3 : 1}
             data={items}
@@ -755,19 +756,14 @@ export default class PathOverview extends React.Component {
                 style={[
                   {
                     width: onTablet
-                      ? `${isLandscape ? 80 / 3 : 100 / 3}%`
+                      ? `${isLandscape ? 86 / 3 : 94 / 3}%` // 86 = 100 - 10(=marginRight) - 4(=2*marginleft); 94 = 100 - 2(=marginRight) - 4 (=2*marginLeft)
                       : '100%',
-                    paddingRight: '2%',
                     paddingVertical: 3.5 * factor,
                     flexDirection: onTablet ? 'column' : 'row'
                   },
-                  isLandscape
-                    ? index % 3 === 2
-                      ? { marginRight: '0%' }
-                      : index % 3 === 0
-                      ? { marginLeft: '0%' }
-                      : {}
-                    : {}
+                  isLandscape && index % 3 === 2
+                    ? { marginRight: '10%' }
+                    : { marginRight: '2%' }
                 ]}
               >
                 <ImageBackground
