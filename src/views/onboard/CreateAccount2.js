@@ -57,8 +57,8 @@ export default class CreateAccount extends React.Component {
       if (this.state.password.length > 7) {
         if (this.props.navigation.state.params?.purchase) {
           let response = await signUp(
-            this.state.email,
-            this.state.password,
+            encodeURIComponent(this.state.email),
+            encodeURIComponent(this.state.password),
             this.props.navigation.state.params?.purchase,
             null,
             this.props.navigation.state.params?.purchase

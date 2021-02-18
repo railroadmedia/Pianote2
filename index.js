@@ -127,7 +127,6 @@ global.maxLevel = {
 global.isConnected = true;
 global.serverLocation = 'https://staging.pianote.com';
 global.isPackOnly = false;
-global.versionNumber = '1.0.11';
 global.fallbackThumb =
   'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
 
