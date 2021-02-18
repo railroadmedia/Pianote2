@@ -436,7 +436,7 @@ export default class Filters_V2 extends React.Component {
                   </View>
                 </View>
               )}
-              {content_type.join() === 'coach-stream' && (
+              {content_type?.join() === 'coach-stream' && (
                 <StatusSection appliedFilters={this.appliedFilters} />
               )}
               {!!instructorNames.length && (
