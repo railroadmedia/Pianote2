@@ -16,8 +16,8 @@ import {
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getUserData } from 'Pianote2/src/services/UserDataAuth.js';
 import Orientation from 'react-native-orientation-locker';
-import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import RNIap, {
   purchaseErrorListener,
@@ -37,14 +37,6 @@ const skus = Platform.select({
   ios: ['pianote_app_1_month_membership', 'pianote_app_1_year_membership']
 });
 
-const benefits = [
-  'Pay nothing for 7 days.',
-  'Award-winning piano lessons & more.',
-  'Access to the Pianote Experience app.',
-  'Access to the Pianote Experience website.',
-  'Cancel anytime through the App Store.'
-];
-
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
@@ -62,7 +54,15 @@ export default class NewMembership extends React.Component {
       newUser: this.props.navigation.state.params.data.type,
       email: this.props.navigation.state.params.data.email,
       password: this.props.navigation.state.params.data.password,
-      token: this.props.navigation.state.params.data.token
+      token: this.props.navigation.state.params.data.token,
+      isExpired: false, 
+      benefits: [
+        'Pay nothing for 7 days.',
+        'Award-winning piano lessons & more.',
+        'Access to the Pianote Experience app.',
+        'Access to the Pianote Experience website.',
+        'Cancel anytime through the App Store.'
+      ],
     };
   }
 
@@ -238,17 +238,21 @@ export default class NewMembership extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                Start Your 7-Day {'\n'} FREE Trial Today
+                {`${(this.state.newUser == 'EXPIRED') ? 'Start your new\n membership TODAY':'Start your 7-Day \n FREE Trial Today'}`}
               </Text>
               <Text
                 style={{
                   color: 'white',
-                  fontSize: onTablet ? 1.5 * fontIndex : 2 * fontIndex,
+                  fontSize: onTablet ? 1.5 * fontIndex : 2.2 * fontIndex,
                   fontFamily: 'OpenSans',
                   textAlign: 'center'
                 }}
               >
-                {`Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`}
+                {`${(this.state.newUser == 'EXPIRED') ? 
+                  'Choose the perfect plan that matches your learning style.'
+                  :
+                  `Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`
+                }`}
               </Text>
             </View>
             <View
@@ -288,7 +292,9 @@ export default class NewMembership extends React.Component {
                           paddingHorizontal: 10
                         }}
                       >
-                        <Text style={styles.planPrice}>RON 99.99</Text>
+                        <Text style={styles.planPrice}>
+                          {subscriptions?.[0]?.localizedPrice}
+                        </Text>
                         {!!subscriptions[0]?.localizedPrice && (
                           <Text style={styles.planSubtitle}>/mo</Text>
                         )}
@@ -300,7 +306,7 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(subscriptions[0])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR\n7-DAY FREE TRIAL`}
+                      {`START YOUR\n${(this.state.newUser == 'EXPIRED') ? 'MEMBERSHIP':'7-DAY FREE TRIAL'}`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -372,7 +378,7 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(subscriptions[1])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR\n7-DAY FREE TRIAL`}
+                      {`START YOUR\n${(this.state.newUser == 'EXPIRED') ? 'MEMBERSHIP':'7-DAY FREE TRIAL'}`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -398,33 +404,37 @@ export default class NewMembership extends React.Component {
                 marginTop: 5
               }}
             >
-              {benefits.map((benefit, i) => (
-                <View
-                  key={i}
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                >
-                  <AntIcon
-                    name={'check'}
-                    size={onTablet ? 1.3 * fontIndex : 2 * fontIndex}
-                    color={'white'}
-                  />
-
-                  <Text
-                    style={{
-                      color: '#ffffff',
-                      fontFamily: 'OpenSans',
-                      fontSize: onTablet ? 1.3 * fontIndex : 1.5 * fontIndex,
-                      marginLeft: 5
-                    }}
-                  >
-                    {benefit}
-                  </Text>
-                </View>
-              ))}
+              {this.state.benefits.map((benefit, i) => {
+                if(!this.state.newUser == 'EXPIRED' || i > 0) {
+                  return (
+                    <View>
+                      <View
+                        key={i}
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <AntIcon
+                          name={'check'}
+                          size={onTablet ? 1.3 * fontIndex : 2 * fontIndex}
+                          color={'white'}
+                        />
+                        <Text
+                          style={{
+                            color: '#ffffff',
+                            fontFamily: 'OpenSans',
+                            fontSize: onTablet ? 1.3 * fontIndex : 1.65 * fontIndex,
+                            marginLeft: 5
+                          }}
+                        >
+                          {benefit}
+                        </Text>
+                      </View>
+                    </View>
+                )}
+              })}
               <TouchableOpacity
                 onPress={() => {
                   this.state.newUser == 'SIGNUP'
@@ -436,7 +446,7 @@ export default class NewMembership extends React.Component {
                 <Text
                   style={[
                     styles.underlineText,
-                    { fontSize: onTablet ? 1.2 * fontIndex : 1.3 * fontIndex }
+                    { fontSize: onTablet ? 1.2 * fontIndex : 1.5 * fontIndex }
                   ]}
                 >
                   {this.state.newUser == 'SIGNUP'
