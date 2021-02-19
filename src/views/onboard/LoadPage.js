@@ -150,18 +150,6 @@ class LoadPage extends React.Component {
                 ]
               })
             );
-          } else if (!userData.isMember && !userData.isPackOlyOwner) {
-            // go to login
-            this.props.navigation.dispatch(
-              StackActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'LOGIN'
-                  })
-                ]
-              })
-            );
           } else {
             if (forumUrl) {
               // if user got a forum related notification

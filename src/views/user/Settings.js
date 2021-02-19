@@ -487,9 +487,7 @@ class Settings extends React.Component {
               </Text>
             </TouchableOpacity>
           }
-          onClose={() => {
-            if (this.loadingRef) this.loadingRef.toggleLoading(false);
-          }}
+          onClose={() => this.loadingRef?.toggleLoading(false)}
         />
         <NavigationBar currentPage={'PROFILE'} pad={true} />
       </SafeAreaView>
