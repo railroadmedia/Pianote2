@@ -150,7 +150,7 @@ class LoadPage extends React.Component {
                 ]
               })
             );
-          } else if (!userData.isMember) {
+          } else if (!userData.isMember && !userData.isPackOlyOwner) {
             // go to login
             this.props.navigation.dispatch(
               StackActions.reset({
