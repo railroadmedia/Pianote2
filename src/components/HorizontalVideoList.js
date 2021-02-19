@@ -309,7 +309,6 @@ class HorizontalVideoList extends React.Component {
               }
             ]}
           >
-            <View style={{ flex: 1 }} />
             {this.props.Title}
           </Text>
           {!this.props.hideSeeAll && (

@@ -768,7 +768,6 @@ class VerticalVideoList extends React.Component {
                           : colors.secondBackground
                       }}
                     >
-                      <View style={{ flex: 1 }} />
                       {this.props.title}
                     </Text>
                     <View style={{ flex: 1 }} />
