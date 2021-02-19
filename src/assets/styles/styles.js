@@ -41,12 +41,6 @@ module.exports = StyleSheet.create({
     marginBottom: 10 * factor,
     justifyContent: 'space-between'
   },
-  cancelSearch: {
-    textAlign: 'center',
-    fontSize: 12 * factor,
-    color: '#fb1b2f',
-    fontFamily: 'OpenSans-Bold'
-  },
   searchText: {
     flex: 0.9,
     color: 'grey',
@@ -102,8 +96,7 @@ module.exports = StyleSheet.create({
   },
   tabRightContainerText: {
     paddingLeft: 10 * factor,
-    fontSize: DeviceInfo.isTablet() ? 26 : 20 * factor,
-    marginBottom: 5 * factor,
+    fontSize: DeviceInfo.isTablet() ? 22 : 20 * factor,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',
@@ -114,7 +107,7 @@ module.exports = StyleSheet.create({
     width: '100%',
     borderTopWidth: 0.5 * factor,
     borderTopColor: '#445f73',
-    borderBottomWidth: 0.5 * factor,
+    borderBottomWidth: 0.5,
     borderBottomColor: '#445f73',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -122,7 +115,7 @@ module.exports = StyleSheet.create({
   },
   contentPageHeader: {
     paddingLeft: 10 * factor,
-    fontSize: 30 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
   },

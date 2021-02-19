@@ -417,7 +417,7 @@ const localStyles = StyleSheet.create({
   },
   text: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor,
     color: '#445f73'
   },
   emailNotificationFrequency: {

@@ -463,7 +463,7 @@ class Lessons extends React.Component {
                 </View>
                 <View
                   style={{
-                    flex: onTablet ? 0.2 : 0.15,
+                    height: (onTablet ? 25 : 40) * factor,
                     flexDirection: 'row',
                     alignItems: 'center',
                     marginBottom: onTablet ? 15 : Platform.OS == 'android' ? -5 : -1

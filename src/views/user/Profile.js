@@ -307,8 +307,8 @@ export default class Profile extends React.Component {
               onPress={() => this.props.navigation.navigate('SETTINGS')}
             >
               <Settings
-                height={onTablet ? 18 * factor : 25 * factor}
-                width={onTablet ? 18 * factor : 25 * factor}
+                height={onTablet ? 15 * factor : 25 * factor}
+                width={onTablet ? 15 * factor : 25 * factor}
                 fill={colors.pianoteRed}
                 style={{ alignSelf: 'flex-end' }}
               />
@@ -646,14 +646,14 @@ const localStyles = StyleSheet.create({
   },
   usernameText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: 30 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
     textAlign: 'center',
     color: 'white',
     marginBottom: (10 * Dimensions.get('window').height) / 812
   },
   memberSinceText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 14 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor,
     textAlign: 'center',
     color: '#445f73'
   },
@@ -671,13 +671,13 @@ const localStyles = StyleSheet.create({
   },
   redXpRank: {
     color: '#fb1b2f',
-    fontSize: 12 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 12) * factor,
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center'
   },
   whiteXpRank: {
     color: 'white',
-    fontSize: 24 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 18 : 24) * factor,
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center'
   },
@@ -691,7 +691,7 @@ const localStyles = StyleSheet.create({
   },
   noNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: 15 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 15) * factor,
     textAlign: 'left',
     paddingLeft: 15,
     color: 'white'
@@ -723,23 +723,23 @@ const localStyles = StyleSheet.create({
   },
   boldNotificationText: {
     fontFamily: 'OpenSans-ExtraBold',
-    fontSize: 15 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 11.5 : 15) * factor,
     color: 'white'
   },
   messageTypeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: 14 * factor
+    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor,
   },
   notificationText: {
     paddingLeft: 15,
-    fontSize: 18 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
     fontFamily: 'OpenSans-ExtraBold',
     color: '#445f73'
   },
   createdAtText: {
     marginTop: (5 * Dimensions.get('window').height) / 812,
     fontFamily: 'OpenSans-Regular',
-    fontSize: 13 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 8 : 13) * factor,
     color: '#445f73'
   },
   threeDotsContainer: {

@@ -128,15 +128,11 @@ export default class Support extends React.Component {
                   fill={colors.secondBackground}
                 />
               </TouchableOpacity>
+              
             </View>
             <View style={{ flex: 0.66 }} />
             <Text
-              style={{
-                fontSize: 22 * factor,
-                fontWeight: 'bold',
-                fontFamily: 'OpenSans-Regular',
-                color: colors.secondBackground
-              }}
+              style={[styles.childHeaderText, { color: colors.secondBackground }]}
             >
               Support
             </Text>
@@ -156,7 +152,7 @@ export default class Support extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factor,
+                  fontSize: (onTablet ? 14 : 18) * factor,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -172,7 +168,7 @@ export default class Support extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factor,
+                  fontSize: (onTablet ? 14 : 18) * factor,
                   color: 'white',
                   paddingVertical: 15
                 }}
@@ -188,7 +184,7 @@ export default class Support extends React.Component {
               <Text
                 style={{
                   fontFamily: 'RobotoCondensed-Bold',
-                  fontSize: 18 * factor,
+                  fontSize: (onTablet ? 14 : 18) * factor,
                   color: 'white',
                   paddingVertical: 15
                 }}

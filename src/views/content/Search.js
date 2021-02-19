@@ -110,7 +110,7 @@ export default class Search extends React.Component {
             <Text
               style={{
                 color: 'white',
-                fontSize: 18 * factor,
+                fontSize: (onTablet ? 12 : 18) * factor,
                 fontFamily: 'OpenSans-Bold',
                 paddingVertical: 10
               }}
@@ -133,7 +133,7 @@ export default class Search extends React.Component {
         >
           <Text
             style={{
-              fontSize: 18 * factor,
+              fontSize: (onTablet ? 14 : 18) * factor,
               fontFamily: 'OpenSans-Regular',
               fontWeight: 'bold',
               color: 'white',
@@ -356,12 +356,16 @@ export default class Search extends React.Component {
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             style={styles.mainContainer}
           >
-            <View style={styles.searchContainer}>
+            <View style={{
+              marginTop: (onTablet ? 0.03 : 0.04) * height,
+              flexDirection: 'row',
+              paddingLeft: 15
+            }}>
               <View style={styles.searchBox}>
                 <View style={[styles.centerContent, { width: 40 * factor }]}>
                   <EvilIcons
                     name={'search'}
-                    size={27.5 * factor}
+                    size={(onTablet ? 22.5 : 27.5) * factor}
                     color={
                       this.props.currentPage == 'SEARCH' ? '#fb1b2f' : 'grey'
                     }
@@ -373,7 +377,14 @@ export default class Search extends React.Component {
                   placeholderTextColor={'grey'}
                   onChangeText={searchTerm => this.setState({ searchTerm })}
                   returnKeyType={'search'}
-                  style={styles.searchText}
+                  style={{
+                    flex: 0.9,
+                    color: 'grey',
+                    paddingVertical: (onTablet ? 10 : 12.5) * factor,
+                    justifyContent: 'center',
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: (onTablet ? 12 : 16) * factor,
+                  }}
                   onSubmitEditing={() => {
                     this.setState({
                       showCancel: true,
@@ -414,7 +425,16 @@ export default class Search extends React.Component {
                       });
                     }}
                   >
-                    <Text style={styles.cancelSearch}>CANCEL</Text>
+                    <Text 
+                      style={{
+                        textAlign: 'center',
+                        fontSize: (onTablet ? 10 : 12) * factor,
+                        color: '#fb1b2f',
+                        fontFamily: 'OpenSans-Bold'  
+                      }}
+                    >
+                        CANCEL
+                    </Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -427,7 +447,7 @@ export default class Search extends React.Component {
                     style={{
                       paddingLeft: 15 * factor,
                       fontFamily: 'OpenSans-Bold',
-                      fontSize: 18 * factor,
+                      fontSize: (onTablet ? 14 : 18) * factor,
                       color: colors.secondBackground
                     }}
                   >
@@ -449,7 +469,7 @@ export default class Search extends React.Component {
                     {!this.state.filtering && (
                       <Text
                         style={{
-                          fontSize: 14 * factor,
+                          fontSize: (onTablet ? 12 : 14) * factor,
                           color: colors.pianoteRed,
                           textAlign: 'right',
                           fontFamily: 'OpenSans-Regular'
@@ -525,7 +545,7 @@ export default class Search extends React.Component {
                   <Text
                     style={{
                       marginTop: 5 * factor,
-                      fontSize: 18 * factor,
+                      fontSize: (onTablet ? 14 : 18) * factor,
                       fontFamily: 'OpenSans-Bold',
                       color: 'white',
                       paddingLeft: 15 * factor

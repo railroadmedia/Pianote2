@@ -309,6 +309,7 @@ class HorizontalVideoList extends React.Component {
               }
             ]}
           >
+            <View style={{flex: 1}}/>
             {this.props.Title}
           </Text>
           {!this.props.hideSeeAll && (
@@ -507,7 +508,7 @@ class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: (onTablet ? 9.5 : 12) * factor,
+                        fontSize: (onTablet ? 8 : 12) * factor,
                         marginTop: 1.5
                       }}
                     >

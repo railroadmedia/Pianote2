@@ -275,7 +275,8 @@ class Course extends React.Component {
               <View
                 key={'continueCourses'}
                 style={{
-                  backgroundColor: colors.mainBackground
+                  backgroundColor: colors.mainBackground,
+                  paddingLeft: 10 * factor
                 }}
               >
                 <HorizontalVideoList
@@ -292,6 +293,7 @@ class Course extends React.Component {
               </View>
             )}
             {onTablet ? (
+              <View style={{paddingLeft: 10 * factor}}>
               <HorizontalVideoList
                 Title={'COURSES'}
                 seeAll={() =>
@@ -323,6 +325,7 @@ class Course extends React.Component {
                   }
                 }}
               />
+              </View>
             ) : (
               <VerticalVideoList
                 items={this.state.allCourses}
