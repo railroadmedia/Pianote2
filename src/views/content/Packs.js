@@ -248,45 +248,45 @@ class Packs extends React.Component {
                     marginBottom: 30 * factor
                   }}
                 >
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                   <View
                     style={{
                       width: onTablet ? 200 : '45%'
                     }}
                   >
-                  {this.state.headerPackCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : !this.state.headerPackStarted ? (
-                    <StartIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  ) : (
-                    <ContinueIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  )}
+                    {this.state.headerPackCompleted ? (
+                      <ResetIcon
+                        pressed={() =>
+                          this.setState({
+                            showRestartCourse: true
+                          })
+                        }
+                      />
+                    ) : !this.state.headerPackStarted ? (
+                      <StartIcon
+                        pressed={() =>
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.headerPackNextLessonUrl
+                          })
+                        }
+                      />
+                    ) : (
+                      <ContinueIcon
+                        pressed={() =>
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.headerPackNextLessonUrl
+                          })
+                        }
+                      />
+                    )}
                   </View>
-                  <View style={onTablet ? {width: 10} : {flex: 0.5}}/>
+                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
                   <View
                     style={{
                       width: onTablet ? 200 : '45%'
                     }}
                   >
-                     <MoreInfoIcon
+                    <MoreInfoIcon
                       pressed={() => {
                         this.props.navigation.push('SINGLEPACK', {
                           url: this.state.headerPackUrl
@@ -294,7 +294,7 @@ class Packs extends React.Component {
                       }}
                     />
                   </View>
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                 </View>
               </ImageBackground>
             </>

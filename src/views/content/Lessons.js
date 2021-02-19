@@ -466,10 +466,14 @@ class Lessons extends React.Component {
                     height: (onTablet ? 25 : 40) * factor,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginBottom: onTablet ? 15 : Platform.OS == 'android' ? -5 : -1
+                    marginBottom: onTablet
+                      ? 15
+                      : Platform.OS == 'android'
+                      ? -5
+                      : -1
                   }}
                 >
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                   <View
                     style={{
                       width: onTablet ? 200 : '45%'
@@ -509,7 +513,7 @@ class Lessons extends React.Component {
                       />
                     )}
                   </View>
-                  <View style={onTablet ? {width: 10} : {flex: 0.5}}/>
+                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
                   <View
                     style={{
                       width: onTablet ? 200 : '45%'
@@ -524,7 +528,7 @@ class Lessons extends React.Component {
                       }}
                     />
                   </View>
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                 </View>
                 <View style={{ flex: 0.1 }} />
               </View>

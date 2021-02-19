@@ -64,7 +64,7 @@ class CommentSort extends React.Component {
             >
               <EntypoIcon
                 name={'check'}
-                 size={(onTablet ? 15 : 20) * factor} 
+                size={(onTablet ? 15 : 20) * factor}
                 color={
                   this.state.currentSort == sortOption.option
                     ? 'white'
@@ -90,7 +90,11 @@ class CommentSort extends React.Component {
             style={localStyles.cancelContainer}
             onPress={() => this.props.hideCommentSort()}
           >
-            <EntypoIcon name={'cross'} size={(onTablet ? 17.5 : 25) * factor} color={'white'} />
+            <EntypoIcon
+              name={'cross'}
+              size={(onTablet ? 17.5 : 25) * factor}
+              color={'white'}
+            />
             <Text style={localStyles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>

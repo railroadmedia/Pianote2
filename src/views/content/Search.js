@@ -356,11 +356,13 @@ export default class Search extends React.Component {
             onScroll={({ nativeEvent }) => this.handleScroll(nativeEvent)}
             style={styles.mainContainer}
           >
-            <View style={{
-              marginTop: (onTablet ? 0.03 : 0.04) * height,
-              flexDirection: 'row',
-              paddingLeft: 15
-            }}>
+            <View
+              style={{
+                marginTop: (onTablet ? 0.03 : 0.04) * height,
+                flexDirection: 'row',
+                paddingLeft: 15
+              }}
+            >
               <View style={styles.searchBox}>
                 <View style={[styles.centerContent, { width: 40 * factor }]}>
                   <EvilIcons
@@ -383,7 +385,7 @@ export default class Search extends React.Component {
                     paddingVertical: (onTablet ? 10 : 12.5) * factor,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Regular',
-                    fontSize: (onTablet ? 12 : 16) * factor,
+                    fontSize: (onTablet ? 12 : 16) * factor
                   }}
                   onSubmitEditing={() => {
                     this.setState({
@@ -425,15 +427,15 @@ export default class Search extends React.Component {
                       });
                     }}
                   >
-                    <Text 
+                    <Text
                       style={{
                         textAlign: 'center',
                         fontSize: (onTablet ? 10 : 12) * factor,
                         color: '#fb1b2f',
-                        fontFamily: 'OpenSans-Bold'  
+                        fontFamily: 'OpenSans-Bold'
                       }}
                     >
-                        CANCEL
+                      CANCEL
                     </Text>
                   </TouchableOpacity>
                 )}

@@ -728,7 +728,7 @@ const localStyles = StyleSheet.create({
   },
   messageTypeText: {
     fontFamily: 'OpenSans-Regular',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor
   },
   notificationText: {
     paddingLeft: 15,

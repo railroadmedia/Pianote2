@@ -314,7 +314,7 @@ export default class Method extends React.Component {
                 }}
               >
                 <View style={{ flex: 1 }} />
-                <View style={{width: '45%',}}>
+                <View style={{ width: '45%' }}>
                   {this.state.methodIsCompleted ? (
                     <ResetIcon
                       isMethod={true}
@@ -365,15 +365,14 @@ export default class Method extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
                         marginTop: 2,
-                        fontSize: (onTablet ? 8 : 12 ) * factor,
+                        fontSize: (onTablet ? 8 : 12) * factor
                       }}
                     >
                       Info
                     </Text>
                   </TouchableOpacity>
-                
                 </View>
-                <View style={{flex: 1}}/>
+                <View style={{ flex: 1 }} />
               </View>
             </View>
           </ImageBackground>

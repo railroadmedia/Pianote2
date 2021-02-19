@@ -56,8 +56,8 @@ export default class CreateAccount extends React.Component {
     if (this.state.password == this.state.confirmPassword) {
       if (this.state.password.length > 7) {
         if (this.props.navigation.state.params?.purchase) {
-          let emailEncode = encodeURIComponent(this.state.email)
-          let passwordEncode = encodeURIComponent(this.state.password)
+          let emailEncode = encodeURIComponent(this.state.email);
+          let passwordEncode = encodeURIComponent(this.state.password);
           let response = await signUp(
             emailEncode,
             passwordEncode,
@@ -198,9 +198,9 @@ export default class CreateAccount extends React.Component {
                   )}
                   <TouchableOpacity
                     onPress={() => {
-                    //  this.setState({
+                      //  this.setState({
                       //  showPassword: !this.state.showPassword
-                    //  });
+                      //  });
                     }}
                     style={localStyles.passwordVisible}
                   >
@@ -250,9 +250,9 @@ export default class CreateAccount extends React.Component {
                   )}
                   <TouchableOpacity
                     style={localStyles.passwordVisible}
-                    onPress={() => { 
+                    onPress={() => {
                       //this.setState({
-                        //showConfirmPassword: !this.state.showConfirmPassword
+                      //showConfirmPassword: !this.state.showConfirmPassword
                       //});
                     }}
                   >

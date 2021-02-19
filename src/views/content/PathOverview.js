@@ -319,9 +319,7 @@ export default class PathOverview extends React.Component {
         </ImageBackground>
         <View
           key={'title'}
-          style={[
-            this.state.isLandscape ? { marginHorizontal: '10%' } : {}
-          ]}
+          style={[this.state.isLandscape ? { marginHorizontal: '10%' } : {}]}
         >
           {!this.state.isMethod && (
             <Text
@@ -331,7 +329,7 @@ export default class PathOverview extends React.Component {
                 color: 'white',
                 textAlign: 'center',
                 fontSize: (onTablet ? 12.5 : 20) * factor,
-                marginTop: 10 * factor,
+                marginTop: 10 * factor
               }}
             >
               {this.state.data.title}
@@ -341,15 +339,14 @@ export default class PathOverview extends React.Component {
             numberOfLines={2}
             style={[
               {
-                
                 fontFamily: 'OpenSans-Regular',
                 color: this.state.isMethod
                   ? colors.pianoteGrey
                   : colors.secondBackground,
                 textAlign: 'center',
                 fontSize: (onTablet ? 8 : 14) * factor,
-                paddingVertical: (onTablet ? 10 : 20) * factor,
-              },
+                paddingVertical: (onTablet ? 10 : 20) * factor
+              }
             ]}
           >
             {this.state.artist?.toUpperCase()} |{' '}
@@ -367,7 +364,7 @@ export default class PathOverview extends React.Component {
             }}
           >
             <View style={{ flex: 1 }} />
-            <View style={{width: '45%',}}>
+            <View style={{ width: '45%' }}>
               <TouchableOpacity
                 style={{
                   position: 'absolute',
@@ -378,26 +375,26 @@ export default class PathOverview extends React.Component {
                 }}
                 onPress={() => this.toggleMyList(this.state.data.id)}
               >
-                <View style={[styles.centerContent,{flexDirection: 'row'}]}>
-                {!this.state.isAddedToList ? (
-                  <AntIcon
-                    name={'plus'}
-                    size={(onTablet ? 20 : 27.5) * factor}
-                    color={colors.pianoteRed}
-                  />
-                ) : (
-                  <AntIcon
-                    name={'close'}
-                    size={(onTablet ? 20 : 27.5) * factor}
-                    color={colors.pianoteRed}
-                  />
-                )}
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
+                  {!this.state.isAddedToList ? (
+                    <AntIcon
+                      name={'plus'}
+                      size={(onTablet ? 20 : 27.5) * factor}
+                      color={colors.pianoteRed}
+                    />
+                  ) : (
+                    <AntIcon
+                      name={'close'}
+                      size={(onTablet ? 20 : 27.5) * factor}
+                      color={colors.pianoteRed}
+                    />
+                  )}
                 </View>
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     color: 'white',
-                    fontSize: (onTablet ? 8 : 12 ) * factor,
+                    fontSize: (onTablet ? 8 : 12) * factor
                   }}
                 >
                   {this.state.isAddedToList ? 'Added' : 'My List'}
@@ -445,7 +442,7 @@ export default class PathOverview extends React.Component {
                   });
                 }}
               >
-                <View style={[styles.centerContent,{flexDirection: 'row'}]}>
+                <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                   <AntIcon
                     name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
                     size={(onTablet ? 15 : 22.5) * factor}
@@ -457,15 +454,15 @@ export default class PathOverview extends React.Component {
                     fontFamily: 'OpenSans-Regular',
                     color: 'white',
                     marginTop: 2,
-                    fontSize: (onTablet ? 8 : 12 ) * factor,
+                    fontSize: (onTablet ? 8 : 12) * factor
                   }}
                 >
                   Info
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1}}/>
-          </View>              
+            <View style={{ flex: 1 }} />
+          </View>
         </View>
 
         {this.state.showInfo && (
@@ -473,7 +470,7 @@ export default class PathOverview extends React.Component {
             key={'info'}
             style={[
               {
-                paddingHorizontal: 20 * factor,
+                paddingHorizontal: 20 * factor
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }
@@ -497,10 +494,7 @@ export default class PathOverview extends React.Component {
             <View key={'containStats'}>
               <View
                 key={'stats'}
-                style={[
-                  styles.centerContent,
-                  {  flexDirection: 'row' }
-                ]}
+                style={[styles.centerContent, { flexDirection: 'row' }]}
               >
                 <View
                   style={[
@@ -857,7 +851,7 @@ export default class PathOverview extends React.Component {
                         fontFamily: 'OpenSans-Bold',
                         color: 'white',
                         paddingHorizontal: onTablet ? 0 : 7.5 * factor,
-                        marginTop: onTablet ? 10 : 2.5,
+                        marginTop: onTablet ? 10 : 2.5
                       }}
                     >
                       {item.title}

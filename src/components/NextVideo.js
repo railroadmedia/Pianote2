@@ -117,8 +117,8 @@ class NextVideo extends React.Component {
                     color: this.props.isMethod
                       ? colors.pianoteGrey
                       : colors.secondBackground
-                  }, 
-                  onTablet ? {fontSize: 13, marginTop: 2} : {},
+                  },
+                  onTablet ? { fontSize: 13, marginTop: 2 } : {}
                 ]}
               >
                 {this.props.item.post.fields?.find(f => f.key === 'video')

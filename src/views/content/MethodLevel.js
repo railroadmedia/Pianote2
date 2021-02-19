@@ -296,7 +296,7 @@ export default class MethodLevel extends React.Component {
                 }}
               >
                 <View style={{ flex: 1 }} />
-                <View style={{width: '45%',}}>
+                <View style={{ width: '45%' }}>
                   <TouchableOpacity
                     style={{
                       position: 'absolute',
@@ -309,27 +309,29 @@ export default class MethodLevel extends React.Component {
                       this.toggleMyList();
                     }}
                   >
-                    <View style={[styles.centerContent,{flexDirection: 'row'}]}>
-                    {!this.state.isAddedToList ? (
-                      <AntIcon
-                        name={'plus'}
-                        size={(onTablet ? 20 : 27.5) * factor}
-                        color={colors.pianoteRed}
-                      />
-                    ) : (
-                      <AntIcon
-                        name={'close'}
-                        size={(onTablet ? 20 : 27.5) * factor}
-                        color={colors.pianoteRed}
-                      />
-                    )}
+                    <View
+                      style={[styles.centerContent, { flexDirection: 'row' }]}
+                    >
+                      {!this.state.isAddedToList ? (
+                        <AntIcon
+                          name={'plus'}
+                          size={(onTablet ? 20 : 27.5) * factor}
+                          color={colors.pianoteRed}
+                        />
+                      ) : (
+                        <AntIcon
+                          name={'close'}
+                          size={(onTablet ? 20 : 27.5) * factor}
+                          color={colors.pianoteRed}
+                        />
+                      )}
                     </View>
                     <Text
                       style={{
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
                         marginTop: 2,
-                        fontSize: (onTablet ? 8 : 12 ) * factor,
+                        fontSize: (onTablet ? 8 : 12) * factor
                       }}
                     >
                       {this.state.isAddedToList ? 'Added' : 'My List'}
@@ -373,9 +375,13 @@ export default class MethodLevel extends React.Component {
                       });
                     }}
                   >
-                    <View style={[styles.centerContent,{flexDirection: 'row'}]}>
+                    <View
+                      style={[styles.centerContent, { flexDirection: 'row' }]}
+                    >
                       <AntIcon
-                        name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                        name={
+                          this.state.showInfo ? 'infocirlce' : 'infocirlceo'
+                        }
                         size={(onTablet ? 15 : 22.5) * factor}
                         color={colors.pianoteRed}
                       />
@@ -385,17 +391,16 @@ export default class MethodLevel extends React.Component {
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
                         marginTop: 2,
-                        fontSize: (onTablet ? 8 : 12 ) * factor,
+                        fontSize: (onTablet ? 8 : 12) * factor
                       }}
                     >
                       Info
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={{flex: 1}}/>
+                <View style={{ flex: 1 }} />
               </View>
             </View>
-
           </ImageBackground>
           {this.state.showInfo && (
             <View
@@ -423,7 +428,7 @@ export default class MethodLevel extends React.Component {
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
               marginBottom: 10 * factor,
-              marginTop: 40 * factor, 
+              marginTop: 40 * factor
             }}
           >
             <VerticalVideoList

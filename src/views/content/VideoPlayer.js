@@ -1137,7 +1137,7 @@ export default class VideoPlayer extends React.Component {
                   <View
                     key={'icons'}
                     style={{
-                      paddingHorizontal: 10 * factor,
+                      paddingHorizontal: 10 * factor
                     }}
                   >
                     <View
@@ -1162,7 +1162,7 @@ export default class VideoPlayer extends React.Component {
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: (onTablet ? 9 : 12 ) * factor,
+                            fontSize: (onTablet ? 9 : 12) * factor,
                             color: 'white',
                             marginTop: 5 * factor
                           }}
@@ -1184,7 +1184,7 @@ export default class VideoPlayer extends React.Component {
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: (onTablet ? 9 : 12 ) * factor,
+                            fontSize: (onTablet ? 9 : 12) * factor,
                             color: 'white',
                             marginTop: 2 * factor
                           }}
@@ -1211,7 +1211,7 @@ export default class VideoPlayer extends React.Component {
                           <Text
                             style={{
                               textAlign: 'center',
-                              fontSize: (onTablet ? 9 : 12 ) * factor,
+                              fontSize: (onTablet ? 9 : 12) * factor,
                               color: 'white',
                               marginTop: 5 * factor
                             }}
@@ -1239,7 +1239,7 @@ export default class VideoPlayer extends React.Component {
                           animatedProgressBackground: colors.pianoteRed,
                           textStatus: {
                             color: '#ffffff',
-                            fontSize: (onTablet ? 9 : 12 ) * factor,
+                            fontSize: (onTablet ? 9 : 12) * factor,
                             fontFamily: 'OpenSans-Regular',
                             marginTop: 2 * factor
                           },
@@ -1280,7 +1280,7 @@ export default class VideoPlayer extends React.Component {
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: (onTablet ? 9 : 12 ) * factor,
+                            fontSize: (onTablet ? 9 : 12) * factor,
                             color: 'white',
                             marginTop: 5 * factor
                           }}

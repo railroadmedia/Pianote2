@@ -249,7 +249,7 @@ class MyList extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tabRightContainer, { marginBottom: 3 * factor}]}
+            style={[styles.tabRightContainer, { marginBottom: 3 * factor }]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
                 title: 'Completed',

@@ -48,7 +48,7 @@ class NavMenuHeaders extends React.Component {
           backgroundColor: this.props.isMethod
             ? 'black'
             : colors.mainBackground,
-          paddingTop: DeviceInfo.hasNotch() ? 0 : 5,
+          paddingTop: DeviceInfo.hasNotch() ? 0 : 5
         }}
         forceInset={{ top: 'always' }}
       >
@@ -64,10 +64,16 @@ class NavMenuHeaders extends React.Component {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: isNotch ? 5 * factor : Platform.OS == 'android' ? 0 : onTablet ? 0 : 4,
+            paddingTop: isNotch
+              ? 5 * factor
+              : Platform.OS == 'android'
+              ? 0
+              : onTablet
+              ? 0
+              : 4,
             paddingBottom: (onTablet ? 5 : 10) * factor,
             paddingRight: 10 * factor,
-            paddingLeft: 5 * factor,
+            paddingLeft: 5 * factor
           }}
         >
           <TouchableOpacity
@@ -97,7 +103,7 @@ class NavMenuHeaders extends React.Component {
               width: (onTablet ? 0.12 : 0.25) * width,
               flexDirection: 'row',
               marginRight: 5 * factor,
-              paddingLeft: onTablet ? 10 : 0,
+              paddingLeft: onTablet ? 10 : 0
             }}
           >
             <Pianote fill={'#fb1b2f'} />

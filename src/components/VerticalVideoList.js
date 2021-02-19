@@ -429,14 +429,14 @@ class VerticalVideoList extends React.Component {
                 >
                   {row.isStarted ? (
                     <Progress
-                      height={(onTablet ? 45: 40 * factor)}
-                      width={(onTablet ? 45 : 40 * factor)}
+                      height={onTablet ? 45 : 40 * factor}
+                      width={onTablet ? 45 : 40 * factor}
                       fill={'white'}
                     />
                   ) : row.isCompleted ? (
                     <ApprovedTeacher
-                      height={(onTablet ? 50: 40 * factor)}
-                      width={(onTablet ? 50 : 40 * factor)}
+                      height={onTablet ? 50 : 40 * factor}
+                      width={onTablet ? 50 : 40 * factor}
                       fill={'white'}
                     />
                   ) : null}
@@ -768,7 +768,7 @@ class VerticalVideoList extends React.Component {
                           : colors.secondBackground
                       }}
                     >
-                      <View style={{flex: 1}}/>
+                      <View style={{ flex: 1 }} />
                       {this.props.title}
                     </Text>
                     <View style={{ flex: 1 }} />
@@ -802,16 +802,17 @@ class VerticalVideoList extends React.Component {
                       <Text
                         style={{
                           color: colors.pianoteRed,
-                          fontSize: (onTablet ? 10 : 14.5 ) * factor,
+                          fontSize: (onTablet ? 10 : 14.5) * factor,
                           fontFamily: 'OpenSans-Regular',
                           marginRight: 3.5 * factor
                         }}
                       >
-                        {onTablet ? 
-                            sortDict[this.props.currentSort].charAt(0) + sortDict[this.props.currentSort].substring(1).toLowerCase()
-                            :
+                        {onTablet
+                          ? sortDict[this.props.currentSort].charAt(0) +
                             sortDict[this.props.currentSort]
-                          }
+                              .substring(1)
+                              .toLowerCase()
+                          : sortDict[this.props.currentSort]}
                       </Text>
                       <View>
                         <FontIcon
@@ -836,7 +837,7 @@ class VerticalVideoList extends React.Component {
                             borderWidth: 1.25 * factor,
                             borderColor: colors.pianoteRed,
                             height: (onTablet ? 17.5 : 30) * factor,
-                          width: (onTablet ? 17.5 : 30) * factor,
+                            width: (onTablet ? 17.5 : 30) * factor,
                             borderRadius: 30 * factor
                           }
                         ]}

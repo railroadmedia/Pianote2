@@ -415,9 +415,9 @@ export default class ProfileSettings extends React.Component {
                 ? this.props.navigation.goBack()
                 : this.setState({ currentlyView: 'Profile Settings' });
             }}
-            style={{ padding: 15 * factor, }}
+            style={{ padding: 15 * factor }}
           >
-            <View style={{flex: 1}}/>
+            <View style={{ flex: 1 }} />
             <Back
               width={(onTablet ? 17.5 : 25) * factor}
               height={(onTablet ? 17.5 : 25) * factor}

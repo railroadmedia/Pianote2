@@ -20,30 +20,29 @@ class MoreInfoIcon extends React.Component {
     this.state = {};
   }
 
-  sizing = (type) => {
-    if(type == 'icon') {
-      if(onTablet) {
-        if(this.props.isMethod) {
-          return 30
+  sizing = type => {
+    if (type == 'icon') {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 30;
         } else {
-          return 22.5
+          return 22.5;
         }
       } else {
-        return 17.5
+        return 17.5;
       }
-    }
-    else {
-      if(onTablet) {
-        if(this.props.isMethod) {
-          return 17.5
+    } else {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 17.5;
         } else {
-          return 15
+          return 15;
         }
       } else {
-          return 12.5
+        return 12.5;
       }
     }
-  }
+  };
 
   render = () => {
     return (

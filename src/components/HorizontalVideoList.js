@@ -309,7 +309,7 @@ class HorizontalVideoList extends React.Component {
               }
             ]}
           >
-            <View style={{flex: 1}}/>
+            <View style={{ flex: 1 }} />
             {this.props.Title}
           </Text>
           {!this.props.hideSeeAll && (
@@ -347,15 +347,16 @@ class HorizontalVideoList extends React.Component {
                             localStyles.seeAllText,
                             {
                               paddingRight: 4 * factor,
-                              fontSize: (onTablet ? 10 : 14.5 ) * factor,
+                              fontSize: (onTablet ? 10 : 14.5) * factor
                             }
                           ]}
                         >
-                          {onTablet ? 
-                            sortDict[this.props.currentSort].charAt(0) + sortDict[this.props.currentSort].substring(1).toLowerCase()
-                            :
-                            sortDict[this.props.currentSort]
-                          }
+                          {onTablet
+                            ? sortDict[this.props.currentSort].charAt(0) +
+                              sortDict[this.props.currentSort]
+                                .substring(1)
+                                .toLowerCase()
+                            : sortDict[this.props.currentSort]}
                         </Text>
                         <View>
                           <FontIcon
@@ -431,21 +432,21 @@ class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                  <View style={[styles.centerContent, localStyles.progressItem]}>
-                    {item.isStarted ? (
-                      <Progress
-                        height={onTablet ? 50 : 50 * factor}
-                        width={onTablet ? 50 : 50 * factor}
-                        fill={'white'}
-                      />
-                    ) : item.isCompleted ? (
-                      <ApprovedTeacher
-                        height={onTablet ? 62.5 : 50 * factor}
-                        width={onTablet ? 62.5 : 50 * factor}
-                        fill={'white'}
-                      />
-                    ) : null}
-                  </View>
+                <View style={[styles.centerContent, localStyles.progressItem]}>
+                  {item.isStarted ? (
+                    <Progress
+                      height={onTablet ? 50 : 50 * factor}
+                      width={onTablet ? 50 : 50 * factor}
+                      fill={'white'}
+                    />
+                  ) : item.isCompleted ? (
+                    <ApprovedTeacher
+                      height={onTablet ? 62.5 : 50 * factor}
+                      width={onTablet ? 62.5 : 50 * factor}
+                      fill={'white'}
+                    />
+                  ) : null}
+                </View>
 
                 {Platform.OS === 'ios' ? (
                   <FastImage
@@ -647,7 +648,7 @@ class HorizontalVideoList extends React.Component {
 
 const localStyles = StyleSheet.create({
   listContainer: {
-    paddingLeft: DeviceInfo.isTablet() ? 5 : 10 * factor 
+    paddingLeft: DeviceInfo.isTablet() ? 5 : 10 * factor
   },
   artist: {
     fontSize:
@@ -663,7 +664,7 @@ const localStyles = StyleSheet.create({
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: (DeviceInfo.isTablet() ? 10 : 14.5 ) * factor,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 14.5) * factor,
     fontWeight: DeviceInfo.isTablet() ? '500' : '300',
     color: '#fb1b2f',
     paddingRight: 10 * factor

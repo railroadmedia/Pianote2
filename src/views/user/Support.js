@@ -128,11 +128,13 @@ export default class Support extends React.Component {
                   fill={colors.secondBackground}
                 />
               </TouchableOpacity>
-              
             </View>
             <View style={{ flex: 0.66 }} />
             <Text
-              style={[styles.childHeaderText, { color: colors.secondBackground }]}
+              style={[
+                styles.childHeaderText,
+                { color: colors.secondBackground }
+              ]}
             >
               Support
             </Text>
