@@ -165,7 +165,6 @@ class LoadPage extends React.Component {
           } else {
             if (forumUrl) {
               // if user got a forum related notification
-              console.log('FORUM URL: ', forumUrl);
               Linking.openURL(forumUrl);
               await AsyncStorage.removeItem('forumUrl');
             }
@@ -173,6 +172,7 @@ class LoadPage extends React.Component {
             if (userData.isPackOlyOwner) {
               // if pack only, set global variable to true & go to packs
               global.isPackOnly = userData.isPackOlyOwner;
+              global.expirationDate = userData.expirationDate;
               await this.props.navigation.dispatch(
                 StackActions.reset({
                   index: 0,
