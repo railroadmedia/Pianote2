@@ -96,9 +96,8 @@ export default class Login extends React.Component {
   };
 
   userHasSubscription = async () => {
-    this.loadingRef.toggleLoading();
+    this.loadingRef?.toggleLoading();
     purchases = await RNIap.getPurchaseHistory();
-    console.log('purchases', purchases);
     if (purchases.some(p => skus.includes(p.productId))) {
       if (Platform.OS === 'android') {
         purchases = purchases.map(p => ({
@@ -108,11 +107,7 @@ export default class Login extends React.Component {
         }));
       }
       let resp = await validateSignUp(purchases);
-      console.log('validateSignUp resp', resp);
-      if (resp.shouldSignup) {
-        this.loadingRef.toggleLoading();
-        return false;
-      } else if (resp.message) {
+      if (resp.message) {
         this.subscriptionExists.toggle(`Signup Blocked`, resp.message);
         this.setState({
           signupAlertText: resp.shouldRenew
@@ -130,18 +125,18 @@ export default class Login extends React.Component {
         );
         this.setState({ signupAlertText: 'Restore' });
       }
-      this.loadingRef.toggleLoading();
+      this.loadingRef?.toggleLoading();
       return true;
     }
+    this.loadingRef?.toggleLoading();
   };
 
   restorePurchases = async () => {
     this.subscriptionExists.toggle();
-    if (this.loadingRef) this.loadingRef.toggleLoading();
+    if (this.loadingRef) this.loadingRef?.toggleLoading();
     try {
       let restoreResponse = await restorePurchase(purchases);
-      console.log('restoreResponse', restoreResponse);
-      if (this.loadingRef) this.loadingRef.toggleLoading();
+      if (this.loadingRef) this.loadingRef?.toggleLoading();
       if (restoreResponse.title && restoreResponse.message)
         return this.alert.toggle(
           restoreResponse.title,
@@ -157,7 +152,9 @@ export default class Login extends React.Component {
           (Platform.OS === 'ios' && purchases[0]))
       ) {
         let purchase = restoreResponse.purchase || purchases[0];
-        const product = await RNIap.getSubscriptions([purchase.product_id]);
+        const product = await RNIap.getSubscriptions([
+          purchase.product_id || purchase.productId
+        ]);
         purchase.price = product[0].price;
         purchase.currency = product[0].currency;
         return this.props.navigation.navigate('CREATEACCOUNT', {
@@ -165,8 +162,7 @@ export default class Login extends React.Component {
         });
       }
     } catch (err) {
-      console.log('restore err', err);
-      if (this.loadingRef) this.loadingRef.toggleLoading();
+      this.loadingRef?.toggleLoading(false);
       Alert.alert(
         'Something went wrong',
         'Please try Again later.',
@@ -905,9 +901,7 @@ export default class Login extends React.Component {
                 </Text>
               </TouchableOpacity>
             }
-            onClose={() => {
-              if (this.loadingRef) this.loadingRef.toggleLoading(false);
-            }}
+            onClose={() => this.loadingRef?.toggleLoading(false)}
           />
         </View>
       </SafeAreaView>
