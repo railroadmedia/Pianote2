@@ -182,25 +182,21 @@ export default class CreateAccount extends React.Component {
                   />
                   {!this.state.showPassword && (
                     <TouchableOpacity
+                      style={localStyles.showPassword}
                       onPress={() =>
                         this.setState({
                           showPassword: true
                         })
                       }
-                      style={{
-                        width: onTablet ? '30%' : '50%',
-                        marginTop: 15 * factor,
-                        backgroundColor: '#fb1b2f'
-                      }}
                     >
                       <Text>{this.state.password}</Text>
                     </TouchableOpacity>
                   )}
                   <TouchableOpacity
                     onPress={() => {
-                      //  this.setState({
-                      //  showPassword: !this.state.showPassword
-                      //  });
+                      this.setState({
+                        showPassword: !this.state.showPassword
+                      });
                     }}
                     style={localStyles.passwordVisible}
                   >
@@ -251,9 +247,9 @@ export default class CreateAccount extends React.Component {
                   <TouchableOpacity
                     style={localStyles.passwordVisible}
                     onPress={() => {
-                      //this.setState({
-                      //showConfirmPassword: !this.state.showConfirmPassword
-                      //});
+                      this.setState({
+                        showConfirmPassword: !this.state.showConfirmPassword
+                      });
                     }}
                   >
                     {this.state.showConfirmPassword ? (
