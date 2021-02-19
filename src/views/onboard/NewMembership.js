@@ -55,14 +55,14 @@ export default class NewMembership extends React.Component {
       email: this.props.navigation.state.params.data.email,
       password: this.props.navigation.state.params.data.password,
       token: this.props.navigation.state.params.data.token,
-      isExpired: false, 
+      isExpired: false,
       benefits: [
         'Pay nothing for 7 days.',
         'Award-winning piano lessons & more.',
         'Access to the Pianote Experience app.',
         'Access to the Pianote Experience website.',
         'Cancel anytime through the App Store.'
-      ],
+      ]
     };
   }
 
@@ -209,7 +209,8 @@ export default class NewMembership extends React.Component {
               style={{ position: 'absolute', left: 15, padding: 5 }}
               onPress={() => {
                 if (onTablet) Orientation.unlockAllOrientations();
-                this.props.navigation.state.params.type == 'SIGNUP' || global.isPackOnly == true
+                this.props.navigation.state.params.type == 'SIGNUP' ||
+                global.isPackOnly == true
                   ? this.props.navigation.goBack()
                   : this.props.navigation.navigate('LOGINCREDENTIALS');
               }}
@@ -238,7 +239,11 @@ export default class NewMembership extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {`${(this.state.newUser == 'EXPIRED') ? 'Start your new\n membership TODAY':'Start your 7-Day \n FREE Trial Today'}`}
+                {`${
+                  this.state.newUser == 'EXPIRED'
+                    ? 'Start your new\n membership TODAY'
+                    : 'Start your 7-Day \n FREE Trial Today'
+                }`}
               </Text>
               <Text
                 style={{
@@ -248,10 +253,10 @@ export default class NewMembership extends React.Component {
                   textAlign: 'center'
                 }}
               >
-                {`${(this.state.newUser == 'EXPIRED') ? 
-                  'Choose the perfect plan that matches your learning style.'
-                  :
-                  `Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`
+                {`${
+                  this.state.newUser == 'EXPIRED'
+                    ? 'Choose the perfect plan that matches your learning style.'
+                    : `Your first 7 days are on us. Choose the\nplan that will start after your trial ends.`
                 }`}
               </Text>
             </View>
@@ -306,7 +311,11 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(subscriptions[0])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR\n${(this.state.newUser == 'EXPIRED') ? 'MEMBERSHIP':'7-DAY FREE TRIAL'}`}
+                      {`START YOUR\n${
+                        this.state.newUser == 'EXPIRED'
+                          ? 'MEMBERSHIP'
+                          : '7-DAY FREE TRIAL'
+                      }`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -378,7 +387,11 @@ export default class NewMembership extends React.Component {
                     onPress={() => this.startPlan(subscriptions[1])}
                   >
                     <Text style={styles.planBtnText}>
-                      {`START YOUR\n${(this.state.newUser == 'EXPIRED') ? 'MEMBERSHIP':'7-DAY FREE TRIAL'}`}
+                      {`START YOUR\n${
+                        this.state.newUser == 'EXPIRED'
+                          ? 'MEMBERSHIP'
+                          : '7-DAY FREE TRIAL'
+                      }`}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -405,7 +418,7 @@ export default class NewMembership extends React.Component {
               }}
             >
               {this.state.benefits.map((benefit, i) => {
-                if(!this.state.newUser == 'EXPIRED' || i > 0) {
+                if (!this.state.newUser == 'EXPIRED' || i > 0) {
                   return (
                     <View>
                       <View
@@ -425,7 +438,9 @@ export default class NewMembership extends React.Component {
                           style={{
                             color: '#ffffff',
                             fontFamily: 'OpenSans',
-                            fontSize: onTablet ? 1.3 * fontIndex : 1.65 * fontIndex,
+                            fontSize: onTablet
+                              ? 1.3 * fontIndex
+                              : 1.65 * fontIndex,
                             marginLeft: 5
                           }}
                         >
@@ -433,7 +448,8 @@ export default class NewMembership extends React.Component {
                         </Text>
                       </View>
                     </View>
-                )}
+                  );
+                }
               })}
               <TouchableOpacity
                 onPress={() => {
