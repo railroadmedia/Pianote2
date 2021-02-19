@@ -330,7 +330,7 @@ class HorizontalVideoList extends React.Component {
                           styles.centerContent,
                           {
                             flexDirection: 'row',
-                            marginRight: 7.5 * factor
+                            marginRight: 5 * factor
                           }
                         ]}
                         onPress={() => {
@@ -345,15 +345,19 @@ class HorizontalVideoList extends React.Component {
                             localStyles.seeAllText,
                             {
                               paddingRight: 4 * factor,
-                              fontSize: 18
+                              fontSize: (onTablet ? 10 : 14.5 ) * factor,
                             }
                           ]}
                         >
-                          {sortDict[this.props.currentSort]}
+                          {onTablet ? 
+                            sortDict[this.props.currentSort].charAt(0) + sortDict[this.props.currentSort].substring(1).toLowerCase()
+                            :
+                            sortDict[this.props.currentSort]
+                          }
                         </Text>
                         <View>
                           <FontIcon
-                            size={(onTablet ? 12 : 14) * factor}
+                            size={(onTablet ? 10 : 14) * factor}
                             name={'sort-amount-down'}
                             color={colors.pianoteRed}
                           />
@@ -370,10 +374,10 @@ class HorizontalVideoList extends React.Component {
                       style={[
                         styles.centerContent,
                         {
-                          borderWidth: 1.25 * factor,
+                          borderWidth: 1 * factor,
                           borderColor: colors.pianoteRed,
-                          height: (onTablet ? 21 : 30) * factor,
-                          width: (onTablet ? 21 : 30) * factor,
+                          height: (onTablet ? 17.5 : 30) * factor,
+                          width: (onTablet ? 17.5 : 30) * factor,
                           borderRadius: 30 * factor,
                           marginRight: 10 * factor
                         }
@@ -386,7 +390,7 @@ class HorizontalVideoList extends React.Component {
                         }}
                       >
                         <IonIcon
-                          size={(onTablet ? 11.5 : 14) * factor}
+                          size={(onTablet ? 9 : 14) * factor}
                           name={'md-options'}
                           color={colors.pianoteRed}
                         />
@@ -636,7 +640,7 @@ class HorizontalVideoList extends React.Component {
 
 const localStyles = StyleSheet.create({
   listContainer: {
-    paddingLeft: (10 * Dimensions.get('window').width) / 375
+    paddingLeft: DeviceInfo.isTablet() ? 5 : 10 * factor 
   },
   artist: {
     fontSize:
@@ -647,22 +651,12 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular'
   },
   title: {
-    fontSize: DeviceInfo.isTablet()
-      ? 22
-      : (18 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
     fontFamily: 'RobotoCondensed-Bold'
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: DeviceInfo.isTablet()
-      ? 20
-      : (14.5 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 14.5 ) * factor,
     fontWeight: DeviceInfo.isTablet() ? '500' : '300',
     color: '#fb1b2f',
     paddingRight: 10 * factor

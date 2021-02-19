@@ -295,10 +295,10 @@ export default class Method extends React.Component {
               <View style={styles.centerContent}>
                 <FastImage
                   style={{
-                    width: width * 0.75,
+                    width: '75%',
                     height: 65 * factor,
                     alignSelf: 'center',
-                    marginBottom: 12.5 * factor
+                    marginBottom: 25 * factor
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -307,65 +307,73 @@ export default class Method extends React.Component {
               <View
                 style={{
                   marginBottom: 10 * factor,
-                  marginTop: 0 * factor,
-                  height: 40 * factor,
-                  justifyContent: 'space-evenly',
+                  height: (onTablet ? 30 : 40) * factor,
+                  width: '100%',
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}
               >
-                <View style={{ flex: 0.5 }} />
-                {this.state.methodIsCompleted ? (
-                  <ResetIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : this.state.methodIsStarted ? (
-                  <ContinueIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.goToLesson(this.state.bannerNextLessonUrl)
-                    }
-                  />
-                ) : (
-                  !this.state.methodIsStarted && (
-                    <StartIcon
+                <View style={{ flex: 1 }} />
+                <View style={{width: '45%',}}>
+                  {this.state.methodIsCompleted ? (
+                    <ResetIcon
+                      isMethod={true}
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : this.state.methodIsStarted ? (
+                    <ContinueIcon
                       isMethod={true}
                       pressed={() =>
                         this.goToLesson(this.state.bannerNextLessonUrl)
                       }
                     />
-                  )
-                )}
-
-                <TouchableOpacity
-                  style={[styles.centerContent, { flex: 0.5 }]}
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factor}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                  ) : (
+                    !this.state.methodIsStarted && (
+                      <StartIcon
+                        isMethod={true}
+                        pressed={() =>
+                          this.goToLesson(this.state.bannerNextLessonUrl)
+                        }
+                      />
+                    )
+                  )}
+                  <TouchableOpacity
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factor,
-                      fontSize: 12 * factor
+                      position: 'absolute',
+                      bottom: 0,
+                      right: -50 * factor,
+                      zIndex: 5,
+                      elevation: 5
+                    }}
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
                     }}
                   >
-                    Info
-                  </Text>
-                </TouchableOpacity>
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={(onTablet ? 15 : 22.5) * factor}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 2,
+                        fontSize: (onTablet ? 8 : 12 ) * factor,
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                
+                </View>
+                <View style={{flex: 1}}/>
               </View>
             </View>
           </ImageBackground>

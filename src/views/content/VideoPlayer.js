@@ -942,8 +942,8 @@ export default class VideoPlayer extends React.Component {
           <>
             {this.state.isLoadingAll ||
             (!this.state.video_playback_endpoints && !youtubeId) ? (
-              <SafeAreaView
-                forceInset={{ top: 'always', bottom: 'never' }}
+              <View
+                //forceInset={{ top: 'always', bottom: 'never' }}
                 style={{ backgroundColor: 'black' }}
               >
                 <View style={{ aspectRatio: 16 / 9, justifyContent: 'center' }}>
@@ -965,7 +965,7 @@ export default class VideoPlayer extends React.Component {
                   </TouchableOpacity>
                   <ActivityIndicator size='large' color='#ffffff' />
                 </View>
-              </SafeAreaView>
+              </View>
             ) : (
               <Video
                 youtubeId={youtubeId}
@@ -1112,8 +1112,9 @@ export default class VideoPlayer extends React.Component {
                     <View style={{ height: 5 }} />
                     <Text
                       style={{
-                        fontSize: (onTablet ? 15 : 20) * factor,
-                        marginVertical: 10 * factor,
+                        fontSize: (onTablet ? 12 : 20) * factor,
+                        marginTop: 10 * factor,
+                        marginBottom: 5 * factor,
                         fontWeight: 'bold',
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
@@ -1125,7 +1126,7 @@ export default class VideoPlayer extends React.Component {
                     </Text>
                     <Text
                       style={{
-                        fontSize: (onTablet ? 12 : 16) * factor,
+                        fontSize: (onTablet ? 10 : 16) * factor,
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: colors.secondBackground,
@@ -1139,7 +1140,6 @@ export default class VideoPlayer extends React.Component {
                     key={'icons'}
                     style={{
                       paddingHorizontal: 10 * factor,
-                      paddingVertical: 5 * factor
                     }}
                   >
                     <View
@@ -1158,13 +1158,13 @@ export default class VideoPlayer extends React.Component {
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isLiked ? 'like1' : 'like2'}
-                          size={onTablet ? 20 * factor : 27.5 * factor}
+                          size={onTablet ? 17.5 * factor : 27.5 * factor}
                           color={colors.pianoteRed}
                         />
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: 12 * factor,
+                            fontSize: (onTablet ? 9 : 12 ) * factor,
                             color: 'white',
                             marginTop: 5 * factor
                           }}
@@ -1180,15 +1180,15 @@ export default class VideoPlayer extends React.Component {
                         <View style={{ flex: 1 }} />
                         <AntIcon
                           name={this.state.isAddedToMyList ? 'close' : 'plus'}
-                          size={onTablet ? 22.5 * factor : 28.5 * factor}
+                          size={(onTablet ? 20 : 28.5) * factor}
                           color={colors.pianoteRed}
                         />
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: 12 * factor,
+                            fontSize: (onTablet ? 9 : 12 ) * factor,
                             color: 'white',
-                            marginTop: 5 * factor
+                            marginTop: 2 * factor
                           }}
                         >
                           {this.state.isAddedToMyList ? 'Added' : 'My List'}
@@ -1206,14 +1206,14 @@ export default class VideoPlayer extends React.Component {
                         >
                           <View style={{ flex: 1 }} />
                           <Resources
-                            height={onTablet ? 20 * factor : 27.5 * factor}
-                            width={onTablet ? 20 * factor : 27.5 * factor}
+                            height={onTablet ? 17.5 * factor : 27.5 * factor}
+                            width={onTablet ? 17.5 * factor : 27.5 * factor}
                             fill={colors.pianoteRed}
                           />
                           <Text
                             style={{
                               textAlign: 'center',
-                              fontSize: 12 * factor,
+                              fontSize: (onTablet ? 9 : 12 ) * factor,
                               color: 'white',
                               marginTop: 5 * factor
                             }}
@@ -1233,17 +1233,17 @@ export default class VideoPlayer extends React.Component {
                         styles={{
                           touchable: { flex: 1 },
                           iconSize: {
-                            height: onTablet ? 22.5 * factor : 27.5 * factor,
-                            width: onTablet ? 22.5 * factor : 27.5 * factor
+                            height: (onTablet ? 18 : 27.5) * factor,
+                            width: (onTablet ? 18 : 27.5) * factor
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
                           textStatus: {
                             color: '#ffffff',
-                            fontSize: 12 * factor,
+                            fontSize: (onTablet ? 9 : 12 ) * factor,
                             fontFamily: 'OpenSans-Regular',
-                            marginTop: 5 * factor
+                            marginTop: 2 * factor
                           },
                           alert: {
                             alertTextMessageFontFamily: 'OpenSans-Regular',
@@ -1276,13 +1276,13 @@ export default class VideoPlayer extends React.Component {
                           name={
                             this.state.showInfo ? 'infocirlce' : 'infocirlceo'
                           }
-                          size={onTablet ? 20 * factor : 22.5 * factor}
+                          size={(onTablet ? 15 : 22.5) * factor}
                           color={colors.pianoteRed}
                         />
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: 12 * factor,
+                            fontSize: (onTablet ? 9 : 12 ) * factor,
                             color: 'white',
                             marginTop: 5 * factor
                           }}
@@ -1299,9 +1299,8 @@ export default class VideoPlayer extends React.Component {
                           paddingHorizontal: '5%',
                           paddingTop: 10 * factor,
                           fontFamily: 'OpenSans-Regular',
-                          fontSize: 14 * factor,
+                          fontSize: (onTablet ? 10 : 14) * factor,
                           textAlign: 'center',
-                          marginVertical: 7.5 * factor,
                           color: 'white'
                         }}
                       >
@@ -1605,9 +1604,9 @@ export default class VideoPlayer extends React.Component {
           />
         )}
         {!this.state.selectedAssignment && !this.state.showMakeComment && (
-          <SafeAreaView
+          <View
             key={'completeLesson'}
-            forceInset={{ bottom: 'always' }}
+            //forceInset={{ bottom: 'always' }}
             style={[
               {
                 backgroundColor: colors.mainBackground
@@ -1671,7 +1670,7 @@ export default class VideoPlayer extends React.Component {
                 <EntypoIcon
                   name={'chevron-thin-left'}
                   size={(onTablet ? 17.5 : 22.5) * factor}
-                  style={{ padding: (onTablet ? 5 : 7.5) * factor }}
+                  style={{ padding: (onTablet ? 3 : 7.5) * factor }}
                   color={
                     this.state.previousLesson
                       ? colors.pianoteRed
@@ -1683,7 +1682,7 @@ export default class VideoPlayer extends React.Component {
                 style={{
                   backgroundColor: colors.pianoteRed,
                   borderRadius: 500,
-                  minHeight: (onTablet ? 40 : 50) * factor,
+                  minHeight: (onTablet ? 30 : 50) * factor,
                   justifyContent: 'center',
                   alignItems: 'center',
                   flex: 1
@@ -1698,7 +1697,7 @@ export default class VideoPlayer extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: (onTablet ? 14 : 18) * factor,
+                    fontSize: (onTablet ? 12 : 20) * factor,
                     paddingVertical: 10
                   }}
                 >
@@ -1730,7 +1729,7 @@ export default class VideoPlayer extends React.Component {
                 <EntypoIcon
                   name={'chevron-thin-right'}
                   size={(onTablet ? 17.5 : 22.5) * factor}
-                  style={{ padding: (onTablet ? 5 : 7.5) * factor }}
+                  style={{ padding: (onTablet ? 3 : 7.5) * factor }}
                   color={
                     this.state.nextLesson
                       ? colors.pianoteRed
@@ -1739,7 +1738,7 @@ export default class VideoPlayer extends React.Component {
                 />
               </TouchableOpacity>
             </View>
-          </SafeAreaView>
+          </View>
         )}
 
         {this.state.selectedAssignment && (

@@ -701,7 +701,7 @@ class VerticalVideoList extends React.Component {
                     >
                       <AntIcon
                         name={'plus'}
-                        size={(onTablet ? 25 : 30) * factor}
+                        size={(onTablet ? 20 : 28.5) * factor}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
@@ -718,7 +718,7 @@ class VerticalVideoList extends React.Component {
                     >
                       <AntIcon
                         name={'close'}
-                        size={onTablet ? 25 * factor : 30 * factor}
+                        size={(onTablet ? 20 : 28.5) * factor}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
@@ -759,7 +759,7 @@ class VerticalVideoList extends React.Component {
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: onTablet ? 22 : 18 * factor,
+                        fontSize: (onTablet ? 12 : 18) * factor,
                         marginBottom: 5 * factor,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',
