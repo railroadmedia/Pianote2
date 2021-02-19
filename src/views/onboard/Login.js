@@ -22,7 +22,7 @@ import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
 
-const windowDim = Dimensions.get('window');
+const windowDim = Dimensions.get('screen');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
 const height =
@@ -271,7 +271,11 @@ export default class Login extends React.Component {
     return (
       <View
         key={'loginSignup'}
-        style={{ flex: 1, width, backgroundColor: 'rgba(23, 26, 26, 1)' }}
+        style={{
+          flex: 1,
+          width,
+          backgroundColor: 'rgba(23, 26, 26, 1)'
+        }}
       >
         <View
           key={'pianote1'}
