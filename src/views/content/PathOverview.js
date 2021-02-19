@@ -320,10 +320,6 @@ export default class PathOverview extends React.Component {
         <View
           key={'title'}
           style={[
-            {
-              paddingTop: 10 * factor,
-              paddingBottom: 5 * factor
-            },
             this.state.isLandscape ? { marginHorizontal: '10%' } : {}
           ]}
         >
@@ -334,7 +330,8 @@ export default class PathOverview extends React.Component {
                 fontFamily: 'OpenSans-Bold',
                 color: 'white',
                 textAlign: 'center',
-                fontSize: 24 * factor
+                fontSize: (onTablet ? 12.5 : 20) * factor,
+                marginTop: 10 * factor,
               }}
             >
               {this.state.data.title}
@@ -344,19 +341,15 @@ export default class PathOverview extends React.Component {
             numberOfLines={2}
             style={[
               {
-                marginVertical: 10 * factor,
+                
                 fontFamily: 'OpenSans-Regular',
                 color: this.state.isMethod
                   ? colors.pianoteGrey
                   : colors.secondBackground,
                 textAlign: 'center',
-                fontSize: onTablet ? 20 : 14 * factor
+                fontSize: (onTablet ? 8 : 14) * factor,
+                paddingVertical: (onTablet ? 10 : 20) * factor,
               },
-              onTablet
-                ? {
-                    marginTop: 15 * factor
-                  }
-                : {}
             ]}
           >
             {this.state.artist?.toUpperCase()} |{' '}
@@ -366,98 +359,113 @@ export default class PathOverview extends React.Component {
             | {this.state.xp} XP
           </Text>
           <View
-            key={'thumb/Start/Info'}
-            style={[
-              {
-                width: '100%',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                flexDirection: 'row'
-              },
-              onTablet
-                ? {
-                    height: 50 * factor,
-                    marginVertical: 5 * factor
-                  }
-                : {}
-            ]}
+            style={{
+              height: (onTablet ? 30 : 40) * factor,
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
           >
-            <TouchableOpacity
-              onPress={() => this.toggleMyList(this.state.data.id)}
-              style={{
-                alignItems: 'center',
-                flex: onTablet ? 0.55 : 0.5
-              }}
-            >
-              <AntIcon
-                name={this.state.isAddedToList ? 'close' : 'plus'}
-                size={22 * factor}
-                color={colors.pianoteRed}
-              />
-              <Text
+            <View style={{ flex: 1 }} />
+            <View style={{width: '45%',}}>
+              <TouchableOpacity
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  color: 'white',
-                  fontSize: 12 * factor
+                  position: 'absolute',
+                  bottom: 0,
+                  left: -50 * factor,
+                  zIndex: 5,
+                  elevation: 5
+                }}
+                onPress={() => this.toggleMyList(this.state.data.id)}
+              >
+                <View style={[styles.centerContent,{flexDirection: 'row'}]}>
+                {!this.state.isAddedToList ? (
+                  <AntIcon
+                    name={'plus'}
+                    size={(onTablet ? 20 : 27.5) * factor}
+                    color={colors.pianoteRed}
+                  />
+                ) : (
+                  <AntIcon
+                    name={'close'}
+                    size={(onTablet ? 20 : 27.5) * factor}
+                    color={colors.pianoteRed}
+                  />
+                )}
+                </View>
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    color: 'white',
+                    fontSize: (onTablet ? 8 : 12 ) * factor,
+                  }}
+                >
+                  {this.state.isAddedToList ? 'Added' : 'My List'}
+                </Text>
+              </TouchableOpacity>
+              {this.state.completed ? (
+                <ResetIcon
+                  isMethod={true}
+                  pressed={() => this.setState({ showRestartCourse: true })}
+                />
+              ) : this.state.started ? (
+                <ContinueIcon
+                  isMethod={true}
+                  pressed={() =>
+                    this.goToLesson(
+                      this.state.isMethod
+                        ? this.state.bannerNextLessonUrl
+                        : this.state.nextLesson.id
+                    )
+                  }
+                />
+              ) : (
+                <StartIcon
+                  isMethod={true}
+                  pressed={() =>
+                    this.goToLesson(
+                      this.state.isMethod
+                        ? this.state.bannerNextLessonUrl
+                        : this.state.nextLesson.id
+                    )
+                  }
+                />
+              )}
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: -50 * factor,
+                  zIndex: 5,
+                  elevation: 5
+                }}
+                onPress={() => {
+                  this.setState({
+                    showInfo: !this.state.showInfo
+                  });
                 }}
               >
-                {!this.state.isAddedToList ? 'My List' : 'Added'}
-              </Text>
-            </TouchableOpacity>
-
-            {this.state.completed ? (
-              <ResetIcon
-                isMethod={true}
-                pressed={() => this.setState({ showRestartCourse: true })}
-              />
-            ) : this.state.started ? (
-              <ContinueIcon
-                isMethod={true}
-                pressed={() =>
-                  this.goToLesson(
-                    this.state.isMethod
-                      ? this.state.bannerNextLessonUrl
-                      : this.state.nextLesson.id
-                  )
-                }
-              />
-            ) : (
-              <StartIcon
-                isMethod={true}
-                pressed={() =>
-                  this.goToLesson(
-                    this.state.isMethod
-                      ? this.state.bannerNextLessonUrl
-                      : this.state.nextLesson.id
-                  )
-                }
-              />
-            )}
-
-            <TouchableOpacity
-              onPress={() => this.setState({ showInfo: !this.state.showInfo })}
-              style={{
-                alignItems: 'center',
-                flex: onTablet ? 0.55 : 0.5
-              }}
-            >
-              <AntIcon
-                name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                size={20 * factor}
-                color={colors.pianoteRed}
-              />
-              <Text
-                style={{
-                  fontFamily: 'OpenSans-Regular',
-                  color: 'white',
-                  marginTop: 2.5,
-                  fontSize: 12 * factor
-                }}
-              >
-                Info
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <View style={[styles.centerContent,{flexDirection: 'row'}]}>
+                  <AntIcon
+                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                    size={(onTablet ? 15 : 22.5) * factor}
+                    color={colors.pianoteRed}
+                  />
+                </View>
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    color: 'white',
+                    marginTop: 2,
+                    fontSize: (onTablet ? 8 : 12 ) * factor,
+                  }}
+                >
+                  Info
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1}}/>
+          </View>              
         </View>
 
         {this.state.showInfo && (
@@ -466,7 +474,6 @@ export default class PathOverview extends React.Component {
             style={[
               {
                 paddingHorizontal: 20 * factor,
-                marginTop: 10 * factor
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }
@@ -477,8 +484,9 @@ export default class PathOverview extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 5 * factor,
-                  fontSize: 15 * factor,
+                  marginTop: 10 * factor,
+                  paddingHorizontal: 10 * factor,
+                  fontSize: (onTablet ? 9 : 15) * factor,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -491,7 +499,7 @@ export default class PathOverview extends React.Component {
                 key={'stats'}
                 style={[
                   styles.centerContent,
-                  { marginTop: 10 * factor, flexDirection: 'row' }
+                  {  flexDirection: 'row' }
                 ]}
               >
                 <View
@@ -505,7 +513,7 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 17 * factor,
+                      fontSize: (onTablet ? 15 : 17) * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Bold',
@@ -516,11 +524,11 @@ export default class PathOverview extends React.Component {
                     {`\n`}
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: (onTablet ? 10 : 13) * factor,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        marginTop: 5 * factor
                       }}
                     >
                       LESSONS
@@ -537,7 +545,7 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 17 * factor,
+                      fontSize: (onTablet ? 15 : 17) * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Bold',
@@ -548,7 +556,7 @@ export default class PathOverview extends React.Component {
                     {`\n`}
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: (onTablet ? 10 : 13) * factor,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
@@ -570,7 +578,7 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 17 * factor,
+                      fontSize: (onTablet ? 15 : 17) * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Bold',
@@ -581,7 +589,7 @@ export default class PathOverview extends React.Component {
                     {`\n`}
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: (onTablet ? 10 : 13) * factor,
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
@@ -615,7 +623,7 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 13 * factor,
+                      fontSize: (onTablet ? 10 : 13) * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
@@ -624,7 +632,7 @@ export default class PathOverview extends React.Component {
                   >
                     <AntIcon
                       name={this.state.isLiked ? 'like1' : 'like2'}
-                      size={27.5 * factor}
+                      size={(onTablet ? 20 : 27.5) * factor}
                       color={colors.pianoteRed}
                     />
                     {`\n`}
@@ -639,15 +647,15 @@ export default class PathOverview extends React.Component {
                   styles={{
                     touchable: { flex: 1 },
                     iconSize: {
-                      width: 27.5 * factor,
-                      height: 27.5 * factor
+                      width: (onTablet ? 20 : 27.5) * factor,
+                      height: (onTablet ? 20 : 27.5) * factor
                     },
                     iconDownloadColor: colors.pianoteRed,
                     activityIndicatorColor: colors.pianoteRed,
                     animatedProgressBackground: colors.pianoteRed,
                     textStatus: {
                       color: '#ffffff',
-                      fontSize: 13 * factor,
+                      fontSize: (onTablet ? 10 : 13) * factor,
                       fontFamily: 'OpenSans-Regular',
                       marginTop: 5
                     },
@@ -681,7 +689,7 @@ export default class PathOverview extends React.Component {
                 >
                   <Text
                     style={{
-                      fontSize: 13 * factor,
+                      fontSize: (onTablet ? 10 : 13) * factor,
                       textAlign: 'center',
                       color: 'white',
                       fontFamily: 'OpenSans-Regular',
@@ -690,7 +698,7 @@ export default class PathOverview extends React.Component {
                   >
                     <MaterialIcon
                       name={'replay'}
-                      size={27.5 * factor}
+                      size={(onTablet ? 20 : 27.5) * factor}
                       color={colors.pianoteRed}
                     />
                     {`\n`}
@@ -741,7 +749,9 @@ export default class PathOverview extends React.Component {
               marginLeft: isLandscape ? '10%' : '2%',
               backgroundColor: isMethod ? 'black' : colors.mainBackground,
               marginBottom: 10,
-              alignSelf: 'center'
+              alignSelf: 'center',
+              paddingHorizontal: onTablet ? 0 : 10 * factor,
+              width: '100%'
             }}
             numColumns={onTablet ? 3 : 1}
             data={items}
@@ -846,7 +856,8 @@ export default class PathOverview extends React.Component {
                         textAlign: 'left',
                         fontFamily: 'OpenSans-Bold',
                         color: 'white',
-                        paddingHorizontal: onTablet ? 0 : 7.5 * factor
+                        paddingHorizontal: onTablet ? 0 : 7.5 * factor,
+                        marginTop: onTablet ? 10 : 2.5,
                       }}
                     >
                       {item.title}

@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
@@ -63,7 +64,7 @@ class CommentSort extends React.Component {
             >
               <EntypoIcon
                 name={'check'}
-                size={20 * factor}
+                 size={(onTablet ? 15 : 20) * factor} 
                 color={
                   this.state.currentSort == sortOption.option
                     ? 'white'
@@ -89,7 +90,7 @@ class CommentSort extends React.Component {
             style={localStyles.cancelContainer}
             onPress={() => this.props.hideCommentSort()}
           >
-            <EntypoIcon name={'cross'} size={25 * factor} color={'white'} />
+            <EntypoIcon name={'cross'} size={(onTablet ? 17.5 : 25) * factor} color={'white'} />
             <Text style={localStyles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -107,20 +108,12 @@ const localStyles = StyleSheet.create({
     paddingLeft: 15,
     flexDirection: 'row',
     borderBottomColor: '#445f73',
-    borderBottomWidth:
-      (0.5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    borderBottomWidth: 0.5,
     alignItems: 'center'
   },
   sortText: {
     padding: 15,
-    fontSize:
-      (16 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
     fontFamily: 'OpenSans-Regular'
   },
   cancelContainer: {
@@ -129,11 +122,7 @@ const localStyles = StyleSheet.create({
     alignItems: 'center'
   },
   cancel: {
-    fontSize:
-      (16 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
     fontFamily: 'OpenSans-Regular',
     color: 'white',
     padding: 15

@@ -27,6 +27,7 @@ import Relevance from '../modals/Relevance';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
+import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 
 let greaterWDim;
@@ -429,17 +430,22 @@ class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                {item.isStarted && (
-                  <View
-                    style={[styles.centerContent, localStyles.progressItem]}
-                  >
-                    <Progress
-                      height={50 * factor}
-                      width={50 * factor}
-                      fill={'white'}
-                    />
+                  <View style={[styles.centerContent, localStyles.progressItem]}>
+                    {item.isStarted ? (
+                      <Progress
+                        height={onTablet ? 50 : 50 * factor}
+                        width={onTablet ? 50 : 50 * factor}
+                        fill={'white'}
+                      />
+                    ) : item.isCompleted ? (
+                      <ApprovedTeacher
+                        height={onTablet ? 62.5 : 50 * factor}
+                        width={onTablet ? 62.5 : 50 * factor}
+                        fill={'white'}
+                      />
+                    ) : null}
                   </View>
-                )}
+
                 {Platform.OS === 'ios' ? (
                   <FastImage
                     style={[

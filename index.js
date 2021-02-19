@@ -117,7 +117,7 @@ global.colors = {
   thirdBackground: '#081826',
   notificationColor: '#002038',
   pianoteRed: '#fb1b2f',
-  pianoteGrey: '#4C5253'
+  pianoteGrey: '#6e777a'
 };
 global.maxLevel = {
   lessons: null,

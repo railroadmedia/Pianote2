@@ -277,116 +277,125 @@ export default class MethodLevel extends React.Component {
               <View style={styles.centerContent}>
                 <FastImage
                   style={{
-                    width: width * 0.48 * factor,
-                    height: 49 * factor,
+                    width: '75%',
+                    height: 65 * factor,
                     alignSelf: 'center',
-                    marginBottom: 5 * factor
+                    marginBottom: 25 * factor
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
-              <Text
-                key={'level'}
-                style={{
-                  fontSize: 42.5 * factor,
-                  color: 'white',
-                  marginBottom: 10 * factor,
-                  fontFamily: 'RobotoCondensed-Bold',
-                  textAlign: 'center'
-                }}
-              >
-                LEVEL {this.state.level}
-              </Text>
               <View
-                key={'startIcon'}
                 style={{
-                  height: 40 * factor,
+                  marginBottom: 10 * factor,
+                  height: (onTablet ? 30 : 40) * factor,
+                  width: '100%',
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  marginBottom: 15 * factor
+                  alignItems: 'center'
                 }}
               >
-                <TouchableOpacity
-                  style={[styles.centerContent, { flex: 0.5 }]}
-                  onPress={() => {
-                    this.toggleMyList();
-                  }}
-                >
-                  {!this.state.isAddedToList ? (
-                    <AntIcon
-                      name={'plus'}
-                      size={27.5 * factor}
-                      color={colors.pianoteRed}
-                    />
-                  ) : (
-                    <AntIcon
-                      name={'close'}
-                      size={27.5 * factor}
-                      color={colors.pianoteRed}
-                    />
-                  )}
-                  <Text
+                <View style={{ flex: 1 }} />
+                <View style={{width: '45%',}}>
+                  <TouchableOpacity
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      fontSize: 12 * factor
+                      position: 'absolute',
+                      bottom: 0,
+                      left: -50 * factor,
+                      zIndex: 5,
+                      elevation: 5
+                    }}
+                    onPress={() => {
+                      this.toggleMyList();
                     }}
                   >
-                    {this.state.isAddedToList ? 'Added' : 'My List'}
-                  </Text>
-                </TouchableOpacity>
-                {this.state.isCompleted ? (
-                  <ResetIcon
-                    isMethod={true}
-                    pressed={() => this.setState({ showRestartCourse: true })}
-                  />
-                ) : this.state.isStarted ? (
-                  <ContinueIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.bannerNextLessonUrl
-                      })
-                    }
-                  />
-                ) : !this.state.isStarted ? (
-                  <StartIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.props.navigation.navigate('VIDEOPLAYER', {
-                        url: this.state.bannerNextLessonUrl
-                      })
-                    }
-                  />
-                ) : null}
-                <TouchableOpacity
-                  style={[styles.centerContent, { flex: 0.5 }]}
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factor}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                    <View style={[styles.centerContent,{flexDirection: 'row'}]}>
+                    {!this.state.isAddedToList ? (
+                      <AntIcon
+                        name={'plus'}
+                        size={(onTablet ? 20 : 27.5) * factor}
+                        color={colors.pianoteRed}
+                      />
+                    ) : (
+                      <AntIcon
+                        name={'close'}
+                        size={(onTablet ? 20 : 27.5) * factor}
+                        color={colors.pianoteRed}
+                      />
+                    )}
+                    </View>
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 2,
+                        fontSize: (onTablet ? 8 : 12 ) * factor,
+                      }}
+                    >
+                      {this.state.isAddedToList ? 'Added' : 'My List'}
+                    </Text>
+                  </TouchableOpacity>
+                  {this.state.isCompleted ? (
+                    <ResetIcon
+                      isMethod={true}
+                      pressed={() => this.setState({ showRestartCourse: true })}
+                    />
+                  ) : this.state.isStarted ? (
+                    <ContinueIcon
+                      isMethod={true}
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.bannerNextLessonUrl
+                        })
+                      }
+                    />
+                  ) : !this.state.isStarted ? (
+                    <StartIcon
+                      isMethod={true}
+                      pressed={() =>
+                        this.props.navigation.navigate('VIDEOPLAYER', {
+                          url: this.state.bannerNextLessonUrl
+                        })
+                      }
+                    />
+                  ) : null}
+                  <TouchableOpacity
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factor,
-                      fontSize: 13 * factor
+                      position: 'absolute',
+                      bottom: 0,
+                      right: -50 * factor,
+                      zIndex: 5,
+                      elevation: 5
+                    }}
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
                     }}
                   >
-                    Info
-                  </Text>
-                </TouchableOpacity>
+                    <View style={[styles.centerContent,{flexDirection: 'row'}]}>
+                      <AntIcon
+                        name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                        size={(onTablet ? 15 : 22.5) * factor}
+                        color={colors.pianoteRed}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 2,
+                        fontSize: (onTablet ? 8 : 12 ) * factor,
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1}}/>
               </View>
             </View>
+
           </ImageBackground>
           {this.state.showInfo && (
             <View
@@ -399,8 +408,9 @@ export default class MethodLevel extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginVertical: 20 * factor,
-                  fontSize: 15 * factor,
+                  marginTop: 20 * factor,
+                  paddingHorizontal: 10 * factor,
+                  fontSize: (onTablet ? 9 : 15) * factor,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -412,7 +422,8 @@ export default class MethodLevel extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10 * factor
+              marginBottom: 10 * factor,
+              marginTop: 40 * factor, 
             }}
           >
             <VerticalVideoList

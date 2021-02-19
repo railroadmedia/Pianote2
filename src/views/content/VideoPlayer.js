@@ -20,7 +20,6 @@ import Video from 'RNVideoEnhanced';
 import Modal from 'react-native-modal';
 import { ContentModel } from '@musora/models';
 import FastImage from 'react-native-fast-image';
-import { SafeAreaView } from 'react-navigation';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -34,7 +33,6 @@ import Replies from '../../components/Replies';
 import SoundSlice from '../../components/SoundSlice';
 import VerticalVideoList from '../../components/VerticalVideoList';
 
-import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import CommentSort from '../../modals/CommentSort';
 import CustomModal from '../../modals/CustomModal';
 import RestartCourse from '../../modals/RestartCourse';
@@ -575,7 +573,7 @@ export default class VideoPlayer extends React.Component {
                 >
                   <AntIcon
                     name={item.is_liked ? 'like1' : 'like2'}
-                    size={(onTablet ? 17.5 : 22.5) * factor}
+                    size={(onTablet ? 15 : 22.5) * factor}
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
@@ -616,7 +614,7 @@ export default class VideoPlayer extends React.Component {
                 >
                   <MaterialIcon
                     name={'comment-text-outline'}
-                    size={(onTablet ? 17.5 : 22.5) * factor}
+                    size={(onTablet ? 15 : 22.5) * factor}
                     color={colors.pianoteRed}
                   />
                 </TouchableOpacity>
@@ -1389,7 +1387,7 @@ export default class VideoPlayer extends React.Component {
                         >
                           <Text
                             style={{
-                              fontSize: onTablet ? 26 : 18 * factor,
+                              fontSize: (onTablet ? 12 : 18) * factor,
                               fontFamily: 'RobotoCondensed-Bold',
                               color: colors.secondBackground
                             }}
@@ -1404,7 +1402,7 @@ export default class VideoPlayer extends React.Component {
                               }
                             >
                               <FontIcon
-                                size={(onTablet ? 18 : 20) * factor}
+                                size={(onTablet ? 15 : 20) * factor}
                                 name={'sort-amount-down'}
                                 color={colors.pianoteRed}
                               />
