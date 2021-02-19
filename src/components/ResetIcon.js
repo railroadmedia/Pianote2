@@ -20,6 +20,30 @@ class ResetIcon extends React.Component {
     this.state = {};
   }
 
+  sizing = type => {
+    if (type == 'icon') {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 30;
+        } else {
+          return 25;
+        }
+      } else {
+        return 17.5;
+      }
+    } else {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 17.5;
+        } else {
+          return 15;
+        }
+      } else {
+        return 12.5;
+      }
+    }
+  };
+
   render = () => {
     return (
       <View
@@ -46,16 +70,15 @@ class ResetIcon extends React.Component {
         >
           <MaterialIcon
             name={'replay'}
-            size={(onTablet ? 21.5 : 25) * factor}
+            size={this.sizing('icon')}
             color={'white'}
           />
-          <View style={{ flex: 0.075 }} />
+          <View style={{ flex: 0.025 }} />
           <Text
             style={[
               styles.buttonText,
               {
-                fontSize:
-                  this.props.isMethod && onTablet ? 16 * factor : 14 * factor
+                fontSize: this.sizing('font')
               }
             ]}
           >

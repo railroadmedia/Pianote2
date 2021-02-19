@@ -63,7 +63,7 @@ class NextVideo extends React.Component {
           <View style={localStyles.nextLesson}>
             <Text
               style={{
-                fontSize: onTablet ? 18 : 16 * factor,
+                fontSize: onTablet ? 16 : 16 * factor,
                 marginBottom: 5 * factor,
                 textAlign: 'left',
                 fontFamily: 'RobotoCondensed-Bold',
@@ -78,7 +78,7 @@ class NextVideo extends React.Component {
               style={[
                 localStyles.typeText,
                 {
-                  fontSize: onTablet ? 18 : 14 * factor,
+                  fontSize: onTablet ? 14 : 14 * factor,
                   color: this.props.isMethod
                     ? colors.pianoteGrey
                     : colors.secondBackground
@@ -117,7 +117,8 @@ class NextVideo extends React.Component {
                     color: this.props.isMethod
                       ? colors.pianoteGrey
                       : colors.secondBackground
-                  }
+                  },
+                  onTablet ? { fontSize: 13, marginTop: 2 } : {}
                 ]}
               >
                 {this.props.item.post.fields?.find(f => f.key === 'video')
@@ -169,11 +170,6 @@ const localStyles = StyleSheet.create({
       2
   },
   typeText: {
-    fontSize:
-      (12 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
     fontFamily: 'OpenSans-Regular',
     textAlign: 'right'
   },
@@ -198,7 +194,7 @@ const localStyles = StyleSheet.create({
   },
   videoTitle: {
     fontSize: DeviceInfo.isTablet()
-      ? 18
+      ? 16
       : (15 *
           (Dimensions.get('window').height / 812 +
             Dimensions.get('window').width / 375)) /

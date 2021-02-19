@@ -218,7 +218,7 @@ class MyList extends React.Component {
               styles.tabRightContainer,
               {
                 borderBottomWidth: 0,
-                marginTop: 20 * factor
+                marginTop: 15 * factor
               }
             ]}
             onPress={() => {
@@ -231,12 +231,12 @@ class MyList extends React.Component {
             <Text style={styles.tabRightContainerText}>In Progress</Text>
             <EntypoIcon
               name={'chevron-thin-right'}
-              size={22.5 * factor}
+              size={(onTablet ? 17.5 : 22.5) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tabRightContainer, { marginBottom: 10 * factor }]}
+            style={[styles.tabRightContainer, { marginBottom: 3 * factor }]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
                 title: 'Completed',
@@ -247,7 +247,7 @@ class MyList extends React.Component {
             <Text style={styles.tabRightContainerText}>Completed</Text>
             <EntypoIcon
               name={'chevron-thin-right'}
-              size={22.5 * factor}
+              size={(onTablet ? 17.5 : 22.5) * factor}
               color={colors.secondBackground}
             />
           </TouchableOpacity>

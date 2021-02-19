@@ -27,6 +27,7 @@ import Relevance from '../modals/Relevance';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
 import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
+import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import Filters_V2 from './Filters_V2';
 
@@ -327,7 +328,7 @@ class HorizontalVideoList extends React.Component {
                           styles.centerContent,
                           {
                             flexDirection: 'row',
-                            marginRight: 7.5 * factor
+                            marginRight: 5 * factor
                           }
                         ]}
                         onPress={() => {
@@ -342,15 +343,20 @@ class HorizontalVideoList extends React.Component {
                             localStyles.seeAllText,
                             {
                               paddingRight: 4 * factor,
-                              fontSize: 18
+                              fontSize: (onTablet ? 10 : 14.5) * factor
                             }
                           ]}
                         >
-                          {sortDict[this.props.currentSort]}
+                          {onTablet
+                            ? sortDict[this.props.currentSort].charAt(0) +
+                              sortDict[this.props.currentSort]
+                                .substring(1)
+                                .toLowerCase()
+                            : sortDict[this.props.currentSort]}
                         </Text>
                         <View>
                           <FontIcon
-                            size={(onTablet ? 12 : 14) * factor}
+                            size={(onTablet ? 10 : 14) * factor}
                             name={'sort-amount-down'}
                             color={colors.pianoteRed}
                           />
@@ -403,17 +409,22 @@ class HorizontalVideoList extends React.Component {
               onPress={() => this.navigate(item, index)}
             >
               <View style={{ width: '100%' }}>
-                {item.isStarted && (
-                  <View
-                    style={[styles.centerContent, localStyles.progressItem]}
-                  >
+                <View style={[styles.centerContent, localStyles.progressItem]}>
+                  {item.isStarted ? (
                     <Progress
-                      height={50 * factor}
-                      width={50 * factor}
+                      height={onTablet ? 50 : 50 * factor}
+                      width={onTablet ? 50 : 50 * factor}
                       fill={'white'}
                     />
-                  </View>
-                )}
+                  ) : item.isCompleted ? (
+                    <ApprovedTeacher
+                      height={onTablet ? 62.5 : 50 * factor}
+                      width={onTablet ? 62.5 : 50 * factor}
+                      fill={'white'}
+                    />
+                  ) : null}
+                </View>
+
                 {Platform.OS === 'ios' ? (
                   <FastImage
                     style={[
@@ -475,7 +486,7 @@ class HorizontalVideoList extends React.Component {
                           ? colors.pianoteGrey
                           : colors.secondBackground,
 
-                        fontSize: (onTablet ? 9.5 : 12) * factor,
+                        fontSize: (onTablet ? 8 : 12) * factor,
                         marginTop: 1.5
                       }}
                     >
@@ -614,7 +625,7 @@ class HorizontalVideoList extends React.Component {
 
 const localStyles = StyleSheet.create({
   listContainer: {
-    paddingLeft: (10 * Dimensions.get('window').width) / 375
+    paddingLeft: DeviceInfo.isTablet() ? 5 : 10 * factor
   },
   artist: {
     fontSize:
@@ -625,22 +636,12 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular'
   },
   title: {
-    fontSize: DeviceInfo.isTablet()
-      ? 22
-      : (18 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
     fontFamily: 'RobotoCondensed-Bold'
   },
   seeAllText: {
     textAlign: 'right',
-    fontSize: DeviceInfo.isTablet()
-      ? 20
-      : (14.5 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 14.5) * factor,
     fontWeight: DeviceInfo.isTablet() ? '500' : '300',
     color: '#fb1b2f',
     paddingRight: 10 * factor

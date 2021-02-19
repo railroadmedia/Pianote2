@@ -349,14 +349,14 @@ class VerticalVideoList extends React.Component {
                 >
                   {row.isStarted ? (
                     <Progress
-                      height={(onTablet ? 32.5 : 40) * factor}
-                      width={(onTablet ? 32.5 : 40) * factor}
+                      height={onTablet ? 45 : 40 * factor}
+                      width={onTablet ? 45 : 40 * factor}
                       fill={'white'}
                     />
                   ) : row.isCompleted ? (
                     <ApprovedTeacher
-                      height={(onTablet ? 42.5 : 50) * factor}
-                      width={(onTablet ? 42.5 : 50) * factor}
+                      height={onTablet ? 50 : 40 * factor}
+                      width={onTablet ? 50 : 40 * factor}
                       fill={'white'}
                     />
                   ) : null}
@@ -442,7 +442,7 @@ class VerticalVideoList extends React.Component {
                         textAlign: 'center',
                         color: 'white',
                         fontFamily: 'RobotoCondensed-Bold',
-                        fontSize: 21 * factor
+                        fontSize: (onTablet ? 16 : 21) * factor
                       }}
                     >
                       LEVEL {index + 1}
@@ -480,7 +480,7 @@ class VerticalVideoList extends React.Component {
               {this.props.isMethodLevel && (
                 <Text
                   style={{
-                    fontSize: 10 * factor,
+                    fontSize: (onTablet ? 8 : 16) * factor,
                     marginBottom: 1 * factor,
                     textAlign: 'left',
                     fontWeight: 'bold',
@@ -494,7 +494,7 @@ class VerticalVideoList extends React.Component {
               <Text
                 numberOfLines={2}
                 style={{
-                  fontSize: (onTablet ? 12 : 16) * factor,
+                  fontSize: (onTablet ? 10 : 16) * factor,
                   textAlign: 'left',
                   paddingRight: 3,
                   fontWeight: 'bold',
@@ -509,7 +509,7 @@ class VerticalVideoList extends React.Component {
                   numberOfLines={2}
                   style={{
                     marginTop: 2 * factor,
-                    fontSize: (onTablet ? 10 : 12) * factor,
+                    fontSize: (onTablet ? 8 : 12) * factor,
                     color: this.props.isMethod
                       ? colors.pianoteGrey
                       : colors.secondBackground,
@@ -527,7 +527,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: 12 * factor,
+                      fontSize: (onTablet ? 10 : 12) * factor,
                       color:
                         this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
@@ -544,7 +544,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={1}
                     style={{
-                      fontSize: (onTablet ? 10 : 12) * factor,
+                      fontSize: (onTablet ? 8 : 12) * factor,
                       color:
                         this.props.isMethod || this.props.methodLevel
                           ? colors.pianoteGrey
@@ -575,7 +575,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     numberOfLines={2}
                     style={{
-                      fontSize: (onTablet ? 10.5 : 12) * factor,
+                      fontSize: (onTablet ? 9 : 12) * factor,
                       color: this.props.isMethod
                         ? colors.pianoteGrey
                         : colors.secondBackground,
@@ -603,7 +603,7 @@ class VerticalVideoList extends React.Component {
                       }}
                     >
                       <FontIcon
-                        size={onTablet ? 20 * factor : 27.5 * factor}
+                        size={onTablet ? 17.5 * factor : 27.5 * factor}
                         name={'calendar-plus'}
                         color={
                           this.props.isMethod && !this.props.methodLevel
@@ -621,7 +621,7 @@ class VerticalVideoList extends React.Component {
                     >
                       <AntIcon
                         name={'plus'}
-                        size={(onTablet ? 25 : 30) * factor}
+                        size={(onTablet ? 20 : 28.5) * factor}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
@@ -638,7 +638,7 @@ class VerticalVideoList extends React.Component {
                     >
                       <AntIcon
                         name={'close'}
-                        size={onTablet ? 25 * factor : 30 * factor}
+                        size={(onTablet ? 20 : 28.5) * factor}
                         color={
                           this.props.isMethod && !this.props.methodLevel
                             ? colors.pianoteGrey
@@ -679,7 +679,7 @@ class VerticalVideoList extends React.Component {
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: onTablet ? 22 : 18 * factor,
+                        fontSize: (onTablet ? 12 : 18) * factor,
                         marginBottom: 5 * factor,
                         textAlign: 'left',
                         fontFamily: 'RobotoCondensed-Bold',
@@ -721,16 +721,21 @@ class VerticalVideoList extends React.Component {
                       <Text
                         style={{
                           color: colors.pianoteRed,
-                          fontSize: onTablet ? 20 : 14.5 * factor,
+                          fontSize: (onTablet ? 10 : 14.5) * factor,
                           fontFamily: 'OpenSans-Regular',
                           marginRight: 3.5 * factor
                         }}
                       >
-                        {sortDict[this.props.currentSort]}
+                        {onTablet
+                          ? sortDict[this.props.currentSort].charAt(0) +
+                            sortDict[this.props.currentSort]
+                              .substring(1)
+                              .toLowerCase()
+                          : sortDict[this.props.currentSort]}
                       </Text>
                       <View>
                         <FontIcon
-                          size={14 * factor}
+                          size={(onTablet ? 10 : 14) * factor}
                           name={'sort-amount-down'}
                           color={colors.pianoteRed}
                         />
@@ -770,7 +775,7 @@ class VerticalVideoList extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: (onTablet ? 12 : 14) * factor,
+                    fontSize: (onTablet ? 10 : 14) * factor,
                     color: this.props.isMethod
                       ? 'white'
                       : colors.secondBackground,
@@ -780,7 +785,7 @@ class VerticalVideoList extends React.Component {
                 >
                   {this.props.title.includes('SEARCH RESULTS')
                     ? ''
-                    : 'There are no results that match those filters.'}
+                    : 'There are no results for this content type.'}
                 </Text>
               </View>
             )}

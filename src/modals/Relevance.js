@@ -164,7 +164,7 @@ const localStyles = StyleSheet.create({
   },
   word: {
     marginLeft: 15 * factor,
-    fontSize: 16 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
     fontFamily: 'OpenSans-Regular'
   },
   button: {
@@ -174,7 +174,7 @@ const localStyles = StyleSheet.create({
   },
   cancel: {
     marginLeft: 10 * factor,
-    fontSize: 16 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 16) * factor,
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   }

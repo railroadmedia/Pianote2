@@ -230,7 +230,8 @@ class Packs extends React.Component {
                   style={{
                     height: greaterWDim / 15,
                     width: '100%',
-                    zIndex: 6
+                    zIndex: 6,
+                    marginBottom: 20 * factor
                   }}
                   source={{
                     uri: `https://cdn.musora.com/image/fetch/f_png,q_auto:eco,w_${Math.round(
@@ -239,50 +240,61 @@ class Packs extends React.Component {
                   }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-
                 <View
                   style={{
-                    flex: onTablet ? 0.2 : 0.15,
+                    height: (onTablet ? 25 : 40) * factor,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                    paddingHorizontal: 25 * factor,
-                    marginVertical: 15
+                    marginBottom: 30 * factor
                   }}
                 >
-                  {this.state.headerPackCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : !this.state.headerPackStarted ? (
-                    <StartIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  ) : (
-                    <ContinueIcon
-                      pressed={() =>
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.headerPackNextLessonUrl
-                        })
-                      }
-                    />
-                  )}
-                  <View style={{ flex: 0.1 }} />
-                  <MoreInfoIcon
-                    pressed={() => {
-                      this.props.navigation.push('SINGLEPACK', {
-                        url: this.state.headerPackUrl
-                      });
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={{
+                      width: onTablet ? 200 : '45%'
                     }}
-                  />
+                  >
+                    {this.state.headerPackCompleted ? (
+                      <ResetIcon
+                        pressed={() =>
+                          this.setState({
+                            showRestartCourse: true
+                          })
+                        }
+                      />
+                    ) : !this.state.headerPackStarted ? (
+                      <StartIcon
+                        pressed={() =>
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.headerPackNextLessonUrl
+                          })
+                        }
+                      />
+                    ) : (
+                      <ContinueIcon
+                        pressed={() =>
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.headerPackNextLessonUrl
+                          })
+                        }
+                      />
+                    )}
+                  </View>
+                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
+                  <View
+                    style={{
+                      width: onTablet ? 200 : '45%'
+                    }}
+                  >
+                    <MoreInfoIcon
+                      pressed={() => {
+                        this.props.navigation.push('SINGLEPACK', {
+                          url: this.state.headerPackUrl
+                        });
+                      }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }} />
                 </View>
               </ImageBackground>
             </>

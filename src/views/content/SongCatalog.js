@@ -278,7 +278,7 @@ class SongCatalog extends React.Component {
             )}
             <Text style={styles.contentPageHeader}>Songs</Text>
             {this.state.started && (
-              <View style={styles.mainContainer}>
+              <View style={[styles.mainContainer, { paddingLeft: 10 }]}>
                 <HorizontalVideoList
                   hideFilterButton={true}
                   Title={'CONTINUE'}

@@ -20,6 +20,30 @@ class MoreInfoIcon extends React.Component {
     this.state = {};
   }
 
+  sizing = type => {
+    if (type == 'icon') {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 30;
+        } else {
+          return 22.5;
+        }
+      } else {
+        return 17.5;
+      }
+    } else {
+      if (onTablet) {
+        if (this.props.isMethod) {
+          return 17.5;
+        } else {
+          return 15;
+        }
+      } else {
+        return 12.5;
+      }
+    }
+  };
+
   render = () => {
     return (
       <View
@@ -46,7 +70,7 @@ class MoreInfoIcon extends React.Component {
         >
           <Icon
             name={'arrowright'}
-            size={(onTablet ? 17.5 : 23) * factor}
+            size={this.sizing('icon')}
             color={'white'}
           />
           <View style={{ flex: 0.075 }} />
@@ -54,8 +78,7 @@ class MoreInfoIcon extends React.Component {
             style={[
               styles.buttonText,
               {
-                fontSize:
-                  this.props.isMethod && onTablet ? 16 * factor : 14 * factor
+                fontSize: this.sizing('font')
               }
             ]}
           >

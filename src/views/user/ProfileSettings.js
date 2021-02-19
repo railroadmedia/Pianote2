@@ -415,8 +415,9 @@ export default class ProfileSettings extends React.Component {
                 ? this.props.navigation.goBack()
                 : this.setState({ currentlyView: 'Profile Settings' });
             }}
-            style={{ padding: 15 }}
+            style={{ padding: 15 * factor }}
           >
+            <View style={{ flex: 1 }} />
             <Back
               width={(onTablet ? 17.5 : 25) * factor}
               height={(onTablet ? 17.5 : 25) * factor}
@@ -458,7 +459,7 @@ const localStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#445f73',
     flexDirection: 'row',
-    paddingHorizontal: 15 * factor
+    paddingHorizontal: 10 * factor
   },
   profilePhoto: {
     height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
@@ -466,7 +467,7 @@ const localStyles = StyleSheet.create({
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 15 * factor
+    paddingHorizontal: 10 * factor
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',

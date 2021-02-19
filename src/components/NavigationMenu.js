@@ -121,7 +121,7 @@ class NavigationMenu extends React.Component {
                     : colors.secondBackground,
                 fontSize:
                   this.props.parentPage == nav.title.toUpperCase()
-                    ? (onTablet ? 25 : 32.5) * factor
+                    ? (onTablet ? 20 : 32.5) * factor
                     : (onTablet ? 15 : 22.5) * factor
               }}
             >
@@ -155,15 +155,15 @@ class NavigationMenu extends React.Component {
               styles.centerContent,
               styles.redButton,
               {
-                height: (onTablet ? 55 : 65) * factor,
-                width: (onTablet ? 55 : 65) * factor,
+                height: (onTablet ? 45 : 65) * factor,
+                width: (onTablet ? 45 : 65) * factor,
                 borderRadius: 500
               }
             ]}
           >
             <View style={{ flex: 1 }} />
             <FeatherIcon
-              size={(onTablet ? 40 : 50) * factor}
+              size={(onTablet ? 30 : 50) * factor}
               name={'x'}
               color={'white'}
               style={{ borderRadius: 500 }}

@@ -64,7 +64,7 @@ class NavigationBar extends React.Component {
               ? 'white'
               : this.state.secondaryColor
           }
-          size={onTablet ? 20.625 * factor : 27.5 * factor}
+          size={onTablet ? 20 * factor : 27.5 * factor}
         />
       );
     } else {
@@ -120,7 +120,7 @@ class NavigationBar extends React.Component {
           >
             <SimpleLineIcon
               name={'home'}
-              size={onTablet ? 22.5 * factor : 30 * factor}
+              size={onTablet ? 18.5 * factor : 30 * factor}
               color={
                 this.props.currentPage == 'LESSONS'
                   ? this.state.primaryColor
@@ -148,7 +148,7 @@ class NavigationBar extends React.Component {
           >
             <EvilIcons
               name={'search'}
-              size={onTablet ? 30 * factor : 40 * factor}
+              size={onTablet ? 26 * factor : 40 * factor}
               color={
                 this.props.currentPage == 'SEARCH'
                   ? this.state.primaryColor
@@ -174,7 +174,7 @@ class NavigationBar extends React.Component {
           >
             <MaterialIcon
               name={'arrow-collapse-down'}
-              size={onTablet ? 22.5 * factor : 30 * factor}
+              size={onTablet ? 20 * factor : 30 * factor}
               color={
                 this.props.currentPage == 'DOWNLOAD'
                   ? this.state.primaryColor
@@ -228,12 +228,12 @@ const localStyles = StyleSheet.create({
   navIconContainer: {
     borderRadius: 100,
     width:
-      ((DeviceInfo.isTablet() ? 28.125 : 37.5) *
+      ((DeviceInfo.isTablet() ? 24.125 : 37.5) *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,
     height:
-      ((DeviceInfo.isTablet() ? 28.125 : 37.5) *
+      ((DeviceInfo.isTablet() ? 24.125 : 37.5) *
         (Dimensions.get('window').height / 812 +
           Dimensions.get('window').width / 375)) /
       2,

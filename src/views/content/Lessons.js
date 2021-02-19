@@ -440,7 +440,7 @@ class Lessons extends React.Component {
                   <FastImage
                     style={{
                       width: width * 0.75,
-                      height: (onTablet ? 55 : 65) * factor,
+                      height: 65 * factor,
                       alignSelf: 'center',
                       marginBottom: 12.5 * factor
                     }}
@@ -450,56 +450,72 @@ class Lessons extends React.Component {
                 </View>
                 <View
                   style={{
-                    flex: onTablet ? 0.2 : 0.15,
+                    height: (onTablet ? 25 : 40) * factor,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                    paddingHorizontal: 25 * factor,
-                    marginBottom: Platform.OS == 'android' ? -5 : -1
+                    marginBottom: onTablet
+                      ? 15
+                      : Platform.OS == 'android'
+                      ? -5
+                      : -1
                   }}
                 >
-                  {this.state.methodIsCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : !this.state.methodIsStarted ? (
-                    <StartIcon
-                      pressed={() => {
-                        if (!this.context.isConnected) {
-                          return this.context.showNoConnectionAlert();
-                        }
-                        if (this.state.methodNextLessonUrl)
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.methodNextLessonUrl
-                          });
-                      }}
-                    />
-                  ) : (
-                    <ContinueIcon
-                      pressed={() => {
-                        if (!this.context.isConnected) {
-                          return this.context.showNoConnectionAlert();
-                        }
-                        if (this.state.methodNextLessonUrl)
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.methodNextLessonUrl
-                          });
-                      }}
-                    />
-                  )}
-                  <View style={{ flex: 0.1 }} />
-                  <MoreInfoIcon
-                    pressed={() => {
-                      this.props.navigation.navigate('METHOD', {
-                        methodIsStarted: this.state.methodIsStarted,
-                        methodIsCompleted: this.state.methodIsCompleted
-                      });
+                  <View style={{ flex: 1 }} />
+                  <View
+                    style={{
+                      width: onTablet ? 200 : '45%'
                     }}
-                  />
+                  >
+                    {this.state.methodIsCompleted ? (
+                      <ResetIcon
+                        pressed={() =>
+                          this.setState({
+                            showRestartCourse: true
+                          })
+                        }
+                      />
+                    ) : !this.state.methodIsStarted ? (
+                      <StartIcon
+                        pressed={() => {
+                          if (!this.context.isConnected) {
+                            return this.context.showNoConnectionAlert();
+                          }
+                          if (this.state.methodNextLessonUrl)
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                              url: this.state.methodNextLessonUrl
+                            });
+                        }}
+                      />
+                    ) : (
+                      <ContinueIcon
+                        pressed={() => {
+                          if (!this.context.isConnected) {
+                            return this.context.showNoConnectionAlert();
+                          }
+                          if (this.state.methodNextLessonUrl)
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                              url: this.state.methodNextLessonUrl
+                            });
+                        }}
+                      />
+                    )}
+                  </View>
+                  <View style={onTablet ? { width: 10 } : { flex: 0.5 }} />
+                  <View
+                    style={{
+                      width: onTablet ? 200 : '45%'
+                    }}
+                  >
+                    <MoreInfoIcon
+                      pressed={() => {
+                        this.props.navigation.navigate('METHOD', {
+                          methodIsStarted: this.state.methodIsStarted,
+                          methodIsCompleted: this.state.methodIsCompleted
+                        });
+                      }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }} />
                 </View>
                 <View style={{ flex: 0.1 }} />
               </View>

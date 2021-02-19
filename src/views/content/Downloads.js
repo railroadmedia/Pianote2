@@ -142,7 +142,7 @@ export default class Downloads extends React.Component {
                 style={{
                   color: colors.pianoteRed,
                   fontFamily: 'OpenSans-Bold',
-                  fontSize: onTablet ? 22 : 16 * factor
+                  fontSize: onTablet ? 18 : 16 * factor
                 }}
               >
                 EDIT

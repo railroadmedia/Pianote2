@@ -295,10 +295,10 @@ export default class Method extends React.Component {
               <View style={styles.centerContent}>
                 <FastImage
                   style={{
-                    width: width * 0.75,
+                    width: '75%',
                     height: 65 * factor,
                     alignSelf: 'center',
-                    marginBottom: 12.5 * factor
+                    marginBottom: 25 * factor
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
@@ -307,116 +307,81 @@ export default class Method extends React.Component {
               <View
                 style={{
                   marginBottom: 10 * factor,
-                  marginTop: 0 * factor,
-                  height: 40 * factor,
-                  justifyContent: 'space-evenly',
+                  height: (onTablet ? 30 : 40) * factor,
+                  width: '100%',
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}
               >
-                <View style={{ flex: 0.5 }} />
-                {this.state.methodIsCompleted ? (
-                  <ResetIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.setState({
-                        showRestartCourse: true
-                      })
-                    }
-                  />
-                ) : this.state.methodIsStarted ? (
-                  <ContinueIcon
-                    isMethod={true}
-                    pressed={() =>
-                      this.goToLesson(this.state.bannerNextLessonUrl)
-                    }
-                  />
-                ) : (
-                  !this.state.methodIsStarted && (
-                    <StartIcon
+                <View style={{ flex: 1 }} />
+                <View style={{ width: '45%' }}>
+                  {this.state.methodIsCompleted ? (
+                    <ResetIcon
+                      isMethod={true}
+                      pressed={() =>
+                        this.setState({
+                          showRestartCourse: true
+                        })
+                      }
+                    />
+                  ) : this.state.methodIsStarted ? (
+                    <ContinueIcon
                       isMethod={true}
                       pressed={() =>
                         this.goToLesson(this.state.bannerNextLessonUrl)
                       }
                     />
-                  )
-                )}
-
-                <TouchableOpacity
-                  style={[styles.centerContent, { flex: 0.5 }]}
-                  onPress={() => {
-                    this.setState({
-                      showInfo: !this.state.showInfo
-                    });
-                  }}
-                >
-                  <AntIcon
-                    name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={22 * factor}
-                    color={colors.pianoteRed}
-                  />
-                  <Text
+                  ) : (
+                    !this.state.methodIsStarted && (
+                      <StartIcon
+                        isMethod={true}
+                        pressed={() =>
+                          this.goToLesson(this.state.bannerNextLessonUrl)
+                        }
+                      />
+                    )
+                  )}
+                  <TouchableOpacity
                     style={{
-                      fontFamily: 'OpenSans-Regular',
-                      color: 'white',
-                      marginTop: 3 * factor,
-                      fontSize: 12 * factor
+                      position: 'absolute',
+                      bottom: 0,
+                      right: -50 * factor,
+                      zIndex: 5,
+                      elevation: 5
+                    }}
+                    onPress={() => {
+                      this.setState({
+                        showInfo: !this.state.showInfo
+                      });
                     }}
                   >
-                    Info
-                  </Text>
-                </TouchableOpacity>
+                    <AntIcon
+                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                      size={(onTablet ? 15 : 22.5) * factor}
+                      color={colors.pianoteRed}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'OpenSans-Regular',
+                        color: 'white',
+                        marginTop: 2,
+                        fontSize: (onTablet ? 8 : 12) * factor
+                      }}
+                    >
+                      Info
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 1 }} />
               </View>
             </View>
           </ImageBackground>
-          {this.state.methodIsStarted && (
-            <View
-              key={'profile'}
-              style={{
-                backgroundColor: 'black',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: 20 * factor
-              }}
-            >
-              <FastImage
-                style={{
-                  height: 50 * factor,
-                  aspectRatio: 1,
-                  borderRadius: 100,
-                  backgroundColor: 'white',
-                  borderWidth: 3 * factor,
-                  borderColor: 'white',
-                  marginRight: 5
-                }}
-                source={{
-                  uri:
-                    this.state.profileImage ||
-                    'https://www.drumeo.com/laravel/public/assets/images/default-avatars/default-male-profile-thumbnail.png'
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-              />
 
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 35 * factor,
-                  fontFamily: 'OpenSans-ExtraBold',
-                  textAlign: 'center',
-                  marginLeft: 5
-                }}
-              >
-                LEVEL {this.state.level}
-              </Text>
-            </View>
-          )}
           {this.state.showInfo && (
             <View
               key={'info'}
               style={{
                 width: '100%',
-                paddingVertical: 15,
                 paddingHorizontal: this.state.isLandscape ? '10%' : 15
               }}
             >
@@ -424,7 +389,7 @@ export default class Method extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   marginTop: 5 * factor,
-                  fontSize: 15 * factor,
+                  fontSize: (onTablet ? 10 : 15) * factor,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -437,7 +402,6 @@ export default class Method extends React.Component {
                   style={[
                     styles.centerContent,
                     {
-                      marginTop: 10 * factor,
                       flex: 0.22,
                       flexDirection: 'row'
                     }
@@ -455,7 +419,7 @@ export default class Method extends React.Component {
                   >
                     <Text
                       style={{
-                        fontSize: 17 * factor,
+                        fontSize: (onTablet ? 15 : 17) * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
@@ -466,11 +430,11 @@ export default class Method extends React.Component {
                     </Text>
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: (onTablet ? 10 : 13) * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        marginTop: 5 * factor
                       }}
                     >
                       LEVELS
@@ -487,7 +451,7 @@ export default class Method extends React.Component {
                     <Text
                       style={{
                         fontWeight: '700',
-                        fontSize: 17 * factor,
+                        fontSize: (onTablet ? 15 : 17) * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
@@ -498,11 +462,11 @@ export default class Method extends React.Component {
                     </Text>
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: (onTablet ? 10 : 13) * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        marginTop: 5 * factor
                       }}
                     >
                       XP
@@ -532,7 +496,7 @@ export default class Method extends React.Component {
                       styles.centerContent,
                       {
                         marginLeft: 15 * factor,
-                        marginBottom: 30 * factor,
+                        marginBottom: 10 * factor,
                         width: 70 * factor
                       }
                     ]}
@@ -540,16 +504,16 @@ export default class Method extends React.Component {
                     <View style={{ flex: 1 }} />
                     <MaterialIcon
                       name={'replay'}
-                      size={27.5 * factor}
+                      size={(onTablet ? 20 : 27.5) * factor}
                       color={colors.pianoteRed}
                     />
                     <Text
                       style={{
-                        fontSize: 13 * factor,
+                        fontSize: (onTablet ? 10 : 13) * factor,
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        marginTop: 5 * factor
                       }}
                     >
                       Restart

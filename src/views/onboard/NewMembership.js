@@ -67,6 +67,7 @@ export default class NewMembership extends React.Component {
   }
 
   async componentDidMount() {
+    console.log(this.props.navigation.state.params.data.type);
     try {
       await RNIap.initConnection();
     } catch (e) {}
@@ -118,8 +119,10 @@ export default class NewMembership extends React.Component {
           ]);
         } catch (e) {}
         try {
+          // finish transaction
           await RNIap.finishTransaction(purchase, false);
-          if (this.state.newUser === 'SIGNUP') {
+          // if new user no pack only then create account
+          if (this.state.newUser === 'SIGNUP' && global.isPackOnly == false) {
             this.props.navigation.navigate('CREATEACCOUNT3', {
               data: {
                 email: this.state.email,
@@ -128,9 +131,11 @@ export default class NewMembership extends React.Component {
               }
             });
           } else {
-            this.props.navigation.navigate('LESSONS');
+            this.props.navigation.navigate('LOADPAGE');
           }
-        } catch (e) {}
+        } catch (e) {
+          console.log(e);
+        }
       } else {
         let { title, detail } = response.errors[0];
         Alert.alert(title, detail, [{ text: 'OK' }], {
