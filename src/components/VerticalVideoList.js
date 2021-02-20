@@ -669,8 +669,8 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
             {!this.props.isMethodLevel && (
-              <View style={{ paddingRight: 15 * factor }}>
-                <View style={[styles.centerContent, { flex: 1 }]}>
+              <View style={{ paddingRight: 10 * factor }}>
+                <View style={[styles.centerContent, { flex: 1,}]}>
                   {new Date(row.publishedOn) > new Date() ? (
                     <TouchableOpacity
                       style={{
