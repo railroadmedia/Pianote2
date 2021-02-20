@@ -122,7 +122,7 @@ module.exports = StyleSheet.create({
   modalHeaderText: {
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center',
-    fontSize: 18 * factor
+    fontSize: (DeviceInfo.isTablet() ? 12.5 : 18) * factor
   },
   modalCancelButtonText: {
     textAlign: 'center',
@@ -132,12 +132,12 @@ module.exports = StyleSheet.create({
   modalButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 15 * factor
+    fontSize: (DeviceInfo.isTablet() ? 10 : 15) * factor,
   },
   modalBodyText: {
     textAlign: 'center',
     fontFamily: 'OpenSans-Regular',
-    fontSize: 15 * factor
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
   },
   centerContent: {
     justifyContent: 'center',

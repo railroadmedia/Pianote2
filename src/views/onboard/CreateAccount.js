@@ -127,6 +127,7 @@ export default class CreateAccount extends React.Component {
                   <Text style={localStyles.emailText}>What's your email?</Text>
                   <TextInput
                     autoCorrect={false}
+                    autoCapitalize={'none'}
                     onBlur={() =>
                       this.setState({
                         scrollViewContentFlex: { flex: 1 }

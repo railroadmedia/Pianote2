@@ -35,7 +35,7 @@ class PasswordMatch extends React.Component {
         <View style={[styles.centerContent, styles.container]}>
           <View style={localStyles.container}>
             <Text style={[styles.modalHeaderText, localStyles.text]}>
-              Your passwords do {'\n'} not match.
+              Your passwords do not {'\n'} match.
             </Text>
             <Text style={[styles.modalBodyText, localStyles.text]}>
               Please try again.
@@ -44,7 +44,11 @@ class PasswordMatch extends React.Component {
               style={localStyles.tryAgainContainer}
               onPress={() => this.props.hidePasswordMatch()}
             >
-              <Text style={[styles.modalButtonText, localStyles.tryAgainText]}>
+              <Text style={[
+                styles.modalButtonText, 
+                localStyles.tryAgainText,
+                {fontSize: (onTablet ? 9 : 14) * factor}
+                ]}>
                 TRY AGAIN
               </Text>
             </TouchableOpacity>

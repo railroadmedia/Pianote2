@@ -269,6 +269,7 @@ export default class ProfileSettings extends React.Component {
           {this.state.currentlyView == 'Display Name' && (
             <ScrollView style={styles.mainContainer}>
               <TextInput
+                autoCapitalize={'none'}
                 ref={txt => {
                   this.txt = txt;
                 }}

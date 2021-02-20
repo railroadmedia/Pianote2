@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -59,6 +60,7 @@ class LogOut extends React.Component {
             <Text style={[styles.modalBodyText, localStyles.description]}>
               Are you sure that you want to log out?
             </Text>
+            <View style={{height: 5}}/>
             <TouchableOpacity
               style={[styles.centerContent, localStyles.logoutText]}
               onPress={() => this.logOut()}
@@ -90,21 +92,24 @@ const localStyles = StyleSheet.create({
   },
   title: {
     marginTop: 25 * factor,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   description: {
-    paddingHorizontal: 40,
+    paddingHorizontal: 20 * factor,
     marginVertical: 10 * factor,
-    marginBottom: 10 * factor
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
   },
   logoutText: {
     backgroundColor: '#fb1b2f',
     borderRadius: 40,
-    marginHorizontal: 40
+    marginHorizontal: 20 * factor,
+    fontFamily: 'OpenSans-Bold',
+    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
+    textAlign: 'center',
   },
   logout: {
     color: 'white',
-    paddingVertical: 12.5 * factor
+    fontSize: (DeviceInfo.isTablet() ? 12.5 : 17.5) * factor,
   },
   cancelContainter: {
     paddingHorizontal: 40,
@@ -112,7 +117,8 @@ const localStyles = StyleSheet.create({
   },
   cancel: {
     color: 'grey',
-    marginBottom: 10 * factor
+    fontSize: (DeviceInfo.isTablet() ? 10 : 15) * factor,
+    marginBottom: 10
   }
 });
 

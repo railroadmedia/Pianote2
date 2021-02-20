@@ -41,11 +41,11 @@ class ValidateEmail extends React.Component {
               onPress={() => this.props.hideValidateEmail()}
               style={localStyles.tryAgain}
             >
-              <Text
+              <Text 
                 style={[
                   styles.modalCancelButtonText,
                   localStyles.tryAgainText,
-                  { fontSize: 17.5 * factorRatio }
+                  {fontSize: (onTablet ? 10 : 14) * factor}
                 ]}
               >
                 TRY AGAIN
@@ -62,7 +62,6 @@ const localStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     borderRadius: 15 * factor,
-    margin: 20 * factor,
     paddingBottom: 5 * factor,
     paddingTop: 20 * factor,
     backgroundColor: 'white'

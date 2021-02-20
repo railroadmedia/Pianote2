@@ -141,7 +141,7 @@ class Replies extends React.Component {
                   >
                     <AntIcon
                       name={reply.is_liked ? 'like1' : 'like2'}
-                      size={(onTablet ? 17.5 : 22.5) * factor}
+                      size={(onTablet ? 15 : 22.5) * factor}
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -180,6 +180,7 @@ class Replies extends React.Component {
                     <AntIcon
                       name={'delete'}
                       size={(onTablet ? 15 : 20) * factor}
+                      
                       color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
@@ -320,7 +321,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={comment.is_liked ? 'like1' : 'like2'}
-                                  size={(onTablet ? 17.5 : 22.5) * factor}
+                                  size={(onTablet ? 15 : 22.5) * factor}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -353,7 +354,7 @@ class Replies extends React.Component {
                             <View style={{ flexDirection: 'row' }}>
                               <MaterialIcon
                                 name={'comment-text-outline'}
-                                size={20 * factor}
+                                size={(onTablet ? 15 : 22.5) * factor}
                                 color={colors.pianoteRed}
                                 style={{ marginRight: 10 }}
                               />
@@ -379,7 +380,7 @@ class Replies extends React.Component {
                               >
                                 <AntIcon
                                   name={'delete'}
-                                  size={(onTablet ? 15 : 20) * factor}
+                                  size={(onTablet ? 12.5 : 20) * factor}
                                   color={colors.pianoteRed}
                                 />
                               </TouchableOpacity>
@@ -456,22 +457,19 @@ class Replies extends React.Component {
                         onChangeText={reply => this.setState({ reply })}
                         style={localStyles.textInput}
                       />
-
-                      <View style={styles.centerContent}>
-                        <TouchableOpacity
-                          onPress={() => this.sendReply(this.state.reply)}
-                          style={{
-                            marginBottom:
-                              Platform.OS == 'android' ? 10 * factor : 0
-                          }}
-                        >
-                          <IonIcon
-                            name={'md-send'}
-                            size={25 * factor}
-                            color={colors.pianoteRed}
-                          />
-                        </TouchableOpacity>
-                      </View>
+                      <TouchableOpacity
+                        onPress={() => this.sendReply(this.state.reply)}
+                        style={{
+                          marginBottom:
+                            Platform.OS == 'android' ? 10 * factor : 0
+                        }}
+                      >
+                        <IonIcon
+                          name={'md-send'}
+                          size={(onTablet ? 15 : 25) * factor}
+                          color={colors.pianoteRed}
+                        />
+                      </TouchableOpacity>
                     </View>
                   </KeyboardAvoidingView>
                 </TouchableOpacity>
@@ -495,27 +493,17 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row'
   },
   profileImage: {
-    height:
-      ((DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width) /
-      375,
-    width:
-      ((DeviceInfo.isTablet() ? 30 : 40) * Dimensions.get('window').width) /
-      375,
+    height: (DeviceInfo.isTablet() ? 30 : 40) * factor,
+    width: (DeviceInfo.isTablet() ? 30 : 40) * factor,
     paddingVertical: (10 * Dimensions.get('window').height) / 812,
     borderRadius: 100
   },
   replyName: {
     fontFamily: 'OpenSans-Regular',
     fontSize:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      (10 * factor),
     marginTop:
-      (2 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      (2 * factor),
     color: 'grey'
   },
   commentContainer: {
@@ -526,20 +514,14 @@ const localStyles = StyleSheet.create({
   displayNameText: {
     fontFamily: 'OpenSans-Regular',
     fontSize:
-      ((DeviceInfo.isTablet() ? 9 : 10) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      ((DeviceInfo.isTablet() ? 9 : 10) * factor),
     color: '#445f73',
     paddingVertical: (5 * Dimensions.get('window').height) / 812
   },
   comment: {
     paddingTop: (10 * Dimensions.get('window').height) / 812,
     fontSize:
-      ((DeviceInfo.isTablet() ? 10 : 13) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      ((DeviceInfo.isTablet() ? 10 : 13) * factor),
     fontFamily: 'OpenSans-Regular',
     color: 'white'
   },
@@ -556,11 +538,7 @@ const localStyles = StyleSheet.create({
   },
   likeCount: {
     fontFamily: 'OpenSans-Regular',
-    fontSize:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    fontSize: (DeviceInfo.isTablet() ? 9 : 10) * factor,
     color: '#fb1b2f',
     paddingHorizontal: (7.5 * Dimensions.get('window').width) / 375
   },
@@ -575,16 +553,11 @@ const localStyles = StyleSheet.create({
   commentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10 * factor,
     marginTop: 10
   },
   replyText: {
-    fontSize: DeviceInfo.isTablet()
-      ? 26
-      : (18 *
-          (Dimensions.get('window').height / 812 +
-            Dimensions.get('window').width / 375)) /
-        2,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
     marginVertical: (5 * Dimensions.get('window').height) / 812,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
@@ -594,10 +567,7 @@ const localStyles = StyleSheet.create({
     paddingTop: 5,
     paddingHorizontal: (10 * Dimensions.get('window').width) / 375,
     marginBottom:
-      (10 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      (10 * factor),
     minHeight: (30 * Dimensions.get('window').height) / 812,
     flexDirection: 'row'
   },
@@ -620,29 +590,20 @@ const localStyles = StyleSheet.create({
             Dimensions.get('window').width / 375)) /
         2,
     marginTop:
-      (5 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      (5 * factor),
     color: 'grey'
   },
   commentText: {
     fontFamily: 'OpenSans-Regular',
     fontSize:
-      (13 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      (13 * factor),
     color: 'white',
     marginBottom: 7
   },
   userStats: {
     fontFamily: 'OpenSans-Regular',
     fontSize:
-      ((DeviceInfo.isTablet() ? 9 : 10) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      ((DeviceInfo.isTablet() ? 9 : 10) * factor),
     color: '#445f73',
     paddingTop: (5 * Dimensions.get('window').height) / 812,
     paddingBottom: (10 * Dimensions.get('window').height) / 812
@@ -656,7 +617,7 @@ const localStyles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     paddingLeft: (10 * Dimensions.get('window').width) / 375,
-    borderTopWidth: 1,
+    borderTopWidth: 0.5,
     borderBottomWidth: 0.5,
     borderBottomColor: '#445f73',
     borderTopColor: '#445f73',
@@ -671,10 +632,7 @@ const localStyles = StyleSheet.create({
     textAlign: 'left',
     fontFamily: 'OpenSans-Regular',
     fontSize:
-      ((DeviceInfo.isTablet() ? 10 : 13) *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+      ((DeviceInfo.isTablet() ? 10 : 13) * factor),
     color: 'white',
     paddingLeft: (10 * Dimensions.get('window').width) / 375,
     paddingVertical: (25 * Dimensions.get('window').height) / 812
@@ -688,12 +646,8 @@ const localStyles = StyleSheet.create({
     borderTopColor: '#445f73'
   },
   textInput: {
-    width: '75%',
-    fontSize:
-      (14 *
-        (Dimensions.get('window').height / 812 +
-          Dimensions.get('window').width / 375)) /
-      2,
+    flex: 1,
+    fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor,
     color: '#445f73',
     fontFamily: 'OpenSans-Regular',
     paddingVertical: (10 * Dimensions.get('window').height) / 812,
