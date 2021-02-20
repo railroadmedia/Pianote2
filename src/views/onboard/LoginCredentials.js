@@ -278,7 +278,7 @@ export default class LoginCredentials extends React.Component {
                   }
                   autoCorrect={false}
                   value={this.state.email}
-                  autoCapitalize={false}
+                  autoCapitalize={"none"}
                   keyboardAppearance={'dark'}
                   placeholderTextColor={'grey'}
                   placeholder={'Email Address'}
@@ -288,7 +288,7 @@ export default class LoginCredentials extends React.Component {
                 />
                 <View style={localStyles.textInputContainer}>
                   <TextInput
-                    autoCapitalize={false}
+                    autoCapitalize={"none"}
                     onBlur={() =>
                       this.setState({
                         scrollViewContentFlex: {
