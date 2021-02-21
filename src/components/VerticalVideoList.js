@@ -555,7 +555,7 @@ class VerticalVideoList extends React.Component {
                 )}
               </View>
             </View>
-            <View style={{ width: paddingInset }} />
+            <View style={{ width: 10 * factor }} />
             <View style={{ flex: 1.5, justifyContent: 'center' }}>
               {this.props.isMethodLevel && (
                 <Text

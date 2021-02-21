@@ -134,8 +134,8 @@ class StudentFocusCatalog extends React.Component {
         style={{
           width: '50%',
           marginTop: '3%',
-          paddingLeft: index % 2 == 0 ? paddingInset : '1%', //(12 * factor) / (index % 2 === 0 ? 1 : 2),
-          paddingRight: index % 2 == 0 ? '1%' : paddingInset //(12 * factor) / (index % 2 === 0 ? 2 : 1)
+          paddingLeft: index % 2 == 0 ? 12 * factor : '1%', //(12 * factor) / (index % 2 === 0 ? 1 : 2),
+          paddingRight: index % 2 == 0 ? '1%' : 12 * factor //(12 * factor) / (index % 2 === 0 ? 2 : 1)
         }}
       >
         <FastImage
@@ -188,7 +188,7 @@ class StudentFocusCatalog extends React.Component {
                 <Text style={styles.contentPageHeader}>Student Focus</Text>
 
                 {this.state.started && (
-                  <View style={styles.mainContainer}>
+                  <View style={[styles.mainContainer, { paddingLeft: 10 }]}>
                     <HorizontalVideoList
                       hideFilterButton={true}
                       Title={'CONTINUE'}
