@@ -341,38 +341,36 @@ export default class Method extends React.Component {
                       />
                     )
                   )}
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
                   <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      right: -50 * factor,
-                      zIndex: 5,
-                      elevation: 5
-                    }}
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
-                  >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={(onTablet ? 15 : 22.5) * factor}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
                       style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 2,
-                        fontSize: (onTablet ? 8 : 12) * factor
+                        flex: 0.5,
+                        alignItems: 'center'
+                      }}
+                      onPress={() => {
+                        this.setState({
+                          showInfo: !this.state.showInfo
+                        });
                       }}
                     >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
+                      <AntIcon
+                        name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                        size={(onTablet ? 15 : 20) * factor}
+                        color={colors.pianoteRed}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: 'OpenSans-Regular',
+                          color: 'white',
+                          marginTop: 2,
+                          fontSize: (onTablet ? 8 : 12) * factor
+                        }}
+                      >
+                        Info
+                      </Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
             </View>
           </ImageBackground>

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.corbt.keepawake.KCKeepAwakePackage;
 import com.reactnative.googlecast.GoogleCastPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage;

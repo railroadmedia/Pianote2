@@ -292,6 +292,8 @@ PODS:
   - react-native-intercom (13.2.0):
     - Intercom (~> 5.5.1)
     - React
+  - react-native-keep-awake (4.0.0):
+    - React
   - react-native-netinfo (5.9.10):
     - React-Core
   - react-native-orientation (3.1.3):
@@ -419,6 +421,7 @@ DEPENDENCIES:
   - react-native-home-indicator (from `../node_modules/react-native-home-indicator`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-intercom (from `../node_modules/react-native-intercom`)
+  - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-orientation (from `../node_modules/react-native-orientation`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
@@ -523,6 +526,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-intercom:
     :path: "../node_modules/react-native-intercom"
+  react-native-keep-awake:
+    :path: "../node_modules/react-native-keep-awake"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-orientation:
@@ -634,6 +639,7 @@ SPEC CHECKSUMS:
   react-native-home-indicator: 4001d2f40e9e0d6d430a46662f3d04feee170945
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
   react-native-intercom: 25ceddd224fdf63be29d4e25e95a893e5befe18f
+  react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
   react-native-netinfo: 52cf0ee8342548a485e28f4b09e56b477567244d
   react-native-orientation: d4a97266b06ec8d45d74e626656a730ebbebbb6f
   react-native-orientation-locker: 47aaa55d59bfc1613804dc22f159e6bb1cca5f30
@@ -672,6 +678,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 109f7907273e3364958e596b1258c77c99d279ad
+PODFILE CHECKSUM: 95a03221b0ae8a7d7d4b73d9e924d7c6627c3a1a
 
 COCOAPODS: 1.8.4
