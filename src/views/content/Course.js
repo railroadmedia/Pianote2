@@ -276,7 +276,6 @@ class Course extends React.Component {
                 key={'continueCourses'}
                 style={{
                   backgroundColor: colors.mainBackground,
-                  paddingLeft: 10 * factor
                 }}
               >
                 <HorizontalVideoList
@@ -293,39 +292,38 @@ class Course extends React.Component {
               </View>
             )}
             {onTablet ? (
-              <View style={{ paddingLeft: 10 * factor }}>
-                <HorizontalVideoList
-                  Title={'COURSES'}
-                  seeAll={() =>
-                    this.props.navigation.navigate('SEEALL', {
-                      title: 'Courses',
-                      parent: 'Courses'
-                    })
+              <HorizontalVideoList
+                isTile={true}
+                Title={'COURSES'}
+                seeAll={() =>
+                  this.props.navigation.navigate('SEEALL', {
+                    title: 'Courses',
+                    parent: 'Courses'
+                  })
+                }
+                items={this.state.allCourses}
+                // if horizontal replace vertical on tablet include below
+                hideFilterButton={false} // if on tablet & should be filter list not see all
+                isPaging={this.state.isPaging}
+                filters={this.state.filters} // show filter list
+                currentSort={this.state.currentSort}
+                changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+                outVideos={this.state.outVideos} // if paging and out of videos
+                getVideos={() => this.getVideos()}
+                callEndReached={true}
+                reachedEnd={() => {
+                  if (!this.state.isPaging && !this.state.outVideos) {
+                    this.setState(
+                      {
+                        page: this.state.page + 1,
+                        isPaging: true
+                      },
+                      () => this.getAllCourses()
+                    );
                   }
-                  items={this.state.allCourses}
-                  // if horizontal replace vertical on tablet include below
-                  hideFilterButton={false} // if on tablet & should be filter list not see all
-                  isPaging={this.state.isPaging}
-                  filters={this.state.filters} // show filter list
-                  currentSort={this.state.currentSort}
-                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                  filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                  outVideos={this.state.outVideos} // if paging and out of videos
-                  getVideos={() => this.getVideos()}
-                  callEndReached={true}
-                  reachedEnd={() => {
-                    if (!this.state.isPaging && !this.state.outVideos) {
-                      this.setState(
-                        {
-                          page: this.state.page + 1,
-                          isPaging: true
-                        },
-                        () => this.getAllCourses()
-                      );
-                    }
-                  }}
-                />
-              </View>
+                }}
+              />
             ) : (
               <VerticalVideoList
                 items={this.state.allCourses}

@@ -382,7 +382,7 @@ class VerticalVideoList extends React.Component {
           <View
             style={{
               flex: 1,
-              paddingLeft: 10 * factor,
+              paddingLeft: paddingInset,
               paddingVertical: (onTablet ? 5 : 7.5) * factor,
               flexDirection: 'row',
               borderTopColor: '#ececec'
@@ -595,7 +595,7 @@ class VerticalVideoList extends React.Component {
                       : colors.secondBackground,
                     textAlign: 'left',
                     fontFamily: 'OpenSans-Regular',
-                    paddingRight: 15
+                    paddingRight: paddingInset
                   }}
                 >
                   {row.description}
@@ -669,7 +669,7 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
             {!this.props.isMethodLevel && (
-              <View style={{ paddingRight: 10 * factor }}>
+              <View style={{ paddingRight: paddingInset }}>
                 <View style={[styles.centerContent, { flex: 1,}]}>
                   {new Date(row.publishedOn) > new Date() ? (
                     <TouchableOpacity
@@ -743,7 +743,7 @@ class VerticalVideoList extends React.Component {
           <View style={{ height: 5 * factor }} />
           {this.props.showFilter && (
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ paddingLeft: 10 * factor }}>
+              <View style={{ paddingLeft: paddingInset }}>
                 {this.props.showLargeTitle ? (
                   <Text
                     style={{
@@ -778,7 +778,7 @@ class VerticalVideoList extends React.Component {
               {!this.props.showTitleOnly && (
                 <View
                   style={{
-                    paddingRight: 15 * factor,
+                    paddingRight: paddingInset,
                     flexDirection: 'row'
                   }}
                 >
@@ -871,7 +871,7 @@ class VerticalVideoList extends React.Component {
                   this.props.filters.instructors.length > 0) && (
                   <View
                     style={{
-                      paddingHorizontal: 15,
+                      paddingHorizontal: paddingInset,
                       paddingTop: 5 * factor
                     }}
                   >
@@ -911,7 +911,7 @@ class VerticalVideoList extends React.Component {
               <View
                 style={{
                   marginTop: 5 * factor,
-                  paddingHorizontal: 10 * factor
+                  paddingHorizontal: paddingInset
                 }}
               >
                 <Text

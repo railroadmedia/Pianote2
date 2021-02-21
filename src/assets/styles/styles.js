@@ -27,7 +27,7 @@ module.exports = StyleSheet.create({
   searchContainer: {
     marginTop: height * 0.04,
     flexDirection: 'row',
-    paddingLeft: 15
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5)
   },
   searchBox: {
     flex: 1,
@@ -74,7 +74,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: 15 * factor
+    padding: (DeviceInfo.isTablet ? 10 : 5)
   },
   filterHeader: {
     fontSize: 18 * factor,
@@ -95,7 +95,7 @@ module.exports = StyleSheet.create({
     color: '#445f73'
   },
   tabRightContainerText: {
-    paddingLeft: 10 * factor,
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
     fontSize: DeviceInfo.isTablet() ? 22 : 20 * factor,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
@@ -103,7 +103,7 @@ module.exports = StyleSheet.create({
     paddingVertical: 10 * factor
   },
   tabRightContainer: {
-    paddingRight: 10 * factor,
+    paddingRight: (DeviceInfo.isTablet ? 10 : 5),
     width: '100%',
     borderTopWidth: 0.5 * factor,
     borderTopColor: '#445f73',
@@ -114,7 +114,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   contentPageHeader: {
-    paddingLeft: 10 * factor,
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
     fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'

@@ -294,6 +294,8 @@ PODS:
     - React
   - react-native-netinfo (5.9.10):
     - React-Core
+  - react-native-orientation (3.1.3):
+    - React
   - react-native-orientation-locker (1.2.0):
     - React
   - react-native-splash-screen (3.2.0):
@@ -418,6 +420,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-intercom (from `../node_modules/react-native-intercom`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-orientation (from `../node_modules/react-native-orientation`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -522,6 +525,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-intercom"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-orientation:
+    :path: "../node_modules/react-native-orientation"
   react-native-orientation-locker:
     :path: "../node_modules/react-native-orientation-locker"
   react-native-splash-screen:
@@ -630,6 +635,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
   react-native-intercom: 25ceddd224fdf63be29d4e25e95a893e5befe18f
   react-native-netinfo: 52cf0ee8342548a485e28f4b09e56b477567244d
+  react-native-orientation: d4a97266b06ec8d45d74e626656a730ebbebbb6f
   react-native-orientation-locker: 47aaa55d59bfc1613804dc22f159e6bb1cca5f30
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-video: 0c9eb61b06ef78b6e2598e1159743de1d82b6e9e

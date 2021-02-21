@@ -119,6 +119,7 @@ global.colors = {
   pianoteRed: '#fb1b2f',
   pianoteGrey: '#6e777a'
 };
+paddingInset = (DeviceInfo.isTablet ? 10 : 5)
 global.maxLevel = {
   lessons: null,
   packs: null,
