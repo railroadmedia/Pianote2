@@ -500,7 +500,7 @@ export default class VideoPlayer extends React.Component {
           flexDirection: 'row',
           paddingTop: 10 * factor,
           paddingBottom: 0 * factor,
-          paddingHorizontal: paddingInset
+          paddingHorizontal: 10 * factor
         }}
       >
         <View
@@ -825,7 +825,7 @@ export default class VideoPlayer extends React.Component {
             this.setState({ selectedAssignment: assignment });
           }}
           style={{
-            paddingHorizontal: paddingInset,
+            paddingHorizontal: 10 * factor,
             paddingVertical: 5,
             borderBottomColor: colors.secondBackground,
             borderBottomWidth: 1,
@@ -1140,7 +1140,7 @@ export default class VideoPlayer extends React.Component {
                   <View
                     key={'icons'}
                     style={{
-                      paddingHorizontal: paddingInset
+                      paddingHorizontal: 10 * factor
                     }}
                   >
                     <View
@@ -1314,7 +1314,7 @@ export default class VideoPlayer extends React.Component {
                     <>
                       <View
                         key={'assingmentsHeader'}
-                        style={{ paddingLeft: paddingInset, paddingBottom: 10 }}
+                        style={{ paddingLeft: 10 * factor, paddingBottom: 10 }}
                       >
                         <Text
                           style={{
@@ -1385,7 +1385,7 @@ export default class VideoPlayer extends React.Component {
                             flexDirection: 'row',
                             flex: 1,
                             justifyContent: 'space-between',
-                            paddingHorizontal: paddingInset
+                            paddingHorizontal: 10 * factor
                           }}
                         >
                           <Text
@@ -1417,7 +1417,7 @@ export default class VideoPlayer extends React.Component {
                           style={{
                             width: '100%',
                             flexDirection: 'row',
-                            paddingHorizontal: paddingInset,
+                            paddingHorizontal: 10 * factor,
                             paddingVertical: 20 * factor
                           }}
                         >
@@ -1455,7 +1455,7 @@ export default class VideoPlayer extends React.Component {
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: (onTablet ? 10 : 13) * factor,
                                   color: 'white',
-                                  paddingLeft: paddingInset
+                                  paddingLeft: 10 * factor
                                 }}
                               >
                                 Add a comment...
@@ -1644,7 +1644,7 @@ export default class VideoPlayer extends React.Component {
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
                 paddingVertical: 5 * factor,
-                paddingHorizontal: paddingInset
+                paddingHorizontal: 10 * factor
               }}
             >
               <TouchableOpacity
@@ -1654,7 +1654,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginRight: paddingInset,
+                  marginRight: 10 * factor,
                   borderColor: this.state.previousLesson
                     ? colors.pianoteRed
                     : colors.secondBackground
@@ -1713,7 +1713,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginLeft: paddingInset,
+                  marginLeft: 10 * factor,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
                     : colors.secondBackground
@@ -1997,7 +1997,7 @@ export default class VideoPlayer extends React.Component {
                   style={{
                     backgroundColor: colors.mainBackground,
                     flexDirection: 'row',
-                    padding: paddingInset,
+                    padding: 10 * factor,
                     alignItems: 'center',
                     borderTopWidth: 0.5 * factor,
                     borderTopColor: colors.secondBackground
@@ -2009,7 +2009,7 @@ export default class VideoPlayer extends React.Component {
                       width: (onTablet ? 30 : 40) * factor,
                       paddingVertical: 10 * factor,
                       borderRadius: 100,
-                      marginRight: paddingInset
+                      marginRight: 10 * factor
                     }}
                     source={{
                       uri:
