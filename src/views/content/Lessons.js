@@ -35,7 +35,6 @@ import { getStartedContent, getAllContent } from '../../services/GetContent';
 import RestartCourse from '../../modals/RestartCourse';
 import { cacheAndWriteLessons } from '../../redux/LessonsCacheActions';
 import { NetworkContext } from '../../context/NetworkProvider';
-import KeepAwake from 'react-native-keep-awake';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -95,7 +94,6 @@ class Lessons extends React.Component {
 
   componentDidMount = () => {
     Orientation.addDeviceOrientationListener(this.orientationListener);
-
     AsyncStorage.multiGet([
       'totalXP',
       'rank',

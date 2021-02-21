@@ -292,9 +292,9 @@ PODS:
   - react-native-intercom (13.2.0):
     - Intercom (~> 5.5.1)
     - React
-  - react-native-keep-awake (4.0.0):
+  - react-native-keep-awake (1.0.4):
     - React
-  - react-native-netinfo (5.9.10):
+  - react-native-netinfo (5.9.9):
     - React-Core
   - react-native-orientation (3.1.3):
     - React
@@ -356,7 +356,7 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.8.0):
     - React-Core
-  - RNDeviceInfo (7.3.1):
+  - RNDeviceInfo (7.4.0):
     - React-Core
   - RNFastImage (7.0.2):
     - React
@@ -381,7 +381,7 @@ PODS:
     - React-Core
   - RNPDF (0.11.0):
     - React
-  - RNScreens (2.17.1):
+  - RNScreens (2.16.1):
     - React-Core
   - RNSVG (12.1.0):
     - React
@@ -421,7 +421,7 @@ DEPENDENCIES:
   - react-native-home-indicator (from `../node_modules/react-native-home-indicator`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-intercom (from `../node_modules/react-native-intercom`)
-  - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
+  - "react-native-keep-awake (from `../node_modules/@sayem314/react-native-keep-awake`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-orientation (from `../node_modules/react-native-orientation`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
@@ -527,7 +527,7 @@ EXTERNAL SOURCES:
   react-native-intercom:
     :path: "../node_modules/react-native-intercom"
   react-native-keep-awake:
-    :path: "../node_modules/react-native-keep-awake"
+    :path: "../node_modules/@sayem314/react-native-keep-awake"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-orientation:
@@ -632,21 +632,21 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-add-calendar-event: e501cea7d393396ff1e798c462983c9e6d8dfc02
-  react-native-background-downloader: f33bf10a731164e272c9101254f63c74b8dc09f9
+  react-native-add-calendar-event: d7744f983d6770cc9e4f004db22bc4d4b4575f17
+  react-native-background-downloader: 4a034cf39a3b00fac57364984e360a4f180a5efb
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
-  react-native-google-cast: 979f76dfabac49f1dda10b784906c45a75da2606
-  react-native-home-indicator: 4001d2f40e9e0d6d430a46662f3d04feee170945
-  react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
+  react-native-google-cast: eaf8b8c3f2875d520f5810eed59cba54d1434413
+  react-native-home-indicator: 92b86b0fbe85a50c9cba286ad7bae4a2c319238a
+  react-native-image-picker: 7a85cf7b0a53845f03ae52fb4592a2748ded069b
   react-native-intercom: 25ceddd224fdf63be29d4e25e95a893e5befe18f
-  react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
-  react-native-netinfo: 52cf0ee8342548a485e28f4b09e56b477567244d
-  react-native-orientation: d4a97266b06ec8d45d74e626656a730ebbebbb6f
+  react-native-keep-awake: e63964d58c890de02bfb6519dedb7d90b5c782de
+  react-native-netinfo: 0212ce8604e88edf686f1481b925b17a42a52449
+  react-native-orientation: f1caf84d65f1a4fd4511a18f2b924e634ad7a628
   react-native-orientation-locker: 47aaa55d59bfc1613804dc22f159e6bb1cca5f30
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
-  react-native-video: 0c9eb61b06ef78b6e2598e1159743de1d82b6e9e
-  react-native-viewpager: 248267e605c2d4edd26924da7f15032d57ac0b75
-  react-native-webview: dbe6c1ad149740f0e2d84a963f1d3c3e77f2d99c
+  react-native-video: 428d518aef3f2b01e3341297ffe0e7f2867523ec
+  react-native-viewpager: f730c1d175a2c1ae789464855d4a2c14247d3109
+  react-native-webview: a4751ec8f0a6a397026f22ed54c1efeec4540555
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -659,25 +659,25 @@ SPEC CHECKSUMS:
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   ReactNativeNavigation: bed6f504aa1a4dadd151503bf99d0ef96d06847f
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAirplay: d863b69586b2ac0270cbb349c44c37a525681329
-  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
-  RNCPushNotificationIOS: 5b1cf9ad2aaa107ecb92d5d2d7005ba521b2b97a
-  RNDeviceInfo: 57bb2806fb7bd982a1434e9f0b4e6a6ab1f6702e
+  RNAirplay: e70a4569487a56837d687b68b33582e27aa192ae
+  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
+  RNCPushNotificationIOS: 61a7c72bd1ebad3568025957d001e0f0e7b32191
+  RNDeviceInfo: 9538a884f862fe4aa0d7cead9f34e292d41ba8f6
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFBApp: 804b98033f45c3a3e35b56de8c894f85ef5e4388
   RNFBCrashlytics: 501d01e5dd0cd6affedba60762b9b8d7d579cea8
   RNFBMessaging: 9287cbf850ed3524c9f915f5b3daaf1cfaabbf06
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
-  RNIap: 091b98e143440e580e51d08b43a3196ae788e87b
-  RNPDF: f9dc9bac0b82da5f250df9bdd0d59b5993828fa2
-  RNScreens: b6c9607e6fe47c1b6e2f1910d2acd46dd7ecea3a
+  RNIap: 66b83af54a855b6314a243a200081a64d7f64c2e
+  RNPDF: b575ff11a65121f346b2851e3da736e7c51c18ab
+  RNScreens: 45c457af3d2ee9e08fc01e70da87e653d46b1198
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 95a03221b0ae8a7d7d4b73d9e924d7c6627c3a1a
+PODFILE CHECKSUM: d605bf20234bed0e3ff8ddc41d7745f26ed824be
 
 COCOAPODS: 1.8.4
