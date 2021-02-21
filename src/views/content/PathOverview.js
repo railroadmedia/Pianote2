@@ -482,7 +482,7 @@ export default class PathOverview extends React.Component {
                 style={{
                   fontFamily: 'OpenSans-Regular',
                   marginTop: 10 * factor,
-                  paddingHorizontal: 10 * factor,
+                  paddingHorizontal: paddingInset,
                   fontSize: (onTablet ? 9 : 15) * factor,
                   color: 'white',
                   textAlign: 'center'
@@ -744,7 +744,7 @@ export default class PathOverview extends React.Component {
               backgroundColor: isMethod ? 'black' : colors.mainBackground,
               marginBottom: 10,
               alignSelf: 'center',
-              paddingHorizontal: onTablet ? 0 : 10 * factor,
+              paddingHorizontal: onTablet ? 0 : paddingInset,
               width: '100%'
             }}
             numColumns={onTablet ? 3 : 1}

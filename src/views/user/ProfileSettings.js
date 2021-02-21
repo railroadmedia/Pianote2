@@ -460,7 +460,7 @@ const localStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#445f73',
     flexDirection: 'row',
-    paddingHorizontal: 10 * factor
+    paddingHorizontal: DeviceInfo.isTablet() ? 10 : 5
   },
   profilePhoto: {
     height: (DeviceInfo.isTablet() ? 40 : 50) * factor,
@@ -468,11 +468,11 @@ const localStyles = StyleSheet.create({
     borderBottomColor: '#445f73',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 10 * factor
+    paddingHorizontal: DeviceInfo.isTablet() ? 10 : 5
   },
   textInput: {
     fontFamily: 'OpenSans-Regular',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: DeviceInfo.isTablet() ? 10 : 5,
     width: '100%',
     fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
     color: '#445f73'
@@ -481,7 +481,7 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     fontSize: (DeviceInfo.isTablet() ? 14 : 16) * factor,
     paddingVertical: '2%',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: DeviceInfo.isTablet() ? 10 : 5,
     color: '#445f73'
   },
   scrollContainer: {
