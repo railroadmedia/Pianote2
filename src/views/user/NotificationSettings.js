@@ -396,7 +396,7 @@ const localStyles = StyleSheet.create({
     color: '#445f73'
   },
   noteTypeContainer: {
-    paddingLeft: 10 * factor,
+    paddingLeft: DeviceInfo.isTablet() ? 10 : 5,
     width: '100%',
     justifyContent: 'center',
     fontSize: 18 * factor
@@ -409,7 +409,7 @@ const localStyles = StyleSheet.create({
     paddingVertical: 5
   },
   textContainer: {
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: DeviceInfo.isTablet() ? 10 : 5,
     paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -421,7 +421,7 @@ const localStyles = StyleSheet.create({
     color: '#445f73'
   },
   emailNotificationFrequency: {
-    paddingLeft: 10 * factor,
+    paddingLeft: DeviceInfo.isTablet() ? 10 : 5,
     paddingTop: 10 * factor,
     width: '100%',
     justifyContent: 'center',

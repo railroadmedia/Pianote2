@@ -308,8 +308,8 @@ class Packs extends React.Component {
               }}
               style={{
                 width: '33%',
-                paddingLeft: 10,
-                paddingBottom: 10
+                paddingLeft: paddingInset,
+                paddingBottom: paddingInset
               }}
             >
               <FastImage
@@ -335,7 +335,7 @@ class Packs extends React.Component {
                     alignItems: 'center',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    paddingBottom: 10
+                    paddingBottom: paddingInset
                   }}
                 >
                   <View />

@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import { SafeAreaView } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -907,8 +908,7 @@ const localStyles = StyleSheet.create({
   },
   contact: {
     marginTop: 20,
-    paddingLeft: 10 * factor,
-    paddingRight: 10 * factor,
+    paddingHorizontal: DeviceInfo.isTablet() ? 10 : 5,
     textAlign: 'center'
   }
 });

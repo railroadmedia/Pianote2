@@ -673,7 +673,7 @@ const localStyles = StyleSheet.create({
     fontSize: (DeviceInfo.isTablet() ? 10 : 14.5) * factor,
     fontWeight: DeviceInfo.isTablet() ? '500' : '300',
     color: '#fb1b2f',
-    paddingRight: 10 * factor
+    paddingRight: (DeviceInfo.isTablet ? 10 : 5)
   },
   titleContain: {
     flex: 1,

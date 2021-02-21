@@ -65,7 +65,7 @@ class Replies extends React.Component {
             flexDirection: 'row',
             paddingTop: 10 * factor,
             paddingBottom: 0 * factor,
-            paddingHorizontal: 10 * factor
+            paddingHorizontal: paddingInset
           }}
         >
           <View
@@ -97,7 +97,7 @@ class Replies extends React.Component {
               {reply.user.display_name}
             </Text>
           </View>
-          <View style={{ flex: 1, paddingLeft: 10 * factor }}>
+          <View style={{ flex: 1, paddingLeft: paddingInset }}>
             <Text
               style={{
                 fontFamily: 'OpenSans-Regular',
@@ -238,7 +238,7 @@ class Replies extends React.Component {
                         flex: 1,
                         flexDirection: 'row',
                         paddingTop: 10 * factor,
-                        paddingHorizontal: 10 * factor
+                        paddingHorizontal: paddingInset
                       }}
                     >
                       <View
@@ -273,7 +273,7 @@ class Replies extends React.Component {
                         </Text>
                       </View>
 
-                      <View style={{ flex: 1, paddingLeft: 10 * factor }}>
+                      <View style={{ flex: 1, paddingLeft: paddingInset }}>
                         <Text
                           style={{
                             fontFamily: 'OpenSans-Regular',
@@ -304,7 +304,7 @@ class Replies extends React.Component {
                         >
                           <View style={{ flexDirection: 'row' }}>
                             <View
-                              style={{ flexDirection: 'row', marginRight: 15 }}
+                              style={{ flexDirection: 'row', marginRight: paddingInset }}
                             >
                               <TouchableOpacity
                                 style={{ marginRight: 10 }}
@@ -440,7 +440,7 @@ class Replies extends React.Component {
                       <FastImage
                         style={[
                           localStyles.profileImage,
-                          { marginRight: 10 * factor }
+                          { marginRight: paddingInset }
                         ]}
                         source={{
                           uri:
@@ -461,7 +461,7 @@ class Replies extends React.Component {
                         onPress={() => this.sendReply(this.state.reply)}
                         style={{
                           marginBottom:
-                            Platform.OS == 'android' ? 10 * factor : 0
+                            Platform.OS == 'android' ? paddingInset : 0
                         }}
                       >
                         <IonIcon
@@ -553,7 +553,7 @@ const localStyles = StyleSheet.create({
   commentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10 * factor,
+    paddingHorizontal: DeviceInfo.isTablet() ? 10 : 5,
     marginTop: 10
   },
   replyText: {
