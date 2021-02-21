@@ -199,7 +199,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-keep-awake')
     implementation project(':react-native-google-cast')
     implementation project(':react-native-push-notification')
     implementation project(':@react-native-firebase_crashlytics')

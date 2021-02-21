@@ -77,7 +77,7 @@ module.exports = StyleSheet.create({
     padding: (DeviceInfo.isTablet ? 10 : 5)
   },
   filterHeader: {
-    fontSize: 18 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
     marginBottom: 12.5 * factor,
     marginTop: 12.5 * factor,
     textAlign: 'left',

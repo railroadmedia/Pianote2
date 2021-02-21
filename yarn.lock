@@ -1061,11 +1061,6 @@
     hoist-non-react-statics "^3.3.2"
     react-native-safe-area-view "^0.14.9"
 
-"@sayem314/react-native-keep-awake@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@sayem314/react-native-keep-awake/-/react-native-keep-awake-1.0.4.tgz#b50479e01aa33519797e1fb36717f504a7829135"
-  integrity sha512-P88tiTDzVyT/323Ipx8j+q5Ua3U2X+EX+6YK3ibp2FLtvDlj8TZ/kmlCQTPOCzJyNQSA4+y6EXy0zJSgLZtuLQ==
-
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.npmjs.org/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz"

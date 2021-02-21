@@ -135,7 +135,7 @@ export default class Downloads extends React.Component {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}
             >
               <Text
@@ -161,7 +161,7 @@ export default class Downloads extends React.Component {
                   padding: 20,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: onTablet ? 26 : 18 * factor
+                  fontSize: onTablet ? 20 : 18 * factor
                 }}
               >
                 Any lessons you download will be available here.
@@ -174,7 +174,7 @@ export default class Downloads extends React.Component {
                   disabled={!!item.dlding.length}
                   onPress={() => this.navigate(item)}
                   style={{
-                    padding: 5,
+                    padding: paddingInset,
                     borderTopWidth: 0.5,
                     flexDirection: 'row',
                     borderBottomWidth: 0.5,
@@ -183,7 +183,7 @@ export default class Downloads extends React.Component {
                 >
                   <FastImage
                     style={{
-                      width: '30%',
+                      width: onTablet ? '22.5%' : '30%',
                       borderRadius: 5,
                       aspectRatio: 16 / 9
                     }}
@@ -204,6 +204,7 @@ export default class Downloads extends React.Component {
                     <Text
                       style={{
                         fontSize: 18,
+                        marginBottom: 2,
                         color: 'white',
                         fontFamily: 'OpenSans-Bold'
                       }}

@@ -534,6 +534,7 @@ class VerticalVideoList extends React.Component {
                   <FastImage
                     style={{
                       flex: 1,
+                      marginVertical: 5,
                       borderRadius: 5 * factor
                     }}
                     source={{
