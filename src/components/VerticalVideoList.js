@@ -686,11 +686,7 @@ class VerticalVideoList extends React.Component {
                       <FontIcon
                         size={onTablet ? 17.5 * factor : 27.5 * factor}
                         name={'calendar-plus'}
-                        color={
-                          this.props.isMethod && !this.props.methodLevel
-                            ? colors.pianoteGrey
-                            : colors.pianoteRed
-                        }
+                        color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : !row.isAddedToList ? (
@@ -703,11 +699,7 @@ class VerticalVideoList extends React.Component {
                       <AntIcon
                         name={'plus'}
                         size={(onTablet ? 20 : 28.5) * factor}
-                        color={
-                          this.props.isMethod && !this.props.methodLevel
-                            ? colors.pianoteGrey
-                            : colors.pianoteRed
-                        }
+                        color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : row.isAddedToList ? (
@@ -720,11 +712,7 @@ class VerticalVideoList extends React.Component {
                       <AntIcon
                         name={'close'}
                         size={(onTablet ? 20 : 28.5) * factor}
-                        color={
-                          this.props.isMethod && !this.props.methodLevel
-                            ? colors.pianoteGrey
-                            : colors.pianoteRed
-                        }
+                        color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : null}

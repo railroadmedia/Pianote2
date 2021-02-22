@@ -540,11 +540,7 @@ class HorizontalVideoList extends React.Component {
                     <FontIcon
                       size={onTablet ? 12.5 * factor : 27.5 * factor}
                       name={'calendar-plus'}
-                      color={
-                        this.props.isMethod && !this.props.methodLevel
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 ) : !item.isAddedToList ? (
@@ -555,11 +551,7 @@ class HorizontalVideoList extends React.Component {
                     <AntIcon
                       name={'plus'}
                       size={onTablet ? 17.5 * factor : 25 * factor}
-                      color={
-                        this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 ) : (
@@ -570,11 +562,7 @@ class HorizontalVideoList extends React.Component {
                     <AntIcon
                       name={'close'}
                       size={onTablet ? 17.5 * factor : 25 * factor}
-                      color={
-                        this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 )}
