@@ -192,7 +192,7 @@ export default class Downloads extends React.Component {
                         d => d.key === 'thumbnail_url'
                       )?.value
                     }}
-                    resizeMode={FastImage.resizeMode.stretch}
+                    resizeMode={FastImage.resizeMode.cover}
                   />
                   <View
                     style={{

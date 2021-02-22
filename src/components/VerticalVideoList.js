@@ -385,13 +385,10 @@ class VerticalVideoList extends React.Component {
               paddingLeft: paddingInset,
               paddingVertical: (onTablet ? 5 : 7.5) * factor,
               flexDirection: 'row',
-              borderTopColor: '#ececec'
+              borderTopColor: '#ececec',
             }}
           >
-            <View
-              style={{ justifyContent: 'center' }}
-              underlayColor={'transparent'}
-            >
+            <View style={{ justifyContent: 'center', }}>
               <View
                 style={{
                   width: this.props.imageWidth,
@@ -556,8 +553,8 @@ class VerticalVideoList extends React.Component {
                 )}
               </View>
             </View>
-            <View style={{ width: 10 * factor }} />
-            <View style={{ flex: 1.5, justifyContent: 'center' }}>
+            <View style={{ width: paddingInset/2 }} />
+            <View style={{ flex: 0.85, justifyContent: 'center' }}>
               {this.props.isMethodLevel && (
                 <Text
                   style={{
@@ -670,7 +667,7 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
             {!this.props.isMethodLevel && (
-              <View style={{ paddingRight: paddingInset }}>
+              <View style={{ flex: 0.15, }}>
                 <View style={[styles.centerContent, { flex: 1,}]}>
                   {new Date(row.publishedOn) > new Date() ? (
                     <TouchableOpacity
@@ -731,122 +728,118 @@ class VerticalVideoList extends React.Component {
         <View>
           <View style={{ height: 5 * factor }} />
           {this.props.showFilter && (
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ paddingLeft: paddingInset }}>
+            <View 
+              style={{ 
+                flexDirection: 'row', 
+                flex: 1,
+                paddingLeft: paddingInset, 
+              }}
+            >
+              <View style={{ width: this.props.imageWidth + paddingInset/2 }}>
                 {this.props.showLargeTitle ? (
                   <Text
                     style={{
                       fontSize: (onTablet ? 25 : 30) * factor,
                       color: 'white',
-                      fontFamily: 'OpenSans-ExtraBold'
+                      fontFamily: 'OpenSans-ExtraBold',
+                      justifyContent: 'flex-end'
                     }}
                   >
+                    <View style={{flex: 1}}/>
                     {this.props.title}
                   </Text>
                 ) : (
-                  <>
+                  <Text
+                    style={{
+                      fontSize: (onTablet ? 12 : 18) * factor,
+                      marginBottom: 5 * factor,
+                      textAlign: 'left',
+                      fontFamily: 'RobotoCondensed-Bold',
+                      color: this.props.isMethod
+                        ? 'white'
+                        : colors.secondBackground
+                    }}
+                  >
+                    <View style={{flex: 1}}/>
+                    {this.props.title}
+                  </Text>
+                )}
+              </View>
+              <View style={{ flex: 0.85 }}>
+                {this.props.showSort && (
+                  <TouchableOpacity
+                    style={[
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row',
+                        marginRight: 2 * factor
+                      }
+                    ]}
+                    onPress={() => {
+                      this.setState({
+                        showRelevance: !this.state.showRelevance
+                      });
+                    }}
+                  >
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: (onTablet ? 12 : 18) * factor,
-                        marginBottom: 5 * factor,
-                        textAlign: 'left',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        color: this.props.isMethod
-                          ? 'white'
-                          : colors.secondBackground
+                        color: colors.pianoteRed,
+                        fontSize: (onTablet ? 10 : 14.5) * factor,
+                        fontFamily: 'OpenSans-Regular',
+                        marginRight: 3.5 * factor
                       }}
                     >
-                      {this.props.title}
+                      <View style={{flex: 1}}/>
+                      {onTablet
+                        ? sortDict[this.props.currentSort].charAt(0) +
+                          sortDict[this.props.currentSort]
+                            .substring(1)
+                            .toLowerCase()
+                        : sortDict[this.props.currentSort]}
                     </Text>
-                    <View style={{ flex: 1 }} />
-                  </>
+                    <View>
+                      <View style={{flex: 1}}/>
+                      <FontIcon
+                        size={(onTablet ? 10 : 14) * factor}
+                        name={'sort-amount-down'}
+                        color={colors.pianoteRed}
+                      />
+                    </View>
+                  </TouchableOpacity>
                 )}
               </View>
-              <View style={{ flex: 1 }} />
               {!this.props.showTitleOnly && (
                 <View
-                  style={{
-                    paddingRight: paddingInset,
-                    flexDirection: 'row'
-                  }}
+                  style={[
+                    styles.centerContent, {
+                    flexDirection: 'row',
+                    flex: 0.15,
+                  }]}
                 >
-                  {this.props.showSort && (
+                  {!this.props.hideFilterButton && (
                     <TouchableOpacity
+                      onPress={() => this.props.filterResults()}
                       style={[
                         styles.centerContent,
                         {
-                          flexDirection: 'row',
-                          marginRight: 7.5 * factor
+                          borderWidth: 1.25 * factor,
+                          borderColor: colors.pianoteRed,
+                          height: (onTablet ? 17.5 : 30) * factor,
+                          width: (onTablet ? 17.5 : 30) * factor,
+                          borderRadius: 30 * factor,
                         }
                       ]}
-                      onPress={() => {
-                        this.setState({
-                          showRelevance: !this.state.showRelevance
-                        });
-                      }}
                     >
-                      <View style={{ flex: 1 }} />
-                      <Text
-                        style={{
-                          color: colors.pianoteRed,
-                          fontSize: (onTablet ? 10 : 14.5) * factor,
-                          fontFamily: 'OpenSans-Regular',
-                          marginRight: 3.5 * factor
-                        }}
-                      >
-                        {onTablet
-                          ? sortDict[this.props.currentSort].charAt(0) +
-                            sortDict[this.props.currentSort]
-                              .substring(1)
-                              .toLowerCase()
-                          : sortDict[this.props.currentSort]}
-                      </Text>
-                      <View>
-                        <FontIcon
-                          size={(onTablet ? 10 : 14) * factor}
-                          name={'sort-amount-down'}
+                      <View style={{transform: [{ rotate: '90deg' }]}}>
+                        <IonIcon
+                          size={(onTablet ? 9 : 14) * factor}
+                          name={'md-options'}
                           color={colors.pianoteRed}
                         />
                       </View>
-                      <View style={{ flex: 1 }} />
                     </TouchableOpacity>
                   )}
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    {!this.props.hideFilterButton && (
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.props.filterResults();
-                        }}
-                        style={[
-                          styles.centerContent,
-                          {
-                            borderWidth: 1.25 * factor,
-                            borderColor: colors.pianoteRed,
-                            height: (onTablet ? 17.5 : 30) * factor,
-                            width: (onTablet ? 17.5 : 30) * factor,
-                            borderRadius: 30 * factor
-                          }
-                        ]}
-                      >
-                        <View style={{ flex: 1 }} />
-                        <View
-                          style={{
-                            transform: [{ rotate: '90deg' }]
-                          }}
-                        >
-                          <IonIcon
-                            size={(onTablet ? 9 : 14) * factor}
-                            name={'md-options'}
-                            color={colors.pianoteRed}
-                          />
-                        </View>
-                        <View style={{ flex: 1 }} />
-                      </TouchableOpacity>
-                    )}
-                    <View style={{ flex: 1 }} />
-                  </View>
                 </View>
               )}
             </View>
