@@ -30,7 +30,7 @@
     "opentype.js": "^1.1.0",
     "patch-package": "^6.2.2",
     "react": "16.9.0",
-    "react-native": "^0.61.4",
+    "react-native": "^0.63.4",
     "react-native-add-calendar-event": "^4.0.0",
     "react-native-airplay-ios": "git+https://github.com/gazedash/react-native-airplay-ios.git#1.0.9",
     "react-native-axios": "^0.17.1",
