@@ -693,7 +693,7 @@ const localStyles = StyleSheet.create({
     fontFamily: 'OpenSans-ExtraBold',
     fontSize: (DeviceInfo.isTablet() ? 12 : 15) * factor,
     textAlign: 'left',
-    paddingLeft: 15,
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
     color: 'white'
   },
   notification: {
@@ -731,7 +731,7 @@ const localStyles = StyleSheet.create({
     fontSize: (DeviceInfo.isTablet() ? 10 : 14) * factor
   },
   notificationText: {
-    paddingLeft: 15,
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
     fontSize: (DeviceInfo.isTablet() ? 14 : 18) * factor,
     fontFamily: 'OpenSans-ExtraBold',
     color: '#445f73'
