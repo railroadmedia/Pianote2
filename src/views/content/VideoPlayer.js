@@ -535,7 +535,7 @@ export default class VideoPlayer extends React.Component {
           </Text>
         </View>
 
-        <View style={{ flex: 1, paddingLeft: 10 * factor }}>
+        <View style={{ flex: 1, paddingLeft: paddingInset }}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -643,7 +643,7 @@ export default class VideoPlayer extends React.Component {
               </View>
               {this.userId === item.user_id && (
                 <TouchableOpacity
-                  style={{ marginLeft: 15 }}
+                  style={{ marginLeft: paddingInset }}
                   onPress={() => this.deleteComment(item.id)}
                 >
                   <AntIcon
@@ -1116,11 +1116,10 @@ export default class VideoPlayer extends React.Component {
                         fontSize: (onTablet ? 12 : 20) * factor,
                         marginTop: 10 * factor,
                         marginBottom: 5 * factor,
-                        fontWeight: 'bold',
-                        fontFamily: 'OpenSans-Regular',
+                        fontFamily: 'OpenSans-Bold',
                         textAlign: 'center',
                         color: 'white',
-                        paddingHorizontal: 15
+                        paddingHorizontal: paddingInset
                       }}
                     >
                       {this.state.lessonTitle}
@@ -1314,7 +1313,7 @@ export default class VideoPlayer extends React.Component {
                     <>
                       <View
                         key={'assingmentsHeader'}
-                        style={{ paddingLeft: 10 * factor, paddingBottom: 10 }}
+                        style={{ paddingLeft: paddingInset, paddingBottom: 10 }}
                       >
                         <Text
                           style={{
@@ -1455,7 +1454,7 @@ export default class VideoPlayer extends React.Component {
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: (onTablet ? 10 : 13) * factor,
                                   color: 'white',
-                                  paddingLeft: 10 * factor
+                                  paddingLeft: paddingInset
                                 }}
                               >
                                 Add a comment...
@@ -1713,7 +1712,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginLeft: 10 * factor,
+                  marginLeft: paddingInset,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
                     : colors.secondBackground
