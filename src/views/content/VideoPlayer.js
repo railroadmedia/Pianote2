@@ -270,12 +270,7 @@ export default class VideoPlayer extends React.Component {
           content.post.type === 'song-part' && content.post.parent
             ? new ContentModel(content.post.parent).getField('artist')
             : content.getField('artist'),
-        instructor:
-          content.post.type === 'learning-path-level'
-            ? content.post.instructors
-            : content.post.type === 'course-part' && content.post.parent
-            ? new ContentModel(content.post.parent).getFieldMulti('instructor')
-            : content.getFieldMulti('instructor'),
+        instructor: content.post.instructors,
         isLoadingAll: false,
         publishedOn: content.publishedOn,
         relatedLessons: rl,
@@ -905,10 +900,7 @@ export default class VideoPlayer extends React.Component {
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
     let instructorTag = instructor
-      ? `${instructor
-          .map(i => i.fields.find(f => f.key === 'name').value)
-          .join(', ')
-          .toUpperCase()} | `
+      ? `${instructor.join(', ').toUpperCase()} | `
       : '';
     switch (type) {
       case 'song-part':
