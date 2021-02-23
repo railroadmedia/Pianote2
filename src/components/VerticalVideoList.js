@@ -383,7 +383,7 @@ class VerticalVideoList extends React.Component {
             style={{
               flex: 1,
               paddingLeft: paddingInset,
-              paddingVertical: (onTablet ? 5 : 7.5) * factor,
+              paddingVertical: (onTablet ? 5 : 5) * factor,
               flexDirection: 'row',
               borderTopColor: '#ececec',
             }}
@@ -411,7 +411,6 @@ class VerticalVideoList extends React.Component {
                     }}
                   />
                 )}
-
                 <View
                   style={[
                     styles.centerContent,
@@ -420,14 +419,13 @@ class VerticalVideoList extends React.Component {
                       width: '100%',
                       aspectRatio: this.props.isSquare ? 1 : 16 / 9,
                       zIndex: 20,
-                      paddingBottom: 10 * factor
                     }
                   ]}
                 >
                   {row.isStarted ? (
                     <Progress
-                      height={onTablet ? 45 : 40 * factor}
-                      width={onTablet ? 45 : 40 * factor}
+                      height={onTablet ? 40 : 32.5 * factor}
+                      width={onTablet ? 40 : 32.5 * factor}
                       fill={'white'}
                     />
                   ) : row.isCompleted ? (
@@ -438,7 +436,6 @@ class VerticalVideoList extends React.Component {
                     />
                   ) : null}
                 </View>
-
                 {this.props.showLines && (
                   <>
                     <View
@@ -487,7 +484,6 @@ class VerticalVideoList extends React.Component {
                     </View>
                   </>
                 )}
-
                 {this.props.isMethodLevel && (
                   <View
                     style={{
@@ -531,7 +527,6 @@ class VerticalVideoList extends React.Component {
                   <FastImage
                     style={{
                       flex: 1,
-                      marginVertical: 5,
                       borderRadius: 5 * factor
                     }}
                     source={{
