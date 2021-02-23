@@ -569,7 +569,6 @@ class VerticalVideoList extends React.Component {
                 style={{
                   fontSize: (onTablet ? 10 : 16) * factor,
                   textAlign: 'left',
-                  paddingRight: 3,
                   fontWeight: 'bold',
                   fontFamily: 'OpenSans-Regular',
                   color: 'white'
@@ -747,7 +746,7 @@ class VerticalVideoList extends React.Component {
                   <Text
                     style={{
                       fontSize: (onTablet ? 12 : 18) * factor,
-                      marginBottom: 5 * factor,
+                      marginBottom: 5 * factor,      
                       textAlign: 'left',
                       fontFamily: 'RobotoCondensed-Bold',
                       color: this.props.isMethod

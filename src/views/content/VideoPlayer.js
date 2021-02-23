@@ -1764,7 +1764,7 @@ export default class VideoPlayer extends React.Component {
         <Modal
           key={'resourceDownload'}
           isVisible={this.state.showResDownload}
-          onDismiss={() => this.modalDismissed()}
+          onDismiss={() => this.modalDismissed}
           style={[
             {
               margin: 0,
