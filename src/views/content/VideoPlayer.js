@@ -535,7 +535,7 @@ export default class VideoPlayer extends React.Component {
           </Text>
         </View>
 
-        <View style={{ flex: 1, paddingLeft: 10 * factor }}>
+        <View style={{ flex: 1, paddingLeft: paddingInset }}>
           <Text
             style={{
               fontFamily: 'OpenSans-Regular',
@@ -643,7 +643,7 @@ export default class VideoPlayer extends React.Component {
               </View>
               {this.userId === item.user_id && (
                 <TouchableOpacity
-                  style={{ marginLeft: 15 }}
+                  style={{ marginLeft: paddingInset }}
                   onPress={() => this.deleteComment(item.id)}
                 >
                   <AntIcon
@@ -826,7 +826,7 @@ export default class VideoPlayer extends React.Component {
           }}
           style={{
             paddingHorizontal: 10 * factor,
-            paddingVertical: 10,
+            paddingVertical: 5,
             borderBottomColor: colors.secondBackground,
             borderBottomWidth: 1,
             justifyContent: 'space-between',
@@ -835,8 +835,9 @@ export default class VideoPlayer extends React.Component {
           }}
         >
           <Text
+            numberOfLines={1}
             style={{
-              fontSize: 18 * factor,
+              fontSize: (onTablet ? 12 : 16) * factor,
               color: colors.secondBackground,
               fontFamily: 'RobotoCondensed-Bold',
               maxWidth: '90%'
@@ -848,13 +849,15 @@ export default class VideoPlayer extends React.Component {
           {row.progress === 100 ? (
             <AntIcon
               name={'checkcircle'}
-              size={25 * factor}
+              size={(onTablet ? 15 : 25) * factor}
+              style={{paddingVertical: 5,}}
               color={colors.pianoteRed}
             />
           ) : (
             <EntypoIcon
               name={'chevron-thin-right'}
-              size={20 * factor}
+              size={(onTablet ? 15 : 20) * factor}
+              style={{paddingVertical: 5,}}
               color={colors.secondBackground}
             />
           )}
@@ -1113,18 +1116,17 @@ export default class VideoPlayer extends React.Component {
                         fontSize: (onTablet ? 12 : 20) * factor,
                         marginTop: 10 * factor,
                         marginBottom: 5 * factor,
-                        fontWeight: 'bold',
-                        fontFamily: 'OpenSans-Regular',
+                        fontFamily: 'OpenSans-Bold',
                         textAlign: 'center',
                         color: 'white',
-                        paddingHorizontal: 15
+                        paddingHorizontal: paddingInset
                       }}
                     >
                       {this.state.lessonTitle}
                     </Text>
                     <Text
                       style={{
-                        fontSize: (onTablet ? 10 : 16) * factor,
+                        fontSize: (onTablet ? 10 : 14) * factor,
                         fontFamily: 'OpenSans-Regular',
                         textAlign: 'center',
                         color: colors.secondBackground,
@@ -1311,11 +1313,11 @@ export default class VideoPlayer extends React.Component {
                     <>
                       <View
                         key={'assingmentsHeader'}
-                        style={{ paddingLeft: 15, paddingBottom: 10 }}
+                        style={{ paddingLeft: paddingInset, paddingBottom: 10 }}
                       >
                         <Text
                           style={{
-                            fontSize: 18 * factor,
+                            fontSize: (onTablet ? 12 : 18) * factor,
                             fontFamily: 'RobotoCondensed-Bold',
                             color: colors.secondBackground
                           }}
@@ -1396,7 +1398,6 @@ export default class VideoPlayer extends React.Component {
                           </Text>
                           {global.isConnected && (
                             <TouchableOpacity
-                              style={{ marginRight: factor * 10 }}
                               onPress={() =>
                                 this.setState({ showCommentSort: true })
                               }
@@ -1453,7 +1454,7 @@ export default class VideoPlayer extends React.Component {
                                   fontFamily: 'OpenSans-Regular',
                                   fontSize: (onTablet ? 10 : 13) * factor,
                                   color: 'white',
-                                  paddingLeft: 10 * factor
+                                  paddingLeft: paddingInset
                                 }}
                               >
                                 Add a comment...
@@ -1695,7 +1696,7 @@ export default class VideoPlayer extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: 'RobotoCondensed-Bold',
-                    fontSize: (onTablet ? 12 : 20) * factor,
+                    fontSize: (onTablet ? 12 : 17.5) * factor,
                     paddingVertical: 10
                   }}
                 >
@@ -1711,7 +1712,7 @@ export default class VideoPlayer extends React.Component {
                   borderWidth: 2,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginLeft: 10 * factor,
+                  marginLeft: paddingInset,
                   borderColor: this.state.nextLesson
                     ? colors.pianoteRed
                     : colors.secondBackground
@@ -1762,7 +1763,7 @@ export default class VideoPlayer extends React.Component {
         <Modal
           key={'resourceDownload'}
           isVisible={this.state.showResDownload}
-          onDismiss={() => this.modalDismissed()}
+          onDismiss={() => this.modalDismissed}
           style={[
             {
               margin: 0,
@@ -2022,10 +2023,10 @@ export default class VideoPlayer extends React.Component {
                     style={{
                       fontFamily: 'OpenSans-Regular',
                       fontSize: (onTablet ? 10 : 14) * factor,
-                      width: onTablet ? '80%' : '70%',
+                      flex: 1,
                       backgroundColor: colors.mainBackground,
                       color: colors.secondBackground,
-                      paddingVertical: 10 * factor
+                      paddingVertical: 10 * factor,
                     }}
                     onSubmitEditing={() => {
                       this.makeComment();

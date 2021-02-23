@@ -37,15 +37,14 @@ class AddToCalendar extends React.Component {
       >
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.container}>
-            <Text style={[styles.modalHeaderText, localStyles.addToCalendar]}>
+            <Text style={[styles.modalHeaderText, localStyles.addToCalendar, {marginTop: 10 * factor,}]}>
               ADD TO CALENDAR
             </Text>
             <Text style={[styles.modalBodyText, localStyles.addToCalendar]}>
-              Add this lesson to your calendar to be notified when it's
-              available
+              Add this lesson to your calendar to{'\n'} be notified when it's available
             </Text>
             <FontIcon
-              size={60 * factor}
+              size={(onTablet ? 45 : 60) * factor}
               name={'calendar-plus'}
               color={colors.pianoteRed}
               style={localStyles.calendarIcon}
@@ -57,7 +56,8 @@ class AddToCalendar extends React.Component {
               <Text
                 style={[
                   styles.modalButtonText,
-                  localStyles.confirmAdditionText
+                  localStyles.confirmAdditionText, 
+                  {height: (onTablet ? 25 : 40) * factor,}
                 ]}
               >
                 CONFIRM ADDITION
@@ -79,8 +79,8 @@ const localStyles = StyleSheet.create({
     paddingVertical: 3.5 * factor
   },
   addToCalendar: {
-    marginTop: 12.5 * factor,
-    paddingHorizontal: 40
+    marginTop: 5 * factor,
+    paddingHorizontal: 25 * factor
   },
   calendarIcon: {
     paddingTop: 7.5 * factor,

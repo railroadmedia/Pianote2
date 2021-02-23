@@ -63,41 +63,43 @@ export default class VideoPlayerSong extends React.Component {
             backgroundColor: colors.mainBackground
           }}
         >
-          <View style={{ height: 25 * factor }} />
           {!this.state.hideTitles && (
             <>
               <TouchableOpacity
                 onPress={this.props.onX}
                 style={{
                   position: 'absolute',
-                  left: 20,
-                  top: 20,
+                  right: paddingInset,
+                  top: paddingInset,
                   zIndex: 1
                 }}
               >
-                <AntIcon name={'close'} size={30 * factor} color={'#ffffff'} />
+                <AntIcon 
+                  name={'close'} 
+                  size={(onTablet ? 20 : 27.5) * factor}
+                  color={'#ffffff'} 
+                />
               </TouchableOpacity>
               <Text
                 key={'assignmentNumber'}
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 16 * factor,
-                  fontWeight: '700',
+                  padding: paddingInset,
+                  fontFamily: 'OpenSans-Bold',
+                  fontSize: (onTablet ? 12 : 16) * factor,
                   textAlign: 'center',
-                  color: colors.secondBackground
+                  color: colors.secondBackground,
                 }}
               >
                 ASSIGNMENT #{index}
               </Text>
-              <View style={{ height: 10 * factor }} />
               <Text
                 key={'assignmentName'}
                 style={{
-                  fontFamily: 'OpenSans-Regular',
-                  fontSize: 28 * factor,
-                  fontWeight: '700',
+                  fontSize: (onTablet ? 12 : 20) * factor,
+                  fontFamily: 'OpenSans-Bold',
                   textAlign: 'center',
-                  color: '#ffffff'
+                  color: 'white',
+                  paddingHorizontal: paddingInset
                 }}
               >
                 {title}
@@ -142,7 +144,7 @@ export default class VideoPlayerSong extends React.Component {
                           fontFamily: 'OpenSans-Regular',
                           fontWeight: '700',
                           color: 'grey',
-                          fontSize: 12 * factor,
+                          fontSize: (onTablet ? 9 : 12) * factor,
                           alignSelf: 'center'
                         }}
                       >
@@ -155,7 +157,7 @@ export default class VideoPlayerSong extends React.Component {
 
               <View
                 style={{
-                  height: 25 * factor,
+                  height: 1 * factor,
                   borderBottomColor: colors.secondBackground,
                   borderBottomWidth: 1 * factor
                 }}
@@ -164,11 +166,10 @@ export default class VideoPlayerSong extends React.Component {
                 <View key={'blurb'} style={{ width: '100%' }}>
                   <Text
                     style={{
-                      paddingTop: '5%',
-                      paddingBottom: '5%',
-                      paddingLeft: '5%',
-                      paddingRight: '5%',
-                      fontSize: 16 * factor,
+                      paddingVertical: '2%',
+                      paddingHorizontal: '5%',
+                      textAlign: 'center',
+                      fontSize: (onTablet ? 10 : 16) * factor,
                       fontFamily: 'OpenSans-Regular',
                       color: '#ffffff'
                     }}
@@ -195,29 +196,28 @@ export default class VideoPlayerSong extends React.Component {
           )}
         </ScrollView>
         {!this.state.hideTitles && this.context.isConnected && (
-          <View style={{ backgroundColor: colors.mainBackground }}>
+          <View style={{ backgroundColor: colors.mainBackground, paddingVertical: 10 }}>
             {slug && (
               <TouchableOpacity
                 onPress={() => this.setState({ showSoundSlice: true })}
                 style={[
                   styles.centerContent,
                   {
-                    borderWidth: 2.5 * factor,
+                    minHeight: (onTablet ? 30 : 50) * factor,
+                    borderWidth: 2 * factor,
                     borderColor: '#fb1b2f',
                     width: '90%',
                     alignSelf: 'center',
-                    borderRadius: 100 * factor,
-                    marginTop: 10 * factor,
-                    marginBottom: 5 * factor
+                    borderRadius: 300,
+                    marginBottom: onTablet ? 10 : 5
                   }
                 ]}
               >
                 <Text
                   style={{
-                    fontSize: 16 * factor,
-                    fontFamily: 'OpenSans-Regular',
-                    fontWeight: '800',
                     color: '#fb1b2f',
+                    fontFamily: 'RobotoCondensed-Bold',
+                    fontSize: (onTablet ? 14 : 17.5) * factor,
                     paddingVertical: 10
                   }}
                 >
@@ -230,23 +230,19 @@ export default class VideoPlayerSong extends React.Component {
               style={[
                 styles.centerContent,
                 {
-                  borderWidth: 2.5 * factor,
-                  borderColor: '#fb1b2f',
+                  minHeight: (onTablet ? 30 : 50) * factor,
                   backgroundColor: '#fb1b2f',
                   width: '90%',
                   alignSelf: 'center',
-                  borderRadius: 100 * factor,
-                  marginTop: 5 * factor,
-                  marginBottom: 10 * factor
+                  borderRadius: 300,
                 }
               ]}
             >
               <Text
                 style={{
-                  fontSize: 16 * factor,
-                  fontFamily: 'OpenSans-Regular',
-                  fontWeight: '800',
                   color: 'white',
+                  fontFamily: 'RobotoCondensed-Bold',
+                  fontSize: (onTablet ? 14 : 17.5) * factor,
                   paddingVertical: 10
                 }}
               >

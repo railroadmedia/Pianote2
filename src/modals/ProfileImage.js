@@ -66,11 +66,11 @@ const localStyles = StyleSheet.create({
   },
   title: {
     paddingHorizontal: 40,
-    marginTop: 20 * factor
+    marginTop: 10 * factor
   },
   tryAgain: {
     paddingHorizontal: 40,
-    marginTop: 20 * factor
+    marginTop: 5 * factor
   },
   tryAgainTextContainer: {
     paddingHorizontal: 20,
@@ -78,7 +78,7 @@ const localStyles = StyleSheet.create({
   },
   tryAgainText: {
     color: '#fb1b2f',
-    marginBottom: 5
+    marginTop: 10
   }
 });
 

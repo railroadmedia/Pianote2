@@ -135,7 +135,7 @@ export default class Downloads extends React.Component {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
               }}
             >
               <Text
@@ -161,7 +161,7 @@ export default class Downloads extends React.Component {
                   padding: 20,
                   color: 'white',
                   textAlign: 'center',
-                  fontSize: onTablet ? 26 : 18 * factor
+                  fontSize: onTablet ? 20 : 18 * factor
                 }}
               >
                 Any lessons you download will be available here.
@@ -174,36 +174,40 @@ export default class Downloads extends React.Component {
                   disabled={!!item.dlding.length}
                   onPress={() => this.navigate(item)}
                   style={{
-                    padding: 5,
-                    borderTopWidth: 0.5,
+                    padding: paddingInset,
                     flexDirection: 'row',
                     borderBottomWidth: 0.5,
-                    borderColor: 'lightgrey'
+                    borderColor: 'lightgrey',
                   }}
                 >
-                  <FastImage
+                  <View 
                     style={{
-                      width: '30%',
-                      borderRadius: 5,
-                      aspectRatio: 16 / 9
+                      width: onTablet ? '22.5%' : '26%',
+                      marginRight: paddingInset,
                     }}
-                    source={{
-                      uri: item[type]?.data?.find(
-                        d => d.key === 'thumbnail_url'
-                      )?.value
-                    }}
-                    resizeMode={FastImage.resizeMode.stretch}
-                  />
+                  >
+                    <FastImage
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: 2,
+                        aspectRatio: 16 / 9,
+                        
+                      }}
+                      source={{uri: item[type]?.data?.find(d => d.key === 'thumbnail_url')?.value}}
+                      resizeMode={FastImage.resizeMode.cover}
+                    />
+                  </View>
                   <View
                     style={{
                       flex: 1,
-                      padding: 10,
                       justifyContent: 'center'
                     }}
                   >
                     <Text
                       style={{
-                        fontSize: 18,
+                        fontSize: (onTablet ? 10 : 16) * factor,
+                        marginBottom: 2,
                         color: 'white',
                         fontFamily: 'OpenSans-Bold'
                       }}
@@ -212,12 +216,12 @@ export default class Downloads extends React.Component {
                     </Text>
                     <Text
                       style={{
-                        color: 'white'
+                        color: 'white',
+                        fontSize: (onTablet ? 8 : 12) * factor,
                       }}
                     >
-                      {item[type]?.type?.replace('-', ' ')} |{' '}
-                      {parseInt(item.sizeInBytes / 1024 / 1024)}
-                      MB
+                      {item[type]?.type?.replace('-', ' ').replace('-', ' ')} |{' '}
+                      {parseInt(item.sizeInBytes / 1024 / 1024)}MB
                     </Text>
                   </View>
                   {!!item.dlding.length && (

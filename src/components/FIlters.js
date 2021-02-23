@@ -271,7 +271,7 @@ export default class Filters extends React.Component {
           />
           <View style={styles.childHeader}>
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={{ flex: 1, paddingLeft: paddingInset }}
               onPress={() => this.props.hideFilters()}
             >
               <Back

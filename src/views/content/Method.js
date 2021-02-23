@@ -24,7 +24,6 @@ import Orientation from 'react-native-orientation-locker';
 import ResetIcon from '../../components/ResetIcon';
 import NextVideo from '../../components/NextVideo';
 import StartIcon from '../../components/StartIcon';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import RestartCourse from '../../modals/RestartCourse';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
@@ -112,6 +111,7 @@ export default class Method extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     const response = new ContentModel(await methodService.getMethod());
+    console.log(response)
     const newContent = response.post.levels.map(data => {
       return new ContentModel(data);
     });
@@ -197,14 +197,17 @@ export default class Method extends React.Component {
       return this.context.showNoConnectionAlert();
     }
 
-    resetProgress(this.state.id);
+    console.log('RESET: ', this.state.id)
+    this.setState({items: [], showRestartCourse: false,})
+
+    await resetProgress(this.state.id);
 
     this.setState(
       {
         methodIsStarted: false,
+        methodIsCompleted: false, 
         isStarted: false,
         isCompleted: false,
-        showRestartCourse: false,
         isLoadingAll: true,
         refreshing: true
       },
@@ -315,7 +318,7 @@ export default class Method extends React.Component {
               >
                 <View style={{ flex: 1 }} />
                 <View style={{ width: '45%' }}>
-                  {this.state.methodIsCompleted ? (
+                  {this.state.methodIsCompleted ? ( 
                     <ResetIcon
                       isMethod={true}
                       pressed={() =>
@@ -341,38 +344,36 @@ export default class Method extends React.Component {
                       />
                     )
                   )}
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
                   <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      right: -50 * factor,
-                      zIndex: 5,
-                      elevation: 5
-                    }}
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
-                  >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={(onTablet ? 15 : 22.5) * factor}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
                       style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 2,
-                        fontSize: (onTablet ? 8 : 12) * factor
+                        flex: 0.5,
+                        alignItems: 'center'
+                      }}
+                      onPress={() => {
+                        this.setState({
+                          showInfo: !this.state.showInfo
+                        });
                       }}
                     >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
+                      <AntIcon
+                        name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
+                        size={(onTablet ? 15 : 20) * factor}
+                        color={colors.pianoteRed}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: 'OpenSans-Regular',
+                          color: 'white',
+                          marginTop: 2,
+                          fontSize: (onTablet ? 8 : 12) * factor
+                        }}
+                      >
+                        Info
+                      </Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
             </View>
           </ImageBackground>

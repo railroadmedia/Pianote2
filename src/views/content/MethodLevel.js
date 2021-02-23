@@ -295,33 +295,30 @@ export default class MethodLevel extends React.Component {
                   alignItems: 'center'
                 }}
               >
-                <View style={{ flex: 1 }} />
-                <View style={{ width: '45%' }}>
+                <View style={{  flex: 1, flexDirection: 'row' }}>
+                  <View style={{flex: 0.5}}/>
                   <TouchableOpacity
                     style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: -50 * factor,
-                      zIndex: 5,
-                      elevation: 5
+                      flex: 0.5,
+                      alignItems: 'center',
                     }}
                     onPress={() => {
                       this.toggleMyList();
                     }}
                   >
                     <View
-                      style={[styles.centerContent, { flexDirection: 'row' }]}
+                      style={[styles.centerContent]}
                     >
                       {!this.state.isAddedToList ? (
                         <AntIcon
                           name={'plus'}
-                          size={(onTablet ? 20 : 27.5) * factor}
+                          size={(onTablet ? 18 : 25) * factor}
                           color={colors.pianoteRed}
                         />
                       ) : (
                         <AntIcon
                           name={'close'}
-                          size={(onTablet ? 20 : 27.5) * factor}
+                          size={(onTablet ? 18 : 25) * factor}
                           color={colors.pianoteRed}
                         />
                       )}
@@ -330,13 +327,14 @@ export default class MethodLevel extends React.Component {
                       style={{
                         fontFamily: 'OpenSans-Regular',
                         color: 'white',
-                        marginTop: 2,
                         fontSize: (onTablet ? 8 : 12) * factor
                       }}
                     >
                       {this.state.isAddedToList ? 'Added' : 'My List'}
                     </Text>
                   </TouchableOpacity>
+                </View>
+                <View style={{ width: '45%' }}>
                   {this.state.isCompleted ? (
                     <ResetIcon
                       isMethod={true}
@@ -361,44 +359,43 @@ export default class MethodLevel extends React.Component {
                       }
                     />
                   ) : null}
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
                   <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      right: -50 * factor,
-                      zIndex: 5,
-                      elevation: 5
-                    }}
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
-                  >
-                    <View
-                      style={[styles.centerContent, { flexDirection: 'row' }]}
-                    >
-                      <AntIcon
-                        name={
-                          this.state.showInfo ? 'infocirlce' : 'infocirlceo'
-                        }
-                        size={(onTablet ? 15 : 22.5) * factor}
-                        color={colors.pianoteRed}
-                      />
-                    </View>
-                    <Text
                       style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 2,
-                        fontSize: (onTablet ? 8 : 12) * factor
+                        flex: 0.5,
+                        alignItems: 'center',
+                      }}
+                      onPress={() => {
+                        this.setState({
+                          showInfo: !this.state.showInfo
+                        });
                       }}
                     >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
+                      <View
+                        style={[styles.centerContent, { flexDirection: 'row' }]}
+                      >
+                        <AntIcon
+                          name={
+                            this.state.showInfo ? 'infocirlce' : 'infocirlceo'
+                          }
+                          size={(onTablet ? 15 : 20) * factor}
+                          color={colors.pianoteRed}
+                        />
+                      </View>
+                      <Text
+                        style={{
+                          fontFamily: 'OpenSans-Regular',
+                          color: 'white',
+                          marginTop: 2,
+                          fontSize: (onTablet ? 8 : 12) * factor
+                        }}
+                      >
+                        Info
+                      </Text>
+                    </TouchableOpacity>
+                  <View style={{flex: 0.5}}/>
                 </View>
-                <View style={{ flex: 1 }} />
               </View>
             </View>
           </ImageBackground>

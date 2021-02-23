@@ -72,8 +72,8 @@ class NavMenuHeaders extends React.Component {
               ? 0
               : 4,
             paddingBottom: (onTablet ? 5 : 10) * factor,
-            paddingRight: 10 * factor,
-            paddingLeft: 5 * factor
+            paddingRight: paddingInset,
+            paddingLeft: 2 * factor,
           }}
         >
           <TouchableOpacity
@@ -103,7 +103,7 @@ class NavMenuHeaders extends React.Component {
               width: (onTablet ? 0.12 : 0.25) * width,
               flexDirection: 'row',
               marginRight: 5 * factor,
-              paddingLeft: onTablet ? 10 : 0
+              paddingLeft: paddingInset
             }}
           >
             <Pianote fill={'#fb1b2f'} />

@@ -83,7 +83,6 @@ class Lessons extends React.Component {
 
   componentDidMount = () => {
     Orientation.addDeviceOrientationListener(this.orientationListener);
-
     AsyncStorage.multiGet([
       'totalXP',
       'rank',
@@ -536,7 +535,7 @@ class Lessons extends React.Component {
                   items={this.state.progressLessons}
                 />
               )}
-              <View style={{ height: onTablet ? -10 : 10 * factor }} />
+              <View style={{ height: 10 }} />
               {onTablet ? (
                 <HorizontalVideoList
                   isMethod={true}

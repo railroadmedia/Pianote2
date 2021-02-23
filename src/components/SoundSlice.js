@@ -6,6 +6,7 @@ import { View, Dimensions, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { withNavigation } from 'react-navigation';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import IdleTimerManager from 'react-native-idle-timer';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -19,6 +20,14 @@ class SoundSlice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    IdleTimerManager.setIdleTimerDisabled(true);
+  }
+
+  componentWillUnmount() {
+    IdleTimerManager.setIdleTimerDisabled(false);
   }
 
   render = () => {

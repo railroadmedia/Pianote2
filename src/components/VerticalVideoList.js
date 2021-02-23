@@ -302,16 +302,13 @@ class VerticalVideoList extends React.Component {
           <View
             style={{
               flex: 1,
-              paddingLeft: 10 * factor,
-              paddingVertical: (onTablet ? 5 : 7.5) * factor,
+              paddingLeft: paddingInset,
+              paddingVertical: (onTablet ? 5 : 5) * factor,
               flexDirection: 'row',
               borderTopColor: '#ececec'
             }}
           >
-            <View
-              style={{ justifyContent: 'center' }}
-              underlayColor={'transparent'}
-            >
+            <View style={{ justifyContent: 'center' }}>
               <View
                 style={{
                   width: this.props.imageWidth,
@@ -334,7 +331,6 @@ class VerticalVideoList extends React.Component {
                     }}
                   />
                 )}
-
                 <View
                   style={[
                     styles.centerContent,
@@ -342,15 +338,14 @@ class VerticalVideoList extends React.Component {
                       position: 'absolute',
                       width: '100%',
                       aspectRatio: this.props.isSquare ? 1 : 16 / 9,
-                      zIndex: 20,
-                      paddingBottom: 10 * factor
+                      zIndex: 20
                     }
                   ]}
                 >
                   {row.isStarted ? (
                     <Progress
-                      height={onTablet ? 45 : 40 * factor}
-                      width={onTablet ? 45 : 40 * factor}
+                      height={onTablet ? 40 : 32.5 * factor}
+                      width={onTablet ? 40 : 32.5 * factor}
                       fill={'white'}
                     />
                   ) : row.isCompleted ? (
@@ -361,7 +356,6 @@ class VerticalVideoList extends React.Component {
                     />
                   ) : null}
                 </View>
-
                 {this.props.showLines && (
                   <>
                     <View
@@ -410,7 +404,6 @@ class VerticalVideoList extends React.Component {
                     </View>
                   </>
                 )}
-
                 {this.props.isMethodLevel && (
                   <View
                     style={{
@@ -475,8 +468,8 @@ class VerticalVideoList extends React.Component {
                 )}
               </View>
             </View>
-            <View style={{ width: 10 * factor }} />
-            <View style={{ flex: 1.5, justifyContent: 'center' }}>
+            <View style={{ width: paddingInset / 2 }} />
+            <View style={{ flex: 0.85, justifyContent: 'center' }}>
               {this.props.isMethodLevel && (
                 <Text
                   style={{
@@ -496,7 +489,6 @@ class VerticalVideoList extends React.Component {
                 style={{
                   fontSize: (onTablet ? 10 : 16) * factor,
                   textAlign: 'left',
-                  paddingRight: 3,
                   fontWeight: 'bold',
                   fontFamily: 'OpenSans-Regular',
                   color: 'white'
@@ -515,7 +507,7 @@ class VerticalVideoList extends React.Component {
                       : colors.secondBackground,
                     textAlign: 'left',
                     fontFamily: 'OpenSans-Regular',
-                    paddingRight: 15
+                    paddingRight: paddingInset
                   }}
                 >
                   {row.description}
@@ -589,7 +581,7 @@ class VerticalVideoList extends React.Component {
               </View>
             </View>
             {!this.props.isMethodLevel && (
-              <View style={{ paddingRight: 15 * factor }}>
+              <View style={{ flex: 0.15 }}>
                 <View style={[styles.centerContent, { flex: 1 }]}>
                   {new Date(row.publishedOn) > new Date() ? (
                     <TouchableOpacity
@@ -605,11 +597,7 @@ class VerticalVideoList extends React.Component {
                       <FontIcon
                         size={onTablet ? 17.5 * factor : 27.5 * factor}
                         name={'calendar-plus'}
-                        color={
-                          this.props.isMethod && !this.props.methodLevel
-                            ? colors.pianoteGrey
-                            : colors.pianoteRed
-                        }
+                        color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : !row.isAddedToList ? (
@@ -622,11 +610,7 @@ class VerticalVideoList extends React.Component {
                       <AntIcon
                         name={'plus'}
                         size={(onTablet ? 20 : 28.5) * factor}
-                        color={
-                          this.props.isMethod && !this.props.methodLevel
-                            ? colors.pianoteGrey
-                            : colors.pianoteRed
-                        }
+                        color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : row.isAddedToList ? (
@@ -639,11 +623,7 @@ class VerticalVideoList extends React.Component {
                       <AntIcon
                         name={'close'}
                         size={(onTablet ? 20 : 28.5) * factor}
-                        color={
-                          this.props.isMethod && !this.props.methodLevel
-                            ? colors.pianoteGrey
-                            : colors.pianoteRed
-                        }
+                        color={colors.pianoteRed}
                       />
                     </TouchableOpacity>
                   ) : null}
@@ -662,85 +642,118 @@ class VerticalVideoList extends React.Component {
         <View>
           <View style={{ height: 5 * factor }} />
           {this.props.showFilter && (
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ paddingLeft: 10 * factor }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                paddingLeft: paddingInset
+              }}
+            >
+              <View style={{ width: this.props.imageWidth + paddingInset / 2 }}>
                 {this.props.showLargeTitle ? (
                   <Text
                     style={{
                       fontSize: (onTablet ? 25 : 30) * factor,
                       color: 'white',
-                      fontFamily: 'OpenSans-ExtraBold'
+                      fontFamily: 'OpenSans-ExtraBold',
+                      justifyContent: 'flex-end'
                     }}
                   >
+                    <View style={{ flex: 1 }} />
                     {this.props.title}
                   </Text>
                 ) : (
-                  <>
+                  <Text
+                    style={{
+                      fontSize: (onTablet ? 12 : 18) * factor,
+                      marginBottom: 5 * factor,
+                      textAlign: 'left',
+                      fontFamily: 'RobotoCondensed-Bold',
+                      color: this.props.isMethod
+                        ? 'white'
+                        : colors.secondBackground
+                    }}
+                  >
+                    <View style={{ flex: 1 }} />
+                    {this.props.title}
+                  </Text>
+                )}
+              </View>
+              <View style={{ flex: 0.85 }}>
+                {this.props.showSort && (
+                  <TouchableOpacity
+                    style={[
+                      styles.centerContent,
+                      {
+                        flexDirection: 'row',
+                        marginRight: 2 * factor
+                      }
+                    ]}
+                    onPress={() => {
+                      this.setState({
+                        showRelevance: !this.state.showRelevance
+                      });
+                    }}
+                  >
                     <View style={{ flex: 1 }} />
                     <Text
                       style={{
-                        fontSize: (onTablet ? 12 : 18) * factor,
-                        marginBottom: 5 * factor,
-                        textAlign: 'left',
-                        fontFamily: 'RobotoCondensed-Bold',
-                        color: this.props.isMethod
-                          ? 'white'
-                          : colors.secondBackground
+                        color: colors.pianoteRed,
+                        fontSize: (onTablet ? 10 : 14.5) * factor,
+                        fontFamily: 'OpenSans-Regular',
+                        marginRight: 3.5 * factor
                       }}
                     >
-                      {this.props.title}
+                      <View style={{ flex: 1 }} />
+                      {onTablet
+                        ? sortDict[this.props.currentSort].charAt(0) +
+                          sortDict[this.props.currentSort]
+                            .substring(1)
+                            .toLowerCase()
+                        : sortDict[this.props.currentSort]}
                     </Text>
-                    <View style={{ flex: 1 }} />
-                  </>
+                    <View>
+                      <View style={{ flex: 1 }} />
+                      <FontIcon
+                        size={(onTablet ? 10 : 14) * factor}
+                        name={'sort-amount-down'}
+                        color={colors.pianoteRed}
+                      />
+                    </View>
+                  </TouchableOpacity>
                 )}
               </View>
-              <View style={{ flex: 1 }} />
               {!this.props.showTitleOnly && (
                 <View
-                  style={{
-                    paddingRight: 15 * factor,
-                    flexDirection: 'row'
-                  }}
+                  style={[
+                    styles.centerContent,
+                    {
+                      flexDirection: 'row',
+                      flex: 0.15
+                    }
+                  ]}
                 >
-                  {this.props.showSort && (
+                  {!this.props.hideFilterButton && (
                     <TouchableOpacity
+                      onPress={() => this.props.filterResults()}
                       style={[
                         styles.centerContent,
                         {
-                          flexDirection: 'row',
-                          marginRight: 7.5 * factor
+                          borderWidth: 1.25 * factor,
+                          borderColor: colors.pianoteRed,
+                          height: (onTablet ? 17.5 : 30) * factor,
+                          width: (onTablet ? 17.5 : 30) * factor,
+                          borderRadius: 30 * factor
                         }
                       ]}
-                      onPress={() => {
-                        this.setState({
-                          showRelevance: !this.state.showRelevance
-                        });
-                      }}
                     >
-                      <View style={{ flex: 1 }} />
-                      <Text
-                        style={{
-                          color: colors.pianoteRed,
-                          fontSize: (onTablet ? 10 : 14.5) * factor,
-                          fontFamily: 'OpenSans-Regular',
-                          marginRight: 3.5 * factor
-                        }}
-                      >
-                        {onTablet
-                          ? sortDict[this.props.currentSort].charAt(0) +
-                            sortDict[this.props.currentSort]
-                              .substring(1)
-                              .toLowerCase()
-                          : sortDict[this.props.currentSort]}
-                      </Text>
-                      <View>
-                        <FontIcon
-                          size={(onTablet ? 10 : 14) * factor}
-                          name={'sort-amount-down'}
+                      <View style={{ transform: [{ rotate: '90deg' }] }}>
+                        <IonIcon
+                          size={(onTablet ? 9 : 14) * factor}
+                          name={'md-options'}
                           color={colors.pianoteRed}
                         />
                       </View>
-                      <View style={{ flex: 1 }} />
                     </TouchableOpacity>
                   )}
                   <View>
@@ -770,7 +783,7 @@ class VerticalVideoList extends React.Component {
               <View
                 style={{
                   marginTop: 5 * factor,
-                  paddingHorizontal: 10 * factor
+                  paddingHorizontal: paddingInset
                 }}
               >
                 <Text

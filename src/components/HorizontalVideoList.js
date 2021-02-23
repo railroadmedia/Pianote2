@@ -30,6 +30,7 @@ import { NetworkContext } from '../context/NetworkProvider';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
 import Filters_V2 from './Filters_V2';
+import Orientation from 'react-native-orientation-locker';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
@@ -51,6 +52,7 @@ class HorizontalVideoList extends React.Component {
   static contextType = NetworkContext;
   constructor(props) {
     super(props);
+    this._onOrientationDidChange = this._onOrientationDidChange.bind(this);
     this.state = {
       showModal: false,
       addToCalendarModal: false,
@@ -61,6 +63,8 @@ class HorizontalVideoList extends React.Component {
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
+  componentWillMount = () =>
+    Orientation.addOrientationListener(this._onOrientationDidChange);
 
   UNSAFE_componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
@@ -100,10 +104,14 @@ class HorizontalVideoList extends React.Component {
       this.setState({ items: this.props.items });
   }
 
+  _onOrientationDidChange = () => {
+    this.forceUpdate();
+  };
+
   decideWidth() {
     if (onTablet) {
       if (this.props.isSquare) return 125;
-      else return 225;
+      else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
     } else {
       if (this.props.isSquare) return Dimensions.get('window').width / 3.25;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
@@ -296,7 +304,7 @@ class HorizontalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={localStyles.listContainer}>
+      <View style={{ marginLeft: paddingInset }}>
         <View style={localStyles.titleContain}>
           <Text
             style={[
@@ -306,6 +314,7 @@ class HorizontalVideoList extends React.Component {
               }
             ]}
           >
+            <View style={{ flex: 1 }} />
             {this.props.Title}
           </Text>
           {!this.props.hideSeeAll && (
@@ -385,9 +394,10 @@ class HorizontalVideoList extends React.Component {
         {this.filters?.filterAppliedText}
         <FlatList
           key={'videos'}
+          numColumns={this.props.isTile ? 3 : 1}
           data={this.state.items}
           extraData={this.state}
-          horizontal={true}
+          horizontal={this.props.isTile ? false : true}
           style={{ width: '100%' }}
           showsHorizontalScrollIndicator={false}
           onEndReached={() => {
@@ -398,7 +408,11 @@ class HorizontalVideoList extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <TouchableOpacity
-              style={{ width: this.decideWidth(), marginRight: 15 }}
+              style={{
+                width: this.decideWidth(),
+                marginRight: paddingInset,
+                marginBottom: this.props.isTile ? paddingInset : 0
+              }}
               onLongPress={() => {
                 this.setState({
                   showModal: true,
@@ -507,11 +521,7 @@ class HorizontalVideoList extends React.Component {
                     <FontIcon
                       size={onTablet ? 12.5 * factor : 27.5 * factor}
                       name={'calendar-plus'}
-                      color={
-                        this.props.isMethod && !this.props.methodLevel
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 ) : !item.isAddedToList ? (
@@ -522,11 +532,7 @@ class HorizontalVideoList extends React.Component {
                     <AntIcon
                       name={'plus'}
                       size={onTablet ? 17.5 * factor : 25 * factor}
-                      color={
-                        this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 ) : (
@@ -537,11 +543,7 @@ class HorizontalVideoList extends React.Component {
                     <AntIcon
                       name={'close'}
                       size={onTablet ? 17.5 * factor : 25 * factor}
-                      color={
-                        this.props.isMethod
-                          ? colors.pianoteGrey
-                          : colors.pianoteRed
-                      }
+                      color={colors.pianoteRed}
                     />
                   </TouchableOpacity>
                 )}
@@ -549,7 +551,6 @@ class HorizontalVideoList extends React.Component {
             </TouchableOpacity>
           )}
         />
-
         <Modal
           key={'modal'}
           isVisible={this.state.showModal}
@@ -624,9 +625,6 @@ class HorizontalVideoList extends React.Component {
 }
 
 const localStyles = StyleSheet.create({
-  listContainer: {
-    paddingLeft: DeviceInfo.isTablet() ? 5 : 10 * factor
-  },
   artist: {
     fontSize:
       ((DeviceInfo.isTablet() ? 12 : 16) *

@@ -36,7 +36,7 @@ class DisplayName extends React.Component {
         <View style={[styles.container, styles.centerContent]}>
           <View style={localStyles.titleContainer}>
             <Text style={[styles.modalHeaderText, localStyles.displayText]}>
-              This display name {'\n'} is already in use.
+              This display name is already {'\n'} in use.
             </Text>
             <Text style={[styles.modalBodyText, localStyles.pleaseTryAgain]}>
               Please try again.
@@ -79,12 +79,12 @@ const localStyles = StyleSheet.create({
     margin: 20 * factor
   },
   displayText: {
-    paddingHorizontal: 40,
+    paddingHorizontal: 20 * factor,
     marginTop: 10 * factor
   },
   pleaseTryAgain: {
     paddingHorizontal: 20,
-    marginTop: 10 * factor
+    marginVertical: 5 * factor
   },
   tryAgainContainer: {
     paddingHorizontal: 20,

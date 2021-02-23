@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 
 const windowDim = Dimensions.get('window');
@@ -56,7 +57,11 @@ class CheckEmail extends React.Component {
               style={localStyles.tryAgain}
             >
               <Text
-                style={[styles.modalCancelButtonText, localStyles.tryAgainText]}
+                style={[
+                  styles.modalCancelButtonText, 
+                  localStyles.tryAgainText,
+                  {fontSize: (onTablet ? 9 : 14) * factor}
+                ]}
               >
                 TRY AGAIN
               </Text>
@@ -85,7 +90,8 @@ const localStyles = StyleSheet.create({
     borderRadius: 45 * factor,
     backgroundColor: '#fb1b2f',
     marginHorizontal: 40,
-    marginVertical: 5 * factor
+    marginVertical: 5 * factor,
+    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
   },
   loginText: {
     color: 'white',

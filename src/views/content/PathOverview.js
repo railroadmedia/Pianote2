@@ -363,15 +363,12 @@ export default class PathOverview extends React.Component {
               alignItems: 'center'
             }}
           >
-            <View style={{ flex: 1 }} />
-            <View style={{ width: '45%' }}>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{flex: 0.5}}/>
               <TouchableOpacity
                 style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: -50 * factor,
-                  zIndex: 5,
-                  elevation: 5
+                  flex: 0.5,
+                  alignItems: 'center',
                 }}
                 onPress={() => this.toggleMyList(this.state.data.id)}
               >
@@ -379,13 +376,13 @@ export default class PathOverview extends React.Component {
                   {!this.state.isAddedToList ? (
                     <AntIcon
                       name={'plus'}
-                      size={(onTablet ? 20 : 27.5) * factor}
+                      size={(onTablet ? 18 : 25) * factor}
                       color={colors.pianoteRed}
                     />
                   ) : (
                     <AntIcon
                       name={'close'}
-                      size={(onTablet ? 20 : 27.5) * factor}
+                      size={(onTablet ? 18 : 25) * factor}
                       color={colors.pianoteRed}
                     />
                   )}
@@ -400,6 +397,8 @@ export default class PathOverview extends React.Component {
                   {this.state.isAddedToList ? 'Added' : 'My List'}
                 </Text>
               </TouchableOpacity>
+            </View>
+            <View style={{ width: '45%' }}>
               {this.state.completed ? (
                 <ResetIcon
                   isMethod={true}
@@ -428,13 +427,12 @@ export default class PathOverview extends React.Component {
                   }
                 />
               )}
+            </View>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
               <TouchableOpacity
                 style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  right: -50 * factor,
-                  zIndex: 5,
-                  elevation: 5
+                  flex: 0.5,
+                  alignItems: 'center'
                 }}
                 onPress={() => {
                   this.setState({
@@ -445,7 +443,7 @@ export default class PathOverview extends React.Component {
                 <View style={[styles.centerContent, { flexDirection: 'row' }]}>
                   <AntIcon
                     name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                    size={(onTablet ? 15 : 22.5) * factor}
+                    size={(onTablet ? 15 : 20) * factor}
                     color={colors.pianoteRed}
                   />
                 </View>
@@ -453,15 +451,14 @@ export default class PathOverview extends React.Component {
                   style={{
                     fontFamily: 'OpenSans-Regular',
                     color: 'white',
-                    marginTop: 2,
                     fontSize: (onTablet ? 8 : 12) * factor
                   }}
                 >
                   Info
                 </Text>
               </TouchableOpacity>
+              <View style={{flex: 0.5}}/>
             </View>
-            <View style={{ flex: 1 }} />
           </View>
         </View>
 

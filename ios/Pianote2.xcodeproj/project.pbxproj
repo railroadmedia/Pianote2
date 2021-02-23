@@ -384,6 +384,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 				"${PODS_ROOT}/google-cast-sdk-no-bluetooth/GoogleCastSDK-ios-4.5.3_static/GoogleCast.framework/GoogleCastCoreResources.bundle",
 				"${PODS_ROOT}/google-cast-sdk-no-bluetooth/GoogleCastSDK-ios-4.5.3_static/GoogleCast.framework/GoogleCastUIResources.bundle",
 			);
@@ -407,6 +408,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastCoreResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastUIResources.bundle",
 			);
@@ -504,7 +506,7 @@
 				CODE_SIGN_ENTITLEMENTS = Pianote2/Pianote.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 53;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7RM4D35J2P;
 				ENABLE_BITCODE = NO;
@@ -540,7 +542,7 @@
 				CODE_SIGN_ENTITLEMENTS = Pianote2/Pianote.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 53;
 				DEVELOPMENT_TEAM = 7RM4D35J2P;
 				ENABLE_BITCODE = NO;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = YES;
@@ -555,12 +557,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				"OTHER_LDFLAGS[arch=*]" = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-					"-l\"z\"",
-				);
+				"OTHER_LDFLAGS[arch=*]" = "$(inherited) -ObjC -lc++ -l\"z\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.drumeo.PianoteApp;
 				PRODUCT_NAME = Pianote;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -584,10 +581,11 @@
 				CODE_SIGN_ENTITLEMENTS = NotificationServiceExtension/NotificationServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 53;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 7RM4D35J2P;
 				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -620,7 +618,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 53;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7RM4D35J2P;
 				ENABLE_BITCODE = NO;

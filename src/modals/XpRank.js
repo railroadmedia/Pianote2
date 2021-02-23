@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { withNavigation } from 'react-navigation';
 import ProgressCircle from 'react-native-progress-circle';
 
@@ -88,7 +89,7 @@ class XpRank extends React.Component {
               >
                 <ProgressCircle
                   percent={this.state.rankProgress}
-                  radius={width * 0.27}
+                  radius={(DeviceInfo.isTablet()? 0.2 : 0.27) * width}
                   borderWidth={4 * factorRatio}
                   shadowColor={'pink'}
                   color={'red'}
@@ -120,12 +121,13 @@ const localStyles = StyleSheet.create({
     elevation: 10
   },
   title: {
-    paddingHorizontal: 40,
+    paddingHorizontal: 30,
     marginTop: 15 * factor
   },
   description: {
-    paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    paddingHorizontal: 20 * factor,
+    marginVertical: 10 * factor,
+    fontSize: (DeviceInfo.isTablet()? 12 : 16) * factor
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -133,17 +135,18 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: 34 * factor
+    fontSize: (DeviceInfo.isTablet()? 26 : 34) * factor
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: 24 * factor
+    fontSize: (DeviceInfo.isTablet()? 18 : 24) * factor
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
-    marginVertical: 10 * factor
+    marginVertical: 10 * factor,
+    fontSize: (DeviceInfo.isTablet()? 12 : 16) * factor
   }
 });
 

@@ -263,8 +263,7 @@ class Course extends React.Component {
               <View
                 key={'continueCourses'}
                 style={{
-                  backgroundColor: colors.mainBackground,
-                  paddingLeft: 10 * factor
+                  backgroundColor: colors.mainBackground
                 }}
               >
                 <HorizontalVideoList
@@ -283,6 +282,7 @@ class Course extends React.Component {
             {onTablet ? (
               <View style={{ paddingLeft: 10 * factor }}>
                 <HorizontalVideoList
+                  isTile={true}
                   Title={'COURSES'}
                   seeAll={() =>
                     this.props.navigation.navigate('SEEALL', {

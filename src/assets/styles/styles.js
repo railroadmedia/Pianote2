@@ -27,7 +27,7 @@ module.exports = StyleSheet.create({
   searchContainer: {
     marginTop: height * 0.04,
     flexDirection: 'row',
-    paddingLeft: 15
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5)
   },
   searchBox: {
     flex: 1,
@@ -74,10 +74,10 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#081826',
-    padding: 15 * factor
+    padding: (DeviceInfo.isTablet ? 10 : 5)
   },
   filterHeader: {
-    fontSize: 18 * factor,
+    fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
     marginBottom: 12.5 * factor,
     marginTop: 12.5 * factor,
     textAlign: 'left',
@@ -95,7 +95,7 @@ module.exports = StyleSheet.create({
     color: '#445f73'
   },
   tabRightContainerText: {
-    paddingLeft: 10 * factor,
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
     fontSize: DeviceInfo.isTablet() ? 22 : 20 * factor,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
@@ -103,7 +103,7 @@ module.exports = StyleSheet.create({
     paddingVertical: 10 * factor
   },
   tabRightContainer: {
-    paddingRight: 10 * factor,
+    paddingRight: (DeviceInfo.isTablet ? 10 : 5),
     width: '100%',
     borderTopWidth: 0.5 * factor,
     borderTopColor: '#445f73',
@@ -114,7 +114,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   contentPageHeader: {
-    paddingLeft: 10 * factor,
+    paddingLeft: (DeviceInfo.isTablet ? 10 : 5),
     fontSize: (DeviceInfo.isTablet() ? 22 : 30) * factor,
     color: 'white',
     fontFamily: 'OpenSans-ExtraBold'
@@ -122,7 +122,7 @@ module.exports = StyleSheet.create({
   modalHeaderText: {
     fontFamily: 'OpenSans-ExtraBold',
     textAlign: 'center',
-    fontSize: 18 * factor
+    fontSize: (DeviceInfo.isTablet() ? 12.5 : 18) * factor
   },
   modalCancelButtonText: {
     textAlign: 'center',
@@ -132,12 +132,12 @@ module.exports = StyleSheet.create({
   modalButtonText: {
     textAlign: 'center',
     fontFamily: 'RobotoCondensed-Bold',
-    fontSize: 15 * factor
+    fontSize: (DeviceInfo.isTablet() ? 10 : 15) * factor,
   },
   modalBodyText: {
     textAlign: 'center',
     fontFamily: 'OpenSans-Regular',
-    fontSize: 15 * factor
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
   },
   centerContent: {
     justifyContent: 'center',
