@@ -11,6 +11,7 @@ import {
   Dimensions
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -63,7 +64,7 @@ class RestartCourse extends React.Component {
               nailed! This will remove the XP you've earned.
             </Text>
             <TouchableOpacity
-              style={localStyles.restartContainer}
+              style={[styles.centerContent, localStyles.restartContainer]}
               onPress={() => this.props.onRestart()}
             >
               <Text style={[styles.modalButtonText, localStyles.restartText]}>
@@ -102,12 +103,13 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#fb1b2f',
     marginTop: 10 * factor,
     borderRadius: 40 * factor,
-    paddingHorizontal: 20,
-    alignSelf: 'center'
+    paddingHorizontal: 30 * factor,
+    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
   restartText: {
     color: 'white',
-    padding: 12.5 * factor
   },
   cancelContainer: {
     marginTop: 10 * factor,
