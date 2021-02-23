@@ -75,7 +75,7 @@ export default class PathOverview extends React.Component {
       isLoadingAll: this.props.navigation.state.params.items?.length
         ? false
         : true,
-      difficulty: 0,
+      difficulty: this.props.navigation.state.params.data.difficulty,
       refreshing: false,
       levelNum: 0,
       bannerNextLessonUrl: '',
@@ -364,11 +364,11 @@ export default class PathOverview extends React.Component {
             }}
           >
             <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{flex: 0.5}}/>
+              <View style={{ flex: 0.5 }} />
               <TouchableOpacity
                 style={{
                   flex: 0.5,
-                  alignItems: 'center',
+                  alignItems: 'center'
                 }}
                 onPress={() => this.toggleMyList(this.state.data.id)}
               >
@@ -457,7 +457,7 @@ export default class PathOverview extends React.Component {
                   Info
                 </Text>
               </TouchableOpacity>
-              <View style={{flex: 0.5}}/>
+              <View style={{ flex: 0.5 }} />
             </View>
           </View>
         </View>
