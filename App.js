@@ -44,9 +44,6 @@ export default class App extends React.Component {
     else Orientation.lockToPortrait();
   }
 
-  componentWillMount = () =>
-    Orientation.addOrientationListener(this._onOrientationDidChange);
-
   _onOrientationDidChange = () => {
     global.fullWidth = Dimensions.get('window').width;
     global.fullHeight = Dimensions.get('window').height;
@@ -63,6 +60,7 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+    Orientation.addOrientationListener(this._onOrientationDidChange);
     Linking.getInitialURL()
       .then(ev => {
         if (ev) this.handleOpenURL({ url: ev });

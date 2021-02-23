@@ -47,27 +47,22 @@ export default class NotificationSettings extends React.Component {
     };
   }
 
-  UNSAFE_componentWillMount = async () => {
-    let userData = await getUserData();
-
-    console.log(
-      'original user data : ',
-      userData.notifications_summary_frequency_minutes
+  componentDidMount() {
+    getUserData().then(userData =>
+      this.setState({
+        notifications_summary_frequency_minutes:
+          userData.notifications_summary_frequency_minutes,
+        notify_on_forum_followed_thread_reply:
+          userData.notify_on_forum_followed_thread_reply,
+        notify_on_forum_post_like: userData.notify_on_forum_post_like,
+        notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
+        notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
+        notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
+        notify_weekly_update: userData.notify_weekly_update,
+        isLoading: false
+      })
     );
-
-    this.setState({
-      notifications_summary_frequency_minutes:
-        userData.notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply:
-        userData.notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like: userData.notify_on_forum_post_like,
-      notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-      notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-      notify_weekly_update: userData.notify_weekly_update,
-      isLoading: false
-    });
-  };
+  }
 
   changeNotificationStatus = async () => {
     if (!this.context.isConnected) {

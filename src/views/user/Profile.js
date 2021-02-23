@@ -107,41 +107,37 @@ export default class Profile extends React.Component {
     };
   }
 
-  UNSAFE_componentWillMount = async () => {
-    let data = await AsyncStorage.multiGet([
+  componentDidMount() {
+    AsyncStorage.multiGet([
       'totalXP',
       'rank',
       'profileURI',
       'displayName',
       'joined'
-    ]);
+    ]).then(data =>
+      this.setState({
+        xp: this.changeXP(data[0][1]),
+        rank: data[1][1],
+        profileImage: data[2][1],
+        username: data[3][1],
+        memberSince: data[4][1]
+      })
+    );
 
-    let xp = await this.changeXP(data[0][1]);
-
-    this.setState({
-      xp,
-      rank: data[1][1],
-      profileImage: data[2][1],
-      username: data[3][1],
-      memberSince: data[4][1]
+    getUserData().then(userData => {
+      this.setState({
+        notifications_summary_frequency_minutes:
+          userData.notifications_summary_frequency_minutes,
+        notify_on_forum_followed_thread_reply:
+          userData.notify_on_forum_followed_thread_reply,
+        notify_on_forum_post_like: userData.notify_on_forum_post_like,
+        notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
+        notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
+        notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
+        notify_weekly_update: userData.notify_weekly_update
+      });
+      this.getNotifications(false);
     });
-  };
-
-  async componentDidMount() {
-    let userData = await getUserData();
-
-    this.setState({
-      notifications_summary_frequency_minutes:
-        userData.notifications_summary_frequency_minutes,
-      notify_on_forum_followed_thread_reply:
-        userData.notify_on_forum_followed_thread_reply,
-      notify_on_forum_post_like: userData.notify_on_forum_post_like,
-      notify_on_forum_post_reply: userData.notify_on_forum_post_reply,
-      notify_on_lesson_comment_like: userData.notify_on_lesson_comment_like,
-      notify_on_lesson_comment_reply: userData.notify_on_lesson_comment_reply,
-      notify_weekly_update: userData.notify_weekly_update
-    });
-    this.getNotifications(false);
   }
 
   async getNotifications(loadMore) {

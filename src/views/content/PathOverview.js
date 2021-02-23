@@ -87,11 +87,8 @@ export default class PathOverview extends React.Component {
 
   componentDidMount() {
     Orientation.addDeviceOrientationListener(this.orientationListener);
-    if (!this.state.items.length && this.context.isConnected) this.getItems();
-  }
-
-  componentWillUnmount() {
     Orientation.removeDeviceOrientationListener(this.orientationListener);
+    if (!this.state.items.length && this.context.isConnected) this.getItems();
   }
 
   orientationListener = o => {

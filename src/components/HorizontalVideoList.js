@@ -63,8 +63,9 @@ class HorizontalVideoList extends React.Component {
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
-  componentWillMount = () =>
+  componentDidMount() {
     Orientation.addOrientationListener(this._onOrientationDidChange);
+  }
 
   UNSAFE_componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
