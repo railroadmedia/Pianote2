@@ -270,12 +270,7 @@ export default class VideoPlayer extends React.Component {
           content.post.type === 'song-part' && content.post.parent
             ? new ContentModel(content.post.parent).getField('artist')
             : content.getField('artist'),
-        instructor:
-          content.post.type === 'learning-path-level'
-            ? content.post.instructors
-            : content.post.type === 'course-part' && content.post.parent
-            ? new ContentModel(content.post.parent).getFieldMulti('instructor')
-            : content.getFieldMulti('instructor'),
+        instructor: content.post.instructors,
         isLoadingAll: false,
         publishedOn: content.publishedOn,
         relatedLessons: rl,
@@ -850,14 +845,14 @@ export default class VideoPlayer extends React.Component {
             <AntIcon
               name={'checkcircle'}
               size={(onTablet ? 15 : 25) * factor}
-              style={{paddingVertical: 5,}}
+              style={{ paddingVertical: 5 }}
               color={colors.pianoteRed}
             />
           ) : (
             <EntypoIcon
               name={'chevron-thin-right'}
               size={(onTablet ? 15 : 20) * factor}
-              style={{paddingVertical: 5,}}
+              style={{ paddingVertical: 5 }}
               color={colors.secondBackground}
             />
           )}
@@ -905,10 +900,7 @@ export default class VideoPlayer extends React.Component {
     let artistTag = artist ? `${artist.toUpperCase()} | ` : '';
     let xpTag = `${xp || 0} XP`;
     let instructorTag = instructor
-      ? `${instructor
-          .map(i => i.fields.find(f => f.key === 'name').value)
-          .join(', ')
-          .toUpperCase()} | `
+      ? `${instructor.join(', ').toUpperCase()} | `
       : '';
     switch (type) {
       case 'song-part':
@@ -2026,7 +2018,7 @@ export default class VideoPlayer extends React.Component {
                       flex: 1,
                       backgroundColor: colors.mainBackground,
                       color: colors.secondBackground,
-                      paddingVertical: 10 * factor,
+                      paddingVertical: 10 * factor
                     }}
                     onSubmitEditing={() => {
                       this.makeComment();

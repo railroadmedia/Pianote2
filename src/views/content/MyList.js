@@ -14,8 +14,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import Modal from 'react-native-modal';
-import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
 import VerticalVideoList from '../../components/VerticalVideoList';
@@ -52,18 +50,8 @@ class MyList extends React.Component {
       page: 1,
       outVideos: false,
       isLoadingAll: true,
-      filtersAvailable: null,
-      showFilters: false,
       isPaging: false,
       filtering: false,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       showModalMenu: false,
       refreshing: false,
       ...this.initialValidData(myListCache, false, true)
@@ -88,9 +76,10 @@ class MyList extends React.Component {
     if (!this.context.isConnected) return this.context.showNoConnectionAlert();
     let response = await getMyListContent(
       this.state.page,
-      this.state.filters,
+      this.filterQuery,
       ''
     );
+    this.metaFilters = response?.meta?.filterOptions;
     this.props.cacheAndWriteMyList(response);
     this.setState(this.initialValidData(response, loadMore));
   };
@@ -138,7 +127,6 @@ class MyList extends React.Component {
       }
       return {
         allLessons: loadMore ? this.state?.allLessons?.concat(items) : items,
-        filtersAvailable: content.meta.filterOptions,
         outVideos: items.length == 0 || content.data.length < 20 ? true : false,
         page: this.state?.page + 1 || 1,
         isLoadingAll: false,
@@ -283,53 +271,27 @@ class MyList extends React.Component {
             showArtist={true}
             showLength={false}
             showSort={false}
-            filters={this.state.filters}
-            filterResults={() => this.setState({ showFilters: true })}
+            filters={this.metaFilters}
+            applyFilters={filters =>
+              new Promise(res =>
+                this.setState(
+                  {
+                    allLessons: [],
+                    outVideos: false,
+                    page: 1
+                  },
+                  () => {
+                    this.filterQuery = filters;
+                    this.getMyList().then(res);
+                  }
+                )
+              )
+            }
             removeItem={contentID => this.removeFromMyList(contentID)}
             outVideos={this.state.outVideos}
             imageWidth={(onTablet ? 0.225 : 0.3) * width}
           />
         </ScrollView>
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={styles.modalContainer}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'My List'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getMyList()
-                );
-              }}
-              filterVideos={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    outVideos: false,
-                    page: 1,
-                    filters
-                  },
-                  () => this.getMyList()
-                );
-              }}
-            />
-          </Modal>
-        )}
         <NavigationBar currentPage={'MyList'} />
       </View>
     );

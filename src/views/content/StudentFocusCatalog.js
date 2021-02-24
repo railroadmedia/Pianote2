@@ -72,7 +72,6 @@ class StudentFocusCatalog extends React.Component {
       ),
       getStudentFocusTypes()
     ]);
-    console.log(content);
     this.props.cacheAndWriteStudentFocus({
       types: content[1],
       inProgress: content[0]

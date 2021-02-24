@@ -121,13 +121,11 @@ class NavMenuHeaders extends React.Component {
               !this.context.isConnected
                 ? this.context.showNoConnectionAlert()
                 : isPackOnly
-                ? this.props.navigation.navigate('NEWMEMBERSHIP', {
-                    data: {
-                      type: 'PACKONLY',
-                      email: null,
-                      password: null
-                    }
-                  })
+                ? expirationDate
+                  ? this.props.navigation.navigate('MEMBERSHIPEXPIRED')
+                  : this.props.navigation.navigate('NEWMEMBERSHIP', {
+                      data: { type: 'PACKONLY' }
+                    })
                 : this.setState({ showModalMenu: true });
             }}
           >

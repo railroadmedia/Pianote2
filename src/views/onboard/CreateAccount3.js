@@ -72,7 +72,6 @@ export default class CreateAccount3 extends React.Component {
 
   changeColor = number => {
     let index = Math.round(number.nativeEvent.contentOffset.x / width);
-    console.log(index);
     if (index == 0) {
       this.setState({ page: 1 });
     } else if (index == 1) {
@@ -186,7 +185,7 @@ export default class CreateAccount3 extends React.Component {
       });
       this.setState({ page: 4 });
     } else {
-      this.loadingRef.toggleLoading();
+      this.loadingRef?.toggleLoading();
       // if there is profile image upload it
       let url;
 
@@ -223,11 +222,8 @@ export default class CreateAccount3 extends React.Component {
 
             // send to loadpage to update asyncstorage with new data
             await this.props.navigation.dispatch(resetAction);
-          } catch (e) {
-            console.log('ERROR: ', e);
-          }
+          } catch (e) {}
         } else {
-          console.log(url?.data?.[0]?.url);
           await commonService.tryCall(
             `${commonService.rootUrl}/api/profile/update`,
             'POST',
@@ -240,10 +236,9 @@ export default class CreateAccount3 extends React.Component {
           // send to loadpage to update asyncstorage with new data
           await this.props.navigation.dispatch(resetAction);
         }
-        this.loadingRef.toggleLoading();
+        this.loadingRef?.toggleLoading();
       } catch (e) {
-        this.loadingRef.toggleLoading();
-        console.log('ERROR: ', e);
+        this.loadingRef?.toggleLoading();
       }
     }
   };

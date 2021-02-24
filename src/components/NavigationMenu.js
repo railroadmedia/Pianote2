@@ -62,19 +62,16 @@ class NavigationMenu extends React.Component {
     };
   }
 
-  UNSAFE_componentWillMount = async () => {
-    let data = await AsyncStorage.multiGet([
-      'methodIsStarted',
-      'methodIsCompleted'
-    ]);
-
-    this.setState({
-      methodIsStarted:
-        typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
-      methodIsCompleted:
-        typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false
-    });
-  };
+  componentDidMount() {
+    AsyncStorage.multiGet(['methodIsStarted', 'methodIsCompleted']).then(data =>
+      this.setState({
+        methodIsStarted:
+          typeof data[0][1] !== null ? JSON.parse(data[0][1]) : false,
+        methodIsCompleted:
+          typeof data[1][1] !== null ? JSON.parse(data[1][1]) : false
+      })
+    );
+  }
 
   lessonNav() {
     return (

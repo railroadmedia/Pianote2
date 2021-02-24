@@ -74,7 +74,6 @@ export default class LoginCredentials extends React.Component {
     try {
       await RNIap.initConnection();
     } catch (error) {
-      console.log('ERROR: ', error);
       return;
     }
     try {
@@ -96,9 +95,7 @@ export default class LoginCredentials extends React.Component {
           })
         };
       }
-    } catch (error) {
-      console.log('error getting purchases: ', error);
-    }
+    } catch (error) {}
   };
 
   login = async () => {
@@ -128,6 +125,7 @@ export default class LoginCredentials extends React.Component {
       if (userData.isPackOlyOwner) {
         // if pack only, make global & go to packs
         global.isPackOnly = userData.isPackOlyOwner;
+        global.expirationDate = userData.expirationDate;
         await this.props.navigation.dispatch(
           StackActions.reset({
             index: 0,

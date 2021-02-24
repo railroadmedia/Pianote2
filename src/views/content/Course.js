@@ -10,12 +10,10 @@ import {
   RefreshControl,
   ActivityIndicator
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ContentModel } from '@musora/models';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import Filters from '../../components/FIlters.js';
 import VerticalVideoList from '../../components/VerticalVideoList';
 import HorizontalVideoList from '../../components/HorizontalVideoList';
 import { getStartedContent, getAllContent } from '../../services/GetContent';
@@ -48,18 +46,8 @@ class Course extends React.Component {
       currentSort: 'newest',
       page: 1,
       outVideos: false,
-      showFilters: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       started: true, // if started lesson
       refreshing: true,
       refreshControl: false,
@@ -89,10 +77,11 @@ class Course extends React.Component {
         'course',
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       ),
       getStartedContent('course')
     ]);
+    this.metaFilters = content?.[0]?.meta?.filterOptions;
     this.props.cacheAndWriteCourses({
       all: content[0],
       inProgress: content[1]
@@ -122,7 +111,6 @@ class Course extends React.Component {
       return {
         allCourses: allVideos,
         progressCourses: inprogressVideos,
-        filtersAvailable: content.all.meta.filterOptions,
         refreshing: false,
         refreshControl: fromCache,
         outVideos:
@@ -146,8 +134,9 @@ class Course extends React.Component {
       'course',
       this.state.currentSort,
       this.state.page,
-      this.state.filters
+      this.filterQuery
     );
+    this.metaFilters = response?.meta?.filterOptions;
     const newContent = await response.data.map(data => {
       return new ContentModel(data);
     });
@@ -155,7 +144,6 @@ class Course extends React.Component {
     let items = this.setData(newContent);
 
     this.setState(state => ({
-      filtersAvailable: response.meta.filterOptions,
       allCourses: loadMore ? state.allCourses.concat(items) : items,
       outVideos: items.length == 0 || response.data.length < 20 ? true : false,
       filtering: false,
@@ -298,20 +286,36 @@ class Course extends React.Component {
                 currentSort={this.state.currentSort}
                 changeSort={sort => this.changeSort(sort)} 
                 filterResults={() => this.setState({ showFilters: true })} 
+                applyFilters={filters =>
+                  new Promise(res =>
+                    this.setState(
+                      {
+                        allCourses: [],
+                        outVideos: false,
+                        page: 1
+                      },
+                      () => {
+                        this.filterQuery = filters;
+                        this.getAllCourses().then(res);
+                      }
+                    )
+                  )
+                }                
                 outVideos={this.state.outVideos} 
                 getVideos={() => this.getVideos()}
                 callEndReached={true}
                 reachedEnd={() => {
-                  if (!this.state.isPaging && !this.state.outVideos) {
-                    this.setState(
-                      {
-                        page: this.state.page + 1,
-                        isPaging: true
-                      },
-                      () => this.getAllCourses()
-                    );
+                    if (!this.state.isPaging && !this.state.outVideos) {
+                      this.setState(
+                        {
+                          page: this.state.page + 1,
+                          isPaging: true
+                        },
+                        () => this.getAllCourses()
+                      );
+                    }
                   }
-                }}
+                }
               />
             ) : (
               <VerticalVideoList
@@ -325,11 +329,25 @@ class Course extends React.Component {
                 showArtist={true}
                 showLength={false}
                 showSort={true}
-                filters={this.state.filters}
+                filters={this.metaFilters}
                 currentSort={this.state.currentSort}
                 changeSort={sort => this.changeSort(sort)}
-                filterResults={() => this.setState({ showFilters: true })} 
-                imageWidth={width * 0.26}
+                applyFilters={filters =>
+                  new Promise(res =>
+                    this.setState(
+                      {
+                        allCourses: [],
+                        outVideos: false,
+                        page: 1
+                      },
+                      () => {
+                        this.filterQuery = filters;
+                        this.getAllCourses().then(res);
+                      }
+                    )
+                  )
+                }
+                imageWidth={width * 0.26} // image width
                 outVideos={this.state.outVideos}
                 getVideos={() => this.getVideos()}
               />
@@ -338,46 +356,6 @@ class Course extends React.Component {
         ) : (
           <ActivityIndicator size='large' style={{ flex: 1 }} color={colors.secondBackground} />
         )}        
-        {this.state.showFilter && (
-        <Modal
-          isVisible={this.state.showFilters}
-          style={styles.modalContainer}
-          animation={'slideInUp'}
-          animationInTiming={1}
-          animationOutTiming={1}
-          coverScreen={true}
-          hasBackdrop={true}
-        >
-          <Filters
-            hideFilters={() => this.setState({ showFilters: false })}
-            filtersAvailable={this.state.filtersAvailable}
-            filters={this.state.filters}
-            filtering={this.state.filtering}
-            type={'Courses'}
-            reset={filters => {
-              this.setState(
-                {
-                  allCourses: [],
-                  filters,
-                  page: 1
-                },
-                () => this.getAllCourses()
-              );
-            }}
-            filterVideos={filters => {
-              this.setState(
-                {
-                  allCourses: [],
-                  outVideos: false,
-                  page: 1,
-                  filters
-                },
-                () => this.getAllCourses()
-              );
-            }}
-          />
-        </Modal>
-        )}
         <NavigationBar currentPage={''} />
       </View>
     );

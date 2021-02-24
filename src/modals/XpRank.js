@@ -54,7 +54,7 @@ class XpRank extends React.Component {
     };
   }
 
-  UNSAFE_componentWillMount = () => {
+  componentDidMount() {
     for (i in ranks) {
       if (this.state.XP >= ranks[i] && this.state.XP < ranks[Number(i) + 1]) {
         this.setState({
@@ -63,7 +63,7 @@ class XpRank extends React.Component {
         });
       }
     }
-  };
+  }
 
   render = () => {
     return (
@@ -127,7 +127,7 @@ const localStyles = StyleSheet.create({
   description: {
     paddingHorizontal: 20 * factor,
     marginVertical: 10 * factor,
-    fontSize: (DeviceInfo.isTablet()? 12 : 16) * factor
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
   },
   ProgressCircleContainer: {
     transform: [{ rotate: '315deg' }]
@@ -135,18 +135,18 @@ const localStyles = StyleSheet.create({
   XPtext: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: (DeviceInfo.isTablet()? 26 : 34) * factor
+    fontSize: (DeviceInfo.isTablet() ? 26 : 34) * factor
   },
   rankText: {
     fontFamily: 'OpenSans-Bold',
     textAlign: 'center',
-    fontSize: (DeviceInfo.isTablet()? 18 : 24) * factor
+    fontSize: (DeviceInfo.isTablet() ? 18 : 24) * factor
   },
   nextRank: {
     color: 'grey',
     paddingHorizontal: 40,
     marginVertical: 10 * factor,
-    fontSize: (DeviceInfo.isTablet()? 12 : 16) * factor
+    fontSize: (DeviceInfo.isTablet() ? 12 : 16) * factor
   }
 });
 

@@ -70,12 +70,14 @@ export default class Downloads extends React.Component {
           title: item.getField('title'),
           artist: item.getField('instructor').fields[0].value,
           xp: item.post.xp,
+          total_xp: item.post.total_xp,
           description: item.getData('description'),
           like_count: item.post.like_count,
           isAddedToList: item.post.is_added_to_primary_playlist,
           next_lesson: new ContentModel(item.post.next_lesson),
           started: item.post.started,
-          started: item.post.completed
+          completed: item.post.completed,
+          difficulty: item.getField('difficulty')
         },
         items: item.post.lessons
           .map(l => new ContentModel(l))
@@ -134,7 +136,7 @@ export default class Downloads extends React.Component {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'flex-end',
+                alignItems: 'flex-end'
               }}
             >
               <Text
@@ -175,13 +177,13 @@ export default class Downloads extends React.Component {
                     padding: paddingInset,
                     flexDirection: 'row',
                     borderBottomWidth: 0.5,
-                    borderColor: 'lightgrey',
+                    borderColor: 'lightgrey'
                   }}
                 >
-                  <View 
+                  <View
                     style={{
                       width: onTablet ? '22.5%' : '26%',
-                      marginRight: paddingInset,
+                      marginRight: paddingInset
                     }}
                   >
                     <FastImage
@@ -189,9 +191,13 @@ export default class Downloads extends React.Component {
                         width: '100%',
                         height: '100%',
                         borderRadius: 2,
-                        aspectRatio: 16 / 9,
+                        aspectRatio: 16 / 9
                       }}
-                      source={{uri: item[type]?.data?.find(d => d.key === 'thumbnail_url')?.value}}
+                      source={{
+                        uri: item[type]?.data?.find(
+                          d => d.key === 'thumbnail_url'
+                        )?.value
+                      }}
                       resizeMode={FastImage.resizeMode.cover}
                     />
                   </View>
@@ -214,7 +220,7 @@ export default class Downloads extends React.Component {
                     <Text
                       style={{
                         color: 'white',
-                        fontSize: (onTablet ? 8 : 12) * factor,
+                        fontSize: (onTablet ? 8 : 12) * factor
                       }}
                     >
                       {item[type]?.type?.replace('-', ' ').replace('-', ' ')} |{' '}

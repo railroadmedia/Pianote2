@@ -49,10 +49,10 @@ export default class ForgotPassword extends React.Component {
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
-    this.loadingRef.toggleLoading();
+    this.loadingRef?.toggleLoading();
     this.textInput.clear();
     const response = await forgotPass(this.state.email);
-    this.loadingRef.toggleLoading();
+    this.loadingRef?.toggleLoading();
     if (response.success) {
       this.alertSuccess.toggle(
         'Please check your email',

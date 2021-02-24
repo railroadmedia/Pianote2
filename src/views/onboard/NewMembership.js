@@ -67,7 +67,6 @@ export default class NewMembership extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(this.props.navigation.state.params.data.type);
     try {
       await RNIap.initConnection();
     } catch (e) {}
@@ -79,11 +78,11 @@ export default class NewMembership extends React.Component {
       });
     });
     try {
-      this.loadingRef.toggleLoading(true);
+      this.loadingRef?.toggleLoading(true);
       const subscriptions = (await RNIap.getSubscriptions(skus)).sort((a, b) =>
         parseFloat(a.price) > parseFloat(b.price) ? 1 : -1
       );
-      this.loadingRef.toggleLoading();
+      this.loadingRef?.toggleLoading();
       this.setState({ subscriptions });
     } catch (e) {}
   }
@@ -93,7 +92,7 @@ export default class NewMembership extends React.Component {
       price: plan.price,
       currency: plan.currency
     };
-    this.loadingRef.toggleLoading();
+    this.loadingRef?.toggleLoading();
     try {
       await RNIap.requestSubscription(plan.productId, false);
     } catch (e) {}
@@ -133,9 +132,7 @@ export default class NewMembership extends React.Component {
           } else {
             this.props.navigation.navigate('LOADPAGE');
           }
-        } catch (e) {
-          console.log(e);
-        }
+        } catch (e) {}
       } else {
         let { title, detail } = response.errors[0];
         Alert.alert(title, detail, [{ text: 'OK' }], {

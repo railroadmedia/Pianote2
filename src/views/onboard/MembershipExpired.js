@@ -7,13 +7,15 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import DeviceInfo from 'react-native-device-info';
 import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const windowDim = Dimensions.get('window');
 const width =
@@ -26,7 +28,21 @@ export default class MembershipExpired extends React.Component {
   static navigationOptions = { header: null };
   constructor(props) {
     super(props);
-    this.state = {};
+
+    this.state = {
+      email: this.props.navigation.state.params?.email,
+      password: this.props.navigation.state.params?.password
+    };
+  }
+
+  componentDidMount() {
+    if (!this.state.email)
+      AsyncStorage.multiGet(['email', 'password']).then(r =>
+        this.setState({
+          email: r[0][1],
+          password: r[1][1]
+        })
+      );
   }
 
   render() {
@@ -54,22 +70,30 @@ export default class MembershipExpired extends React.Component {
                 below to renew your membership - or, if you believe this is an
                 error, please contact support@pianote.com
               </Text>
-
-              <TouchableOpacity
-                style={localStyles.buttonContainer}
-                onPress={() => {
-                  this.props.navigation.navigate('NEWMEMBERSHIP', {
-                    data: {
-                      type: 'EXPIRED',
-                      email: this.props.navigation.state.params?.email,
-                      password: this.props.navigation.state.params?.password,
-                      token: this.props.navigation.state.params?.token
-                    }
-                  });
-                }}
-              >
-                <Text style={localStyles.buttonText}>RENEW MEMBERSHIP</Text>
-              </TouchableOpacity>
+              {this.state.email ? (
+                <TouchableOpacity
+                  style={localStyles.buttonContainer}
+                  onPress={() => {
+                    this.props.navigation.navigate('NEWMEMBERSHIP', {
+                      data: {
+                        type: 'EXPIRED',
+                        email: this.props.navigation.state.params?.email,
+                        password: this.props.navigation.state.params?.password,
+                        token: this.props.navigation.state.params?.token
+                      }
+                    });
+                  }}
+                >
+                  <Text style={localStyles.buttonText}>RENEW MEMBERSHIP</Text>
+                </TouchableOpacity>
+              ) : (
+                <ActivityIndicator
+                  size='large'
+                  animating={true}
+                  color={colors.pianoteRed}
+                  style={{}}
+                />
+              )}
             </View>
           </View>
         </SafeAreaView>

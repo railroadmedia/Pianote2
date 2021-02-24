@@ -22,10 +22,10 @@ class SoundSlice extends React.Component {
     this.state = {};
   }
 
-  UNSAFE_componentWillMount = () => {
+  componentDidMount() {
     IdleTimerManager.setIdleTimerDisabled(true);
   }
-  
+
   componentWillUnmount() {
     IdleTimerManager.setIdleTimerDisabled(false);
   }

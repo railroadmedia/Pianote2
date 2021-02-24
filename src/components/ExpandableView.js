@@ -1,0 +1,101 @@
+/*
+
+* props: title, expandableContStyle, titleStyle, iconColor
+* title: the text next to the expandable/collapsable icon
+* expandableContStyle: style for container
+* titleStyle: style for title
+* iconColor: color for arrow icon
+*/
+
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+
+export default class ExpandableView extends React.Component {
+  state = {};
+  constructor(props) {
+    super(props);
+    switch (props.processType) {
+      case 'RAM': {
+        this.state.maxHeight = 0;
+        break;
+      }
+      case 'CPU': {
+        this.state.contentVisible = false;
+        break;
+      }
+      default: {
+        this.state.contentVisible = false;
+        break;
+      }
+    }
+  }
+
+  toggleView = () => {
+    switch (this.props.processType) {
+      case 'RAM': {
+        this.setState(({ maxHeight }) => ({
+          maxHeight: maxHeight ? 0 : 100000
+        }));
+        break;
+      }
+      case 'CPU': {
+        this.setState(({ contentVisible }) => ({
+          contentVisible: !contentVisible
+        }));
+        break;
+      }
+      default: {
+        this.setState(({ contentVisible }) => ({
+          contentVisible: !contentVisible
+        }));
+        break;
+      }
+    }
+  };
+
+  render() {
+    let { maxHeight, contentVisible } = this.state;
+    return (
+      <View testID='expandableCont' style={this.props.expandableContStyle}>
+        <TouchableOpacity
+          testID='dropBtn'
+          onPress={() => this.toggleView()}
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center'
+            },
+            this.props.dropStyle
+          ]}
+        >
+          <Text testID='title' style={[this.props.titleStyle, { flex: 1 }]}>
+            {this.props.title}
+          </Text>
+          {(contentVisible || !!this.state.maxHeight) && (
+            <EntypoIcon
+              name={'chevron-thin-up'}
+              size={25}
+              color={colors.secondBackground}
+            />
+          )}
+          {!contentVisible && !this.state.maxHeight && (
+            <EntypoIcon
+              name={'chevron-thin-down'}
+              size={25}
+              color={colors.secondBackground}
+            />
+          )}
+        </TouchableOpacity>
+        {contentVisible === undefined ? (
+          <View style={{ overflow: 'hidden', maxHeight }}>
+            {this.props.children}
+          </View>
+        ) : (
+          contentVisible && this.props.children
+        )}
+      </View>
+    );
+  }
+}

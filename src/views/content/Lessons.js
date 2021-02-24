@@ -20,7 +20,6 @@ import FastImage from 'react-native-fast-image';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation-locker';
-import Filters from '../../components/FIlters.js';
 import StartIcon from '../../components/StartIcon';
 import ResetIcon from '../../components/ResetIcon';
 import MoreInfoIcon from '../../components/MoreInfoIcon';
@@ -64,16 +63,6 @@ class Lessons extends React.Component {
       outVideos: false,
       isPaging: false, // scrolling more
       filtering: false, // filtering
-      filtersAvailable: null,
-      showFilters: false,
-      filters: {
-        displayTopics: [],
-        topics: [],
-        content_type: [],
-        level: [],
-        progress: [],
-        instructors: []
-      },
       profileImage: '',
       xp: '',
       rank: '',
@@ -137,10 +126,11 @@ class Lessons extends React.Component {
         '',
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       ),
       getStartedContent('')
     ]);
+    this.metaFilters = content?.[1]?.meta?.filterOptions;
     this.props.cacheAndWriteLessons({
       all: content[1],
       method: content[0],
@@ -181,7 +171,6 @@ class Lessons extends React.Component {
         methodIsCompleted: method.completed,
         methodNextLessonUrl: method.banner_button_url,
         allLessons: allVideos,
-        filtersAvailable: content.all.meta.filterOptions,
         progressLessons: inprogressVideos,
         outVideos:
           allVideos.length == 0 || content.all.data.length < 20 ? true : false,
@@ -225,16 +214,15 @@ class Lessons extends React.Component {
         '',
         this.state.currentSort,
         this.state.page,
-        this.state.filters
+        this.filterQuery
       );
+      this.metaFilters = response?.meta?.filterOptions;
       const newContent = await response.data.map(data => {
         return new ContentModel(data);
       });
-
       let items = this.setData(newContent);
 
       this.setState({
-        filtersAvailable: response.meta.filterOptions,
         allLessons: [...this.state.allLessons, ...items],
         outVideos:
           items.length == 0 || response.data.length < 20 ? true : false,
@@ -544,39 +532,53 @@ class Lessons extends React.Component {
               )}
               <View style={{ height: paddingInset}} />
               {onTablet ? (
-                  <HorizontalVideoList
-                    isMethod={true}
-                    items={this.state.allLessons}
-                    Title={'ALL LESSONS'}
-                    showType={true}
-                    seeAll={() =>
-                      this.props.navigation.navigate('SEEALL', {
-                        title: 'All Lessons',
-                        parent: 'Lessons'
-                      })
+                <HorizontalVideoList
+                  isMethod={true}
+                  items={this.state.allLessons}
+                  Title={'ALL LESSONS'}
+                  showType={true}
+                  seeAll={() =>
+                    this.props.navigation.navigate('SEEALL', {
+                      title: 'All Lessons',
+                      parent: 'Lessons'
+                    })
+                  }
+                  // if horizontal replace vertical on tablet include below
+                  hideFilterButton={false} // if on tablet & should be filter list not see all
+                  isPaging={this.state.isPaging}
+                  filters={this.metaFilters}
+                  currentSort={this.state.currentSort}
+                  changeSort={sort => this.changeSort(sort)}
+                  applyFilters={filters =>
+                    new Promise(res =>
+                      this.setState(
+                        {
+                          allLessons: [],
+                          outVideos: false,
+                          page: 1
+                        },
+                        () => {
+                          this.filterQuery = filters;
+                          this.getAllLessons().then(res);
+                        }
+                      )
+                    )
+                  }
+                  outVideos={this.state.outVideos} // if paging and out of videos
+                  getVideos={() => this.getVideos()}
+                  callEndReached={true}
+                  reachedEnd={() => {
+                    if (!this.state.isPaging && !this.state.outVideos) {
+                      this.setState(
+                        {
+                          page: this.state.page + 1,
+                          isPaging: true
+                        },
+                        () => this.getAllLessons()
+                      );
                     }
-                    // if horizontal replace vertical on tablet include below
-                    hideFilterButton={false} // if on tablet & should be filter list not see all
-                    isPaging={this.state.isPaging}
-                    filters={this.state.filters} // show filter list
-                    currentSort={this.state.currentSort}
-                    changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                    filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                    outVideos={this.state.outVideos} // if paging and out of videos
-                    getVideos={() => this.getVideos()}
-                    callEndReached={true}
-                    reachedEnd={() => {
-                      if (!this.state.isPaging && !this.state.outVideos) {
-                        this.setState(
-                          {
-                            page: this.state.page + 1,
-                            isPaging: true
-                          },
-                          () => this.getAllLessons()
-                        );
-                      }
-                    }}
-                  />
+                  }}
+                />
               ) : (
                 <VerticalVideoList
                   isMethod={true}
@@ -590,12 +592,26 @@ class Lessons extends React.Component {
                   showArtist={true}
                   showSort={true}
                   showLength={false}
-                  filters={this.state.filters} 
+                  filters={this.metaFilters} // show filter list
                   currentSort={this.state.currentSort}
-                  changeSort={sort => this.changeSort(sort)} 
-                  filterResults={() => this.setState({ showFilters: true })} 
-                  imageWidth={width * 0.26} 
-                  outVideos={this.state.outVideos} 
+                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
+                  applyFilters={filters =>
+                    new Promise(res =>
+                      this.setState(
+                        {
+                          allLessons: [],
+                          outVideos: false,
+                          page: 1
+                        },
+                        () => {
+                          this.filterQuery = filters;
+                          this.getAllLessons().then(res);
+                        }
+                      )
+                    )
+                  }
+                  imageWidth={width * 0.26} // image width
+                  outVideos={this.state.outVideos} // if paging and out of videos
                   getVideos={() => this.getVideos()}
                 />
               )}
@@ -624,46 +640,6 @@ class Lessons extends React.Component {
             onRestart={() => this.onRestartMethod()}
           />
         </Modal>
-        {this.state.showFilters && (
-          <Modal
-            isVisible={this.state.showFilters}
-            style={styles.modalContainer}
-            animation={'slideInUp'}
-            animationInTiming={1}
-            animationOutTiming={1}
-            coverScreen={true}
-            hasBackdrop={true}
-          >
-            <Filters
-              hideFilters={() => this.setState({ showFilters: false })}
-              filtersAvailable={this.state.filtersAvailable}
-              filters={this.state.filters}
-              filtering={this.state.filtering}
-              type={'Lessons'}
-              reset={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    filters,
-                    page: 1
-                  },
-                  () => this.getAllLessons()
-                );
-              }}
-              filterVideos={filters => {
-                this.setState(
-                  {
-                    allLessons: [],
-                    outVideos: false,
-                    page: 1,
-                    filters
-                  },
-                  () => this.getAllLessons()
-                );
-              }}
-            />
-          </Modal>
-        )}
         <NavigationBar currentPage={'LESSONS'} isMethod={true} />
       </View>
     );

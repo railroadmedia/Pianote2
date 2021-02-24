@@ -1,7 +1,7 @@
 /**
  * HorizontalVideoList
  */
-import React  from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,6 @@ import FastImage from 'react-native-fast-image';
 import AddToCalendar from '../modals/AddToCalendar';
 import { withNavigation } from 'react-navigation';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 
 import Relevance from '../modals/Relevance';
 import { addToMyList, removeFromMyList } from '../services/UserActions';
@@ -29,12 +28,15 @@ import ContentModal from '../modals/ContentModal';
 import { NetworkContext } from '../context/NetworkProvider';
 import ApprovedTeacher from 'Pianote2/src/assets/img/svgs/approved-teacher.svg';
 import Progress from 'Pianote2/src/assets/img/svgs/progress.svg';
+import Filters_V2 from './Filters_V2';
 import Orientation from 'react-native-orientation-locker';
 
 let greaterWDim;
 const windowDim = Dimensions.get('window');
-const width = windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
-const height = windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
 const factor = (height / 812 + width / 375) / 2;
 const sortDict = {
   newest: 'NEWEST',
@@ -56,11 +58,13 @@ class HorizontalVideoList extends React.Component {
       showRelevance: false,
       outVideos: this.props.outVideos,
       isLoading: false,
-      items: this.props.items,
+      items: this.props.items
     };
     greaterWDim = fullHeight < fullWidth ? fullWidth : fullHeight;
   }
-  componentWillMount = () => Orientation.addOrientationListener(this._onOrientationDidChange);
+  componentDidMount() {
+    Orientation.addOrientationListener(this._onOrientationDidChange);
+  }
 
   UNSAFE_componentWillReceiveProps = props => {
     if (props.isPaging !== this.state.isPaging) {
@@ -101,13 +105,13 @@ class HorizontalVideoList extends React.Component {
   }
 
   _onOrientationDidChange = () => {
-    this.forceUpdate()
+    this.forceUpdate();
   };
 
   decideWidth() {
     if (onTablet) {
       if (this.props.isSquare) return 125;
-      else return ((Dimensions.get('window').width - 4*paddingInset)) / 3;
+      else return (Dimensions.get('window').width - 4 * paddingInset) / 3;
     } else {
       if (this.props.isSquare) return Dimensions.get('window').width / 3.25;
       else return ((Dimensions.get('window').width - 30) * 3) / 4;
@@ -143,7 +147,6 @@ class HorizontalVideoList extends React.Component {
   };
 
   like = contentID => {
-    console.log(contentID);
     if (!this.context.isConnected) {
       return this.context.showNoConnectionAlert();
     }
@@ -184,7 +187,6 @@ class HorizontalVideoList extends React.Component {
     ) {
       return;
     }
-    console.log(content.type, content.id);
     switch (content.type) {
       case 'course':
         return this.props.navigation.navigate('PATHOVERVIEW', {
@@ -247,9 +249,7 @@ class HorizontalVideoList extends React.Component {
         this.addToCalendatLessonPublishDate = '';
         this.setState({ addToCalendarModal: false });
       })
-      .catch(error => {
-        console.log(error);
-      });
+      .catch(e => {});
   };
 
   listFooter = () => {
@@ -304,7 +304,7 @@ class HorizontalVideoList extends React.Component {
 
   render = () => {
     return (
-      <View style={{marginLeft: paddingInset}}>
+      <View style={{ marginLeft: paddingInset }}>
         <View style={localStyles.titleContain}>
           <Text
             style={[
@@ -374,42 +374,23 @@ class HorizontalVideoList extends React.Component {
                     </>
                   )}
                   {!this.props.hideFilterButton && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.props.filterResults();
-                      }}
-                      style={[
-                        styles.centerContent,
-                        {
-                          borderWidth: 1,
-                          borderColor: colors.pianoteRed,
-                          height: (onTablet ? 17.5 : 30) * factor,
-                          width: (onTablet ? 17.5 : 30) * factor,
-                          borderRadius: 200,
-                          marginRight: paddingInset
+                    <View style={{ marginRight: 10 * factor }}>
+                      <Filters_V2
+                        disabled={this.state.isPaging}
+                        onApply={() =>
+                          this.props.applyFilters?.(this.filters?.filterQuery)
                         }
-                      ]}
-                    >
-                      <View style={{ flex: 1 }} />
-                      <View
-                        style={{
-                          transform: [{ rotate: '90deg' }]
-                        }}
-                      >
-                        <IonIcon
-                          size={(onTablet ? 9 : 14) * factor}
-                          name={'md-options'}
-                          color={colors.pianoteRed}
-                        />
-                      </View>
-                      <View style={{ flex: 1 }} />
-                    </TouchableOpacity>
+                        meta={this.props.filters}
+                        reference={r => (this.filters = r)}
+                      />
+                    </View>
                   )}
                 </>
               )}
             </>
           )}
         </View>
+        {this.filters?.filterAppliedText}
         <FlatList
           key={'videos'}
           numColumns={this.props.isTile ? 3 : 1}
@@ -426,8 +407,8 @@ class HorizontalVideoList extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <TouchableOpacity
-              style={{ 
-                width: this.decideWidth(), 
+              style={{
+                width: this.decideWidth(),
                 marginRight: paddingInset,
                 marginBottom: this.props.isTile ? paddingInset : 0
               }}
