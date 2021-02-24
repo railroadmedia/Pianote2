@@ -76,14 +76,14 @@ export default class ExpandableView extends React.Component {
           {(contentVisible || !!this.state.maxHeight) && (
             <EntypoIcon
               name={'chevron-thin-up'}
-              size={25}
+              size={onTablet ? 25 : 17.5}
               color={colors.secondBackground}
             />
           )}
           {!contentVisible && !this.state.maxHeight && (
             <EntypoIcon
               name={'chevron-thin-down'}
-              size={25}
+              size={onTablet ? 25 : 17.5}
               color={colors.secondBackground}
             />
           )}

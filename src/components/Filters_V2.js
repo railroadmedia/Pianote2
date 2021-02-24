@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Dimensions,
   Text,
   TouchableOpacity,
   View
@@ -19,7 +20,7 @@ import ExpandableView from './ExpandableView';
 
 import { NetworkContext } from '../context/NetworkProvider';
 
-import ArrowLeft from '../assets/img/svgs/arrowLeft';
+import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import Filters from '../assets/img/svgs/filters';
 
 let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
@@ -28,9 +29,22 @@ let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
   progressTypes = ['ALL', 'IN PROGRESS', 'COMPLETED'],
   statusKeys = ['ALL', 'UPCOMING LIVE EVENTS', 'RECORDED EVENTS'],
   styleKeys = [],
-  styles,
   topicKeys = [],
   difficulties;
+  const windowDim = Dimensions.get('window');
+const width =
+  windowDim.width < windowDim.height ? windowDim.width : windowDim.height;
+const height =
+  windowDim.width > windowDim.height ? windowDim.width : windowDim.height;
+const factor = (height / 812 + width / 375) / 2;
+const colors = {
+  mainBackground: '#00101d',
+  secondBackground: '#445f73',
+  thirdBackground: '#081826',
+  notificationColor: '#002038',
+  pianoteRed: '#fb1b2f',
+  pianoteGrey: '#6e777a'
+};
 
 export default class Filters_V2 extends React.Component {
   static contextType = NetworkContext;
@@ -52,7 +66,6 @@ export default class Filters_V2 extends React.Component {
 
   constructor(props) {
     super(props);
-    styles = createStyles({ colors });
     this.deepLinking(props.deepLinking);
   }
 
@@ -171,14 +184,28 @@ export default class Filters_V2 extends React.Component {
   get filterAppliedText() {
     let appliedFilters = Object.values(this.appliedFilters);
     return appliedFilters.length ? (
-      <Text style={styles.textAppliedFilters}>
+      <Text 
+        style={{
+          fontSize: (onTablet ? 10 : 12) * factor,
+          marginBottom: 5 * factor,
+          textAlign: 'left',
+          fontFamily: 'OpenSans-Regular',
+          color: this.props.isMethod
+            ? 'white'
+            : colors.secondBackground
+        }}
+      >
         <Text
-          style={[
-            styles.textAppliedFilters,
-            {
-              fontFamily: 'RobotoCondensed-Bold'
-            }
-          ]}
+          style={{
+            // fontFamily: 'RobotoCondensed-Bold',
+            fontSize: (onTablet ? 10 : 12) * factor,
+            marginBottom: 5 * factor,
+            textAlign: 'left',
+            fontFamily: 'OpenSans-Bold',
+            color: this.props.isMethod
+              ? 'white'
+              : colors.secondBackground
+          }}
         >
           FILTERS APPLIED
         </Text>{' '}
@@ -265,9 +292,13 @@ export default class Filters_V2 extends React.Component {
           <TouchableOpacity
             disabled={disabled}
             onPress={this.toggleModal}
-            style={styles.touchableToggler}
+            style={localStyles.touchableToggler}
           >
-            <Filters width={18} height={18} fill={colors.pianoteRed} />
+            <Filters 
+              width={(onTablet ? 9 : 14) * factor}
+              height={(onTablet ? 9 : 14) * factor}
+              fill={colors.pianoteRed} 
+            />
           </TouchableOpacity>
         </View>
         <Modal
@@ -275,205 +306,218 @@ export default class Filters_V2 extends React.Component {
           animationType={'fade'}
           onRequestClose={this.toggleModal}
         >
-          <SafeAreaView style={styles.safeAreaTitleContainer}>
-            <TouchableOpacity
-              activeOpacity={1}
-              style={styles.touchableTitleContainer}
-              onPress={() => {
-                topicKeys = [];
-                styleKeys = [];
-                instructorNames = [];
-                let af = JSON.stringify(this.appliedFilters);
-                let of = JSON.stringify(this.originalFilters);
-                if (af !== of) {
-                  this.appliedFilters = JSON.parse(of);
-                  this.apply();
-                }
-                this.setState({ showModal: false });
-              }}
-            >
-              <Text style={styles.textTitle}>Filter</Text>
-              <ArrowLeft width={18} height={18} fill={'white'} />
-            </TouchableOpacity>
-          </SafeAreaView>
-          {loading ? (
-            <ActivityIndicator
-              size='large'
-              animating={true}
-              color={colors.pianoteRed}
-              style={styles.container}
-            />
-          ) : (
-            <ScrollView style={styles.container}>
-              <SkillSection
-                onApply={this.apply}
-                testID={'SkillSection'}
-                appliedFilters={this.appliedFilters}
+          <SafeAreaView
+            forceInset={{ bottom: 'never' }}
+            style={styles.packsContainer}
+          >
+            <View style={styles.childHeader}>
+              <View style={{ flex: 1, justifyContent: 'center',  }}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    topicKeys = [];
+                    styleKeys = [];
+                    instructorNames = [];
+                    let af = JSON.stringify(this.appliedFilters);
+                    let of = JSON.stringify(this.originalFilters);
+                    if (af !== of) {
+                      this.appliedFilters = JSON.parse(of);
+                      this.apply();
+                    }
+                    this.setState({ showModal: false });
+                  }}
+                >
+                  <Back
+                    width={backButtonSize}
+                    height={backButtonSize}
+                    fill={'white'}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.childHeaderText}>Filters</Text>
+              <View style={{ flex: 1 }} />
+            </View>
+                      
+            {loading ? (
+              <ActivityIndicator
+                size={onTablet ? 'large' : 'small'}
+                animating={true}
+                color={colors.pianoteRed}
+                style={localStyles.container}
               />
-              {!!topicKeys.length && (
-                <View style={styles.filterSection}>
-                  <Text style={styles.sectionTitleText}>
-                    WHAT DO YOU WANT TO WORK ON?
-                  </Text>
-                  <View
-                    style={{
-                      marginTop: 10,
-                      flexWrap: 'wrap',
-                      flexDirection: 'row'
-                    }}
-                  >
-                    {topicKeys.map((topic, i) => (
-                      <View key={i} style={styles.touchableBorderedContainer}>
-                        <TouchableFiller
-                          item={topic}
-                          filterType={'topics'}
-                          toggleItem={this.toggleItem}
-                          testID={`TouchableFiller${i}`}
-                          appliedFilters={this.appliedFilters}
-                          selected={
-                            topic === 'ALL' &&
-                            !this.appliedFilters.topics?.length
-                              ? true
-                              : undefined
-                          }
-                          touchableTextStyle={styles.touchableTextBordered}
-                          touchableSelectedStyle={
-                            topicHeight
-                              ? {
-                                  ...styles.touchableBorderedSelected,
-                                  height: topicHeight
-                                }
-                              : styles.touchableBorderedSelected
-                          }
-                          touchableStyle={
-                            topicHeight
-                              ? {
-                                  ...styles.touchableBordered,
-                                  height: topicHeight
-                                }
-                              : styles.touchableBordered
-                          }
-                          touchableTextSelectedStyle={
-                            styles.touchableTextBorderedSelected
-                          }
-                          onLayout={({
-                            nativeEvent: {
-                              layout: { height }
-                            }
-                          }) => {
-                            this.topicsRenders++;
-                            this.tallestTopic =
-                              this.tallestTopic < height
-                                ? height
-                                : this.tallestTopic;
-                            if (this.topicsRenders === topicKeys.length)
-                              this.setState({ topicHeight: this.tallestTopic });
-                          }}
-                        />
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              )}
-              {!!styleKeys.length && (
-                <View style={styles.filterSection}>
-                  <Text style={styles.sectionTitleText}>
-                    WHAT STYLE YOU WANT TO PLAY?
-                  </Text>
-                  <View
-                    style={{
-                      marginTop: 10,
-                      flexWrap: 'wrap',
-                      flexDirection: 'row'
-                    }}
-                  >
-                    {styleKeys.map((style, i) => (
-                      <View key={i} style={styles.touchableBorderedContainer}>
-                        <TouchableFiller
-                          item={style}
-                          filterType={'styles'}
-                          toggleItem={this.toggleItem}
-                          testID={`TouchableFiller${i}`}
-                          appliedFilters={this.appliedFilters}
-                          selected={
-                            style === 'ALL' &&
-                            !this.appliedFilters.styles?.length
-                              ? true
-                              : undefined
-                          }
-                          touchableTextStyle={styles.touchableTextBordered}
-                          touchableSelectedStyle={
-                            styleHeight
-                              ? {
-                                  ...styles.touchableBorderedSelected,
-                                  height: styleHeight
-                                }
-                              : styles.touchableBorderedSelected
-                          }
-                          touchableStyle={
-                            styleHeight
-                              ? {
-                                  ...styles.touchableBordered,
-                                  height: styleHeight
-                                }
-                              : styles.touchableBordered
-                          }
-                          touchableTextSelectedStyle={
-                            styles.touchableTextBorderedSelected
-                          }
-                          onLayout={({
-                            nativeEvent: {
-                              layout: { height }
-                            }
-                          }) => {
-                            this.stylesRenders++;
-                            this.tallestStyle =
-                              this.tallestStyle < height
-                                ? height
-                                : this.tallestStyle;
-                            if (this.stylesRenders === styleKeys.length)
-                              this.setState({ styleHeight: this.tallestStyle });
-                          }}
-                        />
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              )}
-              {content_type?.join() === 'coach-stream' && (
-                <StatusSection appliedFilters={this.appliedFilters} />
-              )}
-              {!!instructorNames.length && (
-                <InstructorsSection
-                  toggleItem={this.toggleItem}
-                  testID={'InstructorsSection'}
+            ) : (
+              <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={localStyles.container}>
+                <SkillSection
+                  onApply={this.apply}
+                  testID={'SkillSection'}
                   appliedFilters={this.appliedFilters}
                 />
-              )}
-              <ProgressSection
-                testID={'ProgressSection'}
-                appliedFilters={this.appliedFilters}
-              />
-            </ScrollView>
-          )}
-          <SafeAreaView style={styles.safeAreaBottomContainer}>
-            <TouchableOpacity
-              onPress={this.toggleModal}
-              testID={'TouchableDoneApply'}
-              style={styles.touchableDoneAndApply}
-            >
-              <Text style={styles.touchableTextDoneAndApply}>DONE & APPLY</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                difficulties = undefined;
-                this.appliedFilters = {};
-                this.apply();
-              }}
-              style={styles.touchableReset}
-            >
-              <Text style={styles.touchableTextReset}>RESET</Text>
-            </TouchableOpacity>
+                {!!topicKeys.length && (
+                  <View style={localStyles.filterSection}>
+                    <Text style={styles.tabRightContainerText}>
+                      WHAT DO YOU WANT TO WORK ON?
+                    </Text>
+                    <View
+                      style={{
+                        marginTop: 10,
+                        flexWrap: 'wrap',
+                        flexDirection: 'row'
+                      }}
+                    >
+                      {topicKeys.map((topic, i) => (
+                        <View key={i} style={localStyles.touchableBorderedContainer}>
+                          <TouchableFiller
+                            item={topic}
+                            filterType={'topics'}
+                            toggleItem={this.toggleItem}
+                            testID={`TouchableFiller${i}`}
+                            appliedFilters={this.appliedFilters}
+                            selected={
+                              topic === 'ALL' &&
+                              !this.appliedFilters.topics?.length
+                                ? true
+                                : undefined
+                            }
+                            touchableTextStyle={localStyles.touchableTextBordered}
+                            touchableSelectedStyle={
+                              topicHeight
+                                ? {
+                                    ...localStyles.touchableBorderedSelected,
+                                    height: topicHeight
+                                  }
+                                : localStyles.touchableBorderedSelected
+                            }
+                            touchableStyle={
+                              topicHeight
+                                ? {
+                                    ...localStyles.touchableBordered,
+                                    height: topicHeight
+                                  }
+                                : localStyles.touchableBordered
+                            }
+                            touchableTextSelectedStyle={
+                              localStyles.touchableTextBorderedSelected
+                            }
+                            onLayout={({
+                              nativeEvent: {
+                                layout: { height }
+                              }
+                            }) => {
+                              this.topicsRenders++;
+                              this.tallestTopic =
+                                this.tallestTopic < height
+                                  ? height
+                                  : this.tallestTopic;
+                              if (this.topicsRenders === topicKeys.length)
+                                this.setState({ topicHeight: this.tallestTopic });
+                            }}
+                          />
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )}
+                {!!styleKeys.length && (
+                  <View style={localStyles.filterSection}>
+                    <Text style={styles.tabRightContainerText}>
+                      WHAT STYLE YOU WANT TO PLAY?
+                    </Text>
+                    <View
+                      style={{
+                        marginTop: 10,
+                        flexWrap: 'wrap',
+                        flexDirection: 'row'
+                      }}
+                    >
+                      {styleKeys.map((style, i) => (
+                        <View key={i} style={localStyles.touchableBorderedContainer}>
+                          <TouchableFiller
+                            item={style}
+                            filterType={'styles'}
+                            toggleItem={this.toggleItem}
+                            testID={`TouchableFiller${i}`}
+                            appliedFilters={this.appliedFilters}
+                            selected={
+                              style === 'ALL' &&
+                              !this.appliedFilters.styles?.length
+                                ? true
+                                : undefined
+                            }
+                            touchableTextStyle={localStyles.touchableTextBordered}
+                            touchableSelectedStyle={
+                              styleHeight
+                                ? {
+                                    ...localStyles.touchableBorderedSelected,
+                                    height: styleHeight
+                                  }
+                                : localStyles.touchableBorderedSelected
+                            }
+                            touchableStyle={
+                              styleHeight
+                                ? {
+                                    ...localStyles.touchableBordered,
+                                    height: styleHeight
+                                  }
+                                : localStyles.touchableBordered
+                            }
+                            touchableTextSelectedStyle={
+                              localStyles.touchableTextBorderedSelected
+                            }
+                            onLayout={({
+                              nativeEvent: {
+                                layout: { height }
+                              }
+                            }) => {
+                              this.stylesRenders++;
+                              this.tallestStyle =
+                                this.tallestStyle < height
+                                  ? height
+                                  : this.tallestStyle;
+                              if (this.stylesRenders === styleKeys.length)
+                                this.setState({ styleHeight: this.tallestStyle });
+                            }}
+                          />
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )}
+                {content_type?.join() === 'coach-stream' && (
+                  <StatusSection appliedFilters={this.appliedFilters} />
+                )}
+                {!!instructorNames.length && (
+                  <InstructorsSection
+                    toggleItem={this.toggleItem}
+                    testID={'InstructorsSection'}
+                    appliedFilters={this.appliedFilters}
+                  />
+                )}
+                <ProgressSection
+                  testID={'ProgressSection'}
+                  appliedFilters={this.appliedFilters}
+                />
+              </ScrollView>
+            )}
+            <View style={[styles.heightButtons, {paddingHorizontal: paddingInset, flexDirection: 'row'}]}>
+              <TouchableOpacity
+                onPress={this.toggleModal}
+                testID={'TouchableDoneApply'}
+                style={[styles.centerContent, localStyles.touchableDoneAndApply]}
+              >
+                <Text style={localStyles.touchableTextDoneAndApply}>DONE & APPLY</Text>
+              </TouchableOpacity>
+              <View style={{flex: 0.05}} />
+              <TouchableOpacity
+                onPress={() => {
+                  difficulties = undefined;
+                  this.appliedFilters = {};
+                  this.apply();
+                }}
+                style={localStyles.touchableReset}
+              >
+                <Text style={localStyles.touchableTextReset}>RESET</Text>
+              </TouchableOpacity>
+            </View>
           </SafeAreaView>
         </Modal>
       </>
@@ -551,7 +595,7 @@ class SkillSection extends React.PureComponent {
       case 8:
         return 'A Level 8 drummer should be able to navigate charts and lead sheets, play brushes at a basic level, play styles like samba and mozambique, and understand independence concepts like interpreting rhythms and interpreting stickings.';
       case 9:
-        return 'A Level 9 drummer should be able to play all 40 drum rudiments, play Afro-Cuban styles like mambo, nanigo, and songo, solo over a musical vamp, and demonstrate 4-limb independence in Afro-Cuban, Afro-Brazilian, and swing styles.';
+        return 'A Level 9 drummer should be able to play all 40 drum rudiments, play Afro-Cuban styles like mambo, nanigo, and songo, solo over a musical vamp, and demonstrate 4-limb independence in Afro-Cuban, Afro-Brazilian, and swing localStyles.';
       case 10:
         return 'A Level 10 drummer should understand advanced rhythmic concepts including polyrhythms, polymeters, metric modulation, and odd note subdivisions, play advanced Afro-Cuban and jazz styles, play drum solos in a variety of different settings and styles, and demonstrate 4-limb independence at an advanced level.';
     }
@@ -585,12 +629,12 @@ class SkillSection extends React.PureComponent {
   render() {
     let { level } = this.state;
     return (
-      <View style={styles.filterSection}>
-        <Text style={styles.sectionTitleText}>SET YOUR SKILL LEVEL</Text>
-        <Text style={styles.levelText}>LEVEL {level}</Text>
-        <View {...this.pResponder} style={{ justifyContent: 'center' }}>
+      <View style={[localStyles.filterSection, {paddingHorizontal: 0}]}>
+        <Text style={styles.tabRightContainerText}>SET YOUR SKILL LEVEL</Text>
+        <Text style={localStyles.levelText}>LEVEL {level}</Text>
+        <View {...this.pResponder} style={{ justifyContent: 'center', marginHorizontal: paddingInset}}>
           <View
-            style={styles.skillSectionsContainer}
+            style={localStyles.skillSectionsContainer}
             testID={'SkillSectionSliderContainer'}
             onLayout={({
               nativeEvent: {
@@ -612,7 +656,7 @@ class SkillSection extends React.PureComponent {
               <View
                 key={i}
                 style={{
-                  ...styles.skillSection,
+                  ...localStyles.skillSection,
                   borderTopLeftRadius: i === 0 ? 2.5 : 0,
                   borderTopRightRadius: i === 8 ? 2.5 : 0,
                   borderBottomLeftRadius: i === 0 ? 2.5 : 0,
@@ -623,19 +667,19 @@ class SkillSection extends React.PureComponent {
             ))}
             <Animated.View
               style={{
-                ...styles.skillSectionBar,
+                ...localStyles.skillSectionBar,
                 transform: [{ translateX: this.skillLevelBarTranslateX }]
               }}
             />
           </View>
           <Animated.View
             style={{
-              ...styles.skillSectionDot,
+              ...localStyles.skillSectionDot,
               transform: [{ translateX: this.skillLevelDotTranslateX }]
             }}
           />
         </View>
-        <Text style={styles.levelDescriptionText}>
+        <Text style={localStyles.levelDescriptionText}>
           {this.setDifficultyDescription(this.state.level)}
         </Text>
         <TouchableOpacity
@@ -643,21 +687,21 @@ class SkillSection extends React.PureComponent {
           style={
             level === 'ALL'
               ? {
-                  ...styles.touchableAll,
+                  ...localStyles.touchableAll,
                   backgroundColor: colors.pianoteRed,
                   borderColor: 'transparent'
                 }
-              : styles.touchableAll
+              : localStyles.touchableAll
           }
         >
           <Text
             style={
               level === 'ALL'
                 ? {
-                    ...styles.touchableTextBordered,
+                    ...localStyles.touchableTextBordered,
                     color: 'white'
                   }
-                : styles.touchableTextBordered
+                : localStyles.touchableTextBordered
             }
           >
             ALL
@@ -732,35 +776,35 @@ class InstructorsSection extends React.Component {
   render() {
     let { instructorLetters } = this.state;
     return (
-      <View style={styles.filterSectionNoPadding}>
+      <View style={localStyles.filterSectionNoPadding}>
         <ExpandableView
           processType={'RAM'}
-          titleStyle={styles.sectionTitleText}
-          dropStyle={{ height: undefined }}
+          titleStyle={[styles.tabRightContainerText, {paddingLeft: 0}]}
+          expandableContStyle={{ padding: paddingInset }}
+          dropStyle={{ height: undefined,  }}
           title={'CHOOSE YOUR PIANO TEACHER'}
-          iconColor={styles.sectionTitleText.color}
-          expandableContStyle={{ paddingVertical: 25 }}
+          iconColor={localStyles.sectionTitleText.color}
         >
-          <Text style={styles.expandableDetails}>
+          <Text style={localStyles.expandableDetails}>
             Instructors will only appear here if they have Drumeo lessons that
             fit your skill and topic filters.
           </Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {alphabet.map((a, i) => (
-              <View style={styles.touchableContainerInstructorLetter} key={i}>
+              <View style={localStyles.touchableContainerInstructorLetter} key={i}>
                 <TouchableFiller
                   item={a}
                   toggleItem={this.toggleItem}
                   filterType={'instructorLetters'}
                   testID={`TouchableFillerLetter${i}`}
                   appliedFilters={this.props.appliedFilters}
-                  touchableStyle={styles.touchableInstructorLetter}
-                  touchableTextStyle={styles.touchableTextInstructorLetter}
+                  touchableStyle={localStyles.touchableInstructorLetter}
+                  touchableTextStyle={localStyles.touchableTextInstructorLetter}
                   touchableSelectedStyle={
-                    styles.touchableInstructorLetterSelected
+                    localStyles.touchableInstructorLetterSelected
                   }
                   touchableTextSelectedStyle={
-                    styles.touchableTextInstructorLetterSelected
+                    localStyles.touchableTextInstructorLetterSelected
                   }
                 />
               </View>
@@ -774,7 +818,7 @@ class InstructorsSection extends React.Component {
                 style={
                   !instructorLetters.length ||
                   instructorLetters.some(il => il === name[0])
-                    ? styles.touchableContainerInstructor
+                    ? localStyles.touchableContainerInstructor
                     : { width: 0, height: 0 }
                 }
               >
@@ -783,15 +827,15 @@ class InstructorsSection extends React.Component {
                   filterType={'instructors'}
                   toggleItem={this.toggleItem}
                   appliedFilters={this.props.appliedFilters}
-                  touchableStyle={styles.touchableInstructor}
-                  touchableTextStyle={styles.touchableTextInstructor}
-                  touchableSelectedStyle={styles.touchableInstructorSelected}
+                  touchableStyle={localStyles.touchableInstructor}
+                  touchableTextStyle={localStyles.touchableTextInstructor}
+                  touchableSelectedStyle={localStyles.touchableInstructorSelected}
                   touchableTextSelectedStyle={
-                    styles.touchableTextInstructorSelected
+                    localStyles.touchableTextInstructorSelected
                   }
                 >
                   <FastImage
-                    style={styles.touchableInstructorPic}
+                    style={localStyles.touchableInstructorPic}
                     source={{
                       uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,ar_1,c_fill,g_face/${headShotPic}`
                     }}
@@ -829,30 +873,30 @@ class ProgressSection extends React.Component {
 
   render() {
     return (
-      <View style={styles.filterSectionNoPadding}>
+      <View style={localStyles.filterSectionNoPadding}>
         <ExpandableView
           processType={'RAM'}
           title={'CHOOSE YOUR PROGRESS'}
           dropStyle={{ height: undefined }}
-          titleStyle={styles.sectionTitleText}
-          iconColor={styles.sectionTitleText.color}
-          expandableContStyle={{ paddingVertical: 25 }}
+          titleStyle={[styles.tabRightContainerText, {paddingLeft: 0}]}
+          expandableContStyle={{ padding: paddingInset }}
+          iconColor={localStyles.sectionTitleText.color}
         >
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {progressTypes.map((p, i) => (
-              <View key={i} style={styles.touchableBorderedContainerProgress}>
+              <View key={i} style={localStyles.touchableBorderedContainerProgress}>
                 <TouchableFiller
                   item={p}
                   filterType={'progress'}
                   toggleItem={this.toggleItem}
                   selected={p === this.state.selected}
                   testID={`TouchableFillerProgress${i}`}
-                  touchableStyle={styles.touchableBordered}
+                  touchableStyle={localStyles.touchableBordered}
                   appliedFilters={this.props.appliedFilters}
-                  touchableTextStyle={styles.touchableTextBordered}
-                  touchableSelectedStyle={styles.touchableBorderedSelected}
+                  touchableTextStyle={localStyles.touchableTextBordered}
+                  touchableSelectedStyle={localStyles.touchableBorderedSelected}
                   touchableTextSelectedStyle={
-                    styles.touchableTextBorderedSelected
+                    localStyles.touchableTextBorderedSelected
                   }
                 />
               </View>
@@ -891,8 +935,8 @@ class StatusSection extends React.Component {
   render() {
     let { statusHeight } = this.state;
     return (
-      <View style={styles.filterSection}>
-        <Text style={styles.sectionTitleText}>CHOOSE YOUR EVENT STATUS</Text>
+      <View style={localStyles.filterSection}>
+        <Text style={styles.tabRightContainerText}>CHOOSE YOUR EVENT STATUS</Text>
         <View
           style={{
             marginTop: 10,
@@ -901,7 +945,7 @@ class StatusSection extends React.Component {
           }}
         >
           {statusKeys.map((status, i) => (
-            <View key={i} style={styles.touchableBorderedContainer}>
+            <View key={i} style={localStyles.touchableBorderedContainer}>
               <TouchableFiller
                 item={status}
                 filterType={'status'}
@@ -909,25 +953,25 @@ class StatusSection extends React.Component {
                 testID={`TouchableFillerStatus${i}`}
                 appliedFilters={this.props.appliedFilters}
                 selected={status === this.state.selected}
-                touchableTextStyle={styles.touchableTextBordered}
+                touchableTextStyle={localStyles.touchableTextBordered}
                 touchableSelectedStyle={
                   statusHeight
                     ? {
-                        ...styles.touchableBorderedSelected,
+                        ...localStyles.touchableBorderedSelected,
                         height: statusHeight
                       }
-                    : styles.touchableBorderedSelected
+                    : localStyles.touchableBorderedSelected
                 }
                 touchableStyle={
                   statusHeight
                     ? {
-                        ...styles.touchableBordered,
+                        ...localStyles.touchableBordered,
                         height: statusHeight
                       }
-                    : styles.touchableBordered
+                    : localStyles.touchableBordered
                 }
                 touchableTextSelectedStyle={
-                  styles.touchableTextBorderedSelected
+                  localStyles.touchableTextBorderedSelected
                 }
                 onLayout={({
                   nativeEvent: {
@@ -951,8 +995,7 @@ class StatusSection extends React.Component {
   }
 }
 
-const createStyles = ({ colors }) =>
-  StyleSheet.create({
+const localStyles = StyleSheet.create({
     touchableToggler: {
       alignSelf: 'center',
       borderColor: colors.pianoteRed,
@@ -982,7 +1025,7 @@ const createStyles = ({ colors }) =>
       position: 'absolute',
       right: 0,
       textAlign: 'center',
-      textTransform: 'capitalize'
+      textTransform: 'capitalize',
     },
     container: {
       backgroundColor: colors.mainBackground,
@@ -991,13 +1034,11 @@ const createStyles = ({ colors }) =>
     filterSection: {
       borderBottomColor: colors.thirdBackground,
       borderBottomWidth: 1,
-      paddingHorizontal: 15,
-      paddingVertical: 25
+      paddingVertical: 10
     },
     filterSectionNoPadding: {
       borderBottomColor: colors.thirdBackground,
       borderBottomWidth: 1,
-      paddingHorizontal: 15,
       paddingVertical: 0
     },
     sectionTitleText: {
@@ -1033,13 +1074,14 @@ const createStyles = ({ colors }) =>
     },
     levelText: {
       color: 'white',
-      fontFamily: 'OpenSans-Semibold',
-      fontSize: isTablet ? 32 : 30,
+      fontFamily: 'OpenSans-Bold',
+      fontSize: isTablet ? 32 : 18,
       textAlign: 'center'
     },
     levelDescriptionText: {
       color: 'white',
-      padding: 10,
+      padding: 5,
+      marginBottom: 5,
       textAlign: 'center'
     },
     touchableAll: {
@@ -1115,11 +1157,12 @@ const createStyles = ({ colors }) =>
     },
     touchableTextInstructorLetter: {
       color: '#445f73',
-      textAlign: 'center'
+      textAlign: 'center',
+      marginTop: 2,
     },
     touchableTextInstructorLetterSelected: {
       color: 'white',
-      textAlign: 'center'
+      textAlign: 'center',
     },
     touchableContainerInstructor: {
       padding: 5,
@@ -1151,13 +1194,12 @@ const createStyles = ({ colors }) =>
       backgroundColor: colors.pianoteRed,
       borderRadius: 50,
       flex: 1,
-      margin: 20,
-      paddingVertical: 15
     },
     touchableTextDoneAndApply: {
       color: 'white',
       fontFamily: 'RobotoCondensed-Bold',
-      textAlign: 'center'
+      textAlign: 'center',
+      fontSize: DeviceInfo.isTablet() ? 17.5 : 12.5
     },
     touchableReset: {
       borderColor: 'white',
@@ -1165,14 +1207,13 @@ const createStyles = ({ colors }) =>
       borderWidth: 2,
       flex: 1,
       justifyContent: 'center',
-      margin: 20,
       marginLeft: 0,
       padding: 0,
-      paddingVertical: 15
     },
     touchableTextReset: {
       color: 'white',
       fontFamily: 'RobotoCondensed-Bold',
-      textAlign: 'center'
+      textAlign: 'center',
+      fontSize: DeviceInfo.isTablet() ? 17.5 : 12.5
     }
   });

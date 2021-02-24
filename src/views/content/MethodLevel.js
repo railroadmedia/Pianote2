@@ -24,7 +24,6 @@ import ResetIcon from '../../components/ResetIcon';
 import RestartCourse from '../../modals/RestartCourse';
 import NextVideo from '../../components/NextVideo';
 import StartIcon from '../../components/StartIcon';
-import Pianote from 'Pianote2/src/assets/img/svgs/pianote.svg';
 import ContinueIcon from '../../components/ContinueIcon';
 import NavigationBar from '../../components/NavigationBar';
 import VerticalVideoList from '../../components/VerticalVideoList';

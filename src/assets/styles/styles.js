@@ -87,8 +87,7 @@ module.exports = StyleSheet.create({
   },
   filterHeader: {
     fontSize: (DeviceInfo.isTablet() ? 12 : 18) * factor,
-    marginBottom: 12.5 * factor,
-    marginTop: 12.5 * factor,
+    marginVertical: 12.5 * factor,
     textAlign: 'left',
     fontFamily: 'RobotoCondensed-Bold',
     color: '#445f73',

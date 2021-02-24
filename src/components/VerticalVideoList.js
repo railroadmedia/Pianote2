@@ -750,6 +750,7 @@ class VerticalVideoList extends React.Component {
                 >
                   {!this.props.hideFilterButton && (
                     <Filters_V2
+                      isMethod={this.props.isMethod}
                       disabled={!this.props.filters || this.state.isPaging}
                       onApply={() =>
                         this.props.applyFilters?.(this.filters?.filterQuery)
@@ -762,8 +763,8 @@ class VerticalVideoList extends React.Component {
               )}
             </View>
           )}
-          <View style={{ paddingLeft: 10 * factor }}>
-            {this.filters?.filterAppliedText}
+          <View style={{ paddingLeft: paddingInset }}>
+              {this.filters?.filterAppliedText}
           </View>
           {this.state.items.length == 0 &&
             this.state.outVideos &&
