@@ -126,7 +126,7 @@ export default class Search extends React.Component {
           key={'noResults'}
           style={{
             justifyContent: 'center',
-            paddingLeft: 15 * factor,
+            paddingLeft: paddingInset,
             borderTopWidth: 0.5,
             borderTopColor: colors.secondBackground
           }}
@@ -137,7 +137,7 @@ export default class Search extends React.Component {
               fontFamily: 'OpenSans-Regular',
               fontWeight: 'bold',
               color: 'white',
-              paddingTop: 10
+              paddingTop: paddingInset
             }}
           >
             No Recent Searches
@@ -358,13 +358,13 @@ export default class Search extends React.Component {
           >
             <View
               style={{
-                marginTop: (onTablet ? 0.03 : 0.04) * height,
+                marginTop: (onTablet ? '3%' : '4%'),
                 flexDirection: 'row',
-                paddingLeft: 15
+                paddingLeft: paddingInset
               }}
             >
               <View style={styles.searchBox}>
-                <View style={[styles.centerContent, { width: 40 * factor }]}>
+                <View style={[styles.centerContent, { width: 40 * factor, }]}>
                   <EvilIcons
                     name={'search'}
                     size={(onTablet ? 22.5 : 27.5) * factor}
@@ -382,7 +382,7 @@ export default class Search extends React.Component {
                   style={{
                     flex: 0.9,
                     color: 'grey',
-                    paddingVertical: (onTablet ? 10 : 12.5) * factor,
+                    paddingVertical: paddingInset,
                     justifyContent: 'center',
                     fontFamily: 'OpenSans-Regular',
                     fontSize: (onTablet ? 12 : 16) * factor
@@ -403,7 +403,7 @@ export default class Search extends React.Component {
                     paddingRight:
                       this.state.showCancel || this.state.searchTerm.length > 0
                         ? 0
-                        : 15
+                        : paddingInset
                   }
                 ]}
               >
@@ -412,7 +412,7 @@ export default class Search extends React.Component {
                   <TouchableOpacity
                     style={{
                       flex: 1,
-                      paddingHorizontal: 15 * factor,
+                      paddingHorizontal: paddingInset,
                       justifyContent: 'center'
                     }}
                     onPress={() => {
@@ -447,7 +447,7 @@ export default class Search extends React.Component {
                   this.state.searchResults.length > 0) && (
                   <Text
                     style={{
-                      paddingLeft: 15 * factor,
+                      paddingLeft: paddingInset,
                       fontFamily: 'OpenSans-Bold',
                       fontSize: (onTablet ? 14 : 18) * factor,
                       color: colors.secondBackground
@@ -464,7 +464,7 @@ export default class Search extends React.Component {
                     style={[
                       styles.centerContent,
                       {
-                        paddingRight: 15 * factor
+                        paddingRight: paddingInset
                       }
                     ]}
                   >
@@ -493,8 +493,7 @@ export default class Search extends React.Component {
                 !this.state.isLoadingAll && (
                   <View
                     style={{
-                      marginBottom: 10 * factor,
-                      marginTop: 15 * factor
+                      paddingVertical: paddingInset
                     }}
                   >
                     <VerticalVideoList
@@ -524,7 +523,7 @@ export default class Search extends React.Component {
                     styles.centerContent,
                     {
                       flex: 1,
-                      marginTop: 15 * factor
+                      marginTop: paddingInset
                     }
                   ]}
                 >
@@ -540,17 +539,17 @@ export default class Search extends React.Component {
                   key={'noResults'}
                   style={{
                     flex: 1,
-                    borderTopWidth: 1 * factor,
+                    borderTopWidth: 1,
                     borderTopColor: colors.secondBackground
                   }}
                 >
                   <Text
                     style={{
-                      marginTop: 5 * factor,
+                      marginTop: 5,
                       fontSize: (onTablet ? 14 : 18) * factor,
                       fontFamily: 'OpenSans-Bold',
                       color: 'white',
-                      paddingLeft: 15 * factor
+                      paddingLeft: paddingInset
                     }}
                   >
                     No Results
@@ -561,14 +560,7 @@ export default class Search extends React.Component {
           </ScrollView>
           <Modal
             isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
+            style={styles.modalContainer}
             animation={'slideInUp'}
             animationInTiming={1}
             animationOutTiming={1}

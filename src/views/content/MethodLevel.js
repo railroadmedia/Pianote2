@@ -217,9 +217,7 @@ export default class MethodLevel extends React.Component {
           }
         >
           <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}
+            onPress={() => this.props.navigation.goBack()}
             style={[
               styles.centerContent,
               {
@@ -235,8 +233,8 @@ export default class MethodLevel extends React.Component {
             ]}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={'white'}
             />
           </TouchableOpacity>
@@ -280,22 +278,21 @@ export default class MethodLevel extends React.Component {
                     width: '75%',
                     height: 65 * factor,
                     alignSelf: 'center',
-                    marginBottom: 25 * factor
+                    marginBottom: onTablet ? '3%' : '5%'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
               <View
-                style={{
+                style={[styles.heightButtons, {
                   marginBottom: 10 * factor,
-                  height: (onTablet ? 30 : 40) * factor,
                   width: '100%',
                   flexDirection: 'row',
                   alignItems: 'center'
-                }}
+                }]}
               >
-                <View style={{  flex: 1, flexDirection: 'row' }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
                   <View style={{flex: 0.5}}/>
                   <TouchableOpacity
                     style={{
@@ -401,7 +398,6 @@ export default class MethodLevel extends React.Component {
           </ImageBackground>
           {this.state.showInfo && (
             <View
-              key={'info'}
               style={{
                 width: '100%',
                 paddingHorizontal: this.state.isLandscape ? '10%' : 15
@@ -410,9 +406,9 @@ export default class MethodLevel extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 20 * factor,
-                  paddingHorizontal: 10 * factor,
-                  fontSize: (onTablet ? 9 : 15) * factor,
+                  marginTop: onTablet ? 40 : 30,
+                  fontSize: (onTablet ? 10 : 15) * factor,
+                  paddingHorizontal: paddingInset,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -424,8 +420,8 @@ export default class MethodLevel extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10 * factor,
-              marginTop: 40 * factor
+              marginBottom: 10,
+              marginTop: onTablet ? 40 : 30
             }}
           >
             <VerticalVideoList
@@ -444,12 +440,8 @@ export default class MethodLevel extends React.Component {
           </View>
         </ScrollView>
         <Modal
-          key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -479,7 +471,6 @@ export default class MethodLevel extends React.Component {
             }
           />
         )}
-
         <NavigationBar currentPage={''} isMethod={true} />
       </SafeAreaView>
     );

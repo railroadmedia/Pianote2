@@ -411,7 +411,11 @@ export default class LoginCredentials extends React.Component {
                 position: 'absolute'
               }}
             >
-              <Back width={25} height={25} fill={'white'} />
+              <Back 
+                width={backButtonSize}
+                height={backButtonSize}
+                fill={'white'} 
+              />
             </TouchableOpacity>
           </KeyboardAvoidingView>
         </SafeAreaView>

@@ -417,12 +417,11 @@ class Lessons extends React.Component {
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
                 size='small'
-                style={{ padding: 10 }}
+                style={styles.activityIndicator}
                 color={colors.pianoteGrey}
               />
             )}
             <ImageBackground
-              onLayout={() => console.log(this.getAspectRatio())}
               resizeMode={'cover'}
               style={{
                 width: '100%',
@@ -438,7 +437,6 @@ class Lessons extends React.Component {
                 borderRadius={0}
               />
               <View
-                key={'pianoteSVG'}
                 style={{
                   position: 'absolute',
                   height: '100%',
@@ -454,23 +452,19 @@ class Lessons extends React.Component {
                       width: width * 0.75,
                       height: 65 * factor,
                       alignSelf: 'center',
-                      marginBottom: 12.5 * factor
+                      marginBottom: onTablet ? '2%' : '4%'
                     }}
                     source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                     resizeMode={FastImage.resizeMode.contain}
                   />
                 </View>
                 <View
-                  style={{
-                    height: (onTablet ? 25 : 40) * factor,
+                  style={[ 
+                    styles.heightButtons, {
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginBottom: onTablet
-                      ? 15
-                      : Platform.OS == 'android'
-                      ? -5
-                      : -1
-                  }}
+                    marginBottom: '1%'
+                  }]}
                 >
                   <View style={{ flex: 1 }} />
                   <View
@@ -529,7 +523,6 @@ class Lessons extends React.Component {
                   </View>
                   <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ flex: 0.1 }} />
               </View>
             </ImageBackground>
             <View>
@@ -588,20 +581,20 @@ class Lessons extends React.Component {
                   isMethod={true}
                   items={this.state.allLessons}
                   isLoading={false}
-                  title={'ALL LESSONS'} // title for see all page
-                  type={'LESSONS'} // the type of content on page
+                  title={'ALL LESSONS'} 
+                  type={'LESSONS'} 
                   showFilter={true}
                   isPaging={this.state.isPaging}
-                  showType={true} // show course / song by artist name
-                  showArtist={true} // show artist name
+                  showType={true} 
+                  showArtist={true}
                   showSort={true}
                   showLength={false}
-                  filters={this.state.filters} // show filter list
+                  filters={this.state.filters} 
                   currentSort={this.state.currentSort}
-                  changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-                  filterResults={() => this.setState({ showFilters: true })} // apply from filters page
-                  imageWidth={width * 0.26} // image width
-                  outVideos={this.state.outVideos} // if paging and out of videos
+                  changeSort={sort => this.changeSort(sort)} 
+                  filterResults={() => this.setState({ showFilters: true })} 
+                  imageWidth={width * 0.26} 
+                  outVideos={this.state.outVideos} 
                   getVideos={() => this.getVideos()}
                 />
               )}
@@ -613,10 +606,7 @@ class Lessons extends React.Component {
         <Modal
           key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}
@@ -636,14 +626,7 @@ class Lessons extends React.Component {
         {this.state.showFilters && (
           <Modal
             isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
+            style={styles.modalContainer}
             animation={'slideInUp'}
             animationInTiming={1}
             animationOutTiming={1}

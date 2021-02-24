@@ -275,8 +275,8 @@ export default class Filters extends React.Component {
               onPress={() => this.props.hideFilters()}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
             </TouchableOpacity>

@@ -16,8 +16,17 @@ var { StyleSheet } = React;
 
 module.exports = StyleSheet.create({
   modalContainer: {
+    // simple container for modals
     margin: 0,
     flex: 1
+  },
+  heightButtons: {
+    // the height of buttons like start / more info on lessons
+    height: (DeviceInfo.isTablet() ? 25 : 40) * factor,
+  },
+  activityIndicator: {
+    // style for putting on spinners
+    padding: 20
   },
   buttonText: {
     color: 'white',

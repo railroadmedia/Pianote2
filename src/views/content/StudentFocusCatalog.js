@@ -134,8 +134,8 @@ class StudentFocusCatalog extends React.Component {
         style={{
           width: '50%',
           marginTop: '3%',
-          paddingLeft: index % 2 == 0 ? 12 * factor : '1%', //(12 * factor) / (index % 2 === 0 ? 1 : 2),
-          paddingRight: index % 2 == 0 ? '1%' : 12 * factor //(12 * factor) / (index % 2 === 0 ? 2 : 1)
+          paddingLeft: index % 2 == 0 ? 12 * factor : '1%', 
+          paddingRight: index % 2 == 0 ? '1%' : 12 * factor 
         }}
       >
         <FastImage
@@ -143,7 +143,7 @@ class StudentFocusCatalog extends React.Component {
             aspectRatio: 1,
             borderWidth: 0.3,
             borderColor: colors.pianoteRed,
-            borderRadius: 10 * factor
+            borderRadius: 10 
           }}
           source={{ uri: item.thumbnailUrl }}
           resizeMode={FastImage.resizeMode.cover}
@@ -181,14 +181,13 @@ class StudentFocusCatalog extends React.Component {
                 {isiOS && this.state.refreshControl && (
                   <ActivityIndicator
                     size='small'
-                    style={{ padding: 10 }}
+                    style={styles.activityIndicator}
                     color={colors.secondBackground}
                   />
                 )}
                 <Text style={styles.contentPageHeader}>Student Focus</Text>
-
                 {this.state.started && (
-                  <View style={[styles.mainContainer, { paddingLeft: 10 }]}>
+                  <View style={styles.mainContainer}>
                     <HorizontalVideoList
                       hideFilterButton={true}
                       Title={'CONTINUE'}

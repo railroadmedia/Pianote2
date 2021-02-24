@@ -569,8 +569,8 @@ export default class CreateAccount3 extends React.Component {
                   }}
                 >
                   <Back
-                    width={(onTablet ? 17.5 : 25) * factor}
-                    height={(onTablet ? 17.5 : 22.5) * factor}
+                    width={backButtonSize}
+                    height={backButtonSize}
                     fill={'black'}
                   />
                 </TouchableOpacity>

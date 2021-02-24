@@ -111,7 +111,6 @@ export default class Method extends React.Component {
       return this.context.showNoConnectionAlert();
     }
     const response = new ContentModel(await methodService.getMethod());
-    console.log(response)
     const newContent = response.post.levels.map(data => {
       return new ContentModel(data);
     });
@@ -197,7 +196,6 @@ export default class Method extends React.Component {
       return this.context.showNoConnectionAlert();
     }
 
-    console.log('RESET: ', this.state.id)
     this.setState({items: [], showRestartCourse: false,})
 
     await resetProgress(this.state.id);
@@ -244,12 +242,7 @@ export default class Method extends React.Component {
   render() {
     return (
       <View style={[styles.mainContainer, { backgroundColor: 'black' }]}>
-        <NavMenuHeaders
-          isMethod={true}
-          currentPage={'LESSONS'}
-          parentPage={'METHOD'}
-        />
-
+        <NavMenuHeaders isMethod={true} currentPage={'LESSONS'} parentPage={'METHOD'} />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior={'never'}
@@ -301,20 +294,20 @@ export default class Method extends React.Component {
                     width: '75%',
                     height: 65 * factor,
                     alignSelf: 'center',
-                    marginBottom: 25 * factor
+                    marginBottom: onTablet ? '3%' : '5%'
                   }}
                   source={require('Pianote2/src/assets/img/imgs/pianote-method.png')}
                   resizeMode={FastImage.resizeMode.contain}
                 />
               </View>
               <View
-                style={{
-                  marginBottom: 10 * factor,
-                  height: (onTablet ? 30 : 40) * factor,
+                style={[
+                  styles.heightButtons, {
+                  marginBottom: '3%',
                   width: '100%',
                   flexDirection: 'row',
                   alignItems: 'center'
-                }}
+                }]}
               >
                 <View style={{ flex: 1 }} />
                 <View style={{ width: '45%' }}>
@@ -377,10 +370,8 @@ export default class Method extends React.Component {
               </View>
             </View>
           </ImageBackground>
-
           {this.state.showInfo && (
             <View
-              key={'info'}
               style={{
                 width: '100%',
                 paddingHorizontal: this.state.isLandscape ? '10%' : 15
@@ -389,7 +380,6 @@ export default class Method extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 5 * factor,
                   fontSize: (onTablet ? 10 : 15) * factor,
                   color: 'white',
                   textAlign: 'center'
@@ -397,9 +387,8 @@ export default class Method extends React.Component {
               >
                 {this.state.description !== 'TBD' ? this.state.description : ''}
               </Text>
-              <View key={'containStats'}>
+              <View>
                 <View
-                  key={'stats'}
                   style={[
                     styles.centerContent,
                     {
@@ -414,7 +403,7 @@ export default class Method extends React.Component {
                       styles.centerContent,
                       {
                         width: 70 * factor,
-                        marginRight: 15 * factor
+                        marginRight: 15 * factor,
                       }
                     ]}
                   >
@@ -424,7 +413,6 @@ export default class Method extends React.Component {
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Bold',
-                        marginTop: 10 * factor
                       }}
                     >
                       {this.state.items.length}
@@ -435,7 +423,7 @@ export default class Method extends React.Component {
                         textAlign: 'left',
                         color: 'white',
                         fontFamily: 'OpenSans-Regular',
-                        marginTop: 5 * factor
+                        marginTop: 5
                       }}
                     >
                       LEVELS
@@ -451,12 +439,10 @@ export default class Method extends React.Component {
                   >
                     <Text
                       style={{
-                        fontWeight: '700',
                         fontSize: (onTablet ? 15 : 17) * factor,
                         textAlign: 'left',
                         color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
+                        fontFamily: 'OpenSans-Bold',
                       }}
                     >
                       {this.state.xp}
@@ -475,18 +461,16 @@ export default class Method extends React.Component {
                   </View>
                   <View style={{ flex: 1 }} />
                 </View>
-                <View style={{ height: 15 * factor }} />
                 <View
-                  key={'buttons'}
                   style={[
                     styles.centerContent,
                     {
                       flex: 0.25,
-                      flexDirection: 'row'
+                      flexDirection: 'row',
+                      marginTop: 15
                     }
                   ]}
                 >
-                  <View style={{ flex: 1 }} />
                   <TouchableOpacity
                     onPress={() => {
                       this.setState({
@@ -497,7 +481,7 @@ export default class Method extends React.Component {
                       styles.centerContent,
                       {
                         marginLeft: 15 * factor,
-                        marginBottom: 10 * factor,
+                        marginBottom: 10,
                         width: 70 * factor
                       }
                     ]}
@@ -520,7 +504,6 @@ export default class Method extends React.Component {
                       Restart
                     </Text>
                   </TouchableOpacity>
-                  <View style={{ flex: 1 }} />
                 </View>
               </View>
             </View>
@@ -528,7 +511,7 @@ export default class Method extends React.Component {
           <View
             style={{
               paddingHorizontal: this.state.isLandscape ? '10%' : 0,
-              marginBottom: 10 * factor
+              marginBottom: 10
             }}
           >
             <VerticalVideoList
@@ -549,12 +532,8 @@ export default class Method extends React.Component {
           </View>
         </ScrollView>
         <Modal
-          key={'restartCourse'}
           isVisible={this.state.showRestartCourse}
-          style={{
-            margin: 0,
-            flex: 1
-          }}
+          style={styles.modalContainer}
           animation={'slideInUp'}
           animationInTiming={250}
           animationOutTiming={250}

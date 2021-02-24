@@ -18,7 +18,6 @@ import Modal from 'react-native-modal';
 import Filters from '../../components/FIlters.js';
 import NavigationBar from '../../components/NavigationBar';
 import NavMenuHeaders from '../../components/NavMenuHeaders';
-import NavigationMenu from '../../components/NavigationMenu';
 import VerticalVideoList from '../../components/VerticalVideoList';
 
 import { getMyListContent } from '../../services/GetContent';
@@ -221,7 +220,7 @@ class MyList extends React.Component {
           {isiOS && this.state.refreshing && (
             <ActivityIndicator
               size='small'
-              style={{ padding: 10 }}
+              style={styles.activityIndicator}
               color={colors.secondBackground}
             />
           )}
@@ -230,7 +229,6 @@ class MyList extends React.Component {
             style={[
               styles.tabRightContainer,
               {
-                borderBottomWidth: 0,
                 marginTop: 15 * factor
               }
             ]}
@@ -249,7 +247,7 @@ class MyList extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tabRightContainer, { marginBottom: 3 * factor }]}
+            style={[styles.tabRightContainer, { marginBottom: 5 }]}
             onPress={() => {
               this.props.navigation.navigate('SEEALL', {
                 title: 'Completed',
@@ -285,14 +283,7 @@ class MyList extends React.Component {
         {this.state.showFilters && (
           <Modal
             isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
+            style={styles.modalContainer}
             animation={'slideInUp'}
             animationInTiming={1}
             animationOutTiming={1}

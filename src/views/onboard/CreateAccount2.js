@@ -140,8 +140,8 @@ export default class CreateAccount extends React.Component {
               style={localStyles.createAccountContainer}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
               <Text

@@ -89,12 +89,6 @@ PushNotification.configure({
 AppRegistry.registerComponent(appName, () => App);
 console.disableYellowBox = true;
 
-global.token = '';
-global.onTablet = DeviceInfo.isTablet();
-global.loadedFromNotification = false;
-global.isiOS = Platform.OS === 'ios';
-global.styles = require('Pianote2/src/assets/styles/styles.js');
-global.statusBarHeight = StatusBar.statusBarHeight || 24;
 global.fullWidth = Dimensions.get('window').width;
 global.fullHeight = Dimensions.get('window').height;
 global.factorHorizontal = Dimensions.get('window').width / 375;
@@ -103,14 +97,17 @@ global.factorRatio =
   (Dimensions.get('window').height / 812 +
     Dimensions.get('window').width / 375) /
   2;
+global.token = '';
+global.onTablet = DeviceInfo.isTablet();
+global.loadedFromNotification = false; 
+global.isiOS = Platform.OS === 'ios';
+global.styles = require('Pianote2/src/assets/styles/styles.js');
 global.isNotch = DeviceInfo.hasNotch();
-global.navPxFromTop = isNotch
-  ? 30 * factorRatio
-  : onTablet
-  ? -5 * factorVertical
-  : Platform.OS == 'android'
-  ? 0 * factorRatio
-  : 10 * factorRatio;
+global.isConnected = true;
+global.isPackOnly = false;
+global.paddingInset = (DeviceInfo.isTablet ? 10 : 5) 
+global.fallbackThumb = 'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
+global.backButtonSize = (DeviceInfo.isTablet() ? 17.5 : 25) * factorRatio, 
 global.colors = {
   mainBackground: '#00101d',
   secondBackground: '#445f73',
@@ -119,17 +116,6 @@ global.colors = {
   pianoteRed: '#fb1b2f',
   pianoteGrey: '#6e777a'
 };
-paddingInset = (DeviceInfo.isTablet ? 10 : 5)
-global.maxLevel = {
-  lessons: null,
-  packs: null,
-  studentFocus: null
-};
-global.isConnected = true;
-global.serverLocation = 'https://www.pianote.com';
-global.isPackOnly = false;
-global.fallbackThumb =
-  'https://dmmior4id2ysr.cloudfront.net/assets/images/pianote_fallback_thumb.jpg';
 
 configure({
   baseURL: 'https://www.pianote.com',

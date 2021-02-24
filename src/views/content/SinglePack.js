@@ -236,29 +236,28 @@ export default class SinglePack extends React.Component {
                 styles.centerContent,
                 {
                   position: 'absolute',
-                  height: 35 * factor,
-                  width: 35 * factor,
+                  height: 35,
+                  width: 35,
                   borderRadius: 100,
                   position: 'absolute',
-                  left: 7.5 * factor,
-                  top: 10 * factor,
+                  left: paddingInset,
+                  top: paddingInset,
                   zIndex: 4
                 }
               ]}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
             </TouchableOpacity>
-
             <ImageBackground
               resizeMode={'cover'}
               style={{
                 width: '100%',
                 aspectRatio: this.getAspectRatio(),
-                justifyContent: 'flex-end'
+                justifyContent: 'flex-end',
               }}
               source={{
                 uri: `https://cdn.musora.com/image/fetch/fl_lossy,q_auto:eco,w_${Math.round(
@@ -283,195 +282,202 @@ export default class SinglePack extends React.Component {
                   style={{
                     height: greaterWDim / 15,
                     width: '100%',
-                    zIndex: 1
+                    zIndex: 1,
+                    marginBottom: onTablet ? '2%' : '4%'
                   }}
                   source={{ uri: this.state.logo }}
                   resizeMode={FastImage.resizeMode.contain}
                 />
-
                 <View
-                  key={'buttonRow'}
-                  style={{
+                  style={[styles.heightButtons, {
+                    marginBottom: 10 * factor,
+                    width: '100%',
                     flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                    paddingVertical: 15 * factor
-                  }}
+                    alignItems: 'center'
+                  }]}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.toggleMyList();
-                    }}
-                    style={{
-                      flex: 0.5,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <AntIcon
-                      name={this.state.isAddedToList ? 'close' : 'plus'}
-                      size={22 * factor}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <View style={{flex: 0.5}}/>
+                    <TouchableOpacity
                       style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factor,
-                        fontSize: 13 * factor
+                        flex: 0.5,
+                        alignItems: 'center',
+                      }}
+                      onPress={() => {
+                        this.toggleMyList();
                       }}
                     >
-                      {this.state.isAddedToList ? 'Added' : 'My List'}
-                    </Text>
-                  </TouchableOpacity>
-
-                  {this.state.isCompleted ? (
-                    <ResetIcon
-                      pressed={() =>
-                        this.setState({
-                          showRestartCourse: true
-                        })
-                      }
-                    />
-                  ) : !this.state.isStarted ? (
-                    <StartIcon
-                      pressed={() => {
-                        this.props.navigation.navigate('VIDEOPLAYER', {
-                          url: this.state.nextLessonUrl
-                        });
-                      }}
-                    />
-                  ) : (
-                    this.state.isStarted && (
-                      <ContinueIcon
+                      <View
+                        style={[styles.centerContent]}
+                      >
+                        {!this.state.isAddedToList ? (
+                          <AntIcon
+                            name={'plus'}
+                            size={(onTablet ? 18 : 25) * factor}
+                            color={colors.pianoteRed}
+                          />
+                        ) : (
+                          <AntIcon
+                            name={'close'}
+                            size={(onTablet ? 18 : 25) * factor}
+                            color={colors.pianoteRed}
+                          />
+                        )}
+                      </View>
+                      <Text
+                        style={{
+                          fontFamily: 'OpenSans-Regular',
+                          color: 'white',
+                          fontSize: (onTablet ? 8 : 12) * factor
+                        }}
+                      >
+                        {this.state.isAddedToList ? 'Added' : 'My List'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ width: '45%' }}>
+                    {this.state.isCompleted ? (
+                      <ResetIcon
                         pressed={() =>
-                          this.props.navigation.navigate('VIDEOPLAYER', {
-                            url: this.state.nextLessonUrl
+                          this.setState({
+                            showRestartCourse: true
                           })
                         }
                       />
-                    )
-                  )}
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        showInfo: !this.state.showInfo
-                      });
-                    }}
-                    style={{
-                      flex: 0.5,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <AntIcon
-                      name={this.state.showInfo ? 'infocirlce' : 'infocirlceo'}
-                      size={22 * factor}
-                      color={colors.pianoteRed}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: 'OpenSans-Regular',
-                        color: 'white',
-                        marginTop: 3 * factor,
-                        fontSize: 13 * factor
-                      }}
-                    >
-                      Info
-                    </Text>
-                  </TouchableOpacity>
+                    ) : !this.state.isStarted ? (
+                      <StartIcon
+                        pressed={() => {
+                          this.props.navigation.navigate('VIDEOPLAYER', {
+                            url: this.state.nextLessonUrl
+                          });
+                        }}
+                      />
+                    ) : (
+                      this.state.isStarted && (
+                        <ContinueIcon
+                          pressed={() =>
+                            this.props.navigation.navigate('VIDEOPLAYER', {
+                              url: this.state.nextLessonUrl
+                            })
+                          }
+                        />
+                      )
+                    )}
+                  </View>
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={{
+                          flex: 0.5,
+                          alignItems: 'center',
+                        }}
+                        onPress={() => {
+                          this.setState({
+                            showInfo: !this.state.showInfo
+                          });
+                        }}
+                      >
+                        <View
+                          style={[styles.centerContent, { flexDirection: 'row' }]}
+                        >
+                          <AntIcon
+                            name={
+                              this.state.showInfo ? 'infocirlce' : 'infocirlceo'
+                            }
+                            size={(onTablet ? 15 : 20) * factor}
+                            color={colors.pianoteRed}
+                          />
+                        </View>
+                        <Text
+                          style={{
+                            fontFamily: 'OpenSans-Regular',
+                            color: 'white',
+                            marginTop: 2,
+                            fontSize: (onTablet ? 8 : 12) * factor
+                          }}
+                        >
+                          Info
+                        </Text>
+                      </TouchableOpacity>
+                    <View style={{flex: 0.5}}/>
+                  </View>
                 </View>
               </View>
             </ImageBackground>
-
             {this.state.showInfo && (
               <View
-                key={'info'}
                 style={{
                   alignSelf: 'center',
                   backgroundColor: colors.mainBackground,
-                  marginHorizontal: this.state.isLandscape ? '10%' : 15
+                  marginHorizontal: this.state.isLandscape ? '10%' : paddingInset,
+                  marginTop: onTablet ? '2%' : '2%',
                 }}
               >
                 <Text
                   style={{
                     fontFamily: 'OpenSans-Regular',
-                    marginTop: 5 * factor,
-                    fontSize: 15 * factor,
+                    marginTop: onTablet ? '5%' : '5%',
+                    fontSize: (onTablet ? 10 : 15) * factor,
+                    paddingHorizontal: paddingInset,
+                  
                     color: 'white',
                     textAlign: 'center'
                   }}
                 >
                   {this.state.description}
                 </Text>
-                <View key='row1' style={{ flexDirection: 'row' }}>
-                  <View
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      paddingRight: 20,
-                      alignItems: 'flex-end'
-                    }}
-                  >
-                    <View style={{ alignItems: 'center' }}>
+                
+                <View style={{paddingHorizontal: '30%', }}>
+                  <View style={[styles.centerContent, { flexDirection: 'row', marginTop: '2%' }]}>
+                    <Text
+                      style={{
+                        flex: 1,
+                        fontSize: (onTablet ? 15 : 17) * factor,
+                        textAlign: 'center',
+                        color: 'white',
+                        fontFamily: 'OpenSans-Bold',
+                        marginTop: 10,
+                      }}
+                    >
+                      {this.state.videos.length}
+                      {`\n`}
                       <Text
                         style={{
+                          fontSize: (onTablet ? 10 : 13) * factor,
+                          textAlign: 'center',
                           color: 'white',
-                          fontSize: 17 * factor,
-                          fontFamily: 'OpenSans-Bold'
-                        }}
-                      >
-                        {this.state.videos.length}
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 13 * factor,
-                          fontFamily: 'OpenSans-Regular'
+                          fontFamily: 'OpenSans-Regular',
+                          marginTop: 5
                         }}
                       >
                         LESSONS
                       </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      paddingLeft: 20,
-                      alignItems: 'flex-start'
-                    }}
-                  >
-                    <View style={{ alignItems: 'center' }}>
+                    </Text>
+                    <Text
+                      style={{
+                        flex: 1,
+                        fontSize: (onTablet ? 15 : 17) * factor,
+                        textAlign: 'center',
+                        color: 'white',
+                        fontFamily: 'OpenSans-Bold',
+                        marginTop: 10 
+                      }}
+                    >
+                      {this.state.xp}
+                      {`\n`}
                       <Text
                         style={{
+                          fontSize: (onTablet ? 10 : 13) * factor,
+                          textAlign: 'center',
                           color: 'white',
-                          fontSize: 17 * factor,
-                          fontFamily: 'OpenSans-Bold'
-                        }}
-                      >
-                        {this.state.xp}
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 13 * factor,
-                          fontFamily: 'OpenSans-Regular'
+                          fontFamily: 'OpenSans-Regular',
+                          marginTop: 5
                         }}
                       >
                         XP
                       </Text>
-                    </View>
+                    </Text>
                   </View>
-                </View>
-                <View key='row2' style={{ flexDirection: 'row' }}>
-                  <View
-                    style={{
-                      flex: this.state.id == 262875 ? 0.5 : 1,
-                      padding: 10,
-                      paddingRight: 20,
-                      alignItems: 'flex-end'
-                    }}
-                  >
+                  <View style={[styles.centerContent, { flexDirection: 'row', marginTop: '10%' }]}>
                     {(this.state.id == 262875 ? false : true) && (
                       <Download_V2
                         entity={{
@@ -479,17 +485,18 @@ export default class SinglePack extends React.Component {
                           content: packsService.getPack(this.state.url, true)
                         }}
                         styles={{
+                          flex: this.state.id == 262875 ? 1 : 0,
                           touchable: { flex: 1 },
                           iconSize: {
-                            width: 27.5 * factor,
-                            height: 27.5 * factor
+                            width: (onTablet ? 20 : 27.5) * factor,
+                            height: (onTablet ? 20 : 27.5) * factor
                           },
                           iconDownloadColor: colors.pianoteRed,
                           activityIndicatorColor: colors.pianoteRed,
                           animatedProgressBackground: colors.pianoteRed,
                           textStatus: {
                             color: '#ffffff',
-                            fontSize: 13 * factor,
+                            fontSize: (onTablet ? 10 : 13) * factor,
                             fontFamily: 'OpenSans-Regular',
                             marginTop: 5
                           },
@@ -508,17 +515,11 @@ export default class SinglePack extends React.Component {
                         }}
                       />
                     )}
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      padding: 10,
-                      paddingLeft: 20,
-                      alignItems: 'flex-start'
-                    }}
-                  >
                     <TouchableOpacity
-                      style={{ alignItems: 'center' }}
+                      style={{ 
+                        alignItems: 'center', 
+                        flex: 1,
+                      }}
                       onPress={() => {
                         this.setState({
                           showRestartCourse: true
@@ -526,14 +527,15 @@ export default class SinglePack extends React.Component {
                       }}
                     >
                       <MaterialIcon
-                        size={27.5 * factor}
+                        size={(onTablet ? 20 : 27.5) * factor}
                         name={'replay'}
                         color={colors.pianoteRed}
                       />
                       <Text
                         style={{
+                          fontSize: (onTablet ? 10 : 13) * factor,
+                          textAlign: 'center',
                           color: 'white',
-                          fontSize: 13 * factor,
                           fontFamily: 'OpenSans-Regular',
                           marginTop: 5
                         }}
@@ -542,13 +544,15 @@ export default class SinglePack extends React.Component {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                </View>
+                </View>                
               </View>
             )}
-            <View style={{ height: 5 * factor }} />
             <View
-              key={'verticalVideoList'}
-              style={this.state.isLandscape ? { marginHorizontal: '10%' } : {}}
+              style={{
+                paddingHorizontal: this.state.isLandscape ? '10%' : 0,
+                marginBottom: 10,
+                marginTop: onTablet ? '4%' : '8%'
+              }}
             >
               <VerticalVideoList
                 items={this.state.videos}
@@ -565,7 +569,7 @@ export default class SinglePack extends React.Component {
                 navigator={row => this.navigate(row)}
               />
             </View>
-            <View style={{ height: 15 * factor }} />
+            
           </ScrollView>
         ) : (
           <View

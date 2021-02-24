@@ -125,7 +125,6 @@ export default class Downloads extends React.Component {
           <View style={styles.childHeader}>
             <View style={{ flex: 1 }} />
             <Text style={styles.childHeaderText}>Downloads</Text>
-
             <TouchableOpacity
               onPress={() =>
                 this.setState(({ edit }) => ({
@@ -142,14 +141,13 @@ export default class Downloads extends React.Component {
                 style={{
                   color: colors.pianoteRed,
                   fontFamily: 'OpenSans-Bold',
-                  fontSize: onTablet ? 18 : 16 * factor
+                  fontSize: onTablet ? 18 : 12
                 }}
               >
                 EDIT
               </Text>
             </TouchableOpacity>
           </View>
-
           <FlatList
             data={items}
             keyboardShouldPersistTaps='handled'
@@ -158,7 +156,7 @@ export default class Downloads extends React.Component {
             ListEmptyComponent={() => (
               <Text
                 style={{
-                  padding: 20,
+                  padding: paddingInset*1.5,
                   color: 'white',
                   textAlign: 'center',
                   fontSize: onTablet ? 20 : 18 * factor
@@ -192,7 +190,6 @@ export default class Downloads extends React.Component {
                         height: '100%',
                         borderRadius: 2,
                         aspectRatio: 16 / 9,
-                        
                       }}
                       source={{uri: item[type]?.data?.find(d => d.key === 'thumbnail_url')?.value}}
                       resizeMode={FastImage.resizeMode.cover}
@@ -240,7 +237,7 @@ export default class Downloads extends React.Component {
                     <View style={{ justifyContent: 'center' }}>
                       <IconFeather
                         name={'chevron-right'}
-                        size={25 * factor}
+                        size={(onTablet ? 20 : 25) * factor} 
                         color={'white'}
                       />
                     </View>

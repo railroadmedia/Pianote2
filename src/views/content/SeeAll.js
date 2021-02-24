@@ -280,8 +280,8 @@ export default class SeeAll extends React.Component {
             onPress={() => this.props.navigation.goBack()}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={'white'}
             />
           </TouchableOpacity>

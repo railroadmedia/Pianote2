@@ -276,7 +276,7 @@ export default class PathOverview extends React.Component {
   renderHeader = () => {
     let { thumbnail } = this.state;
     return (
-      <View>
+      <View style={{marginBottom: '4%'}}>
         <ImageBackground
           resizeMethod='resize'
           style={{
@@ -311,14 +311,13 @@ export default class PathOverview extends React.Component {
             ]}
           >
             <Back
-              width={(onTablet ? 17.5 : 25) * factor}
-              height={(onTablet ? 17.5 : 25) * factor}
+              width={backButtonSize}
+              height={backButtonSize}
               fill={'white'}
             />
           </TouchableOpacity>
         </ImageBackground>
-        <View
-          key={'title'}
+        <View 
           style={[this.state.isLandscape ? { marginHorizontal: '10%' } : {}]}
         >
           {!this.state.isMethod && (
@@ -329,7 +328,7 @@ export default class PathOverview extends React.Component {
                 color: 'white',
                 textAlign: 'center',
                 fontSize: (onTablet ? 12.5 : 20) * factor,
-                marginTop: 10 * factor
+                marginTop: 10
               }}
             >
               {this.state.data.title}
@@ -356,12 +355,11 @@ export default class PathOverview extends React.Component {
             | {this.state.xp} XP
           </Text>
           <View
-            style={{
-              height: (onTablet ? 30 : 40) * factor,
+            style={[styles.heightButtons, {
               width: '100%',
               flexDirection: 'row',
-              alignItems: 'center'
-            }}
+              alignItems: 'center',
+            }]}
           >
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <View style={{flex: 0.5}}/>
@@ -464,10 +462,9 @@ export default class PathOverview extends React.Component {
 
         {this.state.showInfo && (
           <View
-            key={'info'}
             style={[
               {
-                paddingHorizontal: 20 * factor
+                paddingHorizontal: paddingInset*2
               },
               this.state.isLandscape
                 ? { marginHorizontal: '10%' }
@@ -478,9 +475,8 @@ export default class PathOverview extends React.Component {
               <Text
                 style={{
                   fontFamily: 'OpenSans-Regular',
-                  marginTop: 10 * factor,
-                  paddingHorizontal: 10 * factor,
-                  fontSize: (onTablet ? 9 : 15) * factor,
+                  marginTop: '5%',
+                  fontSize: (onTablet ? 10 : 15) * factor,
                   color: 'white',
                   textAlign: 'center'
                 }}
@@ -488,117 +484,90 @@ export default class PathOverview extends React.Component {
                 {this.state.data.description}
               </Text>
             )}
-            <View key={'containStats'}>
+            <View style={{paddingHorizontal: '20%'}}>
               <View
-                key={'stats'}
-                style={[styles.centerContent, { flexDirection: 'row' }]}
+                style={[styles.centerContent, { flexDirection: 'row', }]}
               >
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1,
-                      alignItems: 'flex-end'
-                    }
-                  ]}
+                <Text
+                  style={{
+                    flex: 1,
+                    fontSize: (onTablet ? 15 : 17) * factor,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Bold',
+                    marginTop: 10,
+                  }}
                 >
+                  {this.state.items.length}
+                  {`\n`}
                   <Text
                     style={{
-                      fontSize: (onTablet ? 15 : 17) * factor,
+                      fontSize: (onTablet ? 10 : 13) * factor,
                       textAlign: 'center',
                       color: 'white',
-                      fontFamily: 'OpenSans-Bold',
+                      fontFamily: 'OpenSans-Regular',
+                      marginTop: 5 * factor
+                    }}
+                  >
+                    LESSONS
+                  </Text>
+                </Text>
+                <Text
+                  style={{
+                    flex: 1,
+                    fontSize: (onTablet ? 15 : 17) * factor,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Bold',
+                    marginTop: 10
+                  }}
+                >
+                  {Math.floor(this.state.totalLength / 60)}
+                  {`\n`}
+                  <Text
+                    style={{
+                      fontSize: (onTablet ? 10 : 13) * factor,
+                      textAlign: 'center',
+                      color: 'white',
+                      fontFamily: 'OpenSans-Regular',
                       marginTop: 10 * factor
                     }}
                   >
-                    {this.state.items.length}
-                    {`\n`}
-                    <Text
-                      style={{
-                        fontSize: (onTablet ? 10 : 13) * factor,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 5 * factor
-                      }}
-                    >
-                      LESSONS
-                    </Text>
+                    MINS
                   </Text>
-                </View>
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1
-                    }
-                  ]}
+                </Text>
+                <Text
+                  style={{
+                    flex: 1,
+                    fontSize: (onTablet ? 15 : 17) * factor,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontFamily: 'OpenSans-Bold',
+                    marginTop: 10 
+                  }}
                 >
+                  {this.state.xp}
+                  {`\n`}
                   <Text
                     style={{
-                      fontSize: (onTablet ? 15 : 17) * factor,
+                      fontSize: (onTablet ? 10 : 13) * factor,
                       textAlign: 'center',
                       color: 'white',
-                      fontFamily: 'OpenSans-Bold',
+                      fontFamily: 'OpenSans-Regular',
                       marginTop: 10 * factor
                     }}
                   >
-                    {Math.floor(this.state.totalLength / 60)}
-                    {`\n`}
-                    <Text
-                      style={{
-                        fontSize: (onTablet ? 10 : 13) * factor,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
-                      }}
-                    >
-                      MINS
-                    </Text>
+                    XP
                   </Text>
-                </View>
-                <View
-                  style={[
-                    styles.centerContent,
-                    {
-                      flex: 1,
-                      alignItems: 'flex-start'
-                    }
-                  ]}
-                >
-                  <Text
-                    style={{
-                      fontSize: (onTablet ? 15 : 17) * factor,
-                      textAlign: 'center',
-                      color: 'white',
-                      fontFamily: 'OpenSans-Bold',
-                      marginTop: 10 * factor
-                    }}
-                  >
-                    {this.state.xp}
-                    {`\n`}
-                    <Text
-                      style={{
-                        fontSize: (onTablet ? 10 : 13) * factor,
-                        textAlign: 'center',
-                        color: 'white',
-                        fontFamily: 'OpenSans-Regular',
-                        marginTop: 10 * factor
-                      }}
-                    >
-                      XP
-                    </Text>
-                  </Text>
-                </View>
+                </Text>
               </View>
               <View
-                key={'buttons'}
                 style={[
                   styles.centerContent,
                   {
                     flexDirection: 'row',
-                    marginTop: 15 * factor
+                    marginTop: 20,
+                    marginBottom: onTablet ? '2%' : '4%',
                   }
                 ]}
               >
@@ -608,7 +577,6 @@ export default class PathOverview extends React.Component {
                     styles.centerContent,
                     {
                       flex: 1,
-                      alignItems: 'flex-end'
                     }
                   ]}
                 >
@@ -636,6 +604,7 @@ export default class PathOverview extends React.Component {
                     content: contentService.getContent(this.state.data.id, true)
                   }}
                   styles={{
+                    flex: 1,
                     touchable: { flex: 1 },
                     iconSize: {
                       width: (onTablet ? 20 : 27.5) * factor,
@@ -674,7 +643,6 @@ export default class PathOverview extends React.Component {
                     styles.centerContent,
                     {
                       flex: 1,
-                      alignItems: 'flex-start'
                     }
                   ]}
                 >
@@ -697,11 +665,9 @@ export default class PathOverview extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ height: 30 * factor }} />
             </View>
           </View>
         )}
-        <View style={{ height: 15 * factor }} />
       </View>
     );
   };

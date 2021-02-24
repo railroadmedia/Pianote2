@@ -264,7 +264,6 @@ class SongCatalog extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <NavMenuHeaders currentPage={'LESSONS'} parentPage={'SONGS'} />
-
         {!this.state.refreshing ? (
           <ScrollView
             style={styles.mainContainer}
@@ -284,13 +283,13 @@ class SongCatalog extends React.Component {
             {isiOS && this.state.refreshControl && (
               <ActivityIndicator
                 size='small'
-                style={{ padding: 10 }}
+                style={styles.ActivityIndicator}
                 color={colors.secondBackground}
               />
             )}
             <Text style={styles.contentPageHeader}>Songs</Text>
             {this.state.started && (
-              <View style={[styles.mainContainer, { paddingLeft: 10 }]}>
+              <View style={styles.mainContainer}>
                 <HorizontalVideoList
                   hideFilterButton={true}
                   Title={'CONTINUE'}
@@ -310,26 +309,26 @@ class SongCatalog extends React.Component {
             <VerticalVideoList
               items={this.state.allSongs}
               isLoading={false}
-              title={'ALL SONGS'} // title for see all page
-              type={'SONGS'} // the type of content on page
+              title={'ALL SONGS'} 
+              type={'SONGS'}
               showFilter={true}
-              showType={false} // show course / song by artist name
-              showArtist={true} // show artist name
+              showType={false} 
+              showArtist={true} 
               showLength={false}
               showSort={true}
               isPaging={this.state.isPaging}
-              filters={this.state.filters} // show filter list
-              imageRadius={5 * factor} // radius of image shown
-              containerBorderWidth={0} // border of box
-              containerWidth={width} // width of list
+              filters={this.state.filters}
+              imageRadius={5 * factor} 
+              containerBorderWidth={0} 
+              containerWidth={width} 
               currentSort={this.state.currentSort}
-              changeSort={sort => this.changeSort(sort)} // change sort and reload videos
-              outVideos={this.state.outVideos} // if paging and out of videos
-              filterResults={() => this.setState({ showFilters: true })} // apply from filters page
+              changeSort={sort => this.changeSort(sort)} 
+              outVideos={this.state.outVideos} 
+              filterResults={() => this.setState({ showFilters: true })} 
               isSquare={true}
-              containerHeight={this.getSquareHeight()} // height per row
-              imageHeight={this.getSquareHeight()} // image height
-              imageWidth={this.getSquareHeight()} // image height
+              containerHeight={this.getSquareHeight()} 
+              imageHeight={this.getSquareHeight()} 
+              imageWidth={this.getSquareHeight()}
             />
           </ScrollView>
         ) : (
@@ -342,14 +341,7 @@ class SongCatalog extends React.Component {
         {this.state.showFilters && (
           <Modal
             isVisible={this.state.showFilters}
-            style={[
-              styles.centerContent,
-              {
-                margin: 0,
-                height: '100%',
-                width: '100%'
-              }
-            ]}
+            style={styles.modalContainer}
             animation={'slideInUp'}
             animationInTiming={1}
             animationOutTiming={1}

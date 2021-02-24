@@ -194,8 +194,8 @@ export default class ForgotPassword extends React.Component {
               style={{ padding: 15, position: 'absolute' }}
             >
               <Back
-                width={(onTablet ? 17.5 : 25) * factor}
-                height={(onTablet ? 17.5 : 25) * factor}
+                width={backButtonSize}
+                height={backButtonSize}
                 fill={'white'}
               />
             </TouchableOpacity>
