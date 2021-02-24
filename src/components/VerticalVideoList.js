@@ -646,7 +646,8 @@ class VerticalVideoList extends React.Component {
               style={{
                 flexDirection: 'row',
                 flex: 1,
-                paddingLeft: paddingInset
+                paddingLeft: paddingInset,
+                alignItems: 'center'
               }}
             >
               <View style={{ width: this.props.imageWidth + paddingInset / 2 }}>
@@ -734,42 +735,15 @@ class VerticalVideoList extends React.Component {
                   ]}
                 >
                   {!this.props.hideFilterButton && (
-                    <TouchableOpacity
-                      onPress={() => this.props.filterResults()}
-                      style={[
-                        styles.centerContent,
-                        {
-                          borderWidth: 1.25 * factor,
-                          borderColor: colors.pianoteRed,
-                          height: (onTablet ? 17.5 : 30) * factor,
-                          width: (onTablet ? 17.5 : 30) * factor,
-                          borderRadius: 30 * factor
-                        }
-                      ]}
-                    >
-                      <View style={{ transform: [{ rotate: '90deg' }] }}>
-                        <IonIcon
-                          size={(onTablet ? 9 : 14) * factor}
-                          name={'md-options'}
-                          color={colors.pianoteRed}
-                        />
-                      </View>
-                    </TouchableOpacity>
+                    <Filters_V2
+                      disabled={!this.props.filters || this.state.isPaging}
+                      onApply={() =>
+                        this.props.applyFilters?.(this.filters?.filterQuery)
+                      }
+                      meta={this.props.filters}
+                      reference={r => (this.filters = r)}
+                    />
                   )}
-                  <View>
-                    <View style={{ flex: 1 }} />
-                    {!this.props.hideFilterButton && (
-                      <Filters_V2
-                        disabled={this.state.isPaging}
-                        onApply={() =>
-                          this.props.applyFilters?.(this.filters?.filterQuery)
-                        }
-                        meta={this.props.filters}
-                        reference={r => (this.filters = r)}
-                      />
-                    )}
-                    <View style={{ flex: 1 }} />
-                  </View>
                 </View>
               )}
             </View>
