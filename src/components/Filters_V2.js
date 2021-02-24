@@ -218,9 +218,9 @@ export default class Filters_V2 extends React.Component {
   };
 
   toggleItem = (filterType, item) => {
+    difficulties = undefined;
     if (!this.appliedFilters[filterType]) {
       this.appliedFilters[filterType] = [item];
-      difficulties = undefined;
       if (item === 'ALL') delete this.appliedFilters[filterType];
       this.apply();
       return;
