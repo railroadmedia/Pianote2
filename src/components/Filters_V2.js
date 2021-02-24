@@ -747,6 +747,7 @@ class TouchableFiller extends React.Component {
       >
         {this.props.children}
         <Text
+          numberOfLines={2}
           style={
             selected
               ? this.props.touchableTextSelectedStyle
