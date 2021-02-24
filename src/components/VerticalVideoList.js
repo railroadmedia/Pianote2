@@ -901,7 +901,6 @@ class VerticalVideoList extends React.Component {
             !this.state.isLoading && (
               <View
                 style={{
-                  marginTop: 5 * factor,
                   paddingHorizontal: paddingInset
                 }}
               >

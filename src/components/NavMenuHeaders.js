@@ -64,7 +64,7 @@ class NavMenuHeaders extends React.Component {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: isNotch
+            paddingTop: DeviceInfo.hasNotch()
               ? 5 * factor
               : Platform.OS == 'android'
               ? 0

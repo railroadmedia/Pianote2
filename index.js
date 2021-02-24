@@ -101,7 +101,6 @@ global.onTablet = DeviceInfo.isTablet();
 global.loadedFromNotification = false; 
 global.isiOS = Platform.OS === 'ios';
 global.styles = require('Pianote2/src/assets/styles/styles.js');
-global.isNotch = DeviceInfo.hasNotch();
 global.isConnected = true;
 global.isPackOnly = false;
 global.paddingInset = (DeviceInfo.isTablet ? 10 : 5) 

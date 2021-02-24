@@ -149,7 +149,7 @@ class Relevance extends React.Component {
                 <Text style={localStyles.cancel}>Cancel</Text>
               </View>
             </TouchableOpacity>
-            <View style={{ flex: isNotch ? 0.25 : 0.025 }} />
+            <View style={{ height: '5%' }} />
           </View>
         </View>
       </View>
@@ -159,7 +159,7 @@ class Relevance extends React.Component {
 
 const localStyles = StyleSheet.create({
   container: {
-    minHeight: height * 0.25,
+    minHeight: (DeviceInfo.isTablet() ? 0.175 : 0.25) * height,
     flexDirection: 'row'
   },
   word: {

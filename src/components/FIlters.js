@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableOpacity
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { ScrollView } from 'react-native-gesture-handler';
 import Back from 'Pianote2/src/assets/img/svgs/back.svg';
 import Modal from 'react-native-modal';
@@ -2225,7 +2226,7 @@ export default class Filters extends React.Component {
               </View>
               <View style={{ flex: 1 }} />
             </View>
-            <View style={{ height: isNotch ? height * 0.035 : 0 }} />
+            <View style={{ height: DeviceInfo.hasNotch() ? height * 0.035 : 0 }} />
           </View>
           <Modal
             isVisible={this.state.showLoading}

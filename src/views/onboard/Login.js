@@ -12,6 +12,7 @@ import {
   Dimensions,
   StatusBar
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-navigation';
 import RNIap from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
@@ -22,6 +23,7 @@ import CustomModal from '../../modals/CustomModal';
 import Loading from '../../components/Loading';
 import Orientation from 'react-native-orientation-locker';
 
+const isNotch = DeviceInfo.hasNotch();
 const windowDim = Dimensions.get('window');
 const width =
   windowDim.width < windowDim.height ? windowDim.width : windowDim.height;

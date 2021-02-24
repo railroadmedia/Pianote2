@@ -114,9 +114,8 @@ module.exports = StyleSheet.create({
   },
   tabRightContainer: {
     // container used for my list in progress & on settings
-    paddingRight: (DeviceInfo.isTablet ? 10 : 5),
     width: '100%',
-    borderTopWidth: 0.5 * factor,
+    borderTopWidth: 0.5,
     borderTopColor: '#445f73',
     borderBottomWidth: 0.5,
     borderBottomColor: '#445f73',

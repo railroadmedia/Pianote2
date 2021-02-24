@@ -229,7 +229,7 @@ class MyList extends React.Component {
             style={[
               styles.tabRightContainer,
               {
-                marginTop: 15 * factor
+                marginTop: 15 * factor,
               }
             ]}
             onPress={() => {
@@ -239,12 +239,17 @@ class MyList extends React.Component {
               });
             }}
           >
-            <Text style={styles.tabRightContainerText}>In Progress</Text>
-            <EntypoIcon
-              name={'chevron-thin-right'}
-              size={(onTablet ? 17.5 : 22.5) * factor}
-              color={colors.secondBackground}
-            />
+            <View style={{width: width * 0.26 + paddingInset/2}}>
+              <Text style={styles.tabRightContainerText}>In Progress</Text>
+            </View>
+            <View style={{flex: 0.85}}/>
+            <View style={[styles.centerContent, {flex: 0.15}]}>
+              <EntypoIcon
+                name={'chevron-thin-right'}
+                size={(onTablet ? 15 : 22.5) * factor}
+                color={colors.secondBackground}
+              />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.tabRightContainer}
@@ -255,12 +260,17 @@ class MyList extends React.Component {
               });
             }}
           >
-            <Text style={styles.tabRightContainerText}>Completed</Text>
-            <EntypoIcon
-              name={'chevron-thin-right'}
-              size={(onTablet ? 17.5 : 22.5) * factor}
-              color={colors.secondBackground}
-            />
+            <View style={{width: width * 0.26 + paddingInset/2}}>
+              <Text style={styles.tabRightContainerText}>Completed</Text>
+            </View>
+            <View style={{flex: 0.85}}/>
+            <View style={[styles.centerContent, {flex: 0.15}]}>
+              <EntypoIcon
+                name={'chevron-thin-right'}
+                size={(onTablet ? 15 : 22.5) * factor}
+                color={colors.secondBackground}
+              />
+            </View>
           </TouchableOpacity>
           <VerticalVideoList
             title={'ADDED TO MY LIST'}
@@ -277,7 +287,7 @@ class MyList extends React.Component {
             filterResults={() => this.setState({ showFilters: true })}
             removeItem={contentID => this.removeFromMyList(contentID)}
             outVideos={this.state.outVideos}
-            imageWidth={onTablet ? width * 0.225 : width * 0.3}
+            imageWidth={(onTablet ? 0.225 : 0.3) * width}
           />
         </ScrollView>
         {this.state.showFilters && (
