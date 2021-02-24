@@ -187,7 +187,7 @@ export default class Profile extends React.Component {
     }));
   }
 
-  changeXP = async num => {
+  changeXP = num => {
     if (num !== '') {
       num = Number(num);
       if (num < 10000) {
